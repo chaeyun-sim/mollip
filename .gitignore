@@ -42,3 +42,7 @@ yarn-error.*
 
 
 .env
+.moai
+.claude/**
+!.claude/rules/
+!.claude/rules/**
