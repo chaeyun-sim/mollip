@@ -12,7 +12,10 @@ interface SlotProps {
 
 function ScreenHeader({ children, className, style }: SlotProps) {
 	return (
-		<View className={cn('flex-row items-center py-4', className)} style={style}>
+		<View
+			className={cn('relative flex-row items-center py-4', className)}
+			style={style}
+		>
 			{children}
 		</View>
 	);
@@ -28,7 +31,13 @@ function Left({ children, className, style }: SlotProps) {
 
 function Center({ children, className, style }: SlotProps) {
 	return (
-		<View className={cn('flex-1 items-center', className)} style={style}>
+		<View
+			className={cn(
+				'absolute left-1/2 -translate-x-1/2 flex-1 items-center mt-1',
+				className,
+			)}
+			style={style}
+		>
 			{children}
 		</View>
 	);

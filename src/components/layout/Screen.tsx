@@ -14,11 +14,11 @@ function Screen({ className, children }: PropsWithChildren<ScreenProps>) {
 	return (
 		<>
 			<StatusBar style='light' />
-			<LinearGradient
-				colors={['#0C0A09', '#171412']}
-				style={{ flex: 1 }}
-			>
-				<SafeAreaView className={cn('px-6 flex-1', className)}>
+			<LinearGradient colors={['#0C0A09', '#171412']} style={{ flex: 1 }}>
+				<SafeAreaView
+					edges={['top', 'left', 'right']}
+					className={cn('px-6 flex-1', className)}
+				>
 					{children}
 				</SafeAreaView>
 			</LinearGradient>
@@ -28,9 +28,7 @@ function Screen({ className, children }: PropsWithChildren<ScreenProps>) {
 
 function Bottom({ children, className }: PropsWithChildren<ScreenProps>) {
 	return (
-		<View className={cn('pt-3 pb-2', className)} style={{ backgroundColor: 'transparent' }}>
-			{children}
-		</View>
+		<View className={cn('pt-3 pb-2 bg-transparent', className)}>{children}</View>
 	);
 }
 
@@ -39,9 +37,7 @@ function BottomAbsolute({
 	children,
 }: PropsWithChildren<ScreenProps>) {
 	return (
-		<View
-			className={cn('absolute left-0 right-0 bottom-0 pb-6', className)}
-		>
+		<View className={cn('absolute left-0 right-0 bottom-0 pb-6', className)}>
 			{children}
 		</View>
 	);
