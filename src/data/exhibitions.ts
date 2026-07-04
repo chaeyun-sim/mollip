@@ -33,6 +33,7 @@ export interface Exhibition {
 	admission: string;
 	admissionFree?: boolean;
 	ticketUrl?: string;
+	coordinates?: { latitude: number; longitude: number };
 	artworks: Artwork[];
 	relatedExhibitionIds: string[];
 	tags?: string[];
@@ -43,6 +44,7 @@ export const EXHIBITIONS: Exhibition[] = [
 		id: '1',
 		title: '모네, 빛을 그리다',
 		venue: '예술의전당',
+		coordinates: { latitude: 37.4784, longitude: 127.0082 },
 		startDate: '2026.05.01',
 		endDate: '2026.08.31',
 		artist: '클로드 모네',
@@ -105,6 +107,7 @@ export const EXHIBITIONS: Exhibition[] = [
 		id: '2',
 		title: '이중섭 특별전',
 		venue: '국립현대미술관',
+		coordinates: { latitude: 37.5789, longitude: 126.9800 },
 		startDate: '2026.04.10',
 		endDate: '2026.07.20',
 		artist: '이중섭',
@@ -141,6 +144,7 @@ export const EXHIBITIONS: Exhibition[] = [
 		id: '3',
 		title: '달리 초현실주의',
 		venue: '세종문화회관',
+		coordinates: { latitude: 37.5724, longitude: 126.9769 },
 		startDate: '2026.06.01',
 		endDate: '2026.09.15',
 		artist: '살바도르 달리',
@@ -176,6 +180,7 @@ export const EXHIBITIONS: Exhibition[] = [
 		id: '4',
 		title: '김환기 회고전',
 		venue: '환기미술관',
+		coordinates: { latitude: 37.5844, longitude: 126.9676 },
 		startDate: '2026.05.01',
 		endDate: '2026.09.30',
 		artist: '김환기',
@@ -198,6 +203,7 @@ export const EXHIBITIONS: Exhibition[] = [
 		id: '5',
 		title: 'KAWS: HOLIDAY',
 		venue: '롯데뮤지엄',
+		coordinates: { latitude: 37.5133, longitude: 127.1028 },
 		startDate: '2026.06.15',
 		endDate: '2026.10.01',
 		artist: 'KAWS',
@@ -220,6 +226,7 @@ export const EXHIBITIONS: Exhibition[] = [
 		id: '6',
 		title: '반 고흐: 별이 빛나는 밤',
 		venue: 'DDP 갤러리',
+		coordinates: { latitude: 37.5673, longitude: 127.0095 },
 		startDate: '2026.04.01',
 		endDate: '2026.08.15',
 		artist: '빈센트 반 고흐',
