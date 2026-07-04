@@ -275,7 +275,7 @@ export default function ExhibitionDetailScreen() {
 									</Text>
 								)}
 								{exhibition.tags && exhibition.tags.length > 0 && (
-									<View className='flex-row flex-wrap gap-2 mt-4 pt-4 border-t-[1px] border-t-black/6'>
+									<View className='flex-row flex-wrap gap-2 mt-4'>
 										{exhibition.tags.map((tag) => (
 											<View
 												key={tag}
@@ -586,7 +586,9 @@ function MetaPill({
 	return (
 		<View className='flex-row items-center gap-1.5 rounded-full px-3 py-2 bg-white'>
 			<Ionicons name={icon} size={14} color='#6B7280' />
-			<Text className='font-pretendard-regular text-[12px] text-[#374151]'>{text}</Text>
+			<Text className='font-pretendard-regular text-[12px] text-[#374151]'>
+				{text}
+			</Text>
 		</View>
 	);
 }
