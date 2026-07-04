@@ -8,4 +8,5 @@ export const store = {
   manualTitle: '',
   manualArtist: '',
   artworkDescription: '',
+  artworkImageUrl: '',
 };
