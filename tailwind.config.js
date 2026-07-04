@@ -10,10 +10,14 @@ module.exports = {
     extend: {
       fontFamily: {
         sans: ['Pretendard-Regular'],
+        'pretendard-regular': ['Pretendard-Regular'],
         'pretendard-light': ['Pretendard-Light'],
         'pretendard-medium': ['Pretendard-Medium'],
         'pretendard-semibold': ['Pretendard-SemiBold'],
         'pretendard-bold': ['Pretendard-Bold'],
+        'hahmlet': ['Hahmlet_400Regular'],
+        'hahmlet-semibold': ['Hahmlet_600SemiBold'],
+        'hahmlet-bold': ['Hahmlet_700Bold'],
       },
     },
   },
