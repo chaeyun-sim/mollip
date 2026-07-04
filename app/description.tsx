@@ -31,17 +31,26 @@ import {
 } from '../src/utils/api';
 import { formatTime } from '../src/utils/text';
 import { ScreenHeader } from '../src/components/layout/ScreenHeader';
+import { cn } from '@/src/lib/cn';
 
 const CHAR_INTERVAL_MS = 25;
 
 // **bold** 파싱 → Text 컴포넌트 배열
-function BoldText({ text, style }: { text: string; style: object }) {
+function BoldText({
+	text,
+	style,
+	className,
+}: {
+	text: string;
+	style: object;
+	className: string;
+}) {
 	const parts = text.split(/\*\*(.+?)\*\*/g);
 	return (
-		<Text style={style}>
+		<Text style={style} className={className}>
 			{parts.map((part, i) =>
 				i % 2 === 1 ? (
-					<Text key={i} style={{ fontFamily: 'Pretendard-Bold' }}>
+					<Text key={i} className='font-pretendard-bold'>
 						{part}
 					</Text>
 				) : (
@@ -239,35 +248,22 @@ export default function DescriptionScreen() {
 				contentContainerStyle={{ paddingBottom: 40, paddingTop: 12 }}
 			>
 				{hasError ? (
-					<View className='items-center mt-16' style={{ gap: 16 }}>
+					<View className='items-center mt-16 gap-4'>
 						<Ionicons name='alert-circle-outline' size={40} color='#78716C' />
-						<Text
-							style={{ fontFamily: 'Pretendard-Regular', color: '#78716C', fontSize: 15 }}
-						>
-							해설 생성에 실패했어요
-						</Text>
+						<Text className='text-[#78716C] text-[15px]'>해설 생성에 실패했어요</Text>
 						<TouchableOpacity
-							className='px-6 py-3 rounded-xl'
-							style={{ backgroundColor: '#1C1917' }}
+							className='px-6 py-3 rounded-xl bg-[#1C1917]'
 							onPress={handleRetry}
 						>
-							<Text
-								style={{
-									fontFamily: 'Pretendard-SemiBold',
-									color: '#60A5FA',
-									fontSize: 14,
-								}}
-							>
+							<Text className='font-pretendard-semibold text-[#60A5FA] text-[14px]'>
 								다시 시도
 							</Text>
 						</TouchableOpacity>
 					</View>
 				) : isStreaming && displayed === '' ? (
-					<View className='flex-row items-center mt-5' style={{ gap: 10 }}>
+					<View className='flex-row items-center mt-5 gap-[10px]'>
 						<ActivityIndicator color='#60A5FA' />
-						<Text
-							style={{ fontSize: 15, fontFamily: 'Pretendard-Regular', color: '#A8A29E' }}
-						>
+						<Text className='text-[15px] text-[#A8A29E]'>
 							{loadingStep === 0 && '그림 찾는 중...'}
 							{loadingStep === 1 && '그림 분석 중...'}
 							{loadingStep === 2 && '해설 생성 중...'}
@@ -276,11 +272,10 @@ export default function DescriptionScreen() {
 				) : (
 					<BoldText
 						text={displayed}
+						className='text-[#e8e8e8] font-pretendard-medium'
 						style={{
 							fontSize: bodyFontSize,
 							lineHeight: bodyFontSize * 1.9,
-							color: '#e8e8e8',
-							fontFamily: 'Pretendard-Medium',
 						}}
 					/>
 				)}
@@ -290,8 +285,7 @@ export default function DescriptionScreen() {
 			<Screen.Bottom>
 				<TouchableOpacity
 					activeOpacity={1}
-					className='h-1 rounded-sm overflow-hidden'
-					style={{ backgroundColor: '#292524' }}
+					className='h-1 rounded-sm overflow-hidden bg-[#292524]'
 					hitSlop={{ top: 16, bottom: 16 }}
 					onLayout={(e: LayoutChangeEvent) => {
 						progressWidth.current = e.nativeEvent.layout.width;
@@ -299,20 +293,14 @@ export default function DescriptionScreen() {
 					onPress={handleProgressTap}
 				>
 					<View
-						className='h-full rounded-sm'
-						style={{ width: `${progress * 100}%`, backgroundColor: '#60A5FA' }}
+						className='h-full rounded-sm bg-[#60A5FA]'
+						style={{ width: `${progress * 100}%` }}
 					/>
 				</TouchableOpacity>
 
 				<View className='flex-row justify-between mt-1 mb-2'>
-					<Text
-						style={{ fontSize: 11, fontFamily: 'Pretendard-Regular', color: '#78716C' }}
-					>
-						{formatTime(elapsed)}
-					</Text>
-					<Text
-						style={{ fontSize: 11, fontFamily: 'Pretendard-Regular', color: '#78716C' }}
-					>
+					<Text className='text-[11px] text-[#78716C]'>{formatTime(elapsed)}</Text>
+					<Text className='text-[11px] text-[#78716C]'>
 						{duration > 0 ? formatTime(duration) : '--:--'}
 					</Text>
 				</View>

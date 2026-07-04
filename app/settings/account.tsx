@@ -13,10 +13,7 @@ export default function AccountScreen() {
 					<ScreenHeader.Back onPress={() => router.back()} />
 				</ScreenHeader.Left>
 				<ScreenHeader.Center>
-					<Text
-						className='text-base text-white'
-						style={{ fontFamily: 'Pretendard-SemiBold' }}
-					>
+					<Text className='text-base text-white font-pretendard-semibold'>
 						계정 정보
 					</Text>
 				</ScreenHeader.Center>
@@ -24,9 +21,7 @@ export default function AccountScreen() {
 			</ScreenHeader>
 
 			<View className='flex-1 items-center justify-center'>
-				<Text
-					style={{ fontFamily: 'Pretendard-Regular', color: '#555', fontSize: 15 }}
-				>
+				<Text className='font-pretendard-regular text-[#555] text-[15px]'>
 					준비 중이에요
 				</Text>
 			</View>

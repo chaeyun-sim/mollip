@@ -19,11 +19,18 @@ import { CHAT_SYSTEM_PROMPT } from '../src/constants/prompts';
 import { store } from '../src/store';
 import { useChatStore } from '../src/store/chatStore';
 import { streamChat } from '../src/utils/api';
+import { cn } from '@/src/lib/cn';
 
 export default function ChatScreen() {
 	const router = useRouter();
-	const { messages, history, addMessage, updateMessage, markError, pushHistory } =
-		useChatStore();
+	const {
+		messages,
+		history,
+		addMessage,
+		updateMessage,
+		markError,
+		pushHistory,
+	} = useChatStore();
 	const [input, setInput] = useState('');
 	const [isLoading, setIsLoading] = useState(false);
 	const flatListRef = useRef<FlatList>(null);
@@ -64,14 +71,12 @@ export default function ChatScreen() {
 	};
 
 	const retryMessage = (item: (typeof messages)[0]) => {
-		// 직전 유저 메시지 찾기
 		const idx = messages.findIndex((m) => m.id === item.id);
 		const userMsg = messages.slice(0, idx).findLast((m) => m.role === 'user');
 		if (!userMsg) return;
-		// 에러 메시지 제거 후 재전송
 		useChatStore.setState((s) => ({
 			messages: s.messages.filter((m) => m.id !== item.id),
-			history: s.history.slice(0, -1), // 마지막 유저 history 제거
+			history: s.history.slice(0, -1),
 		}));
 		sendMessage(userMsg.text);
 	};
@@ -87,42 +92,38 @@ export default function ChatScreen() {
 		return (
 			<View className={`mb-4 ${isUser ? 'items-end' : 'items-start'}`}>
 				{!isUser && (
-					<View
-						className='w-6 h-6 rounded-full items-center justify-center mb-1'
-						style={{ backgroundColor: '#1e2d4a' }}
-					>
+					<View className='w-6 h-6 rounded-full items-center justify-center mb-1 bg-[#1e2d4a]'>
 						<Ionicons name='sparkles' size={12} color='#60A5FA' />
 					</View>
 				)}
 				{item.isError ? (
 					<TouchableOpacity
-						className='flex-row items-center gap-2 px-4 py-3 rounded-2xl rounded-tl-sm'
-						style={{ backgroundColor: '#2a1a1a' }}
+						className='flex-row items-center gap-2 px-4 py-3 rounded-2xl rounded-tl-sm bg-[#2a1a1a]'
 						onPress={() => retryMessage(item)}
 					>
 						<Ionicons name='refresh' size={14} color='#e05050' />
-						<Text style={{ fontFamily: 'Pretendard-Regular', color: '#e05050', fontSize: 13 }}>
+						<Text className='font-pretendard-regular text-[#e05050] text-[13px]'>
 							답변 실패 — 다시 시도
 						</Text>
 					</TouchableOpacity>
 				) : (
 					<View
-						className={`rounded-2xl px-4 py-3 max-w-[80%] ${isUser ? 'rounded-tr-sm' : 'rounded-tl-sm'}`}
-						style={{
-							backgroundColor: isUser ? '#3B82F6' : '#1C1917',
-							borderWidth: isUser ? 0 : StyleSheet.hairlineWidth,
-							borderColor: 'rgba(255,255,255,0.08)',
-						}}
+						className={cn(
+							'rounded-2xl px-4 py-3 max-w-[80%]',
+							isUser
+								? 'rounded-tr-sm bg-[#3B82F6]'
+								: 'rounded-tl-sm bg-[#1C1917] border-white/[0.08]',
+						)}
+						style={{ borderWidth: isUser ? 0 : StyleSheet.hairlineWidth }}
 					>
 						{item.text === '' && !isUser ? (
 							<ActivityIndicator size='small' color='#60A5FA' />
 						) : (
 							<Text
-								className='text-sm leading-5'
-								style={{
-									fontFamily: 'Pretendard-Regular',
-									color: isUser ? '#fff' : '#efefef',
-								}}
+								className={cn(
+									'text-sm leading-5',
+									isUser ? 'text-white' : 'text-[#e8e8e8]',
+								)}
 							>
 								{item.text}
 							</Text>
@@ -140,10 +141,7 @@ export default function ChatScreen() {
 					<ScreenHeader.Back onPress={() => router.back()} />
 				</ScreenHeader.Left>
 				<ScreenHeader.Center>
-					<Text
-						className='text-base text-white'
-						style={{ fontFamily: 'Pretendard-SemiBold' }}
-					>
+					<Text className='text-base text-white font-pretendard-semibold'>
 						작품에 대해 물어보기
 					</Text>
 				</ScreenHeader.Center>
@@ -163,27 +161,18 @@ export default function ChatScreen() {
 					showsVerticalScrollIndicator={false}
 					contentContainerStyle={{ flexGrow: 1, paddingTop: 16, paddingBottom: 8 }}
 					ListEmptyComponent={
-						<View className='flex-1 items-center justify-center' style={{ gap: 12 }}>
-							<View
-								className='w-16 h-16 rounded-full items-center justify-center'
-								style={{ backgroundColor: '#1C1917' }}
-							>
-								<Ionicons name='chatbubble-ellipses-outline' size={28} color='#57534E' />
+						<View className='flex-1 items-center justify-center gap-3'>
+							<View className='w-16 h-16 rounded-full items-center justify-center bg-[#1C1917]'>
+								<Ionicons
+									name='chatbubble-ellipses-outline'
+									size={28}
+									color='#57534E'
+								/>
 							</View>
-							<Text
-								className='text-base text-center'
-								style={{ fontFamily: 'Pretendard-SemiBold', color: '#e8e8e8' }}
-							>
+							<Text className='text-base text-center font-pretendard-bold text-[#e8e8e8]'>
 								작품이 궁금하신가요?
 							</Text>
-							<Text
-								className='text-sm text-center'
-								style={{
-									fontFamily: 'Pretendard-Regular',
-									color: '#78716C',
-									lineHeight: 20,
-								}}
-							>
+							<Text className='text-sm text-center text-[#78716C] leading-5'>
 								{'작가, 시대적 배경, 기법 등\n무엇이든 물어보세요'}
 							</Text>
 						</View>
@@ -191,21 +180,9 @@ export default function ChatScreen() {
 				/>
 
 				{/* 입력창 */}
-				<View
-					className='flex-row items-end gap-2 py-3'
-					style={{ borderTopWidth: 1, borderTopColor: '#1C1917' }}
-				>
+				<View className='flex-row items-end gap-2 py-3 border-t-[1px] border-t-[#1C1917]'>
 					<TextInput
-						className='flex-1 rounded-2xl px-4 text-sm'
-						style={{
-							backgroundColor: '#1C1917',
-							color: '#e8e8e8',
-							fontFamily: 'Pretendard-Regular',
-							minHeight: 44,
-							maxHeight: 120,
-							paddingTop: 12,
-							paddingBottom: 12,
-						}}
+						className='flex-1 rounded-2xl px-4 pt-3 pb-3 text-sm font-pretendard-regular bg-[#1C1917] text-[#e8e8e8] min-h-[44px] max-h-[120px]'
 						returnKeyType='send'
 						value={input}
 						onChangeText={(t) => {
@@ -220,11 +197,11 @@ export default function ChatScreen() {
 						multiline
 					/>
 					<TouchableOpacity
-						className='w-11 h-11 rounded-full items-center justify-center'
-						style={{
-							backgroundColor: input.trim() && !isLoading ? '#3B82F6' : '#1C1917',
-						}}
-						onPress={sendMessage}
+						className={cn(
+							'w-11 h-11 rounded-full items-center justify-center',
+							input.trim() && !isLoading ? 'bg-[#3B82F6]' : 'bg-[#1C1917]',
+						)}
+						onPress={() => sendMessage()}
 						disabled={!input.trim() || isLoading}
 						accessibilityLabel='전송'
 						accessibilityRole='button'

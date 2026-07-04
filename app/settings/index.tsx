@@ -13,6 +13,7 @@ import {
 	useSettingsStore,
 } from '../../src/store/settingsStore';
 import { fetchVoices } from '../../src/utils/api';
+import { cn } from '@/src/lib/cn';
 
 const APP_VERSION = '1.0.0';
 
@@ -40,18 +41,13 @@ function Section({
 }) {
 	return (
 		<View className='mb-8'>
-			<Text
-				className='text-xs mb-3 px-1'
-				style={{ fontFamily: 'Pretendard-SemiBold', color: '#78716C', letterSpacing: 0.8 }}
-			>
+			<Text className='text-xs mb-3 px-1 font-pretendard-semibold text-[#78716C] tracking-[0.8]'>
 				{title.toUpperCase()}
 			</Text>
 			<View
-				className='rounded-2xl overflow-hidden'
+				className='rounded-2xl overflow-hidden bg-[#1C1917] border-white/8'
 				style={{
-					backgroundColor: '#1C1917',
 					borderWidth: StyleSheet.hairlineWidth,
-					borderColor: 'rgba(255,255,255,0.08)',
 				}}
 			>
 				{children}
@@ -79,7 +75,7 @@ function Row({
 				border ? { borderBottomWidth: 1, borderBottomColor: '#292524' } : undefined,
 			]}
 		>
-			<Text style={{ fontFamily: 'Pretendard-Regular', color: '#e8e8e8', fontSize: 15 }}>
+			<Text className='font-pretendard-regular text-[#E8E8E8] text-[15px]'>
 				{label}
 			</Text>
 			{children}
@@ -126,10 +122,7 @@ export default function SettingsScreen() {
 					<ScreenHeader.Back onPress={() => router.back()} />
 				</ScreenHeader.Left>
 				<ScreenHeader.Center>
-					<Text
-						className='text-[16px] text-white'
-						style={{ fontFamily: 'Pretendard-SemiBold' }}
-					>
+					<Text className='text-[16px] text-white font-pretendard-semibold'>
 						설정
 					</Text>
 				</ScreenHeader.Center>
@@ -171,11 +164,10 @@ export default function SettingsScreen() {
 									}}
 								>
 									<Text
-										style={{
-											fontFamily: 'Pretendard-SemiBold',
-											fontSize: 12,
-											color: voiceSpeed === speed ? '#fff' : '#A8A29E',
-										}}
+										className={cn(
+											'font-pretendard-semibold text-[12px]',
+											voiceSpeed === speed ? 'text-white' : 'text-[#A8A29E]',
+										)}
 									>
 										{label}
 									</Text>
@@ -191,9 +183,7 @@ export default function SettingsScreen() {
 					>
 						<View className='flex-row items-center gap-1'>
 							{currentVoiceName ? (
-								<Text
-									style={{ fontFamily: 'Pretendard-Regular', color: '#666', fontSize: 13 }}
-								>
+								<Text className='font-pretendard-regular text-[#666] text-[13px]'>
 									{currentVoiceName.split(' - ')[0]}
 								</Text>
 							) : null}
@@ -221,10 +211,12 @@ export default function SettingsScreen() {
 									}}
 								>
 									<Text
+										className={cn(
+											'font-pretendard-semibold',
+											fontSize === opt.value ? 'text-white' : 'text-[#A8A29E',
+										)}
 										style={{
-											fontFamily: 'Pretendard-SemiBold',
 											fontSize: FONT_SIZE_VALUE[opt.value] - 5,
-											color: fontSize === opt.value ? '#fff' : '#A8A29E',
 										}}
 									>
 										{opt.label}
@@ -238,9 +230,7 @@ export default function SettingsScreen() {
 				{/* ── 앱 정보 ── */}
 				<Section title='앱 정보'>
 					<Row label='버전' border={false}>
-						<Text
-							style={{ fontFamily: 'Pretendard-Regular', color: '#78716C', fontSize: 13 }}
-						>
+						<Text className='font-pretendard-regular text-[#78716C] text-[13px]'>
 							{APP_VERSION}
 						</Text>
 					</Row>

@@ -23,6 +23,7 @@ import { ScreenHeader } from '../../src/components/layout/ScreenHeader';
 import type { Voice } from '../../src/hooks/useTTS';
 import { useSettingsStore } from '../../src/store/settingsStore';
 import { fetchTTSBlob, fetchVoices } from '../../src/utils/api';
+import { cn } from '@/src/lib/cn';
 
 /* ─── 스켈레톤 ─── */
 
@@ -56,9 +57,9 @@ function SkeletonItem() {
 				},
 			]}
 		>
-			<View style={{ width: 32, height: 32, borderRadius: 16, backgroundColor: '#292524' }} />
-			<View style={{ flex: 1, height: 13, borderRadius: 6, backgroundColor: '#292524' }} />
-			<View style={{ width: 24, height: 24, borderRadius: 12, backgroundColor: '#1C1917' }} />
+			<View className='w-8 h-8 rounded-[16px] bg-[#292524]' />
+			<View className='flex-1 h-[13px] rounded-[6px] bg-[#292524]' />
+			<View className='w-6 h-6 rounded-[12px] bg-[#1C1917]' />
 		</Animated.View>
 	);
 }
@@ -106,10 +107,7 @@ export default function VoiceScreen() {
 					<ScreenHeader.Back onPress={() => router.back()} />
 				</ScreenHeader.Left>
 				<ScreenHeader.Center>
-					<Text
-						className='text-[16px] text-white'
-						style={{ fontFamily: 'Pretendard-SemiBold' }}
-					>
+					<Text className='text-[16px] text-white font-pretendard-semibold'>
 						음성 선택
 					</Text>
 				</ScreenHeader.Center>
@@ -128,7 +126,7 @@ export default function VoiceScreen() {
 						))}
 					</View>
 				) : voices.length === 0 ? (
-					<Text style={{ fontFamily: 'Pretendard-Regular', color: '#78716C', fontSize: 13 }}>
+					<Text className='text-[#78716C] text-[13px] font-pretendard-regular'>
 						불러올 수 있는 음성이 없어요
 					</Text>
 				) : (
@@ -158,36 +156,32 @@ export default function VoiceScreen() {
 								>
 									<View className='flex-row items-center gap-3 flex-1'>
 										<View
-											className='w-8 h-8 rounded-full items-center justify-center'
-											style={{ backgroundColor: selected ? '#3B82F6' : '#292524' }}
+											className={cn(
+												'w-8 h-8 rounded-full items-center justify-center',
+												selected ? 'bg-[#3B82F6]' : 'bg-[#292524]',
+											)}
 										>
 											{selected ? (
 												<Ionicons name='checkmark' size={14} color='#fff' />
 											) : (
-												<Text
-													style={{
-														fontFamily: 'Pretendard-Bold',
-														color: '#78716C',
-														fontSize: 12,
-													}}
-												>
+												<Text className='font-pretendard-bold text-[#78716C] text-[12px]'>
 													{i + 1}
 												</Text>
 											)}
 										</View>
 										<Text
-											style={{
-												fontFamily: selected ? 'Pretendard-SemiBold' : 'Pretendard-Regular',
-												color: selected ? '#fff' : '#A8A29E',
-												fontSize: 14,
-											}}
+											className={cn(
+												selected
+													? 'text-white font-pretendard-semibold'
+													: 'text-[#A8A29E] font-pretendard-regular',
+												'text-[14px]',
+											)}
 										>
 											{voice.name.split(' - ')[0]}
 										</Text>
 									</View>
 									<Pressable
-										className='items-center justify-center'
-										style={{ width: 32, height: 32 }}
+										className='items-center justify-center w-8 h-8'
 										hitSlop={8}
 										accessibilityLabel={`${voice.name.split(' - ')[0]} 미리 듣기`}
 										accessibilityRole='button'

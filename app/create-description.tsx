@@ -5,7 +5,15 @@ import * as FileSystem from 'expo-file-system/legacy';
 import * as ImagePicker from 'expo-image-picker';
 import { useRouter } from 'expo-router';
 import { useCallback, useRef, useState } from 'react';
-import { Alert, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {
+	Alert,
+	Image,
+	ScrollView,
+	StyleSheet,
+	Text,
+	TouchableOpacity,
+	View,
+} from 'react-native';
 import { Screen } from '../src/components/layout/Screen';
 import * as Haptics from 'expo-haptics';
 import { store } from '../src/store';
@@ -110,10 +118,7 @@ export default function IndexScreen() {
 
 			{/* 상단 타이틀 */}
 			<View className='mt-3 gap-2'>
-				<Text
-					className='text-3xl text-white mb-2'
-					style={{ fontFamily: 'Pretendard-Bold' }}
-				>
+				<Text className='text-3xl text-white mb-2 font-pretendard-bold'>
 					작품 해설 생성기
 				</Text>
 				<Text className='text-md leading-6 text-[#78716C]'>
@@ -132,27 +137,15 @@ export default function IndexScreen() {
 					accessibilityLabel='카메라로 촬영'
 					accessibilityRole='button'
 				>
-					<View
-						className='flex-row items-center gap-4 px-6 py-5'
-						style={{ backgroundColor: '#3B82F6' }}
-					>
+					<View className='flex-row items-center gap-4 px-6 py-5 bg-[#3B82F6]'>
 						<View className='w-10 h-10 rounded-xl items-center justify-center bg-white/20'>
 							<Ionicons name='camera' size={22} color='#fff' />
 						</View>
 						<View className='flex-1'>
-							<Text
-								className='text-white text-base'
-								style={{ fontFamily: 'Pretendard-SemiBold' }}
-							>
+							<Text className='text-white text-base font-pretendard-semibold'>
 								카메라로 촬영
 							</Text>
-							<Text
-								className='text-xs mt-0.5'
-								style={{
-									fontFamily: 'Pretendard-Regular',
-									color: 'rgba(255,255,255,0.6)',
-								}}
-							>
+							<Text className='text-xs mt-0.5 text-white/60'>
 								지금 바로 작품을 찍어보세요
 							</Text>
 						</View>
@@ -174,9 +167,8 @@ export default function IndexScreen() {
 					accessibilityRole='button'
 				>
 					<View
-						className='flex-row items-center gap-4 px-6 py-5'
+						className='flex-row items-center gap-4 px-6 py-5 bg-[#1C1917]'
 						style={{
-							backgroundColor: '#1C1917',
 							borderWidth: StyleSheet.hairlineWidth,
 							borderColor: 'rgba(255,255,255,0.08)',
 						}}
@@ -185,16 +177,10 @@ export default function IndexScreen() {
 							<Ionicons name='images' size={22} color='#e8e8e8' />
 						</View>
 						<View className='flex-1'>
-							<Text
-								className='text-base'
-								style={{ fontFamily: 'Pretendard-SemiBold', color: '#e8e8e8' }}
-							>
+							<Text className='text-base font-pretendard-semibold text-[#e8e8e8]'>
 								갤러리에서 선택
 							</Text>
-							<Text
-								className='text-xs mt-0.5'
-								style={{ fontFamily: 'Pretendard-Regular', color: '#78716C' }}
-							>
+							<Text className='text-xs mt-0.5 font-pretendard-regular text-[#78716C]'>
 								저장된 사진을 불러오세요
 							</Text>
 						</View>
@@ -212,12 +198,7 @@ export default function IndexScreen() {
 					accessibilityRole='button'
 				>
 					<Ionicons name='pencil-outline' size={15} color='#78716C' />
-					<Text
-						className='text-sm'
-						style={{ fontFamily: 'Pretendard-Regular', color: '#78716C' }}
-					>
-						작품명 직접 입력
-					</Text>
+					<Text className='text-sm text-[#78716C]'>작품명 직접 입력</Text>
 				</TouchableOpacity>
 			</Screen.BottomAbsolute>
 
@@ -230,16 +211,10 @@ export default function IndexScreen() {
 				handleIndicatorStyle={{ backgroundColor: '#57534E' }}
 			>
 				<BottomSheetView className='px-6 pb-10'>
-					<Text
-						className='text-lg text-white mt-2 mb-1'
-						style={{ fontFamily: 'Pretendard-Bold' }}
-					>
+					<Text className='text-lg text-white mt-2 mb-1 font-pretendard-bold'>
 						이렇게 찍어보세요
 					</Text>
-					<Text
-						className='text-sm mb-5'
-						style={{ fontFamily: 'Pretendard-Regular', color: '#78716C' }}
-					>
+					<Text className='text-sm mb-5 font-pretendard-regular text-[#78716C]'>
 						작품 옆 설명 안내판이나 작품 전체를 찍으면{'\n'}정확한 해설을 생성해요
 					</Text>
 
@@ -251,18 +226,14 @@ export default function IndexScreen() {
 						className='mb-6'
 					>
 						{EXAMPLES.map((ex, i) => (
-							<View key={i} className='gap-2' style={{ width: 220 }}>
+							<View key={i} className='gap-2 w-[220px]'>
 								<Image
 									source={ex.image}
-									className='rounded-xl'
-									style={{ width: 220, height: 160 }}
+									className='rounded-xl w-[220px] h-[160px]'
 									resizeMode='cover'
 									accessibilityLabel={ex.caption}
 								/>
-								<Text
-									className='text-xs text-center'
-									style={{ fontFamily: 'Pretendard-Regular', color: '#A8A29E' }}
-								>
+								<Text className='text-xs text-center font-pretendard-regular text-[#A8A29E]'>
 									{ex.caption}
 								</Text>
 							</View>
@@ -270,17 +241,13 @@ export default function IndexScreen() {
 					</ScrollView>
 
 					<TouchableOpacity
-						className='w-full py-4 rounded-2xl items-center mb-3'
-						style={{ backgroundColor: '#3B82F6' }}
+						className='w-full py-4 rounded-2xl items-center mb-3 bg-[#3B82F6]'
 						onPress={handleConfirm}
 						activeOpacity={0.85}
 						accessibilityLabel='확인했어요'
 						accessibilityRole='button'
 					>
-						<Text
-							className='text-white text-base'
-							style={{ fontFamily: 'Pretendard-SemiBold' }}
-						>
+						<Text className='text-white text-base font-pretendard-semibold'>
 							확인했어요
 						</Text>
 					</TouchableOpacity>
@@ -292,12 +259,7 @@ export default function IndexScreen() {
 						accessibilityLabel='다시 보지 않기'
 						accessibilityRole='button'
 					>
-						<Text
-							className='text-sm'
-							style={{ fontFamily: 'Pretendard-Regular', color: '#57534E' }}
-						>
-							다시 보지 않기
-						</Text>
+						<Text className='text-sm font-pretendard-regular text-[#57534E]'>다시 보지 않기</Text>
 					</TouchableOpacity>
 				</BottomSheetView>
 			</BottomSheetModal>
