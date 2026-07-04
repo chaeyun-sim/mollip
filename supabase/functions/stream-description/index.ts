@@ -58,11 +58,9 @@ Deno.serve(async (req) => {
           { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
         );
       }
-      headers['anthropic-beta'] = 'interleaved-thinking-2025-05-14';
       body = {
         model: 'claude-opus-4-6',
-        max_tokens: 4096,
-        thinking: { type: 'adaptive' },
+        max_tokens: 1024,
         stream: true,
         messages: [{ role: 'user', content: prompt }],
       };
