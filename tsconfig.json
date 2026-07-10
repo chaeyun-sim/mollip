@@ -5,5 +5,10 @@
     "paths": {
       "@/*": ["./*"]
     }
-  }
+  },
+  "exclude": [
+    "node_modules",
+    "index.ts",
+    "supabase/functions"
+  ]
 }
