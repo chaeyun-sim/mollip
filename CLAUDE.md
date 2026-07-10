@@ -4,6 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 @AGENTS.md
 @.claude/rules/commit-convention.md
+@.claude/rules/component-convention.md
 
 ## Project Overview
 
