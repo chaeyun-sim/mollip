@@ -2,6 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
 import { useRouter } from 'expo-router';
 import {
+	Image,
 	Pressable,
 	ScrollView,
 	Text,
@@ -95,10 +96,12 @@ export default function ExploreScreen() {
 				<View className='gap-1.5 mb-5'>
 					<View className='flex-row items-center gap-1'>
 						<Ionicons name='location-outline' size={13} color='#9CA3AF' />
-						<Text className='text-gray-400 text-[13px] font-pretendard-regular'>서울·종로구</Text>
+						<Text className='text-gray-400 text-[13px] font-pretendard-regular'>
+							서울·종로구
+						</Text>
 					</View>
-					<Text className='mt-2 text-gray-900 text-[38px] leading-[38px] font-hahmlet-bold'>
-						{'Catch your next\nExperience'}
+					<Text className='mt-2 text-gray-900 text-[38px] leading-[42px] font-hahmlet-bold'>
+						{'어떤 이야기를\n담고 있을까요?'}
 					</Text>
 				</View>
 
