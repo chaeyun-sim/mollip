@@ -1,9 +1,10 @@
 import { Ionicons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 import {
 	ActivityIndicator,
 	FlatList,
+	Image,
 	Keyboard,
 	KeyboardAvoidingView,
 	Platform,
@@ -21,16 +22,25 @@ import { useChatStore } from '../../src/store/chatStore';
 import { streamChat } from '../../src/utils/api';
 import { cn } from '@/src/lib/cn';
 
+const DOCENT_AVATAR = require('../../assets/images/marker/gogh.png');
+
 export default function ChatScreen() {
 	const router = useRouter();
+	const { sessionId } = useLocalSearchParams<{ sessionId: string }>();
+	const sid = sessionId ?? 'default';
+
 	const {
-		messages,
-		history,
+		getMessages,
+		getHistory,
 		addMessage,
 		updateMessage,
 		markError,
 		pushHistory,
+		removeMessage,
+		popHistory,
 	} = useChatStore();
+
+	const messages = getMessages(sid);
 	const [input, setInput] = useState('');
 	const [isLoading, setIsLoading] = useState(false);
 	const flatListRef = useRef<FlatList>(null);
@@ -42,44 +52,41 @@ export default function ChatScreen() {
 
 		const userMsg = { id: Date.now().toString(), role: 'user' as const, text };
 		if (!overrideText) {
-			addMessage(userMsg);
+			addMessage(sid, userMsg);
 			setInput('');
 		}
 		setIsLoading(true);
 
-		pushHistory({ role: 'user', content: text });
+		pushHistory(sid, { role: 'user', content: text });
 
 		const assistantId = (Date.now() + 1).toString();
-		addMessage({ id: assistantId, role: 'assistant', text: '' });
+		addMessage(sid, { id: assistantId, role: 'assistant', text: '' });
 
 		let fullText = '';
 		try {
+			const currentHistory = getHistory(sid);
 			const gen = streamChat(
 				CHAT_SYSTEM_PROMPT(store.extractedText, store.artworkDescription),
-				[...history, { role: 'user', content: text }],
+				[...currentHistory, { role: 'user', content: text }],
 			);
 			for await (const chunk of gen) {
 				fullText += chunk;
-				updateMessage(assistantId, fullText);
+				updateMessage(sid, assistantId, fullText);
 			}
-			pushHistory({ role: 'assistant', content: fullText });
+			pushHistory(sid, { role: 'assistant', content: fullText });
 		} catch {
-			markError(assistantId);
+			markError(sid, assistantId);
 		} finally {
 			setIsLoading(false);
 		}
 	};
 
-	const retryMessage = (item: (typeof messages)[0]) => {
-		// 직전 유저 메시지 찾기
+	const retryMessage = (item: ReturnType<typeof getMessages>[0]) => {
 		const idx = messages.findIndex((m) => m.id === item.id);
 		const userMsg = messages.slice(0, idx).findLast((m) => m.role === 'user');
 		if (!userMsg) return;
-		// 에러 메시지 제거 후 재전송
-		useChatStore.setState((s) => ({
-			messages: s.messages.filter((m) => m.id !== item.id),
-			history: s.history.slice(0, -1), // 마지막 유저 history 제거
-		}));
+		removeMessage(sid, item.id);
+		popHistory(sid);
 		sendMessage(userMsg.text);
 	};
 
@@ -89,33 +96,39 @@ export default function ChatScreen() {
 		}
 	}, [messages]);
 
-	const renderMessage = ({ item }: { item: (typeof messages)[0] }) => {
+	const renderMessage = ({
+		item,
+	}: {
+		item: ReturnType<typeof getMessages>[0];
+	}) => {
 		const isUser = item.role === 'user';
 		return (
 			<View className={`mb-4 ${isUser ? 'items-end' : 'items-start'}`}>
 				{!isUser && (
-					<View className='w-6 h-6 rounded-full items-center justify-center mb-1 bg-[#1E2D4A]'>
-						<Ionicons name='sparkles' size={12} color='#60A5FA' />
-					</View>
+					<Image
+						source={DOCENT_AVATAR}
+						style={{ width: 28, height: 28, marginBottom: 4 }}
+					/>
 				)}
 				{item.isError ? (
 					<TouchableOpacity
-						className='flex-row items-center gap-2 px-4 py-3 rounded-2xl rounded-tl-sm bg-[#2A1A1A]'
+						className='flex-row items-center gap-2 px-4 py-3 rounded-2xl rounded-tl-sm bg-[#2a1a1a]'
 						onPress={() => retryMessage(item)}
 					>
 						<Ionicons name='refresh' size={14} color='#e05050' />
-						<Text className='text-[#E05050] text-[13px]'>답변 실패 — 다시 시도</Text>
+						<Text className='font-pretendard-regular text-[#e05050] text-[13px]'>
+							답변 실패 — 다시 시도
+						</Text>
 					</TouchableOpacity>
 				) : (
 					<View
 						className={cn(
 							'rounded-2xl px-4 py-3 max-w-[80%]',
-							isUser ? 'rounded-tr-sm bg-[#3B82F6]' : 'rounded-tl-sm bg-[#1C1917]',
+							isUser
+								? 'rounded-tr-sm bg-[#3B82F6]'
+								: 'rounded-tl-sm bg-[#1C1917] border-white/[0.08]',
 						)}
-						style={{
-							borderWidth: isUser ? 0 : StyleSheet.hairlineWidth,
-							borderColor: isUser ? undefined : 'rgba(255,255,255,0.08)',
-						}}
+						style={{ borderWidth: isUser ? 0 : StyleSheet.hairlineWidth }}
 					>
 						{item.text === '' && !isUser ? (
 							<ActivityIndicator size='small' color='#60A5FA' />
@@ -123,7 +136,7 @@ export default function ChatScreen() {
 							<Text
 								className={cn(
 									'text-sm leading-5',
-									isUser ? 'text-white' : 'text-[#efefef]',
+									isUser ? 'text-white' : 'text-[#e8e8e8]',
 								)}
 							>
 								{item.text}
@@ -170,7 +183,7 @@ export default function ChatScreen() {
 									color='#57534E'
 								/>
 							</View>
-							<Text className='text-base text-center font-pretendard-semibold text-[#E8E8E8]'>
+							<Text className='text-base text-center font-pretendard-bold text-[#e8e8e8]'>
 								작품이 궁금하신가요?
 							</Text>
 							<Text className='text-sm text-center text-[#78716C] leading-5'>
@@ -181,9 +194,9 @@ export default function ChatScreen() {
 				/>
 
 				{/* 입력창 */}
-				<View className='flex-row items-end gap-2 py-3 border-t-[1px] border-t-[#1C1917]'>
+				<View className='mb-10 flex-row items-end gap-2 py-3 border-t-[1px] border-t-[#1C1917]'>
 					<TextInput
-						className='flex-1 rounded-2xl px-4 text-sm bg-[#1C1917] text-[#E8E8E8] min-h-[44px] max-h-[120px] py-3'
+						className='flex-1 rounded-2xl px-4 pt-3 pb-3 text-sm font-pretendard-regular bg-[#1C1917] text-[#e8e8e8] min-h-[44px] max-h-[120px]'
 						returnKeyType='send'
 						value={input}
 						onChangeText={(t) => {

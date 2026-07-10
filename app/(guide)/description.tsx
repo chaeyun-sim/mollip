@@ -70,6 +70,7 @@ const SCREEN_WIDTH = Dimensions.get('window').width;
 
 export default function DescriptionScreen() {
 	const router = useRouter();
+	const sessionId = useRef(Date.now().toString()).current;
 	const isImmersive = useImmersiveStore((s) => s.isImmersiveMode);
 	const addToPlaylist = useImmersiveStore((s) => s.addToPlaylist);
 	const { fontSize } = useSettingsStore();
@@ -256,7 +257,7 @@ export default function DescriptionScreen() {
 						}}
 					/>
 					<ScreenHeader.Right className='mt-1'>
-						{isImmersive ? (
+						{isImmersive && (
 							<TouchableOpacity
 								onPress={() => {
 									stop();
@@ -269,15 +270,6 @@ export default function DescriptionScreen() {
 							>
 								<Ionicons name='search' size={15} color='#78716C' />
 								<Text className='font-pretendard-regular text-[#78716C] text-[13px]'>다른 그림</Text>
-							</TouchableOpacity>
-						) : (
-							<TouchableOpacity
-								onPress={() => router.push('/chat')}
-								hitSlop={8}
-								accessibilityLabel='작품에 대해 질문하기'
-								accessibilityRole='button'
-							>
-								<Ionicons name='chatbox' size={20} color='#60A5FA' />
 							</TouchableOpacity>
 						)}
 					</ScreenHeader.Right>
@@ -347,51 +339,60 @@ export default function DescriptionScreen() {
 					</Text>
 				</View>
 
-				<View className='flex-row items-center justify-center py-1 w-full gap-8'>
-					{/* 왼쪽 여백 (비몰입) 또는 빈 공간 (몰입시 오른쪽과 균형) */}
-					<View className='flex-1'>
-						<View className='w-9' />
+				<View className='flex-row items-center justify-between py-1 w-full'>
+					{/* 채팅 버튼 — 해설 완료 후 표시 */}
+					<View className='w-9 items-center'>
+						{!isTyping && (
+							<TouchableOpacity
+								onPress={() => router.push({ pathname: '/chat', params: { sessionId } })}
+								hitSlop={8}
+								accessibilityLabel='작품에 대해 질문하기'
+								accessibilityRole='button'
+							>
+								<Ionicons name='chatbubble' size={26} color='#78716C' />
+							</TouchableOpacity>
+						)}
 					</View>
 
-					<View className='flex-1'>
-						<Pressable
-							className={cn(
-								'w-16 h-16 rounded-[32px] items-center justify-center',
-								isTTSLoading || isTyping ? 'bg-[#292524]' : 'bg-[#3B82F6]',
-							)}
-							style={({ pressed }) => ({
-								transform: [
-									{ scale: pressed && !(isTTSLoading || isTyping) ? 0.93 : 1 },
-								],
-							})}
-							onPress={() => {
-								Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-								handlePlayPause();
-							}}
-							disabled={isTTSLoading || isTyping}
-							accessibilityLabel={isSpeaking ? '일시정지' : '재생'}
-							accessibilityRole='button'
-						>
-							{isTTSLoading ? (
-								<ActivityIndicator color='#fff' size='small' />
-							) : (
-								<Ionicons name={isSpeaking ? 'pause' : 'play'} size={30} color='#fff' />
-							)}
-						</Pressable>
-					</View>
+					{/* 플레이 버튼 */}
+					<Pressable
+						className={cn(
+							'w-16 h-16 rounded-[32px] items-center justify-center',
+							isTTSLoading || isTyping ? 'bg-[#292524]' : 'bg-[#3B82F6]',
+						)}
+						style={({ pressed }) => ({
+							transform: [
+								{ scale: pressed && !(isTTSLoading || isTyping) ? 0.93 : 1 },
+							],
+						})}
+						onPress={() => {
+							Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+							handlePlayPause();
+						}}
+						disabled={isTTSLoading || isTyping}
+						accessibilityLabel={isSpeaking ? '일시정지' : '재생'}
+						accessibilityRole='button'
+					>
+						{isTTSLoading ? (
+							<ActivityIndicator color='#fff' size='small' />
+						) : (
+							<Ionicons name={isSpeaking ? 'pause' : 'play'} size={30} color='#fff' />
+						)}
+					</Pressable>
 
 					{/* 재생목록 버튼 — 몰입 모드 전용 */}
-					{isImmersive && (
-						<TouchableOpacity
-							onPress={() => router.push('/playlist')}
-							hitSlop={8}
-							className='w-9'
-							accessibilityLabel='재생목록 보기'
-							accessibilityRole='button'
-						>
-							<Ionicons name='list' size={28} color='#78716C' />
-						</TouchableOpacity>
-					)}
+					<View className='w-9 items-center'>
+						{isImmersive && (
+							<TouchableOpacity
+								onPress={() => router.push('/playlist')}
+								hitSlop={8}
+								accessibilityLabel='재생목록 보기'
+								accessibilityRole='button'
+							>
+								<Ionicons name='list' size={28} color='#78716C' />
+							</TouchableOpacity>
+						)}
+					</View>
 				</View>
 			</Screen.BottomAbsolute>
 		</Screen>

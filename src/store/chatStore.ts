@@ -7,28 +7,69 @@ export type Message = {
 	isError?: boolean;
 };
 
-type ChatStore = {
+type HistoryEntry = { role: 'user' | 'assistant'; content: string };
+
+type ChatSession = {
 	messages: Message[];
-	history: { role: 'user' | 'assistant'; content: string }[];
-	addMessage: (msg: Message) => void;
-	updateMessage: (id: string, text: string) => void;
-	markError: (id: string) => void;
-	pushHistory: (entry: { role: 'user' | 'assistant'; content: string }) => void;
+	history: HistoryEntry[];
+};
+
+type ChatStore = {
+	sessions: Record<string, ChatSession>;
+	getMessages: (sessionId: string) => Message[];
+	getHistory: (sessionId: string) => HistoryEntry[];
+	addMessage: (sessionId: string, msg: Message) => void;
+	updateMessage: (sessionId: string, id: string, text: string) => void;
+	markError: (sessionId: string, id: string) => void;
+	pushHistory: (sessionId: string, entry: HistoryEntry) => void;
+	removeMessage: (sessionId: string, id: string) => void;
+	popHistory: (sessionId: string) => void;
+	/** @deprecated 세션별 관리로 전환됨 — 각 해설은 고유 sessionId를 사용하므로 호출 불필요 */
 	clear: () => void;
 };
 
-export const useChatStore = create<ChatStore>((set) => ({
-	messages: [],
-	history: [],
-	addMessage: (msg) => set((s) => ({ messages: [...s.messages, msg] })),
-	updateMessage: (id, text) =>
-		set((s) => ({
-			messages: s.messages.map((m) => (m.id === id ? { ...m, text, isError: false } : m)),
-		})),
-	markError: (id) =>
-		set((s) => ({
-			messages: s.messages.map((m) => (m.id === id ? { ...m, isError: true } : m)),
-		})),
-	pushHistory: (entry) => set((s) => ({ history: [...s.history, entry] })),
-	clear: () => set({ messages: [], history: [] }),
+const empty = (): ChatSession => ({ messages: [], history: [] });
+
+const patch = (
+	sessions: Record<string, ChatSession>,
+	sessionId: string,
+	updater: (s: ChatSession) => Partial<ChatSession>,
+) => {
+	const current = sessions[sessionId] ?? empty();
+	return { sessions: { ...sessions, [sessionId]: { ...current, ...updater(current) } } };
+};
+
+export const useChatStore = create<ChatStore>((set, get) => ({
+	sessions: {},
+	getMessages: (sessionId) => get().sessions[sessionId]?.messages ?? [],
+	getHistory: (sessionId) => get().sessions[sessionId]?.history ?? [],
+	addMessage: (sessionId, msg) =>
+		set((s) => patch(s.sessions, sessionId, (c) => ({ messages: [...c.messages, msg] }))),
+	updateMessage: (sessionId, id, text) =>
+		set((s) =>
+			patch(s.sessions, sessionId, (c) => ({
+				messages: c.messages.map((m) => (m.id === id ? { ...m, text, isError: false } : m)),
+			})),
+		),
+	markError: (sessionId, id) =>
+		set((s) =>
+			patch(s.sessions, sessionId, (c) => ({
+				messages: c.messages.map((m) => (m.id === id ? { ...m, isError: true } : m)),
+			})),
+		),
+	pushHistory: (sessionId, entry) =>
+		set((s) =>
+			patch(s.sessions, sessionId, (c) => ({ history: [...c.history, entry] })),
+		),
+	removeMessage: (sessionId, id) =>
+		set((s) =>
+			patch(s.sessions, sessionId, (c) => ({
+				messages: c.messages.filter((m) => m.id !== id),
+			})),
+		),
+	popHistory: (sessionId) =>
+		set((s) =>
+			patch(s.sessions, sessionId, (c) => ({ history: c.history.slice(0, -1) })),
+		),
+	clear: () => {},
 }));

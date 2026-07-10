@@ -1,9 +1,10 @@
 import { Ionicons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 import {
 	ActivityIndicator,
 	FlatList,
+	Image,
 	Keyboard,
 	KeyboardAvoidingView,
 	Platform,
@@ -21,16 +22,17 @@ import { useChatStore } from '../src/store/chatStore';
 import { streamChat } from '../src/utils/api';
 import { cn } from '@/src/lib/cn';
 
+const DOCENT_AVATAR = require('../assets/images/marker/gogh.png');
+
 export default function ChatScreen() {
 	const router = useRouter();
-	const {
-		messages,
-		history,
-		addMessage,
-		updateMessage,
-		markError,
-		pushHistory,
-	} = useChatStore();
+	const { sessionId } = useLocalSearchParams<{ sessionId: string }>();
+	const sid = sessionId ?? 'default';
+
+	const { getMessages, getHistory, addMessage, updateMessage, markError, pushHistory, removeMessage, popHistory } =
+		useChatStore();
+
+	const messages = getMessages(sid);
 	const [input, setInput] = useState('');
 	const [isLoading, setIsLoading] = useState(false);
 	const flatListRef = useRef<FlatList>(null);
@@ -42,42 +44,41 @@ export default function ChatScreen() {
 
 		const userMsg = { id: Date.now().toString(), role: 'user' as const, text };
 		if (!overrideText) {
-			addMessage(userMsg);
+			addMessage(sid, userMsg);
 			setInput('');
 		}
 		setIsLoading(true);
 
-		pushHistory({ role: 'user', content: text });
+		pushHistory(sid, { role: 'user', content: text });
 
 		const assistantId = (Date.now() + 1).toString();
-		addMessage({ id: assistantId, role: 'assistant', text: '' });
+		addMessage(sid, { id: assistantId, role: 'assistant', text: '' });
 
 		let fullText = '';
 		try {
+			const currentHistory = getHistory(sid);
 			const gen = streamChat(
 				CHAT_SYSTEM_PROMPT(store.extractedText, store.artworkDescription),
-				[...history, { role: 'user', content: text }],
+				[...currentHistory, { role: 'user', content: text }],
 			);
 			for await (const chunk of gen) {
 				fullText += chunk;
-				updateMessage(assistantId, fullText);
+				updateMessage(sid, assistantId, fullText);
 			}
-			pushHistory({ role: 'assistant', content: fullText });
+			pushHistory(sid, { role: 'assistant', content: fullText });
 		} catch {
-			markError(assistantId);
+			markError(sid, assistantId);
 		} finally {
 			setIsLoading(false);
 		}
 	};
 
-	const retryMessage = (item: (typeof messages)[0]) => {
+	const retryMessage = (item: ReturnType<typeof getMessages>[0]) => {
 		const idx = messages.findIndex((m) => m.id === item.id);
 		const userMsg = messages.slice(0, idx).findLast((m) => m.role === 'user');
 		if (!userMsg) return;
-		useChatStore.setState((s) => ({
-			messages: s.messages.filter((m) => m.id !== item.id),
-			history: s.history.slice(0, -1),
-		}));
+		removeMessage(sid, item.id);
+		popHistory(sid);
 		sendMessage(userMsg.text);
 	};
 
@@ -87,14 +88,12 @@ export default function ChatScreen() {
 		}
 	}, [messages]);
 
-	const renderMessage = ({ item }: { item: (typeof messages)[0] }) => {
+	const renderMessage = ({ item }: { item: ReturnType<typeof getMessages>[0] }) => {
 		const isUser = item.role === 'user';
 		return (
 			<View className={`mb-4 ${isUser ? 'items-end' : 'items-start'}`}>
 				{!isUser && (
-					<View className='w-6 h-6 rounded-full items-center justify-center mb-1 bg-[#1e2d4a]'>
-						<Ionicons name='sparkles' size={12} color='#60A5FA' />
-					</View>
+					<Image source={DOCENT_AVATAR} style={{ width: 28, height: 28, marginBottom: 4 }} />
 				)}
 				{item.isError ? (
 					<TouchableOpacity
