@@ -13,6 +13,7 @@ import {
 	Hahmlet_600SemiBold,
 	Hahmlet_700Bold,
 } from '@expo-google-fonts/hahmlet';
+import { NanumPenScript_400Regular } from '@expo-google-fonts/nanum-pen-script';
 import { useFonts } from 'expo-font';
 import { useRouter, Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
@@ -38,6 +39,7 @@ export default function RootLayout() {
 		Hahmlet_400Regular,
 		Hahmlet_600SemiBold,
 		Hahmlet_700Bold,
+		NanumPenScript_400Regular,
 	});
 
 	const hasHydrated = useImmersiveStore((s) => s._hasHydrated);
@@ -66,6 +68,7 @@ export default function RootLayout() {
 						<Stack.Screen name='(guide)' options={{ headerShown: false }} />
 						<Stack.Screen name='(explore)' options={{ headerShown: false }} />
 						<Stack.Screen name='settings' options={{ headerShown: false }} />
+					<Stack.Screen name='diary/[date]' options={{ headerShown: false }} />
 						<Stack.Screen name='onboarding' options={{ headerShown: false }} />
 					</Stack>
 				</BottomSheetModalProvider>
