@@ -101,9 +101,17 @@ export default function ExploreScreen() {
 							서울·종로구
 						</Text>
 					</View>
-					<Text className='mt-2 text-gray-900 text-[38px] leading-[42px] font-hahmlet-bold'>
-						{'어떤 이야기를\n담고 있을까요?'}
-					</Text>
+					<View className='flex-row items-end justify-between'>
+						<Text className='mt-2 text-gray-900 text-[38px] leading-[42px] font-hahmlet-bold'>
+							{'어떤 이야기를\n담고 있을까요?'}
+						</Text>
+						{/* 석고상 도슨트 캐릭터 */}
+						<Image
+							source={require('../../assets/images/skulpture/default.png')}
+							resizeMode='contain'
+							style={{ width: 50, height: 70, marginBottom: -6 }}
+						/>
+					</View>
 				</View>
 
 				{/* 이번 주 전시 — 큰 카드 */}
