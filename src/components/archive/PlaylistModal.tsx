@@ -17,31 +17,27 @@ export function PlaylistModal({ visible, titles, onClose }: PlaylistModalProps) 
 			onRequestClose={onClose}
 		>
 			<Pressable
-				className='flex-1 items-center justify-center bg-black/45 px-8'
+				className='flex-1 items-center justify-center bg-black/40 px-6'
 				onPress={onClose}
 				accessibilityLabel='재생목록 닫기'
 				accessibilityRole='button'
 			>
 				<Pressable
-					className='w-full rounded-lg bg-[#FFFEF9] px-5 py-6'
+					className='w-full rounded-3xl bg-white px-5 py-6'
 					onPress={() => {}}
 					style={{
-						transform: [{ rotate: '-1deg' }],
 						shadowColor: '#000',
-						shadowOpacity: 0.3,
-						shadowRadius: 12,
-						shadowOffset: { width: 0, height: 6 },
+						shadowOpacity: 0.15,
+						shadowRadius: 20,
+						shadowOffset: { width: 0, height: 8 },
 						elevation: 8,
 						maxHeight: '65%',
 					}}
 				>
 					<View className='flex-row items-center justify-between'>
-						<View className='flex-row items-center'>
-							<Ionicons name='musical-notes' size={18} color='#2F5FA8' />
-							<Text
-								className='ml-2 text-[22px] text-[#37342F]'
-								style={{ fontFamily: 'NanumPenScript_400Regular' }}
-							>
+						<View className='flex-row items-center gap-2'>
+							<Ionicons name='musical-notes-outline' size={17} color='#111827' />
+							<Text className='text-gray-900 text-[17px] font-pretendard-semibold'>
 								오디오 관람 목록
 							</Text>
 						</View>
@@ -52,30 +48,26 @@ export function PlaylistModal({ visible, titles, onClose }: PlaylistModalProps) 
 							accessibilityRole='button'
 							style={({ pressed }) => ({ opacity: pressed ? 0.5 : 1 })}
 						>
-							<Ionicons name='close' size={22} color='#78716C' />
+							<Ionicons name='close' size={22} color='#9CA3AF' />
 						</Pressable>
 					</View>
 
-					<ScrollView className='mt-4' showsVerticalScrollIndicator={false}>
+					<ScrollView className='mt-3' showsVerticalScrollIndicator={false}>
 						{titles.map((title, index) => (
 							<View
 								key={title}
-								className='flex-row items-center border-b border-dashed border-[#E5E0D3] py-3'
+								className='flex-row items-center border-b border-gray-100 py-3.5'
 							>
-								<Text
-									className='w-7 text-[18px] text-[#2F5FA8]'
-									style={{ fontFamily: 'NanumPenScript_400Regular' }}
-								>
-									{index + 1}.
+								<Text className='w-7 text-[13px] font-pretendard-medium text-gray-400'>
+									{index + 1}
 								</Text>
 								<Text
-									className='flex-1 text-[19px] text-[#44403C]'
-									style={{ fontFamily: 'NanumPenScript_400Regular' }}
+									className='flex-1 text-[15px] font-pretendard-regular text-gray-800'
 									numberOfLines={1}
 								>
 									{title}
 								</Text>
-								<Ionicons name='headset-outline' size={16} color='#A8A29E' />
+								<Ionicons name='headset-outline' size={16} color='#D1D5DB' />
 							</View>
 						))}
 					</ScrollView>

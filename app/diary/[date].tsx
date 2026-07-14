@@ -1,19 +1,16 @@
 import { Ionicons } from '@expo/vector-icons';
+import { StatusBar } from 'expo-status-bar';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useMemo, useState } from 'react';
-import { ActivityIndicator, Pressable, ScrollView, Text, View } from 'react-native';
+import { ActivityIndicator, Image, Pressable, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { GridPaper } from '@/src/components/archive/GridPaper';
 import { PlaylistModal } from '@/src/components/archive/PlaylistModal';
-import { Polaroid } from '@/src/components/archive/Polaroid';
-import { WashiTape } from '@/src/components/archive/WashiTape';
 import { useDiaryEntry } from '@/src/hooks/useDiaryEntry';
 import { useImmersiveStore } from '@/src/store/immersiveStore';
 import { DIARY_PROMPT } from '@/src/constants/prompts';
 import { EXHIBITIONS } from '@/src/data/exhibitions';
 
-const HAND = { fontFamily: 'NanumPenScript_400Regular' } as const;
 const WEEKDAYS = ['일', '월', '화', '수', '목', '금', '토'] as const;
 
 export default function DiaryScreen() {
@@ -64,7 +61,8 @@ export default function DiaryScreen() {
 	);
 
 	return (
-		<SafeAreaView className='flex-1' style={{ backgroundColor: '#C4CFD3' }} edges={['top']}>
+		<SafeAreaView className='flex-1 bg-[#F8F6F2]' edges={['top']}>
+			<StatusBar style='dark' />
 			{/* 헤더 */}
 			<View className='flex-row items-center justify-between px-6 py-3'>
 				<Pressable
@@ -74,12 +72,9 @@ export default function DiaryScreen() {
 					accessibilityRole='button'
 					style={({ pressed }) => ({ opacity: pressed ? 0.5 : 1 })}
 				>
-					<Ionicons name='arrow-back' size={22} color='#37342F' />
+					<Ionicons name='arrow-back' size={22} color='#111827' />
 				</Pressable>
-				<Text
-					className='text-[17px] text-[#37342F]'
-					style={{ fontFamily: 'Pretendard-SemiBold' }}
-				>
+				<Text className='text-[16px] font-pretendard-semibold text-gray-900'>
 					{dateLabel}
 				</Text>
 				<View className='flex-row items-center gap-4'>
@@ -90,7 +85,7 @@ export default function DiaryScreen() {
 						accessibilityRole='button'
 						style={({ pressed }) => ({ opacity: pressed ? 0.5 : 1 })}
 					>
-						<Ionicons name='musical-notes-outline' size={20} color='#37342F' />
+						<Ionicons name='musical-notes-outline' size={20} color='#111827' />
 					</Pressable>
 					{hasEntry && (
 						<Pressable
@@ -100,7 +95,7 @@ export default function DiaryScreen() {
 							accessibilityRole='button'
 							style={({ pressed }) => ({ opacity: pressed ? 0.5 : 1 })}
 						>
-							<Ionicons name='refresh' size={20} color='#37342F' />
+							<Ionicons name='refresh' size={20} color='#111827' />
 						</Pressable>
 					)}
 				</View>
@@ -108,152 +103,121 @@ export default function DiaryScreen() {
 
 			<ScrollView
 				className='flex-1'
-				contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 32, paddingTop: 16 }}
+				contentContainerStyle={{ paddingHorizontal: 24, paddingBottom: 48, paddingTop: 8 }}
 				showsVerticalScrollIndicator={false}
 			>
-				{/* 다이어리 속지 */}
-				<View
-					className='rounded-[3px] bg-[#FFFEF9] px-5 pb-8 pt-10'
-					style={{
-						shadowColor: '#3E4A50',
-						shadowOpacity: 0.25,
-						shadowRadius: 10,
-						shadowOffset: { width: 0, height: 5 },
-						elevation: 6,
-					}}
-				>
-					<GridPaper />
+				{/* 타이틀 */}
+				<Text className='text-gray-900 text-[26px] leading-[34px] font-hahmlet-bold'>
+					오늘의 전시 관람
+				</Text>
 
-					{/* 마스킹테이프 */}
-					<WashiTape
-						style={{ position: 'absolute', top: -8, left: 18 }}
-						rotate={-5}
-					/>
-					<WashiTape
-						style={{ position: 'absolute', top: -6, right: 24 }}
-						rotate={7}
-						color='rgba(240, 200, 121, 0.5)'
-					/>
-
-					{/* 날짜 스탬프 */}
-					<View
-						className='self-start rounded-md border-2 border-[#2F5FA8] bg-white px-3 py-1.5'
-						style={{ transform: [{ rotate: '-2deg' }] }}
-					>
-						<Text className='text-[20px] leading-6 text-[#2F5FA8]' style={HAND}>
-							{dateLabel}
+				{/* 관람한 전시 카드 */}
+				<View className='mt-6 flex-row items-center gap-4 rounded-2xl bg-[#F2EFE9] p-4'>
+					{exhibition.posterImage ? (
+						<Image
+							source={exhibition.posterImage}
+							resizeMode='cover'
+							className='rounded-xl'
+							style={{ width: 64, height: 64 }}
+						/>
+					) : (
+						<View
+							className='h-16 w-16 flex-shrink-0 rounded-xl'
+							style={{ backgroundColor: exhibition.posterColor }}
+						/>
+					)}
+					<View className='flex-1'>
+						<Text
+							className='font-pretendard-semibold text-[15px] leading-[21px] text-gray-900'
+							numberOfLines={2}
+						>
+							{exhibition.title}
+						</Text>
+						<Text className='mt-1 font-pretendard-regular text-[12px] text-gray-400'>
+							{exhibition.venue}
 						</Text>
 					</View>
+				</View>
 
-					{/* 손글씨 제목 */}
-					<Text className='mt-5 text-[27px] text-[#37342F]' style={HAND}>
-						오늘의 전시 관람
-					</Text>
-					<View className='mt-0.5 h-[3px] w-36 rounded-full bg-[#F2C879]/70' />
-
-					{/* 폴라로이드 + 티켓/해설 스티커 */}
-					<View className='mt-6 flex-row items-start'>
-						<Polaroid
-							source={exhibition.posterImage}
-							fallbackColor={exhibition.posterColor}
-							caption={exhibition.title}
-						/>
-						<View className='ml-4 flex-1'>
-							{/* 티켓 스티커 */}
-							<View
-								className='self-start rounded-full border-[1.5px] border-[#2F5FA8] bg-white px-3 py-1'
-								style={{ transform: [{ rotate: '2deg' }] }}
-							>
-								<Text className='text-[13px] tracking-wider text-[#2F5FA8]' style={{ fontFamily: 'Pretendard-Bold' }}>
-									{exhibition.venue}
-								</Text>
-							</View>
-
-							{/* 들은 해설 메모지 */}
-							<View
-								className='mt-4 rounded-sm bg-[#FBF3CF] px-3 py-3'
-								style={{
-									transform: [{ rotate: '-1.5deg' }],
-									shadowColor: '#4A4238',
-									shadowOpacity: 0.15,
-									shadowRadius: 4,
-									shadowOffset: { width: 0, height: 2 },
-									elevation: 3,
-								}}
-							>
-								<Text className='text-[18px] text-[#57534E]' style={HAND}>
-									오늘 들은 해설
-								</Text>
-								{listenedTitles.map((title) => (
-									<View key={title} className='mt-1 flex-row items-center'>
-										<View className='mr-2 h-1.5 w-1.5 rounded-full bg-[#5B7F5B]' />
-										<Text
-											className='flex-1 text-[16px] leading-5 text-[#44403C]'
-											style={HAND}
-											numberOfLines={1}
-										>
-											{title}
-										</Text>
-									</View>
-								))}
-							</View>
-						</View>
+				{/* 오늘 들은 해설 */}
+				<View className='mt-8'>
+					<View className='mb-3 flex-row items-center gap-2'>
+						<Ionicons name='headset-outline' size={15} color='#9CA3AF' />
+						<Text className='font-pretendard-semibold text-[13px] uppercase tracking-widest text-gray-400'>
+							오늘 들은 해설
+						</Text>
 					</View>
+					<View className='rounded-2xl bg-white px-5 py-2'>
+						{listenedTitles.map((title, index) => (
+							<View
+								key={title}
+								className='flex-row items-center py-3'
+								style={
+									index < listenedTitles.length - 1
+										? { borderBottomWidth: 1, borderBottomColor: '#F3F4F6' }
+										: undefined
+								}
+							>
+								<Text className='w-7 text-[13px] font-pretendard-medium text-gray-400'>
+									{index + 1}
+								</Text>
+								<Text
+									className='flex-1 text-[14px] font-pretendard-regular text-gray-800'
+									numberOfLines={1}
+								>
+									{title}
+								</Text>
+							</View>
+						))}
+					</View>
+				</View>
 
-					{/* 일기 본문 */}
-					<View className='mt-7 min-h-[180px]'>
-						{text ? (
-							<Text className='text-[21px] leading-[34px] text-[#3A3633]' style={HAND}>
+				{/* 일기 본문 */}
+				<View className='mt-8'>
+					<View className='mb-3 flex-row items-center gap-2'>
+						<Ionicons name='create-outline' size={15} color='#9CA3AF' />
+						<Text className='font-pretendard-semibold text-[13px] uppercase tracking-widest text-gray-400'>
+							AI 도슨트의 일기
+						</Text>
+					</View>
+					{text ? (
+						<View className='rounded-2xl bg-white p-5'>
+							<Text className='font-pretendard-light text-[15px] leading-[27px] text-gray-700'>
 								{text}
 							</Text>
-						) : (
-							<View className='flex-1 items-center justify-center rounded-lg border border-dashed border-[#C7BFAE] px-6 py-8'>
-								{isStreaming ? (
-									<>
-										<ActivityIndicator color='#2F5FA8' />
-										<Text className='mt-3 text-[19px] text-[#78716C]' style={HAND}>
-											도슨트가 일기를 쓰고 있어요...
+						</View>
+					) : (
+						<View className='min-h-[200px] items-center justify-center rounded-2xl bg-white px-6 py-10'>
+							{isStreaming ? (
+								<>
+									<ActivityIndicator color='#111827' />
+									<Text className='mt-3 text-[14px] font-pretendard-regular text-gray-400'>
+										도슨트가 일기를 쓰고 있어요...
+									</Text>
+								</>
+							) : (
+								<>
+									<Text className='text-center text-[14px] leading-6 font-pretendard-regular text-gray-400'>
+										{hasError
+											? '일기를 쓰다가 잉크가 번졌어요.\n다시 한번 부탁해볼까요?'
+											: '이 날의 관람 기록이 아직 비어 있어요.\nAI 도슨트에게 일기를 부탁해보세요.'}
+									</Text>
+									<Pressable
+										onPress={generate}
+										accessibilityLabel='AI 도슨트에게 일기 부탁하기'
+										accessibilityRole='button'
+										className='mt-5 flex-row items-center rounded-full bg-[#1C1917] px-5 py-2.5'
+										style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
+									>
+										<Ionicons name='create-outline' size={16} color='white' />
+										<Text className='ml-2 text-[14px] font-pretendard-semibold text-white'>
+											{hasError ? '다시 부탁하기' : 'AI 도슨트에게 일기 부탁하기'}
 										</Text>
-									</>
-								) : (
-									<>
-										<Text className='text-center text-[19px] leading-7 text-[#78716C]' style={HAND}>
-											{hasError
-												? '일기를 쓰다가 잉크가 번졌어요.\n다시 한번 부탁해볼까요?'
-												: '이 날의 관람 기록이 아직 비어 있어요.\nAI 도슨트에게 일기를 부탁해보세요.'}
-										</Text>
-										<Pressable
-											onPress={generate}
-											accessibilityLabel='AI 도슨트에게 일기 부탁하기'
-											accessibilityRole='button'
-											className='mt-5 flex-row items-center rounded-full bg-[#2F5FA8] px-5 py-2.5'
-											style={({ pressed }) => ({
-												opacity: pressed ? 0.7 : 1,
-												transform: [{ rotate: '-1deg' }],
-											})}
-										>
-											<Ionicons name='create-outline' size={18} color='#FFFFFF' />
-											<Text
-												className='ml-2 text-[15px] text-white'
-												style={{ fontFamily: 'Pretendard-SemiBold' }}
-											>
-												{hasError ? '다시 부탁하기' : 'AI 도슨트에게 일기 부탁하기'}
-											</Text>
-										</Pressable>
-									</>
-								)}
-							</View>
-						)}
-					</View>
-
-					{/* 하단 장식 스티커 */}
-					<View className='mt-6 flex-row items-center justify-end'>
-						<View className='mr-2 h-3 w-3 rounded-full bg-[#D77A61]/70' />
-						<View className='mr-3 h-2 w-2 rounded-full bg-[#5B7F5B]/70' />
-						<Text className='text-[16px] tracking-widest text-[#A8A29E]' style={HAND}>
-							with AI docent
-						</Text>
-					</View>
+									</Pressable>
+								</>
+							)}
+						</View>
+					)}
 				</View>
 			</ScrollView>
 

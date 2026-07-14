@@ -12,14 +12,14 @@ interface DiaryCalendarProps {
 	onChangeMonth: (offset: -1 | 1) => void;
 }
 
-const HAND = { fontFamily: 'NanumPenScript_400Regular' } as const;
 const WEEK_LABELS = ['일', '월', '화', '수', '목', '금', '토'] as const;
+const INK = '#1C1917';
 
 function toDateKey(year: number, month: number, day: number): string {
 	return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
 }
 
-// 다이어리 표지에 붙는 손글씨 달력. 날짜를 누르면 해당 일기로 이동한다.
+// 관람 다이어리 달력. 날짜를 누르면 해당 일기로 이동한다.
 export function DiaryCalendar({
 	year,
 	month,
@@ -56,11 +56,12 @@ export function DiaryCalendar({
 					hitSlop={10}
 					accessibilityLabel='이전 달'
 					accessibilityRole='button'
+					className='h-8 w-8 items-center justify-center rounded-full bg-white'
 					style={({ pressed }) => ({ opacity: pressed ? 0.5 : 1 })}
 				>
-					<Ionicons name='chevron-back' size={18} color='#78716C' />
+					<Ionicons name='chevron-back' size={15} color='#6B7280' />
 				</Pressable>
-				<Text className='text-[26px] text-[#37342F]' style={HAND}>
+				<Text className='text-[17px] font-pretendard-bold text-gray-900'>
 					{year}년 {month}월
 				</Text>
 				<Pressable
@@ -68,22 +69,19 @@ export function DiaryCalendar({
 					hitSlop={10}
 					accessibilityLabel='다음 달'
 					accessibilityRole='button'
+					className='h-8 w-8 items-center justify-center rounded-full bg-white'
 					style={({ pressed }) => ({ opacity: pressed ? 0.5 : 1 })}
 				>
-					<Ionicons name='chevron-forward' size={18} color='#78716C' />
+					<Ionicons name='chevron-forward' size={15} color='#6B7280' />
 				</Pressable>
 			</View>
 
 			{/* 요일 헤더 */}
-			<View className='mt-3 flex-row'>
-				{WEEK_LABELS.map((label, i) => (
+			<View className='mt-5 flex-row'>
+				{WEEK_LABELS.map(label => (
 					<Text
 						key={label}
-						className={cn(
-							'flex-1 text-center text-[16px]',
-							i === 0 ? 'text-[#C0564A]' : 'text-[#78716C]',
-						)}
-						style={HAND}
+						className='flex-1 text-center text-[11px] font-pretendard-medium text-gray-400'
 					>
 						{label}
 					</Text>
@@ -114,26 +112,23 @@ export function DiaryCalendar({
 								<View
 									className={cn(
 										'h-8 w-8 items-center justify-center rounded-full',
-										isToday && 'border-[1.5px] border-[#2F5FA8]',
+										isToday && 'bg-[#1C1917]',
 									)}
 								>
 									<Text
-										className={cn('text-[18px]', {
-											'text-[#D6D1C4]': isFuture,
-											'text-[#C0564A]': !isFuture && di === 0,
-											'text-[#44403C]': !isFuture && di !== 0,
+										className={cn('text-[13px] font-pretendard-medium', {
+											'text-white': isToday,
+											'text-gray-300': !isToday && isFuture,
+											'text-gray-700': !isToday && !isFuture,
 										})}
-										style={HAND}
 									>
 										{day}
 									</Text>
 								</View>
 								{/* 일기가 있는 날 표시 */}
 								<View
-									className={cn(
-										'h-1.5 w-1.5 rounded-full',
-										hasEntry ? 'bg-[#2F5FA8]' : 'bg-transparent',
-									)}
+									className='h-1 w-1 rounded-full'
+									style={{ backgroundColor: hasEntry ? INK : 'transparent' }}
 								/>
 							</Pressable>
 						);
