@@ -21,6 +21,19 @@ export default function TabsLayout() {
 			}}
 		>
 			<Tabs.Screen
+				name='search'
+				options={{
+					title: '검색',
+					tabBarIcon: ({ focused, color, size }) => (
+						<Ionicons
+							name={focused ? 'search' : 'search-outline'}
+							size={size}
+							color={color}
+						/>
+					),
+				}}
+			/>
+			<Tabs.Screen
 				name='index'
 				options={{
 					title: '둘러보기',
