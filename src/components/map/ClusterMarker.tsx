@@ -4,9 +4,8 @@ import type { FilterKey } from '@/src/hooks/useMapFilter';
 import type { VenueGroup } from '@/src/data/venues';
 import type { Cluster } from '@/src/utils/mapUtils';
 
-const MARKER_IMAGE = require('../../../assets/images/marker/pearl-girl.png');
-const MARKER_W = 43;
-const MARKER_H = 44;
+// 잉크 원형 배지 + 석고상 합성 이미지 (마커 children은 스냅샷 방식이라 완성 PNG 사용)
+const MARKER_IMAGE = require('../../../assets/images/skulpture/marker-badge.png');
 
 interface ClusterMarkerProps {
 	cluster: Cluster;
@@ -63,15 +62,14 @@ export function ClusterMarker({
 		);
 	}
 
-	const w = isSelected ? 54 : MARKER_W;
-	const h = isSelected ? 55 : MARKER_H;
+	const size = isSelected ? 60 : 48;
 	return (
 		<NaverMapMarkerOverlay
 			latitude={cluster.latitude}
 			longitude={cluster.longitude}
 			onTap={() => onTap(cluster)}
-			width={w}
-			height={h}
+			width={size}
+			height={size}
 			anchor={{ x: 0.5, y: 0.5 }}
 			image={MARKER_IMAGE}
 			alpha={dimmed ? 0.2 : 1}
