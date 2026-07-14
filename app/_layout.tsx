@@ -69,6 +69,7 @@ export default function RootLayout() {
 						<Stack.Screen name='(explore)' options={{ headerShown: false }} />
 						<Stack.Screen name='settings' options={{ headerShown: false }} />
 					<Stack.Screen name='diary/[date]' options={{ headerShown: false }} />
+					<Stack.Screen name='create-description' options={{ headerShown: false }} />
 						<Stack.Screen name='onboarding' options={{ headerShown: false }} />
 					</Stack>
 				</BottomSheetModalProvider>

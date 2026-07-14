@@ -10,6 +10,7 @@ import {
 	View,
 } from 'react-native';
 import { Screen } from '@/src/components/layout/Screen';
+import { SERVICE_NAME } from '@/src/constants/service-name';
 
 const NEARBY_EXHIBITIONS = [
 	{
@@ -74,7 +75,7 @@ export default function ExploreScreen() {
 
 			<Screen.Header>
 				<Screen.Header.Left>
-					<Text className='text-gray-900 text-[22px] font-pretendard-bold'>AAA</Text>
+					<Text className='text-gray-900 text-[22px] font-pretendard-bold'>{SERVICE_NAME}</Text>
 				</Screen.Header.Left>
 				<Screen.Header.Right>
 					<TouchableOpacity
@@ -138,6 +139,24 @@ export default function ExploreScreen() {
 					</View>
 				</View>
 			</ScrollView>
+
+			{/* 해설 생성 FAB */}
+			<Pressable
+				onPress={() => router.push('/create-description')}
+				accessibilityLabel='작품 해설 만들기'
+				accessibilityRole='button'
+				className='absolute bottom-6 right-6 h-14 w-14 items-center justify-center rounded-full bg-[#1C1917]'
+				style={({ pressed }) => ({
+					opacity: pressed ? 0.8 : 1,
+					shadowColor: '#000',
+					shadowOpacity: 0.3,
+					shadowRadius: 8,
+					shadowOffset: { width: 0, height: 4 },
+					elevation: 6,
+				})}
+			>
+				<Ionicons name='camera' size={24} color='#E5D5B5' />
+			</Pressable>
 		</Screen>
 	);
 }
