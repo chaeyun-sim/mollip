@@ -1,4 +1,6 @@
+import { Ionicons } from '@expo/vector-icons';
 import { Image, Pressable, Text, View } from 'react-native';
+import { useBookmarkStore } from '@/src/store/bookmarkStore';
 import { formatDistance } from '@/src/utils/mapUtils';
 import { getDdayLabel, STATUS_LABELS } from '@/src/utils/exhibitionSearch';
 import { StatusBadge } from './StatusBadge';
@@ -12,6 +14,8 @@ interface ExhibitionResultCardProps {
 export function ExhibitionResultCard({ result, onPress }: ExhibitionResultCardProps) {
 	const { exhibition: ex, status, distanceKm } = result;
 	const ddayLabel = getDdayLabel(ex);
+	const isBookmarked = useBookmarkStore((s) => s.isBookmarked(ex.id));
+	const toggleBookmark = useBookmarkStore((s) => s.toggle);
 
 	return (
 		<Pressable
@@ -68,6 +72,21 @@ export function ExhibitionResultCard({ result, onPress }: ExhibitionResultCardPr
 					)}
 				</View>
 			</View>
+
+			{/* 북마크 토글 */}
+			<Pressable
+				onPress={() => toggleBookmark(ex.id)}
+				hitSlop={8}
+				accessibilityLabel={isBookmarked ? '북마크 해제' : '북마크 추가'}
+				accessibilityRole='button'
+				className='self-center pl-1'
+			>
+				<Ionicons
+					name={isBookmarked ? 'bookmark' : 'bookmark-outline'}
+					size={20}
+					color={isBookmarked ? '#1C1917' : '#D6D3D1'}
+				/>
+			</Pressable>
 		</Pressable>
 	);
 }
