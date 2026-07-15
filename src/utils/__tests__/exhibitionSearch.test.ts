@@ -2,6 +2,7 @@ import {
 	daysUntilEnd,
 	getDdayLabel,
 	getExhibitionStatus,
+	getPopularTags,
 	isViewableOn,
 	matchesExcluded,
 	matchesQuery,
@@ -99,6 +100,20 @@ describe('daysUntilEnd / getDdayLabel — 마감 임박', () => {
 	});
 	it('마감된 전시 → null', () => {
 		expect(getDdayLabel(base, new Date(2026, 8, 10))).toBeNull();
+	});
+});
+
+describe('getPopularTags — 추천 태그', () => {
+	const list = [
+		{ ...base, id: 'p1', tags: ['명화', '인상주의'] },
+		{ ...base, id: 'p2', tags: ['명화', '조각'] },
+		{ ...base, id: 'p3', tags: ['명화', '인상주의', '미디어아트'] },
+	];
+	it('빈도순 정렬 + limit 적용', () => {
+		expect(getPopularTags(2, list)).toEqual(['명화', '인상주의']);
+	});
+	it('태그 없는 전시만 → 빈 배열', () => {
+		expect(getPopularTags(5, [{ ...base, tags: undefined }])).toEqual([]);
 	});
 });
 

@@ -12,12 +12,16 @@ import { ExcludeWordsModal } from '@/src/components/search/ExcludeWordsModal';
 import { ExhibitionResultCard } from '@/src/components/search/ExhibitionResultCard';
 import { useExhibitionSearch } from '@/src/hooks/useExhibitionSearch';
 import { useRecentSearchStore } from '@/src/store/recentSearchStore';
+import { getPopularTags } from '@/src/utils/exhibitionSearch';
 import { SERVICE_NAME } from '@/src/constants/service-name';
 
 const ITEM_ENTERING = FadeIn.duration(220);
 const ITEM_EXITING = FadeOut.duration(160);
 // 스프링 대신 시간 기반 — 오버슈트(바운스) 없음
 const ITEM_LAYOUT = LinearTransition.duration(200);
+
+// 정적 데이터라 모듈 로드 시 1회 계산
+const POPULAR_TAGS = getPopularTags(8);
 
 export default function SearchScreen() {
 	const router = useRouter();
@@ -64,6 +68,15 @@ export default function SearchScreen() {
 		[commitSearchText, addRecent],
 	);
 
+	// 태그 탭은 제안이므로 최근 검색어에 쌓지 않음
+	const handlePressTag = useCallback(
+		(tag: string) => {
+			commitSearchText(tag);
+			Keyboard.dismiss();
+		},
+		[commitSearchText],
+	);
+
 	return (
 		<Screen className='bg-white'>
 			<StatusBar style='dark' />
@@ -106,9 +119,38 @@ export default function SearchScreen() {
 				keyboardDismissMode='on-drag'
 			>
 				{!searchText ? (
-					/* 검색 전 — 최근 검색어 */
-					recentWords.length > 0 ? (
+					/* 검색 전 — 추천 태그 + 최근 검색어 */
+					<View>
 						<View className='mt-7'>
+							<Text
+								className='text-[#1C1917] text-[18px] mb-3'
+								style={{ fontFamily: 'Pretendard-Bold' }}
+							>
+								추천 태그
+							</Text>
+							<View className='flex-row flex-wrap gap-2'>
+								{POPULAR_TAGS.map((tag) => (
+									<Pressable
+										key={tag}
+										onPress={() => handlePressTag(tag)}
+										accessibilityLabel={`${tag} 태그로 검색`}
+										accessibilityRole='button'
+										className='rounded-full bg-[#F2EFE9] px-3.5 py-2'
+										style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
+									>
+										<Text
+											className='text-[#57534E] text-[13px]'
+											style={{ fontFamily: 'Pretendard-Medium' }}
+										>
+											{tag}
+										</Text>
+									</Pressable>
+								))}
+							</View>
+						</View>
+
+						{recentWords.length > 0 && (
+							<View className='mt-7'>
 							<View className='flex-row items-center justify-between mb-2'>
 								<Text
 									className='text-[#1C1917] text-[18px]'
@@ -157,17 +199,8 @@ export default function SearchScreen() {
 								</View>
 							))}
 						</View>
-					) : (
-						<View className='items-center py-20 gap-2'>
-							<Ionicons name='search-outline' size={28} color='#D6D3D1' />
-							<Text
-								className='text-[#A8A29E] text-[14px]'
-								style={{ fontFamily: 'Pretendard-Regular' }}
-							>
-								전시·미술관·작가를 검색해 보세요
-							</Text>
-						</View>
-					)
+					)}
+					</View>
 				) : (
 					/* 검색 후 — 검색 결과 */
 					<View className='mt-7'>

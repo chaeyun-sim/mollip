@@ -1,4 +1,4 @@
-import type { Exhibition } from '../data/exhibitions';
+import { EXHIBITIONS, type Exhibition } from '../data/exhibitions';
 import { parseDate } from './mapUtils';
 
 export type ExhibitionStatus = 'upcoming' | 'ongoing' | 'ended';
@@ -54,6 +54,20 @@ export function getDdayLabel(ex: Exhibition, base: Date = new Date()): string | 
 	const days = daysUntilEnd(ex, base);
 	if (days > 7) return null;
 	return days === 0 ? '오늘 마감' : `마감 D-${days}`;
+}
+
+/** 전시 태그를 빈도순으로 집계해 상위 N개 반환 */
+export function getPopularTags(limit: number, exhibitions: Exhibition[] = EXHIBITIONS): string[] {
+	const counts = new Map<string, number>();
+	for (const ex of exhibitions) {
+		for (const tag of ex.tags ?? []) {
+			counts.set(tag, (counts.get(tag) ?? 0) + 1);
+		}
+	}
+	return Array.from(counts.entries())
+		.sort((a, b) => b[1] - a[1])
+		.slice(0, limit)
+		.map(([tag]) => tag);
 }
 
 /** 지정 날짜에 관람 가능한 전시인지 (시작일~종료일 사이) */
