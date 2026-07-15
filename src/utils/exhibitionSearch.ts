@@ -40,6 +40,22 @@ export function matchesExcluded(ex: Exhibition, excluded: string[]): boolean {
 	return excluded.some((word) => haystack.includes(word.trim().toLowerCase()));
 }
 
+/** 종료일까지 남은 일수 (오늘 마감 = 0, 이미 종료 = 음수) */
+export function daysUntilEnd(ex: Exhibition, base: Date = new Date()): number {
+	const d = new Date(base);
+	d.setHours(0, 0, 0, 0);
+	const end = parseDate(ex.endDate);
+	return Math.round((end.getTime() - d.getTime()) / (24 * 60 * 60 * 1000));
+}
+
+/** 진행 중 + 마감 임박(D-7 이내)일 때만 D-day 라벨, 아니면 null */
+export function getDdayLabel(ex: Exhibition, base: Date = new Date()): string | null {
+	if (getExhibitionStatus(ex, base) !== 'ongoing') return null;
+	const days = daysUntilEnd(ex, base);
+	if (days > 7) return null;
+	return days === 0 ? '오늘 마감' : `마감 D-${days}`;
+}
+
 /** 지정 날짜에 관람 가능한 전시인지 (시작일~종료일 사이) */
 export function isViewableOn(ex: Exhibition, date: Date): boolean {
 	const d = new Date(date);

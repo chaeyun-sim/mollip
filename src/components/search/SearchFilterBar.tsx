@@ -7,6 +7,8 @@ const STATUS_KEYS: ExhibitionStatus[] = ['upcoming', 'ongoing', 'ended'];
 interface SearchFilterBarProps {
 	statusFilters: Set<ExhibitionStatus>;
 	onToggleStatus: (key: ExhibitionStatus) => void;
+	freeOnly: boolean;
+	onToggleFree: () => void;
 	filterDate: Date | null;
 	onPressDate: () => void;
 	excludedCount: number;
@@ -20,6 +22,8 @@ function formatChipDate(date: Date): string {
 export function SearchFilterBar({
 	statusFilters,
 	onToggleStatus,
+	freeOnly,
+	onToggleFree,
 	filterDate,
 	onPressDate,
 	excludedCount,
@@ -39,6 +43,7 @@ export function SearchFilterBar({
 					onPress={() => onToggleStatus(key)}
 				/>
 			))}
+			<FilterChip label='무료' active={freeOnly} onPress={onToggleFree} />
 			<FilterChip
 				label={filterDate ? formatChipDate(filterDate) : '날짜'}
 				active={filterDate !== null}

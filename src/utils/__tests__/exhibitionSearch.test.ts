@@ -1,4 +1,6 @@
 import {
+	daysUntilEnd,
+	getDdayLabel,
 	getExhibitionStatus,
 	isViewableOn,
 	matchesExcluded,
@@ -73,6 +75,30 @@ describe('matchesExcluded — 제외어', () => {
 	});
 	it('제외어 없음 → 통과', () => {
 		expect(matchesExcluded(base, [])).toBe(false);
+	});
+});
+
+describe('daysUntilEnd / getDdayLabel — 마감 임박', () => {
+	it('종료일 7일 전 → 7', () => {
+		expect(daysUntilEnd(base, new Date(2026, 7, 24))).toBe(7);
+	});
+	it('종료일 당일 → 0', () => {
+		expect(daysUntilEnd(base, new Date(2026, 7, 31))).toBe(0);
+	});
+	it('D-7 이내 → 마감 D-n 라벨', () => {
+		expect(getDdayLabel(base, new Date(2026, 7, 28))).toBe('마감 D-3');
+	});
+	it('종료일 당일 → 오늘 마감', () => {
+		expect(getDdayLabel(base, new Date(2026, 7, 31))).toBe('오늘 마감');
+	});
+	it('7일 초과 남음 → null', () => {
+		expect(getDdayLabel(base, new Date(2026, 6, 1))).toBeNull();
+	});
+	it('예정 전시 → null', () => {
+		expect(getDdayLabel(base, new Date(2026, 3, 1))).toBeNull();
+	});
+	it('마감된 전시 → null', () => {
+		expect(getDdayLabel(base, new Date(2026, 8, 10))).toBeNull();
 	});
 });
 

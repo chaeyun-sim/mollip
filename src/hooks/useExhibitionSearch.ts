@@ -25,6 +25,7 @@ export function useExhibitionSearch() {
 	const [statusFilters, setStatusFilters] = useState<Set<ExhibitionStatus>>(new Set());
 	const [filterDate, setFilterDate] = useState<Date | null>(null);
 	const [excludedWords, setExcludedWords] = useState<string[]>([]);
+	const [freeOnly, setFreeOnly] = useState(false);
 	const [currentCoord, setCurrentCoord] = useState<{ latitude: number; longitude: number } | null>(null);
 	const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -81,6 +82,7 @@ export function useExhibitionSearch() {
 			if (matchesExcluded(ex, excludedWords)) return false;
 			if (statusFilters.size > 0 && !statusFilters.has(getExhibitionStatus(ex))) return false;
 			if (filterDate && !isViewableOn(ex, filterDate)) return false;
+			if (freeOnly && !ex.admissionFree) return false;
 			return true;
 		})
 			.map((ex) => ({
@@ -97,7 +99,7 @@ export function useExhibitionSearch() {
 						: null,
 			}))
 			.sort((a, b) => (a.distanceKm ?? Infinity) - (b.distanceKm ?? Infinity));
-	}, [searchText, excludedWords, statusFilters, filterDate, currentCoord]);
+	}, [searchText, excludedWords, statusFilters, filterDate, freeOnly, currentCoord]);
 
 	return {
 		searchText: inputText, // 입력창에 즉시 반영
@@ -110,6 +112,8 @@ export function useExhibitionSearch() {
 		excludedWords,
 		addExcludedWord,
 		removeExcludedWord,
+		freeOnly,
+		toggleFreeOnly: () => setFreeOnly((prev) => !prev),
 		hasLocation: currentCoord !== null,
 		results,
 	};

@@ -35,6 +35,8 @@ export default function SearchScreen() {
 		excludedWords,
 		addExcludedWord,
 		removeExcludedWord,
+		freeOnly,
+		toggleFreeOnly,
 		hasLocation,
 		results,
 	} = useExhibitionSearch();
@@ -88,6 +90,8 @@ export default function SearchScreen() {
 				<SearchFilterBar
 					statusFilters={statusFilters}
 					onToggleStatus={toggleStatusFilter}
+					freeOnly={freeOnly}
+					onToggleFree={toggleFreeOnly}
 					filterDate={filterDate}
 					onPressDate={() => setShowDatePicker(true)}
 					excludedCount={excludedWords.length}

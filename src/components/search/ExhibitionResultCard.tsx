@@ -1,6 +1,6 @@
 import { Image, Pressable, Text, View } from 'react-native';
 import { formatDistance } from '@/src/utils/mapUtils';
-import { STATUS_LABELS } from '@/src/utils/exhibitionSearch';
+import { getDdayLabel, STATUS_LABELS } from '@/src/utils/exhibitionSearch';
 import { StatusBadge } from './StatusBadge';
 import type { SearchResult } from '@/src/hooks/useExhibitionSearch';
 
@@ -11,6 +11,7 @@ interface ExhibitionResultCardProps {
 
 export function ExhibitionResultCard({ result, onPress }: ExhibitionResultCardProps) {
 	const { exhibition: ex, status, distanceKm } = result;
+	const ddayLabel = getDdayLabel(ex);
 
 	return (
 		<Pressable
@@ -50,12 +51,22 @@ export function ExhibitionResultCard({ result, onPress }: ExhibitionResultCardPr
 					{distanceKm !== null && ` · ${formatDistance(distanceKm)}`}
 				</Text>
 
-				<Text
-					className='text-[#A8A29E] text-[12px]'
-					style={{ fontFamily: 'Pretendard-Regular' }}
-				>
-					{ex.startDate} – {ex.endDate}
-				</Text>
+				<View className='flex-row items-center gap-1.5'>
+					<Text
+						className='text-[#A8A29E] text-[12px]'
+						style={{ fontFamily: 'Pretendard-Regular' }}
+					>
+						{ex.startDate} – {ex.endDate}
+					</Text>
+					{ddayLabel && (
+						<Text
+							className='text-[#C2410C] text-[12px]'
+							style={{ fontFamily: 'Pretendard-SemiBold' }}
+						>
+							{ddayLabel}
+						</Text>
+					)}
+				</View>
 			</View>
 		</Pressable>
 	);
