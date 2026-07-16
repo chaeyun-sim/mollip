@@ -6,12 +6,12 @@ import * as ImagePicker from 'expo-image-picker';
 import { useRouter } from 'expo-router';
 import { useCallback, useRef, useState } from 'react';
 import {
+	Pressable,
 	Alert,
 	Image,
 	ScrollView,
 	StyleSheet,
 	Text,
-	TouchableOpacity,
 	View,
 } from 'react-native';
 import { Screen } from '../src/components/layout/Screen';
@@ -129,10 +129,10 @@ export default function IndexScreen() {
 			{/* 버튼 영역 */}
 			<Screen.BottomAbsolute className='gap-3 px-6 bottom-10'>
 				{/* 카메라 — primary */}
-				<TouchableOpacity
+				<Pressable
 					className='rounded-2xl overflow-hidden'
 					onPress={() => pickAndGo(true)}
-					activeOpacity={0.85}
+					style={({ pressed }) => ({ opacity: pressed ? 0.85 : 1 })}
 					disabled={isLoading}
 					accessibilityLabel='카메라로 촬영'
 					accessibilityRole='button'
@@ -155,13 +155,13 @@ export default function IndexScreen() {
 							color='rgba(255,255,255,0.5)'
 						/>
 					</View>
-				</TouchableOpacity>
+				</Pressable>
 
 				{/* 갤러리 — secondary */}
-				<TouchableOpacity
+				<Pressable
 					className='rounded-2xl overflow-hidden'
 					onPress={() => pickAndGo(false)}
-					activeOpacity={0.85}
+					style={({ pressed }) => ({ opacity: pressed ? 0.85 : 1 })}
 					disabled={isLoading}
 					accessibilityLabel='갤러리에서 선택'
 					accessibilityRole='button'
@@ -186,20 +186,20 @@ export default function IndexScreen() {
 						</View>
 						<Ionicons name='chevron-forward' size={18} color='#57534E' />
 					</View>
-				</TouchableOpacity>
+				</Pressable>
 
 				{/* 직접 입력 — ghost */}
-				<TouchableOpacity
+				<Pressable
 					className='flex-row items-center justify-center gap-2 py-4'
 					onPress={() => router.push('/manual')}
-					activeOpacity={0.6}
+					style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
 					disabled={isLoading}
 					accessibilityLabel='작품명 직접 입력'
 					accessibilityRole='button'
 				>
 					<Ionicons name='pencil-outline' size={15} color='#78716C' />
 					<Text className='text-sm text-[#78716C]'>작품명 직접 입력</Text>
-				</TouchableOpacity>
+				</Pressable>
 			</Screen.BottomAbsolute>
 
 			{/* 예시 바텀시트 */}
@@ -240,27 +240,27 @@ export default function IndexScreen() {
 						))}
 					</ScrollView>
 
-					<TouchableOpacity
+					<Pressable
 						className='w-full py-4 rounded-2xl items-center mb-3 bg-[#3B82F6]'
 						onPress={handleConfirm}
-						activeOpacity={0.85}
+						style={({ pressed }) => ({ opacity: pressed ? 0.85 : 1 })}
 						accessibilityLabel='확인했어요'
 						accessibilityRole='button'
 					>
 						<Text className='text-white text-base font-pretendard-semibold'>
 							확인했어요
 						</Text>
-					</TouchableOpacity>
+					</Pressable>
 
-					<TouchableOpacity
+					<Pressable
 						className='items-center py-2'
 						onPress={handleDismissForever}
-						activeOpacity={0.6}
+						style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
 						accessibilityLabel='다시 보지 않기'
 						accessibilityRole='button'
 					>
 						<Text className='text-sm font-pretendard-regular text-[#57534E]'>다시 보지 않기</Text>
-					</TouchableOpacity>
+					</Pressable>
 				</BottomSheetView>
 			</BottomSheetModal>
 		</Screen>

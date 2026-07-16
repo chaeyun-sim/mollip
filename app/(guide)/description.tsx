@@ -11,7 +11,6 @@ import {
 	Pressable,
 	ScrollView,
 	Text,
-	TouchableOpacity,
 	View,
 } from 'react-native';
 import {
@@ -258,7 +257,7 @@ export default function DescriptionScreen() {
 					/>
 					<ScreenHeader.Right className='mt-1'>
 						{isImmersive && (
-							<TouchableOpacity
+							<Pressable
 								onPress={() => {
 									stop();
 									router.replace('/(guide)/create-description');
@@ -267,10 +266,11 @@ export default function DescriptionScreen() {
 								accessibilityLabel='다른 그림 찾기'
 								accessibilityRole='button'
 								className='flex-row items-center gap-1'
+								style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
 							>
 								<Ionicons name='search' size={15} color='#78716C' />
 								<Text className='font-pretendard-regular text-[#78716C] text-[13px]'>다른 그림</Text>
-							</TouchableOpacity>
+							</Pressable>
 						)}
 					</ScreenHeader.Right>
 				</Screen.Header>
@@ -285,14 +285,15 @@ export default function DescriptionScreen() {
 					<View className='items-center mt-16 gap-4'>
 						<Ionicons name='alert-circle-outline' size={40} color='#78716C' />
 						<Text className='text-[#78716C] text-[15px]'>해설 생성에 실패했어요</Text>
-						<TouchableOpacity
+						<Pressable
 							className='px-6 py-3 rounded-xl bg-[#1C1917]'
 							onPress={handleRetry}
+							style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
 						>
 							<Text className='font-pretendard-semibold text-[#60A5FA] text-[14px]'>
 								다시 시도
 							</Text>
-						</TouchableOpacity>
+						</Pressable>
 					</View>
 				) : isStreaming && displayed === '' ? (
 					<View className='flex-row items-center mt-5 gap-2.5'>
@@ -317,8 +318,7 @@ export default function DescriptionScreen() {
 
 			{/* 플레이어 항상 표시, 타이핑 중엔 비활성 */}
 			<Screen.BottomAbsolute className='bottom-10 px-6'>
-				<TouchableOpacity
-					activeOpacity={1}
+				<Pressable
 					className='h-1 rounded-sm overflow-hidden bg-[#292524]'
 					hitSlop={{ top: 16, bottom: 16 }}
 					onLayout={(e: LayoutChangeEvent) => {
@@ -330,7 +330,7 @@ export default function DescriptionScreen() {
 						className='h-full rounded-sm bg-[#60A5FA]'
 						style={{ width: `${progress * 100}%` }}
 					/>
-				</TouchableOpacity>
+				</Pressable>
 
 				<View className='flex-row justify-between mt-1 mb-2'>
 					<Text className='text-[11px] text-[#78716C]'>{formatTime(elapsed)}</Text>
@@ -343,14 +343,15 @@ export default function DescriptionScreen() {
 					{/* 채팅 버튼 — 해설 완료 후 표시 */}
 					<View className='w-9 items-center'>
 						{!isTyping && (
-							<TouchableOpacity
+							<Pressable
 								onPress={() => router.push({ pathname: '/chat', params: { sessionId } })}
 								hitSlop={8}
 								accessibilityLabel='작품에 대해 질문하기'
 								accessibilityRole='button'
+								style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
 							>
 								<Ionicons name='chatbubble' size={26} color='#78716C' />
-							</TouchableOpacity>
+							</Pressable>
 						)}
 					</View>
 
@@ -383,14 +384,15 @@ export default function DescriptionScreen() {
 					{/* 재생목록 버튼 — 몰입 모드 전용 */}
 					<View className='w-9 items-center'>
 						{isImmersive && (
-							<TouchableOpacity
+							<Pressable
 								onPress={() => router.push('/playlist')}
 								hitSlop={8}
 								accessibilityLabel='재생목록 보기'
 								accessibilityRole='button'
+								style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
 							>
 								<Ionicons name='list' size={28} color='#78716C' />
-							</TouchableOpacity>
+							</Pressable>
 						)}
 					</View>
 				</View>

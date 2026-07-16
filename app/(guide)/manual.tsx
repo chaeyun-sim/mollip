@@ -1,11 +1,11 @@
 import { useRouter } from 'expo-router';
 import { useRef, useState } from 'react';
 import {
+	Pressable,
 	KeyboardAvoidingView,
 	Platform,
 	Text,
 	TextInput,
-	TouchableOpacity,
 	View,
 } from 'react-native';
 import { Screen } from '../../src/components/layout/Screen';
@@ -114,14 +114,15 @@ export default function ManualScreen() {
 					</View>
 
 					<Screen.BottomAbsolute>
-						<TouchableOpacity
+						<Pressable
 							className='w-full rounded-lg items-center bg-[#3B82F6] py-3.5'
 							onPress={handleSubmit}
+							style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
 						>
 							<Text className='text-base font-pretendard-semibold text-white'>
 								해설 생성
 							</Text>
-						</TouchableOpacity>
+						</Pressable>
 					</Screen.BottomAbsolute>
 				</View>
 			</KeyboardAvoidingView>

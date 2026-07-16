@@ -2,11 +2,11 @@ import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { useRouter } from 'expo-router';
 import {
+	Pressable,
 	Image,
 	ScrollView,
 	StyleSheet,
 	Text,
-	TouchableOpacity,
 	View,
 } from 'react-native';
 import { Screen } from '../../src/components/layout/Screen';
@@ -55,15 +55,16 @@ export default function PlaylistScreen() {
 					<Text className='font-pretendard-regular text-[#57534E] text-[15px]'>
 						아직 들은 작품이 없어요
 					</Text>
-					<TouchableOpacity
+					<Pressable
 						className='mt-2 flex-row items-center gap-2 px-5 py-3 rounded-xl bg-[#1C1917]'
 						onPress={() => router.push('/(guide)/create-description')}
+						style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
 					>
 						<Ionicons name='search' size={15} color='#60A5FA' />
 						<Text className='font-pretendard-semibold text-[#60A5FA] text-[14px]'>
 							작품 찾기
 						</Text>
-					</TouchableOpacity>
+					</Pressable>
 				</View>
 			) : (
 				<ScrollView
@@ -109,7 +110,7 @@ export default function PlaylistScreen() {
 									{item.description}
 								</Text>
 							</View>
-							<TouchableOpacity onPress={() => handlePlay(item)} activeOpacity={0.7}>
+							<Pressable onPress={() => handlePlay(item)} style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}>
 								<Ionicons
 									name={
 										item.description === FAILED_DESCRIPTION
@@ -119,7 +120,7 @@ export default function PlaylistScreen() {
 									size={26}
 									color={item.description === FAILED_DESCRIPTION ? '#78716C' : '#3B82F6'}
 								/>
-							</TouchableOpacity>
+							</Pressable>
 						</View>
 					))}
 				</ScrollView>

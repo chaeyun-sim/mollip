@@ -10,7 +10,6 @@ import {
 	Pressable,
 	ScrollView,
 	Text,
-	TouchableOpacity,
 	View,
 } from 'react-native';
 import {
@@ -230,14 +229,15 @@ export default function DescriptionScreen() {
 						}}
 					/>
 					<ScreenHeader.Right className='mt-1'>
-						<TouchableOpacity
+						<Pressable
 							onPress={() => router.push('/chat')}
 							hitSlop={8}
 							accessibilityLabel='작품에 대해 질문하기'
 							accessibilityRole='button'
+							style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
 						>
 							<Ionicons name='chatbox' size={20} color='#60A5FA' />
-						</TouchableOpacity>
+						</Pressable>
 					</ScreenHeader.Right>
 				</Screen.Header>
 			)}
@@ -251,14 +251,15 @@ export default function DescriptionScreen() {
 					<View className='items-center mt-16 gap-4'>
 						<Ionicons name='alert-circle-outline' size={40} color='#78716C' />
 						<Text className='text-[#78716C] text-[15px]'>해설 생성에 실패했어요</Text>
-						<TouchableOpacity
+						<Pressable
 							className='px-6 py-3 rounded-xl bg-[#1C1917]'
 							onPress={handleRetry}
+							style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
 						>
 							<Text className='font-pretendard-semibold text-[#60A5FA] text-[14px]'>
 								다시 시도
 							</Text>
-						</TouchableOpacity>
+						</Pressable>
 					</View>
 				) : isStreaming && displayed === '' ? (
 					<View className='flex-row items-center mt-5 gap-[10px]'>
@@ -283,8 +284,7 @@ export default function DescriptionScreen() {
 
 			{/* 플레이어 항상 표시, 타이핑 중엔 비활성 */}
 			<Screen.Bottom>
-				<TouchableOpacity
-					activeOpacity={1}
+				<Pressable
 					className='h-1 rounded-sm overflow-hidden bg-[#292524]'
 					hitSlop={{ top: 16, bottom: 16 }}
 					onLayout={(e: LayoutChangeEvent) => {
@@ -296,7 +296,7 @@ export default function DescriptionScreen() {
 						className='h-full rounded-sm bg-[#60A5FA]'
 						style={{ width: `${progress * 100}%` }}
 					/>
-				</TouchableOpacity>
+				</Pressable>
 
 				<View className='flex-row justify-between mt-1 mb-2'>
 					<Text className='text-[11px] text-[#78716C]'>{formatTime(elapsed)}</Text>

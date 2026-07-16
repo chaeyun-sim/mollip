@@ -2,6 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 import {
+	Pressable,
 	ActivityIndicator,
 	FlatList,
 	Image,
@@ -11,7 +12,6 @@ import {
 	StyleSheet,
 	Text,
 	TextInput,
-	TouchableOpacity,
 	View,
 } from 'react-native';
 import { Screen } from '../../src/components/layout/Screen';
@@ -111,15 +111,16 @@ export default function ChatScreen() {
 					/>
 				)}
 				{item.isError ? (
-					<TouchableOpacity
+					<Pressable
 						className='flex-row items-center gap-2 px-4 py-3 rounded-2xl rounded-tl-sm bg-[#2a1a1a]'
 						onPress={() => retryMessage(item)}
+						style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
 					>
 						<Ionicons name='refresh' size={14} color='#e05050' />
 						<Text className='font-pretendard-regular text-[#e05050] text-[13px]'>
 							답변 실패 — 다시 시도
 						</Text>
-					</TouchableOpacity>
+					</Pressable>
 				) : (
 					<View
 						className={cn(
@@ -210,7 +211,7 @@ export default function ChatScreen() {
 						placeholderTextColor='#57534E'
 						multiline
 					/>
-					<TouchableOpacity
+					<Pressable
 						className={cn(
 							'w-11 h-11 rounded-full items-center justify-center',
 							input.trim() && !isLoading ? 'bg-[#3B82F6]' : 'bg-[#1C1917]',
@@ -219,13 +220,14 @@ export default function ChatScreen() {
 						disabled={!input.trim() || isLoading}
 						accessibilityLabel='전송'
 						accessibilityRole='button'
+						style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
 					>
 						<Ionicons
 							name='arrow-up'
 							size={20}
 							color={input.trim() && !isLoading ? '#fff' : '#292524'}
 						/>
-					</TouchableOpacity>
+					</Pressable>
 				</View>
 			</KeyboardAvoidingView>
 		</Screen>

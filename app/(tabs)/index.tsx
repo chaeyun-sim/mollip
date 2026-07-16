@@ -6,7 +6,6 @@ import {
 	Pressable,
 	ScrollView,
 	Text,
-	TouchableOpacity,
 	View,
 } from 'react-native';
 import { Screen } from '@/src/components/layout/Screen';
@@ -78,14 +77,15 @@ export default function ExploreScreen() {
 					<Text className='text-gray-900 text-[22px] font-pretendard-bold'>{SERVICE_NAME}</Text>
 				</Screen.Header.Left>
 				<Screen.Header.Right>
-					<TouchableOpacity
+					<Pressable
 						onPress={() => router.push('/settings')}
 						hitSlop={12}
 						accessibilityLabel='설정'
 						accessibilityRole='button'
+						style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
 					>
 						<Ionicons name='settings-outline' size={22} color='#9CA3AF' />
-					</TouchableOpacity>
+					</Pressable>
 				</Screen.Header.Right>
 			</Screen.Header>
 
