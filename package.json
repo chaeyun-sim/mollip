@@ -48,6 +48,7 @@
   "devDependencies": {
     "@commitlint/cli": "^21.2.0",
     "@commitlint/config-conventional": "^21.2.0",
+    "@react-native/jest-preset": "^0.86.0",
     "@types/react": "~19.2.2",
     "@types/tinycolor2": "^1.4.6",
     "husky": "^9.1.7",
