@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
-import { useRouter } from 'expo-router';
+import { useNavigation, useRouter } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 import {
 	ActivityIndicator,
@@ -25,6 +25,7 @@ import { DESCRIPTION_PROMPT } from '../../src/constants/prompts';
 import { useTTS } from '../../src/hooks/useTTS';
 import { store } from '../../src/store';
 import { useImmersiveStore } from '../../src/store/immersiveStore';
+import { todayKey, useVisitStore } from '../../src/store/visitStore';
 import {
 	FONT_SIZE_VALUE,
 	useSettingsStore,
@@ -69,6 +70,7 @@ const SCREEN_WIDTH = Dimensions.get('window').width;
 
 export default function DescriptionScreen() {
 	const router = useRouter();
+	const navigation = useNavigation();
 	const sessionId = useRef(Date.now().toString()).current;
 	const isImmersive = useImmersiveStore((s) => s.isImmersiveMode);
 	const addToPlaylist = useImmersiveStore((s) => s.addToPlaylist);
@@ -82,9 +84,6 @@ export default function DescriptionScreen() {
 
 	// 인디케이터 progress bar
 	const barTranslate = useSharedValue(-SCREEN_WIDTH);
-	const barAnimStyle = useAnimatedStyle(() => ({
-		transform: [{ translateX: barTranslate.value }],
-	}));
 	// 0: 그림 찾는 중, 1: 그림 분석 중, 2: 해설 생성 중
 	const scrollRef = useRef<ScrollView>(null);
 	const progressWidth = useRef(0);
@@ -93,6 +92,8 @@ export default function DescriptionScreen() {
 	const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 	const mountedRef = useRef(true);
 	const savedToPlaylistRef = useRef(false);
+	const savedToVisitRef = useRef(false);
+	const recordListened = useVisitStore((s) => s.recordListened);
 
 	const {
 		isSpeaking,
@@ -106,6 +107,15 @@ export default function DescriptionScreen() {
 		preload,
 		seekTo,
 	} = useTTS();
+
+	// 화면을 벗어나는 모든 경로(헤더 버튼, 스와이프 제스처, 하드웨어 back)에서 재생 중인
+	// 오디오를 확실히 멈춘다 — 헤더 버튼 onPress에만 stop()을 걸어두면 제스처로 나갈 때 놓친다.
+	useEffect(() => {
+		const unsubscribe = navigation.addListener('beforeRemove', () => {
+			stop();
+		});
+		return unsubscribe;
+	}, [navigation, stop]);
 
 	// 로딩 단계 자동 진행 (5초, 10초)
 	useEffect(() => {
@@ -173,7 +183,6 @@ export default function DescriptionScreen() {
 			} catch (e) {
 				if (!cancelled && mountedRef.current) {
 					setHasError(true);
-					console.log(e);
 				}
 			} finally {
 				if (!cancelled && mountedRef.current) {
@@ -245,41 +254,33 @@ export default function DescriptionScreen() {
 		}
 	}, [isTyping]);
 
+	// 해설 생성 성공 시 관람 다이어리용 들은 기록 저장 (모드 무관, 중복 방지)
+	useEffect(() => {
+		if (!isTyping && fullTextRef.current && !savedToVisitRef.current) {
+			savedToVisitRef.current = true;
+			recordListened(todayKey(), {
+				title: store.inputMode === 'manual' ? store.manualTitle : '촬영한 작품',
+				imageUrl: store.artworkImageUrl || undefined,
+			});
+		}
+	}, [isTyping]);
+
 	return (
-		<Screen>
+		<Screen edges={['top', 'bottom']}>
 			{!isTyping && (
 				<Screen.Header>
 					<ScreenHeader.Back
 						onPress={() => {
-							stop();
 							router.back();
 						}}
 					/>
-					<ScreenHeader.Right className='mt-1'>
-						{isImmersive && (
-							<Pressable
-								onPress={() => {
-									stop();
-									router.replace('/(guide)/create-description');
-								}}
-								hitSlop={8}
-								accessibilityLabel='다른 그림 찾기'
-								accessibilityRole='button'
-								className='flex-row items-center gap-1'
-								style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
-							>
-								<Ionicons name='search' size={15} color='#78716C' />
-								<Text className='font-pretendard-regular text-[#78716C] text-[13px]'>다른 그림</Text>
-							</Pressable>
-						)}
-					</ScreenHeader.Right>
 				</Screen.Header>
 			)}
 
 			<ScrollView
 				ref={scrollRef}
 				className='flex-1'
-				contentContainerStyle={{ paddingBottom: 40, paddingTop: 12 }}
+				contentContainerStyle={{ paddingBottom: 150, paddingTop: 12 }}
 			>
 				{hasError ? (
 					<View className='items-center mt-16 gap-4'>
@@ -317,7 +318,7 @@ export default function DescriptionScreen() {
 			</ScrollView>
 
 			{/* 플레이어 항상 표시, 타이핑 중엔 비활성 */}
-			<Screen.BottomAbsolute className='bottom-10 px-6'>
+			<Screen.BottomAbsolute className='bottom-9 pt-6 px-6 bg-[#171412]'>
 				<Pressable
 					className='h-1 rounded-sm overflow-hidden bg-[#292524]'
 					hitSlop={{ top: 16, bottom: 16 }}
@@ -383,7 +384,7 @@ export default function DescriptionScreen() {
 
 					{/* 재생목록 버튼 — 몰입 모드 전용 */}
 					<View className='w-9 items-center'>
-						{isImmersive && (
+						{!isTyping && isImmersive && (
 							<Pressable
 								onPress={() => router.push('/playlist')}
 								hitSlop={8}

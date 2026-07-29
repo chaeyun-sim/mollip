@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet';
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
-import { useRouter } from 'expo-router';
+import { useNavigation, useRouter } from 'expo-router';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
 	Pressable,
@@ -38,6 +38,7 @@ const EXAMPLES = [
 
 export default function IndexScreen() {
 	const router = useRouter();
+	const navigation = useNavigation();
 	const clearChat = useChatStore((s) => s.clear);
 	const bottomSheetRef = useRef<BottomSheetModal>(null);
 	const pendingCameraRef = useRef<boolean>(false);
@@ -46,11 +47,44 @@ export default function IndexScreen() {
 
 	const [isLoading, setIsLoading] = useState(false);
 
+	// 셀프 가이드 진입점(작품 선택 화면) — 헤더 버튼뿐 아니라 스와이프 제스처/하드웨어 back
+	// 까지 전부 가로채서, 몰입 모드일 때는 확인 없이 메인 서비스로 빠져나가지 못하게 막는다.
+	useEffect(() => {
+		const unsubscribe = navigation.addListener('beforeRemove', (e) => {
+			if (!isImmersive) return;
+			e.preventDefault();
+			Alert.alert('전시 관람 종료', '재생목록이 초기화됩니다.', [
+				{ text: '취소', style: 'cancel' },
+				{
+					text: '종료',
+					style: 'destructive',
+					onPress: () => {
+						exitImmersive();
+						// 바로 나가지 않고, 관람 마무리 화면(종료 요약 + 주변 추천)을 먼저 보여준다.
+						// replace — 뒤로가기로 다시 가이드 화면으로 못 돌아오게 스택에서 제거.
+						router.replace('/(guide)/exit-summary');
+					},
+				},
+			]);
+		});
+		return unsubscribe;
+	}, [navigation, isImmersive, exitImmersive, router]);
+
 	// Wikidata 검색 상태 (몰입 모드 전용)
 	const [searchQuery, setSearchQuery] = useState('');
 	const [searchResults, setSearchResults] = useState<WikiArtwork[]>([]);
 	const [isSearching, setIsSearching] = useState(false);
 	const searchTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+	// 해설 화면 등에서 뒤로가기로 이 화면에 다시 돌아왔을 때 이전 검색어가 남아있지
+	// 않도록, 화면이 포커스를 받을 때마다 검색 상태를 초기화한다.
+	useEffect(() => {
+		const unsubscribe = navigation.addListener('focus', () => {
+			setSearchQuery('');
+			setSearchResults([]);
+		});
+		return unsubscribe;
+	}, [navigation]);
 
 	useEffect(() => {
 		if (!isImmersive || searchQuery.trim().length < 2) {
@@ -77,17 +111,12 @@ export default function IndexScreen() {
 	const handleSelectArtwork = (artwork: WikiArtwork) => {
 		Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
 		store.manualTitle = artwork.label;
-		store.manualArtist = '';
+		store.manualArtist = artwork.artist ?? '';
 		store.artworkImageUrl = artwork.imageUrl ?? '';
 		store.artworkDescription = '';
 		store.inputMode = 'manual';
 		clearChat();
-		// 몰입 모드: replace로 스택 유지 (back 시 immersive 입장 화면으로)
-		if (isImmersive) {
-			router.replace('/description');
-		} else {
-			router.push('/description');
-		}
+		router.push('/description');
 	};
 
 	const launchPicker = async (useCamera: boolean) => {
@@ -133,12 +162,7 @@ export default function IndexScreen() {
 		store.artworkDescription = '';
 		clearChat();
 		setIsLoading(false);
-		// 몰입 모드: replace로 스택 유지 (back 시 immersive 입장 화면으로)
-		if (isImmersive) {
-			router.replace('/description');
-		} else {
-			router.push('/description');
-		}
+		router.push('/description');
 	};
 
 	const pickAndGo = async (useCamera: boolean) => {
@@ -197,7 +221,7 @@ export default function IndexScreen() {
 					>
 						<Ionicons name='search' size={18} color='#57534E' />
 						<TextInput
-							className='flex-1 text-white font-pretendard-regular text-[15px]'
+							className='flex-1 text-white font-pretendard-regular text-[14px] pb-0 leading-0'
 							placeholder='작품명으로 검색 (예: 별이 빛나는 밤)'
 							placeholderTextColor='#57534E'
 							value={searchQuery}
