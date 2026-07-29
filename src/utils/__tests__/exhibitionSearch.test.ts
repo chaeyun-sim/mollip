@@ -18,6 +18,7 @@ const base: Exhibition = {
 	artist: '클로드 모네',
 	description: '인상주의 특별전',
 	posterColor: '#fff',
+	genre: '인상주의',
 	openHours: '10:00 – 20:00',
 	admission: '18,000원',
 	artworks: [],

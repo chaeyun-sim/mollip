@@ -16,8 +16,7 @@ import { getArtwork } from '@/src/data/exhibitions';
 import { store } from '@/src/store';
 import { useChatStore } from '@/src/store/chatStore';
 import { Screen } from '@/src/components/layout/Screen';
-
-const PAINTING_PLACEHOLDER = require('../../../assets/images/example/painting-2.jpg');
+import { EmptyImagePlaceholder } from '@/src/components/common/EmptyImagePlaceholder';
 
 export default function ArtworkDetailScreen() {
 	const { id } = useLocalSearchParams<{ id: string }>();
@@ -95,23 +94,29 @@ export default function ArtworkDetailScreen() {
 			onPressOut={handleRelease}
 			delayLongPress={400}
 		>
-			{/* Cover 이미지 (기본) */}
-			<Animated.View className='absolute w-full h-full' style={coverImageStyle}>
-				<Image
-					source={artwork.imageSource ?? PAINTING_PLACEHOLDER}
-					className='w-full h-full'
-					resizeMode='cover'
-				/>
-			</Animated.View>
+			{artwork.imageSource ? (
+				<>
+					{/* Cover 이미지 (기본) */}
+					<Animated.View className='absolute w-full h-full' style={coverImageStyle}>
+						<Image
+							source={artwork.imageSource}
+							className='w-full h-full'
+							resizeMode='cover'
+						/>
+					</Animated.View>
 
-			{/* Contain 이미지 (꾹 누를 때) */}
-			<Animated.View className='absolute w-full h-full' style={containImageStyle}>
-				<Image
-					source={artwork.imageSource ?? PAINTING_PLACEHOLDER}
-					className='w-full h-full'
-					resizeMode='contain'
-				/>
-			</Animated.View>
+					{/* Contain 이미지 (꾹 누를 때) */}
+					<Animated.View className='absolute w-full h-full' style={containImageStyle}>
+						<Image
+							source={artwork.imageSource}
+							className='w-full h-full'
+							resizeMode='contain'
+						/>
+					</Animated.View>
+				</>
+			) : (
+				<EmptyImagePlaceholder className='absolute w-full h-full items-center justify-center bg-[#E5E1D8]' iconSize={160} />
+			)}
 
 			{/* 다크 오버레이 + 텍스트 UI */}
 			<Animated.View className='absolute w-full h-full' style={uiStyle}>
