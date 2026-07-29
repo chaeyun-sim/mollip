@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
-import { useRouter } from 'expo-router';
-import { useCallback, useState } from 'react';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useCallback, useEffect, useState } from 'react';
 import { Keyboard, Pressable, ScrollView, Text, View } from 'react-native';
 import Animated, { FadeIn, FadeOut, LinearTransition } from 'react-native-reanimated';
 import { Screen } from '@/src/components/layout/Screen';
@@ -24,250 +24,270 @@ const ITEM_LAYOUT = LinearTransition.duration(200);
 const POPULAR_TAGS = getPopularTags(8);
 
 export default function SearchScreen() {
-	const router = useRouter();
-	const [showDatePicker, setShowDatePicker] = useState(false);
-	const [showExcludeModal, setShowExcludeModal] = useState(false);
+  const router = useRouter();
+  const { q } = useLocalSearchParams<{ q?: string }>();
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [showExcludeModal, setShowExcludeModal] = useState(false);
 
-	const {
-		searchText,
-		setSearchText,
-		commitSearchText,
-		statusFilters,
-		toggleStatusFilter,
-		filterDate,
-		setFilterDate,
-		excludedWords,
-		addExcludedWord,
-		removeExcludedWord,
-		freeOnly,
-		toggleFreeOnly,
-		hasLocation,
-		results,
-	} = useExhibitionSearch();
+  const {
+    searchText,
+    setSearchText,
+    commitSearchText,
+    statusFilters,
+    toggleStatusFilter,
+    filterDate,
+    setFilterDate,
+    excludedWords,
+    addExcludedWord,
+    removeExcludedWord,
+    freeOnly,
+    toggleFreeOnly,
+    hasLocation,
+    results,
+  } = useExhibitionSearch();
 
-	const recentWords = useRecentSearchStore((s) => s.words);
-	const addRecent = useRecentSearchStore((s) => s.add);
-	const removeRecent = useRecentSearchStore((s) => s.remove);
-	const clearRecent = useRecentSearchStore((s) => s.clear);
+  const recentWords = useRecentSearchStore(s => s.words);
+  const addRecent = useRecentSearchStore(s => s.add);
+  const removeRecent = useRecentSearchStore(s => s.remove);
+  const clearRecent = useRecentSearchStore(s => s.clear);
 
-	const handlePressExhibition = useCallback(
-		(id: string) => router.push(`/(explore)/${id}`),
-		[router],
-	);
+  // 상세 화면 태그 탭 등 외부에서 ?q= 파라미터로 들어오면 디바운스 없이 바로 검색 반영
+  useEffect(() => {
+    if (q) commitSearchText(q);
+  }, [q, commitSearchText]);
 
-	const handleSubmitSearch = useCallback(() => {
-		addRecent(searchText);
-	}, [addRecent, searchText]);
+  const handlePressExhibition = useCallback(
+    (id: string) => router.push(`/(explore)/${id}`),
+    [router],
+  );
 
-	const handlePressRecent = useCallback(
-		(word: string) => {
-			commitSearchText(word); // 디바운스 없이 즉시 필터 반영
-			addRecent(word);
-			Keyboard.dismiss();
-		},
-		[commitSearchText, addRecent],
-	);
+  const handleSubmitSearch = useCallback(() => {
+    addRecent(searchText);
+  }, [addRecent, searchText]);
 
-	// 태그 탭은 제안이므로 최근 검색어에 쌓지 않음
-	const handlePressTag = useCallback(
-		(tag: string) => {
-			commitSearchText(tag);
-			Keyboard.dismiss();
-		},
-		[commitSearchText],
-	);
+  const handlePressRecent = useCallback(
+    (word: string) => {
+      commitSearchText(word); // 디바운스 없이 즉시 필터 반영
+      addRecent(word);
+      Keyboard.dismiss();
+    },
+    [commitSearchText, addRecent],
+  );
 
-	return (
-		<Screen className='bg-white'>
-			<StatusBar style='dark' />
+  // 태그 탭은 제안이므로 최근 검색어에 쌓지 않음
+  const handlePressTag = useCallback(
+    (tag: string) => {
+      commitSearchText(tag);
+      Keyboard.dismiss();
+    },
+    [commitSearchText],
+  );
 
-			<Screen.Header>
-				<Screen.Header.Left>
-					<Text className='text-gray-900 text-[22px] font-pretendard-bold'>
-						{SERVICE_NAME}
-					</Text>
-				</Screen.Header.Left>
-			</Screen.Header>
+  return (
+    <Screen className='bg-white'>
+      <StatusBar style='dark' />
 
-			{/* 검색바 */}
-			<SearchBar
-				value={searchText}
-				onChangeText={setSearchText}
-				onSubmitEditing={handleSubmitSearch}
-				placeholder='전시·미술관·작가 검색'
-				variant='tonal'
-			/>
+      <Screen.Header>
+        <Screen.Header.Left>
+          <Text className='text-gray-900 text-[22px] font-pretendard-bold'>{SERVICE_NAME}</Text>
+        </Screen.Header.Left>
+      </Screen.Header>
 
-			{/* 필터 칩 */}
-			<View className='mt-3'>
-				<SearchFilterBar
-					statusFilters={statusFilters}
-					onToggleStatus={toggleStatusFilter}
-					freeOnly={freeOnly}
-					onToggleFree={toggleFreeOnly}
-					filterDate={filterDate}
-					onPressDate={() => setShowDatePicker(true)}
-					excludedCount={excludedWords.length}
-					onPressExclude={() => setShowExcludeModal(true)}
-				/>
-			</View>
+      {/* 검색바 */}
+      <SearchBar
+        value={searchText}
+        onChangeText={setSearchText}
+        onSubmitEditing={handleSubmitSearch}
+        placeholder='전시·미술관·작가 검색'
+        variant='tonal'
+      />
 
-			<ScrollView
-				showsVerticalScrollIndicator={false}
-				contentContainerStyle={{ paddingBottom: 48 }}
-				keyboardShouldPersistTaps='handled'
-				keyboardDismissMode='on-drag'
-			>
-				{!searchText ? (
-					/* 검색 전 — 추천 태그 + 최근 검색어 */
-					<View>
-						<View className='mt-7'>
-							<Text
-								className='text-[#1C1917] text-[18px] mb-3'
-								style={{ fontFamily: 'Pretendard-Bold' }}
-							>
-								추천 태그
-							</Text>
-							<View className='flex-row flex-wrap gap-2'>
-								{POPULAR_TAGS.map((tag) => (
-									<Pressable
-										key={tag}
-										onPress={() => handlePressTag(tag)}
-										accessibilityLabel={`${tag} 태그로 검색`}
-										accessibilityRole='button'
-										className='rounded-full bg-[#F2EFE9] px-3.5 py-2'
-										style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
-									>
-										<Text
-											className='text-[#57534E] text-[13px]'
-											style={{ fontFamily: 'Pretendard-Medium' }}
-										>
-											{tag}
-										</Text>
-									</Pressable>
-								))}
-							</View>
-						</View>
+      {/* 필터 칩 */}
+      {searchText && (
+        <View className='mt-3'>
+          <SearchFilterBar
+            statusFilters={statusFilters}
+            onToggleStatus={toggleStatusFilter}
+            freeOnly={freeOnly}
+            onToggleFree={toggleFreeOnly}
+            filterDate={filterDate}
+            onPressDate={() => setShowDatePicker(true)}
+            excludedCount={excludedWords.length}
+            onPressExclude={() => setShowExcludeModal(true)}
+          />
+        </View>
+      )}
 
-						{recentWords.length > 0 && (
-							<View className='mt-7'>
-							<View className='flex-row items-center justify-between mb-2'>
-								<Text
-									className='text-[#1C1917] text-[18px]'
-									style={{ fontFamily: 'Pretendard-Bold' }}
-								>
-									최근 검색
-								</Text>
-								<Pressable
-									onPress={clearRecent}
-									hitSlop={8}
-									accessibilityLabel='최근 검색어 전체 삭제'
-									accessibilityRole='button'
-								>
-									<Text
-										className='text-[#A8A29E] text-[13px]'
-										style={{ fontFamily: 'Pretendard-Regular' }}
-									>
-										전체 삭제
-									</Text>
-								</Pressable>
-							</View>
-							{recentWords.map((word) => (
-								<View key={word} className='flex-row items-center gap-2.5 py-3'>
-									<Ionicons name='time-outline' size={15} color='#A8A29E' />
-									<Pressable
-										onPress={() => handlePressRecent(word)}
-										accessibilityLabel={`${word} 검색`}
-										accessibilityRole='button'
-										className='flex-1'
-									>
-										<Text
-											className='text-[#44403C] text-[15px]'
-											style={{ fontFamily: 'Pretendard-Regular' }}
-										>
-											{word}
-										</Text>
-									</Pressable>
-									<Pressable
-										onPress={() => removeRecent(word)}
-										hitSlop={8}
-										accessibilityLabel={`최근 검색어 ${word} 삭제`}
-										accessibilityRole='button'
-									>
-										<Ionicons name='close' size={15} color='#D6D3D1' />
-									</Pressable>
-								</View>
-							))}
-						</View>
-					)}
-					</View>
-				) : (
-					/* 검색 후 — 검색 결과 */
-					<View className='mt-7'>
-						<View className='flex-row items-end justify-between mb-3'>
-							<Text
-								className='text-[#1C1917] text-[18px]'
-								style={{ fontFamily: 'Pretendard-Bold' }}
-							>
-								검색 결과
-							</Text>
-							<Text
-								className='text-[#A8A29E] text-[13px]'
-								style={{ fontFamily: 'Pretendard-Regular' }}
-							>
-								{results.length}건{hasLocation ? ' · 가까운 순' : ''}
-							</Text>
-						</View>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: 48 }}
+        keyboardShouldPersistTaps='handled'
+        keyboardDismissMode='on-drag'
+      >
+        {!searchText ? (
+          /* 검색 전 — 추천 태그 + 최근 검색어 */
+          <View>
+            <View className='mt-7'>
+              <Text
+                className='text-[#1C1917] text-[16px] mb-3'
+                style={{ fontFamily: 'Pretendard-Bold' }}
+              >
+                추천 태그
+              </Text>
+              <View className='flex-row flex-wrap gap-2'>
+                {POPULAR_TAGS.map(tag => (
+                  <Pressable
+                    key={tag}
+                    onPress={() => handlePressTag(tag)}
+                    accessibilityLabel={`${tag} 태그로 검색`}
+                    accessibilityRole='button'
+                    className='rounded-full bg-[#F2EFE9] px-3.5 py-2'
+                    style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
+                  >
+                    <Text
+                      className='text-[#57534E] text-[13px]'
+                      style={{ fontFamily: 'Pretendard-Medium' }}
+                    >
+                      {tag}
+                    </Text>
+                  </Pressable>
+                ))}
+              </View>
+            </View>
 
-						{results.length === 0 ? (
-							<View className='items-center py-16 gap-2'>
-								<Text
-									className='text-[#57534E] text-[15px]'
-									style={{ fontFamily: 'Pretendard-SemiBold' }}
-								>
-									조건에 맞는 전시가 없어요
-								</Text>
-								<Text
-									className='text-[#A8A29E] text-[13px]'
-									style={{ fontFamily: 'Pretendard-Regular' }}
-								>
-									검색어나 필터를 조정해 보세요
-								</Text>
-							</View>
-						) : (
-							<View className='gap-5'>
-								{results.map((r) => (
-									<Animated.View
-										key={r.exhibition.id}
-										entering={ITEM_ENTERING}
-										exiting={ITEM_EXITING}
-										layout={ITEM_LAYOUT}
-									>
-										<ExhibitionResultCard result={r} onPress={handlePressExhibition} />
-									</Animated.View>
-								))}
-							</View>
-						)}
-					</View>
-				)}
-			</ScrollView>
+            {recentWords.length > 0 && (
+              <View className='mt-7'>
+                <View className='flex-row items-center justify-between mb-2'>
+                  <Text
+                    className='text-[#1C1917] text-[16px]'
+                    style={{ fontFamily: 'Pretendard-Bold' }}
+                  >
+                    최근 검색
+                  </Text>
+                  <Pressable
+                    onPress={clearRecent}
+                    hitSlop={8}
+                    accessibilityLabel='최근 검색어 전체 삭제'
+                    accessibilityRole='button'
+                  >
+                    <Text
+                      className='text-[#A8A29E] text-[13px]'
+                      style={{ fontFamily: 'Pretendard-Regular' }}
+                    >
+                      전체 삭제
+                    </Text>
+                  </Pressable>
+                </View>
+                {recentWords.map(word => (
+                  <View
+                    key={word}
+                    className='flex-row items-center gap-2.5 py-3'
+                  >
+                    <Ionicons
+                      name='time-outline'
+                      size={15}
+                      color='#A8A29E'
+                    />
+                    <Pressable
+                      onPress={() => handlePressRecent(word)}
+                      accessibilityLabel={`${word} 검색`}
+                      accessibilityRole='button'
+                      className='flex-1'
+                    >
+                      <Text
+                        className='text-[#44403C] text-[15px]'
+                        style={{ fontFamily: 'Pretendard-Regular' }}
+                      >
+                        {word}
+                      </Text>
+                    </Pressable>
+                    <Pressable
+                      onPress={() => removeRecent(word)}
+                      hitSlop={8}
+                      accessibilityLabel={`최근 검색어 ${word} 삭제`}
+                      accessibilityRole='button'
+                    >
+                      <Ionicons
+                        name='close'
+                        size={15}
+                        color='#D6D3D1'
+                      />
+                    </Pressable>
+                  </View>
+                ))}
+              </View>
+            )}
+          </View>
+        ) : (
+          /* 검색 후 — 검색 결과 */
+          <View className='mt-7'>
+            <View className='flex-row items-end justify-between mb-3'>
+              <Text
+                className='text-[#1C1917] text-[18px]'
+                style={{ fontFamily: 'Pretendard-Bold' }}
+              >
+                검색 결과
+              </Text>
+              <Text
+                className='text-[#A8A29E] text-[13px]'
+                style={{ fontFamily: 'Pretendard-Regular' }}
+              >
+                {results.length}건{hasLocation ? ' · 가까운 순' : ''}
+              </Text>
+            </View>
 
-			<DatePickerModal
-				visible={showDatePicker}
-				value={filterDate ?? new Date()}
-				onChange={setFilterDate}
-				onDismiss={() => setShowDatePicker(false)}
-				onReset={() => setFilterDate(null)}
-				resetLabel='날짜 필터 해제'
-			/>
+            {results.length === 0 ? (
+              <View className='items-center py-16 gap-2'>
+                <Text
+                  className='text-[#57534E] text-[15px]'
+                  style={{ fontFamily: 'Pretendard-SemiBold' }}
+                >
+                  조건에 맞는 전시가 없어요
+                </Text>
+                <Text
+                  className='text-[#A8A29E] text-[13px]'
+                  style={{ fontFamily: 'Pretendard-Regular' }}
+                >
+                  검색어나 필터를 조정해 보세요
+                </Text>
+              </View>
+            ) : (
+              <View className='gap-5'>
+                {results.map(r => (
+                  <Animated.View
+                    key={r.exhibition.id}
+                    entering={ITEM_ENTERING}
+                    exiting={ITEM_EXITING}
+                    layout={ITEM_LAYOUT}
+                  >
+                    <ExhibitionResultCard
+                      result={r}
+                      onPress={handlePressExhibition}
+                    />
+                  </Animated.View>
+                ))}
+              </View>
+            )}
+          </View>
+        )}
+      </ScrollView>
 
-			<ExcludeWordsModal
-				visible={showExcludeModal}
-				words={excludedWords}
-				onAdd={addExcludedWord}
-				onRemove={removeExcludedWord}
-				onDismiss={() => setShowExcludeModal(false)}
-			/>
-		</Screen>
-	);
+      <DatePickerModal
+        visible={showDatePicker}
+        value={filterDate ?? new Date()}
+        onChange={setFilterDate}
+        onDismiss={() => setShowDatePicker(false)}
+        onReset={() => setFilterDate(null)}
+        resetLabel='날짜 필터 해제'
+      />
+
+      <ExcludeWordsModal
+        visible={showExcludeModal}
+        words={excludedWords}
+        onAdd={addExcludedWord}
+        onRemove={removeExcludedWord}
+        onDismiss={() => setShowExcludeModal(false)}
+      />
+    </Screen>
+  );
 }

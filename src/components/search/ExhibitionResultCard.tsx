@@ -1,6 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Image, Pressable, Text, View } from 'react-native';
 import { useBookmarkStore } from '@/src/store/bookmarkStore';
+import { EmptyImagePlaceholder } from '@/src/components/common/EmptyImagePlaceholder';
 import { formatDistance } from '@/src/utils/mapUtils';
 import { getDdayLabel, STATUS_LABELS } from '@/src/utils/exhibitionSearch';
 import { StatusBadge } from './StatusBadge';
@@ -28,10 +29,16 @@ export function ExhibitionResultCard({ result, onPress }: ExhibitionResultCardPr
 			{/* 썸네일 + 상태 배지 오버레이 */}
 			<View
 				className='rounded-lg overflow-hidden'
-				style={{ width: 76, height: 100, backgroundColor: ex.posterColor }}
+				style={{ width: 76, height: 100 }}
 			>
-				{ex.posterImage && (
-					<Image source={ex.posterImage} resizeMode='cover' className='w-full h-full' />
+				{ex.heroImageUri || ex.posterImage ? (
+					<Image
+						source={ex.heroImageUri ? { uri: ex.heroImageUri } : ex.posterImage}
+						resizeMode='cover'
+						className='w-full h-full'
+					/>
+				) : (
+					<EmptyImagePlaceholder className='w-full h-full items-center justify-center bg-[#E5E1D8]' iconSize={40} />
 				)}
 				<StatusBadge status={status} />
 			</View>

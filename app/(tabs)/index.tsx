@@ -2,71 +2,125 @@ import { Ionicons } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
 import { useRouter } from 'expo-router';
 import {
+	ActivityIndicator,
 	Image,
+	ImageBackground,
 	Pressable,
 	ScrollView,
 	Text,
 	View,
 } from 'react-native';
 import { Screen } from '@/src/components/layout/Screen';
+import { EmptyImagePlaceholder } from '@/src/components/common/EmptyImagePlaceholder';
 import { SERVICE_NAME } from '@/src/constants/service-name';
+import {
+	useCultureExhibitions,
+	type CultureExhibitionItem,
+} from '@/src/hooks/useCultureExhibitions';
+import { useImageAspectRatio } from '@/src/hooks/useImageAspectRatio';
+import {
+	useKcisaExhibitions,
+	type KcisaExhibitionItem,
+} from '@/src/hooks/useKcisaExhibitions';
 
-const NEARBY_EXHIBITIONS = [
-	{
-		id: '1',
-		name: '모네, 빛을 그리다',
-		venue: '예술의전당',
-		distance: '0.4km',
-		endDate: '2026.08.31',
-		color: '#E8D5B7',
-	},
-	{
-		id: '2',
-		name: '이중섭 특별전',
-		venue: '국립현대미술관',
-		distance: '1.2km',
-		endDate: '2026.07.20',
-		color: '#D5E8D4',
-	},
-	{
-		id: '3',
-		name: '달리 초현실주의',
-		venue: '세종문화회관',
-		distance: '2.1km',
-		endDate: '2026.09.15',
-		color: '#D4D5E8',
-	},
-];
+interface ExhibitionPosterCardProps {
+	item: CultureExhibitionItem;
+	onPress: (id: string) => void;
+}
 
-const FEATURED_EXHIBITIONS = [
-	{
-		id: '4',
-		name: '김환기 회고전',
-		venue: '환기미술관',
-		dates: '2026.05.01 – 2026.09.30',
-		tag: '현재 전시 중',
-		color: '#D4C5B0',
-	},
-	{
-		id: '5',
-		name: 'KAWS: HOLIDAY',
-		venue: '롯데뮤지엄',
-		dates: '2026.06.15 – 2026.10.01',
-		tag: '이번 주 마감',
-		color: '#B8CCB8',
-	},
-	{
-		id: '6',
-		name: '반 고흐: 별이 빛나는 밤',
-		venue: 'DDP 갤러리',
-		dates: '2026.04.01 – 2026.08.15',
-		tag: '인기',
-		color: '#C8C5D8',
-	},
-];
+function ExhibitionPosterCard({ item, onPress }: ExhibitionPosterCardProps) {
+	const aspectRatio = useImageAspectRatio(item.thumbnail);
+
+	return (
+		<Pressable
+			onPress={() => onPress(item.id)}
+			accessibilityLabel={`${item.title}, ${item.venue}`}
+			accessibilityRole='button'
+			style={({ pressed }) => ({ opacity: pressed ? 0.85 : 1 })}
+		>
+			{item.thumbnail ? (
+				// 포스터 이미지 영역 — 실제 이미지 비율에 맞춰 카드 모양 조절
+				// imageStyle에도 borderRadius를 줘야 내부 Image 레이어가 모서리를 안 덮음 (RN 이슈)
+				<ImageBackground
+					source={{ uri: item.thumbnail }}
+					className='w-full rounded-lg overflow-hidden relative'
+					style={{ aspectRatio, backgroundColor: '#E8E4DC' }}
+					imageStyle={{ borderRadius: 8 }}
+				/>
+			) : (
+				<EmptyImagePlaceholder
+					className='w-full rounded-lg overflow-hidden items-center justify-center bg-[#dad4c8]'
+					style={{ aspectRatio: 0.75 }}
+					iconSize={120}
+				/>
+			)}
+		</Pressable>
+	);
+}
+
+interface KcisaExhibitionCardProps {
+	item: KcisaExhibitionItem;
+	onPress: (id: string) => void;
+}
+
+const KCISA_CARD_WIDTH = 140;
+const KCISA_CARD_HEIGHT = Math.round((KCISA_CARD_WIDTH * 4) / 3);
+// 세로 ScrollView 안에 중첩된 가로 ScrollView는 높이가 없으면 aspect-ratio 계산이
+// 안정적이지 않아(RN 중첩 스크롤뷰 이슈), 고정 width/height를 명시적으로 준다.
+export const KCISA_SECTION_HEIGHT = KCISA_CARD_HEIGHT + 56;
+
+function KcisaExhibitionCard({ item, onPress }: KcisaExhibitionCardProps) {
+	return (
+		<Pressable
+			onPress={() => onPress(item.id)}
+			accessibilityLabel={`${item.title}, ${item.venue}`}
+			accessibilityRole='button'
+			style={({ pressed }) => ({ opacity: pressed ? 0.85 : 1, width: KCISA_CARD_WIDTH })}
+		>
+			<View
+				className='rounded-lg overflow-hidden'
+				style={{ width: KCISA_CARD_WIDTH, height: KCISA_CARD_HEIGHT }}
+			>
+				{item.thumbnail ? (
+					<Image
+						source={{ uri: item.thumbnail }}
+						style={{ width: KCISA_CARD_WIDTH, height: KCISA_CARD_HEIGHT, borderRadius: 8 }}
+						resizeMode='cover'
+					/>
+				) : (
+					<EmptyImagePlaceholder
+						className='items-center justify-center bg-[#ece9e1]'
+						style={{ width: KCISA_CARD_WIDTH, height: KCISA_CARD_HEIGHT }}
+						iconSize={64}
+					/>
+				)}
+			</View>
+			<Text
+				numberOfLines={2}
+				style={{ width: KCISA_CARD_WIDTH }}
+				className='mt-2 text-gray-900 text-[13px] font-pretendard-semibold leading-[18px]'
+			>
+				{item.title}
+			</Text>
+			<Text
+				numberOfLines={1}
+				style={{ width: KCISA_CARD_WIDTH }}
+				className='text-gray-400 text-[11px] font-pretendard-regular mt-0.5'
+			>
+				{item.venue}
+			</Text>
+		</Pressable>
+	);
+}
 
 export default function ExploreScreen() {
 	const router = useRouter();
+	const { items, status, refetch } = useCultureExhibitions();
+	const {
+		items: kcisaItems,
+		status: kcisaStatus,
+		refetch: kcisaRefetch,
+	} = useKcisaExhibitions();
 
 	return (
 		<Screen className='bg-white'>
@@ -94,13 +148,7 @@ export default function ExploreScreen() {
 				contentContainerStyle={{ paddingBottom: 48 }}
 			>
 				{/* 타이틀 */}
-				<View className='gap-1.5 mb-5'>
-					<View className='flex-row items-center gap-1'>
-						<Ionicons name='location-outline' size={13} color='#9CA3AF' />
-						<Text className='text-gray-400 text-[13px] font-pretendard-regular'>
-							서울·종로구
-						</Text>
-					</View>
+				<View className='gap-1.5 mb-8'>
 					<View className='flex-row items-end justify-between'>
 						<Text className='mt-2 text-gray-900 text-[38px] leading-[42px] font-hahmlet-bold'>
 							{'어떤 이야기를\n담고 있을까요?'}
@@ -114,43 +162,78 @@ export default function ExploreScreen() {
 					</View>
 				</View>
 
-				{/* 이번 주 전시 — 큰 카드 */}
+				{/* 국공립 기관 전시 */}
 				<View>
-					<View className='gap-4'>
-						{FEATURED_EXHIBITIONS.map((item) => (
-							<Pressable
-								key={item.id}
-								onPress={() => router.push(`/(explore)/${item.id}`)}
-								accessibilityLabel={`${item.name}, ${item.venue}`}
-								accessibilityRole='button'
-								style={({ pressed }) => ({ opacity: pressed ? 0.85 : 1 })}
-							>
-								{/* 포스터 이미지 영역 */}
-								<View
-									className='w-full aspect-[3/4] rounded-lg overflow-hidden relative'
-									style={{ backgroundColor: item.color }}
-								>
-									{/* 하단 오버레이 + 텍스트 */}
-									<View className='absolute bottom-0 left-0 right-0 px-4 pb-5 pt-10'>
-										<View className='relative gap-0.5'>
-											<Text className='text-white text-xl font-pretendard-bold'>
-												{item.name}
-											</Text>
-											<Text className='text-white/70 text-[13px] font-pretendard-semibold'>
-												{item.venue} · {item.dates}
-											</Text>
-										</View>
-									</View>
-								</View>
+					<Text className='text-gray-900 text-[18px] font-pretendard-bold mb-3'>
+						국공립 기관 전시
+					</Text>
+					{kcisaStatus === 'loading' && kcisaItems.length === 0 ? (
+						<View className='items-center justify-center py-8'>
+							<ActivityIndicator color='#9CA3AF' />
+						</View>
+					) : kcisaStatus === 'error' ? (
+						<View className='items-center justify-center py-8 gap-2'>
+							<Text className='text-gray-400 text-[13px] font-pretendard-regular'>
+								전시 정보를 불러오지 못했어요
+							</Text>
+							<Pressable onPress={kcisaRefetch} accessibilityLabel='다시 시도' accessibilityRole='button'>
+								<Text className='text-gray-900 text-[13px] font-pretendard-semibold'>다시 시도</Text>
 							</Pressable>
-						))}
-					</View>
+						</View>
+					) : (
+						<View style={{ height: KCISA_SECTION_HEIGHT }}>
+							<ScrollView
+								horizontal
+								showsHorizontalScrollIndicator={false}
+								contentContainerStyle={{ flexDirection: 'row', gap: 12 }}
+							>
+								{kcisaItems.map((item) => (
+									<KcisaExhibitionCard
+										key={item.id}
+										item={item}
+										onPress={(id) => router.push(`/(explore)/${id}`)}
+									/>
+								))}
+							</ScrollView>
+						</View>
+					)}
+				</View>
+
+				{/* 이번 주 전시 — 큰 카드 */}
+				<View className='mt-10'>
+					<Text className='text-gray-900 text-[18px] font-pretendard-bold mb-3'>
+						추천 전시
+					</Text>
+					{status === 'loading' && items.length === 0 ? (
+						<View className='items-center justify-center py-16'>
+							<ActivityIndicator color='#9CA3AF' />
+						</View>
+					) : status === 'error' ? (
+						<View className='items-center justify-center py-16 gap-2'>
+							<Text className='text-gray-400 text-[13px] font-pretendard-regular'>
+								전시 정보를 불러오지 못했어요
+							</Text>
+							<Pressable onPress={refetch} accessibilityLabel='다시 시도' accessibilityRole='button'>
+								<Text className='text-gray-900 text-[13px] font-pretendard-semibold'>다시 시도</Text>
+							</Pressable>
+						</View>
+					) : (
+						<View className='gap-4'>
+							{items.map((item) => (
+								<ExhibitionPosterCard
+									key={item.id}
+									item={item}
+									onPress={(id) => router.push(`/(explore)/${id}`)}
+								/>
+							))}
+						</View>
+					)}
 				</View>
 			</ScrollView>
 
 			{/* 해설 생성 FAB */}
 			<Pressable
-				onPress={() => router.push('/create-description')}
+				onPress={() => router.push('/(guide)/create-description')}
 				accessibilityLabel='작품 해설 만들기'
 				accessibilityRole='button'
 				className='absolute bottom-6 right-6 h-14 w-14 items-center justify-center rounded-full bg-[#1C1917]'
