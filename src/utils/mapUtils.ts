@@ -1,39 +1,6 @@
 import type { Exhibition } from '../data/exhibitions';
 import type { VenueGroup } from '../data/venues';
 
-export type Cluster = {
-	venues: VenueGroup[];
-	latitude: number;
-	longitude: number;
-};
-
-const CLUSTER_RADIUS_PX = 40;
-
-/** 현재 줌 레벨 기준으로 마커를 클러스터로 그룹화 */
-export function computeClusters(venues: VenueGroup[], zoom: number): Cluster[] {
-	const radius = latOffsetForPixels(zoom, CLUSTER_RADIUS_PX);
-	const clusters: Cluster[] = [];
-	const assigned = new Set<string>();
-
-	for (const v of venues) {
-		if (assigned.has(v.venueName)) continue;
-
-		const members = venues.filter(
-			(u) =>
-				!assigned.has(u.venueName) &&
-				Math.abs(u.coordinates.latitude - v.coordinates.latitude) <= radius &&
-				Math.abs(u.coordinates.longitude - v.coordinates.longitude) <= radius * 1.5,
-		);
-		members.forEach((u) => assigned.add(u.venueName));
-
-		const lat = members.reduce((s, u) => s + u.coordinates.latitude, 0) / members.length;
-		const lon = members.reduce((s, u) => s + u.coordinates.longitude, 0) / members.length;
-		clusters.push({ venues: members, latitude: lat, longitude: lon });
-	}
-
-	return clusters;
-}
-
 /** "10:00 – 20:00" 형태 파싱 후 지정 날짜 영업 중 여부 */
 export function isOpenOn(openHours: string, date: Date): boolean {
 	const match = openHours.match(/(\d{1,2}):(\d{2})\s*[–-]\s*(\d{1,2}):(\d{2})/);
@@ -86,4 +53,48 @@ export function latOffsetForPixels(zoom: number, pixels: number): number {
 /** km 거리를 표시 문자열로 변환 */
 export function formatDistance(km: number): string {
 	return km < 1 ? `${Math.round(km * 1000)}m` : `${km.toFixed(1)}km`;
+}
+
+const DECLUTTER_RADIUS_PX = 40;
+
+/**
+ * 카카오맵 스타일 마커 밀집 처리 — 클러스터처럼 좌표를 평균 내 옮기지 않고, 각 장소는
+ * 항상 자기 실제 좌표에 그대로 둔 채 "라벨 있는 큰 마커"로 보여줄지 "작은 점"으로
+ * 줄일지만 정한다. 선택된 장소는 항상 큰 마커, 그다음은 오늘 진행 중인 전시가 있는
+ * 장소를 우선 큰 마커로 남기고, 이미 자리 잡은 큰 마커와 너무 가까운 나머지는 점으로 줄인다.
+ */
+export function declutterMarkers(
+	venues: VenueGroup[],
+	zoom: number,
+	selectedVenueName: string | null,
+	referenceDate: Date,
+): { full: VenueGroup[]; dots: VenueGroup[] } {
+	const radius = latOffsetForPixels(zoom, DECLUTTER_RADIUS_PX);
+
+	const priority = (v: VenueGroup) => {
+		if (v.venueName === selectedVenueName) return 0;
+		if (hasExhibitionOn(v.exhibitions, referenceDate)) return 1;
+		return 2;
+	};
+
+	const sorted = [...venues].sort((a, b) => priority(a) - priority(b));
+
+	const full: VenueGroup[] = [];
+	const dots: VenueGroup[] = [];
+
+	for (const v of sorted) {
+		const isSelected = v.venueName === selectedVenueName;
+		const tooCloseToFullMarker = full.some(
+			(u) =>
+				Math.abs(u.coordinates.latitude - v.coordinates.latitude) <= radius &&
+				Math.abs(u.coordinates.longitude - v.coordinates.longitude) <= radius * 1.5,
+		);
+		if (isSelected || !tooCloseToFullMarker) {
+			full.push(v);
+		} else {
+			dots.push(v);
+		}
+	}
+
+	return { full, dots };
 }

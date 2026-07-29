@@ -2,10 +2,13 @@ import { EXHIBITIONS, type Exhibition } from './exhibitions';
 
 export type VenueGroup = {
 	venueName: string;
+	venueAddress?: string;
 	coordinates: { latitude: number; longitude: number };
 	openHours: string;
 	closedDays?: string;
 	exhibitions: Exhibition[];
+	phone?: string;
+	homepageUrl?: string;
 };
 
 export const venueGroups: VenueGroup[] = (() => {
@@ -15,6 +18,7 @@ export const venueGroups: VenueGroup[] = (() => {
 		if (!map.has(ex.venue)) {
 			map.set(ex.venue, {
 				venueName: ex.venue,
+				venueAddress: ex.venueAddress,
 				coordinates: ex.coordinates,
 				openHours: ex.openHours,
 				closedDays: ex.closedDays,
@@ -25,3 +29,5 @@ export const venueGroups: VenueGroup[] = (() => {
 	}
 	return Array.from(map.values());
 })();
+
+export const venueNames = new Set(venueGroups.map((v) => v.venueName));

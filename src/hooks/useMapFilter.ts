@@ -11,7 +11,7 @@ export type FilterKey = (typeof FILTERS)[number]['key'];
 
 const DEBOUNCE_MS = 300;
 
-export function useMapFilter() {
+export function useMapFilter(extraVenues: VenueGroup[] = []) {
 	const [inputText, setInputText] = useState('');
 	const [searchText, setSearchText] = useState('');
 	const [activeFilters, setActiveFilters] = useState<Set<FilterKey>>(new Set());
@@ -29,10 +29,15 @@ export function useMapFilter() {
 		if (debounceTimer.current) clearTimeout(debounceTimer.current);
 	}, []);
 
+	const allVenues = useMemo(
+		() => [...venueGroups, ...extraVenues],
+		[extraVenues],
+	);
+
 	const mapVenues = useMemo(() => {
-		if (!searchText) return venueGroups;
-		return venueGroups.filter((v) => v.venueName.includes(searchText));
-	}, [searchText]);
+		if (!searchText) return allVenues;
+		return allVenues.filter((v) => v.venueName.includes(searchText));
+	}, [searchText, allVenues]);
 
 	const matchesFilters = useCallback(
 		(v: VenueGroup) => {
