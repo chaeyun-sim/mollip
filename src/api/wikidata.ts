@@ -4,6 +4,11 @@ export interface WikiArtwork {
 	description: string;
 	imageUrl?: string;
 	year?: string;
+	artist?: string;
+}
+
+interface RawArtwork extends WikiArtwork {
+	creatorId?: string;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -102,8 +107,12 @@ function isArtist(claims: EntityClaims): boolean {
 	});
 }
 
-function parseArtwork(id: string, e: EntityMap[string]): WikiArtwork | null {
-	const label = e.labels?.ko?.value ?? e.labels?.en?.value ?? id;
+function getLabel(e: EntityMap[string], fallback: string): string {
+	return e.labels?.ko?.value ?? e.labels?.en?.value ?? fallback;
+}
+
+function parseArtwork(id: string, e: EntityMap[string]): RawArtwork | null {
+	const label = getLabel(e, id);
 	const description = e.descriptions?.ko?.value ?? e.descriptions?.en?.value ?? '';
 	const imageClaim = e.claims?.P18?.[0]?.mainsnak?.datavalue?.value;
 	const imageUrl = imageClaim ? commonsImageUrl(imageClaim) : undefined;
@@ -111,7 +120,9 @@ function parseArtwork(id: string, e: EntityMap[string]): WikiArtwork | null {
 	const year = yearClaim
 		? String(Math.abs(parseInt(yearClaim.slice(1, 5), 10)))
 		: undefined;
-	return { qId: id, label, description, imageUrl, year };
+	// P170 (creator) — 별도 배치로 조회해 이름을 붙인다 (searchWikiArtworks 참고)
+	const creatorId: string | undefined = e.claims?.P170?.[0]?.mainsnak?.datavalue?.value?.id;
+	return { qId: id, label, description, imageUrl, year, creatorId };
 }
 
 export async function searchWikiArtworks(query: string): Promise<WikiArtwork[]> {
@@ -120,8 +131,11 @@ export async function searchWikiArtworks(query: string): Promise<WikiArtwork[]> 
 
 	const firstBatch = await fetchEntities(ids);
 
-	const directArtworks: WikiArtwork[] = [];
+	const directArtworks: RawArtwork[] = [];
 	const notableWorkIds: string[] = [];
+	// 대표작(P800) 경로로 들어온 작품은 자기 항목에 P170(creator)이 비어있는 경우가 흔해서,
+	// 이미 알고 있는 검색된 작가 id를 폴백으로 남겨둔다.
+	const notableWorkArtistId = new Map<string, string>();
 
 	for (const id of ids) {
 		const e = firstBatch[id];
@@ -137,6 +151,7 @@ export async function searchWikiArtworks(query: string): Promise<WikiArtwork[]> 
 				.map((c: { mainsnak?: { datavalue?: { value?: { id?: string } } } }) => c?.mainsnak?.datavalue?.value?.id)
 				.filter(Boolean)
 				.slice(0, 8) as string[];
+			for (const workId of p800) notableWorkArtistId.set(workId, id);
 			notableWorkIds.push(...p800);
 		}
 	}
@@ -149,11 +164,29 @@ export async function searchWikiArtworks(query: string): Promise<WikiArtwork[]> 
 		const secondBatch = await fetchEntities(uniqueWorkIds.slice(0, 20));
 		for (const id of uniqueWorkIds) {
 			const e = secondBatch[id];
-			if (!e || !isArtwork(e.claims ?? {})) continue;
+			// 대표작(P800) 목록에서 나온 항목은 이미 "확인된 작가의 대표작"이라는 신뢰도가
+			// 있으므로, isArtwork(P31 분류) 여부와 무관하게 채택한다. Wikidata에는 대표작으로
+			// 링크되어 있으면서도 정작 자기 항목엔 P31이 비어있는 경우가 흔하다.
+			if (!e) continue;
 			const artwork = parseArtwork(id, e);
-			if (artwork) directArtworks.push(artwork);
+			if (!artwork) continue;
+			if (!artwork.creatorId) artwork.creatorId = notableWorkArtistId.get(id);
+			directArtworks.push(artwork);
 		}
 	}
 
-	return directArtworks;
+	// 작가명 보강 — 작가명이 프롬프트에 있어야 해설 품질이 떨어지지 않는다.
+	const creatorIds = [
+		...new Set(directArtworks.map((a) => a.creatorId).filter(Boolean)),
+	] as string[];
+	if (creatorIds.length > 0) {
+		const creatorBatch = await fetchEntities(creatorIds);
+		for (const artwork of directArtworks) {
+			if (!artwork.creatorId) continue;
+			const creator = creatorBatch[artwork.creatorId];
+			if (creator) artwork.artist = getLabel(creator, '');
+		}
+	}
+
+	return directArtworks.map(({ creatorId: _creatorId, ...artwork }) => artwork);
 }

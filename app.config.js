@@ -40,6 +40,15 @@ module.exports = {
 				NSLocationWhenInUseUsageDescription: '주변 전시관을 지도에 표시하기 위해 위치 정보를 사용합니다.',
 				NSLocationAlwaysAndWhenInUseUsageDescription: '주변 전시관을 지도에 표시하기 위해 위치 정보를 사용합니다.',
 				NMFClientId: NAVER_CLIENT_ID,
+				// 문화포털(culture.go.kr) 전시 썸네일이 HTTP로만 제공되어 ATS 예외 필요
+				NSAppTransportSecurity: {
+					NSExceptionDomains: {
+						'culture.go.kr': {
+							NSIncludesSubdomains: true,
+							NSExceptionAllowsInsecureHTTPLoads: true,
+						},
+					},
+				},
 			},
 		},
 		android: {

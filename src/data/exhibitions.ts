@@ -8,6 +8,8 @@ export interface Artwork {
 	thumbnailColor: string;
 	frameRatio?: FrameRatio;
 	imageSource?: ReturnType<typeof require>;
+	// Wikidata 등에서 가져온 원격 작품 이미지 URL. 있으면 imageSource보다 우선 사용.
+	imageUri?: string;
 	medium?: string;
 	dimensions?: string;
 	description?: string;
@@ -28,14 +30,21 @@ export interface Exhibition {
 	description: string;
 	posterColor: string;
 	posterImage?: ReturnType<typeof require>;
+	// 문화포털 API로 조회한 전시의 실제 포스터 URL (원격 이미지). 있으면 히어로에서 우선 사용.
+	heroImageUri?: string;
 	openHours: string;
 	closedDays?: string;
 	admission: string;
 	admissionFree?: boolean;
 	ticketUrl?: string;
+	phone?: string;
 	coordinates?: { latitude: number; longitude: number };
+	// 관련 전시 카드(포스터 캐러셀)에 표시되는 장르 배지. 데이터 소스와 무관하게 항상 채워져야 함.
+	genre: string;
 	artworks: Artwork[];
 	relatedExhibitionIds: string[];
+	// API 소스(KCISA 등)에서 이미 완전히 조회해둔 관련 전시. 있으면 relatedExhibitionIds보다 우선.
+	relatedExhibitions?: Exhibition[];
 	tags?: string[];
 }
 
@@ -52,6 +61,7 @@ export const EXHIBITIONS: Exhibition[] = [
 			'인상주의의 대가 클로드 모네의 대표작 60여 점을 한자리에서 만날 수 있는 특별전입니다. 빛과 색채의 마법사 모네가 포착한 순간들, 수련 연작부터 루앙 대성당까지 그의 예술 세계를 깊이 있게 탐구합니다.',
 		posterColor: '#E8D5B7',
 		posterImage: require('../../assets/images/example/exhibition-1.png'),
+		genre: '인상주의',
 		openHours: '10:00 – 20:00',
 		closedDays: '매주 월요일',
 		admission: '성인 18,000원',
@@ -106,7 +116,7 @@ export const EXHIBITIONS: Exhibition[] = [
 	{
 		id: '2',
 		title: '이중섭 특별전',
-		venue: '국립현대미술관',
+		venue: '국립현대미술관 서울관',
 		coordinates: { latitude: 37.5789, longitude: 126.9800 },
 		startDate: '2026.04.10',
 		endDate: '2026.07.20',
@@ -114,6 +124,7 @@ export const EXHIBITIONS: Exhibition[] = [
 		description:
 			'한국 근현대 미술의 거장 이중섭의 탄생 110주년을 기념하는 대규모 회고전입니다.',
 		posterColor: '#D5E8D4',
+		genre: '한국화',
 		openHours: '10:00 – 18:00',
 		closedDays: '매주 월요일',
 		admission: '무료',
@@ -152,6 +163,7 @@ export const EXHIBITIONS: Exhibition[] = [
 		description:
 			'초현실주의 거장 살바도르 달리의 회화, 조각, 드로잉 80여 점을 선보이는 국내 최대 규모의 달리 전시입니다.',
 		posterColor: '#D4D5E8',
+		genre: '초현실주의',
 		openHours: '10:00 – 19:00',
 		admission: '성인 20,000원',
 		ticketUrl: 'https://tickets.interpark.com',
@@ -188,6 +200,7 @@ export const EXHIBITIONS: Exhibition[] = [
 		description:
 			'한국 추상미술의 선구자 김환기의 탄생 110주년을 기념하는 대규모 회고전.',
 		posterColor: '#D4C5B0',
+		genre: '추상미술',
 		openHours: '10:00 – 18:00',
 		closedDays: '매주 월요일',
 		admission: '성인 10,000원',
@@ -211,6 +224,7 @@ export const EXHIBITIONS: Exhibition[] = [
 		description:
 			'세계적인 팝 아티스트 KAWS의 아시아 순회 전시.',
 		posterColor: '#B8CCB8',
+		genre: '팝아트',
 		openHours: '10:00 – 20:00',
 		admission: '성인 18,000원',
 		ticketUrl: 'https://tickets.lottemuseum.com',
@@ -234,6 +248,7 @@ export const EXHIBITIONS: Exhibition[] = [
 		description:
 			'몰입형 미디어아트로 재탄생한 반 고흐의 세계.',
 		posterColor: '#C8C5D8',
+		genre: '몰입형 미디어아트',
 		openHours: '10:00 – 21:00',
 		admission: '성인 20,000원',
 		ticketUrl: 'https://tickets.interpark.com',
