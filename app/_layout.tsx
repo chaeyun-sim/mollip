@@ -63,13 +63,12 @@ export default function RootLayout() {
 		<GestureHandlerRootView style={{ flex: 1 }}>
 			<QueryClientProvider client={queryClient}>
 				<BottomSheetModalProvider>
-					<Stack>
+					<Stack screenOptions={{ headerShown: false}}>
 						<Stack.Screen name='(tabs)' options={{ headerShown: false }} />
 						<Stack.Screen name='(guide)' options={{ headerShown: false }} />
 						<Stack.Screen name='(explore)' options={{ headerShown: false }} />
 						<Stack.Screen name='settings' options={{ headerShown: false }} />
-					<Stack.Screen name='diary/[date]' options={{ headerShown: false }} />
-					<Stack.Screen name='create-description' options={{ headerShown: false }} />
+						<Stack.Screen name='diary/[date]' options={{ headerShown: false }} />
 						<Stack.Screen name='onboarding' options={{ headerShown: false }} />
 					</Stack>
 				</BottomSheetModalProvider>
