@@ -51,7 +51,7 @@ function Right({ children, className, style }: SlotProps) {
 	);
 }
 
-function Back({ onPress }: { onPress?: () => void }) {
+function Back({ onPress, color }: { onPress?: () => void; color?: string; }) {
 	const router = useRouter();
 	return (
 		<Pressable
@@ -61,7 +61,7 @@ function Back({ onPress }: { onPress?: () => void }) {
 			accessibilityRole='button'
 			style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
 		>
-			<Ionicons name='arrow-back' size={24} color='#4da3ff' />
+			<Ionicons name='arrow-back' size={24} color={color || '#4da3ff'} />
 		</Pressable>
 	);
 }

@@ -1,15 +1,17 @@
 import { Ionicons } from '@expo/vector-icons';
-import { StatusBar } from 'expo-status-bar';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useMemo, useState } from 'react';
-import { ActivityIndicator, Image, Pressable, ScrollView, Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { Pressable, Text, View } from 'react-native';
 
 import { PlaylistModal } from '@/src/components/archive/PlaylistModal';
+import { VisitTicket } from '@/src/components/archive/VisitTicket';
 import { useDiaryEntry } from '@/src/hooks/useDiaryEntry';
 import { useImmersiveStore } from '@/src/store/immersiveStore';
+import { useVisitStore } from '@/src/store/visitStore';
 import { DIARY_PROMPT } from '@/src/constants/prompts';
-import { EXHIBITIONS } from '@/src/data/exhibitions';
+import { EXHIBITIONS, getExhibition } from '@/src/data/exhibitions';
+import { Screen } from '@/src/components/layout/Screen';
+import { ScreenHeader } from '@/src/components/layout/ScreenHeader';
 
 const WEEKDAYS = ['일', '월', '화', '수', '목', '금', '토'] as const;
 
@@ -31,18 +33,23 @@ export default function DiaryScreen() {
 		return `${y}.${m}.${d} ${weekday}요일`;
 	}, [dateKey]);
 
-	// 관람 기록: 최근 관람 전시(데모: 첫 전시) + 들은 오디오 해설(플레이리스트)
-	const exhibition = EXHIBITIONS[0];
+	// 관람 기록: 그날의 방문 기록(visitStore) 우선, 없으면 데모 데이터로 대체
+	const visit = useVisitStore((s) => s.visits[dateKey]);
 	const playlist = useImmersiveStore((s) => s.playlist);
 	const [playlistVisible, setPlaylistVisible] = useState(false);
 
-	const listenedTitles = useMemo(
+	const exhibition = useMemo(
 		() =>
-			playlist.length > 0
-				? playlist.map((p) => p.title)
-				: exhibition.artworks.slice(0, 3).map((a) => a.title),
-		[playlist, exhibition],
+			(visit?.exhibitionId ? getExhibition(visit.exhibitionId) : undefined) ??
+			EXHIBITIONS[0],
+		[visit],
 	);
+
+	const listenedTitles = useMemo(() => {
+		if (visit && visit.listened.length > 0) return visit.listened.map((l) => l.title);
+		if (playlist.length > 0) return playlist.map((p) => p.title);
+		return exhibition.artworks.slice(0, 3).map((a) => a.title);
+	}, [visit, playlist, exhibition]);
 
 	const prompt = useMemo(
 		() =>
@@ -61,23 +68,16 @@ export default function DiaryScreen() {
 	);
 
 	return (
-		<SafeAreaView className='flex-1 bg-[#F8F6F2]' edges={['top']}>
-			<StatusBar style='dark' />
-			{/* 헤더 */}
-			<View className='flex-row items-center justify-between px-6 py-3'>
-				<Pressable
-					onPress={() => router.back()}
-					hitSlop={8}
-					accessibilityLabel='뒤로 가기'
-					accessibilityRole='button'
-					style={({ pressed }) => ({ opacity: pressed ? 0.5 : 1 })}
-				>
-					<Ionicons name='arrow-back' size={22} color='#111827' />
-				</Pressable>
-				<Text className='text-[16px] font-pretendard-semibold text-gray-900'>
+		<Screen>
+			<ScreenHeader>
+				<ScreenHeader.Back color="white" onPress={() => router.back()} />
+				<ScreenHeader.Center>
+					<Text className='text-[16px] font-pretendard-semibold text-white'>
 					{dateLabel}
 				</Text>
-				<View className='flex-row items-center gap-4'>
+				</ScreenHeader.Center>
+				<ScreenHeader.Right>
+					<View className='flex-row items-center gap-4'>
 					<Pressable
 						onPress={() => setPlaylistVisible(true)}
 						hitSlop={8}
@@ -85,7 +85,7 @@ export default function DiaryScreen() {
 						accessibilityRole='button'
 						style={({ pressed }) => ({ opacity: pressed ? 0.5 : 1 })}
 					>
-						<Ionicons name='musical-notes-outline' size={20} color='#111827' />
+						<Ionicons name='musical-notes-outline' size={20} color='white' />
 					</Pressable>
 					{hasEntry && (
 						<Pressable
@@ -95,85 +95,36 @@ export default function DiaryScreen() {
 							accessibilityRole='button'
 							style={({ pressed }) => ({ opacity: pressed ? 0.5 : 1 })}
 						>
-							<Ionicons name='refresh' size={20} color='#111827' />
+							<Ionicons name='refresh' size={20} color='white' />
 						</Pressable>
 					)}
 				</View>
-			</View>
+				</ScreenHeader.Right>
+			</ScreenHeader>
 
-			<ScrollView
+
+			{/* <ScrollView
 				className='flex-1'
 				contentContainerStyle={{ paddingHorizontal: 24, paddingBottom: 48, paddingTop: 8 }}
 				showsVerticalScrollIndicator={false}
-			>
-				{/* 타이틀 */}
-				<Text className='text-gray-900 text-[26px] leading-[34px] font-hahmlet-bold'>
-					오늘의 전시 관람
-				</Text>
+			> */}
 
-				{/* 관람한 전시 카드 */}
-				<View className='mt-6 flex-row items-center gap-4 rounded-2xl bg-[#F2EFE9] p-4'>
-					{exhibition.posterImage ? (
-						<Image
-							source={exhibition.posterImage}
-							resizeMode='cover'
-							className='rounded-xl'
-							style={{ width: 64, height: 64 }}
-						/>
-					) : (
-						<View
-							className='h-16 w-16 flex-shrink-0 rounded-xl'
-							style={{ backgroundColor: exhibition.posterColor }}
-						/>
-					)}
-					<View className='flex-1'>
-						<Text
-							className='font-pretendard-semibold text-[15px] leading-[21px] text-gray-900'
-							numberOfLines={2}
-						>
-							{exhibition.title}
-						</Text>
-						<Text className='mt-1 font-pretendard-regular text-[12px] text-gray-400'>
-							{exhibition.venue}
-						</Text>
-					</View>
-				</View>
-
-				{/* 오늘 들은 해설 */}
-				<View className='mt-8'>
-					<View className='mb-3 flex-row items-center gap-2'>
-						<Ionicons name='headset-outline' size={15} color='#9CA3AF' />
-						<Text className='font-pretendard-semibold text-[13px] uppercase tracking-widest text-gray-400'>
-							오늘 들은 해설
-						</Text>
-					</View>
-					<View className='rounded-2xl bg-white px-5 py-2'>
-						{listenedTitles.map((title, index) => (
-							<View
-								key={title}
-								className='flex-row items-center py-3'
-								style={
-									index < listenedTitles.length - 1
-										? { borderBottomWidth: 1, borderBottomColor: '#F3F4F6' }
-										: undefined
-								}
-							>
-								<Text className='w-7 text-[13px] font-pretendard-medium text-gray-400'>
-									{index + 1}
-								</Text>
-								<Text
-									className='flex-1 text-[14px] font-pretendard-regular text-gray-800'
-									numberOfLines={1}
-								>
-									{title}
-								</Text>
-							</View>
-						))}
-					</View>
+				{/* 관람 티켓: 앞면 관람 정보 + 뒷면 AI 일기 */}
+				<View className='justify-center pt-10 px-4'>
+					<VisitTicket
+						exhibition={exhibition}
+						listenedTitles={listenedTitles}
+						dateKey={dateKey}
+						dateLabel={dateLabel}
+						diaryText={text}
+						isStreaming={isStreaming}
+						hasError={hasError}
+						onGenerate={generate}
+					/>
 				</View>
 
 				{/* 일기 본문 */}
-				<View className='mt-8'>
+				{/* <View className='mt-8'>
 					<View className='mb-3 flex-row items-center gap-2'>
 						<Ionicons name='create-outline' size={15} color='#9CA3AF' />
 						<Text className='font-pretendard-semibold text-[13px] uppercase tracking-widest text-gray-400'>
@@ -218,14 +169,14 @@ export default function DiaryScreen() {
 							)}
 						</View>
 					)}
-				</View>
-			</ScrollView>
+				</View> */}
+			{/* </ScrollView> */}
 
 			<PlaylistModal
 				visible={playlistVisible}
 				titles={listenedTitles}
 				onClose={() => setPlaylistVisible(false)}
 			/>
-		</SafeAreaView>
+		</Screen>
 	);
 }

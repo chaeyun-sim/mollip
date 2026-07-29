@@ -2,21 +2,22 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { StatusBar } from 'expo-status-bar';
 import { PropsWithChildren } from 'react';
 import { View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { Edges, SafeAreaView } from 'react-native-safe-area-context';
 import { cn } from '../../lib/cn';
 import { ScreenHeader } from './ScreenHeader';
 
 interface ScreenProps {
 	className?: string;
+	edges?: Edges
 }
 
-function Screen({ className, children }: PropsWithChildren<ScreenProps>) {
+function Screen({ className, children, edges }: PropsWithChildren<ScreenProps>) {
 	return (
 		<>
 			<StatusBar style='light' />
 			<LinearGradient colors={['#0C0A09', '#171412']} style={{ flex: 1 }}>
 				<SafeAreaView
-					edges={['top', 'left', 'right']}
+					edges={edges || ['top', 'left', 'right']}
 					className={cn('px-6 flex-1', className)}
 				>
 					{children}

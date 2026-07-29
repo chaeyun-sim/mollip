@@ -1,0 +1,70 @@
+import { Ionicons } from '@expo/vector-icons';
+import { useMemo } from 'react';
+import { Text, View } from 'react-native';
+import Animated, { FadeIn, FadeOut, LinearTransition } from 'react-native-reanimated';
+
+import { ExhibitionResultCard } from '@/src/components/search/ExhibitionResultCard';
+import { useBookmarkStore } from '@/src/store/bookmarkStore';
+import { EXHIBITIONS } from '@/src/data/exhibitions';
+import { getExhibitionStatus } from '@/src/utils/exhibitionSearch';
+import type { SearchResult } from '@/src/hooks/useExhibitionSearch';
+
+const ITEM_LAYOUT = LinearTransition.duration(200);
+
+// 진행 중 → 예정 → 종료 순, 같은 상태끼리는 종료일 임박순
+const STATUS_ORDER = { ongoing: 0, upcoming: 1, ended: 2 } as const;
+
+interface SavedExhibitionsProps {
+	onPressExhibition: (id: string) => void;
+}
+
+export function SavedExhibitions({ onPressExhibition }: SavedExhibitionsProps) {
+	const ids = useBookmarkStore(s => s.ids);
+
+	const results = useMemo<SearchResult[]>(
+		() =>
+			EXHIBITIONS.filter(ex => ids.includes(ex.id))
+				.map(ex => ({ exhibition: ex, status: getExhibitionStatus(ex), distanceKm: null }))
+				.sort(
+					(a, b) =>
+						STATUS_ORDER[a.status] - STATUS_ORDER[b.status] ||
+						a.exhibition.endDate.localeCompare(b.exhibition.endDate),
+				),
+		[ids],
+	);
+
+	if (results.length === 0) {
+		return (
+			<View className='items-center py-16 gap-2'>
+				<Ionicons name='bookmark-outline' size={28} color='#D6D3D1' />
+				<Text
+					className='text-[#78716C] text-[14px]'
+					style={{ fontFamily: 'Pretendard-Medium' }}
+				>
+					저장한 전시가 없어요
+				</Text>
+				<Text
+					className='text-[#A8A29E] text-[12px]'
+					style={{ fontFamily: 'Pretendard-Regular' }}
+				>
+					검색에서 마음에 드는 전시를 북마크해 보세요
+				</Text>
+			</View>
+		);
+	}
+
+	return (
+		<View className='gap-5'>
+			{results.map(r => (
+				<Animated.View
+					key={r.exhibition.id}
+					entering={FadeIn.duration(150)}
+					exiting={FadeOut.duration(150)}
+					layout={ITEM_LAYOUT}
+				>
+					<ExhibitionResultCard result={r} onPress={onPressExhibition} />
+				</Animated.View>
+			))}
+		</View>
+	);
+}

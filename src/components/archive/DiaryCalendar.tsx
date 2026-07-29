@@ -1,13 +1,20 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useMemo } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Image, Pressable, Text, View, type ImageSourcePropType } from 'react-native';
 
 import { cn } from '@/src/lib/cn';
+
+// 기록이 있는 날 셀에 표시할 이미지 (포스터 또는 본 그림)
+export interface DayImage {
+	source?: ImageSourcePropType;
+	color?: string;
+}
 
 interface DiaryCalendarProps {
 	year: number;
 	month: number; // 1~12
-	markedDates: string[]; // 일기가 있는 날짜 키 (YYYY-MM-DD)
+	markedDates: string[]; // 관람 기록·일기가 있는 날짜 키 (YYYY-MM-DD) — 이 날만 선택 가능
+	dayImages?: Record<string, DayImage>;
 	onSelectDate: (dateKey: string) => void;
 	onChangeMonth: (offset: -1 | 1) => void;
 }
@@ -24,6 +31,7 @@ export function DiaryCalendar({
 	year,
 	month,
 	markedDates,
+	dayImages,
 	onSelectDate,
 	onChangeMonth,
 }: DiaryCalendarProps) {
@@ -99,37 +107,71 @@ export function DiaryCalendar({
 						const isFuture = dateKey > todayKey;
 						const isToday = dateKey === todayKey;
 						const hasEntry = markedDates.includes(dateKey);
+						const dayImage = dayImages?.[dateKey];
+						const hasImage = Boolean(dayImage?.source || dayImage?.color);
 						return (
 							<Pressable
 								key={dateKey}
 								className='flex-1 items-center py-1.5'
 								onPress={() => onSelectDate(dateKey)}
-								disabled={isFuture}
-								accessibilityLabel={`${month}월 ${day}일 일기 보기`}
+								disabled={!hasEntry}
+								accessibilityLabel={
+									hasEntry
+										? `${month}월 ${day}일 일기 보기`
+										: `${month}월 ${day}일, 기록 없음`
+								}
 								accessibilityRole='button'
+								accessibilityState={{ disabled: !hasEntry }}
 								style={({ pressed }) => ({ opacity: pressed ? 0.5 : 1 })}
 							>
+								{/* 3:4 셀 — 기록이 있는 날은 포스터/그림, 없는 날은 숫자만 */}
 								<View
 									className={cn(
-										'h-8 w-8 items-center justify-center rounded-full',
-										isToday && 'bg-[#1C1917]',
+										'items-center justify-center overflow-hidden',
+										hasImage ? 'rounded-lg' : 'rounded-full',
+										isToday && !hasImage && 'bg-[#1C1917]',
 									)}
+									style={{
+										width: 36,
+										height: 48,
+										// backgroundColor: undefined는 className의 배경색을 덮어쓰므로 키 자체를 생략
+										...(hasImage
+											? { backgroundColor: dayImage?.color ?? '#D6D3D1' }
+											: null),
+										...(isToday && hasImage
+											? { borderWidth: 2, borderColor: INK }
+											: null),
+									}}
 								>
+									{dayImage?.source && (
+										<Image
+											source={dayImage.source}
+											resizeMode='cover'
+											className='absolute h-full w-full'
+										/>
+									)}
+									{hasImage && (
+										// 숫자 가독성용 스크림
+										<View
+											className='absolute h-full w-full'
+											style={{ backgroundColor: 'rgba(0,0,0,0.28)' }}
+										/>
+									)}
 									<Text
-										className={cn('text-[13px] font-pretendard-medium', {
-											'text-white': isToday,
-											'text-gray-300': !isToday && isFuture,
-											'text-gray-700': !isToday && !isFuture,
+										className={cn('text-[13px]', {
+											'text-white font-pretendard-bold': hasImage,
+											'text-white font-pretendard-medium': !hasImage && isToday,
+											'text-gray-300 font-pretendard-medium':
+												!hasImage && !isToday && isFuture,
+											'text-gray-400 font-pretendard-medium':
+												!hasImage && !isToday && !isFuture && !hasEntry,
+											'text-gray-700 font-pretendard-semibold':
+												!hasImage && !isToday && !isFuture && hasEntry,
 										})}
 									>
 										{day}
 									</Text>
 								</View>
-								{/* 일기가 있는 날 표시 */}
-								<View
-									className='h-1 w-1 rounded-full'
-									style={{ backgroundColor: hasEntry ? INK : 'transparent' }}
-								/>
 							</Pressable>
 						);
 					})}
