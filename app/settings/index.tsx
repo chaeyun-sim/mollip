@@ -202,7 +202,6 @@ export default function SettingsScreen() {
 									className='px-3 rounded-lg items-center justify-center'
 									style={({ pressed }) => ({
 										height: 32,
-										backgroundColor: fontSize === opt.value ? '#3B82F6' : '#292524',
 										transform: [{ scale: pressed ? 0.95 : 1 }],
 									})}
 									onPress={() => {
@@ -213,7 +212,7 @@ export default function SettingsScreen() {
 									<Text
 										className={cn(
 											'font-pretendard-semibold',
-											fontSize === opt.value ? 'text-white' : 'text-[#A8A29E',
+											fontSize === opt.value ? 'text-white' : 'text-white/30',
 										)}
 										style={{
 											fontSize: FONT_SIZE_VALUE[opt.value] - 5,
