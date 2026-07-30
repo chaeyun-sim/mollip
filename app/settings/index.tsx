@@ -1,10 +1,10 @@
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { useRouter } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Pressable, ScrollView, Text, View } from 'react-native';
 import { Screen } from '../../src/components/layout/Screen';
-import { ScreenHeader } from '../../src/components/layout/ScreenHeader';
 import type { Voice } from '../../src/hooks/useTTS';
 import {
 	FONT_SIZE_VALUE,
@@ -32,52 +32,39 @@ const SPEED_OPTIONS: { value: VoiceSpeed; label: string }[] = [
 
 /* ─── 섹션 컴포넌트 ─── */
 
-function Section({
-	title,
-	children,
-}: {
+interface SectionProps {
 	title: string;
 	children: React.ReactNode;
-}) {
+}
+
+function Section({ title, children }: SectionProps) {
 	return (
-		<View className='mb-8'>
-			<Text className='text-xs mb-3 px-1 font-pretendard-semibold text-[#78716C] tracking-[0.8]'>
+		<View className='mb-6'>
+			<Text className='text-[12px] mb-2 px-1 font-pretendard-semibold text-gray-400 tracking-[0.8]'>
 				{title.toUpperCase()}
 			</Text>
-			<View
-				className='rounded-2xl overflow-hidden bg-[#1C1917] border-white/8'
-				style={{
-					borderWidth: StyleSheet.hairlineWidth,
-				}}
-			>
-				{children}
-			</View>
+			<View className='rounded-3xl overflow-hidden bg-[#F2EFE9]'>{children}</View>
 		</View>
 	);
 }
 
-function Row({
-	label,
-	children,
-	border = true,
-	onPress,
-}: {
+interface RowProps {
 	label: string;
 	children?: React.ReactNode;
 	border?: boolean;
 	onPress?: () => void;
-}) {
+}
+
+function Row({ label, children, border = true, onPress }: RowProps) {
 	const content = (pressed: boolean) => (
 		<View
-			className='flex-row items-center justify-between px-4'
-			style={[
-				{ minHeight: 52, opacity: pressed ? 0.7 : 1 },
-				border ? { borderBottomWidth: 1, borderBottomColor: '#292524' } : undefined,
-			]}
+			className={cn(
+				'flex-row items-center justify-between px-4',
+				border && 'border-b border-black/5',
+			)}
+			style={{ minHeight: 52, opacity: pressed ? 0.6 : 1 }}
 		>
-			<Text className='font-pretendard-regular text-[#E8E8E8] text-[15px]'>
-				{label}
-			</Text>
+			<Text className='font-pretendard-regular text-gray-900 text-[15px]'>{label}</Text>
 			{children}
 		</View>
 	);
@@ -89,12 +76,64 @@ function Row({
 					Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
 					onPress();
 				}}
+				accessibilityRole='button'
+				accessibilityLabel={label}
 			>
 				{({ pressed }) => content(pressed)}
 			</Pressable>
 		);
 	}
 	return content(false);
+}
+
+interface PillGroupProps<T extends string | number> {
+	options: { value: T; label: string }[];
+	value: T;
+	onChange: (value: T) => void;
+	labelFontSize?: (value: T) => number;
+}
+
+function PillGroup<T extends string | number>({
+	options,
+	value,
+	onChange,
+	labelFontSize,
+}: PillGroupProps<T>) {
+	return (
+		<View className='flex-row gap-2'>
+			{options.map((opt) => {
+				const selected = value === opt.value;
+				return (
+					<Pressable
+						key={opt.value}
+						className='px-3 rounded-lg items-center justify-center'
+						style={({ pressed }) => ({
+							height: 32,
+							backgroundColor: selected ? '#1C1917' : '#FFFFFF',
+							transform: [{ scale: pressed ? 0.95 : 1 }],
+						})}
+						accessibilityRole='button'
+						accessibilityState={{ selected }}
+						accessibilityLabel={opt.label}
+						onPress={() => {
+							Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+							onChange(opt.value);
+						}}
+					>
+						<Text
+							className={cn(
+								'font-pretendard-semibold',
+								selected ? 'text-black' : 'text-gray-400',
+							)}
+							style={{ fontSize: labelFontSize ? labelFontSize(opt.value) : 12 }}
+						>
+							{opt.label}
+						</Text>
+					</Pressable>
+				);
+			})}
+		</View>
+	);
 }
 
 /* ─── 메인 화면 ─── */
@@ -116,22 +155,22 @@ export default function SettingsScreen() {
 	}, [voiceId]);
 
 	return (
-		<Screen>
-			<ScreenHeader>
-				<ScreenHeader.Left>
-					<ScreenHeader.Back onPress={() => router.back()} />
-				</ScreenHeader.Left>
-				<ScreenHeader.Center>
-					<Text className='text-[16px] text-white font-pretendard-semibold'>
-						설정
-					</Text>
-				</ScreenHeader.Center>
-				<ScreenHeader.Right />
-			</ScreenHeader>
+		<Screen className='bg-white'>
+			<StatusBar style='dark' />
+
+			<Screen.Header>
+				<Screen.Header.Left>
+					<Screen.Header.Back color='#1C1917' onPress={() => router.back()} />
+				</Screen.Header.Left>
+				<Screen.Header.Center>
+					<Text className='text-[16px] text-gray-900 font-pretendard-semibold'>설정</Text>
+				</Screen.Header.Center>
+				<Screen.Header.Right />
+			</Screen.Header>
 
 			<ScrollView
 				className='flex-1'
-				contentContainerStyle={{ paddingTop: 20, paddingBottom: 48 }}
+				contentContainerStyle={{ paddingTop: 12, paddingBottom: 48 }}
 				showsVerticalScrollIndicator={false}
 			>
 				{/* ── 계정 ── */}
@@ -141,39 +180,14 @@ export default function SettingsScreen() {
 						border={false}
 						onPress={() => router.push('/settings/account')}
 					>
-						<Ionicons name='chevron-forward' size={16} color='#78716C' />
+						<Ionicons name='chevron-forward' size={16} color='#A8A29E' />
 					</Row>
 				</Section>
 
 				{/* ── 음성 ── */}
 				<Section title='음성'>
 					<Row label='재생 속도'>
-						<View className='flex-row gap-2'>
-							{SPEED_OPTIONS.map(({ value: speed, label }) => (
-								<Pressable
-									key={speed}
-									className='px-3 rounded-lg items-center justify-center'
-									style={({ pressed }) => ({
-										height: 32,
-										backgroundColor: voiceSpeed === speed ? '#3B82F6' : '#292524',
-										transform: [{ scale: pressed ? 0.95 : 1 }],
-									})}
-									onPress={() => {
-										Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-										setVoiceSpeed(speed);
-									}}
-								>
-									<Text
-										className={cn(
-											'font-pretendard-semibold text-[12px]',
-											voiceSpeed === speed ? 'text-white' : 'text-[#A8A29E]',
-										)}
-									>
-										{label}
-									</Text>
-								</Pressable>
-							))}
-						</View>
+						<PillGroup options={SPEED_OPTIONS} value={voiceSpeed} onChange={setVoiceSpeed} />
 					</Row>
 
 					<Row
@@ -183,11 +197,11 @@ export default function SettingsScreen() {
 					>
 						<View className='flex-row items-center gap-1'>
 							{currentVoiceName ? (
-								<Text className='font-pretendard-regular text-[#666] text-[13px]'>
+								<Text className='font-pretendard-regular text-gray-400 text-[13px]'>
 									{currentVoiceName.split(' - ')[0]}
 								</Text>
 							) : null}
-							<Ionicons name='chevron-forward' size={16} color='#78716C' />
+							<Ionicons name='chevron-forward' size={16} color='#A8A29E' />
 						</View>
 					</Row>
 				</Section>
@@ -195,41 +209,30 @@ export default function SettingsScreen() {
 				{/* ── 해설 표시 ── */}
 				<Section title='해설 표시'>
 					<Row label='글자 크기' border={false}>
-						<View className='flex-row gap-2'>
-							{FONT_SIZE_OPTIONS.map((opt) => (
-								<Pressable
-									key={opt.value}
-									className='px-3 rounded-lg items-center justify-center'
-									style={({ pressed }) => ({
-										height: 32,
-										transform: [{ scale: pressed ? 0.95 : 1 }],
-									})}
-									onPress={() => {
-										Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-										setFontSize(opt.value);
-									}}
-								>
-									<Text
-										className={cn(
-											'font-pretendard-semibold',
-											fontSize === opt.value ? 'text-white' : 'text-white/30',
-										)}
-										style={{
-											fontSize: FONT_SIZE_VALUE[opt.value] - 5,
-										}}
-									>
-										{opt.label}
-									</Text>
-								</Pressable>
-							))}
-						</View>
+						<PillGroup
+							options={FONT_SIZE_OPTIONS}
+							value={fontSize}
+							onChange={setFontSize}
+							labelFontSize={(v) => FONT_SIZE_VALUE[v] - 5}
+						/>
+					</Row>
+				</Section>
+
+				{/* ── 지원 ── */}
+				<Section title='지원'>
+					<Row
+						label='문의하기'
+						border={false}
+						onPress={() => router.push('/settings/inquiry')}
+					>
+						<Ionicons name='chevron-forward' size={16} color='#A8A29E' />
 					</Row>
 				</Section>
 
 				{/* ── 앱 정보 ── */}
 				<Section title='앱 정보'>
 					<Row label='버전' border={false}>
-						<Text className='font-pretendard-regular text-[#78716C] text-[13px]'>
+						<Text className='font-pretendard-regular text-gray-400 text-[13px]'>
 							{APP_VERSION}
 						</Text>
 					</Row>

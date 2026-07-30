@@ -1,16 +1,10 @@
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { useRouter } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
 import { useAudioPlayer } from 'expo-audio';
-import {
-	ActivityIndicator,
-	Pressable,
-	ScrollView,
-	StyleSheet,
-	Text,
-	View,
-} from 'react-native';
+import { ActivityIndicator, Pressable, ScrollView, Text, View } from 'react-native';
 import Animated, {
 	Easing,
 	useAnimatedStyle,
@@ -19,11 +13,42 @@ import Animated, {
 	withTiming,
 } from 'react-native-reanimated';
 import { Screen } from '../../src/components/layout/Screen';
-import { ScreenHeader } from '../../src/components/layout/ScreenHeader';
 import type { Voice } from '../../src/hooks/useTTS';
 import { useSettingsStore } from '../../src/store/settingsStore';
 import { fetchTTSBlob, fetchVoices } from '../../src/utils/api';
 import { cn } from '@/src/lib/cn';
+
+const AVATAR_COLORS = ['#F3D9C4', '#CFE0DF', '#E8D9F0', '#D9E3F0', '#F0DDD9', '#DDEAD1'];
+
+const GENDER_LABEL: Record<string, string> = {
+	male: '남성',
+	female: '여성',
+	neutral: '중성',
+};
+
+const AGE_LABEL: Record<string, string> = {
+	young: '청년',
+	middle_aged: '중년',
+	old: '장년',
+};
+
+function avatarColor(name: string) {
+	const idx = name.charCodeAt(0) % AVATAR_COLORS.length;
+	return AVATAR_COLORS[idx];
+}
+
+function voiceTags(voice: Voice): string[] {
+	const tags: string[] = [];
+	const gender = voice.labels?.gender;
+	const age = voice.labels?.age;
+	if (age && AGE_LABEL[age]) tags.push(AGE_LABEL[age]);
+	if (gender && GENDER_LABEL[gender]) tags.push(GENDER_LABEL[gender]);
+	if (voice.labels?.descriptive) {
+		const d = voice.labels.descriptive;
+		tags.push(d.charAt(0).toUpperCase() + d.slice(1));
+	}
+	return tags;
+}
 
 /* ─── 스켈레톤 ─── */
 
@@ -47,19 +72,20 @@ function SkeletonItem() {
 				{
 					flexDirection: 'row',
 					alignItems: 'center',
-					borderRadius: 12,
+					borderRadius: 20,
 					paddingHorizontal: 16,
-					height: 56,
-					backgroundColor: '#1C1917',
+					height: 76,
+					backgroundColor: '#F2EFE9',
 					gap: 12,
-					borderWidth: StyleSheet.hairlineWidth,
-					borderColor: 'rgba(255,255,255,0.06)',
 				},
 			]}
 		>
-			<View className='w-8 h-8 rounded-[16px] bg-[#292524]' />
-			<View className='flex-1 h-[13px] rounded-[6px] bg-[#292524]' />
-			<View className='w-6 h-6 rounded-[12px] bg-[#1C1917]' />
+			<View className='w-11 h-11 rounded-full bg-black/5' />
+			<View className='flex-1 gap-2'>
+				<View className='h-[13px] w-1/3 rounded-[6px] bg-black/5' />
+				<View className='h-[11px] w-2/3 rounded-[6px] bg-black/5' />
+			</View>
+			<View className='w-9 h-9 rounded-full bg-white' />
 		</Animated.View>
 	);
 }
@@ -101,102 +127,128 @@ export default function VoiceScreen() {
 	};
 
 	return (
-		<Screen>
-			<ScreenHeader>
-				<ScreenHeader.Left>
-					<ScreenHeader.Back onPress={() => router.back()} />
-				</ScreenHeader.Left>
-				<ScreenHeader.Center>
-					<Text className='text-[16px] text-white font-pretendard-semibold'>
+		<Screen className='bg-white'>
+			<StatusBar style='dark' />
+
+			<Screen.Header>
+				<Screen.Header.Left>
+					<Screen.Header.Back color='#1C1917' onPress={() => router.back()} />
+				</Screen.Header.Left>
+				<Screen.Header.Center>
+					<Text className='text-[16px] text-gray-900 font-pretendard-semibold'>
 						음성 선택
 					</Text>
-				</ScreenHeader.Center>
-				<ScreenHeader.Right />
-			</ScreenHeader>
+				</Screen.Header.Center>
+				<Screen.Header.Right />
+			</Screen.Header>
 
 			<ScrollView
 				className='flex-1'
-				contentContainerStyle={{ paddingTop: 20, paddingBottom: 48 }}
+				contentContainerStyle={{ paddingTop: 4, paddingBottom: 48 }}
 				showsVerticalScrollIndicator={false}
 			>
+				<Text className='text-gray-400 text-[13px] font-pretendard-regular mb-5 leading-[19px]'>
+					해설을 읽어줄 목소리를 골라보세요. 재생 버튼으로 미리 들을 수 있어요.
+				</Text>
+
 				{voicesLoading ? (
-					<View className='gap-2'>
+					<View className='gap-2.5'>
 						{[0, 1, 2, 3].map((i) => (
 							<SkeletonItem key={i} />
 						))}
 					</View>
 				) : voices.length === 0 ? (
-					<Text className='text-[#78716C] text-[13px] font-pretendard-regular'>
+					<Text className='text-gray-400 text-[13px] font-pretendard-regular'>
 						불러올 수 있는 음성이 없어요
 					</Text>
 				) : (
-					<View className='gap-2'>
-						{voices.map((voice, i) => {
+					<View className='gap-2.5'>
+						{voices.map((voice, idx) => {
 							const selected = voiceId === voice.voice_id;
+							const displayName = voice.name.split(' - ')[0];
+							const tags = voiceTags(voice);
 							return (
 								<Pressable
 									key={voice.voice_id}
-									className='flex-row items-center justify-between rounded-xl px-4'
+									className='rounded-[22px] py-3.5'
 									style={({ pressed }) => ({
-										minHeight: 56,
-										backgroundColor: selected ? '#172148' : '#1C1917',
-										borderWidth: StyleSheet.hairlineWidth,
-										borderColor: selected
-											? 'rgba(59,130,246,0.4)'
-											: 'rgba(255,255,255,0.06)',
+										backgroundColor: selected ? '#1C1917' : '#F2EFE9',
 										transform: [{ scale: pressed ? 0.98 : 1 }],
 									})}
 									accessibilityRole='radio'
 									accessibilityState={{ checked: selected }}
-									accessibilityLabel={voice.name.split(' - ')[0]}
+									accessibilityLabel={displayName}
 									onPress={() => {
 										Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
 										setVoiceId(voice.voice_id);
 									}}
 								>
-									<View className='flex-row items-center gap-3 flex-1'>
+									<View className='flex-row items-center gap-3'>
 										<View
-											className={cn(
-												'w-8 h-8 rounded-full items-center justify-center',
-												selected ? 'bg-[#3B82F6]' : 'bg-[#292524]',
-											)}
+											className='w-11 h-11 rounded-full items-center justify-center'
+											style={{ backgroundColor: avatarColor(displayName) }}
 										>
-											{selected ? (
-												<Ionicons name='checkmark' size={14} color='#fff' />
-											) : (
-												<Text className='font-pretendard-bold text-[#78716C] text-[12px]'>
-													{i + 1}
+											<Text className='font-pretendard-bold text-[15px] text-[#1C1917]'>
+												{displayName.charAt(0)}
+											</Text>
+										</View>
+
+										<View className='flex-1'>
+											<View className='flex-row items-center gap-1.5'>
+												<Text
+													className='text-[15px] font-pretendard-semibold text-[#111827]'
+												>
+													{displayName}
 												</Text>
+												{selected && (
+													<Ionicons name='checkmark-circle' size={15} color='#60A5FA' />
+												)}
+											</View>
+											{tags.length > 0 && (
+												<View className='flex-row flex-wrap gap-1.5 mt-1.5'>
+													{tags.map((tag) => (
+														<View
+															key={tag}
+															className='px-2 py-0.5 rounded-full'
+															style={{
+																backgroundColor: 'rgba(28,25,23,0.06)',
+															}}
+														>
+															<Text
+																className={cn(
+																	'text-[11px] font-pretendard-medium text-gray-500',
+																)}
+															>
+																{tag}
+															</Text>
+														</View>
+													))}
+												</View>
 											)}
 										</View>
-										<Text
-											className={cn(
-												selected
-													? 'text-white font-pretendard-semibold'
-													: 'text-[#A8A29E] font-pretendard-regular',
-												'text-[14px]',
-											)}
+
+										<Pressable
+											className='items-center justify-center w-9 h-9 rounded-full bg-white'
+											hitSlop={8}
+											accessibilityLabel={`${displayName} 미리 듣기`}
+											accessibilityRole='button'
+											onPress={() => {
+												Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+												handlePreview(voice);
+											}}
+											disabled={!!previewingId}
 										>
-											{voice.name.split(' - ')[0]}
-										</Text>
+											{previewingId === voice.voice_id ? (
+												<ActivityIndicator size='small' color='#3B82F6' />
+											) : (
+												<Ionicons
+													name='play'
+													size={15}
+													color='#3B82F6'
+												/>
+											)}
+										</Pressable>
 									</View>
-									<Pressable
-										className='items-center justify-center w-8 h-8'
-										hitSlop={8}
-										accessibilityLabel={`${voice.name.split(' - ')[0]} 미리 듣기`}
-										accessibilityRole='button'
-										onPress={() => {
-											Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-											handlePreview(voice);
-										}}
-										disabled={!!previewingId}
-									>
-										{previewingId === voice.voice_id ? (
-											<ActivityIndicator size='small' color='#60A5FA' />
-										) : (
-											<Ionicons name='play-circle-outline' size={24} color='#60A5FA' />
-										)}
-									</Pressable>
 								</Pressable>
 							);
 						})}
