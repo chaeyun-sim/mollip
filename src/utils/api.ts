@@ -81,7 +81,13 @@ export async function fetchVoices() {
   });
   if (!res.ok) throw new Error(`voices ${res.status}`);
   const data = await res.json();
-  return data.voices as { voice_id: string; name: string; preview_url: string; labels?: Record<string, string> }[];
+  return data.voices as {
+    voice_id: string;
+    name: string;
+    preview_url: string;
+    description?: string;
+    labels?: Record<string, string>;
+  }[];
 }
 
 export async function fetchTTSBlob(voiceId: string, text: string, speed = 1.0): Promise<string> {
