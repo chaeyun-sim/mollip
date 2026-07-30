@@ -1,11 +1,12 @@
 import type { MutableRefObject, RefObject } from 'react';
-import { Pressable, View } from 'react-native';
+import { Pressable, View, type DimensionValue } from 'react-native';
 import type { NaverMapViewRef } from '@mj-studio/react-native-naver-map';
 import { Ionicons } from '@expo/vector-icons';
 
 interface ZoomControlsProps {
 	mapRef: RefObject<NaverMapViewRef | null>;
 	cameraRef: MutableRefObject<{ latitude: number; longitude: number; zoom: number }>;
+	bottomOffset?: DimensionValue;
 }
 
 const BUTTONS = [
@@ -13,9 +14,12 @@ const BUTTONS = [
 	{ icon: 'remove', label: '지도 축소', delta: -1 },
 ] as const;
 
-export function ZoomControls({ mapRef, cameraRef }: ZoomControlsProps) {
+export function ZoomControls({ mapRef, cameraRef, bottomOffset = 96 }: ZoomControlsProps) {
 	return (
-		<View className='absolute right-5 bottom-24 bg-[rgba(15,14,13,0.92)] border border-white/15 rounded-xl overflow-hidden'>
+		<View
+			className='absolute right-5 bg-[rgba(15,14,13,0.92)] border border-white/15 rounded-xl overflow-hidden'
+			style={{ bottom: bottomOffset }}
+		>
 			{BUTTONS.map(({ icon, label, delta }, i) => (
 				<View key={icon}>
 					{i === 1 && <View className='h-px bg-white/15' />}
