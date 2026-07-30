@@ -68,11 +68,16 @@ export function declutterMarkers(
 	zoom: number,
 	selectedVenueName: string | null,
 	referenceDate: Date,
+	// 길찾기 중인 목적지 — 경로 조회를 시작하면 정보 바텀시트가 닫히며 selectedVenueName이
+	// 지워지므로, 별도로 보호해 줌아웃해도 점으로 줄어들지 않게 한다.
+	pinnedVenueName: string | null = null,
 ): { full: VenueGroup[]; dots: VenueGroup[] } {
 	const radius = latOffsetForPixels(zoom, DECLUTTER_RADIUS_PX);
+	const isPinned = (v: VenueGroup) =>
+		v.venueName === selectedVenueName || v.venueName === pinnedVenueName;
 
 	const priority = (v: VenueGroup) => {
-		if (v.venueName === selectedVenueName) return 0;
+		if (isPinned(v)) return 0;
 		if (hasExhibitionOn(v.exhibitions, referenceDate)) return 1;
 		return 2;
 	};
@@ -83,7 +88,7 @@ export function declutterMarkers(
 	const dots: VenueGroup[] = [];
 
 	for (const v of sorted) {
-		const isSelected = v.venueName === selectedVenueName;
+		const isSelected = isPinned(v);
 		const tooCloseToFullMarker = full.some(
 			(u) =>
 				Math.abs(u.coordinates.latitude - v.coordinates.latitude) <= radius &&
