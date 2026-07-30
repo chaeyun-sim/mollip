@@ -1,6 +1,7 @@
-// Tmap Open API — 보행자/대중교통 길찾기.
-// https://tmapapi.tmapmobility.com/ 에서 앱 등록 후 appKey 발급.
-const TMAP_APP_KEY = process.env.EXPO_PUBLIC_TMAP_APP_KEY ?? '';
+// ODsay Lab API — 도보/대중교통(버스/지하철) 길찾기.
+// SK Tmap 대중교통 API는 무료 요금제가 월 10건뿐이라 개발/운영이 불가능해 ODsay로 교체했다.
+// https://lab.odsay.com/ 에서 앱 등록 후 apiKey 발급 (무료 Basic 요금제 일 1,000건).
+const ODSAY_API_KEY = process.env.EXPO_PUBLIC_ODSAY_API_KEY ?? '';
 
 export interface RouteCoord {
 	latitude: number;
@@ -12,107 +13,170 @@ export type RouteLegMode = 'walk' | 'bus' | 'subway';
 export interface RouteLeg {
 	mode: RouteLegMode;
 	coords: RouteCoord[];
+	sectionSeconds: number;
+	distanceMeters: number;
+	startName: string;
+	endName: string;
+	// 버스 번호(예: "32") 또는 지하철 노선명(예: "신분당선"). 도보 구간에는 없음.
+	routeName?: string;
+	// 지나는 정류장/역 개수. 버스·지하철 구간에만 있음.
+	stopCount?: number;
 }
 
 export interface RouteResult {
 	legs: RouteLeg[];
 	distanceMeters: number;
 	durationSeconds: number;
+	transferCount: number;
+	fareWon?: number;
 }
 
-function toCoordParams(start: RouteCoord, end: RouteCoord) {
+// 버스 경로 비교 기준 — 최단시간 / 최단거리 / 환승 없음(최소 환승).
+export type TransitCriterion = 'time' | 'distance' | 'transfer';
+
+// "경도 위도|경도 위도|..." 형태의 폴리라인 문자열을 좌표 배열로 변환한다.
+function parseGraphPolyline(graph: string | undefined): RouteCoord[] {
+	if (!graph) return [];
+	return graph.split('|').map((pair) => {
+		const [lon, lat] = pair.split(' ').map(Number);
+		return { latitude: lat, longitude: lon };
+	});
+}
+
+function transitLegCount(path: any): number {
+	return (path.rps ?? []).filter((rp: any) => rp.trafficType === 1 || rp.trafficType === 2).length;
+}
+
+function pickTransitPath(paths: any[], criterion: TransitCriterion): any | null {
+	if (paths.length === 0) return null;
+	if (criterion === 'time') {
+		return paths.reduce((best, p) => (p.totalTime < best.totalTime ? p : best));
+	}
+	if (criterion === 'distance') {
+		return paths.reduce((best, p) => (p.totalDistance < best.totalDistance ? p : best));
+	}
+	return paths.reduce((best, p) => (transitLegCount(p) < transitLegCount(best) ? p : best));
+}
+
+function formatSearchTime(date: Date): string {
+	const pad = (n: number) => String(n).padStart(2, '0');
+	return `${date.getFullYear()}${pad(date.getMonth() + 1)}${pad(date.getDate())}${pad(date.getHours())}${pad(date.getMinutes())}`;
+}
+
+// 멀티모달 길찾기(maasRP) — searchPubTransPathT와 달리 도보 구간도
+// routes[].xyInfos에 실제 도로를 따르는 상세 좌표가 들어있어 loadLane 없이 지도에 그릴 수 있다.
+// searchMethod: 1=도보, 2=대중교통.
+async function searchMaasPaths(
+	start: RouteCoord,
+	end: RouteCoord,
+	searchMethod: '1' | '2',
+): Promise<any[]> {
+	const params = new URLSearchParams({
+		apiKey: ODSAY_API_KEY,
+		lang: '0',
+		SX: String(start.longitude),
+		SY: String(start.latitude),
+		EX: String(end.longitude),
+		EY: String(end.latitude),
+		SearchTime: formatSearchTime(new Date()),
+		SearchMethod: searchMethod,
+	});
+	const res = await fetch(`https://api.odsay.com/v1/api/maasRP?${params}`);
+	if (!res.ok) throw new Error(`ODsay 경로 요청 실패 (${res.status})`);
+	const json = await res.json();
+	if (json.error) {
+		console.log('[DEBUG maasRP error]', JSON.stringify(json.error));
+		return [];
+	}
+	if (!json.result) {
+		console.log('[DEBUG maasRP unexpected response]', JSON.stringify(json));
+	}
+	return json.result?.paths ?? [];
+}
+
+function buildRouteResult(path: any): RouteResult {
+	const legs: RouteLeg[] = (path.rps ?? []).map((rp: any): RouteLeg => {
+		if (rp.trafficType === 3) {
+			// 도보 — routes[].xyInfos에 실제 도로를 따르는 상세 좌표가 들어있다.
+			const coords: RouteCoord[] = (rp.routes ?? []).flatMap((route: any) =>
+				(route.xyInfos ?? []).map((p: any) => ({ latitude: p.y, longitude: p.x })),
+			);
+			return {
+				mode: 'walk',
+				coords,
+				sectionSeconds: (rp.duration ?? 0) * 60,
+				distanceMeters: rp.distance ?? 0,
+				startName: '',
+				endName: '',
+			};
+		}
+
+		const mode: RouteLegMode = rp.trafficType === 1 ? 'subway' : 'bus';
+		const lane = rp.lane?.[0];
+		return {
+			mode,
+			coords: parseGraphPolyline(rp.graph),
+			sectionSeconds: (rp.duration ?? 0) * 60,
+			distanceMeters: rp.distance ?? 0,
+			startName: rp.startName ?? '',
+			endName: rp.endName ?? '',
+			routeName: mode === 'bus' ? lane?.busNo : lane?.name,
+			stopCount: Math.max(0, (rp.passStopList?.stations?.length ?? 1) - 1),
+		};
+	});
+
 	return {
-		startX: String(start.longitude),
-		startY: String(start.latitude),
-		endX: String(end.longitude),
-		endY: String(end.latitude),
+		legs,
+		distanceMeters: path.totalDistance ?? 0,
+		durationSeconds: (path.totalTime ?? 0) * 60,
+		transferCount: Math.max(0, transitLegCount(path) - 1),
+		fareWon: path.totalPayment,
 	};
 }
 
-// 도보 경로 — 좌표열이 GeoJSON LineString feature로 온다.
+// 도보 경로 — routes[].xyInfos의 실제 도로 좌표를 그대로 사용한다.
 export async function getWalkingRoute(
 	start: RouteCoord,
 	end: RouteCoord,
 	startName: string,
 	endName: string,
 ): Promise<RouteResult> {
-	const res = await fetch('https://apis.openapi.sk.com/tmap/routes/pedestrian?version=1', {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json',
-			Accept: 'application/json',
-			appKey: TMAP_APP_KEY,
-		},
-		body: JSON.stringify({
-			...toCoordParams(start, end),
-			startName: encodeURIComponent(startName).slice(0, 60),
-			endName: encodeURIComponent(endName).slice(0, 60),
-			reqCoordType: 'WGS84GEO',
-			resCoordType: 'WGS84GEO',
-			searchOption: '0',
-		}),
-	});
-	if (!res.ok) throw new Error(`Tmap 보행자 경로 요청 실패 (${res.status})`);
-	const json = await res.json();
-
-	const coords: RouteCoord[] = [];
-	let distanceMeters = 0;
-	let durationSeconds = 0;
-	for (const feature of json.features ?? []) {
-		if (feature.properties?.totalDistance) distanceMeters = feature.properties.totalDistance;
-		if (feature.properties?.totalTime) durationSeconds = feature.properties.totalTime;
-		if (feature.geometry?.type === 'LineString') {
-			for (const [lon, lat] of feature.geometry.coordinates as [number, number][]) {
-				coords.push({ latitude: lat, longitude: lon });
-			}
-		}
+	const paths = await searchMaasPaths(start, end, '1');
+	if (paths.length === 0) {
+		return { legs: [], distanceMeters: 0, durationSeconds: 0, transferCount: 0 };
 	}
-
-	return { legs: [{ mode: 'walk', coords }], distanceMeters, durationSeconds };
+	// 후보 중 첫 번째가 아니라 가장 짧은 거리의 경로를 고른다 — 첫 번째가 산을 크게 돌아가는
+	// 등 비정상적으로 먼 경로일 수 있다.
+	const path = paths.reduce((best, p) => (p.totalDistance < best.totalDistance ? p : best));
+	const result = buildRouteResult(path);
+	if (result.legs.length > 0) {
+		result.legs[0].startName = startName;
+		result.legs[result.legs.length - 1].endName = endName;
+	}
+	return result;
 }
 
-// 대중교통(버스/지하철) 경로 — 여러 구간(leg)으로 나뉘어 오고, 각 구간마다 이동수단이 다르다.
+// 대중교통(버스/지하철) 경로 — criterion으로 ODsay가 돌려주는 후보 경로(path[]) 중 하나를 고른다.
 export async function getTransitRoute(
 	start: RouteCoord,
 	end: RouteCoord,
+	criterion: TransitCriterion = 'time',
 ): Promise<RouteResult | null> {
-	const res = await fetch('https://apis.openapi.sk.com/transit/routes', {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json',
-			Accept: 'application/json',
-			appKey: TMAP_APP_KEY,
-		},
-		body: JSON.stringify({
-			...toCoordParams(start, end),
-			count: 1,
-			lang: 0,
-			format: 'json',
-		}),
-	});
-	if (!res.ok) throw new Error(`Tmap 대중교통 경로 요청 실패 (${res.status})`);
-	const json = await res.json();
-	const itinerary = json.metaData?.plan?.itineraries?.[0];
-	if (!itinerary) return null;
+	const paths = await searchMaasPaths(start, end, '2');
+	const path = pickTransitPath(paths, criterion);
+	if (!path) return null;
+	return buildRouteResult(path);
+}
 
-	const legs: RouteLeg[] = [];
-	for (const leg of itinerary.legs ?? []) {
-		const mode: RouteLegMode =
-			leg.mode === 'BUS' ? 'bus' : leg.mode === 'SUBWAY' ? 'subway' : 'walk';
-		const linestring: string = leg.passShape?.linestring ?? '';
-		const coords: RouteCoord[] = linestring
-			.split(' ')
-			.filter(Boolean)
-			.map((pair) => {
-				const [lon, lat] = pair.split(',').map(Number);
-				return { latitude: lat, longitude: lon };
-			});
-		if (coords.length > 0) legs.push({ mode, coords });
-	}
-
-	return {
-		legs,
-		distanceMeters: itinerary.totalDistance ?? 0,
-		durationSeconds: itinerary.totalTime ?? 0,
-	};
+// 대중교통(버스/지하철) 경로 후보 전체 — ODsay가 돌려주는 path[]를 모두 변환해 반환한다.
+// 최단 시간 순으로 정렬해 가장 추천할 만한 경로가 리스트 맨 위에 오게 한다.
+export async function getTransitRoutes(
+	start: RouteCoord,
+	end: RouteCoord,
+): Promise<RouteResult[]> {
+	const paths = await searchMaasPaths(start, end, '2');
+	return paths
+		.slice()
+		.sort((a, b) => a.totalTime - b.totalTime)
+		.map(buildRouteResult);
 }
