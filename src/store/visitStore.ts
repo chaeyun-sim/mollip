@@ -5,18 +5,26 @@ import { createJSONStorage, persist } from 'zustand/middleware';
 export interface ListenedItem {
 	title: string;
 	imageUrl?: string;
+	/** 생성된 해설 앞부분 — 아카이브에서 다시 읽기용 */
+	descriptionPreview?: string;
 }
 
 // 하루치 관람 기록: 관람한 전시 + 들은 해설 목록
 export interface DayVisit {
 	exhibitionId: string | null;
+	exhibitionTitle?: string;
+	venue?: string;
 	listened: ListenedItem[];
 }
 
 interface VisitStore {
 	// 날짜 키(YYYY-MM-DD)별 관람 기록
 	visits: Record<string, DayVisit>;
-	recordExhibition: (dateKey: string, exhibitionId: string) => void;
+	recordExhibition: (
+		dateKey: string,
+		exhibitionId: string,
+		meta?: { title?: string; venue?: string },
+	) => void;
 	recordListened: (dateKey: string, item: ListenedItem) => void;
 }
 
@@ -31,13 +39,18 @@ export const useVisitStore = create<VisitStore>()(
 	persist(
 		set => ({
 			visits: {},
-			recordExhibition: (dateKey, exhibitionId) =>
+			recordExhibition: (dateKey, exhibitionId, meta) =>
 				set(state => {
 					const prev = state.visits[dateKey];
 					return {
 						visits: {
 							...state.visits,
-							[dateKey]: { exhibitionId, listened: prev?.listened ?? [] },
+							[dateKey]: {
+								exhibitionId,
+								exhibitionTitle: meta?.title ?? prev?.exhibitionTitle,
+								venue: meta?.venue ?? prev?.venue,
+								listened: prev?.listened ?? [],
+							},
 						},
 					};
 				}),

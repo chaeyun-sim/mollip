@@ -1,17 +1,21 @@
 import { Ionicons } from '@expo/vector-icons';
-import { useMemo } from 'react';
-import { Text, View } from 'react-native';
+import { useEffect, useMemo, useState } from 'react';
+import { ActivityIndicator, Text, View } from 'react-native';
 import Animated, { FadeIn, FadeOut, LinearTransition } from 'react-native-reanimated';
 
 import { ExhibitionResultCard } from '@/src/components/search/ExhibitionResultCard';
 import { useBookmarkStore } from '@/src/store/bookmarkStore';
-import { EXHIBITIONS } from '@/src/data/exhibitions';
-import { getExhibitionStatus } from '@/src/utils/exhibitionSearch';
+import { supabase } from '@/src/utils/supabase';
+import {
+	EXHIBITION_COLUMNS,
+	mapExhibitionRowToExhibition,
+	type ExhibitionRow,
+} from '@/src/utils/exhibitionMapper';
+import { getExhibitionStatus, isExhibitionListed } from '@/src/utils/exhibitionSearch';
 import type { SearchResult } from '@/src/hooks/useExhibitionSearch';
 
 const ITEM_LAYOUT = LinearTransition.duration(200);
 
-// 진행 중 → 예정 → 종료 순, 같은 상태끼리는 종료일 임박순
 const STATUS_ORDER = { ongoing: 0, upcoming: 1, ended: 2 } as const;
 
 interface SavedExhibitionsProps {
@@ -19,19 +23,71 @@ interface SavedExhibitionsProps {
 }
 
 export function SavedExhibitions({ onPressExhibition }: SavedExhibitionsProps) {
-	const ids = useBookmarkStore(s => s.ids);
+	const ids = useBookmarkStore((s) => s.ids);
+	const [loading, setLoading] = useState(false);
+	const [rows, setRows] = useState<SearchResult[]>([]);
 
-	const results = useMemo<SearchResult[]>(
-		() =>
-			EXHIBITIONS.filter(ex => ids.includes(ex.id))
-				.map(ex => ({ exhibition: ex, status: getExhibitionStatus(ex), distanceKm: null }))
-				.sort(
+	useEffect(() => {
+		if (ids.length === 0) {
+			setRows([]);
+			return;
+		}
+		let cancelled = false;
+		setLoading(true);
+		const numericIds = ids.map(Number).filter((n) => Number.isFinite(n));
+		if (numericIds.length === 0) {
+			setRows([]);
+			setLoading(false);
+			return;
+		}
+		supabase
+			.from('exhibitions')
+			.select(EXHIBITION_COLUMNS)
+			.in('id', numericIds)
+			.then(({ data, error }) => {
+				if (cancelled) return;
+				if (error || !data) {
+					setRows([]);
+					setLoading(false);
+					return;
+				}
+				const mapped = (data as ExhibitionRow[])
+					.map((row) => ({
+						exhibition: mapExhibitionRowToExhibition(row),
+						status: getExhibitionStatus(mapExhibitionRowToExhibition(row)),
+						distanceKm: null as number | null,
+					}))
+					.filter((r) => isExhibitionListed(r.exhibition));
+				const order = new Map(ids.map((id, i) => [id, i]));
+				mapped.sort(
 					(a, b) =>
-						STATUS_ORDER[a.status] - STATUS_ORDER[b.status] ||
-						a.exhibition.endDate.localeCompare(b.exhibition.endDate),
-				),
-		[ids],
+						(order.get(a.exhibition.id) ?? 0) - (order.get(b.exhibition.id) ?? 0),
+				);
+				setRows(mapped);
+				setLoading(false);
+			});
+		return () => {
+			cancelled = true;
+		};
+	}, [ids]);
+
+	const results = useMemo(
+		() =>
+			[...rows].sort(
+				(a, b) =>
+					STATUS_ORDER[a.status] - STATUS_ORDER[b.status] ||
+					a.exhibition.endDate.localeCompare(b.exhibition.endDate),
+			),
+		[rows],
 	);
+
+	if (loading && results.length === 0) {
+		return (
+			<View className='items-center py-16'>
+				<ActivityIndicator color='#78716C' />
+			</View>
+		);
+	}
 
 	if (results.length === 0) {
 		return (
@@ -55,7 +111,7 @@ export function SavedExhibitions({ onPressExhibition }: SavedExhibitionsProps) {
 
 	return (
 		<View className='gap-5'>
-			{results.map(r => (
+			{results.map((r) => (
 				<Animated.View
 					key={r.exhibition.id}
 					entering={FadeIn.duration(150)}

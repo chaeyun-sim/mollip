@@ -261,6 +261,9 @@ export default function DescriptionScreen() {
 			recordListened(todayKey(), {
 				title: store.inputMode === 'manual' ? store.manualTitle : '촬영한 작품',
 				imageUrl: store.artworkImageUrl || undefined,
+				descriptionPreview: fullTextRef.current
+					? fullTextRef.current.replace(/\s+/g, ' ').trim().slice(0, 280)
+					: undefined,
 			});
 		}
 	}, [isTyping]);

@@ -8,10 +8,33 @@ import { ScreenHeader } from './ScreenHeader';
 
 interface ScreenProps {
 	className?: string;
-	edges?: Edges
+	edges?: Edges;
+	/** dark: 가이드·몰입 / warm: 아카이브·탐색 본문 */
+	variant?: 'dark' | 'warm';
 }
 
-function Screen({ className, children, edges }: PropsWithChildren<ScreenProps>) {
+function Screen({
+	className,
+	children,
+	edges,
+	variant = 'dark',
+}: PropsWithChildren<ScreenProps>) {
+	if (variant === 'warm') {
+		return (
+			<>
+				<StatusBar style='dark' />
+				<View className='flex-1 bg-[#F8F6F2]'>
+					<SafeAreaView
+						edges={edges || ['top', 'left', 'right']}
+						className={cn('px-6 flex-1', className)}
+					>
+						{children}
+					</SafeAreaView>
+				</View>
+			</>
+		);
+	}
+
 	return (
 		<>
 			<StatusBar style='light' />

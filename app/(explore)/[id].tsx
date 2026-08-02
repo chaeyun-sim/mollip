@@ -25,17 +25,19 @@ import Animated, {
 } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { getExhibition, type Artwork, type Exhibition } from '@/src/data/exhibitions';
+import { type Artwork, type Exhibition } from '@/src/data/exhibitions';
 import { ImmersiveOverlay } from '@/src/components/explore/ImmersiveOverlay';
 import { useBookmarkStore } from '@/src/store/bookmarkStore';
 import { useImmersiveStore } from '@/src/store/immersiveStore';
 import { todayKey, useVisitStore } from '@/src/store/visitStore';
 import { useCultureExhibitionDetail } from '@/src/hooks/useCultureExhibitionDetail';
-import { useKcisaExhibitionDetail } from '@/src/hooks/useKcisaExhibitionDetail';
+import { useExhibitionDetail } from '@/src/hooks/useExhibitionDetail';
 import { cn } from '@/src/lib/cn';
-import { EmptyImagePlaceholder } from '@/src/components/common/EmptyImagePlaceholder';
+import { EmptyImagePlaceholder, ExhibitionPoster } from '@/src/components/common/EmptyImagePlaceholder';
+import { displayGenre } from '@/src/utils/exhibitionClassification';
 import {
-  getExhibitionTypeLabel,
+  getExhibitionTypeDisplay,
+  getGenreTag,
   getShortVenueLabel,
   splitArtistNames,
 } from '@/src/utils/exhibitionSearch';
@@ -72,20 +74,19 @@ export default function ExhibitionDetailScreen() {
   const recordVisit = useVisitStore(s => s.recordExhibition);
   const setImmersiveMode = useImmersiveStore(s => s.setImmersiveMode);
 
-  const staticExhibition = getExhibition(id);
-  const { exhibition: kcisaExhibition, status: kcisaStatus } = useKcisaExhibitionDetail(
-    staticExhibition ? undefined : id,
+  const isNumericDbId = id != null && Number.isFinite(Number(id));
+  const { exhibition: kcisaExhibition, status: kcisaStatus } = useExhibitionDetail(
+    isNumericDbId ? id : undefined,
   );
-  const shouldTryCulture = !staticExhibition && kcisaStatus === 'error';
+  const shouldTryCulture = !isNumericDbId || kcisaStatus === 'error';
   const { exhibition: apiExhibition, status: apiStatus } = useCultureExhibitionDetail(
     shouldTryCulture ? id : undefined,
   );
-  const exhibition = staticExhibition ?? kcisaExhibition ?? apiExhibition ?? undefined;
+  const exhibition = kcisaExhibition ?? apiExhibition ?? undefined;
   const isLoading =
-    !staticExhibition &&
-    (kcisaStatus === 'loading' ||
-      kcisaStatus === 'idle' ||
-      (shouldTryCulture && (apiStatus === 'loading' || apiStatus === 'idle')));
+    kcisaStatus === 'loading' ||
+    kcisaStatus === 'idle' ||
+    (shouldTryCulture && (apiStatus === 'loading' || apiStatus === 'idle'));
   const isBookmarked = useBookmarkStore(s => s.isBookmarked(id));
   const toggle = useBookmarkStore(s => s.toggle);
 
@@ -171,26 +172,14 @@ export default function ExhibitionDetailScreen() {
           style={{ height: HERO_HEIGHT }}
         >
           <Animated.View style={[{ width: '100%', height: HERO_HEIGHT }, heroImageStyle]}>
-            {exhibition.heroImageUri ? (
-              <>
-                <Image
-                  source={{ uri: exhibition.heroImageUri }}
-                  className='w-full h-full'
-                  resizeMode='cover'
-                />
-                {/* 포스터 전체에 살짝 어두운 레이어 — 상단 아이콘 대비 확보 */}
-                <View
-                  className='absolute inset-0'
-                  style={{ backgroundColor: 'rgba(0,0,0,0.15)' }}
-                  pointerEvents='none'
-                />
-              </>
-            ) : (
-              <EmptyImagePlaceholder
-                className='w-full h-full items-center justify-center bg-[#dad4c8]'
-                iconSize={160}
-              />
-            )}
+            <ExhibitionPoster
+              heroImageUri={exhibition.heroImageUri}
+              posterImage={exhibition.posterImage}
+              style={{ width: '100%', height: HERO_HEIGHT }}
+              iconSize={160}
+              resizeMode='cover'
+              dimOverlay
+            />
           </Animated.View>
 
           <LinearGradient
@@ -216,7 +205,7 @@ export default function ExhibitionDetailScreen() {
           >
             <MetaPill
               icon='location-outline'
-              text={getShortVenueLabel(exhibition.venue)}
+              text={exhibition.venue}
             />
             {splitArtistNames(exhibition.artist).map(name => (
               <MetaPill
@@ -225,6 +214,8 @@ export default function ExhibitionDetailScreen() {
                 text={name}
               />
             ))}
+            {exhibition.exhibitionType && <MetaPill text={exhibition.exhibitionType} />}
+            {getGenreTag(exhibition) && <MetaPill text={getGenreTag(exhibition)!} />}
           </ScrollView>
         </FadeInView>
 
@@ -232,15 +223,20 @@ export default function ExhibitionDetailScreen() {
         <FadeInView delay={170}>
           <View className='px-6 pt-1 pb-3'>
             <Text className='text-gray-900 text-[26px] leading-[34px] font-pretendard-bold'>
-              {exhibition.title}
+              {exhibition.title.trim()}
             </Text>
-            <Text className='text-gray-400 text-[13px] font-pretendard-regular mt-1'>
-              {exhibition.startDate} – {exhibition.endDate}
-            </Text>
+            <View className='flex-row items-center flex-wrap gap-x-3 gap-y-1 mt-3'>
+              <Text className='text-gray-400 text-[13px] font-pretendard-regular'>
+                {exhibition.startDate} – {exhibition.endDate}
+              </Text>
+              {exhibition.ticketUrl ? (
+                <ExhibitionOfficialLink exhibition={exhibition} />
+              ) : null}
+            </View>
           </View>
         </FadeInView>
 
-        {/* Description — 없으면(문화포털 데이터 특성상 자주 비어있음) 안내 URL 링크로 대체 */}
+        {/* Description — 본문만 (외부 안내는 제목 아래 링크) */}
         <FadeInView delay={200}>
           <View className='px-6'>
             {exhibition.description ? (
@@ -260,30 +256,37 @@ export default function ExhibitionDetailScreen() {
                   </Text>
                 </Pressable>
               </>
-            ) : exhibition.ticketUrl ? (
-              <Pressable
-                onPress={() => WebBrowser.openBrowserAsync(exhibition.ticketUrl!)}
-                className='flex-row items-center gap-1'
-                accessibilityLabel='전시 안내 페이지 자세히 보기'
-                accessibilityRole='link'
-              >
-                <Text className='text-gray-500 text-[14px] font-pretendard-medium underline'>
-                  자세히 보기
-                </Text>
-                <Ionicons
-                  name='open-outline'
-                  size={14}
-                  color='#6B7280'
-                />
-              </Pressable>
             ) : null}
           </View>
         </FadeInView>
 
+        {(exhibition.tags?.length ?? 0) > 0 && (
+          <FadeInView delay={250}>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={{
+                paddingHorizontal: 18,
+                paddingTop: 12,
+                paddingBottom: 4,
+                gap: 8,
+              }}
+            >
+              {(exhibition.tags ?? [])?.map(tag => (
+                <MetaPill
+                  key={tag}
+                  icon='pricetag-outline'
+                  text={tag}
+                />
+              ))}
+            </ScrollView>
+          </FadeInView>
+        )}
+
         {/* 관람 정보 — 카드/아이콘 없이 순수 타이포+룰선으로만 구성한 팩트시트.
 				    도록(catalogue)이나 벽면 라벨에 인쇄된 스펙 표를 참고했다. */}
         <FadeInView delay={300}>
-          <View className='px-6 pt-8 mt-2'>
+          <View className='px-6 pt-10'>
             <Text className='font-pretendard-semibold text-[18px] text-gray-900 mb-4'>
               관람 정보
             </Text>
@@ -302,7 +305,7 @@ export default function ExhibitionDetailScreen() {
               label='전시 형태'
               isLast
             >
-              {getExhibitionTypeLabel(exhibition)}
+              {getExhibitionTypeDisplay(exhibition)}
             </InfoRow>
             <View style={{ height: 2, backgroundColor: '#1C1917' }} />
           </View>
@@ -330,15 +333,11 @@ export default function ExhibitionDetailScreen() {
 
         {/* 추천 전시 — API 소스는 이미 조회된 relatedExhibitions, 정적 데이터는 id로 조회 */}
         {(() => {
-          const related =
-            exhibition.relatedExhibitions ??
-            exhibition.relatedExhibitionIds
-              .map(relId => getExhibition(relId))
-              .filter((e): e is Exhibition => e !== undefined);
-          if (related.length === 0) return null;
+          const related = exhibition.relatedExhibitions;
+          if (related?.length === 0) return null;
           return (
             <FadeInView delay={500}>
-              <RelatedExhibitions exhibitions={related} />
+              <RelatedExhibitions exhibitions={related!} />
             </FadeInView>
           );
         })()}
@@ -436,7 +435,7 @@ export default function ExhibitionDetailScreen() {
       {/* 하단 CTA */}
       <View className='absolute bottom-0 left-0 right-0 bg-white border-t border-gray-100'>
         <SafeAreaView edges={['bottom']}>
-          <CTAButton exhibition={exhibition} />
+          <CTAButton onPress={() => setImmersiveOpen(true)} />
         </SafeAreaView>
       </View>
 
@@ -446,7 +445,10 @@ export default function ExhibitionDetailScreen() {
         onStart={() => {
           setImmersiveOpen(false);
           enterImmersive(id);
-          recordVisit(todayKey(), id); // 관람 다이어리용 방문 기록
+          recordVisit(todayKey(), id, {
+            title: exhibition.title,
+            venue: exhibition.venue,
+          });
           setImmersiveMode(true);
           router.push('/(guide)/create-description');
         }}
@@ -456,58 +458,70 @@ export default function ExhibitionDetailScreen() {
   );
 }
 
-function CTAButton({ exhibition }: { exhibition: Exhibition }) {
+function exhibitionOfficialLinkLabel(exhibition: Exhibition): string {
+  if (exhibition.admissionFree) return '공식 안내';
+  return '예매·안내';
+}
+
+function ExhibitionOfficialLink({ exhibition }: { exhibition: Exhibition }) {
+  const url = exhibition.ticketUrl;
+  if (!url) return null;
+  const label = exhibitionOfficialLinkLabel(exhibition);
+
+  return (
+    <Pressable
+      onPress={() => {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+        WebBrowser.openBrowserAsync(url);
+      }}
+      hitSlop={6}
+      className='flex-row items-center gap-0.5'
+      accessibilityRole='link'
+      accessibilityLabel={`${label}, 외부 브라우저에서 열기`}
+    >
+      <Text className='text-[#1C1917] text-[13px] font-pretendard-semibold underline'>
+        {label}
+      </Text>
+      <Ionicons
+        name='open-outline'
+        size={12}
+        color='#1C1917'
+      />
+    </Pressable>
+  );
+}
+
+function CTAButton({ onPress }: { onPress: () => void }) {
   const scale = useSharedValue(1);
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }],
   }));
 
-  const isFree = !!exhibition.admissionFree;
-  const hasTicket = !isFree && !!exhibition.ticketUrl;
-  const label = isFree ? '무료 전시입니다' : hasTicket ? '예매하러 가기' : '예매 정보 없음';
-
   return (
     <Pressable
       onPressIn={() => {
-        if (!hasTicket) return;
         scale.value = withTiming(0.97, { duration: 100 });
       }}
       onPressOut={() => {
         scale.value = withTiming(1, { duration: 150 });
       }}
       onPress={() => {
-        if (!hasTicket) return;
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-        WebBrowser.openBrowserAsync(exhibition.ticketUrl!);
+        onPress();
       }}
-      accessibilityLabel={label}
+      accessibilityLabel='몰입하기, 오디오 가이드 시작'
       accessibilityRole='button'
-      disabled={!hasTicket}
     >
       <Animated.View
-        style={[animatedStyle, { backgroundColor: hasTicket ? '#111827' : '#D1D5DB' }]}
+        style={[animatedStyle, { backgroundColor: '#1C1917' }]}
         className='mx-5 my-3 rounded-2xl py-[18px] flex-row items-center justify-center gap-2.5'
       >
         <Ionicons
-          name='ticket-outline'
+          name='headset'
           size={20}
-          color={hasTicket ? 'white' : '#9CA3AF'}
+          color='white'
         />
-        <Text
-          className={cn(
-            'font-pretendard-bold text-[16px]',
-            hasTicket ? 'text-white' : 'text-[#9CA3AF]',
-          )}
-        >
-          {label}
-        </Text>
-        {hasTicket && (
-          <Ionicons
-            name='chevron-forward'
-            size={16}
-            color='rgba(255,255,255,0.5)'
-          />
-        )}
+        <Text className='font-pretendard-bold text-[16px] text-white'>몰입하기</Text>
       </Animated.View>
     </Pressable>
   );
@@ -770,48 +784,37 @@ function RelatedExhibitionCard({
     >
       <Animated.View style={animatedStyle}>
         {/* 포스터 — 이미지 있으면 실제 이미지, 없으면 빈 상태 */}
-        <View
-          className='rounded-2xl overflow-hidden'
+        <ExhibitionPoster
+          heroImageUri={exhibition.heroImageUri}
+          posterImage={exhibition.posterImage}
           style={{ width: POSTER_W, height: POSTER_H }}
+          className='rounded-2xl'
+          iconSize={72}
+          resizeMode='cover'
         >
-          {exhibition.heroImageUri || exhibition.posterImage ? (
-            <Image
-              source={
-                exhibition.heroImageUri ? { uri: exhibition.heroImageUri } : exhibition.posterImage
-              }
-              style={{ width: POSTER_W, height: POSTER_H }}
-              resizeMode='cover'
-            />
-          ) : (
-            <EmptyImagePlaceholder
-              style={{ width: POSTER_W, height: POSTER_H }}
-              className='items-center justify-center bg-[#E5E1D8]'
-              iconSize={72}
-            />
-          )}
-
           <LinearGradient
             colors={['rgba(0,0,0,0.4)', 'transparent']}
             className='absolute top-0 left-0 right-0 h-14'
             pointerEvents='none'
           />
 
-          {/* 장르 배지 — 포스터가 흰색/밝은 배경이면 배지가 묻히므로 그림자로 경계를 살린다 */}
-          <View
-            className='absolute top-2.5 left-2.5 rounded-full px-2.5 py-1 bg-white/85'
-            style={{
-              shadowColor: '#000',
-              shadowOpacity: 0.15,
-              shadowRadius: 4,
-              shadowOffset: { width: 0, height: 1 },
-              elevation: 2,
-            }}
-          >
-            <Text className='text-[10px] font-pretendard-semibold text-[#1C1917]'>
-              {exhibition.genre}
-            </Text>
-          </View>
-        </View>
+          {getGenreTag(exhibition) ? (
+            <View
+              className='absolute top-2.5 left-2.5 rounded-full px-2.5 py-1 bg-white/85'
+              style={{
+                shadowColor: '#000',
+                shadowOpacity: 0.15,
+                shadowRadius: 4,
+                shadowOffset: { width: 0, height: 1 },
+                elevation: 2,
+              }}
+            >
+              <Text className='text-[10px] font-pretendard-semibold text-[#1C1917]'>
+                {getGenreTag(exhibition)}
+              </Text>
+            </View>
+          ) : null}
+        </ExhibitionPoster>
 
         {/* 텍스트 */}
         <View
