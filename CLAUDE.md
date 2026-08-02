@@ -42,8 +42,8 @@ After all features pass individually: run `npx tsc --noEmit` once more and walk 
 
 Report completion ONLY with an evidence checklist per feature, e.g.:
 
-| 기능 | tsc | 스크린샷 | 인터랙션 | 회귀 |
-|---|---|---|---|---|
+| 기능   | tsc         | 스크린샷      | 인터랙션       | 회귀           |
+| ------ | ----------- | ------------- | -------------- | -------------- |
 | 기능 A | ✅ 0 errors | `<path>` 확인 | 탭 → 이동 확인 | 인접 화면 정상 |
 
 "Done" without this table is a defect. If a check was skipped (e.g., simulator not booted), state it explicitly instead of implying it passed.

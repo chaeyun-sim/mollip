@@ -49,3 +49,7 @@ yarn-error.*
 
 .omc
 .agents
+
+.docs/IDEA.md
+.docs/museum_exhibition_content.md
+scripts/__pycache__/
