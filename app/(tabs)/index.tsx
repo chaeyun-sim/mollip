@@ -49,7 +49,7 @@ function ExhibitionPosterCard({ item, onPress }: ExhibitionPosterCardProps) {
 				/>
 			) : (
 				<EmptyImagePlaceholder
-					className='w-full rounded-lg overflow-hidden items-center justify-center bg-[#dad4c8]'
+					className='w-full rounded-lg overflow-hidden items-center justify-center bg-[#E5E1D8]'
 					style={{ aspectRatio: 0.75 }}
 					iconSize={120}
 				/>
@@ -89,7 +89,7 @@ function KcisaExhibitionCard({ item, onPress }: KcisaExhibitionCardProps) {
 					/>
 				) : (
 					<EmptyImagePlaceholder
-						className='items-center justify-center bg-[#ece9e1]'
+						className='items-center justify-center bg-[#E5E1D8]'
 						style={{ width: KCISA_CARD_WIDTH, height: KCISA_CARD_HEIGHT }}
 						iconSize={64}
 					/>

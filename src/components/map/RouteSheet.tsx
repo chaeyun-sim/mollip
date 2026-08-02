@@ -1,6 +1,6 @@
 import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { Ionicons } from '@expo/vector-icons';
-import { ActivityIndicator, Pressable, ScrollView, Text, View } from 'react-native';
+import { ActivityIndicator, Modal, Pressable, ScrollView, Text, View } from 'react-native';
 import type { LayoutChangeEvent } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import Animated, {
@@ -20,6 +20,7 @@ import type { RouteCoord, RouteLeg, RouteResult } from '@/src/api/tmap';
 import { cn } from '@/src/lib/cn';
 import type { DirectionsMode } from '@/src/hooks/useDirections';
 import { legColor } from '@/src/utils/routeColors';
+import { EXTERNAL_MAP_APPS, openExternalMap } from '@/src/utils/externalMaps';
 
 interface RouteSheetProps {
   mode: DirectionsMode;
@@ -32,6 +33,7 @@ interface RouteSheetProps {
   // 타임라인의 승차/하차 행을 누르면 지도에서 그 좌표로 줌·이동한다.
   onFocusStop: (coord: RouteCoord) => void;
   destinationName?: string;
+  originName?: string;
   bottomInset: number;
 }
 
@@ -63,23 +65,43 @@ function formatDistanceM(meters: number): string {
   return meters < 1000 ? `${Math.round(meters)}m` : `${(meters / 1000).toFixed(1)}km`;
 }
 
+// ODsay 공식 버스노선 타입 코드 — 14 = 광역버스.
+const BUS_ROUTE_TYPE_EXPRESS = 14;
+
 // Tmap 노선명이 "지선:3011"처럼 "구분:번호" 형태로 와서, 번호만 남긴다.
+// 광역버스는 일반버스보다 요금이 비싼데 번호만 봐서는 구분이 안 돼서, 앞에 "M"을 붙여 표시한다.
 function busNumber(leg: RouteLeg): string {
-  return leg.routeName?.split(':').pop() ?? '';
+  const raw = leg.routeName?.split(':').pop() ?? '';
+  if (!raw) return raw;
+  if (leg.routeType === BUS_ROUTE_TYPE_EXPRESS && !raw.toUpperCase().startsWith('M')) {
+    return `M${raw}`;
+  }
+  return raw;
 }
 
-type SortCriterion = 'time' | 'distance' | 'transfer';
+type SortCriterion = 'time' | 'distance' | 'transfer' | 'fare' | 'walk';
 
 const SORT_OPTIONS: Array<{ key: SortCriterion; label: string }> = [
   { key: 'time', label: '최단 시간' },
   { key: 'distance', label: '최단 거리' },
   { key: 'transfer', label: '환승 적은 순' },
+  { key: 'fare', label: '최소 운임 순' },
+  { key: 'walk', label: '최소 도보 순' },
 ];
+
+// 경로 전체 구간 중 도보 구간만 합산 — 같은 총 소요시간이라도 걷는 시간이 다를 수 있다.
+function walkSeconds(route: RouteResult): number {
+  return route.legs
+    .filter((leg) => leg.mode === 'walk')
+    .reduce((sum, leg) => sum + leg.sectionSeconds, 0);
+}
 
 function compareRoutes(a: RouteResult, b: RouteResult, criterion: SortCriterion): number {
   if (criterion === 'time') return a.durationSeconds - b.durationSeconds;
   if (criterion === 'distance') return a.distanceMeters - b.distanceMeters;
-  return a.transferCount - b.transferCount;
+  if (criterion === 'transfer') return a.transferCount - b.transferCount;
+  if (criterion === 'fare') return (a.fareWon ?? Infinity) - (b.fareWon ?? Infinity);
+  return walkSeconds(a) - walkSeconds(b);
 }
 
 // 경로 카드 상단 요약 — key-value 형태로 미리 뽑아두고 JSX는 그대로 찍기만 한다.
@@ -147,9 +169,9 @@ type TimelineItem =
       coord: RouteCoord | null;
     };
 
-function buildTimeline(route: RouteResult, destinationLabel: string): TimelineItem[] {
+function buildTimeline(route: RouteResult, destinationLabel: string, originLabel: string): TimelineItem[] {
   const items: TimelineItem[] = [
-    { type: 'endpoint', key: 'start', variant: 'start', label: '현재 위치' },
+    { type: 'endpoint', key: 'start', variant: 'start', label: originLabel },
   ];
 
   route.legs.forEach((leg, i) => {
@@ -294,9 +316,14 @@ interface SortChipsProps {
 }
 
 // 정렬 기준 칩 — 드롭다운 대신 항상 보이는 한 줄로 두어 선택 상태가 바로 읽힌다.
+// 옵션이 늘어나 한 줄에 다 안 들어가면 가로 스크롤로 넘어간다.
 function SortChips({ criterion, onChangeCriterion }: SortChipsProps) {
   return (
-    <View className='flex-row gap-1.5'>
+    <ScrollView
+      horizontal
+      showsHorizontalScrollIndicator={false}
+      contentContainerStyle={{ gap: 6 }}
+    >
       {SORT_OPTIONS.map(option => {
         const active = criterion === option.key;
         return (
@@ -326,7 +353,7 @@ function SortChips({ criterion, onChangeCriterion }: SortChipsProps) {
           </Pressable>
         );
       })}
-    </View>
+    </ScrollView>
   );
 }
 
@@ -345,6 +372,75 @@ function MetaChip({ icon, label }: MetaChipProps) {
       />
       <Text className='text-black/55 text-[11px] font-pretendard-semibold'>{label}</Text>
     </View>
+  );
+}
+
+interface ExternalMapTarget {
+  coord: RouteCoord;
+  label: string;
+}
+
+interface ExternalMapSheetProps {
+  target: ExternalMapTarget;
+  onClose: () => void;
+}
+
+// 승차/하차 위치를 외부 지도 앱(네이버/카카오/구글)에서 열기 위한 액션시트.
+function ExternalMapSheet({ target, onClose }: ExternalMapSheetProps) {
+  const handlePick = useCallback(
+    (app: (typeof EXTERNAL_MAP_APPS)[number]['key']) => {
+      onClose();
+      openExternalMap(app, target.coord, target.label);
+    },
+    [target, onClose],
+  );
+
+  return (
+    <Modal
+      transparent
+      animationType='fade'
+      onRequestClose={onClose}
+    >
+      <Pressable
+        className='flex-1 justify-end'
+        style={{ backgroundColor: 'rgba(28,25,23,0.35)' }}
+        onPress={onClose}
+        accessibilityLabel='닫기'
+        accessibilityRole='button'
+      >
+        <Pressable
+          className='bg-white rounded-t-[28px] px-5 pt-2 pb-8'
+          onPress={(e) => e.stopPropagation()}
+        >
+          <View
+            className='self-center w-9 h-1 rounded-full bg-black/15 mt-2 mb-4'
+          />
+          <Text className='text-black/40 text-[12px] font-pretendard-semibold px-1 mb-2'>
+            {target.label} · 지도 앱에서 보기
+          </Text>
+          {EXTERNAL_MAP_APPS.map((app) => (
+            <Pressable
+              key={app.key}
+              onPress={() => handlePick(app.key)}
+              className='flex-row items-center gap-3 h-14 px-1'
+              accessibilityRole='button'
+              accessibilityLabel={app.label}
+            >
+              <View className='w-9 h-9 rounded-full items-center justify-center bg-black/[0.045]'>
+                <Ionicons
+                  name='map-outline'
+                  size={17}
+                  color={INK}
+                />
+              </View>
+              <Text className='text-[15px] font-pretendard-medium text-[#1C1917]'>
+                {app.label}
+              </Text>
+            </Pressable>
+          ))}
+        </Pressable>
+      </Pressable>
+    </Modal>
   );
 }
 
@@ -418,15 +514,17 @@ interface RouteTimelineProps {
   route: RouteResult;
   mode: DirectionsMode;
   destinationName?: string;
+  originName?: string;
   onFocusStop: (coord: RouteCoord) => void;
+  onOpenExternalMap: (target: ExternalMapTarget) => void;
 }
 
 // 승차/하차/도보 상세 타임라인 — 세로 척추(스파인) 색을 구간 색에 맞춰 이어 붙인다.
 // 승차/하차 행만 누를 수 있고, 누르면 카드 펼침 상태는 그대로 둔 채 지도가 그 위치로 이동한다.
-function RouteTimeline({ route, mode, destinationName, onFocusStop }: RouteTimelineProps) {
+function RouteTimeline({ route, mode, destinationName, originName, onFocusStop, onOpenExternalMap }: RouteTimelineProps) {
   const items = useMemo(
-    () => buildTimeline(route, destinationName ?? '도착지'),
-    [route, destinationName],
+    () => buildTimeline(route, destinationName ?? '도착지', originName ?? '출발지'),
+    [route, destinationName, originName],
   );
 
   return (
@@ -558,20 +656,33 @@ function RouteTimeline({ route, mode, destinationName, onFocusStop }: RouteTimel
 
               if ((item.type === 'board' || item.type === 'alight') && item.coord) {
                 const coord = item.coord;
+                const label =
+                  item.type === 'board' ? `${item.title}역` : `${item.title}${item.stopSuffix}`;
                 return (
-                  <Pressable
-                    onPress={() => onFocusStop(coord)}
-                    className='flex-1 pb-3'
-                    hitSlop={4}
-                    accessibilityRole='button'
-                    accessibilityLabel={
-                      item.type === 'board'
-                        ? `${item.title}역 위치를 지도에서 보기`
-                        : `${item.title}${item.stopSuffix} 위치를 지도에서 보기`
-                    }
-                  >
-                    {content}
-                  </Pressable>
+                  <View className='flex-1 flex-row items-start pb-3'>
+                    <Pressable
+                      onPress={() => onFocusStop(coord)}
+                      className='flex-1'
+                      hitSlop={4}
+                      accessibilityRole='button'
+                      accessibilityLabel={`${label} 위치를 지도에서 보기`}
+                    >
+                      {content}
+                    </Pressable>
+                    <Pressable
+                      onPress={() => onOpenExternalMap({ coord, label })}
+                      hitSlop={8}
+                      className='w-7 h-7 items-center justify-center'
+                      accessibilityRole='button'
+                      accessibilityLabel={`${label} 외부 지도 앱에서 열기`}
+                    >
+                      <Ionicons
+                        name='share-outline'
+                        size={16}
+                        color='rgba(28,25,23,0.3)'
+                      />
+                    </Pressable>
+                  </View>
                 );
               }
               return <View className='flex-1 pb-3'>{content}</View>;
@@ -591,8 +702,10 @@ interface RouteCandidateCardProps {
   expanded: boolean;
   selected: boolean;
   destinationName?: string;
+  originName?: string;
   onPressCard: (index: number) => void;
   onFocusStop: (coord: RouteCoord) => void;
+  onOpenExternalMap: (target: ExternalMapTarget) => void;
 }
 
 // 대중교통 경로 후보 카드 — 헤더를 탭해야만 선택·펼침이 바뀐다. 펼쳐진 타임라인 안의
@@ -605,8 +718,10 @@ function RouteCandidateCard({
   expanded,
   selected,
   destinationName,
+  originName,
   onPressCard,
   onFocusStop,
+  onOpenExternalMap,
 }: RouteCandidateCardProps) {
   const reduceMotion = useReducedMotion();
   const pressScale = useSharedValue(1);
@@ -703,7 +818,9 @@ function RouteCandidateCard({
                 route={route}
                 mode={mode}
                 destinationName={destinationName}
+                originName={originName}
                 onFocusStop={onFocusStop}
+                onOpenExternalMap={onOpenExternalMap}
               />
             </View>
           </Animated.View>
@@ -723,11 +840,14 @@ export function RouteSheet({
   onChangeMode,
   onFocusStop,
   destinationName,
+  originName,
   bottomInset,
 }: RouteSheetProps) {
   // 버스 후보 카드 중 상세 타임라인이 펼쳐진 카드 — 아코디언이라 한 번에 하나만 열린다.
   const [expandedIndex, setExpandedIndex] = useState<number | null>(0);
   const [sortCriterion, setSortCriterion] = useState<SortCriterion>('time');
+  // 승차/하차 행의 "외부 지도 앱에서 열기" 액션시트 대상 — null이면 시트가 닫혀 있다.
+  const [externalMapTarget, setExternalMapTarget] = useState<ExternalMapTarget | null>(null);
 
   const handleCardPress = useCallback(
     (index: number) => {
@@ -798,7 +918,9 @@ export function RouteSheet({
                   route={route}
                   mode={mode}
                   destinationName={destinationName}
+                  originName={originName}
                   onFocusStop={onFocusStop}
+                  onOpenExternalMap={setExternalMapTarget}
                 />
               </View>
             </View>
@@ -828,14 +950,23 @@ export function RouteSheet({
                   expanded={expandedIndex === i}
                   selected={i === selectedRouteIndex}
                   destinationName={destinationName}
+                  originName={originName}
                   onPressCard={handleCardPress}
                   onFocusStop={onFocusStop}
+                  onOpenExternalMap={setExternalMapTarget}
                 />
               ))}
             </View>
           </View>
         )}
       </Animated.View>
+
+      {externalMapTarget && (
+        <ExternalMapSheet
+          target={externalMapTarget}
+          onClose={() => setExternalMapTarget(null)}
+        />
+      )}
     </BottomSheetScrollView>
   );
 }

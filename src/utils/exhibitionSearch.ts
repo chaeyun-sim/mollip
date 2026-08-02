@@ -1,5 +1,21 @@
 import { EXHIBITIONS, type Exhibition } from '../data/exhibitions';
+import { EXHIBITION_TYPE_VALUES } from '@/src/constants/exhibitionTaxonomy';
+import { displayGenre } from '@/src/utils/exhibitionClassification';
 import { parseDate } from './mapUtils';
+
+/** 태그로 노출할 만한 "진짜" 장르 값일 때만 반환, 아니면 null. */
+export function getGenreTag(ex: Exhibition): string | null {
+	return displayGenre(ex.genre);
+}
+
+/** DB type → (레거시) tags → 기간 휴리스틱 */
+export function getExhibitionTypeDisplay(ex: Exhibition): string {
+	const fromColumn = ex.exhibitionType?.trim();
+	if (fromColumn) return fromColumn;
+	const fromTags = ex.tags?.find((t) => EXHIBITION_TYPE_VALUES.has(t));
+	if (fromTags) return fromTags;
+	return getExhibitionTypeLabel(ex);
+}
 
 export type ExhibitionStatus = 'upcoming' | 'ongoing' | 'ended';
 
@@ -9,8 +25,24 @@ export const STATUS_LABELS: Record<ExhibitionStatus, string> = {
 	ended: '마감',
 };
 
-/** 기준 날짜 대비 전시 진행 상태 */
+/** Supabase `start_date` / `end_date` (YYYY.MM.DD) */
+export const EXHIBITION_DATE_RE = /^\d{4}\.\d{2}\.\d{2}$/;
+
+export function isValidExhibitionDateString(value: string | null | undefined): boolean {
+	return typeof value === 'string' && EXHIBITION_DATE_RE.test(value.trim());
+}
+
+export function hasValidExhibitionDates(
+	ex: Pick<Exhibition, 'startDate' | 'endDate'>,
+): boolean {
+	return (
+		isValidExhibitionDateString(ex.startDate) && isValidExhibitionDateString(ex.endDate)
+	);
+}
+
+/** 기준 날짜 대비 전시 진행 상태 (날짜 없/형식 오류 → 마감 취급) */
 export function getExhibitionStatus(ex: Exhibition, base: Date = new Date()): ExhibitionStatus {
+	if (!hasValidExhibitionDates(ex)) return 'ended';
 	const d = new Date(base);
 	d.setHours(0, 0, 0, 0);
 	const start = parseDate(ex.startDate);
@@ -21,11 +53,37 @@ export function getExhibitionStatus(ex: Exhibition, base: Date = new Date()): Ex
 	return 'ongoing';
 }
 
+export function todayExhibitionDateString(base: Date = new Date()): string {
+	const d = new Date(base);
+	return `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')}`;
+}
+
+export function isExhibitionEnded(ex: Exhibition, base: Date = new Date()): boolean {
+	return getExhibitionStatus(ex, base) === 'ended';
+}
+
+/** 목록·검색·지도 등 사용자-facing 노출 대상 */
+export function isExhibitionListed(ex: Exhibition, base: Date = new Date()): boolean {
+	return hasValidExhibitionDates(ex) && !isExhibitionEnded(ex, base);
+}
+
+/** Supabase — 빈 start/end 제외 (YYYY.MM.DD 형식은 클라이언트에서 추가 검증) */
+export function applyExhibitionDateFilters<T>(query: T): T {
+	// @ts-expect-error — PostgrestFilterBuilder 재귀 제네릭 깊이 회피
+	return query.neq('start_date', '').neq('end_date', '');
+}
+
 /** 검색어가 제목·미술관·작가·태그 중 하나라도 매칭되는지 */
 export function matchesQuery(ex: Exhibition, query: string): boolean {
 	const q = query.trim().toLowerCase();
 	if (!q) return true;
-	const haystack = [ex.title, ex.venue, ex.artist ?? '', ...(ex.tags ?? [])]
+	const haystack = [
+		ex.title,
+		ex.venue,
+		ex.artist ?? '',
+		ex.exhibitionType ?? '',
+		...(ex.tags ?? []),
+	]
 		.join(' ')
 		.toLowerCase();
 	return haystack.includes(q);
@@ -34,7 +92,14 @@ export function matchesQuery(ex: Exhibition, query: string): boolean {
 /** 제외어가 하나라도 포함되면 true (검색 결과에서 걸러냄) */
 export function matchesExcluded(ex: Exhibition, excluded: string[]): boolean {
 	if (excluded.length === 0) return false;
-	const haystack = [ex.title, ex.venue, ex.artist ?? '', ex.description, ...(ex.tags ?? [])]
+	const haystack = [
+		ex.title,
+		ex.venue,
+		ex.artist ?? '',
+		ex.description,
+		ex.exhibitionType ?? '',
+		...(ex.tags ?? []),
+	]
 		.join(' ')
 		.toLowerCase();
 	return excluded.some((word) => haystack.includes(word.trim().toLowerCase()));
@@ -106,15 +171,6 @@ export function splitArtistNames(artist: string | undefined): string[] {
  * 태그로 쓴다. venue는 "기관명 + 세부위치"를 공백으로 이어붙인 형태라 첫 단어가 기관명이다. */
 export function getShortVenueLabel(venue: string): string {
 	return venue.split(' ')[0] || venue;
-}
-
-// KCISA genre 필드는 실제로는 "현재전시/예정전시" 같은 진행 상태 값이라 장르 태그로 부적절하고,
-// 문화포털 소스는 genre가 항상 '전시' 고정값이다 — 둘 다 태그로 노출하면 노이즈만 된다.
-const NON_GENRE_VALUES = new Set(['전시', '현재전시', '예정전시']);
-
-/** 태그로 노출할 만한 "진짜" 장르 값일 때만 반환, 아니면 null. */
-export function getGenreTag(ex: Exhibition): string | null {
-	return NON_GENRE_VALUES.has(ex.genre) ? null : ex.genre;
 }
 
 /** 휴무일 정보에 토요일/일요일/주말 언급이 없으면 주말에도 운영하는 것으로 본다

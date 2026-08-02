@@ -2,39 +2,40 @@ import { useCallback, useRef, useState } from 'react';
 import { getTransitRoutes, getWalkingRoute, type RouteCoord, type RouteResult } from '@/src/api/tmap';
 
 export type DirectionsMode = 'walk' | 'bus';
-type Status = 'idle' | 'loading' | 'success' | 'error';
+export type DirectionsStatus = 'idle' | 'planning' | 'loading' | 'success' | 'error';
+
+export interface RouteEndpoint {
+	name: string;
+	coord: RouteCoord;
+}
+
+function routeCacheKey(start: RouteCoord, end: RouteCoord): string {
+	return `${start.latitude},${start.longitude}->${end.latitude},${end.longitude}`;
+}
 
 export function useDirections() {
 	const [mode, setMode] = useState<DirectionsMode>('walk');
-	// 도보는 후보가 1개뿐이라 walkRoute에, 버스는 후보 전체가 routes에 들어간다.
 	const [walkRoute, setWalkRoute] = useState<RouteResult | null>(null);
 	const [routes, setRoutes] = useState<RouteResult[]>([]);
 	const [selectedRouteIndex, setSelectedRouteIndex] = useState(0);
-	const [status, setStatus] = useState<Status>('idle');
-	// selectedVenue는 목록이 새로고침되는 동안 잠깐 null이 될 수 있어, 목적지 이름/좌표는
-	// 여기 별도로 저장해 도보/버스 전환이 그 상태 변화에 휘둘리지 않게 한다.
-	const [destination, setDestination] = useState<{ name: string; coord: RouteCoord } | null>(null);
-	// 목적지가 같은 동안은 도보/버스 탭을 오가도 API를 다시 호출하지 않도록 캐싱한다.
+	const [status, setStatus] = useState<DirectionsStatus>('idle');
+	const [origin, setOrigin] = useState<RouteEndpoint | null>(null);
+	const [destination, setDestination] = useState<RouteEndpoint | null>(null);
 	const cacheRef = useRef<{
-		destinationKey: string;
+		key: string;
 		walk?: RouteResult;
 		bus?: RouteResult[];
-	}>({ destinationKey: '' });
+	}>({ key: '' });
 
-	const fetchRoute = useCallback(
-		async (
-			start: RouteCoord,
-			end: RouteCoord,
-			startName: string,
-			endName: string,
-			requestedMode: DirectionsMode,
-		) => {
-			const destinationKey = `${end.latitude},${end.longitude}`;
-			if (cacheRef.current.destinationKey !== destinationKey) {
-				cacheRef.current = { destinationKey };
+	const fetchRouteWithEndpoints = useCallback(
+		async (start: RouteEndpoint, end: RouteEndpoint, requestedMode: DirectionsMode) => {
+			const key = routeCacheKey(start.coord, end.coord);
+			if (cacheRef.current.key !== key) {
+				cacheRef.current = { key };
 			}
 			setMode(requestedMode);
-			setDestination({ name: endName, coord: end });
+			setOrigin(start);
+			setDestination(end);
 			setSelectedRouteIndex(0);
 
 			if (requestedMode === 'walk') {
@@ -46,7 +47,12 @@ export function useDirections() {
 				}
 				setStatus('loading');
 				try {
-					const result = await getWalkingRoute(start, end, startName, endName);
+					const result = await getWalkingRoute(
+						start.coord,
+						end.coord,
+						start.name,
+						end.name,
+					);
 					if (!result || result.legs.length === 0) {
 						setWalkRoute(null);
 						setStatus('error');
@@ -55,8 +61,7 @@ export function useDirections() {
 					cacheRef.current.walk = result;
 					setWalkRoute(result);
 					setStatus('success');
-				} catch (err) {
-					console.log('[DEBUG] 경로 조회 실패', err);
+				} catch {
 					setWalkRoute(null);
 					setStatus('error');
 				}
@@ -71,7 +76,7 @@ export function useDirections() {
 			}
 			setStatus('loading');
 			try {
-				const result = await getTransitRoutes(start, end);
+				const result = await getTransitRoutes(start.coord, end.coord);
 				if (result.length === 0) {
 					setRoutes([]);
 					setStatus('error');
@@ -80,14 +85,39 @@ export function useDirections() {
 				cacheRef.current.bus = result;
 				setRoutes(result);
 				setStatus('success');
-			} catch (err) {
-				console.log('[DEBUG] 경로 조회 실패', err);
+			} catch {
 				setRoutes([]);
 				setStatus('error');
 			}
 		},
 		[],
 	);
+
+	const beginPlanning = useCallback(
+		(end: RouteEndpoint, defaultStart: RouteEndpoint | null) => {
+			setDestination(end);
+			setOrigin(defaultStart);
+			setWalkRoute(null);
+			setRoutes([]);
+			setSelectedRouteIndex(0);
+			setStatus('planning');
+		},
+		[],
+	);
+
+	const confirmRoute = useCallback(
+		(requestedMode: DirectionsMode = 'walk') => {
+			if (!origin || !destination) return;
+			return fetchRouteWithEndpoints(origin, destination, requestedMode);
+		},
+		[origin, destination, fetchRouteWithEndpoints],
+	);
+
+	const swapEndpoints = useCallback(() => {
+		if (!origin || !destination) return;
+		setOrigin(destination);
+		setDestination(origin);
+	}, [origin, destination]);
 
 	const selectRoute = useCallback((index: number) => {
 		setSelectedRouteIndex(index);
@@ -98,6 +128,9 @@ export function useDirections() {
 		setRoutes([]);
 		setSelectedRouteIndex(0);
 		setStatus('idle');
+		setDestination(null);
+		setOrigin(null);
+		cacheRef.current = { key: '' };
 	}, []);
 
 	const route = mode === 'walk' ? walkRoute : (routes[selectedRouteIndex] ?? null);
@@ -108,9 +141,14 @@ export function useDirections() {
 		routes,
 		selectedRouteIndex,
 		status,
+		origin,
 		destination,
-		fetchRoute,
+		setOrigin,
+		setDestination,
+		beginPlanning,
+		confirmRoute,
+		swapEndpoints,
 		selectRoute,
 		clearRoute,
 	};
-}
+};

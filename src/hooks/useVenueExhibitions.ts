@@ -1,85 +1,58 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '@/src/utils/supabase';
-import { KCISA_EXHIBITION_COLUMNS, mapKcisaRowToExhibition } from './useKcisaExhibitionDetail';
+import {
+	EXHIBITION_COLUMNS,
+	mapExhibitionRowToExhibition,
+	type ExhibitionRow,
+} from '@/src/utils/exhibitionMapper';
+import { applyExhibitionDateFilters, isExhibitionListed, todayExhibitionDateString } from '@/src/utils/exhibitionSearch';
 import type { Exhibition } from '@/src/data/exhibitions';
 
 type Status = 'idle' | 'loading' | 'success' | 'error';
-
-interface ManualExhibitionRow {
-	id: string;
-	venue_name: string;
-	title: string;
-	genre: string;
-	description: string;
-	image_url: string | null;
-	url: string | null;
-	artist: string | null;
-	phone: string | null;
-	admission: string;
-	admission_free: boolean;
-	start_date: string;
-	end_date: string;
-	open_hours: string;
-}
-
-function mapManualRowToExhibition(row: ManualExhibitionRow): Exhibition {
-	return {
-		id: row.id,
-		title: row.title,
-		venue: row.venue_name,
-		startDate: row.start_date,
-		endDate: row.end_date,
-		artist: row.artist || undefined,
-		description: row.description,
-		posterColor: '#E8E4DC',
-		genre: row.genre || '전시',
-		heroImageUri: row.image_url || undefined,
-		openHours: row.open_hours || '운영시간 정보 없음',
-		admission: row.admission || '정보 없음',
-		admissionFree: row.admission_free,
-		ticketUrl: row.url || undefined,
-		phone: row.phone || undefined,
-		artworks: [],
-		relatedExhibitionIds: [],
-	};
-}
 
 function escapeIlike(value: string): string {
 	return value.replace(/[%_]/g, (c) => `\\${c}`);
 }
 
 // KCISA institution 컬럼은 "국립현대미술관"처럼 분관 접미사 없는 짧은 공식 명칭인 반면,
-// 지도 마커 이름은 "국립현대미술관 서울관"처럼 분관까지 포함한다. 뒤에서부터 단어를 하나씩
-// 떼어내며 후보를 만들어 ilike OR 조건으로 넓게 조회한다 (예: "국립현대미술관 서울관" → "국립현대미술관").
-// 이 단계는 일부러 느슨하게(포함 관계) 잡고, 실제 동일 장소 여부는 isSameVenue로 다시 거른다.
-function institutionCandidates(venueName: string): string[] {
+// 지도 마커 이름은 "국립현대미술관 서울관"처럼 분관까지 포함하거나, 반대로 "종로구립 고희동미술관"
+// 처럼 앞에 소속 수식어가 붙기도 한다. 앞/뒤에서 단어를 하나씩 떼어내며 후보를 만들어 ilike OR
+// 조건으로 넓게 조회한다. 이 단계는 일부러 느슨하게(포함 관계) 잡고, 실제 동일 장소 여부는
+// isSameVenue로 다시 거른다.
+function venueNameCandidates(venueName: string): string[] {
 	const words = venueName.trim().split(/\s+/).filter(Boolean);
-	const candidates: string[] = [];
+	const candidates = new Set<string>();
 	for (let i = words.length; i >= 1; i--) {
-		candidates.push(words.slice(0, i).join(' '));
+		candidates.add(words.slice(0, i).join(' ')); // 뒤에서부터 제거 (분관 접미사 케이스)
+		candidates.add(words.slice(words.length - i).join(' ')); // 앞에서부터 제거 (소속 접두사 케이스)
 	}
-	return candidates;
+	return Array.from(candidates);
 }
 
 // "경주예술의전당" !== "예술의전당" (단순 포함이면 오탐) 이지만
-// "예술의전당(한가림디자인미술관)" === "예술의전당" (한쪽이 다른 한쪽의 접두사) 이길 원하므로,
-// 부분 문자열 포함이 아니라 양방향 접두사(startsWith) 관계로 동일 장소 여부를 판단한다.
+// "국립현대미술관 서울관" === "국립현대미술관" (분관 접미사)
+// "종로구립 고희동미술관" === "고희동미술관" (소속 접두사) 이길 원하므로,
+// 문자 단위 부분 문자열이 아니라 "단어 배열" 기준으로 한쪽이 다른 쪽의 앞/뒤 부분과
+// 완전히 일치하는지를 본다 (단어 경계가 없는 "경주"+"예술의전당" 같은 붙여쓰기는 걸러진다).
 function isSameVenue(a: string, b: string): boolean {
-	const x = a.trim();
-	const y = b.trim();
-	if (!x || !y) return false;
-	return x.startsWith(y) || y.startsWith(x);
+	const wordsA = a.trim().split(/\s+/).filter(Boolean);
+	const wordsB = b.trim().split(/\s+/).filter(Boolean);
+	if (wordsA.length === 0 || wordsB.length === 0) return false;
+	const [longer, shorter] = wordsA.length >= wordsB.length ? [wordsA, wordsB] : [wordsB, wordsA];
+	const isPrefix = shorter.every((w, i) => longer[i] === w);
+	const isSuffix = shorter.every((w, i) => longer[longer.length - shorter.length + i] === w);
+	return isPrefix || isSuffix;
 }
 
-// 지도 마커(미술관 API 등)로 추가된, 정적 전시 데이터가 없는 장소를 위해
-// 장소 이름으로 KCISA 캐시 + 수동 큐레이션(manual_exhibitions) 테이블을 함께 조회한다.
-// 두 API 모두 커버하지 못하는 소규모 갤러리는 manual_exhibitions에 직접 행을 추가해 채운다.
-export function useVenueExhibitions(venueName: string | null) {
+// 지도 마커(미술관 API 등)로 추가된, 정적 전시 데이터가 없는 장소를 위해 통합 exhibitions
+// 테이블을 장소 이름으로 조회한다. API가 못 채우는 소규모 갤러리는 source='manual' 행으로
+// 채워 넣으면 여기서 함께 잡힌다 (kcisa/manual 구분 없이 같은 테이블, 같은 쿼리).
+export function useVenueExhibitions(venueName: string | null, museumId?: number | null) {
 	const [exhibitions, setExhibitions] = useState<Exhibition[]>([]);
 	const [status, setStatus] = useState<Status>('idle');
 
 	useEffect(() => {
-		if (!venueName) {
+		if (!venueName && museumId == null) {
 			setExhibitions([]);
 			setStatus('idle');
 			return;
@@ -87,50 +60,58 @@ export function useVenueExhibitions(venueName: string | null) {
 		let cancelled = false;
 		setStatus('loading');
 
-		const orFilter = institutionCandidates(venueName)
-			.map((c) => `institution.ilike.%${escapeIlike(c)}%`)
-			.join(',');
-
-		Promise.all([
+		const loadByMuseumId = museumId != null;
+		const query = applyExhibitionDateFilters(
 			supabase
-				.from('kcisa_exhibitions')
-				.select(KCISA_EXHIBITION_COLUMNS)
-				.or(orFilter)
-				.order('period', { ascending: false })
-				.limit(50),
-			supabase
-				.from('manual_exhibitions')
-				.select('*')
-				.eq('venue_name', venueName)
-				.limit(10),
-		]).then(([kcisaRes, manualRes]) => {
-			if (cancelled) return;
-			if (kcisaRes.error && manualRes.error) {
-				setStatus('error');
-				return;
-			}
-			const manual = (manualRes.data ?? []).map(mapManualRowToExhibition);
+				.from('exhibitions')
+				.select(EXHIBITION_COLUMNS)
+				.gte('end_date', todayExhibitionDateString())
+				.order('start_date', {
+					ascending: false,
+				}),
+		);
 
-			// 1) 느슨하게 넓혀 가져온 후보 중, 실제로 같은 장소인 것만 남긴다
-			//    (예: "경주예술의전당"이 "예술의전당" 조회에 섞여 들어오는 것을 제외).
-			const sameVenueRows = (kcisaRes.data ?? []).filter((row) =>
-				row.institution ? isSameVenue(row.institution, venueName) : false,
-			);
-			// 2) 그중에서도 여러 분관이 섞여 있으면 event_site(분관명)로 한 번 더 좁힌다.
-			//    분관 구분 정보가 없거나 매칭이 없으면(=단일 분관) 전체를 그대로 둔다.
-			const branchMatched = sameVenueRows.filter(
-				(row) => row.event_site && venueName.includes(row.event_site),
-			);
-			const finalRows = branchMatched.length > 0 ? branchMatched : sameVenueRows;
-			const kcisa = finalRows.slice(0, 10).map(mapKcisaRowToExhibition);
+		const request = loadByMuseumId
+			? query.eq('museum_id', museumId!).limit(60)
+			: (() => {
+					const orFilter = venueNameCandidates(venueName!)
+						.map((c) => `venue_name_fallback.ilike.%${escapeIlike(c)}%`)
+						.join(',');
+					return query.or(orFilter).limit(60);
+				})();
 
-			setExhibitions([...manual, ...kcisa]);
-			setStatus('success');
-		});
+		request.then(({ data, error }) => {
+				if (cancelled) return;
+				if (error || !data) {
+					setStatus('error');
+					return;
+				}
+
+				// 1) 느슨하게 넓혀 가져온 후보 중, 실제로 같은 장소인 것만 남긴다
+				//    (예: "경주예술의전당"이 "예술의전당" 조회에 섞여 들어오는 것을 제외).
+				let finalRows = data as ExhibitionRow[];
+				if (!loadByMuseumId && venueName) {
+					const sameVenueRows = finalRows.filter((row) =>
+						isSameVenue(row.venue_name_fallback, venueName),
+					);
+					const branchMatched = sameVenueRows.filter(
+						(row) => row.event_site && venueName.includes(row.event_site),
+					);
+					finalRows = branchMatched.length > 0 ? branchMatched : sameVenueRows;
+				}
+
+				setExhibitions(
+					finalRows
+						.slice(0, 20)
+						.map((row) => mapExhibitionRowToExhibition(row))
+						.filter((ex) => isExhibitionListed(ex)),
+				);
+				setStatus('success');
+			});
 		return () => {
 			cancelled = true;
 		};
-	}, [venueName]);
+	}, [venueName, museumId]);
 
 	return { exhibitions, status };
 }

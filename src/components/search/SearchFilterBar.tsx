@@ -2,7 +2,7 @@ import { ScrollView } from 'react-native';
 import { FilterChip } from './FilterChip';
 import { STATUS_LABELS, type ExhibitionStatus } from '@/src/utils/exhibitionSearch';
 
-const STATUS_KEYS: ExhibitionStatus[] = ['upcoming', 'ongoing', 'ended'];
+const STATUS_KEYS: ExhibitionStatus[] = ['upcoming', 'ongoing'];
 
 interface SearchFilterBarProps {
 	statusFilters: Set<ExhibitionStatus>;

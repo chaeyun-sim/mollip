@@ -5,13 +5,14 @@ import {
 	NaverMapView,
 } from '@mj-studio/react-native-naver-map';
 import { useFocusEffect, useRouter } from 'expo-router';
-import { useCallback, useEffect, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { DatePickerModal } from '@/src/components/common/DatePickerModal';
 import { SearchBar } from '@/src/components/common/SearchBar';
 import { FilterChips } from '@/src/components/map/FilterChips';
+import { RoutePlanningBar } from '@/src/components/map/RoutePlanningBar';
 import { RouteSheet } from '@/src/components/map/RouteSheet';
 import { VenueMarker } from '@/src/components/map/VenueMarker';
 import { VenueSheet } from '@/src/components/map/VenueSheet';
@@ -20,7 +21,7 @@ import { venueGroups } from '@/src/data/venues';
 import { useDirections, type DirectionsMode } from '@/src/hooks/useDirections';
 import { useMapCamera, DEFAULT_CAMERA } from '@/src/hooks/useMapCamera';
 import { useMapFilter } from '@/src/hooks/useMapFilter';
-import { useMuseums } from '@/src/hooks/useMuseums';
+import { useMapVenues } from '@/src/hooks/useMapVenues';
 import { useVenueExhibitions } from '@/src/hooks/useVenueExhibitions';
 import { useMapStore } from '@/src/store/mapStore';
 import { declutterMarkers, distanceKm, formatDistance, latOffsetForPixels } from '@/src/utils/mapUtils';
@@ -46,15 +47,21 @@ export default function MapScreen() {
 		useMapCamera();
 
 	const { selectedVenueName, selectVenue, clearSelection } = useMapStore();
-	const museumVenues = useMuseums();
+	const [filterDate, setFilterDate] = useState(new Date());
+	const dbVenues = useMapVenues(filterDate);
 	const {
 		mode: directionsMode,
 		route,
 		routes,
 		selectedRouteIndex,
 		status: directionsStatus,
+		origin: routeOrigin,
 		destination,
-		fetchRoute,
+		setOrigin: setRouteOrigin,
+		setDestination: setRouteDestination,
+		beginPlanning,
+		confirmRoute,
+		swapEndpoints,
 		selectRoute,
 		clearRoute,
 	} = useDirections();
@@ -62,14 +69,12 @@ export default function MapScreen() {
 		searchText,
 		setSearchText,
 		activeFilters,
-		filterDate,
-		setFilterDate,
 		showDatePicker,
 		setShowDatePicker,
 		mapVenues,
 		matchesFilters,
 		toggleFilter,
-	} = useMapFilter(museumVenues);
+	} = useMapFilter(dbVenues, filterDate, setFilterDate);
 
 	// 고정된 스냅 지점만 사용 — 탭 전환이나 로딩/성공/에러 등 콘텐츠 길이가 바뀌어도
 	// 시트 높이가 콘텐츠에 맞춰 흔들리면 안 된다. 항상 고정된 snapPoints로만 크기를 정하고,
@@ -79,29 +84,44 @@ export default function MapScreen() {
 	const routeSnapPoints = useMemo(() => ['24%', '50%', '85%'], []);
 
 	// 카카오맵처럼 좌표를 옮기지 않고, 밀집 지역에서만 큰 마커 대신 점으로 줄인다.
+	const pinnedVenueName = useMemo(() => {
+		if (directionsStatus === 'idle') return null;
+		return destination?.name ?? selectedVenueName;
+	}, [directionsStatus, destination?.name, selectedVenueName]);
+
+	const markerVenues = useMemo(() => {
+		const pinNames = new Set<string>();
+		if (selectedVenueName) pinNames.add(selectedVenueName);
+		if (pinnedVenueName) pinNames.add(pinnedVenueName);
+		if (pinNames.size === 0) return mapVenues;
+		const missing = dbVenues.filter(
+			(v) => pinNames.has(v.venueName) && !mapVenues.some((m) => m.venueName === v.venueName),
+		);
+		return missing.length > 0 ? [...mapVenues, ...missing] : mapVenues;
+	}, [mapVenues, dbVenues, selectedVenueName, pinnedVenueName]);
+
 	const { full: fullMarkerVenues, dots: dotVenues } = useMemo(
 		() =>
 			declutterMarkers(
-				mapVenues,
+				markerVenues,
 				displayZoom,
 				selectedVenueName,
 				filterDate,
-				destination?.name ?? null,
+				pinnedVenueName,
 			),
-		[mapVenues, displayZoom, selectedVenueName, filterDate, destination],
+		[markerVenues, displayZoom, selectedVenueName, filterDate, pinnedVenueName],
 	);
 
 	const selectedVenue = useMemo(
 		() =>
-			[...venueGroups, ...museumVenues].find(
-				(v) => v.venueName === selectedVenueName,
-			) ?? null,
-		[selectedVenueName, museumVenues],
+			[...venueGroups, ...dbVenues].find((v) => v.venueName === selectedVenueName) ?? null,
+		[selectedVenueName, dbVenues],
 	);
 
-	// 정적 데이터 유무와 상관없이 항상 이름으로 전시 API(KCISA + 수동 큐레이션)를 조회해 보강한다.
-	// 정적 큐레이션 데이터만으로는 실제 진행 중인 전시를 놓칠 수 있기 때문.
-	const { exhibitions: apiExhibitions } = useVenueExhibitions(selectedVenueName);
+	const { exhibitions: apiExhibitions } = useVenueExhibitions(
+		selectedVenueName,
+		selectedVenue?.museumId,
+	);
 
 	const displayVenue = useMemo(() => {
 		if (!selectedVenue) return null;
@@ -194,32 +214,33 @@ export default function MapScreen() {
 		clearSelection();
 	}, [currentCoord, mapRef, clearSelection]);
 
+	const handleBeginDirections = useCallback(() => {
+		if (!selectedVenue) return;
+		suppressClearOnDismissRef.current = true;
+		beginPlanning(
+			{ name: selectedVenue.venueName, coord: selectedVenue.coordinates },
+			currentCoord ? { name: '현재 위치', coord: currentCoord } : null,
+		);
+		bottomSheetRef.current?.dismiss();
+	}, [selectedVenue, currentCoord, beginPlanning]);
+
+	const handleConfirmRoutePlan = useCallback(async () => {
+		await confirmRoute('walk');
+		routeSheetRef.current?.snapToIndex(1);
+	}, [confirmRoute]);
+
 	const handleRequestDirections = useCallback(
 		(mode: DirectionsMode = 'walk') => {
-			if (!currentCoord) return;
-			// 이미 경로를 보고 있는 중이면(도보/버스 전환) selectedVenue를 다시 조회하지 않고
-			// useDirections가 기억해 둔 목적지를 그대로 쓴다 — selectedVenue는 비동기로 로드되는
-			// museumVenues 목록에 의존해서 한동안 null이 될 수 있고, 그러면 모드 전환이 조용히 무시됐다.
-			const target = selectedVenue
-				? { coord: selectedVenue.coordinates, name: selectedVenue.venueName }
-				: destination
-					? { coord: destination.coord, name: destination.name }
-					: null;
-			if (!target) return;
-			console.log('[DEBUG] 현재 위치', currentCoord, '/ 목적지', target.name, target.coord);
-			fetchRoute(currentCoord, target.coord, '현재 위치', target.name, mode);
-			bottomSheetRef.current?.dismiss();
-			// 길찾기 패널은 모달이 아닌 일반 BottomSheet라 지도를 계속 자유롭게 탭/이동할 수 있고,
-			// 손잡이를 드래그해서 접고 펼 수 있다.
-			routeSheetRef.current?.snapToIndex(1);
+			void confirmRoute(mode);
 		},
-		[currentCoord, selectedVenue, destination, fetchRoute],
+		[confirmRoute],
 	);
 
 	const handleCloseRoute = useCallback(() => {
 		routeSheetRef.current?.close();
 		clearRoute();
-	}, [clearRoute]);
+		clearSelection();
+	}, [clearRoute, clearSelection]);
 
 	// 타임라인의 승차/하차 행을 누르면 경로·선택은 그대로 둔 채 그 위치로 카메라만 옮기고
 	// 패널을 접어(-1) 지도가 잘 보이게 한다.
@@ -245,10 +266,10 @@ export default function MapScreen() {
 	// 상세 화면에서 뒤로가기로 지도 탭에 돌아왔을 때, 선택이 남아있으면 시트를 다시 연다.
 	useFocusEffect(
 		useCallback(() => {
-			if (selectedVenueName) {
+			if (selectedVenueName && directionsStatus === 'idle') {
 				bottomSheetRef.current?.present();
 			}
-		}, [selectedVenueName]),
+		}, [selectedVenueName, directionsStatus]),
 	);
 
 	const renderBackdrop = useCallback(
@@ -352,7 +373,7 @@ export default function MapScreen() {
 				})}
 			</NaverMapView>
 
-			{/* 필터 칩 — 길찾기 모드에서는 숨긴다 */}
+			{/* 필터 칩 — 길찾기·출발/도착 설정 중에는 숨긴다 */}
 			{directionsStatus === 'idle' && (
 				<FilterChips
 					topOffset={insets.top + 56}
@@ -363,7 +384,6 @@ export default function MapScreen() {
 				/>
 			)}
 
-			{/* 검색 바 — 길찾기 모드에서는 숨기고 대신 닫기(X) 버튼을 같은 자리에 둔다 */}
 			<View
 				className='absolute left-4 right-4'
 				style={{ top: insets.top + 12, zIndex: 20 }}
@@ -373,6 +393,23 @@ export default function MapScreen() {
 						value={searchText}
 						onChangeText={setSearchText}
 						placeholder='미술관 또는 전시 검색'
+					/>
+				) : directionsStatus === 'planning' ? (
+					<RoutePlanningBar
+						origin={routeOrigin}
+						destination={destination}
+						venues={dbVenues}
+						hasCurrentLocation={currentCoord != null}
+						onSelectOrigin={setRouteOrigin}
+						onSelectDestination={setRouteDestination}
+						onUseCurrentLocation={() => {
+							if (currentCoord) {
+								setRouteOrigin({ name: '현재 위치', coord: currentCoord });
+							}
+						}}
+						onSwap={swapEndpoints}
+						onConfirm={handleConfirmRoutePlan}
+						onClose={handleCloseRoute}
 					/>
 				) : (
 					<Pressable
@@ -466,14 +503,14 @@ export default function MapScreen() {
 						filterDate={filterDate}
 						distanceText={distanceText}
 						onGoToExhibition={handleGoToExhibition}
-						onRequestDirections={() => handleRequestDirections('walk')}
+						onRequestDirections={handleBeginDirections}
 					/>
 				)}
 			</BottomSheetModal>
 
 			{/* 길찾기 패널을 다시 열 수 있는 버튼 — 패널을 드래그로 내려도(index -1) 항상 떠 있고,
 			    아래의 BottomSheet가 나중에 그려지며(JSX 순서상 위 레이어) 패널이 열리면 이 버튼을 자연히 덮는다. */}
-			{directionsStatus !== 'idle' && (
+			{directionsStatus !== 'idle' && directionsStatus !== 'planning' && (
 				<Pressable
 					onPress={() => routeSheetRef.current?.snapToIndex(1)}
 					className='absolute left-5 bottom-8 flex-row items-center gap-2 h-12 px-5 rounded-full bg-[rgba(15,14,13,0.92)] border border-white/15'
@@ -501,7 +538,7 @@ export default function MapScreen() {
 					borderRadius: 2,
 				}}
 			>
-				{directionsStatus !== 'idle' && (
+				{directionsStatus !== 'idle' && directionsStatus !== 'planning' && (
 					<RouteSheet
 						mode={directionsMode}
 						status={directionsStatus}
@@ -512,6 +549,7 @@ export default function MapScreen() {
 						onChangeMode={handleRequestDirections}
 						onFocusStop={handleFocusStop}
 						destinationName={destination?.name}
+						originName={routeOrigin?.name}
 						bottomInset={insets.bottom}
 					/>
 				)}

@@ -19,6 +19,9 @@ export interface RouteLeg {
 	endName: string;
 	// 버스 번호(예: "32") 또는 지하철 노선명(예: "신분당선"). 도보 구간에는 없음.
 	routeName?: string;
+	// ODsay 공식 노선 타입 코드 — 버스는 busRouteType(간선/지선/광역 등), 지하철은 subwayCode(호선)
+	// 문서 기준 값이라 routeName 문자열 매칭보다 신뢰도가 높다. 도보 구간에는 없음.
+	routeType?: number;
 	// 지나는 정류장/역 개수. 버스·지하철 구간에만 있음.
 	stopCount?: number;
 }
@@ -121,6 +124,7 @@ function buildRouteResult(path: any): RouteResult {
 			startName: rp.startName ?? '',
 			endName: rp.endName ?? '',
 			routeName: mode === 'bus' ? lane?.busNo : lane?.name,
+			routeType: lane?.type,
 			stopCount: Math.max(0, (rp.passStopList?.stations?.length ?? 1) - 1),
 		};
 	});

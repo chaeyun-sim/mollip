@@ -62,13 +62,14 @@ function mapToExhibition(item: {
 	};
 }
 
-// 문화포털 detail2는 설명(contents1)이 거의 항상 비어있다. KCISA 캐시 테이블(kcisa_exhibitions)에
+// 문화포털 detail2는 설명(contents1)이 거의 항상 비어있다. exhibitions(source='kcisa')에
 // 제목이 유사한 국공립 전시가 있으면 그 설명만 가져와 채운다 (best-effort, 못 찾아도 무해함).
 async function findDescriptionFromKcisa(title: string): Promise<string | null> {
 	const escaped = title.replace(/[%_]/g, (c) => `\\${c}`);
 	const { data } = await supabase
-		.from('kcisa_exhibitions')
+		.from('exhibitions')
 		.select('description')
+		.eq('source', 'kcisa')
 		.ilike('title', `%${escaped}%`)
 		.not('description', 'is', null)
 		.neq('description', '')
@@ -106,8 +107,9 @@ export function useCultureExhibitionDetail(seq: string | undefined) {
 					findRelatedExhibitions({
 						excludeId: mapped.id,
 						venue: mapped.venue,
+						venueDisplay: mapped.venue,
 						artist: mapped.artist,
-						// KCISA엔 없는 소규모 기관도 문화포털 지역 검색으로 "같은 시/도" 관련 전시를 채운다.
+						tags: mapped.tags,
 						area: item.area || undefined,
 						sigungu: item.sigungu || undefined,
 					}),

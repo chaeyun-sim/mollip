@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { supabase } from '@/src/utils/supabase';
+import { applyExhibitionDateFilters, todayExhibitionDateString } from '@/src/utils/exhibitionSearch';
 
 export interface KcisaExhibitionItem {
 	id: string;
@@ -18,11 +19,15 @@ export function useKcisaExhibitions() {
 
 	const fetchExhibitions = useCallback(async () => {
 		setStatus('loading');
-		const { data, error } = await supabase
-			.from('kcisa_exhibitions')
-			.select('id, title, institution, event_site, image_url')
-			.order('collected_date', { ascending: false })
-			.limit(LIST_LIMIT);
+		const { data, error } = await applyExhibitionDateFilters(
+			supabase
+				.from('exhibitions')
+				.select('id, title, venue_name_fallback, event_site, image_url, start_date, end_date')
+				.eq('source', 'kcisa')
+				.gte('end_date', todayExhibitionDateString())
+				.order('collected_date', { ascending: false })
+				.limit(LIST_LIMIT),
+		);
 
 		if (error) {
 			setStatus('error');
@@ -31,9 +36,9 @@ export function useKcisaExhibitions() {
 
 		setItems(
 			data.map((row) => ({
-				id: row.id,
+				id: String(row.id),
 				title: row.title,
-				venue: [row.institution, row.event_site].filter(Boolean).join(' '),
+				venue: [row.venue_name_fallback, row.event_site].filter(Boolean).join(' '),
 				thumbnail: row.image_url,
 			})),
 		);

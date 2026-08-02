@@ -11,11 +11,14 @@ export type FilterKey = (typeof FILTERS)[number]['key'];
 
 const DEBOUNCE_MS = 300;
 
-export function useMapFilter(extraVenues: VenueGroup[] = []) {
+export function useMapFilter(
+	extraVenues: VenueGroup[] = [],
+	filterDate: Date,
+	setFilterDate: (date: Date) => void,
+) {
 	const [inputText, setInputText] = useState('');
 	const [searchText, setSearchText] = useState('');
 	const [activeFilters, setActiveFilters] = useState<Set<FilterKey>>(new Set());
-	const [filterDate, setFilterDate] = useState(new Date());
 	const [showDatePicker, setShowDatePicker] = useState(false);
 	const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 

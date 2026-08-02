@@ -78,6 +78,27 @@ interface NowRunningCultureListResponse extends Pick<
 
 const DATA_URL = 'https://apis.data.go.kr/B553457/cultureinfo';
 
+/** period2 조회 시작일 (YYYYMMDD) */
+const CULTURE_EXHIBITION_PERIOD_FROM = '20260101';
+/** period2 조회 종료일 — 상설·먼 종료일까지 기간 겹침 조회 */
+const CULTURE_EXHIBITION_PERIOD_TO = '29991231';
+
+function isCultureExhibitionItem(item: CultureListResponse): boolean {
+	return item.serviceName === '전시';
+}
+
+function filterExhibitionItems(
+	result: Response<CultureListResponse>,
+): Response<CultureListResponse> {
+	return {
+		...result,
+		body: {
+			...result.body,
+			items: result.body.items.filter(({ item }) => isCultureExhibitionItem(item)),
+		},
+	};
+}
+
 const endpoint = {
 	realm: `${DATA_URL}/realm2`,
 	detail: `${DATA_URL}/detail2`,
@@ -93,6 +114,58 @@ export const getCultureList = async (
 		`${endpoint.realm}?serviceKey=${process.env.EXPO_PUBLIC_DATA_KEY}&PageNo=1&numOfrows=${numOfrows}&sortStdr=1&realmCode=D000&serviceTp=A`,
 	);
 	return parseXmlResponse<CultureListResponse>(response);
+};
+
+/** period2 요청당 row 수 — API가 허용하면 한 번에 많이 받음 (totalCount가 더 크면 PageNo로 이어 받음) */
+const CULTURE_PERIOD_PAGE_SIZE = 1000;
+
+async function fetchCulturePeriodPage(
+	pageNo: number,
+): Promise<Response<CultureListResponse>> {
+	const response = await fetch(
+		`${endpoint.period}?serviceKey=${process.env.EXPO_PUBLIC_DATA_KEY}&PageNo=${pageNo}&numOfrows=${CULTURE_PERIOD_PAGE_SIZE}&sortStdr=1&from=20200101&to=${CULTURE_EXHIBITION_PERIOD_TO}&serviceTp=A`,
+	);
+	return parseXmlResponse<CultureListResponse>(response);
+}
+
+/** 홈·culture 캐시용 — period2 페이지네이션 + serviceName=전시 */
+export const getCultureExhibitionList = async (
+	numOfrows = 30,
+): Promise<Response<CultureListResponse>> => {
+	const seenSeq = new Set<string>();
+	const exhibitions: CultureListResponse[] = [];
+	let totalCount = '0';
+	let lastHeader = { resultCode: '00', resultMsg: 'OK' };
+
+	for (let page = 1; page <= 20; page++) {
+		const parsed = await fetchCulturePeriodPage(page);
+		lastHeader = parsed.header;
+		totalCount = parsed.body.totalCount;
+		const pageExhibitions = parsed.body.items
+			.map(({ item }) => item)
+			.filter(isCultureExhibitionItem)
+			.filter((item) => {
+				if (seenSeq.has(item.seq)) return false;
+				seenSeq.add(item.seq);
+				return true;
+			});
+		exhibitions.push(...pageExhibitions);
+		if (exhibitions.length >= numOfrows) break;
+		if (parsed.body.items.length < CULTURE_PERIOD_PAGE_SIZE) break;
+		const total = Number(totalCount);
+		if (Number.isFinite(total) && page * CULTURE_PERIOD_PAGE_SIZE >= total) break;
+	}
+
+	const slice = exhibitions.slice(0, numOfrows);
+	return {
+		header: lastHeader,
+		body: {
+			items: slice.map((item) => ({ item })),
+			totalCount: String(exhibitions.length),
+			PageNo: '1',
+			numOfrows: String(slice.length),
+		},
+	};
 };
 
 export const getCultureDetail = async (
@@ -116,11 +189,13 @@ export const getNowRunningCultureList = async (
 export const getCultureByPeriod = async (
 	startDate: string,
 	endDate: string,
+	numOfrows = 10,
 ): Promise<Response<CultureListResponse>> => {
 	const response = await fetch(
-		`${endpoint.period}?serviceKey=${process.env.EXPO_PUBLIC_DATA_KEY}&PageNo=1&numOfrows=10&sortStdr=1&from=${startDate}&to=${endDate}&serviceTp=A`,
+		`${endpoint.period}?serviceKey=${process.env.EXPO_PUBLIC_DATA_KEY}&PageNo=1&numOfrows=${numOfrows}&sortStdr=1&from=${startDate}&to=${endDate}&serviceTp=A`,
 	);
-	return parseXmlResponse<CultureListResponse>(response);
+	const parsed = await parseXmlResponse<CultureListResponse>(response);
+	return filterExhibitionItems(parsed);
 };
 
 export const getCultureByArea = async (

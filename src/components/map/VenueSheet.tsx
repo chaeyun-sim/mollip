@@ -1,11 +1,14 @@
 import { useMemo, useState } from 'react';
-import { Linking, Pressable, Text, View } from 'react-native';
+import { Alert, Pressable, Share, Text, View } from 'react-native';
 import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { Ionicons } from '@expo/vector-icons';
+import * as Haptics from 'expo-haptics';
+import * as WebBrowser from 'expo-web-browser';
 
 import { ExhibitionCard } from '@/src/components/map/ExhibitionCard';
 import { cn } from '@/src/lib/cn';
 import { parseDate } from '@/src/utils/mapUtils';
+import { openPhoneDialer } from '@/src/utils/venueContactActions';
 import type { VenueGroup } from '@/src/data/venues';
 
 interface VenueSheetProps {
@@ -26,6 +29,22 @@ export function VenueSheet({
   onRequestDirections,
 }: VenueSheetProps) {
   const [tab, setTab] = useState<Tab>('active');
+  const copyAddress = async (address: string) => {
+    try {
+      const Clipboard = require('expo-clipboard') as typeof import('expo-clipboard');
+      await Clipboard.setStringAsync(address);
+      await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    } catch {
+      await Share.share({ message: address });
+    }
+  };
+
+  const callVenue = async (phone: string) => {
+    const ok = await openPhoneDialer(phone);
+    if (!ok) {
+      Alert.alert('전화를 걸 수 없어요', '기기에서 전화 앱을 사용할 수 없거나 번호 형식이 올바르지 않아요.');
+    }
+  };
 
   const activeExhibitions = useMemo(() => {
     const d = new Date(filterDate);
@@ -52,7 +71,6 @@ export function VenueSheet({
   // 이 장소의 대표 전시가 가진 포스터 색 — 탭 밑줄·전시 도트 등 한 곳의 억양색으로만 쓴다
   const accentColor = heroExhibition?.posterColor ?? '#1C1917';
 
-
   return (
     <BottomSheetScrollView
       className='px-5 pt-3'
@@ -67,19 +85,28 @@ export function VenueSheet({
             </Text>
             <View className='flex flex-col gap-2 mt-4'>
               {venue.venueAddress && (
-                <View className='flex-row items-center gap-1'>
+                <Pressable
+                  onPress={() => copyAddress(venue.venueAddress!)}
+                  hitSlop={4}
+                  style={({ pressed }) => (pressed ? { opacity: 0.55 } : undefined)}
+                  className='flex-row items-center gap-1 self-start max-w-full'
+                  accessibilityRole='button'
+                  accessibilityHint='탭하면 주소가 복사됩니다'
+                  accessibilityLabel={`주소 ${venue.venueAddress}`}
+                >
                   <Ionicons
                     name='location-outline'
                     size={13}
                     color='rgba(0,0,0,0.45)'
                   />
                   <Text
-                    className='text-black/60 text-[13px] font-pretendard-medium flex-1'
-                    numberOfLines={1}
+                    className='text-black/60 text-[13px] font-pretendard-medium shrink'
+                    numberOfLines={2}
+                    dataDetectorType='none'
                   >
                     {venue.venueAddress}
                   </Text>
-                </View>
+                </Pressable>
               )}
 
               <View className='flex-row items-center flex-wrap gap-x-1.5 gap-y-1'>
@@ -102,6 +129,30 @@ export function VenueSheet({
                   </View>
                 )}
               </View>
+              {venue.phone && (
+                <Pressable
+                  onPress={() => callVenue(venue.phone!)}
+                  hitSlop={4}
+                  style={({ pressed }) => (pressed ? { opacity: 0.55 } : undefined)}
+                  className='flex-row items-center gap-1 self-start'
+                  accessibilityRole='button'
+                  accessibilityHint='탭하면 전화 앱으로 연결됩니다'
+                  accessibilityLabel={`전화번호 ${venue.phone}`}
+                >
+                  <Ionicons
+                    name='call-outline'
+                    size={13}
+                    color='rgba(0,0,0,0.45)'
+                  />
+                  <Text
+                    className='text-black/60 text-[13px] font-pretendard-medium'
+                    numberOfLines={1}
+                    dataDetectorType='none'
+                  >
+                    {venue.phone}
+                  </Text>
+                </Pressable>
+              )}
             </View>
           </View>
 
@@ -128,39 +179,48 @@ export function VenueSheet({
           </View>
         </View>
 
-        <View className='gap-1.5 mb-5'>
-          {(venue.phone || venue.homepageUrl) && (
-            <View className='flex-row items-center flex-wrap gap-x-1.5 gap-y-1'>
-              {venue.phone && (
-                <Text className='text-black/55 text-[13px] font-pretendard-regular'>
-                  {venue.phone}
-                </Text>
-              )}
-              {venue.homepageUrl && (
-                <Pressable
-                  onPress={() => Linking.openURL(venue.homepageUrl!)}
-                  hitSlop={8}
-                  className='flex-row items-center gap-1 ml-0.5 py-1'
-                  accessibilityLabel='홈페이지로 이동'
-                  accessibilityRole='link'
-                >
-                  {venue.phone && (
-                    <View className='w-[3px] h-[3px] rounded-full bg-black/25 mr-1' />
-                  )}
-                  <Text className='text-black text-[13px] font-pretendard-semibold underline'>
-                    홈페이지
-                  </Text>
-                  <Ionicons
-                    name='arrow-up-outline'
-                    size={11}
-                    className='rotate-45'
-                    color='#1C1917'
-                  />
-                </Pressable>
-              )}
-            </View>
+        <View className='mt-2 mb-5'>
+          {venue.description && (
+            <Text
+              className='text-black/65 text-[13px] font-pretendard-regular leading-[19px]'
+              numberOfLines={3}
+            >
+              {venue.description}
+            </Text>
+          )}
+          {venue.homepageUrl && (
+            <Pressable
+              onPress={() => WebBrowser.openBrowserAsync(venue.homepageUrl!)}
+              hitSlop={8}
+              className='flex-row items-center gap-1 mt-2'
+              accessibilityLabel='홈페이지로 이동'
+              accessibilityRole='link'
+            >
+              <Text className='text-black text-[13px] font-pretendard-semibold underline'>
+                홈페이지
+              </Text>
+              <Ionicons
+                name='arrow-up-outline'
+                size={11}
+                color='#1C1917'
+                style={{ transform: [{ rotate: '45deg' }] }}
+              />
+            </Pressable>
           )}
         </View>
+
+        {venue.amenities && venue.amenities.length > 0 && (
+          <View className='flex-row flex-wrap gap-1.5 mb-5'>
+            {venue.amenities.map(amenity => (
+              <View
+                key={amenity}
+                className='rounded-full px-2.5 py-1 bg-black/[0.04]'
+              >
+                <Text className='text-black/55 text-[12px] font-pretendard-medium'>{amenity}</Text>
+              </View>
+            ))}
+          </View>
+        )}
 
         {/* 탭 — 카탈로그 목차처럼, 채워진 필 대신 밑줄로 선택을 표시 */}
         <View

@@ -1,6 +1,8 @@
-import { EXHIBITIONS, type Exhibition } from './exhibitions';
+import type { Exhibition } from './exhibitions';
 
 export type VenueGroup = {
+	/** museums.id — exhibitions.museum_id 조회용 */
+	museumId?: number;
 	venueName: string;
 	venueAddress?: string;
 	coordinates: { latitude: number; longitude: number };
@@ -9,25 +11,12 @@ export type VenueGroup = {
 	exhibitions: Exhibition[];
 	phone?: string;
 	homepageUrl?: string;
+	description?: string;
+	amenities?: string[];
 };
 
-export const venueGroups: VenueGroup[] = (() => {
-	const map = new Map<string, VenueGroup>();
-	for (const ex of EXHIBITIONS) {
-		if (!ex.coordinates) continue;
-		if (!map.has(ex.venue)) {
-			map.set(ex.venue, {
-				venueName: ex.venue,
-				venueAddress: ex.venueAddress,
-				coordinates: ex.coordinates,
-				openHours: ex.openHours,
-				closedDays: ex.closedDays,
-				exhibitions: [],
-			});
-		}
-		map.get(ex.venue)!.exhibitions.push(ex);
-	}
-	return Array.from(map.values());
-})();
+// 지도 마커는 Supabase museums + useMapVenues(useMuseums)가 담당한다.
+// 정적 venueGroups는 더 이상 쓰지 않는다.
+export const venueGroups: VenueGroup[] = [];
 
-export const venueNames = new Set(venueGroups.map((v) => v.venueName));
+export const venueNames = new Set<string>();
