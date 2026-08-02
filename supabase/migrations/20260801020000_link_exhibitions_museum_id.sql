@@ -1,0 +1,20 @@
+-- exhibitions.museum_id를 museums.name과 매칭해서 채운다 (단어 단위 접두/접미 매칭, 모호하지 않은 것만).
+update public.exhibitions set museum_id = 1121 where venue_name_fallback = '국립경주박물관' and museum_id is null;
+update public.exhibitions set museum_id = 1123 where venue_name_fallback = '국립공주박물관' and museum_id is null;
+update public.exhibitions set museum_id = 1126 where venue_name_fallback = '국립광주박물관' and museum_id is null;
+update public.exhibitions set museum_id = 1133 where venue_name_fallback = '국립김해박물관' and museum_id is null;
+update public.exhibitions set museum_id = 1127 where venue_name_fallback = '국립대구박물관' and museum_id is null;
+update public.exhibitions set museum_id = 1122 where venue_name_fallback = '국립부여박물관' and museum_id is null;
+update public.exhibitions set museum_id = 1131 where venue_name_fallback = '국립제주박물관' and museum_id is null;
+update public.exhibitions set museum_id = 1130 where venue_name_fallback = '국립중앙박물관' and museum_id is null;
+update public.exhibitions set museum_id = 1132 where venue_name_fallback = '국립진주박물관' and museum_id is null;
+update public.exhibitions set museum_id = 1124 where venue_name_fallback = '국립청주박물관' and museum_id is null;
+update public.exhibitions set museum_id = 1125 where venue_name_fallback = '국립춘천박물관' and museum_id is null;
+update public.exhibitions set museum_id = 53 where venue_name_fallback = '국립현대미술관 과천관' and museum_id is null;
+update public.exhibitions set museum_id = 483 where venue_name_fallback = '대구미술관' and museum_id is null;
+update public.exhibitions set museum_id = 1074 where venue_name_fallback = '부산현대미술관' and museum_id is null;
+update public.exhibitions set museum_id = 71 where venue_name_fallback = '서울시립미술관' and museum_id is null;
+update public.exhibitions set museum_id = 415 where venue_name_fallback = '종로구립 고희동미술관' and museum_id is null;
+update public.exhibitions set museum_id = 81 where venue_name_fallback = '종로구립 박노수미술관' and museum_id is null;
+update public.exhibitions set museum_id = 55 where venue_name_fallback = '창원시립마산문신미술관' and museum_id is null;
+update public.exhibitions set museum_id = 1135 where venue_name_fallback = '포도뮤지엄' and museum_id is null;
