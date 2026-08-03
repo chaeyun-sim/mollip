@@ -9,8 +9,8 @@ import { ScreenHeader } from './ScreenHeader';
 interface ScreenProps {
 	className?: string;
 	edges?: Edges;
-	/** dark: 가이드·몰입 / warm: 아카이브·탐색 본문 */
-	variant?: 'dark' | 'warm';
+	/** dark: 가이드·몰입 / warm: 아카이브·탐색 본문 / gradient: 로그인·온보딩 톤 웜 그라데이션 (설정류) */
+	variant?: 'dark' | 'warm' | 'gradient';
 }
 
 function Screen({
@@ -24,6 +24,27 @@ function Screen({
 			<>
 				<StatusBar style='dark' />
 				<View className='flex-1 bg-[#F8F6F2]'>
+					<SafeAreaView
+						edges={edges || ['top', 'left', 'right']}
+						className={cn('px-6 flex-1', className)}
+					>
+						{children}
+					</SafeAreaView>
+				</View>
+			</>
+		);
+	}
+
+	if (variant === 'gradient') {
+		return (
+			<>
+				<StatusBar style='dark' />
+				<View className='flex-1'>
+					<LinearGradient
+						colors={['#FFF3E6', '#F7DFCE', '#F8F6F2']}
+						locations={[0, 0.3, 0.75]}
+						style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
+					/>
 					<SafeAreaView
 						edges={edges || ['top', 'left', 'right']}
 						className={cn('px-6 flex-1', className)}
