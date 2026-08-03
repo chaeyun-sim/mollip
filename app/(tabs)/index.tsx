@@ -3,15 +3,14 @@ import { useRouter } from 'expo-router';
 import { useMemo } from 'react';
 import {
 	ActivityIndicator,
-	Image,
 	Pressable,
 	ScrollView,
 	Text,
 	View,
 } from 'react-native';
 
-import { EmptyImagePlaceholder } from '@/src/components/common/EmptyImagePlaceholder';
 import { ExploreHomeHero } from '@/src/components/explore/ExploreHomeHero';
+import { KcisaExhibitionCard } from '@/src/components/explore/KcisaExhibitionCard';
 import {
 	ExploreSectionTitle,
 	FeaturedExhibitionHero,
@@ -23,70 +22,10 @@ import {
 } from '@/src/hooks/useCultureExhibitions';
 import {
 	useKcisaExhibitions,
-	type KcisaExhibitionItem,
 } from '@/src/hooks/useKcisaExhibitions';
 
 /** 추천 전시: 1장 hero + 그리드 4장 */
 const RECOMMENDED_TOTAL = 5;
-
-interface KcisaExhibitionCardProps {
-	item: KcisaExhibitionItem;
-	onPress: (id: string) => void;
-}
-
-const KCISA_CARD_WIDTH = 148;
-const KCISA_CARD_HEIGHT = Math.round((KCISA_CARD_WIDTH * 4) / 3);
-
-function KcisaExhibitionCard({ item, onPress }: KcisaExhibitionCardProps) {
-	return (
-		<Pressable
-			onPress={() => onPress(item.id)}
-			accessibilityLabel={`${item.title}, ${item.venue}`}
-			accessibilityRole='button'
-			style={({ pressed }) => ({ opacity: pressed ? 0.88 : 1, width: KCISA_CARD_WIDTH })}
-		>
-			<View
-				className='rounded-[18px] overflow-hidden'
-				style={{
-					width: KCISA_CARD_WIDTH,
-					height: KCISA_CARD_HEIGHT,
-					shadowColor: '#1C1917',
-					shadowOpacity: 0.1,
-					shadowRadius: 10,
-					shadowOffset: { width: 0, height: 4 },
-				}}
-			>
-				{item.thumbnail ? (
-					<Image
-						source={{ uri: item.thumbnail }}
-						style={{ width: KCISA_CARD_WIDTH, height: KCISA_CARD_HEIGHT, borderRadius: 18 }}
-						resizeMode='cover'
-					/>
-				) : (
-					<EmptyImagePlaceholder
-						className='items-center justify-center bg-[#E5E1D8]'
-						style={{ width: KCISA_CARD_WIDTH, height: KCISA_CARD_HEIGHT }}
-						iconSize={64}
-					/>
-				)}
-			</View>
-			<Text
-				numberOfLines={2}
-				style={{ width: KCISA_CARD_WIDTH, fontFamily: 'Pretendard-SemiBold' }}
-				className='mt-2.5 text-[#1C1917] text-[13px] leading-[18px]'
-			>
-				{item.title}
-			</Text>
-			<Text
-				numberOfLines={1}
-				style={{ width: KCISA_CARD_WIDTH, fontFamily: 'Pretendard-Regular' }}
-				className='text-[#A8A29E] text-[11px] mt-0.5'
-			>
-				{item.venue}
-			</Text>
-		</Pressable>
-	);
-}
 
 export default function ExploreScreen() {
 	const router = useRouter();

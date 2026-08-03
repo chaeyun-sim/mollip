@@ -4,13 +4,7 @@ import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { useAudioPlayer } from 'expo-audio';
 import { ActivityIndicator, Pressable, ScrollView, Text, View } from 'react-native';
-import Animated, {
-	Easing,
-	useAnimatedStyle,
-	useSharedValue,
-	withRepeat,
-	withTiming,
-} from 'react-native-reanimated';
+import { VoiceListSkeletonItem } from '@/src/components/settings/VoiceListSkeletonItem';
 import { Screen } from '../../src/components/layout/Screen';
 import type { Voice } from '../../src/hooks/useTTS';
 import { useSettingsStore } from '../../src/store/settingsStore';
@@ -47,46 +41,6 @@ function voiceTags(voice: Voice): string[] {
 		tags.push(d.charAt(0).toUpperCase() + d.slice(1));
 	}
 	return tags;
-}
-
-/* ─── 스켈레톤 ─── */
-
-function SkeletonItem() {
-	const opacity = useSharedValue(1);
-
-	useEffect(() => {
-		opacity.value = withRepeat(
-			withTiming(0.35, { duration: 750, easing: Easing.inOut(Easing.ease) }),
-			-1,
-			true,
-		);
-	}, []);
-
-	const animStyle = useAnimatedStyle(() => ({ opacity: opacity.value }));
-
-	return (
-		<Animated.View
-			style={[
-				animStyle,
-				{
-					flexDirection: 'row',
-					alignItems: 'center',
-					borderRadius: 20,
-					paddingHorizontal: 16,
-					height: 76,
-					backgroundColor: '#F2EFE9',
-					gap: 12,
-				},
-			]}
-		>
-			<View className='w-11 h-11 rounded-full bg-black/5' />
-			<View className='flex-1 gap-2'>
-				<View className='h-[13px] w-1/3 rounded-[6px] bg-black/5' />
-				<View className='h-[11px] w-2/3 rounded-[6px] bg-black/5' />
-			</View>
-			<View className='w-9 h-9 rounded-full bg-white' />
-		</Animated.View>
-	);
 }
 
 /* ─── 메인 ─── */
@@ -151,7 +105,7 @@ export default function VoiceScreen() {
 				{voicesLoading ? (
 					<View className='gap-2.5'>
 						{[0, 1, 2, 3].map((i) => (
-							<SkeletonItem key={i} />
+							<VoiceListSkeletonItem key={i} />
 						))}
 					</View>
 				) : voices.length === 0 ? (

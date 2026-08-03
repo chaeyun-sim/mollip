@@ -34,35 +34,10 @@ import {
 } from '../../src/utils/api';
 import { formatTime } from '../../src/utils/text';
 import { ScreenHeader } from '../../src/components/layout/ScreenHeader';
+import { MarkdownBoldText } from '@/src/components/common/MarkdownBoldText';
 import { cn } from '@/src/lib/cn';
 
 const CHAR_INTERVAL_MS = 25;
-
-// **bold** 파싱 → Text 컴포넌트 배열
-function BoldText({
-	text,
-	style,
-	className,
-}: {
-	text: string;
-	style: object;
-	className: string;
-}) {
-	const parts = text.split(/\*\*(.+?)\*\*/g);
-	return (
-		<Text style={style} className={className}>
-			{parts.map((part, i) =>
-				i % 2 === 1 ? (
-					<Text key={i} className='font-pretendard-bold'>
-						{part}
-					</Text>
-				) : (
-					part
-				),
-			)}
-		</Text>
-	);
-}
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -307,7 +282,7 @@ export default function DescriptionScreen() {
 						</Text>
 					</View>
 				) : (
-					<BoldText
+					<MarkdownBoldText
 						text={displayed}
 						className='text-[#e8e8e8] font-pretendard-medium'
 						style={{

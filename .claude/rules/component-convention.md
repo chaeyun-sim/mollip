@@ -201,16 +201,49 @@ const clusters = useMemo(
 src/
   components/
     common/        # 도메인 무관 공통 컴포넌트 (SearchBar, DatePickerModal 등)
+    explore/       # 탐색·전시 상세
+    settings/      # 설정 화면 UI 조각
+    auth/          # 로그인 등 인증 UI
+    onboarding/    # 온보딩 UI
     map/           # 지도 도메인 컴포넌트
-    layout/        # Screen, ScreenHeader 등 레이아웃 기반
+    layout/        # Screen, ScreenHeader 등 레이아웃·컴파운드
   hooks/           # 커스텀 훅 (useMapFilter, useMapCamera 등)
   store/           # Zustand 스토어
   utils/           # 순수 함수 유틸
   data/            # 정적 데이터
+app/               # expo-router 화면 — default export 1개(스크린)만
 ```
 
-한 파일에 한 컴포넌트. 여러 컴포넌트를 한 파일에 묶지 않는다
-(단, 컴포넌트 전용 내부 서브컴포넌트는 같은 파일 허용).
+### 9.1 기본 원칙
+
+- **`src/components/`**: 파일당 **named export 컴포넌트 1개**.
+- **`app/*.tsx`**: **default export 스크린 1개**. 역할은 훅·스토어와 `src/components` **조립**만.
+
+### 9.2 컴파운드 컴포넌트 (예외)
+
+`Screen`, `ScreenHeader`처럼 **하나의 API로 묶인 slot 패턴**은 한 파일에 여러 서브컴포넌트를 둔다.
+
+```tsx
+<Screen.Header>
+  <Screen.Header.Logo />
+  <Screen.Header.Right>...</Screen.Header.Right>
+</Screen.Header>
+```
+
+### 9.3 페이지 전용 private 서브컴포넌트 (좁은 예외)
+
+아래를 **모두** 만족할 때만 `app/` 파일 안에 둘 수 있다.
+
+- 해당 화면에서만 사용
+- **약 50줄 이하**
+- 재사용·테스트 분리 계획 없음
+
+그 외(전시 상세 `[id].tsx` 수준의 다중 UI)는 **`src/components/{도메인}/`** 로 분리한다.
+
+### 9.4 분리 신호
+
+- 파일 **100줄 초과** + UI 블록이 2개 이상 → 컴포넌트 추출 검토
+- 같은 UI가 **다른 화면**에서도 쓰일 가능성 → 즉시 `src/components/`로
 
 ---
 
