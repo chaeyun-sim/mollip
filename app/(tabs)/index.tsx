@@ -18,7 +18,6 @@ import {
 	RecommendedExhibitions,
 } from '@/src/components/explore/ExploreHomeSections';
 import { Screen } from '@/src/components/layout/Screen';
-import { SERVICE_NAME } from '@/src/constants/service-name';
 import {
 	useCultureExhibitions,
 } from '@/src/hooks/useCultureExhibitions';
@@ -142,14 +141,7 @@ export default function ExploreScreen() {
 	return (
 		<Screen variant='warm' className='bg-[#F8F6F2]'>
 			<Screen.Header>
-				<Screen.Header.Left>
-					<Text
-						className='text-[#1C1917] text-[24px]'
-						style={{ fontFamily: 'Hahmlet_700Bold', letterSpacing: -0.5 }}
-					>
-						{SERVICE_NAME}
-					</Text>
-				</Screen.Header.Left>
+				<Screen.Header.Logo />
 				<Screen.Header.Right>
 					<Pressable
 						onPress={() => router.push('/settings')}

@@ -13,7 +13,6 @@ import { ExhibitionResultCard } from '@/src/components/search/ExhibitionResultCa
 import { useExhibitionSearch } from '@/src/hooks/useExhibitionSearch';
 import { useRecentSearchStore } from '@/src/store/recentSearchStore';
 import { getPopularTags } from '@/src/utils/exhibitionSearch';
-import { SERVICE_NAME } from '@/src/constants/service-name';
 
 const ITEM_ENTERING = FadeIn.duration(220);
 const ITEM_EXITING = FadeOut.duration(160);
@@ -88,9 +87,7 @@ export default function SearchScreen() {
       <StatusBar style='dark' />
 
       <Screen.Header>
-        <Screen.Header.Left>
-          <Text className='text-gray-900 text-[22px] font-pretendard-bold'>{SERVICE_NAME}</Text>
-        </Screen.Header.Left>
+        <Screen.Header.Logo />
       </Screen.Header>
 
       {/* 검색바 */}

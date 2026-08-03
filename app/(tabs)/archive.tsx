@@ -10,7 +10,6 @@ import { useAuthStore } from '@/src/store/authStore';
 import { cn } from '@/src/lib/cn';
 import { useDiaryStore } from '@/src/store/diaryStore';
 import { useVisitStore } from '@/src/store/visitStore';
-import { SERVICE_NAME } from '@/src/constants/service-name';
 
 type ArchiveTab = 'diary' | 'saved';
 
@@ -89,9 +88,7 @@ export default function ArchiveScreen() {
 			<StatusBar style='dark' />
 
 			<Screen.Header>
-				<Screen.Header.Left>
-					<Text className='text-gray-900 text-[22px] font-pretendard-bold'>{SERVICE_NAME}</Text>
-				</Screen.Header.Left>
+				<Screen.Header.Logo />
 			</Screen.Header>
 
 			<ScrollView

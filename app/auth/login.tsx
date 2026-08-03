@@ -4,22 +4,11 @@ import * as Haptics from 'expo-haptics';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useCallback, useState } from 'react';
-import { ActivityIndicator, Image, Platform, Pressable, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Platform, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-
 import { cn } from '@/src/lib/cn';
 import { SERVICE_NAME } from '@/src/constants/service-name';
 import { signInWithApple, signInWithKakao } from '@/src/utils/authOAuth';
-import { supabase } from '@/src/utils/supabase';
-
-const HERO = require('@/assets/images/skulpture/default.png');
-
-const CARD_SHADOW = {
-	shadowColor: '#1C1917',
-	shadowOpacity: 0.08,
-	shadowRadius: 28,
-	shadowOffset: { width: 0, height: 10 },
-};
 
 const APPLE_PILL_SHADOW = {
 	shadowColor: '#1C1917',
@@ -105,24 +94,6 @@ export default function LoginScreen() {
 		router.replace('/onboarding' as never);
 		return;
 
-		// const {
-		// 	data: { user },
-		// } = await supabase.auth.getUser();
-
-		// if (user) {
-		// 	const { data: profile } = await supabase
-		// 		.from('profiles')
-		// 		.select('onboarding_completed')
-		// 		.eq('id', user.id)
-		// 		.single();
-
-		// 	if (profile && !profile.onboarding_completed) {
-		// 		router.replace('/onboarding' as never);
-		// 		return;
-		// 	}
-		// }
-
-		router.replace(destination as never);
 	}, [router, destination]);
 
 	const run = async (provider: 'kakao' | 'apple') => {
