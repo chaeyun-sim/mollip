@@ -1,11 +1,12 @@
 import { useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Pressable, ScrollView, Text, View } from 'react-native';
 
 import { DiaryCalendar, type DayImage } from '@/src/components/archive/DiaryCalendar';
 import { SavedExhibitions } from '@/src/components/archive/SavedExhibitions';
 import { Screen } from '@/src/components/layout/Screen';
+import { useAuthStore } from '@/src/store/authStore';
 import { cn } from '@/src/lib/cn';
 import { useDiaryStore } from '@/src/store/diaryStore';
 import { useVisitStore } from '@/src/store/visitStore';
@@ -20,6 +21,7 @@ const SEGMENTS: { key: ArchiveTab; label: string }[] = [
 
 export default function ArchiveScreen() {
 	const router = useRouter();
+	const session = useAuthStore((s) => s.session);
 	const entries = useDiaryStore(s => s.entries);
 	const [tab, setTab] = useState<ArchiveTab>('diary');
 
@@ -73,6 +75,14 @@ export default function ArchiveScreen() {
 		}
 		return map;
 	}, [visits]);
+
+	useEffect(() => {
+		if (!session) router.replace('/(tabs)');
+	}, [session, router]);
+
+	if (!session) {
+		return null;
+	}
 
 	return (
 		<Screen variant='warm' className='bg-white'>

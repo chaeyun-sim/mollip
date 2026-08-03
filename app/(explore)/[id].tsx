@@ -28,6 +28,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { type Artwork, type Exhibition } from '@/src/data/exhibitions';
 import { ImmersiveOverlay } from '@/src/components/explore/ImmersiveOverlay';
 import { useBookmarkStore } from '@/src/store/bookmarkStore';
+import { useRequireAuth } from '@/src/hooks/useRequireAuth';
 import { useImmersiveStore } from '@/src/store/immersiveStore';
 import { todayKey, useVisitStore } from '@/src/store/visitStore';
 import { useCultureExhibitionDetail } from '@/src/hooks/useCultureExhibitionDetail';
@@ -89,6 +90,7 @@ export default function ExhibitionDetailScreen() {
     (shouldTryCulture && (apiStatus === 'loading' || apiStatus === 'idle'));
   const isBookmarked = useBookmarkStore(s => s.isBookmarked(id));
   const toggle = useBookmarkStore(s => s.toggle);
+  const { ensureAuth } = useRequireAuth();
 
   const scrollY = useSharedValue(0);
   const scrollHandler = useAnimatedScrollHandler({
@@ -413,6 +415,7 @@ export default function ExhibitionDetailScreen() {
           }}
           onPress={() => {
             Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+            if (!ensureAuth(`/(explore)/${id}`)) return;
             toggle(id);
           }}
           accessibilityLabel='북마크'

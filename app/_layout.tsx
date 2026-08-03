@@ -20,6 +20,8 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useImmersiveStore } from '../src/store/immersiveStore';
+import { AuthProvider } from '../src/providers/AuthProvider';
+import { useAuthStore } from '../src/store/authStore';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -43,36 +45,43 @@ export default function RootLayout() {
 	});
 
 	const hasHydrated = useImmersiveStore((s) => s._hasHydrated);
+	const authLoading = useAuthStore((s) => s.isLoading);
 	const isImmersive = useImmersiveStore((s) => s.isImmersiveMode);
 	const exhibitionId = useImmersiveStore((s) => s.exhibitionId);
 	const router = useRouter();
 
 	useEffect(() => {
-		if (!fontsLoaded || !hasHydrated) return;
+		if (!fontsLoaded || !hasHydrated || authLoading) return;
 		// 몰입 모드 복원이 있으면 replace 먼저, 그다음 스플래시 해제
 		// → 스플래시가 가리는 동안 이동 완료되어 플래시 없음
 		if (isImmersive && exhibitionId) {
 			router.push(`/(guide)/immersive/${exhibitionId}`);
 		}
 		SplashScreen.hideAsync();
-	}, [fontsLoaded, hasHydrated]);
+	}, [fontsLoaded, hasHydrated, authLoading]);
 
 	if (!fontsLoaded) return null;
 
 	return (
 		<GestureHandlerRootView style={{ flex: 1 }}>
-			<QueryClientProvider client={queryClient}>
-				<BottomSheetModalProvider>
-					<Stack screenOptions={{ headerShown: false}}>
-						<Stack.Screen name='(tabs)' options={{ headerShown: false }} />
-						<Stack.Screen name='(guide)' options={{ headerShown: false }} />
-						<Stack.Screen name='(explore)' options={{ headerShown: false }} />
-						<Stack.Screen name='settings' options={{ headerShown: false }} />
-						<Stack.Screen name='diary/[date]' options={{ headerShown: false }} />
-						<Stack.Screen name='onboarding' options={{ headerShown: false }} />
-					</Stack>
-				</BottomSheetModalProvider>
-			</QueryClientProvider>
+			<AuthProvider>
+				<QueryClientProvider client={queryClient}>
+					<BottomSheetModalProvider>
+						<Stack screenOptions={{ headerShown: false}}>
+							<Stack.Screen name='(tabs)' options={{ headerShown: false }} />
+							<Stack.Screen name='(guide)' options={{ headerShown: false }} />
+							<Stack.Screen name='(explore)' options={{ headerShown: false }} />
+							<Stack.Screen name='settings' options={{ headerShown: false }} />
+							<Stack.Screen name='auth' options={{ headerShown: false }} />
+							<Stack.Screen name='diary/[date]' options={{ headerShown: false }} />
+							<Stack.Screen
+								name='onboarding'
+								options={{ headerShown: false, gestureEnabled: false }}
+							/>
+						</Stack>
+					</BottomSheetModalProvider>
+				</QueryClientProvider>
+			</AuthProvider>
 		</GestureHandlerRootView>
 	);
 }

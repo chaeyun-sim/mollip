@@ -1,7 +1,13 @@
 import { Ionicons } from '@expo/vector-icons';
-import { Tabs } from 'expo-router';
+import { Tabs, useRouter } from 'expo-router';
+
+import { useAuthStore } from '@/src/store/authStore';
 
 export default function TabsLayout() {
+	const router = useRouter();
+	const session = useAuthStore((s) => s.session);
+	const authLoading = useAuthStore((s) => s.isLoading);
+
 	return (
 		<Tabs
 			screenOptions={{
@@ -61,6 +67,16 @@ export default function TabsLayout() {
 			/>
 			<Tabs.Screen
 				name='archive'
+				listeners={{
+					tabPress: (e) => {
+						if (authLoading || session) return;
+						e.preventDefault();
+						router.push({
+							pathname: '/auth/login',
+							params: { returnTo: '/(tabs)/archive' },
+						});
+					},
+				}}
 				options={{
 					title: '아카이브',
 					tabBarIcon: ({ focused, color, size }) => (
