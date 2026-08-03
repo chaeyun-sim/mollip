@@ -1,7 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { useRouter } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
 import { useAudioPlayer } from 'expo-audio';
 import { ActivityIndicator, Pressable, ScrollView, Text, View } from 'react-native';
@@ -127,15 +126,13 @@ export default function VoiceScreen() {
 	};
 
 	return (
-		<Screen className='bg-white'>
-			<StatusBar style='dark' />
-
+		<Screen variant='warm'>
 			<Screen.Header>
 				<Screen.Header.Left>
 					<Screen.Header.Back color='#1C1917' onPress={() => router.back()} />
 				</Screen.Header.Left>
 				<Screen.Header.Center>
-					<Text className='text-[16px] text-gray-900 font-pretendard-semibold'>
+					<Text className='text-[18px] text-gray-900 font-hahmlet-semibold'>
 						음성 선택
 					</Text>
 				</Screen.Header.Center>

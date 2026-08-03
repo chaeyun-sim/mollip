@@ -1,7 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { useRouter } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
 import { Pressable, ScrollView, Text, View } from 'react-native';
 import { Screen } from '../../src/components/layout/Screen';
@@ -14,6 +13,8 @@ import {
 } from '../../src/store/settingsStore';
 import { fetchVoices } from '../../src/utils/api';
 import { cn } from '@/src/lib/cn';
+import { authDisplayLabel } from '@/src/hooks/useRequireAuth';
+import { useAuthStore } from '@/src/store/authStore';
 
 const APP_VERSION = '1.0.0';
 
@@ -43,28 +44,53 @@ function Section({ title, children }: SectionProps) {
 			<Text className='text-[12px] mb-2 px-1 font-pretendard-semibold text-gray-400 tracking-[0.8]'>
 				{title.toUpperCase()}
 			</Text>
-			<View className='rounded-3xl overflow-hidden bg-[#F2EFE9]'>{children}</View>
+			<View
+				className='rounded-3xl overflow-hidden bg-[#F2EFE9]'
+				style={{
+					shadowColor: '#1C1917',
+					shadowOpacity: 0.05,
+					shadowRadius: 12,
+					shadowOffset: { width: 0, height: 4 },
+					elevation: 2,
+				}}
+			>
+				{children}
+			</View>
 		</View>
 	);
 }
 
 interface RowProps {
 	label: string;
+	icon?: keyof typeof Ionicons.glyphMap;
 	children?: React.ReactNode;
 	border?: boolean;
 	onPress?: () => void;
+	danger?: boolean;
 }
 
-function Row({ label, children, border = true, onPress }: RowProps) {
+function Row({ label, icon, children, border = true, onPress, danger = false }: RowProps) {
 	const content = (pressed: boolean) => (
 		<View
 			className={cn(
-				'flex-row items-center justify-between px-4',
+				'flex-row items-center justify-between px-4 gap-3',
 				border && 'border-b border-black/5',
 			)}
 			style={{ minHeight: 52, opacity: pressed ? 0.6 : 1 }}
 		>
-			<Text className='font-pretendard-regular text-gray-900 text-[15px]'>{label}</Text>
+			<View className='flex-row items-center gap-3 flex-1'>
+				{icon ? (
+					<Ionicons name={icon} size={14} color={danger ? '#EF4444' : '#57534E'} />
+				) : null}
+				<Text
+					className={cn(
+						'font-pretendard-regular text-[15px]',
+						danger ? 'text-red-500' : 'text-gray-900',
+					)}
+				>
+					{label}
+				</Text>
+			</View>
 			{children}
 		</View>
 	);
@@ -100,17 +126,29 @@ function PillGroup<T extends string | number>({
 	labelFontSize,
 }: PillGroupProps<T>) {
 	return (
-		<View className='flex-row gap-2'>
+		<View
+			className='flex-row gap-1 rounded-2xl p-1'
+			style={{ backgroundColor: 'rgba(28,25,23,0.06)' }}
+		>
 			{options.map((opt) => {
 				const selected = value === opt.value;
 				return (
 					<Pressable
 						key={opt.value}
-						className='px-3 rounded-lg items-center justify-center'
+						className='px-3 rounded-xl items-center justify-center'
 						style={({ pressed }) => ({
 							height: 32,
-							backgroundColor: selected ? '#1C1917' : '#FFFFFF',
+							backgroundColor: selected ? '#1C1917' : 'transparent',
 							transform: [{ scale: pressed ? 0.95 : 1 }],
+							...(selected
+								? {
+										shadowColor: '#1C1917',
+										shadowOpacity: 0.25,
+										shadowRadius: 6,
+										shadowOffset: { width: 0, height: 2 },
+										elevation: 3,
+									}
+								: null),
 						})}
 						accessibilityRole='button'
 						accessibilityState={{ selected }}
@@ -123,7 +161,7 @@ function PillGroup<T extends string | number>({
 						<Text
 							className={cn(
 								'font-pretendard-semibold',
-								selected ? 'text-black' : 'text-gray-400',
+								selected ? 'text-white' : 'text-gray-400',
 							)}
 							style={{ fontSize: labelFontSize ? labelFontSize(opt.value) : 12 }}
 						>
@@ -140,6 +178,7 @@ function PillGroup<T extends string | number>({
 
 export default function SettingsScreen() {
 	const router = useRouter();
+	const user = useAuthStore((s) => s.user);
 	const { voiceId, voiceSpeed, fontSize, setVoiceSpeed, setFontSize } =
 		useSettingsStore();
 
@@ -155,15 +194,13 @@ export default function SettingsScreen() {
 	}, [voiceId]);
 
 	return (
-		<Screen className='bg-white'>
-			<StatusBar style='dark' />
-
+		<Screen variant='warm'>
 			<Screen.Header>
 				<Screen.Header.Left>
 					<Screen.Header.Back color='#1C1917' onPress={() => router.back()} />
 				</Screen.Header.Left>
 				<Screen.Header.Center>
-					<Text className='text-[16px] text-gray-900 font-pretendard-semibold'>설정</Text>
+					<Text className='text-[18px] text-gray-900 font-hahmlet-semibold'>설정</Text>
 				</Screen.Header.Center>
 				<Screen.Header.Right />
 			</Screen.Header>
@@ -177,21 +214,44 @@ export default function SettingsScreen() {
 				<Section title='계정'>
 					<Row
 						label='계정 정보'
+						icon='person-outline'
 						border={false}
-						onPress={() => router.push('/settings/account')}
+						onPress={() =>
+							user
+								? router.push('/settings/account')
+								: router.push({
+										pathname: '/auth/login',
+										params: { returnTo: '/settings' },
+									})
+						}
 					>
-						<Ionicons name='chevron-forward' size={16} color='#A8A29E' />
+						<View className='flex-row items-center gap-1 max-w-[50%]'>
+							{user ? (
+								<Text
+									className='font-pretendard-regular text-gray-400 text-[13px]'
+									numberOfLines={1}
+								>
+									{authDisplayLabel(user)}
+								</Text>
+							) : (
+								<Text className='font-pretendard-regular text-[#A8A29E] text-[13px]'>
+									로그인하기
+								</Text>
+							)}
+							<Ionicons name='chevron-forward' size={16} color='#A8A29E' />
+						</View>
 					</Row>
 				</Section>
 
 				{/* ── 음성 ── */}
 				<Section title='음성'>
-					<Row label='재생 속도'>
+					<Row label='재생 속도' icon='speedometer-outline'>
 						<PillGroup options={SPEED_OPTIONS} value={voiceSpeed} onChange={setVoiceSpeed} />
 					</Row>
 
 					<Row
 						label='음성 선택'
+						icon='mic-outline'
 						border={false}
 						onPress={() => router.push('/settings/voice')}
 					>
@@ -208,7 +268,7 @@ export default function SettingsScreen() {
 
 				{/* ── 해설 표시 ── */}
 				<Section title='해설 표시'>
-					<Row label='글자 크기' border={false}>
+					<Row label='글자 크기' icon='text-outline' border={false}>
 						<PillGroup
 							options={FONT_SIZE_OPTIONS}
 							value={fontSize}
@@ -222,6 +282,7 @@ export default function SettingsScreen() {
 				<Section title='지원'>
 					<Row
 						label='문의하기'
+						icon='chatbubble-ellipses-outline'
 						border={false}
 						onPress={() => router.push('/settings/inquiry')}
 					>
@@ -231,7 +292,7 @@ export default function SettingsScreen() {
 
 				{/* ── 앱 정보 ── */}
 				<Section title='앱 정보'>
-					<Row label='버전' border={false}>
+					<Row label='버전' icon='information-circle-outline' border={false}>
 						<Text className='font-pretendard-regular text-gray-400 text-[13px]'>
 							{APP_VERSION}
 						</Text>

@@ -1,8 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { useRouter } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
 	ActivityIndicator,
 	KeyboardAvoidingView,
@@ -16,6 +15,7 @@ import {
 import { Screen } from '../../src/components/layout/Screen';
 import { supabase } from '@/src/utils/supabase';
 import { cn } from '@/src/lib/cn';
+import { useAuthStore } from '@/src/store/authStore';
 
 type SubmitStatus = 'idle' | 'submitting' | 'success' | 'error';
 type Category = 'bug' | 'feature' | 'other';
@@ -28,9 +28,14 @@ const CATEGORY_OPTIONS: { value: Category; label: string }[] = [
 
 export default function InquiryScreen() {
 	const router = useRouter();
+	const userEmail = useAuthStore((s) => s.user?.email);
 	const [category, setCategory] = useState<Category>('bug');
 	const [content, setContent] = useState('');
 	const [contact, setContact] = useState('');
+
+	useEffect(() => {
+		if (userEmail && !contact) setContact(userEmail);
+	}, [userEmail, contact]);
 	const [status, setStatus] = useState<SubmitStatus>('idle');
 
 	const canSubmit = content.trim().length > 0 && status !== 'submitting';
@@ -53,14 +58,13 @@ export default function InquiryScreen() {
 
 	if (status === 'success') {
 		return (
-			<Screen className='bg-white'>
-				<StatusBar style='dark' />
+			<Screen variant='warm'>
 				<Screen.Header>
 					<Screen.Header.Left>
 						<Screen.Header.Back color='#1C1917' onPress={() => router.back()} />
 					</Screen.Header.Left>
 					<Screen.Header.Center>
-						<Text className='text-[16px] text-gray-900 font-pretendard-semibold'>문의하기</Text>
+						<Text className='text-[18px] text-gray-900 font-hahmlet-semibold'>문의하기</Text>
 					</Screen.Header.Center>
 					<Screen.Header.Right />
 				</Screen.Header>
@@ -89,15 +93,13 @@ export default function InquiryScreen() {
 	}
 
 	return (
-		<Screen className='bg-white'>
-			<StatusBar style='dark' />
-
+		<Screen variant='warm'>
 			<Screen.Header>
 				<Screen.Header.Left>
 					<Screen.Header.Back color='#1C1917' onPress={() => router.back()} />
 				</Screen.Header.Left>
 				<Screen.Header.Center>
-					<Text className='text-[16px] text-gray-900 font-pretendard-semibold'>문의하기</Text>
+					<Text className='text-[18px] text-gray-900 font-hahmlet-semibold'>문의하기</Text>
 				</Screen.Header.Center>
 				<Screen.Header.Right />
 			</Screen.Header>
@@ -127,7 +129,7 @@ export default function InquiryScreen() {
 										setCategory(opt.value);
 									}}
 									className='flex-1 h-11 rounded-2xl items-center justify-center'
-									style={{ backgroundColor: selected ? '#1C1917' : '#F2EFE9' }}
+									style={{ backgroundColor: selected ? '#3B82F6' : '#F2EFE9' }}
 									accessibilityRole='radio'
 									accessibilityState={{ checked: selected }}
 									accessibilityLabel={opt.label}
