@@ -67,19 +67,8 @@ interface CultureDetailResponse extends Omit<
 	placeSeq: string;
 }
 
-interface NowRunningCultureListResponse extends Pick<
-	CultureListResponse,
-	'seq' | 'title'
-> {
-	orgName: string;
-	regDate: string;
-	url: string;
-}
-
 const DATA_URL = 'https://apis.data.go.kr/B553457/cultureinfo';
 
-/** period2 조회 시작일 (YYYYMMDD) */
-const CULTURE_EXHIBITION_PERIOD_FROM = '20260101';
 /** period2 조회 종료일 — 상설·먼 종료일까지 기간 겹침 조회 */
 const CULTURE_EXHIBITION_PERIOD_TO = '29991231';
 
@@ -87,33 +76,10 @@ function isCultureExhibitionItem(item: CultureListResponse): boolean {
 	return item.serviceName === '전시';
 }
 
-function filterExhibitionItems(
-	result: Response<CultureListResponse>,
-): Response<CultureListResponse> {
-	return {
-		...result,
-		body: {
-			...result.body,
-			items: result.body.items.filter(({ item }) => isCultureExhibitionItem(item)),
-		},
-	};
-}
-
 const endpoint = {
-	realm: `${DATA_URL}/realm2`,
 	detail: `${DATA_URL}/detail2`,
-	livelihood: `${DATA_URL}/livelihood2`,
 	period: `${DATA_URL}/period2`,
 	area: `${DATA_URL}/area2`,
-};
-
-export const getCultureList = async (
-	numOfrows = 10,
-): Promise<Response<CultureListResponse>> => {
-	const response = await fetch(
-		`${endpoint.realm}?serviceKey=${process.env.EXPO_PUBLIC_DATA_KEY}&PageNo=1&numOfrows=${numOfrows}&sortStdr=1&realmCode=D000&serviceTp=A`,
-	);
-	return parseXmlResponse<CultureListResponse>(response);
 };
 
 /** period2 요청당 row 수 — API가 허용하면 한 번에 많이 받음 (totalCount가 더 크면 PageNo로 이어 받음) */
@@ -175,27 +141,6 @@ export const getCultureDetail = async (
 		`${endpoint.detail}?serviceKey=${process.env.EXPO_PUBLIC_DATA_KEY}&seq=${seq}`,
 	);
 	return parseXmlResponse<CultureDetailResponse>(response);
-};
-
-export const getNowRunningCultureList = async (
-	keyword: string,
-): Promise<Response<NowRunningCultureListResponse>> => {
-	const response = await fetch(
-		`${endpoint.livelihood}?serviceKey=${process.env.EXPO_PUBLIC_DATA_KEY}&PageNo=1&numOfrows=10&sortStdr=1&keyword=${keyword}`,
-	);
-	return parseXmlResponse<NowRunningCultureListResponse>(response);
-};
-
-export const getCultureByPeriod = async (
-	startDate: string,
-	endDate: string,
-	numOfrows = 10,
-): Promise<Response<CultureListResponse>> => {
-	const response = await fetch(
-		`${endpoint.period}?serviceKey=${process.env.EXPO_PUBLIC_DATA_KEY}&PageNo=1&numOfrows=${numOfrows}&sortStdr=1&from=${startDate}&to=${endDate}&serviceTp=A`,
-	);
-	const parsed = await parseXmlResponse<CultureListResponse>(response);
-	return filterExhibitionItems(parsed);
 };
 
 export const getCultureByArea = async (

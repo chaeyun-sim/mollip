@@ -34,9 +34,6 @@ export interface RouteResult {
 	fareWon?: number;
 }
 
-// 버스 경로 비교 기준 — 최단시간 / 최단거리 / 환승 없음(최소 환승).
-export type TransitCriterion = 'time' | 'distance' | 'transfer';
-
 // "경도 위도|경도 위도|..." 형태의 폴리라인 문자열을 좌표 배열로 변환한다.
 function parseGraphPolyline(graph: string | undefined): RouteCoord[] {
 	if (!graph) return [];
@@ -48,17 +45,6 @@ function parseGraphPolyline(graph: string | undefined): RouteCoord[] {
 
 function transitLegCount(path: any): number {
 	return (path.rps ?? []).filter((rp: any) => rp.trafficType === 1 || rp.trafficType === 2).length;
-}
-
-function pickTransitPath(paths: any[], criterion: TransitCriterion): any | null {
-	if (paths.length === 0) return null;
-	if (criterion === 'time') {
-		return paths.reduce((best, p) => (p.totalTime < best.totalTime ? p : best));
-	}
-	if (criterion === 'distance') {
-		return paths.reduce((best, p) => (p.totalDistance < best.totalDistance ? p : best));
-	}
-	return paths.reduce((best, p) => (transitLegCount(p) < transitLegCount(best) ? p : best));
 }
 
 function formatSearchTime(date: Date): string {
@@ -158,18 +144,6 @@ export async function getWalkingRoute(
 		result.legs[result.legs.length - 1].endName = endName;
 	}
 	return result;
-}
-
-// 대중교통(버스/지하철) 경로 — criterion으로 ODsay가 돌려주는 후보 경로(path[]) 중 하나를 고른다.
-export async function getTransitRoute(
-	start: RouteCoord,
-	end: RouteCoord,
-	criterion: TransitCriterion = 'time',
-): Promise<RouteResult | null> {
-	const paths = await searchMaasPaths(start, end, '2');
-	const path = pickTransitPath(paths, criterion);
-	if (!path) return null;
-	return buildRouteResult(path);
 }
 
 // 대중교통(버스/지하철) 경로 후보 전체 — ODsay가 돌려주는 path[]를 모두 변환해 반환한다.

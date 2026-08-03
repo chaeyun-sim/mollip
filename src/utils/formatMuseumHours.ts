@@ -1,5 +1,5 @@
 /** museums.open_hours + rstdeInfo → VenueSheet/지도 필터용 표시 문자열 */
-export function formatMuseumOpenHours(openHours: string | null, rstdeInfo: string | null): string {
+export function formatMuseumOpenHours(openHours: string | null, _rstdeInfo: string | null): string {
 	const hours = openHours?.trim();
 	if (!hours) return '운영시간 정보 없음';
 	return hours;

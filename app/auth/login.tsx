@@ -90,7 +90,8 @@ export default function LoginScreen() {
 
 	const finish = useCallback(async () => {
 		// 온보딩 UI 테스트중 — 완료 여부 상관없이 항상 온보딩으로 이동
-		// 테스트 끝나면 아래 블록 주석 해제하고 이 줄 + return 제거
+		// 테스트 끝나면 프로필 onboarding_completed 확인 후 router.replace(destination) 사용
+		void destination;
 		router.replace('/onboarding' as never);
 		return;
 

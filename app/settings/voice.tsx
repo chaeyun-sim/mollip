@@ -160,7 +160,7 @@ export default function VoiceScreen() {
 					</Text>
 				) : (
 					<View className='gap-2.5'>
-						{voices.map((voice, idx) => {
+						{voices.map((voice) => {
 							const selected = voiceId === voice.voice_id;
 							const displayName = voice.name.split(' - ')[0];
 							const tags = voiceTags(voice);

@@ -104,11 +104,6 @@ export function displayGenre(genre: string | null | undefined): string | null {
 	return g;
 }
 
-/** tags에서 type·genre 라벨 제거 (레거시 데이터용) */
-export function tagsWithoutExhibitionType(tags: string[] | undefined): string[] {
-	return sanitizeExhibitionTags(tags);
-}
-
 export function sanitizeExhibitionTags(tags: string[] | undefined): string[] {
 	const cleaned = (tags ?? []).filter(
 		(t) => !EXHIBITION_TYPE_VALUES.has(t) && !ART_GENRE_VALUES.has(t),

@@ -5,7 +5,6 @@ import { useState } from 'react';
 import { ActivityIndicator, Modal, Pressable, Text, View } from 'react-native';
 
 import { Screen } from '../../src/components/layout/Screen';
-import { authDisplayLabel } from '../../src/hooks/useRequireAuth';
 import { useAuthStore } from '../../src/store/authStore';
 
 export default function AccountScreen() {
@@ -64,8 +63,6 @@ export default function AccountScreen() {
       </Screen>
     );
   }
-
-  const label = authDisplayLabel(user);
 
   return (
     <Screen variant='warm'>

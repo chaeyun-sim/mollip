@@ -18,5 +18,3 @@ export type VenueGroup = {
 // 지도 마커는 Supabase museums + useMapVenues(useMuseums)가 담당한다.
 // 정적 venueGroups는 더 이상 쓰지 않는다.
 export const venueGroups: VenueGroup[] = [];
-
-export const venueNames = new Set<string>();

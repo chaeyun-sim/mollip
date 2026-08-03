@@ -166,16 +166,3 @@ export function splitArtistNames(artist: string | undefined): string[] {
 		.filter(Boolean);
 	return names.length > 0 ? names : [artist.trim()];
 }
-
-/** "국립춘천박물관 어린이박물관2층 열린전시실" → "국립춘천박물관" 처럼 장소명 앞부분(기관명)만
- * 태그로 쓴다. venue는 "기관명 + 세부위치"를 공백으로 이어붙인 형태라 첫 단어가 기관명이다. */
-export function getShortVenueLabel(venue: string): string {
-	return venue.split(' ')[0] || venue;
-}
-
-/** 휴무일 정보에 토요일/일요일/주말 언급이 없으면 주말에도 운영하는 것으로 본다
- * (국내 미술관 대부분은 월요일 휴관 + 주말 운영이라 이 가정이 대체로 맞다). */
-export function isWeekendOpen(ex: Exhibition): boolean {
-	if (!ex.closedDays) return true;
-	return !/토요일|일요일|주말/.test(ex.closedDays);
-}

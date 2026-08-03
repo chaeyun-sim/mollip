@@ -9,13 +9,6 @@ export const FONT_SIZE_VALUE: Record<FontSize, number> = {
 	large: 20,
 };
 
-export const VOICE_SPEED_LABEL: Record<VoiceSpeed, string> = {
-	0.7: '0.7x',
-	1.0: '1.0x',
-	1.25: '1.25x',
-	1.5: '1.5x',
-};
-
 type SettingsStore = {
 	voiceId: string;
 	voiceSpeed: VoiceSpeed;

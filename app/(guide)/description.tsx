@@ -6,7 +6,6 @@ import {
 	ActivityIndicator,
 	Dimensions,
 	GestureResponderEvent,
-	Image,
 	LayoutChangeEvent,
 	Pressable,
 	ScrollView,
@@ -15,7 +14,6 @@ import {
 } from 'react-native';
 import {
 	Easing,
-	useAnimatedStyle,
 	useSharedValue,
 	withRepeat,
 	withTiming,

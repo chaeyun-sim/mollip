@@ -53,12 +53,6 @@ export const EXHIBITION_TYPE_RULES: { type: string; keywords: string[] }[] = [
 
 export const EXHIBITION_TYPE_VALUES = new Set(EXHIBITION_TYPE_RULES.map((r) => r.type));
 
-/** @deprecated tags가 아닌 type 컬럼 사용 */
-export const EXHIBITION_TYPE_TAG_RULES = EXHIBITION_TYPE_RULES.map((r) => ({
-	tag: r.type,
-	keywords: r.keywords,
-}));
-
 /** DB tags — 관람·편의 키워드만 (genre/type 값은 넣지 않음). 키즈는 태그로 쓰지 않음 */
 export const THEME_TAG_RULES: { tag: string; keywords: string[] }[] = [
 	{ tag: '무료', keywords: ['무료 관람', '무료입장', '관람료 무료'] },

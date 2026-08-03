@@ -17,20 +17,6 @@ function authHeaders(): Record<string, string> {
 
 type AnthropicMessage = { role: 'user' | 'assistant'; content: string };
 
-export async function extractTextFromImage(
-  imageBase64: string,
-  mediaType: 'image/jpeg' | 'image/png' | 'image/webp',
-): Promise<string> {
-  const res = await fetch(edgeFunctionUrl('extract-text'), {
-    method: 'POST',
-    headers: authHeaders(),
-    body: JSON.stringify({ imageBase64, mediaType }),
-  });
-  if (!res.ok) throw new Error(`extract-text ${res.status}`);
-  const data = await res.json();
-  return data.text ?? '';
-}
-
 export async function* streamDescriptionFromImage(
   imageBase64: string,
   mediaType: 'image/jpeg' | 'image/png' | 'image/webp',

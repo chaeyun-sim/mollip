@@ -33,13 +33,10 @@ import { useImmersiveStore } from '@/src/store/immersiveStore';
 import { todayKey, useVisitStore } from '@/src/store/visitStore';
 import { useCultureExhibitionDetail } from '@/src/hooks/useCultureExhibitionDetail';
 import { useExhibitionDetail } from '@/src/hooks/useExhibitionDetail';
-import { cn } from '@/src/lib/cn';
 import { EmptyImagePlaceholder, ExhibitionPoster } from '@/src/components/common/EmptyImagePlaceholder';
-import { displayGenre } from '@/src/utils/exhibitionClassification';
 import {
   getExhibitionTypeDisplay,
   getGenreTag,
-  getShortVenueLabel,
   splitArtistNames,
 } from '@/src/utils/exhibitionSearch';
 
@@ -295,12 +292,7 @@ export default function ExhibitionDetailScreen() {
             <View style={{ height: 2, backgroundColor: '#1C1917' }} />
             {exhibition.venueAddress && <InfoRow label='위치'>{exhibition.venueAddress}</InfoRow>}
             <InfoRow label='전화번호'>{exhibition.phone ?? '정보 없음'}</InfoRow>
-            <InfoRow
-              label='운영시간'
-              sub={exhibition.closedDays ? `${exhibition.closedDays} 휴관` : undefined}
-            >
-              {exhibition.openHours}
-            </InfoRow>
+            <InfoRow label='운영시간'>{exhibition.openHours}</InfoRow>
             <InfoRow label='관람료'>{exhibition.admission}</InfoRow>
 
             <InfoRow
@@ -617,41 +609,13 @@ function MetaPill({
   );
 }
 
-// 위치·작가(MetaPill, 아이콘+흰 배경)와 구분되는 분류용 태그 — 전시 타입/장르/주말운영처럼
-// "사실 정보"가 아니라 "분류"에 해당하는 값에 쓴다. 포스터 색 기반 팔레트를 따른다.
-function TagPill({
-  text,
-  palette,
-}: {
-  text: string;
-  palette: { pillText: string; tagBg: string } | null;
-}) {
-  return (
-    <View
-      className='rounded-full px-3 py-1.5'
-      style={{ backgroundColor: palette?.tagBg ?? '#F2EFE9' }}
-    >
-      <Text
-        className='text-[12px] font-pretendard-medium'
-        style={{ color: palette?.pillText ?? '#6B7280' }}
-      >
-        # {text}
-      </Text>
-    </View>
-  );
-}
-
-// 관람 정보 명판의 한 줄 — 아이콘 칩(포스터 팔레트) + 라벨 + 값. 마지막 줄엔 구분선을 안 그린다.
-// 관람 정보 팩트시트의 한 줄 — 라벨(좌) / 값(우, Hahmlet) + 검은 헤어라인 룰.
-// 카드도 아이콘도 없이 타이포와 룰선만으로 "인쇄된 스펙 표" 느낌을 낸다.
+// 관람 정보 팩트시트의 한 줄 — 라벨(좌) / 값(우) + 검은 헤어라인 룰.
 function InfoRow({
   label,
-  sub,
   isLast,
   children,
 }: {
   label: string;
-  sub?: string;
   isLast?: boolean;
   children: React.ReactNode;
 }) {

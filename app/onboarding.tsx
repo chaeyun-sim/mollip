@@ -14,9 +14,6 @@ import Animated, {
 } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { useAuthStore } from '@/src/store/authStore';
-import { supabase } from '@/src/utils/supabase';
-
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const SWIPE_THRESHOLD = SCREEN_WIDTH * 0.35;
 const CARD_HEIGHT = 500;
@@ -359,7 +356,6 @@ function SwipeCard({
 
 export default function OnboardingScreen() {
 	const router = useRouter();
-	const userId = useAuthStore((s) => s.user?.id);
 	const [cards, setCards] = useState(() => shuffle(ART_ITEMS));
 	const [liked, setLiked] = useState<typeof ART_ITEMS>([]);
 
@@ -374,7 +370,7 @@ export default function OnboardingScreen() {
 		// 		.eq('id', userId);
 		// }
 		router.replace('/(tabs)');
-	}, [router, userId]);
+	}, [router]);
 
 	const handleSwipeLeft = useCallback(() => {
 		setCards((prev) => prev.slice(1));
