@@ -52,4 +52,7 @@ yarn-error.*
 
 .docs/IDEA.md
 .docs/museum_exhibition_content.md
+.docs/museum_exhibition_scan_report.md
+.docs/museum_exhibition_tab.md
+scripts/gallery_scan.log
 scripts/__pycache__/
