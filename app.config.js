@@ -34,6 +34,7 @@ module.exports = {
     ios: {
       supportsTablet: true,
       bundleIdentifier: 'com.simune.aaa',
+      usesAppleSignIn: true,
       infoPlist: {
         NSPhotoLibraryUsageDescription: '사진 라이브러리에 접근합니다.',
         NSCameraUsageDescription: '카메라를 사용합니다.',
@@ -84,6 +85,7 @@ module.exports = {
       ],
       'expo-font',
       'expo-splash-screen',
+      'expo-apple-authentication',
       // NMFClientId를 마지막에 강제 주입 (다른 플러그인이 덮어쓰는 것 방지)
       config =>
         withInfoPlist(config, c => {
