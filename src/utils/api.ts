@@ -1,5 +1,6 @@
+import { getAccessTokenForApi } from '@/src/store/authStore';
+
 const SUPABASE_URL = process.env.EXPO_PUBLIC_SUPABASE_URL ?? '';
-const SUPABASE_ANON_KEY = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY ?? '';
 
 function edgeFunctionUrl(name: string): string {
   return `${SUPABASE_URL}/functions/v1/${name}`;
@@ -7,7 +8,7 @@ function edgeFunctionUrl(name: string): string {
 
 function authHeaders(): Record<string, string> {
   return {
-    Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+    Authorization: `Bearer ${getAccessTokenForApi()}`,
     'Content-Type': 'application/json',
   };
 }
@@ -103,6 +104,19 @@ export async function fetchTTSBlob(voiceId: string, text: string, speed = 1.0): 
   const buffer = await res.arrayBuffer();
   const base64 = arrayBufferToBase64(buffer);
   return `data:audio/mpeg;base64,${base64}`;
+}
+
+// -- Account -------------------------------------------------------------------
+
+export async function deleteAccount(): Promise<void> {
+  const res = await fetch(edgeFunctionUrl('delete-account'), {
+    method: 'POST',
+    headers: authHeaders(),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(`delete-account ${res.status}: ${JSON.stringify(err)}`);
+  }
 }
 
 // -- Helpers ------------------------------------------------------------------
