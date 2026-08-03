@@ -1,15 +1,14 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 
 import { PlaylistModal } from '@/src/components/archive/PlaylistModal';
 import { VisitTicket } from '@/src/components/archive/VisitTicket';
-import { useDiaryEntry } from '@/src/hooks/useDiaryEntry';
 import { useExhibitionDetail } from '@/src/hooks/useExhibitionDetail';
+import type { ListenedItem } from '@/src/store/visitStore';
 import { useImmersiveStore } from '@/src/store/immersiveStore';
 import { useVisitStore } from '@/src/store/visitStore';
-import { DIARY_PROMPT } from '@/src/constants/prompts';
 import { Screen } from '@/src/components/layout/Screen';
 import { ScreenHeader } from '@/src/components/layout/ScreenHeader';
 
@@ -33,6 +32,7 @@ export default function DiaryScreen() {
 	}, [dateKey]);
 
 	const visit = useVisitStore(s => s.visits[dateKey]);
+	const setVisitMemo = useVisitStore(s => s.setVisitMemo);
 	const playlist = useImmersiveStore(s => s.playlist);
 	const [playlistVisible, setPlaylistVisible] = useState(false);
 
@@ -64,49 +64,42 @@ export default function DiaryScreen() {
 		return exhibition.artworks.slice(0, 3).map(a => a.title);
 	}, [visit, playlist, exhibition]);
 
-	const prompt = useMemo(
-		() =>
-			DIARY_PROMPT({
-				date: dateLabel,
-				exhibitionTitle: exhibition.title,
-				venue: exhibition.venue,
-				artworkTitles: listenedTitles,
-			}),
-		[dateLabel, exhibition, listenedTitles],
-	);
+	const listenedItems = useMemo((): ListenedItem[] => {
+		if (visit?.listened && visit.listened.length > 0) return visit.listened;
+		return listenedTitles.map(title => ({ title }));
+	}, [visit?.listened, listenedTitles]);
 
-	const { text, hasEntry, isStreaming, hasError, generate } = useDiaryEntry(dateKey, { prompt });
+	const memo = visit?.memo ?? '';
+
+	const handleMemoChange = useCallback(
+		(text: string) => {
+			setVisitMemo(dateKey, text);
+		},
+		[dateKey, setVisitMemo],
+	);
 
 	return (
 		<Screen>
 			<ScreenHeader>
 				<ScreenHeader.Back color='white' onPress={() => router.back()} />
 				<ScreenHeader.Center>
-					<Text className='text-[16px] font-pretendard-semibold text-white'>{dateLabel}</Text>
+					<Text
+						className='text-[16px] text-white'
+						style={{ fontFamily: 'Pretendard-SemiBold' }}
+					>
+						{dateLabel}
+					</Text>
 				</ScreenHeader.Center>
 				<ScreenHeader.Right>
-					<View className='flex-row items-center gap-4'>
-						<Pressable
-							onPress={() => setPlaylistVisible(true)}
-							hitSlop={8}
-							accessibilityLabel='오디오 관람 목록 보기'
-							accessibilityRole='button'
-							style={({ pressed }) => ({ opacity: pressed ? 0.5 : 1 })}
-						>
-							<Ionicons name='musical-notes-outline' size={20} color='white' />
-						</Pressable>
-						{hasEntry ? (
-							<Pressable
-								onPress={generate}
-								hitSlop={8}
-								accessibilityLabel='일기 다시 쓰기'
-								accessibilityRole='button'
-								style={({ pressed }) => ({ opacity: pressed ? 0.5 : 1 })}
-							>
-								<Ionicons name='refresh' size={20} color='white' />
-							</Pressable>
-						) : null}
-					</View>
+					<Pressable
+						onPress={() => setPlaylistVisible(true)}
+						hitSlop={8}
+						accessibilityLabel='오디오 관람 목록 보기'
+						accessibilityRole='button'
+						style={({ pressed }) => ({ opacity: pressed ? 0.5 : 1 })}
+					>
+						<Ionicons name='musical-notes-outline' size={20} color='white' />
+					</Pressable>
 				</ScreenHeader.Right>
 			</ScreenHeader>
 
@@ -114,12 +107,11 @@ export default function DiaryScreen() {
 				<VisitTicket
 					exhibition={exhibition}
 					listenedTitles={listenedTitles}
+					listenedItems={listenedItems}
 					dateKey={dateKey}
 					dateLabel={dateLabel}
-					diaryText={text}
-					isStreaming={isStreaming}
-					hasError={hasError}
-					onGenerate={generate}
+					memo={memo}
+					onMemoChange={handleMemoChange}
 				/>
 			</View>
 

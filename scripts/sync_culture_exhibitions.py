@@ -9,6 +9,8 @@ import sys
 import urllib.parse
 import urllib.request
 
+from exhibition_sync_filters import END_DATE_MIN, end_date_eligible, venue_sync_allowed
+
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ENV = os.path.join(REPO, ".env")
 
@@ -51,6 +53,8 @@ def fetch_exhibitions(api_key: str) -> list[dict]:
 
     seen: set[str] = set()
     out: list[dict] = []
+    skipped_end = 0
+    skipped_venue = 0
     for b in blocks:
         if tag(b, "serviceName") != "전시":
             continue
@@ -61,16 +65,30 @@ def fetch_exhibitions(api_key: str) -> list[dict]:
         sd, ed = tag(b, "startDate"), tag(b, "endDate")
         if len(sd) != 8 or len(ed) != 8:
             continue
+        end_date = f"{ed[:4]}.{ed[4:6]}.{ed[6:8]}"
+        if not end_date_eligible(end_date):
+            skipped_end += 1
+            continue
+        place = tag(b, "place") or ""
+        title = tag(b, "title")
+        if not venue_sync_allowed(place, title):
+            skipped_venue += 1
+            continue
         out.append(
             {
                 "source": "culture",
-                "venue_name_fallback": tag(b, "place") or "장소 정보 없음",
-                "title": tag(b, "title"),
+                "venue_name_fallback": place or "장소 정보 없음",
+                "title": title,
                 "start_date": f"{sd[:4]}.{sd[4:6]}.{sd[6:8]}",
-                "end_date": f"{ed[:4]}.{ed[4:6]}.{ed[6:8]}",
+                "end_date": end_date,
                 "image_url": tag(b, "thumbnail") or None,
                 "synced_at": __import__("datetime").datetime.now(__import__("datetime").timezone.utc).isoformat(),
             }
+        )
+    if skipped_end or skipped_venue:
+        print(
+            f"filtered out: end_date<{END_DATE_MIN} → {skipped_end}, venue blocklist → {skipped_venue}",
+            file=sys.stderr,
         )
     return out
 

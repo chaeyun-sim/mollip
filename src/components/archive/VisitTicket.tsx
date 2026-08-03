@@ -1,16 +1,18 @@
-import { useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import {
-	ActivityIndicator,
 	Image,
 	Pressable,
 	ScrollView,
 	StyleSheet,
 	Text,
+	TextInput,
 	View,
 } from 'react-native';
+import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
 	Easing,
 	interpolate,
+	runOnJS,
 	useAnimatedStyle,
 	useSharedValue,
 	withTiming,
@@ -18,27 +20,38 @@ import Animated, {
 
 import { EmptyImagePlaceholder } from '@/src/components/common/EmptyImagePlaceholder';
 import type { Exhibition } from '@/src/data/exhibitions';
+import type { ListenedItem } from '@/src/store/visitStore';
 
 // 다이어리 화면의 어두운 그라데이션(#0C0A09→#171412) 중간값 — 절취선 노치가 뚫린 것처럼 보이게 함
 const NOTCH = '#110F0E';
 const INK = '#1C1917';
 const STAMP = '#C2410C';
-const STUB_HEIGHT = 112; // 앞/뒷면 절취선 위치를 맞추는 하단 스텁 고정 높이
-const TICKET_MIN_HEIGHT = 640; // 뒷면 일기(6~7줄)가 잘리지 않는 최소 높이
+const STUB_HEIGHT = 112;
+/** 절취선 행(노치 20 + 점선) — 앞·뒤 동일 Y 고정용 */
+const PERFORATION_HEIGHT = 24;
+const TICKET_MIN_HEIGHT = 640;
+const TICKET_BODY_HEIGHT = TICKET_MIN_HEIGHT - STUB_HEIGHT - PERFORATION_HEIGHT;
+
+const ticketShellStyle = {
+	height: TICKET_MIN_HEIGHT,
+	minHeight: TICKET_MIN_HEIGHT,
+	flexDirection: 'column' as const,
+};
 
 // 차분한 플립: 여유 있는 시간 + 부드러운 가감속
 const FLIP_TIMING = { duration: 650, easing: Easing.inOut(Easing.cubic) };
+/** 좌우 드래그 이 거리만큼이면 한 면(0↔1) 전환 */
+const FLIP_DRAG_PX = 280;
 
 interface VisitTicketProps {
 	exhibition: Exhibition;
 	listenedTitles: string[];
-	dateKey: string; // YYYY-MM-DD, 티켓 번호 생성에 사용
+	/** visit store 우선; 없으면 screen에서 title-only fallback */
+	listenedItems: ListenedItem[];
+	dateKey: string;
 	dateLabel: string;
-	// 뒷면 AI 일기
-	diaryText?: string;
-	isStreaming?: boolean;
-	hasError?: boolean;
-	onGenerate?: () => void;
+	memo: string;
+	onMemoChange: (text: string) => void;
 }
 
 // dateKey 기반 고정 바코드 막대 폭 (렌더마다 동일)
@@ -50,7 +63,7 @@ function barcodeWidths(dateKey: string): number[] {
 // 절취선: 양옆 노치 + 점선
 function Perforation() {
 	return (
-		<View className='flex-row items-center'>
+		<View className='flex-row items-center' style={{ height: PERFORATION_HEIGHT }}>
 			<View
 				className='rounded-full'
 				style={{ width: 20, height: 20, marginLeft: -10, backgroundColor: NOTCH }}
@@ -64,6 +77,99 @@ function Perforation() {
 				style={{ width: 20, height: 20, marginRight: -10, backgroundColor: NOTCH }}
 			/>
 		</View>
+	);
+}
+
+function TicketStubFront({
+	bars,
+	ticketNo,
+	dateKey,
+}: {
+	bars: number[];
+	ticketNo: string;
+	dateKey: string;
+}) {
+	return (
+		<View
+			className='flex-row items-center justify-between px-6'
+			style={{ height: STUB_HEIGHT }}
+		>
+			<View>
+				<View className='flex-row items-end' accessibilityLabel='장식용 바코드'>
+					{bars.map((w, i) => (
+						<View
+							key={i}
+							style={{
+								width: w,
+								height: i % 4 === 0 ? 30 : 24,
+								marginRight: 2,
+								backgroundColor: INK,
+							}}
+						/>
+					))}
+				</View>
+				<Text
+					className='mt-1.5 text-[10px] tracking-[4px] text-[#78716C]'
+					style={{ fontFamily: 'Pretendard-Medium' }}
+				>
+					{ticketNo}
+				</Text>
+			</View>
+			<VisitStamp dateKey={dateKey} />
+		</View>
+	);
+}
+
+function TicketStubBack({ ticketNo }: { ticketNo: string }) {
+	return (
+		<View
+			className='flex-row items-center justify-between px-6'
+			style={{ height: STUB_HEIGHT }}
+		>
+			<View>
+				<Text
+					className='text-[10px] tracking-[3px] text-[#A8A29E]'
+					style={{ fontFamily: 'Pretendard-SemiBold' }}
+				>
+					MUSEUM TICKET
+				</Text>
+				<Text
+					className='mt-1 text-[10px] tracking-[3px] text-[#D6D3D1]'
+					style={{ fontFamily: 'Pretendard-SemiBold' }}
+				>
+					ADMIT ONE
+				</Text>
+			</View>
+			<Text
+				className='text-[10px] tracking-[4px] text-[#78716C]'
+				style={{ fontFamily: 'Pretendard-Medium' }}
+			>
+				{ticketNo}
+			</Text>
+		</View>
+	);
+}
+
+function TicketFooter({
+	variant,
+	bars,
+	ticketNo,
+	dateKey,
+}: {
+	variant: 'front' | 'back';
+	bars: number[];
+	ticketNo: string;
+	dateKey: string;
+}) {
+	return (
+		<>
+			<Perforation />
+			{variant === 'front' ? (
+				<TicketStubFront bars={bars} ticketNo={ticketNo} dateKey={dateKey} />
+			) : (
+				<TicketStubBack ticketNo={ticketNo} />
+			)}
+		</>
 	);
 }
 
@@ -99,39 +205,166 @@ function VisitStamp({ dateKey }: { dateKey: string }) {
 	);
 }
 
-// 관람 기록 입장권. 탭하면 앞면(관람 정보) ↔ 뒷면(AI 일기)이 뒤집힌다.
+function ProgramRow({ index, item }: { index: number; item: ListenedItem }) {
+	return (
+		<View
+			className='flex-row items-center py-3 border-b border-[#F5F5F4]'
+			accessibilityLabel={`${index + 1}번, ${item.title}`}
+		>
+			<Text
+				className='w-6 text-[13px]'
+				style={{ fontFamily: 'Pretendard-Medium', color: '#A8A29E' }}
+			>
+				{index + 1}
+			</Text>
+			<View
+				className='overflow-hidden rounded-lg mr-3'
+				style={{ width: 44, height: 44, backgroundColor: '#E5E1D8' }}
+			>
+				{item.imageUrl ? (
+					<Image source={{ uri: item.imageUrl }} resizeMode='cover' className='h-full w-full' />
+				) : (
+					<EmptyImagePlaceholder
+						className='h-full w-full items-center justify-center'
+						iconSize={20}
+					/>
+				)}
+			</View>
+			<View className='flex-1 min-w-0'>
+				<Text
+					className='text-[14px] leading-[19px]'
+					numberOfLines={2}
+					style={{ fontFamily: 'Pretendard-SemiBold', color: INK }}
+				>
+					{item.title}
+				</Text>
+				{item.descriptionPreview ? (
+					<Text
+						className='text-[12px] mt-1 leading-[17px]'
+						numberOfLines={1}
+						style={{ fontFamily: 'Pretendard-Regular', color: '#78716C' }}
+					>
+						{item.descriptionPreview}
+					</Text>
+				) : null}
+			</View>
+		</View>
+	);
+}
+
+function TicketVisitMemo({
+	memo,
+	onMemoChange,
+}: {
+	memo: string;
+	onMemoChange: (text: string) => void;
+}) {
+	return (
+		<View className='mt-5 pt-5 border-t border-[#E7E5E4]'>
+			<Text className='text-[14px] mb-1' style={{ fontFamily: 'Pretendard-SemiBold', color: INK }}>
+				나의 관람 메모
+			</Text>
+			<Text
+				className='text-[12px] mb-3 leading-[18px]'
+				style={{ fontFamily: 'Pretendard-Regular', color: '#78716C' }}
+			>
+				직접 적은 글이 이 티켓에 남아요
+			</Text>
+			<TextInput
+				value={memo}
+				onChangeText={onMemoChange}
+				placeholder='오늘 기억하고 싶은 것을 적어보세요'
+				placeholderTextColor='#A8A29E'
+				multiline
+				maxLength={400}
+				accessibilityLabel='관람 메모 입력'
+				style={{
+					minHeight: 96,
+					borderRadius: 12,
+					borderWidth: 1,
+					borderColor: '#E7E5E4',
+					paddingHorizontal: 14,
+					paddingVertical: 12,
+					fontFamily: 'Pretendard-Regular',
+					fontSize: 14,
+					lineHeight: 22,
+					color: '#44403C',
+					textAlignVertical: 'top',
+					backgroundColor: '#FAFAF9',
+				}}
+			/>
+		</View>
+	);
+}
+
+// 관람 기록 입장권. 앞면 탭 → 뒷면(프로그램·메모). 뒷면은 입력 가능.
 export function VisitTicket({
 	exhibition,
 	listenedTitles,
+	listenedItems,
 	dateKey,
 	dateLabel,
-	diaryText,
-	isStreaming = false,
-	hasError = false,
-	onGenerate,
+	memo,
+	onMemoChange,
 }: VisitTicketProps) {
 	const [flipped, setFlipped] = useState(false);
 	const rotation = useSharedValue(0);
+	const dragStartRotation = useSharedValue(0);
+
+	const applyFlipped = useCallback((toBack: boolean) => {
+		setFlipped(toBack);
+	}, []);
+
+	const snapTo = useCallback(
+		(toBack: boolean) => {
+			rotation.value = withTiming(toBack ? 1 : 0, FLIP_TIMING);
+			applyFlipped(toBack);
+		},
+		[applyFlipped, rotation],
+	);
+
+	const flipGesture = useMemo(
+		() =>
+			Gesture.Race(
+				Gesture.Pan()
+					.activeOffsetX([-14, 14])
+					.failOffsetY([-22, 22])
+					.onBegin(() => {
+						dragStartRotation.value = rotation.value;
+					})
+					.onUpdate(e => {
+						const next = dragStartRotation.value - e.translationX / FLIP_DRAG_PX;
+						rotation.value = Math.min(1, Math.max(0, next));
+					})
+					.onEnd(e => {
+						const projected = rotation.value - e.velocityX / 2800;
+						const toBack = projected > 0.5;
+						rotation.value = withTiming(toBack ? 1 : 0, FLIP_TIMING);
+						runOnJS(applyFlipped)(toBack);
+					}),
+				Gesture.Tap().maxDuration(280).onEnd(() => {
+					const toBack = rotation.value <= 0.5;
+					rotation.value = withTiming(toBack ? 1 : 0, FLIP_TIMING);
+					runOnJS(applyFlipped)(toBack);
+				}),
+			),
+		[applyFlipped, dragStartRotation, rotation],
+	);
 
 	const frontStyle = useAnimatedStyle(() => ({
 		transform: [
 			{ perspective: 1200 },
-			{ rotateY: `${interpolate(rotation.value, [0, 1], [0, 180])}deg` },
+			{ rotateY: `${interpolate(rotation.value, [0, 1], [0, -180])}deg` },
 		],
 		backfaceVisibility: 'hidden',
 	}));
 	const backStyle = useAnimatedStyle(() => ({
 		transform: [
 			{ perspective: 1200 },
-			{ rotateY: `${interpolate(rotation.value, [0, 1], [180, 360])}deg` },
+			{ rotateY: `${interpolate(rotation.value, [0, 1], [-180, -360])}deg` },
 		],
 		backfaceVisibility: 'hidden',
 	}));
-
-	const handleFlip = () => {
-		rotation.value = withTiming(flipped ? 0 : 1, FLIP_TIMING);
-		setFlipped(prev => !prev);
-	};
 
 	const bars = barcodeWidths(dateKey);
 	const ticketNo = `NO. ${dateKey.replaceAll('-', '')}`;
@@ -144,40 +377,41 @@ export function VisitTicket({
 
 	return (
 		<View>
-			<Pressable
-				onPress={handleFlip}
-				accessibilityLabel={flipped ? '티켓 앞면 보기' : '티켓 뒷면 일기 보기'}
-				accessibilityRole='button'
-			>
-				{/* 앞면: 관람 정보 */}
+			<GestureDetector gesture={flipGesture}>
+				<View style={{ height: TICKET_MIN_HEIGHT, minHeight: TICKET_MIN_HEIGHT }}>
+				{/* 앞면 */}
 				<Animated.View
 					className='overflow-hidden rounded-3xl bg-white'
-					style={[cardShadow, frontStyle, { minHeight: TICKET_MIN_HEIGHT }]}
+					pointerEvents={flipped ? 'none' : 'box-none'}
+					style={[
+						cardShadow,
+						frontStyle,
+						ticketShellStyle,
+						{ zIndex: flipped ? 0 : 2 },
+					]}
 				>
-					{/* 풀와이드 포스터: 늘어난 티켓 높이를 흡수해 이미지가 커짐 */}
-					<View
-						className='w-full flex-1 items-center justify-center'
-						style={{ minHeight: 220 }}
-					>
-						{exhibition.heroImageUri || exhibition.posterImage ? (
-							<Image
-								source={
-									exhibition.heroImageUri
-										? { uri: exhibition.heroImageUri }
-										: exhibition.posterImage
-								}
-								resizeMode='cover'
-								className='h-full w-full'
-							/>
-						) : (
-							<EmptyImagePlaceholder
-								className='h-full w-full items-center justify-center bg-[#E5E1D8]'
-								iconSize={100}
-							/>
-						)}
-					</View>
+					<View style={{ height: TICKET_BODY_HEIGHT, flexDirection: 'column' }}>
+						<View style={{ flex: 1, minHeight: 0, width: '100%' }}>
+							{exhibition.heroImageUri || exhibition.posterImage ? (
+								<Image
+									source={
+										exhibition.heroImageUri
+											? { uri: exhibition.heroImageUri }
+											: exhibition.posterImage
+									}
+									resizeMode='cover'
+									style={{ width: '100%', height: '100%' }}
+								/>
+							) : (
+								<EmptyImagePlaceholder
+									className='h-full w-full items-center justify-center bg-[#E5E1D8]'
+									style={{ width: '100%', height: '100%' }}
+									iconSize={100}
+								/>
+							)}
+						</View>
 
-					<View className='px-6 pt-5'>
+						<View className='px-6 pt-5'>
 						<Text
 							className='text-[10px] tracking-[3px] text-[#A8A29E]'
 							style={{ fontFamily: 'Pretendard-SemiBold' }}
@@ -185,15 +419,16 @@ export function VisitTicket({
 							EXHIBITION
 						</Text>
 						<Text
-							className='mt-1.5 text-[24px] leading-[32px] text-[#1C1917] font-hahmlet-bold'
+							className='mt-1.5 text-[24px] leading-[32px] text-[#1C1917]'
 							numberOfLines={2}
+							style={{ fontFamily: 'Hahmlet_700Bold' }}
 						>
 							{exhibition.title}
 						</Text>
 					</View>
 
 					{/* 정보 그리드 */}
-					<View className='mb-6 mt-5 flex-row px-6'>
+					<View className='mb-4 mt-5 flex-row px-6'>
 						{[
 							{ label: '장소', value: exhibition.venue },
 							{ label: '날짜', value: dateLabel.split(' ')[0] },
@@ -216,147 +451,98 @@ export function VisitTicket({
 							</View>
 						))}
 					</View>
-
-					<Perforation />
-
-					{/* 하단 스텁: 바코드 + 도장 */}
-					<View
-						className='flex-row items-center justify-between px-6'
-						style={{ height: STUB_HEIGHT }}
-					>
-						<View>
-							<View className='flex-row items-end' accessibilityLabel='장식용 바코드'>
-								{bars.map((w, i) => (
-									<View
-										key={i}
-										style={{
-											width: w,
-											height: i % 4 === 0 ? 30 : 24,
-											marginRight: 2,
-											backgroundColor: INK,
-										}}
-									/>
-								))}
-							</View>
-							<Text
-								className='mt-1.5 text-[10px] tracking-[4px] text-[#78716C]'
-								style={{ fontFamily: 'Pretendard-Medium' }}
-							>
-								{ticketNo}
-							</Text>
-						</View>
-						<VisitStamp dateKey={dateKey} />
 					</View>
+
+					<TicketFooter variant='front' bars={bars} ticketNo={ticketNo} dateKey={dateKey} />
 				</Animated.View>
 
-				{/* 뒷면: AI 일기 (앞면과 동일한 절취선·스텁 구조) */}
+				{/* 뒷면: 프로그램 + 나의 메모 (플립 시 입력 가능) */}
 				<Animated.View
 					className='overflow-hidden rounded-3xl bg-white'
-					style={[cardShadow, backStyle, StyleSheet.absoluteFill]}
+					pointerEvents={flipped ? 'box-none' : 'none'}
+					style={[
+						cardShadow,
+						backStyle,
+						StyleSheet.absoluteFill,
+						ticketShellStyle,
+						{ zIndex: flipped ? 2 : 0 },
+					]}
 				>
-					<View className='flex-1 px-6 pt-6'>
-						<View className='flex-row items-center justify-between'>
+					<View style={{ height: TICKET_BODY_HEIGHT, flexDirection: 'column' }}>
+						<Pressable
+							onPress={() => snapTo(false)}
+							className='px-6 pt-4 pb-1 self-start'
+							accessibilityRole='button'
+							accessibilityLabel='티켓 앞면 보기'
+							style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
+						>
 							<Text
-								className='text-[10px] tracking-[3px] text-[#A8A29E]'
-								style={{ fontFamily: 'Pretendard-SemiBold' }}
+								className='text-[13px]'
+								style={{ fontFamily: 'Pretendard-Medium', color: '#78716C' }}
 							>
-								DOCENT'S DIARY
+								← 앞면 보기
 							</Text>
+						</Pressable>
+						<ScrollView
+							style={{ flex: 1, minHeight: 0 }}
+							showsVerticalScrollIndicator={false}
+							nestedScrollEnabled
+							contentContainerStyle={{ paddingBottom: 8, flexGrow: 1 }}
+						>
+							<View className='px-6 pt-2 pb-2'>
+							<View className='flex-row items-baseline justify-between mb-1'>
+								<Text
+									className='text-[15px]'
+									style={{ fontFamily: 'Pretendard-SemiBold', color: INK }}
+								>
+									오늘의 프로그램
+								</Text>
+								{listenedItems.length > 0 ? (
+									<Text
+										className='text-[12px]'
+										style={{ fontFamily: 'Pretendard-Regular', color: '#A8A29E' }}
+									>
+										{listenedItems.length}작품
+									</Text>
+								) : null}
+							</View>
 							<Text
-								className='text-[11px] text-[#A8A29E]'
-								style={{ fontFamily: 'Pretendard-Medium' }}
+								className='text-[11px] mb-3'
+								style={{ fontFamily: 'Pretendard-Medium', color: '#A8A29E' }}
 							>
 								{dateLabel}
 							</Text>
-						</View>
 
-						{diaryText ? (
-							<ScrollView
-								className='mt-4 flex-1'
-								showsVerticalScrollIndicator={false}
-								nestedScrollEnabled
-							>
-								<Text
-									className='pb-4 text-[15px] leading-[27px] text-[#44403C]'
-									style={{ fontFamily: 'Pretendard-Light' }}
-								>
-									{diaryText}
-								</Text>
-							</ScrollView>
-						) : (
-							<View className='flex-1 items-center justify-center px-4'>
-								{isStreaming ? (
-									<>
-										<ActivityIndicator color={INK} />
-										<Text
-											className='mt-3 text-[14px] text-[#A8A29E]'
-											style={{ fontFamily: 'Pretendard-Regular' }}
-										>
-											도슨트가 일기를 쓰고 있어요...
-										</Text>
-									</>
-								) : (
-									<>
-										<Text
-											className='text-center text-[14px] leading-6 text-[#A8A29E]'
-											style={{ fontFamily: 'Pretendard-Regular' }}
-										>
-											{hasError
-												? '일기를 쓰다가 잉크가 번졌어요.\n다시 한번 부탁해볼까요?'
-												: '티켓 뒷면이 아직 비어 있어요.\nAI 도슨트에게 일기를 부탁해보세요.'}
-										</Text>
-										{onGenerate && (
-											<Pressable
-												onPress={onGenerate}
-												accessibilityLabel='AI 도슨트에게 일기 부탁하기'
-												accessibilityRole='button'
-												className='mt-5 rounded-full bg-[#1C1917] px-5 py-2.5'
-												style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
-											>
-												<Text
-													className='text-[14px] text-white'
-													style={{ fontFamily: 'Pretendard-SemiBold' }}
-												>
-													{hasError ? '다시 부탁하기' : 'AI 도슨트에게 일기 부탁하기'}
-												</Text>
-											</Pressable>
-										)}
-									</>
-								)}
-							</View>
-						)}
+							{listenedItems.length > 0 ? (
+								listenedItems.map((item, index) => (
+									<ProgramRow key={`${item.title}-${index}`} index={index} item={item} />
+								))
+							) : (
+								<View className='py-6'>
+									<Text
+										className='text-[14px] text-center'
+										style={{ fontFamily: 'Pretendard-Medium', color: INK }}
+									>
+										이날 들은 작품이 없어요
+									</Text>
+									<Text
+										className='text-[13px] text-center mt-2 leading-[20px]'
+										style={{ fontFamily: 'Pretendard-Regular', color: '#78716C' }}
+									>
+										헤더의 ♪에서 목록을 확인할 수 있어요
+									</Text>
+								</View>
+							)}
+
+							<TicketVisitMemo memo={memo} onMemoChange={onMemoChange} />
+						</View>
+					</ScrollView>
 					</View>
 
-					<Perforation />
-
-					{/* 하단 스텁: 앞면과 동일 높이로 절취선 위치 고정 */}
-					<View
-						className='flex-row items-center justify-between px-6'
-						style={{ height: STUB_HEIGHT }}
-					>
-						<View>
-							<Text
-								className='text-[10px] tracking-[3px] text-[#A8A29E]'
-								style={{ fontFamily: 'Pretendard-SemiBold' }}
-							>
-								MUSEUM TICKET
-							</Text>
-							<Text
-								className='mt-1 text-[10px] tracking-[3px] text-[#D6D3D1]'
-								style={{ fontFamily: 'Pretendard-SemiBold' }}
-							>
-								ADMIT ONE
-							</Text>
-						</View>
-						<Text
-							className='text-[10px] tracking-[4px] text-[#78716C]'
-							style={{ fontFamily: 'Pretendard-Medium' }}
-						>
-							{ticketNo}
-						</Text>
-					</View>
+					<TicketFooter variant='back' bars={bars} ticketNo={ticketNo} dateKey={dateKey} />
 				</Animated.View>
-			</Pressable>
+				</View>
+			</GestureDetector>
 
 			{/* 페이지 도트: 앞면/뒷면 표시 */}
 			<View className='mt-4 flex-row items-center justify-center gap-1.5'>
@@ -376,12 +562,22 @@ export function VisitTicket({
 				/>
 			</View>
 
-			<Text
-				className='mt-2 text-center text-[12px]'
-				style={{ fontFamily: 'Pretendard-Regular', color: 'rgba(255,255,255,0.4)' }}
+			<Pressable
+				onPress={() => snapTo(!flipped)}
+				accessibilityRole='button'
+				accessibilityLabel={flipped ? '티켓 앞면 보기' : '티켓 뒷면 프로그램 보기'}
+				className='mt-2'
+				style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
 			>
-				{flipped ? '탭하면 앞면이 보여요' : '탭하면 뒷면에 일기가 있어요'}
-			</Text>
+				<Text
+					className='text-center text-[12px]'
+					style={{ fontFamily: 'Pretendard-Regular', color: 'rgba(255,255,255,0.4)' }}
+				>
+					{flipped
+						? '← 밀거나 탭하면 앞면 · 앞면 보기'
+						: '좌우로 밀거나 탭하면 프로그램·메모'}
+				</Text>
+			</Pressable>
 		</View>
 	);
 }

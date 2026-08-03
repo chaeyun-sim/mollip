@@ -9,12 +9,14 @@ export interface ListenedItem {
 	descriptionPreview?: string;
 }
 
-// 하루치 관람 기록: 관람한 전시 + 들은 해설 목록
+// 하루치 관람 기록: 관람한 전시 + 들은 해설 목록 + 사용자 메모
 export interface DayVisit {
 	exhibitionId: string | null;
 	exhibitionTitle?: string;
 	venue?: string;
 	listened: ListenedItem[];
+	/** 사용자가 직접 적는 관람 메모 (티켓 뒷면) */
+	memo?: string;
 }
 
 interface VisitStore {
@@ -26,6 +28,7 @@ interface VisitStore {
 		meta?: { title?: string; venue?: string },
 	) => void;
 	recordListened: (dateKey: string, item: ListenedItem) => void;
+	setVisitMemo: (dateKey: string, memo: string) => void;
 }
 
 export function todayKey(): string {
@@ -63,6 +66,16 @@ export const useVisitStore = create<VisitStore>()(
 						visits: {
 							...state.visits,
 							[dateKey]: { ...prev, listened: [...prev.listened, item] },
+						},
+					};
+				}),
+			setVisitMemo: (dateKey, memo) =>
+				set(state => {
+					const prev = state.visits[dateKey] ?? { exhibitionId: null, listened: [] };
+					return {
+						visits: {
+							...state.visits,
+							[dateKey]: { ...prev, memo },
 						},
 					};
 				}),

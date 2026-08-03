@@ -6,6 +6,8 @@ import { Pressable, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { OnboardingSwipeCard, ONBOARDING_CARD_HEIGHT, type OnboardingArtItem } from '@/src/components/onboarding/OnboardingSwipeCard';
+import { useAuthStore } from '@/src/store/authStore';
+import { supabase } from '@/src/utils/supabase';
 
 // 12개 하드코딩
 const ART_ITEMS = [
@@ -154,21 +156,21 @@ function shuffle<T>(items: T[]): T[] {
 
 export default function OnboardingScreen() {
 	const router = useRouter();
+	const userId = useAuthStore((s) => s.user?.id);
 	const [cards, setCards] = useState(() => shuffle(ART_ITEMS));
 	const [liked, setLiked] = useState<OnboardingArtItem[]>([]);
 
 	const totalSwiped = ART_ITEMS.length - cards.length;
 
 	const handleComplete = useCallback(async () => {
-		// 온보딩 작업중 — 완료 플래그 저장 임시 주석처리
-		// if (userId) {
-		// 	await supabase
-		// 		.from('profiles')
-		// 		.update({ onboarding_completed: true })
-		// 		.eq('id', userId);
-		// }
+		if (userId) {
+			await supabase
+				.from('profiles')
+				.update({ onboarding_completed: true })
+				.eq('id', userId);
+		}
 		router.replace('/(tabs)');
-	}, [router]);
+	}, [router, userId]);
 
 	const handleSwipeLeft = useCallback(() => {
 		setCards((prev) => prev.slice(1));
@@ -252,7 +254,12 @@ export default function OnboardingScreen() {
 
 					{/* 하단 버튼 */}
 					<View className='flex-row justify-center items-center gap-6 pb-10 pt-2'>
-						<View className='items-center gap-1.5'>
+						<Pressable
+							onPress={handleSwipeLeft}
+							accessibilityRole='button'
+							accessibilityLabel='패스'
+							className='items-center gap-1.5'
+						>
 							<View
 								className='w-16 h-16 rounded-full bg-white items-center justify-center'
 								style={{
@@ -266,13 +273,18 @@ export default function OnboardingScreen() {
 								<Ionicons name='close' size={28} color='#f43f5e' />
 							</View>
 							<Text className='text-gray-400 text-xs font-pretendard-regular'>패스</Text>
-						</View>
+						</Pressable>
 
-						<View className='items-center gap-1.5'>
+						<Pressable
+							onPress={handleSwipeRight}
+							accessibilityRole='button'
+							accessibilityLabel='선택'
+							className='items-center gap-1.5'
+						>
 							<View
 								className='w-16 h-16 rounded-full bg-white items-center justify-center'
 								style={{
-									shadowColor: '##00bc7d',
+									shadowColor: '#00bc7d',
 									shadowOffset: { width: 0, height: 4 },
 									shadowOpacity: 0.08,
 									shadowRadius: 12,
@@ -282,7 +294,7 @@ export default function OnboardingScreen() {
 								<Ionicons name='heart' size={30} color='#00bc7d' />
 							</View>
 							<Text className='text-gray-400 text-xs font-pretendard-regular'>선택!</Text>
-						</View>
+						</Pressable>
 					</View>
 				</>
 			)}

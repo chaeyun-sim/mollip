@@ -1,42 +1,45 @@
 import { useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Pressable, ScrollView, Text, View } from 'react-native';
+import { useCallback, useMemo, useState } from 'react';
+import { ScrollView, View } from 'react-native';
 
+import { ArchiveDiaryEmpty } from '@/src/components/archive/ArchiveDiaryEmpty';
+import { ArchiveLoginPrompt } from '@/src/components/archive/ArchiveLoginPrompt';
+import { ArchiveSectionTitle } from '@/src/components/archive/ArchiveSectionTitle';
+import { ArchiveSummaryHero } from '@/src/components/archive/ArchiveSummaryHero';
 import { DiaryCalendar, type DayImage } from '@/src/components/archive/DiaryCalendar';
+import { ArchiveTabBar } from '@/src/components/archive/ArchiveTabBar';
 import { SavedExhibitions } from '@/src/components/archive/SavedExhibitions';
 import { Screen } from '@/src/components/layout/Screen';
+import { useArchiveStats } from '@/src/hooks/useArchiveStats';
 import { useAuthStore } from '@/src/store/authStore';
-import { cn } from '@/src/lib/cn';
-import { useDiaryStore } from '@/src/store/diaryStore';
+import { useBookmarkStore } from '@/src/store/bookmarkStore';
 import { useVisitStore } from '@/src/store/visitStore';
 
 type ArchiveTab = 'diary' | 'saved';
 
-const SEGMENTS: { key: ArchiveTab; label: string }[] = [
-	{ key: 'diary', label: '관람 다이어리' },
-	{ key: 'saved', label: '저장한 전시' },
-];
-
 export default function ArchiveScreen() {
 	const router = useRouter();
 	const session = useAuthStore((s) => s.session);
-	const entries = useDiaryStore(s => s.entries);
+	const authLoading = useAuthStore((s) => s.isLoading);
 	const [tab, setTab] = useState<ArchiveTab>('diary');
+
+	const stats = useArchiveStats();
+	const savedCount = useBookmarkStore((s) => s.ids.length);
 
 	const now = new Date();
 	const [year, setYear] = useState(now.getFullYear());
 	const [month, setMonth] = useState(now.getMonth() + 1);
 
 	const handleChangeMonth = useCallback((offset: -1 | 1) => {
-		setMonth(prev => {
+		setMonth((prev) => {
 			const next = prev + offset;
 			if (next < 1) {
-				setYear(y => y - 1);
+				setYear((y) => y - 1);
 				return 12;
 			}
 			if (next > 12) {
-				setYear(y => y + 1);
+				setYear((y) => y + 1);
 				return 1;
 			}
 			return next;
@@ -57,17 +60,21 @@ export default function ArchiveScreen() {
 		[router],
 	);
 
-	const visits = useVisitStore(s => s.visits);
+	const handleLogin = useCallback(() => {
+		router.push({
+			pathname: '/auth/login',
+			params: { returnTo: '/(tabs)/archive' },
+		});
+	}, [router]);
 
-	const markedDates = useMemo(
-		() => [...new Set([...Object.keys(visits), ...Object.keys(entries)])],
-		[visits, entries],
-	);
+	const visits = useVisitStore((s) => s.visits);
+
+	const markedDates = useMemo(() => Object.keys(visits), [visits]);
 
 	const dayImages = useMemo(() => {
 		const map: Record<string, DayImage> = {};
 		for (const [dateKey, visit] of Object.entries(visits)) {
-			const listenedImageUrl = visit.listened.find(l => l.imageUrl)?.imageUrl;
+			const listenedImageUrl = visit.listened.find((l) => l.imageUrl)?.imageUrl;
 			if (listenedImageUrl) {
 				map[dateKey] = { source: { uri: listenedImageUrl }, color: '#E8E4DC' };
 			}
@@ -75,12 +82,22 @@ export default function ArchiveScreen() {
 		return map;
 	}, [visits]);
 
-	useEffect(() => {
-		if (!session) router.replace('/(tabs)');
-	}, [session, router]);
+	const hasDiaryRecords = markedDates.length > 0;
+
+	if (authLoading) {
+		return null;
+	}
 
 	if (!session) {
-		return null;
+		return (
+			<Screen variant='warm' className='bg-white'>
+				<StatusBar style='dark' />
+				<Screen.Header>
+					<Screen.Header.Logo />
+				</Screen.Header>
+				<ArchiveLoginPrompt onLogin={handleLogin} />
+			</Screen>
+		);
 	}
 
 	return (
@@ -93,69 +110,43 @@ export default function ArchiveScreen() {
 
 			<ScrollView
 				showsVerticalScrollIndicator={false}
-				contentContainerStyle={{ paddingBottom: 48 }}
+				contentContainerStyle={{ paddingBottom: 48, alignItems: 'stretch' }}
 			>
-				<View className='flex-row rounded-full bg-[#F2EFE9] p-1 mb-5'>
-					{SEGMENTS.map(seg => {
-						const selected = tab === seg.key;
-						return (
-							<Pressable
-								key={seg.key}
-								onPress={() => setTab(seg.key)}
-								accessibilityLabel={seg.label}
-								accessibilityRole='button'
-								accessibilityState={{ selected }}
-								className={cn(
-									'flex-1 items-center justify-center rounded-full py-2',
-									selected && 'bg-white',
-								)}
-								style={
-									selected
-										? {
-												shadowColor: '#1C1917',
-												shadowOpacity: 0.08,
-												shadowRadius: 4,
-												shadowOffset: { width: 0, height: 1 },
-											}
-										: undefined
-								}
-							>
-								<Text
-									className={cn(
-										'text-[14px]',
-										selected ? 'text-[#1C1917]' : 'text-[#A8A29E]',
-									)}
-									style={{
-										fontFamily: selected ? 'Pretendard-SemiBold' : 'Pretendard-Medium',
-									}}
-								>
-									{seg.label}
-								</Text>
-							</Pressable>
-						);
-					})}
-				</View>
+				<ArchiveSummaryHero stats={stats} />
 
-				{tab === 'diary' ? (
-					<>
-						<View className='rounded-3xl bg-[#F2EFE9] px-4 pb-5 pt-5'>
-							<DiaryCalendar
-								year={year}
-								month={month}
-								markedDates={markedDates}
-								dayImages={dayImages}
-								onSelectDate={handleSelectDate}
-								onChangeMonth={handleChangeMonth}
+				<ArchiveTabBar value={tab} onChange={setTab} />
+
+				<View className='mt-6'>
+					{tab === 'diary' ? (
+						<>
+							{!hasDiaryRecords ? (
+								<ArchiveDiaryEmpty
+									onExplore={() => router.push('/(tabs)/')}
+									onMap={() => router.push('/(tabs)/map')}
+								/>
+							) : (
+								<View className='rounded-3xl px-4 pb-5 pt-5 border border-[#E7E5E4] bg-white'>
+									<DiaryCalendar
+										year={year}
+										month={month}
+										markedDates={markedDates}
+										dayImages={dayImages}
+										onSelectDate={handleSelectDate}
+										onChangeMonth={handleChangeMonth}
+									/>
+								</View>
+							)}
+						</>
+					) : (
+						<>
+							<ArchiveSectionTitle
+								title={savedCount > 0 ? `저장한 전시 ${savedCount}개` : '저장한 전시'}
+								subtitle='나중에 보고 싶은 전시를 모아두세요'
 							/>
-						</View>
-
-						<Text className='mt-4 text-center text-[12px] font-pretendard-regular text-gray-400'>
-							날짜를 선택하면 그날의 기록이 열립니다
-						</Text>
-					</>
-				) : (
-					<SavedExhibitions onPressExhibition={handlePressExhibition} />
-				)}
+							<SavedExhibitions onPressExhibition={handlePressExhibition} />
+						</>
+					)}
+				</View>
 			</ScrollView>
 		</Screen>
 	);

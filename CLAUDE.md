@@ -2,45 +2,78 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-@AGENTS.md @.claude/rules/commit-convention.md @.claude/rules/component-convention.md
+@AGENTS.md @.claude/rules/commit-convention.md @.claude/rules/component-convention.md @.claude/rules/feature-pipeline.md
+
+## Agent team (feature work)
+
+Named roles and handoff rules live in **AGENTS.md**. **Manager** runs the pipeline; only Manager asks the user for confirmation at **G6** (`06-handoff-to-user.md`).
+
+| Name | Role |
+|------|------|
+| Manager | 검수 · orchestrator |
+| John (PM) | 기획 |
+| Sam (Design) | 디자인 |
+| Alex (Design QA) | 디자인 QA |
+| Chris (Dev) | 개발 |
+| Taylor (QA) | 개발 QA |
+
+Tier **S** = Chris → Taylor only. Tier **M/L** = `.claude/rules/feature-pipeline.md`. Templates: `.docs/templates/feature/`.
 
 ## Development Workflow (MANDATORY)
 
-The user gives ONE instruction and must NEVER need to re-check the result themselves. Claude owns the entire verification loop: implement → verify → self-fix → re-verify, and only reports back with evidence.
+The user gives ONE instruction and must NEVER need to re-check the result themselves. **Manager** owns the end-to-end loop through QA; **Chris** owns implement → verify → self-fix per AC. Report to the user only after **G6** (or after 5 failed fix iterations on one AC).
 
-Work is done in per-feature cycles. NEVER batch multiple features and test them at the end — implement ONE feature, verify it, then move to the next:
+### Tier L/M pipeline (new UI / flows)
 
 ```
-[ 기획(Plan) ] → [ 디자인(Design) ] → [ 개발(기능 1) → 검증 루프 ] → [ 개발(기능 2) → 검증 루프 ] → … → [ 최종 종합 검증 ]
+John(01-spec) → Sam(02-design-brief) → Alex(03-design-review) ⟲ max 3
+  → 프로토타입 시뮬 스모크 → Chris(AC별 개발) ⟲ Taylor(QA) → Manager(06-handoff) → 사용자 확인
 ```
 
-1. **기획 (Plan)** — Clarify intent and scope before touching code. If the request is ambiguous, ask via AskUserQuestion first. Break the work into feature-sized units here.
-2. **디자인 (Design)** — Match the existing design language (warm neutral palette `#F8F6F2`/`#F2EFE9`, ink `#1C1917`, Pretendard/Hahmlet, rounded cards). For new UI, propose the direction before implementing. Design based on web accessibilities.
-3. **개발 (Implement)** — ONE feature at a time. Follow `component-convention.md`. Read files before editing.
-4. **검증 루프 (Verification Loop)** — Run immediately after EACH feature, not once at the end.
+Work in **one AC at a time** for implementation. NEVER batch multiple ACs and test only at the end.
 
-### Verification Checks (ALL required per feature)
+### Tier S (small change)
+
+```
+[ Chris: 변경 ] → [ Taylor: 검증 루프 ] → (commit은 사용자 요청 시)
+```
+
+### Role summary (same session or subagents)
+
+1. **John (PM)** — Scope, ACs, `.docs/wip/{slug}/01-spec.md` for M/L. Ambiguity → Manager uses AskUserQuestion.
+2. **Sam (Design)** — Design language, `02-design-brief.md`, a11y.
+3. **Alex (Design QA)** — Brief review loop (feature-pipeline.md).
+4. **Chris (Dev)** — ONE AC at a time, `component-convention.md`.
+5. **Taylor (QA)** — Verification after EACH AC (feature-pipeline.md §4).
+
+### Verification Checks (ALL required per AC — Taylor)
+
+Core checks (tier S and every AC in M/L):
 
 1. **Type check** — `npx tsc --noEmit` passes with zero errors.
-2. **Visual check** — Capture the iOS simulator with `xcrun simctl io booted screenshot <path>`, open and inspect the image. Confirm the change is actually rendered (layout, colors, text) — a screenshot that was taken but not inspected does not count.
-3. **Interaction check** — Actually exercise the changed behavior, not just look at it: tap/scroll/type via simulator control (`xcrun simctl`, browser/E2E tooling when applicable) and confirm the expected state change (navigation, toggle, list update).
-4. **Regression check** — Visit adjacent screens on the navigation path to/from the changed screen and confirm they still render and behave correctly.
-5. **Native modules** — If a native module was added/removed: `cd ios && pod install`, then rebuild with `npx expo run:ios` (JS reload alone will NOT register native views — expect "Unimplemented component" otherwise).
+2. **Tests** — `npm test` when suites exist.
+3. **Visual check** — Capture the iOS simulator with `xcrun simctl io booted screenshot <path>`, open and inspect the image. Confirm the change is actually rendered (layout, colors, text) — a screenshot that was taken but not inspected does not count.
+4. **Interaction check** — Actually exercise the changed behavior, not just look at it: tap/scroll/type via simulator control (`xcrun simctl`, browser/E2E tooling when applicable) and confirm the expected state change (navigation, toggle, list update).
+5. **Regression check** — Visit adjacent screens on the navigation path to/from the changed screen and confirm they still render and behave correctly.
+6. **Convention** — `.claude/rules/component-convention.md` (file structure, imports).
+7. **Native modules** — If a native module was added/removed: `cd ios && pod install`, then rebuild with `npx expo run:ios` (JS reload alone will NOT register native views — expect "Unimplemented component" otherwise).
 
 ### Self-Fix Loop (automatic — do NOT ask the user)
 
 - If ANY check fails: diagnose the cause, fix it, and re-run ALL checks from the top.
-- Repeat up to **5 iterations** per feature without reporting intermediate failures to the user.
+- Repeat up to **5 iterations** per AC without reporting intermediate failures to the user.
 - Only after 5 failed iterations: stop, report what failed, what was tried, and the suspected root cause, then wait for instructions.
-- NEVER carry a broken feature forward to the next feature.
+- NEVER carry a broken AC forward to the next AC.
 
-### Final Integrated Verification (before commit / before declaring the whole task done)
+### Final Integrated Verification (before commit / before G6 handoff)
 
 After all features pass individually: run `npx tsc --noEmit` once more and walk the main affected flow end-to-end in the app (screenshot evidence). Multi-feature work is not "done" until this passes.
 
-### Completion Report (evidence checklist)
+### Completion Report (evidence checklist — Taylor → Manager → user at G6)
 
-Report completion ONLY with an evidence checklist per feature, e.g.:
+Tier M/L: fill `05-qa-report.md` then `06-handoff-to-user.md`. Tier S: report inline with the same table.
+
+Report completion ONLY with an evidence checklist per AC, e.g.:
 
 | 기능   | tsc         | 스크린샷      | 인터랙션       | 회귀           |
 | ------ | ----------- | ------------- | -------------- | -------------- |
@@ -64,9 +97,12 @@ npx expo start --android
 
 # Install dependencies
 npm install
+
+# Tests
+npm test
 ```
 
-No linter or test runner is configured yet.
+Jest covers exhibition search utils; extend tests when adding domain logic.
 
 ## Environment Setup
 

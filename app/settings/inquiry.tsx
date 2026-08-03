@@ -118,7 +118,16 @@ export default function InquiryScreen() {
 					<Text className='text-[12px] mb-2 px-1 font-pretendard-semibold text-gray-400 tracking-[0.8]'>
 						유형
 					</Text>
-					<View className='flex-row gap-2 mb-6'>
+					<View
+						className='flex-row gap-2 rounded-3xl bg-[#F2EFE9] p-2 mb-6'
+						style={{
+							shadowColor: '#1C1917',
+							shadowOpacity: 0.05,
+							shadowRadius: 12,
+							shadowOffset: { width: 0, height: 4 },
+							elevation: 2,
+						}}
+					>
 						{CATEGORY_OPTIONS.map((opt) => {
 							const selected = category === opt.value;
 							return (
@@ -129,7 +138,18 @@ export default function InquiryScreen() {
 										setCategory(opt.value);
 									}}
 									className='flex-1 h-11 rounded-2xl items-center justify-center'
-									style={{ backgroundColor: selected ? '#3B82F6' : '#F2EFE9' }}
+									style={{
+										backgroundColor: selected ? '#3B82F6' : '#FFFFFF',
+										...(selected
+											? {
+													shadowColor: '#3B82F6',
+													shadowOpacity: 0.25,
+													shadowRadius: 6,
+													shadowOffset: { width: 0, height: 2 },
+													elevation: 3,
+												}
+											: null),
+									}}
 									accessibilityRole='radio'
 									accessibilityState={{ checked: selected }}
 									accessibilityLabel={opt.label}

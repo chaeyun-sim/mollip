@@ -9,6 +9,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { SocialPill } from '@/src/components/auth/SocialPill';
 import { SERVICE_NAME } from '@/src/constants/service-name';
 import { signInWithApple, signInWithKakao } from '@/src/utils/authOAuth';
+import { supabase } from '@/src/utils/supabase';
 
 function safeReturnTo(raw: string | string[] | undefined): string {
 	const value = Array.isArray(raw) ? raw[0] : raw;
@@ -26,12 +27,24 @@ export default function LoginScreen() {
 	const [error, setError] = useState<string | null>(null);
 
 	const finish = useCallback(async () => {
-		// 온보딩 UI 테스트중 — 완료 여부 상관없이 항상 온보딩으로 이동
-		// 테스트 끝나면 프로필 onboarding_completed 확인 후 router.replace(destination) 사용
-		void destination;
-		router.replace('/onboarding' as never);
-		return;
+		const {
+			data: { user },
+		} = await supabase.auth.getUser();
 
+		if (user) {
+			const { data: profile } = await supabase
+				.from('profiles')
+				.select('onboarding_completed')
+				.eq('id', user.id)
+				.single();
+
+			if (profile && !profile.onboarding_completed) {
+				router.replace('/onboarding' as never);
+				return;
+			}
+		}
+
+		router.replace(destination as never);
 	}, [router, destination]);
 
 	const run = async (provider: 'kakao' | 'apple') => {

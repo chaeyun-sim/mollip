@@ -128,8 +128,13 @@ export default function AccountScreen() {
           )}
         </Pressable>
         <Pressable
-          onPress={() => setShowWithdrawWarning(true)}
+          onPress={() => {
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+            setShowWithdrawWarning(true);
+          }}
           className='flex-row items-center justify-end mt-5'
+          style={({ pressed }) => (pressed ? { opacity: 0.6 } : undefined)}
+          hitSlop={8}
           accessibilityRole='button'
           accessibilityLabel='탈퇴하기'
         >
@@ -160,9 +165,12 @@ export default function AccountScreen() {
             </Text>
             <View className='flex-row gap-2'>
               <Pressable
-                onPress={() => setShowWithdrawWarning(false)}
+                onPress={() => {
+                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                  setShowWithdrawWarning(false);
+                }}
                 className='flex-1 rounded-2xl bg-[#F2EFE9] items-center justify-center'
-                style={{ minHeight: 50 }}
+                style={({ pressed }) => ({ minHeight: 50, opacity: pressed ? 0.7 : 1 })}
                 accessibilityRole='button'
                 accessibilityLabel='취소'
               >
@@ -170,11 +178,12 @@ export default function AccountScreen() {
               </Pressable>
               <Pressable
                 onPress={() => {
+                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
                   setShowWithdrawWarning(false);
                   router.push('/settings/delete-account');
                 }}
                 className='flex-1 rounded-2xl bg-red-500 items-center justify-center'
-                style={{ minHeight: 50 }}
+                style={({ pressed }) => ({ minHeight: 50, opacity: pressed ? 0.85 : 1 })}
                 accessibilityRole='button'
                 accessibilityLabel='그래도 탈퇴할래요'
               >

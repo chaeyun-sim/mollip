@@ -50,12 +50,20 @@ export async function signInWithApple(): Promise<void> {
 	const available = await AppleAuthentication.isAvailableAsync();
 	if (!available) throw new Error('Apple 로그인을 사용할 수 없습니다');
 
-	const credential = await AppleAuthentication.signInAsync({
-		requestedScopes: [
-			AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
-			AppleAuthentication.AppleAuthenticationScope.EMAIL,
-		],
-	});
+	let credential: AppleAuthentication.AppleAuthenticationCredential;
+	try {
+		credential = await AppleAuthentication.signInAsync({
+			requestedScopes: [
+				AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
+				AppleAuthentication.AppleAuthenticationScope.EMAIL,
+			],
+		});
+	} catch (e) {
+		if (e && typeof e === 'object' && 'code' in e && e.code === 'ERR_REQUEST_CANCELED') {
+			throw new Error('Apple 로그인이 취소되었습니다');
+		}
+		throw e;
+	}
 	if (!credential.identityToken) {
 		throw new Error('Apple identity token이 없습니다');
 	}

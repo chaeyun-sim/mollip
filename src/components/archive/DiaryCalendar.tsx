@@ -67,7 +67,7 @@ export function DiaryCalendar({
 					className='h-8 w-8 items-center justify-center rounded-full bg-white'
 					style={({ pressed }) => ({ opacity: pressed ? 0.5 : 1 })}
 				>
-					<Ionicons name='chevron-back' size={15} color='#6B7280' />
+					<Ionicons name='chevron-back' size={15} color='#78716C' />
 				</Pressable>
 				<Text className='text-[17px] font-pretendard-bold text-gray-900'>
 					{year}년 {month}월
@@ -80,7 +80,7 @@ export function DiaryCalendar({
 					className='h-8 w-8 items-center justify-center rounded-full bg-white'
 					style={({ pressed }) => ({ opacity: pressed ? 0.5 : 1 })}
 				>
-					<Ionicons name='chevron-forward' size={15} color='#6B7280' />
+					<Ionicons name='chevron-forward' size={15} color='#78716C' />
 				</Pressable>
 			</View>
 

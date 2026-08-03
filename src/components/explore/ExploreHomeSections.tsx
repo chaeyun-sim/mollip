@@ -1,12 +1,13 @@
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import * as Haptics from 'expo-haptics';
+import { useState } from 'react';
 import {
 	Image,
 	ImageBackground,
+	LayoutChangeEvent,
 	Pressable,
 	Text,
-	useWindowDimensions,
 	View,
 } from 'react-native';
 
@@ -14,7 +15,6 @@ import { EmptyImagePlaceholder } from '@/src/components/common/EmptyImagePlaceho
 import type { CultureExhibitionItem } from '@/src/hooks/useCultureExhibitions';
 
 const GRID_GAP = 12;
-const HORIZONTAL_PADDING = 24;
 
 export interface FeaturedExhibitionProps {
 	id: string;
@@ -154,12 +154,13 @@ function PosterFrame({
 	borderRadius?: number;
 	iconSize?: number;
 }) {
+	const sizeStyle = { width, height };
+
 	return (
 		<View
 			className='overflow-hidden'
 			style={{
-				width,
-				height,
+				...sizeStyle,
 				borderRadius,
 				shadowColor: '#1C1917',
 				shadowOpacity: 0.08,
@@ -170,13 +171,13 @@ function PosterFrame({
 			{thumbnail ? (
 				<Image
 					source={{ uri: thumbnail }}
-					style={{ width, height, borderRadius }}
+					style={{ ...sizeStyle, borderRadius }}
 					resizeMode='cover'
 				/>
 			) : (
 				<EmptyImagePlaceholder
 					className='items-center justify-center bg-[#E5E1D8]'
-					style={{ width, height, borderRadius }}
+					style={{ ...sizeStyle, borderRadius }}
 					iconSize={iconSize}
 				/>
 			)}
@@ -203,10 +204,7 @@ function GridExhibitionCell({
 			}}
 			accessibilityRole='button'
 			accessibilityLabel={`${item.title}, ${item.venue}`}
-			style={({ pressed }) => ({
-				opacity: pressed ? 0.92 : 1,
-				width: colWidth,
-			})}
+			style={({ pressed }) => ({ opacity: pressed ? 0.92 : 1, width: colWidth })}
 		>
 			<PosterFrame
 				thumbnail={item.thumbnail}
@@ -215,10 +213,10 @@ function GridExhibitionCell({
 				borderRadius={16}
 				iconSize={40}
 			/>
-			<Text
-				numberOfLines={2}
+			<View className='flex-1'>
+				<Text
 				className='mt-2 text-[#1C1917] text-[13px] leading-[18px]'
-				style={{ fontFamily: 'Pretendard-SemiBold' }}
+				style={{ fontFamily: 'Pretendard-SemiBold', width: colWidth }}
 			>
 				{item.title}
 			</Text>
@@ -229,6 +227,7 @@ function GridExhibitionCell({
 			>
 				{item.venue}
 			</Text>
+			</View>
 		</Pressable>
 	);
 }
@@ -243,10 +242,11 @@ function pairGridRows(items: CultureExhibitionItem[]): CultureExhibitionItem[][]
 
 /** 추천 전시: 1장 full-width + 나머지 최대 4장 2열 그리드 */
 export function RecommendedExhibitions({ items, onPress }: RecommendedExhibitionsProps) {
-	const { width: screenWidth } = useWindowDimensions();
-	const contentWidth = screenWidth - HORIZONTAL_PADDING * 2;
-	const colWidth = (contentWidth - GRID_GAP) / 2;
-	const gridHeight = Math.round((colWidth * 4) / 3);
+	const [containerWidth, setContainerWidth] = useState(0);
+	const handleLayout = (e: LayoutChangeEvent) => {
+		const w = e.nativeEvent.layout.width;
+		if (w > 0 && w !== containerWidth) setContainerWidth(w);
+	};
 
 	const [lead, ...rest] = items;
 	const gridItems = rest.slice(0, 4);
@@ -254,8 +254,12 @@ export function RecommendedExhibitions({ items, onPress }: RecommendedExhibition
 
 	if (!lead) return null;
 
+	const colWidth = containerWidth > 0 ? (containerWidth - GRID_GAP) / 2 : 0;
+	const gridHeight = Math.round((colWidth * 4) / 3);
+	const leadHeight = containerWidth > 0 ? Math.round(containerWidth * 0.56) : 0;
+
 	return (
-		<View style={{ width: contentWidth, gap: 16 }}>
+		<View style={{ gap: 16 }} onLayout={handleLayout}>
 			<Pressable
 				onPress={() => {
 					Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -263,12 +267,12 @@ export function RecommendedExhibitions({ items, onPress }: RecommendedExhibition
 				}}
 				accessibilityRole='button'
 				accessibilityLabel={`${lead.title}, ${lead.venue}`}
-				style={({ pressed }) => ({ opacity: pressed ? 0.92 : 1, width: contentWidth })}
+				style={({ pressed }) => ({ opacity: pressed ? 0.92 : 1 })}
 			>
 				<PosterFrame
 					thumbnail={lead.thumbnail}
-					width={contentWidth}
-					height={Math.round(contentWidth * 0.56)}
+					width={containerWidth}
+					height={leadHeight}
 					borderRadius={22}
 					iconSize={80}
 				/>
@@ -295,7 +299,6 @@ export function RecommendedExhibitions({ items, onPress }: RecommendedExhibition
 							key={`row-${rowIndex}`}
 							style={{
 								flexDirection: 'row',
-								width: contentWidth,
 								gap: GRID_GAP,
 								alignItems: 'flex-start',
 							}}
@@ -309,6 +312,7 @@ export function RecommendedExhibitions({ items, onPress }: RecommendedExhibition
 									onPress={onPress}
 								/>
 							))}
+							{row.length === 1 ? <View style={{ width: colWidth }} /> : null}
 						</View>
 					))}
 				</View>

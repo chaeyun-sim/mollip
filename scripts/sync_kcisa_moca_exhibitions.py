@@ -9,13 +9,13 @@ import sys
 import urllib.parse
 import urllib.request
 
+from exhibition_sync_filters import END_DATE_MIN, end_date_eligible, venue_sync_allowed
+
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ENV = os.path.join(REPO, ".env")
 
 PAGE_SIZE = 1000
 DATE_RANGE = re.compile(r"^(\d{4})-(\d{2})-(\d{2})~(\d{4})-(\d{2})-(\d{2})$")
-# classify/sync_culture_exhibitions.py와 동일한 기준 — 올해 이후 종료하는 전시만 유지
-END_DATE_CUTOFF = "2026.01.01"
 
 
 def load_env() -> dict[str, str]:
@@ -47,6 +47,8 @@ def fetch_exhibitions(api_key: str) -> list[dict]:
 
     seen: set[tuple[str, str, str]] = set()
     out: list[dict] = []
+    skipped_end = 0
+    skipped_venue = 0
     page_no = 1
     while True:
         items, total = fetch_page(api_key, page_no)
@@ -60,7 +62,12 @@ def fetch_exhibitions(api_key: str) -> list[dict]:
             sy, sm, sd, ey, em, ed = m.groups()
             start_date = f"{sy}.{sm}.{sd}"
             end_date = f"{ey}.{em}.{ed}"
-            if end_date < END_DATE_CUTOFF:
+            if not end_date_eligible(end_date):
+                skipped_end += 1
+                continue
+            venue = tag(b, "rights") or tag(b, "venue") or ""
+            if not venue_sync_allowed(venue, title):
+                skipped_venue += 1
                 continue
             key = (title, start_date, end_date)
             if key in seen:
@@ -70,7 +77,7 @@ def fetch_exhibitions(api_key: str) -> list[dict]:
             out.append(
                 {
                     "source": "kcisa_moca",
-                    "venue_name_fallback": tag(b, "rights") or tag(b, "venue") or "장소 정보 없음",
+                    "venue_name_fallback": venue or "장소 정보 없음",
                     "title": title,
                     "start_date": start_date,
                     "end_date": end_date,
@@ -84,6 +91,11 @@ def fetch_exhibitions(api_key: str) -> list[dict]:
         if page_no * PAGE_SIZE >= total:
             break
         page_no += 1
+    if skipped_end or skipped_venue:
+        print(
+            f"filtered out: end_date<{END_DATE_MIN} → {skipped_end}, venue blocklist → {skipped_venue}",
+            file=sys.stderr,
+        )
     return out
 
 
@@ -120,7 +132,7 @@ def main() -> None:
         sys.exit(1)
 
     rows = fetch_exhibitions(api_key)
-    print(f"fetched {len(rows)} exhibitions (end_date >= {END_DATE_CUTOFF}, deduped by title+dates)")
+    print(f"fetched {len(rows)} exhibitions (end_date >= {END_DATE_MIN}, venue filter, deduped)")
 
     sb_request("DELETE", "/rest/v1/exhibitions?source=eq.kcisa_moca", sb_url, sb_key)
     inserted = 0
