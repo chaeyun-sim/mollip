@@ -1,1 +1,1 @@
-export const SERVICE_NAME = 'aaa'
+export const SERVICE_NAME = 'mollip'
