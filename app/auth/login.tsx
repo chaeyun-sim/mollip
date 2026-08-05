@@ -4,12 +4,20 @@ import * as Haptics from 'expo-haptics';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useCallback, useState } from 'react';
-import { ActivityIndicator, Platform, Pressable, StyleSheet, Text, View } from 'react-native';
+import {
+	ActivityIndicator,
+	Platform,
+	Pressable,
+	StyleSheet,
+	Text,
+	View,
+} from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { SocialPill } from '@/src/components/auth/SocialPill';
 import { SERVICE_NAME } from '@/src/constants/service-name';
 import { signInWithApple, signInWithKakao } from '@/src/utils/authOAuth';
 import { supabase } from '@/src/utils/supabase';
+import { useAuthStore } from '@/src/store/authStore';
 
 function safeReturnTo(raw: string | string[] | undefined): string {
 	const value = Array.isArray(raw) ? raw[0] : raw;
@@ -23,6 +31,7 @@ export default function LoginScreen() {
 	const { returnTo } = useLocalSearchParams<{ returnTo?: string }>();
 	const destination = safeReturnTo(returnTo);
 
+	const setOnboardingCompleted = useAuthStore((s) => s.setOnboardingCompleted);
 	const [busy, setBusy] = useState<'kakao' | 'apple' | null>(null);
 	const [error, setError] = useState<string | null>(null);
 
@@ -38,14 +47,17 @@ export default function LoginScreen() {
 				.eq('id', user.id)
 				.single();
 
-			if (profile && !profile.onboarding_completed) {
+			const completed = profile?.onboarding_completed ?? false;
+			setOnboardingCompleted(completed);
+
+			if (!completed) {
 				router.replace('/onboarding' as never);
 				return;
 			}
 		}
 
 		router.replace(destination as never);
-	}, [router, destination]);
+	}, [router, destination, setOnboardingCompleted]);
 
 	const run = async (provider: 'kakao' | 'apple') => {
 		if (busy) return;
@@ -100,9 +112,7 @@ export default function LoginScreen() {
 						>
 							{SERVICE_NAME}
 						</Text>
-						<Text
-							className='text-[15px] leading-[22px] text-[#6B6360] text-center max-w-[280px] font-pretendard-regular'
-						>
+						<Text className='text-[15px] leading-[22px] text-[#6B6360] text-center max-w-[280px] font-pretendard-regular'>
 							{`예술에 몰입하는 가장 조용한 방법`}
 						</Text>
 					</View>
@@ -116,10 +126,7 @@ export default function LoginScreen() {
 							onPress={() => run('kakao')}
 							icon={
 								<View className='bg-[#191919] rounded px-1 py-0.5'>
-									<Text
-										className='text-[8px] text-[#FEE500] tracking-[0.2px]'
-										style={{ fontFamily: 'Pretendard-Bold' }}
-									>
+									<Text className='text-[8px] text-[#FEE500] tracking-[0.2px] font-pretendard-bold'>
 										TALK
 									</Text>
 								</View>
@@ -138,20 +145,14 @@ export default function LoginScreen() {
 						) : null}
 
 						{error ? (
-							<Text
-								className='text-[13px] text-[#DC2626] text-center mt-1'
-								style={{ fontFamily: 'Pretendard-Regular' }}
-							>
+							<Text className='text-[13px] text-[#DC2626] text-center mt-1 font-pretendard-regular'>
 								{error}
 							</Text>
 						) : null}
 
-						<Text
-							className='text-[11px] leading-[16px] text-[#A8A29E] text-center mt-2 px-2'
-							style={{ fontFamily: 'Pretendard-Regular' }}
-						>
-							로그인 시 서비스 이용에 필요한 계정 정보만 저장됩니다. 둘러보기·지도·가이드는 로그인
-							없이 이용할 수 있어요.
+						<Text className='text-[11px] leading-[16px] text-[#A8A29E] text-center mt-2 px-2 font-pretendard-regular'>
+							로그인 시 서비스 이용에 필요한 계정 정보만 저장됩니다.
+							둘러보기·지도·가이드는 로그인 없이 이용할 수 있어요.
 						</Text>
 					</View>
 				</View>

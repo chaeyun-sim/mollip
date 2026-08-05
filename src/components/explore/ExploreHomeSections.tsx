@@ -12,7 +12,6 @@ import {
 } from 'react-native';
 
 import { EmptyImagePlaceholder } from '@/src/components/common/EmptyImagePlaceholder';
-import type { CultureExhibitionItem } from '@/src/hooks/useCultureExhibitions';
 
 const GRID_GAP = 12;
 
@@ -54,38 +53,30 @@ export function FeaturedExhibitionHero({
 				{thumbnail ? (
 					<ImageBackground
 						source={{ uri: thumbnail }}
-						style={{ height: 300, justifyContent: 'flex-end' }}
+						className='h-[300px] justify-end'
 						imageStyle={{ resizeMode: 'cover' }}
 					>
 						<LinearGradient
 							colors={['transparent', 'rgba(12,10,9,0.55)', 'rgba(12,10,9,0.92)']}
 							style={{ paddingHorizontal: 22, paddingBottom: 22, paddingTop: 80 }}
 						>
-							<Text
-								className='text-[11px] text-white/80 mb-2'
-								style={{ fontFamily: 'Pretendard-SemiBold', letterSpacing: 1.8 }}
-							>
+							<Text className='text-[11px] text-white/80 mb-2 font-pretendard-semibold leading-[1.8px]'>
 								오늘의 전시
 							</Text>
 							<Text
-								className='text-white text-[26px] leading-[32px] mb-2'
-								style={{ fontFamily: 'Hahmlet_700Bold' }}
+								className='text-white text-[26px] leading-[32px] mb-2 font-hahmlet-bold'
 								numberOfLines={2}
 							>
 								{title}
 							</Text>
 							<Text
-								className='text-white/75 text-[13px] mb-4'
-								style={{ fontFamily: 'Pretendard-Regular' }}
+								className='text-white/75 text-[13px] mb-4 font-pretendard-regular'
 								numberOfLines={1}
 							>
 								{venue}
 							</Text>
 							<View className='flex-row items-center gap-1.5 self-start rounded-full bg-white/95 px-4 py-2'>
-								<Text
-									className='text-[#1C1917] text-[13px]'
-									style={{ fontFamily: 'Pretendard-SemiBold' }}
-								>
+								<Text className='text-[#1C1917] text-[13px] font-pretendard-semibold'>
 									자세히 보기
 								</Text>
 								<Ionicons name='arrow-forward' size={14} color='#1C1917' />
@@ -96,16 +87,12 @@ export function FeaturedExhibitionHero({
 					<View className='h-[300px] bg-[#E5E1D8] items-center justify-center px-6'>
 						<EmptyImagePlaceholder iconSize={100} className='mb-4' />
 						<Text
-							className='text-[#1C1917] text-[22px] text-center'
-							style={{ fontFamily: 'Hahmlet_700Bold' }}
+							className='text-[#1C1917] text-[22px] text-center font-hahmlet-bold'
 							numberOfLines={2}
 						>
 							{title}
 						</Text>
-						<Text
-							className='text-[#78716C] text-[13px] mt-2 text-center'
-							style={{ fontFamily: 'Pretendard-Regular' }}
-						>
+						<Text className='text-[#78716C] text-[13px] mt-2 text-center font-pretendard-regular'>
 							{venue}
 						</Text>
 					</View>
@@ -123,21 +110,25 @@ interface SectionTitleProps {
 export function ExploreSectionTitle({ eyebrow, title }: SectionTitleProps) {
 	return (
 		<View className='mb-4'>
-			<Text
-				className='text-[11px] text-[#A8A29E] mb-1'
-				style={{ fontFamily: 'Pretendard-SemiBold', letterSpacing: 1.6 }}
-			>
+			<Text className='text-[11px] text-[#A8A29E] mb-1 font-pretendard-semibold leading-[1.6px]'>
 				{eyebrow}
 			</Text>
-			<Text className='text-[#1C1917] text-[20px]' style={{ fontFamily: 'Hahmlet_600SemiBold' }}>
+			<Text className='text-[#1C1917] text-[20px] font-hahmlet-semibold'>
 				{title}
 			</Text>
 		</View>
 	);
 }
 
+export interface RecommendableItem {
+	id: string;
+	title: string;
+	venue: string;
+	thumbnail: string | null;
+}
+
 interface RecommendedExhibitionsProps {
-	items: CultureExhibitionItem[];
+	items: RecommendableItem[];
 	onPress: (id: string) => void;
 }
 
@@ -154,7 +145,9 @@ function PosterFrame({
 	borderRadius?: number;
 	iconSize?: number;
 }) {
+	const [imgError, setImgError] = useState(false);
 	const sizeStyle = { width, height };
+	const showImage = !!thumbnail && !imgError;
 
 	return (
 		<View
@@ -168,11 +161,12 @@ function PosterFrame({
 				shadowOffset: { width: 0, height: 3 },
 			}}
 		>
-			{thumbnail ? (
+			{showImage ? (
 				<Image
 					source={{ uri: thumbnail }}
 					style={{ ...sizeStyle, borderRadius }}
 					resizeMode='cover'
+					onError={() => setImgError(true)}
 				/>
 			) : (
 				<EmptyImagePlaceholder
@@ -191,7 +185,7 @@ function GridExhibitionCell({
 	gridHeight,
 	onPress,
 }: {
-	item: CultureExhibitionItem;
+	item: RecommendableItem;
 	colWidth: number;
 	gridHeight: number;
 	onPress: (id: string) => void;
@@ -215,25 +209,25 @@ function GridExhibitionCell({
 			/>
 			<View className='flex-1'>
 				<Text
-				className='mt-2 text-[#1C1917] text-[13px] leading-[18px]'
-				style={{ fontFamily: 'Pretendard-SemiBold', width: colWidth }}
-			>
-				{item.title}
-			</Text>
-			<Text
-				numberOfLines={1}
-				className='text-[#A8A29E] text-[11px] mt-0.5'
-				style={{ fontFamily: 'Pretendard-Regular' }}
-			>
-				{item.venue}
-			</Text>
+					className='mt-2 text-[#1C1917] text-[13px] leading-[18px] font-pretendard-semibold'
+					style={{ width: colWidth }}
+				>
+					{item.title}
+				</Text>
+				<Text
+					numberOfLines={1}
+					className='text-[#A8A29E] text-[11px] mt-0.5 font-pretendard-regular'
+					style={{ width: colWidth }}
+				>
+					{item.venue}
+				</Text>
 			</View>
 		</Pressable>
 	);
 }
 
-function pairGridRows(items: CultureExhibitionItem[]): CultureExhibitionItem[][] {
-	const rows: CultureExhibitionItem[][] = [];
+function pairGridRows(items: RecommendableItem[]): RecommendableItem[][] {
+	const rows: RecommendableItem[][] = [];
 	for (let i = 0; i < items.length; i += 2) {
 		rows.push(items.slice(i, i + 2));
 	}
@@ -241,7 +235,10 @@ function pairGridRows(items: CultureExhibitionItem[]): CultureExhibitionItem[][]
 }
 
 /** 추천 전시: 1장 full-width + 나머지 최대 4장 2열 그리드 */
-export function RecommendedExhibitions({ items, onPress }: RecommendedExhibitionsProps) {
+export function RecommendedExhibitions({
+	items,
+	onPress,
+}: RecommendedExhibitionsProps) {
 	const [containerWidth, setContainerWidth] = useState(0);
 	const handleLayout = (e: LayoutChangeEvent) => {
 		const w = e.nativeEvent.layout.width;
@@ -259,7 +256,7 @@ export function RecommendedExhibitions({ items, onPress }: RecommendedExhibition
 	const leadHeight = containerWidth > 0 ? Math.round(containerWidth * 0.56) : 0;
 
 	return (
-		<View style={{ gap: 16 }} onLayout={handleLayout}>
+		<View className='gap-4' onLayout={handleLayout}>
 			<Pressable
 				onPress={() => {
 					Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -278,15 +275,13 @@ export function RecommendedExhibitions({ items, onPress }: RecommendedExhibition
 				/>
 				<Text
 					numberOfLines={2}
-					className='mt-3 text-[#1C1917] text-[16px] leading-[22px]'
-					style={{ fontFamily: 'Pretendard-SemiBold' }}
+					className='mt-3 text-[#1C1917] text-[16px] leading-[22px] font-pretendard-semibold'
 				>
 					{lead.title}
 				</Text>
 				<Text
 					numberOfLines={1}
-					className='text-[#A8A29E] text-[12px] mt-1'
-					style={{ fontFamily: 'Pretendard-Regular' }}
+					className='text-[#A8A29E] text-[12px] mt-1 font-pretendard-regular'
 				>
 					{lead.venue}
 				</Text>
@@ -297,11 +292,8 @@ export function RecommendedExhibitions({ items, onPress }: RecommendedExhibition
 					{gridRows.map((row, rowIndex) => (
 						<View
 							key={`row-${rowIndex}`}
-							style={{
-								flexDirection: 'row',
-								gap: GRID_GAP,
-								alignItems: 'flex-start',
-							}}
+							className='flex-row items-start'
+							style={{ gap: GRID_GAP + 8 }}
 						>
 							{row.map((item) => (
 								<GridExhibitionCell

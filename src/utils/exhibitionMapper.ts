@@ -96,7 +96,7 @@ export function mapExhibitionRowToExhibition(
 		closedDays,
 		admission,
 		admissionFree: isAdmissionFree(admission),
-		ticketUrl: row.ticket_url || row.web_site || undefined,
+		ticketUrl: row.ticket_url || undefined,
 		phone: museum?.phone?.trim() || institutionInfo?.phone,
 		artworks: [],
 		relatedExhibitionIds: [],

@@ -46,19 +46,29 @@ export default function RootLayout() {
 
 	const hasHydrated = useImmersiveStore((s) => s._hasHydrated);
 	const authLoading = useAuthStore((s) => s.isLoading);
+	const user = useAuthStore((s) => s.user);
+	const onboardingCompleted = useAuthStore((s) => s.onboardingCompleted);
 	const isImmersive = useImmersiveStore((s) => s.isImmersiveMode);
 	const exhibitionId = useImmersiveStore((s) => s.exhibitionId);
 	const router = useRouter();
 
 	useEffect(() => {
 		if (!fontsLoaded || !hasHydrated || authLoading) return;
+
+		// 로그인은 됐지만 온보딩 미완료 → 온보딩으로 보낸다
+		// (앱 종료 후 재시작, 또는 온보딩 중 앱을 끈 경우)
+		if (user && onboardingCompleted === false) {
+			router.replace('/onboarding');
+			SplashScreen.hideAsync();
+			return;
+		}
+
 		// 몰입 모드 복원이 있으면 replace 먼저, 그다음 스플래시 해제
-		// → 스플래시가 가리는 동안 이동 완료되어 플래시 없음
 		if (isImmersive && exhibitionId) {
 			router.push(`/(guide)/immersive/${exhibitionId}`);
 		}
 		SplashScreen.hideAsync();
-	}, [fontsLoaded, hasHydrated, authLoading]);
+	}, [fontsLoaded, hasHydrated, authLoading, user, onboardingCompleted]);
 
 	if (!fontsLoaded) return null;
 
@@ -76,6 +86,10 @@ export default function RootLayout() {
 							<Stack.Screen name='diary/[date]' options={{ headerShown: false }} />
 							<Stack.Screen
 								name='onboarding'
+								options={{ headerShown: false, gestureEnabled: false }}
+							/>
+							<Stack.Screen
+								name='onboarding/location'
 								options={{ headerShown: false, gestureEnabled: false }}
 							/>
 						</Stack>

@@ -15,14 +15,11 @@ import {
 	ExploreSectionTitle,
 	FeaturedExhibitionHero,
 	RecommendedExhibitions,
+	type RecommendableItem,
 } from '@/src/components/explore/ExploreHomeSections';
 import { Screen } from '@/src/components/layout/Screen';
-import {
-	useCultureExhibitions,
-} from '@/src/hooks/useCultureExhibitions';
-import {
-	useKcisaExhibitions,
-} from '@/src/hooks/useKcisaExhibitions';
+import { useCultureExhibitions } from '@/src/hooks/useCultureExhibitions';
+import { useKcisaExhibitions } from '@/src/hooks/useKcisaExhibitions';
 
 /** 추천 전시: 1장 hero + 그리드 4장 */
 const RECOMMENDED_TOTAL = 5;
@@ -72,10 +69,16 @@ export default function ExploreScreen() {
 		return items.slice(1);
 	}, [items, featured]);
 
-	const recommendedItems = useMemo(() => {
-		const list = cultureList.length > 0 ? cultureList : items;
-		return list.slice(0, RECOMMENDED_TOTAL);
-	}, [cultureList, items]);
+	const recommendedItems = useMemo((): RecommendableItem[] => {
+		const culturePart = cultureList.slice(0, RECOMMENDED_TOTAL);
+		if (culturePart.length >= RECOMMENDED_TOTAL) return culturePart;
+		// culture가 부족하면 kcisa 캐러셀 항목으로 채움
+		const kcisaPart = kcisaCarousel.slice(
+			0,
+			RECOMMENDED_TOTAL - culturePart.length,
+		);
+		return [...culturePart, ...kcisaPart];
+	}, [cultureList, kcisaCarousel]);
 
 	return (
 		<Screen variant='warm' className='bg-[#F8F6F2]'>
@@ -135,10 +138,7 @@ export default function ExploreScreen() {
 								</View>
 							) : kcisaStatus === 'error' ? (
 								<View className='items-center justify-center py-8 gap-2'>
-									<Text
-										className='text-[#A8A29E] text-[13px]'
-										style={{ fontFamily: 'Pretendard-Regular' }}
-									>
+									<Text className='text-[#A8A29E] text-[13px] font-pretendard-regular'>
 										전시 정보를 불러오지 못했어요
 									</Text>
 									<Pressable
@@ -146,23 +146,17 @@ export default function ExploreScreen() {
 										accessibilityLabel='다시 시도'
 										accessibilityRole='button'
 									>
-										<Text
-											className='text-[#1C1917] text-[13px]'
-											style={{ fontFamily: 'Pretendard-SemiBold' }}
-										>
+										<Text className='text-[#1C1917] text-[13px] font-pretendard-semibold'>
 											다시 시도
 										</Text>
 									</Pressable>
 								</View>
 							) : carousel.length === 0 ? (
-								<Text
-									className='text-[#A8A29E] text-[13px]'
-									style={{ fontFamily: 'Pretendard-Regular' }}
-								>
+								<Text className='text-[#A8A29E] text-[13px] font-pretendard-regular'>
 									진행 중인 전시가 없어요
 								</Text>
 							) : (
-								<View style={{ marginHorizontal: -24 }}>
+								<View className='-mx-6'>
 									<ScrollView
 										horizontal
 										showsHorizontalScrollIndicator={false}
@@ -174,7 +168,11 @@ export default function ExploreScreen() {
 										}}
 									>
 										{carousel.map((item) => (
-											<KcisaExhibitionCard key={item.id} item={item} onPress={openExhibition} />
+											<KcisaExhibitionCard
+												key={item.id}
+												item={item}
+												onPress={openExhibition}
+											/>
 										))}
 									</ScrollView>
 								</View>
@@ -191,21 +189,28 @@ export default function ExploreScreen() {
 						</View>
 					) : status === 'error' ? (
 						<View className='items-center justify-center py-16 gap-2'>
-							<Text className='text-[#A8A29E] text-[13px]' style={{ fontFamily: 'Pretendard-Regular' }}>
+							<Text className='text-[#A8A29E] text-[13px] font-pretendard-regular'>
 								전시 정보를 불러오지 못했어요
 							</Text>
-							<Pressable onPress={refetch} accessibilityLabel='다시 시도' accessibilityRole='button'>
-								<Text className='text-[#1C1917] text-[13px]' style={{ fontFamily: 'Pretendard-SemiBold' }}>
+							<Pressable
+								onPress={refetch}
+								accessibilityLabel='다시 시도'
+								accessibilityRole='button'
+							>
+								<Text className='text-[#1C1917] text-[13px] font-pretendard-semibold'>
 									다시 시도
 								</Text>
 							</Pressable>
 						</View>
 					) : recommendedItems.length === 0 ? (
-						<Text className='text-[#A8A29E] text-[13px]' style={{ fontFamily: 'Pretendard-Regular' }}>
+						<Text className='text-[#A8A29E] text-[13px] font-pretendard-regular'>
 							추천할 전시가 없어요
 						</Text>
 					) : (
-						<RecommendedExhibitions items={recommendedItems} onPress={openExhibition} />
+						<RecommendedExhibitions
+							items={recommendedItems}
+							onPress={openExhibition}
+						/>
 					)}
 				</View>
 			</ScrollView>

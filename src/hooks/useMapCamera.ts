@@ -14,7 +14,12 @@ export function useMapCamera() {
 
 	useEffect(() => {
 		(async () => {
-			const { status } = await Location.requestForegroundPermissionsAsync();
+			// 온보딩에서 이미 요청했으므로 현재 상태만 확인.
+			// undetermined면(온보딩 건너뛴 기존 사용자 등) 한 번 요청한다.
+			let { status } = await Location.getForegroundPermissionsAsync();
+			if (status === 'undetermined') {
+				({ status } = await Location.requestForegroundPermissionsAsync());
+			}
 			if (status !== 'granted') return;
 			const loc = await Location.getCurrentPositionAsync({});
 			const coord = { latitude: loc.coords.latitude, longitude: loc.coords.longitude };

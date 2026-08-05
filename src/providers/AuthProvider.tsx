@@ -12,15 +12,30 @@ type Props = {
 export function AuthProvider({ children }: Props) {
 	const setAuth = useAuthStore((s) => s.setAuth);
 	const setLoading = useAuthStore((s) => s.setLoading);
+	const setOnboardingCompleted = useAuthStore((s) => s.setOnboardingCompleted);
 
 	useEffect(() => {
 		let mounted = true;
+
+		const fetchOnboardingStatus = async (userId: string) => {
+			const { data } = await supabase
+				.from('profiles')
+				.select('onboarding_completed')
+				.eq('id', userId)
+				.single();
+			if (mounted && data) {
+				setOnboardingCompleted(data.onboarding_completed ?? false);
+			}
+		};
 
 		const init = async () => {
 			const { data, error } = await supabase.auth.getSession();
 			if (!mounted) return;
 			if (error) console.warn('[auth] getSession', error.message);
 			setAuth(data.session ?? null);
+			if (data.session?.user) {
+				await fetchOnboardingStatus(data.session.user.id);
+			}
 			setLoading(false);
 		};
 

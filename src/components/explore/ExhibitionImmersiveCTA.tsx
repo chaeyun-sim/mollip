@@ -1,5 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
+import * as Linking from 'expo-linking';
 import { Pressable, Text } from 'react-native';
 import Animated, {
 	useAnimatedStyle,
@@ -7,15 +8,20 @@ import Animated, {
 	withTiming,
 } from 'react-native-reanimated';
 
-interface ExhibitionImmersiveCTAProps {
-	onPress: () => void;
+interface ExhibitionTicketCTAProps {
+	ticketUrl: string;
 }
 
-export function ExhibitionImmersiveCTA({ onPress }: ExhibitionImmersiveCTAProps) {
+export function ExhibitionTicketCTA({ ticketUrl }: ExhibitionTicketCTAProps) {
 	const scale = useSharedValue(1);
 	const animatedStyle = useAnimatedStyle(() => ({
 		transform: [{ scale: scale.value }],
 	}));
+
+	const handlePress = () => {
+		Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+		void Linking.openURL(ticketUrl);
+	};
 
 	return (
 		<Pressable
@@ -25,19 +31,16 @@ export function ExhibitionImmersiveCTA({ onPress }: ExhibitionImmersiveCTAProps)
 			onPressOut={() => {
 				scale.value = withTiming(1, { duration: 150 });
 			}}
-			onPress={() => {
-				Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-				onPress();
-			}}
-			accessibilityLabel='몰입하기, 오디오 가이드 시작'
+			onPress={handlePress}
+			accessibilityLabel='예매하기'
 			accessibilityRole='button'
 		>
 			<Animated.View
 				style={[animatedStyle, { backgroundColor: '#1C1917' }]}
 				className='mx-5 my-3 rounded-2xl py-[18px] flex-row items-center justify-center gap-2.5'
 			>
-				<Ionicons name='headset' size={20} color='white' />
-				<Text className='font-pretendard-bold text-[16px] text-white'>몰입하기</Text>
+				<Ionicons name='ticket-outline' size={20} color='white' />
+				<Text className='font-pretendard-bold text-[16px] text-white'>예매하기</Text>
 			</Animated.View>
 		</Pressable>
 	);
