@@ -22,81 +22,81 @@ const NAVER_CLIENT_ID = process.env.EXPO_PUBLIC_NAVER_CLIENT_ID;
 console.log('[app.config.js] NAVER_CLIENT_ID:', NAVER_CLIENT_ID ? '✓ 로드됨' : '✗ undefined');
 
 module.exports = {
-  expo: {
-    name: 'aaa',
-    slug: 'aaa',
-    scheme: 'aaa',
-    owner: 'bysimune',
-    version: '1.0.0',
-    orientation: 'portrait',
-    icon: './assets/icon.png',
-    userInterfaceStyle: 'light',
-    ios: {
-      supportsTablet: true,
-      bundleIdentifier: 'com.simune.aaa',
-      usesAppleSignIn: true,
-      infoPlist: {
-        NSPhotoLibraryUsageDescription: '사진 라이브러리에 접근합니다.',
-        NSCameraUsageDescription: '카메라를 사용합니다.',
-        NSMicrophoneUsageDescription: '마이크를 사용합니다.',
-        NSLocationWhenInUseUsageDescription:
-          '주변 전시관을 지도에 표시하기 위해 위치 정보를 사용합니다.',
-        NSLocationAlwaysAndWhenInUseUsageDescription:
-          '주변 전시관을 지도에 표시하기 위해 위치 정보를 사용합니다.',
-        NMFClientId: NAVER_CLIENT_ID,
-        // 문화포털(culture.go.kr) 전시 썸네일이 HTTP로만 제공되어 ATS 예외 필요
-        NSAppTransportSecurity: {
-          NSExceptionDomains: {
-            'culture.go.kr': {
-              NSIncludesSubdomains: true,
-              NSExceptionAllowsInsecureHTTPLoads: true,
-            },
-          },
-        },
-      },
-    },
-    android: {
-      adaptiveIcon: {
-        backgroundColor: '#E6F4FE',
-        foregroundImage: './assets/android-icon-foreground.png',
-        backgroundImage: './assets/android-icon-background.png',
-        monochromeImage: './assets/android-icon-monochrome.png',
-      },
-      predictiveBackGestureEnabled: false,
-    },
-    web: {
-      favicon: './assets/favicon.png',
-    },
-    plugins: [
-      [
-        '@mj-studio/react-native-naver-map',
-        {
-          client_id: NAVER_CLIENT_ID,
-        },
-      ],
-      'expo-router',
-      'expo-status-bar',
-      [
-        'expo-image-picker',
-        {
-          photosPermission: '사진 라이브러리에 접근합니다.',
-          cameraPermission: '카메라를 사용합니다.',
-        },
-      ],
-      'expo-font',
-      'expo-splash-screen',
-      'expo-apple-authentication',
-      // NMFClientId를 마지막에 강제 주입 (다른 플러그인이 덮어쓰는 것 방지)
-      config =>
-        withInfoPlist(config, c => {
-          c.modResults.NMFClientId = NAVER_CLIENT_ID;
-          return c;
-        }),
-    ],
-    extra: {
-      eas: {
-        projectId: '1d491184-25a6-4d90-aa1e-fe92374c6962',
-      },
-    },
-  },
+	expo: {
+		name: 'mollip',
+		slug: 'mollip',
+		scheme: 'mollip',
+		owner: 'bysimune',
+		version: '1.0.0',
+		orientation: 'portrait',
+		icon: './assets/icon.png',
+		userInterfaceStyle: 'light',
+		ios: {
+			supportsTablet: true,
+			bundleIdentifier: 'com.simune.aaa',
+			usesAppleSignIn: true,
+			infoPlist: {
+				NSPhotoLibraryUsageDescription: '사진 라이브러리에 접근합니다.',
+				NSCameraUsageDescription: '카메라를 사용합니다.',
+				NSMicrophoneUsageDescription: '마이크를 사용합니다.',
+				NSLocationWhenInUseUsageDescription:
+					'주변 전시관을 지도에 표시하기 위해 위치 정보를 사용합니다.',
+				NSLocationAlwaysAndWhenInUseUsageDescription:
+					'주변 전시관을 지도에 표시하기 위해 위치 정보를 사용합니다.',
+				NMFClientId: NAVER_CLIENT_ID,
+				// 문화포털(culture.go.kr) 전시 썸네일이 HTTP로만 제공되어 ATS 예외 필요
+				NSAppTransportSecurity: {
+					NSExceptionDomains: {
+						'culture.go.kr': {
+							NSIncludesSubdomains: true,
+							NSExceptionAllowsInsecureHTTPLoads: true,
+						},
+					},
+				},
+			},
+		},
+		android: {
+			adaptiveIcon: {
+				backgroundColor: '#E6F4FE',
+				foregroundImage: './assets/android-icon-foreground.png',
+				backgroundImage: './assets/android-icon-background.png',
+				monochromeImage: './assets/android-icon-monochrome.png',
+			},
+			predictiveBackGestureEnabled: false,
+		},
+		web: {
+			favicon: './assets/favicon.png',
+		},
+		plugins: [
+			[
+				'@mj-studio/react-native-naver-map',
+				{
+					client_id: NAVER_CLIENT_ID,
+				},
+			],
+			'expo-router',
+			'expo-status-bar',
+			[
+				'expo-image-picker',
+				{
+					photosPermission: '사진 라이브러리에 접근합니다.',
+					cameraPermission: '카메라를 사용합니다.',
+				},
+			],
+			'expo-font',
+			'expo-splash-screen',
+			'expo-apple-authentication',
+			// NMFClientId를 마지막에 강제 주입 (다른 플러그인이 덮어쓰는 것 방지)
+			(config) =>
+				withInfoPlist(config, (c) => {
+					c.modResults.NMFClientId = NAVER_CLIENT_ID;
+					return c;
+				}),
+		],
+		extra: {
+			eas: {
+				projectId: '1d491184-25a6-4d90-aa1e-fe92374c6962',
+			},
+		},
+	},
 };
