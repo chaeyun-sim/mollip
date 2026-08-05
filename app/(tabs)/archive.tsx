@@ -110,6 +110,7 @@ export default function ArchiveScreen() {
 
 			<ScrollView
 				showsVerticalScrollIndicator={false}
+				bounces={false}
 				contentContainerStyle={{ paddingBottom: 48, alignItems: 'stretch' }}
 			>
 				<ArchiveSummaryHero stats={stats} />

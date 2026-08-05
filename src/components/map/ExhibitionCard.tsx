@@ -41,10 +41,7 @@ export function ExhibitionCard({ ex, status, onPress }: ExhibitionCardProps) {
 				className='flex-row gap-3 rounded-2xl overflow-hidden bg-black/[0.03] p-2.5'
 			>
 				{/* 갤러리 엽서처럼 — 원본 비율을 자르지 않고 정사각 마운트 안에 담는다 */}
-				<View
-					className='rounded-xl items-center justify-center overflow-hidden w-[88px] h-[88px]'
-					style={{ backgroundColor: '#FAFAF8' }}
-				>
+				<View className='rounded-xl items-center justify-center overflow-hidden w-[88px] h-[88px] bg-[#FAFAF8]'>
 					{ex.heroImageUri ? (
 						<Image
 							source={{ uri: ex.heroImageUri }}
@@ -68,7 +65,10 @@ export function ExhibitionCard({ ex, status, onPress }: ExhibitionCardProps) {
 					<View className='flex-row items-center gap-1.5'>
 						<View
 							className='w-[5px] h-[5px] rounded-full'
-							style={{ backgroundColor: status === 'active' ? ex.posterColor : 'rgba(0,0,0,0.35)' }}
+							style={{
+								backgroundColor:
+									status === 'active' ? ex.posterColor : 'rgba(0,0,0,0.35)',
+							}}
 						/>
 						<Text
 							className={cn(

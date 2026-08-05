@@ -1,14 +1,20 @@
 import { Pressable, Text, View } from 'react-native';
 
 import { ArchiveSectionTitle } from '@/src/components/archive/ArchiveSectionTitle';
-import { ARCHIVE_INK, ARCHIVE_MUTED } from '@/src/components/archive/archivePalette';
+import {
+	ARCHIVE_INK,
+	ARCHIVE_MUTED,
+} from '@/src/components/archive/archivePalette';
 
 interface ArchiveDiaryEmptyProps {
 	onExplore: () => void;
 	onMap: () => void;
 }
 
-export function ArchiveDiaryEmpty({ onExplore, onMap }: ArchiveDiaryEmptyProps) {
+export function ArchiveDiaryEmpty({
+	onExplore,
+	onMap,
+}: ArchiveDiaryEmptyProps) {
 	return (
 		<View className='border border-dashed border-[#D6D3D1] rounded-[24px] px-5 py-8'>
 			<ArchiveSectionTitle
@@ -25,7 +31,7 @@ export function ArchiveDiaryEmpty({ onExplore, onMap }: ArchiveDiaryEmptyProps) 
 					backgroundColor: ARCHIVE_INK,
 				})}
 			>
-				<Text className='text-white text-[14px]' style={{ fontFamily: 'Pretendard-SemiBold' }}>
+				<Text className='text-white text-[14px] font-pretendard-semibold'>
 					전시 둘러보기
 				</Text>
 			</Pressable>
@@ -37,8 +43,8 @@ export function ArchiveDiaryEmpty({ onExplore, onMap }: ArchiveDiaryEmptyProps) 
 				style={({ pressed }) => ({ opacity: pressed ? 0.9 : 1 })}
 			>
 				<Text
-					className='text-[14px]'
-					style={{ fontFamily: 'Pretendard-SemiBold', color: ARCHIVE_INK }}
+					className='text-[14px] font-pretendard-semibold'
+					style={{ color: ARCHIVE_INK }}
 				>
 					지도에서 찾기
 				</Text>

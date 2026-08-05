@@ -1,3 +1,4 @@
+import { cn } from '@/src/lib/cn';
 import * as Haptics from 'expo-haptics';
 import { Pressable, Text, View } from 'react-native';
 
@@ -19,11 +20,10 @@ export function SettingsPillGroup<T extends string | number>({
 }: SettingsPillGroupProps<T>) {
 	return (
 		<View
-			className='flex-row gap-1 rounded-2xl p-1'
-			style={{
-				backgroundColor: 'rgba(28,25,23,0.06)',
-				...(equalWidth ? { width: '100%' } : null),
-			}}
+			className={cn(
+				'flex-row gap-1 rounded-2xl p-1 bg-[#1c19170f]',
+				equalWidth ? 'w-full' : null,
+			)}
 		>
 			{options.map((opt) => {
 				const selected = value === opt.value;
@@ -58,11 +58,11 @@ export function SettingsPillGroup<T extends string | number>({
 					>
 						<Text
 							numberOfLines={1}
-							style={{
-								fontFamily: 'Pretendard-SemiBold',
-								fontSize,
-								color: selected ? '#FFFFFF' : '#A8A29E',
-							}}
+							className={cn(
+								'font-pretendard-semibold',
+								selected ? 'text-white' : 'text-[#A8A29E]',
+							)}
+							style={{ fontSize }}
 						>
 							{opt.label}
 						</Text>

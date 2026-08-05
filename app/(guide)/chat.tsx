@@ -104,12 +104,7 @@ export default function ChatScreen() {
 		const isUser = item.role === 'user';
 		return (
 			<View className={`mb-4 ${isUser ? 'items-end' : 'items-start'}`}>
-				{!isUser && (
-					<Image
-						source={DOCENT_AVATAR}
-						style={{ width: 28, height: 28, marginBottom: 4 }}
-					/>
-				)}
+				{!isUser && <Image source={DOCENT_AVATAR} className='w-7 h-7 mb-1' />}
 				{item.isError ? (
 					<Pressable
 						className='flex-row items-center gap-2 px-4 py-3 rounded-2xl rounded-tl-sm bg-[#2a1a1a]'

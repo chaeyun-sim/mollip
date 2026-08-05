@@ -1,3 +1,4 @@
+import { cn } from '@/src/lib/cn';
 import * as Haptics from 'expo-haptics';
 import { useEffect, useState } from 'react';
 import { LayoutChangeEvent, Pressable, Text, View } from 'react-native';
@@ -51,14 +52,8 @@ export function ArchiveTabBar({ value, onChange }: ArchiveTabBarProps) {
 	return (
 		<View
 			onLayout={onTrackLayout}
-			style={{
-				width: '100%',
-				height: 44,
-				borderRadius: 22,
-				backgroundColor: TRACK,
-				flexDirection: 'row',
-				padding: 4,
-			}}
+			className='w-full h-[44px] rounded-[22px] flex-row px-1'
+			style={{ backgroundColor: TRACK }}
 		>
 			<Animated.View
 				pointerEvents='none'
@@ -91,24 +86,17 @@ export function ArchiveTabBar({ value, onChange }: ArchiveTabBarProps) {
 						accessibilityRole='tab'
 						accessibilityState={{ selected }}
 						accessibilityLabel={tab.label}
-						style={{
-							flex: 1,
-							flexBasis: 0,
-							alignItems: 'center',
-							justifyContent: 'center',
-							zIndex: 1,
-						}}
+						className='flex-1 flex-basis-0 items-center justify-center z-10'
 					>
 						<Text
 							numberOfLines={1}
 							adjustsFontSizeToFit
 							minimumFontScale={0.82}
-							style={{
-								fontFamily: selected ? 'Pretendard-SemiBold' : 'Pretendard-Regular',
-								fontSize: 14,
-								color: selected ? INK : MUTED,
-								paddingHorizontal: 6,
-							}}
+							className={cn(
+								'text-[14px] px-[6px]',
+								selected ? 'font-pretendard-semibold' : 'font-pretendard-regular',
+							)}
+							style={{ color: selected ? INK : MUTED }}
 						>
 							{tab.label}
 						</Text>

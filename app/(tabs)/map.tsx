@@ -118,9 +118,12 @@ export default function MapScreen() {
 		[selectedVenueName, dbVenues],
 	);
 
+	// 하위 미술관을 묶은 부모 venue(예: 예술의전당)는 exhibitions가 이미 useMapVenues에서
+	// 하위 미술관별로 채워져 있으므로 추가 API 조회 불필요 — 빈 이름/id를 전달해 쿼리를 건너뛴다.
+	const isGroupedVenue = Boolean(selectedVenue?.subVenues?.length);
 	const { exhibitions: apiExhibitions } = useVenueExhibitions(
-		selectedVenueName,
-		selectedVenue?.museumId,
+		isGroupedVenue ? null : selectedVenueName,
+		isGroupedVenue ? null : selectedVenue?.museumId,
 	);
 
 	const displayVenue = useMemo(() => {

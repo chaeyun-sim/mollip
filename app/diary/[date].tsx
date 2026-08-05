@@ -31,13 +31,15 @@ export default function DiaryScreen() {
 		return `${y}.${m}.${d} ${weekday}요일`;
 	}, [dateKey]);
 
-	const visit = useVisitStore(s => s.visits[dateKey]);
-	const setVisitMemo = useVisitStore(s => s.setVisitMemo);
-	const playlist = useImmersiveStore(s => s.playlist);
+	const visit = useVisitStore((s) => s.visits[dateKey]);
+	const setVisitMemo = useVisitStore((s) => s.setVisitMemo);
+	const playlist = useImmersiveStore((s) => s.playlist);
 	const [playlistVisible, setPlaylistVisible] = useState(false);
 
 	const visitExhibitionId = visit?.exhibitionId;
-	const { exhibition: visitExhibition } = useExhibitionDetail(visitExhibitionId ?? undefined);
+	const { exhibition: visitExhibition } = useExhibitionDetail(
+		visitExhibitionId ?? undefined,
+	);
 
 	const exhibition = useMemo(
 		() =>
@@ -59,14 +61,15 @@ export default function DiaryScreen() {
 	);
 
 	const listenedTitles = useMemo(() => {
-		if (visit && visit.listened.length > 0) return visit.listened.map(l => l.title);
-		if (playlist.length > 0) return playlist.map(p => p.title);
-		return exhibition.artworks.slice(0, 3).map(a => a.title);
+		if (visit && visit.listened.length > 0)
+			return visit.listened.map((l) => l.title);
+		if (playlist.length > 0) return playlist.map((p) => p.title);
+		return exhibition.artworks.slice(0, 3).map((a) => a.title);
 	}, [visit, playlist, exhibition]);
 
 	const listenedItems = useMemo((): ListenedItem[] => {
 		if (visit?.listened && visit.listened.length > 0) return visit.listened;
-		return listenedTitles.map(title => ({ title }));
+		return listenedTitles.map((title) => ({ title }));
 	}, [visit?.listened, listenedTitles]);
 
 	const memo = visit?.memo ?? '';
@@ -83,10 +86,7 @@ export default function DiaryScreen() {
 			<ScreenHeader>
 				<ScreenHeader.Back color='white' onPress={() => router.back()} />
 				<ScreenHeader.Center>
-					<Text
-						className='text-[16px] text-white'
-						style={{ fontFamily: 'Pretendard-SemiBold' }}
-					>
+					<Text className='text-[16px] text-white font-pretendard-semibold'>
 						{dateLabel}
 					</Text>
 				</ScreenHeader.Center>

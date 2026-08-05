@@ -44,29 +44,40 @@ export function DatePickerModal({
 
 	return (
 		<Modal visible={visible} transparent animationType='fade'>
-			<Pressable
-				className='flex-1 justify-end'
-				style={{ backgroundColor: 'rgba(0,0,0,0.35)' }}
-				onPress={onDismiss}
-			>
+			<Pressable className='flex-1 justify-end bg-black/35' onPress={onDismiss}>
 				<Pressable onPress={(e) => e.stopPropagation()}>
 					<Animated.View
 						className='bg-white rounded-t-3xl'
-						style={{ paddingBottom: insets.bottom + 8, transform: [{ translateY: slideAnim }] }}
+						style={{
+							paddingBottom: insets.bottom + 8,
+							transform: [{ translateY: slideAnim }],
+						}}
 					>
 						<View className='items-center pt-3 pb-1'>
 							<View className='w-9 h-1 rounded-full bg-black/15' />
 						</View>
 						<View className='flex-row justify-between items-center px-5 pt-2 pb-0'>
 							{onReset ? (
-								<Pressable onPress={() => { onReset(); onDismiss(); }}>
-									<Text className='text-sm font-pretendard-medium text-black/40'>{resetLabel}</Text>
+								<Pressable
+									onPress={() => {
+										onReset();
+										onDismiss();
+									}}
+								>
+									<Text className='text-sm font-pretendard-medium text-black/40'>
+										{resetLabel}
+									</Text>
 								</Pressable>
 							) : (
 								<View />
 							)}
-							<Pressable onPress={onDismiss} className='bg-black rounded-full px-4 py-1.5'>
-								<Text className='text-sm font-pretendard-semibold text-white'>{confirmLabel}</Text>
+							<Pressable
+								onPress={onDismiss}
+								className='bg-black rounded-full px-4 py-1.5'
+							>
+								<Text className='text-sm font-pretendard-semibold text-white'>
+									{confirmLabel}
+								</Text>
 							</Pressable>
 						</View>
 						<View className='w-full flex-row justify-center items-center h-[200px] mt-2'>
@@ -75,7 +86,7 @@ export function DatePickerModal({
 								mode='date'
 								display='spinner'
 								onValueChange={(_event: any, date: Date) => onChange(date)}
-								style={{ height: '100%', width: '100%' }}
+								className='h-full w-full'
 							/>
 						</View>
 					</Animated.View>

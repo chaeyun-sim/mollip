@@ -11,7 +11,10 @@ interface KcisaExhibitionCardProps {
 	onPress: (id: string) => void;
 }
 
-export function KcisaExhibitionCard({ item, onPress }: KcisaExhibitionCardProps) {
+export function KcisaExhibitionCard({
+	item,
+	onPress,
+}: KcisaExhibitionCardProps) {
 	return (
 		<Pressable
 			onPress={() => onPress(item.id)}
@@ -46,15 +49,15 @@ export function KcisaExhibitionCard({ item, onPress }: KcisaExhibitionCardProps)
 			</View>
 			<Text
 				numberOfLines={2}
-				style={{ width: CARD_WIDTH, fontFamily: 'Pretendard-SemiBold' }}
-				className='mt-2.5 text-[#1C1917] text-[13px] leading-[18px]'
+				style={{ width: CARD_WIDTH }}
+				className='mt-2.5 text-[#1C1917] text-[13px] leading-[18px] font-pretendard-semibold'
 			>
 				{item.title}
 			</Text>
 			<Text
 				numberOfLines={1}
-				style={{ width: CARD_WIDTH, fontFamily: 'Pretendard-Regular' }}
-				className='text-[#A8A29E] text-[11px] mt-0.5'
+				style={{ width: CARD_WIDTH }}
+				className='text-[#A8A29E] text-[11px] mt-0.5 font-pretendard-regular'
 			>
 				{item.venue}
 			</Text>

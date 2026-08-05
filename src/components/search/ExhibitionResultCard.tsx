@@ -12,7 +12,10 @@ interface ExhibitionResultCardProps {
 	onPress: (id: string) => void;
 }
 
-export function ExhibitionResultCard({ result, onPress }: ExhibitionResultCardProps) {
+export function ExhibitionResultCard({
+	result,
+	onPress,
+}: ExhibitionResultCardProps) {
 	const { exhibition: ex, status, distanceKm } = result;
 	const ddayLabel = getDdayLabel(ex);
 	const isBookmarked = useBookmarkStore((s) => s.isBookmarked(ex.id));
@@ -27,10 +30,7 @@ export function ExhibitionResultCard({ result, onPress }: ExhibitionResultCardPr
 			style={({ pressed }) => ({ opacity: pressed ? 0.85 : 1 })}
 		>
 			{/* 썸네일 + 상태 배지 오버레이 */}
-			<View
-				className='rounded-lg overflow-hidden'
-				style={{ width: 76, height: 100 }}
-			>
+			<View className='rounded-lg overflow-hidden w-[76px] h-[100px]'>
 				{ex.heroImageUri || ex.posterImage ? (
 					<Image
 						source={ex.heroImageUri ? { uri: ex.heroImageUri } : ex.posterImage}
@@ -38,7 +38,10 @@ export function ExhibitionResultCard({ result, onPress }: ExhibitionResultCardPr
 						className='w-full h-full'
 					/>
 				) : (
-					<EmptyImagePlaceholder className='w-full h-full items-center justify-center bg-[#E5E1D8]' iconSize={40} />
+					<EmptyImagePlaceholder
+						className='w-full h-full items-center justify-center bg-[#E5E1D8]'
+						iconSize={40}
+					/>
 				)}
 				<StatusBadge status={status} />
 			</View>
@@ -47,33 +50,25 @@ export function ExhibitionResultCard({ result, onPress }: ExhibitionResultCardPr
 			<View className='flex-1 justify-center gap-1'>
 				<Text
 					numberOfLines={1}
-					className='text-[#1C1917] text-[15px]'
-					style={{ fontFamily: 'Pretendard-SemiBold' }}
+					className='text-[#1C1917] text-[15px] font-pretendard-semibold'
 				>
 					{ex.title}
 				</Text>
 
 				<Text
 					numberOfLines={1}
-					className='text-[#78716C] text-[13px]'
-					style={{ fontFamily: 'Pretendard-Regular' }}
+					className='text-[#78716C] text-[13px] font-pretendard-regular'
 				>
 					{ex.venue}
 					{distanceKm !== null && ` · ${formatDistance(distanceKm)}`}
 				</Text>
 
 				<View className='flex-row items-center gap-1.5'>
-					<Text
-						className='text-[#A8A29E] text-[12px]'
-						style={{ fontFamily: 'Pretendard-Regular' }}
-					>
+					<Text className='text-[#A8A29E] text-[12px] font-pretendard-regular'>
 						{ex.startDate} – {ex.endDate}
 					</Text>
 					{ddayLabel && (
-						<Text
-							className='text-[#C2410C] text-[12px]'
-							style={{ fontFamily: 'Pretendard-SemiBold' }}
-						>
+						<Text className='text-[#C2410C] text-[12px] font-pretendard-semibold'>
 							{ddayLabel}
 						</Text>
 					)}

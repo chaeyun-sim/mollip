@@ -64,7 +64,9 @@ export default function InquiryScreen() {
 						<Screen.Header.Back color='#1C1917' onPress={() => router.back()} />
 					</Screen.Header.Left>
 					<Screen.Header.Center>
-						<Text className='text-[18px] text-gray-900 font-hahmlet-semibold'>문의하기</Text>
+						<Text className='text-[18px] text-gray-900 font-hahmlet-semibold'>
+							문의하기
+						</Text>
 					</Screen.Header.Center>
 					<Screen.Header.Right />
 				</Screen.Header>
@@ -85,7 +87,9 @@ export default function InquiryScreen() {
 						accessibilityRole='button'
 						accessibilityLabel='설정으로 돌아가기'
 					>
-						<Text className='text-white text-[14px] font-pretendard-semibold'>확인</Text>
+						<Text className='text-white text-[14px] font-pretendard-semibold'>
+							확인
+						</Text>
 					</Pressable>
 				</View>
 			</Screen>
@@ -99,7 +103,9 @@ export default function InquiryScreen() {
 					<Screen.Header.Back color='#1C1917' onPress={() => router.back()} />
 				</Screen.Header.Left>
 				<Screen.Header.Center>
-					<Text className='text-[18px] text-gray-900 font-hahmlet-semibold'>문의하기</Text>
+					<Text className='text-[18px] text-gray-900 font-hahmlet-semibold'>
+						문의하기
+					</Text>
 				</Screen.Header.Center>
 				<Screen.Header.Right />
 			</Screen.Header>
@@ -114,7 +120,6 @@ export default function InquiryScreen() {
 					showsVerticalScrollIndicator={false}
 					keyboardShouldPersistTaps='handled'
 				>
-
 					<Text className='text-[12px] mb-2 px-1 font-pretendard-semibold text-gray-400 tracking-[0.8]'>
 						유형
 					</Text>
@@ -171,8 +176,7 @@ export default function InquiryScreen() {
 						내용
 					</Text>
 					<TextInput
-						className='rounded-3xl bg-[#F2EFE9] px-4 py-4 text-gray-900 text-[15px]'
-						style={{ fontFamily: 'Pretendard-Regular', minHeight: 160, textAlignVertical: 'top' }}
+						className='rounded-3xl bg-[#F2EFE9] px-4 py-4 text-gray-900 text-[15px] min-h-[160px] text-top font-pretendard-regular'
 						placeholder='내용을 입력해주세요'
 						placeholderTextColor='#A8A29E'
 						value={content}
@@ -185,8 +189,7 @@ export default function InquiryScreen() {
 						연락처 (선택)
 					</Text>
 					<TextInput
-						className='rounded-3xl bg-[#F2EFE9] px-4 text-gray-900 text-[15px]'
-						style={{ fontFamily: 'Pretendard-Regular', height: 52 }}
+						className='rounded-3xl bg-[#F2EFE9] px-4 text-gray-900 text-[15px] h-[52px] font-pretendard-regular'
 						placeholder='답변받을 이메일을 입력해주세요'
 						placeholderTextColor='#A8A29E'
 						value={contact}
@@ -203,7 +206,7 @@ export default function InquiryScreen() {
 					) : null}
 				</ScrollView>
 
-				<Screen.BottomAbsolute className="bottom-10">
+				<Screen.BottomAbsolute className='bottom-10'>
 					<Pressable
 						onPress={handleSubmit}
 						disabled={!canSubmit}

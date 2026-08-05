@@ -1,6 +1,10 @@
 import { useEffect, useMemo, useState } from 'react';
 import { ActivityIndicator, Text, View } from 'react-native';
-import Animated, { FadeIn, FadeOut, LinearTransition } from 'react-native-reanimated';
+import Animated, {
+	FadeIn,
+	FadeOut,
+	LinearTransition,
+} from 'react-native-reanimated';
 
 import { ExhibitionResultCard } from '@/src/components/search/ExhibitionResultCard';
 import { useBookmarkStore } from '@/src/store/bookmarkStore';
@@ -10,7 +14,10 @@ import {
 	mapExhibitionRowToExhibition,
 	type ExhibitionRow,
 } from '@/src/utils/exhibitionMapper';
-import { getExhibitionStatus, isExhibitionListed } from '@/src/utils/exhibitionSearch';
+import {
+	getExhibitionStatus,
+	isExhibitionListed,
+} from '@/src/utils/exhibitionSearch';
 import type { SearchResult } from '@/src/hooks/useExhibitionSearch';
 
 const ITEM_LAYOUT = LinearTransition.duration(200);
@@ -91,16 +98,10 @@ export function SavedExhibitions({ onPressExhibition }: SavedExhibitionsProps) {
 	if (results.length === 0) {
 		return (
 			<View className='rounded-[22px] bg-[#F8F6F2] px-6 py-10 items-center'>
-				<Text
-					className='text-[15px] text-center'
-					style={{ fontFamily: 'Pretendard-SemiBold', color: '#1C1917' }}
-				>
+				<Text className='text-[15px] text-center font-pretendard-semibold text-[#1C1917]'>
 					저장한 전시가 없어요
 				</Text>
-				<Text
-					className='text-[13px] text-center mt-2 leading-[20px]'
-					style={{ fontFamily: 'Pretendard-Regular', color: '#57534E' }}
-				>
+				<Text className='text-[13px] text-center mt-2 leading-[20px] font-pretendard-regular text-[#57534E]'>
 					둘러보기에서 마음에 드는 전시를 저장해 보세요
 				</Text>
 			</View>

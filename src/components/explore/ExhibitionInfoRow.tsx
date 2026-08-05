@@ -7,7 +7,11 @@ interface ExhibitionInfoRowProps {
 	children: ReactNode;
 }
 
-export function ExhibitionInfoRow({ label, isLast, children }: ExhibitionInfoRowProps) {
+export function ExhibitionInfoRow({
+	label,
+	isLast,
+	children,
+}: ExhibitionInfoRowProps) {
 	return (
 		<View
 			className='flex-row items-start justify-between gap-4 py-3'
@@ -24,10 +28,7 @@ export function ExhibitionInfoRow({ label, isLast, children }: ExhibitionInfoRow
 				{label}
 			</Text>
 			<View className='flex-1 items-end'>
-				<Text
-					className='text-[#1C1917] text-[14px] font-pretendard-regular text-right'
-					style={{ lineHeight: 21 }}
-				>
+				<Text className='text-[#1C1917] text-[14px] font-pretendard-regular text-right leading-5'>
 					{children}
 				</Text>
 			</View>

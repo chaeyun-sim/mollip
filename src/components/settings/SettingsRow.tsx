@@ -24,10 +24,10 @@ export function SettingsRow({
 	const content = (pressed: boolean) => (
 		<View
 			className={cn(
-				'flex-row items-center justify-between px-4 gap-3',
+				'flex-row items-center justify-between px-4 gap-3 min-h-[52px]',
 				border && 'border-b border-black/5',
+				pressed ? 'opacity-60' : 'opacity-100',
 			)}
-			style={{ minHeight: 52, opacity: pressed ? 0.6 : 1 }}
 		>
 			<View className='flex-row items-center gap-3 flex-1'>
 				{icon ? (

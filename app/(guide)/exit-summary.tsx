@@ -51,11 +51,7 @@ export default function ExitSummaryScreen() {
 				</Text>
 				<View className='flex-row flex-wrap justify-between'>
 					{places.map((place) => (
-						<View
-							key={place.id}
-							className='rounded-2xl overflow-hidden mb-3'
-							style={{ width: '48%' }}
-						>
+						<View key={place.id} className='rounded-2xl overflow-hidden mb-3 w-[48%]'>
 							<Image
 								source={{ uri: place.imageUrl }}
 								style={{ width: '100%', height: 130 }}

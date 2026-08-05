@@ -16,7 +16,10 @@ interface ArchiveRecentVisitsProps {
 	onSelectDate: (dateKey: string) => void;
 }
 
-function formatDateLine(dateKey: string): { primary: string; secondary: string } {
+function formatDateLine(dateKey: string): {
+	primary: string;
+	secondary: string;
+} {
 	const [y, m, d] = dateKey.split('-').map(Number);
 	const date = new Date(y, m - 1, d);
 	const today = new Date();
@@ -25,13 +28,21 @@ function formatDateLine(dateKey: string): { primary: string; secondary: string }
 	yesterday.setDate(yesterday.getDate() - 1);
 	const yesterdayKey = `${yesterday.getFullYear()}-${String(yesterday.getMonth() + 1).padStart(2, '0')}-${String(yesterday.getDate()).padStart(2, '0')}`;
 
-	if (dateKey === todayKey) return { primary: '오늘', secondary: `${y}년 ${m}월 ${d}일` };
-	if (dateKey === yesterdayKey) return { primary: '어제', secondary: `${y}년 ${m}월 ${d}일` };
+	if (dateKey === todayKey)
+		return { primary: '오늘', secondary: `${y}년 ${m}월 ${d}일` };
+	if (dateKey === yesterdayKey)
+		return { primary: '어제', secondary: `${y}년 ${m}월 ${d}일` };
 	const weekdays = ['일', '월', '화', '수', '목', '금', '토'] as const;
-	return { primary: `${m}월 ${d}일`, secondary: `${weekdays[date.getDay()]}요일` };
+	return {
+		primary: `${m}월 ${d}일`,
+		secondary: `${weekdays[date.getDay()]}요일`,
+	};
 }
 
-export function ArchiveRecentVisits({ dateKeys, onSelectDate }: ArchiveRecentVisitsProps) {
+export function ArchiveRecentVisits({
+	dateKeys,
+	onSelectDate,
+}: ArchiveRecentVisitsProps) {
 	const visits = useVisitStore((s) => s.visits);
 
 	if (dateKeys.length === 0) return null;
@@ -64,13 +75,8 @@ export function ArchiveRecentVisits({ dateKeys, onSelectDate }: ArchiveRecentVis
 							})}
 						>
 							<View
-								className='overflow-hidden mr-3.5'
-								style={{
-									width: 52,
-									height: 52,
-									borderRadius: 14,
-									backgroundColor: tint,
-								}}
+								className='overflow-hidden mr-3.5 w-[52px] h-[52px] rounded-[14px]'
+								style={{ backgroundColor: tint }}
 							>
 								{imageUrl ? (
 									<Image
@@ -90,29 +96,29 @@ export function ArchiveRecentVisits({ dateKeys, onSelectDate }: ArchiveRecentVis
 							<View className='flex-1 min-w-0'>
 								<View className='flex-row items-baseline gap-2 mb-0.5'>
 									<Text
-										className='text-[15px]'
-										style={{ fontFamily: 'Pretendard-SemiBold', color: ARCHIVE_INK }}
+										className='text-[15px] font-pretendard-semibold'
+										style={{ color: ARCHIVE_INK }}
 									>
 										{primary}
 									</Text>
 									<Text
-										className='text-[12px]'
-										style={{ fontFamily: 'Pretendard-Regular', color: ARCHIVE_SUBTLE }}
+										className='text-[12px] font-pretendard-regular'
+										style={{ color: ARCHIVE_SUBTLE }}
 									>
 										{secondary}
 									</Text>
 								</View>
 								<Text
-									className='text-[14px] leading-[19px]'
+									className='text-[14px] leading-[19px] font-pretendard-medium'
 									numberOfLines={1}
-									style={{ fontFamily: 'Pretendard-Medium', color: ARCHIVE_INK }}
+									style={{ color: ARCHIVE_INK }}
 								>
 									{title}
 								</Text>
 								{listenedCount > 0 ? (
 									<Text
-										className='text-[12px] mt-1'
-										style={{ fontFamily: 'Pretendard-Regular', color: ARCHIVE_MUTED }}
+										className='text-[12px] mt-1 font-pretendard-regular'
+										style={{ color: ARCHIVE_MUTED }}
 									>
 										들은 작품 {listenedCount}개
 									</Text>

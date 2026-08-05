@@ -18,7 +18,14 @@ export interface SocialPillProps {
 	icon?: React.ReactNode;
 }
 
-export function SocialPill({ label, onPress, disabled, loading, variant, icon }: SocialPillProps) {
+export function SocialPill({
+	label,
+	onPress,
+	disabled,
+	loading,
+	variant,
+	icon,
+}: SocialPillProps) {
 	const isKakao = variant === 'kakao';
 	const isApple = variant === 'apple';
 	const isGhost = variant === 'ghost';
@@ -33,7 +40,8 @@ export function SocialPill({ label, onPress, disabled, loading, variant, icon }:
 				'h-14 rounded-full items-center justify-center',
 				isKakao && 'bg-[#FEE500]',
 				isApple && 'bg-white border border-[rgba(28,25,23,0.08)]',
-				isGhost && 'bg-[rgba(255,255,255,0.38)] border border-[rgba(255,255,255,0.65)]',
+				isGhost &&
+					'bg-[rgba(255,255,255,0.38)] border border-[rgba(255,255,255,0.65)]',
 				disabled && !loading && 'opacity-[0.55]',
 			)}
 			style={isApple ? APPLE_PILL_SHADOW : undefined}
@@ -41,7 +49,9 @@ export function SocialPill({ label, onPress, disabled, loading, variant, icon }:
 			{({ pressed }) => (
 				<View
 					className='flex-row items-center justify-center gap-2'
-					style={pressed ? { opacity: 0.88, transform: [{ scale: 0.985 }] } : undefined}
+					style={
+						pressed ? { opacity: 0.88, transform: [{ scale: 0.985 }] } : undefined
+					}
 				>
 					{loading ? (
 						<ActivityIndicator color={isKakao ? '#191919' : '#1C1917'} />
@@ -50,10 +60,13 @@ export function SocialPill({ label, onPress, disabled, loading, variant, icon }:
 							{icon}
 							<Text
 								className={cn(
-									'text-[16px]',
-									isKakao ? 'text-[#191919]' : isGhost ? 'text-[#44403C]' : 'text-[#1C1917]',
+									'text-[16px] font-pretendard-semibold',
+									isKakao
+										? 'text-[#191919]'
+										: isGhost
+											? 'text-[#44403C]'
+											: 'text-[#1C1917]',
 								)}
-								style={{ fontFamily: 'Pretendard-SemiBold' }}
 							>
 								{label}
 							</Text>

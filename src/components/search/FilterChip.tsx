@@ -10,7 +10,13 @@ interface FilterChipProps {
 	accessibilityLabel?: string;
 }
 
-export function FilterChip({ label, active, onPress, icon, accessibilityLabel }: FilterChipProps) {
+export function FilterChip({
+	label,
+	active,
+	onPress,
+	icon,
+	accessibilityLabel,
+}: FilterChipProps) {
 	return (
 		<Pressable
 			onPress={onPress}
@@ -23,10 +29,16 @@ export function FilterChip({ label, active, onPress, icon, accessibilityLabel }:
 			)}
 			style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
 		>
-			{icon && <Ionicons name={icon} size={13} color={active ? '#FFFFFF' : '#57534E'} />}
+			{icon && (
+				<Ionicons name={icon} size={13} color={active ? '#FFFFFF' : '#57534E'} />
+			)}
 			<Text
-				className={cn('text-[13px]', active ? 'text-white' : 'text-[#57534E]')}
-				style={{ fontFamily: active ? 'Pretendard-SemiBold' : 'Pretendard-Medium' }}
+				className={cn(
+					'text-[13px]',
+					active
+						? 'text-white font-pretendard-semibold'
+						: 'text-[#57534E] font-pretendard-medium',
+				)}
 			>
 				{label}
 			</Text>

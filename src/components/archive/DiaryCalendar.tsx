@@ -1,6 +1,12 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useMemo } from 'react';
-import { Image, Pressable, Text, View, type ImageSourcePropType } from 'react-native';
+import {
+	Image,
+	Pressable,
+	Text,
+	View,
+	type ImageSourcePropType,
+} from 'react-native';
 
 import { cn } from '@/src/lib/cn';
 
@@ -86,7 +92,7 @@ export function DiaryCalendar({
 
 			{/* 요일 헤더 */}
 			<View className='mt-5 flex-row'>
-				{WEEK_LABELS.map(label => (
+				{WEEK_LABELS.map((label) => (
 					<Text
 						key={label}
 						className='flex-1 text-center text-[11px] font-pretendard-medium text-gray-400'
@@ -127,14 +133,11 @@ export function DiaryCalendar({
 								{/* 3:4 셀 — 기록이 있는 날은 포스터/그림, 없는 날은 숫자만 */}
 								<View
 									className={cn(
-										'items-center justify-center overflow-hidden',
+										'items-center justify-center overflow-hidden w-[36px] h-[48px]',
 										hasImage ? 'rounded-lg' : 'rounded-full',
 										isToday && !hasImage && 'bg-[#1C1917]',
 									)}
 									style={{
-										width: 36,
-										height: 48,
-										// backgroundColor: undefined는 className의 배경색을 덮어쓰므로 키 자체를 생략
 										...(hasImage
 											? { backgroundColor: dayImage?.color ?? '#D6D3D1' }
 											: null),
@@ -152,10 +155,7 @@ export function DiaryCalendar({
 									)}
 									{hasImage && (
 										// 숫자 가독성용 스크림
-										<View
-											className='absolute h-full w-full'
-											style={{ backgroundColor: 'rgba(0,0,0,0.28)' }}
-										/>
+										<View className='absolute h-full w-full bg-black/28' />
 									)}
 									<Text
 										className={cn('text-[13px]', {

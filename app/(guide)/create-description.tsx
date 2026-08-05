@@ -213,10 +213,9 @@ export default function IndexScreen() {
 			{isImmersive && (
 				<View className='mt-5'>
 					<View
-						className='flex-row items-center rounded-2xl px-4 gap-3 bg-[#1C1917] h-[52px]'
+						className='flex-row items-center rounded-2xl px-4 gap-3 bg-[#1C1917] h-[52px] border-white/10'
 						style={{
 							borderWidth: StyleSheet.hairlineWidth,
-							borderColor: 'rgba(255,255,255,0.1)',
 						}}
 					>
 						<Ionicons name='search' size={18} color='#57534E' />
@@ -429,7 +428,9 @@ export default function IndexScreen() {
 						accessibilityLabel='다시 보지 않기'
 						accessibilityRole='button'
 					>
-						<Text className='text-sm font-pretendard-regular text-[#57534E]'>다시 보지 않기</Text>
+						<Text className='text-sm font-pretendard-regular text-[#57534E]'>
+							다시 보지 않기
+						</Text>
 					</Pressable>
 				</BottomSheetView>
 			</BottomSheetModal>

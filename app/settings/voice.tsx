@@ -3,7 +3,13 @@ import * as Haptics from 'expo-haptics';
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { useAudioPlayer } from 'expo-audio';
-import { ActivityIndicator, Pressable, ScrollView, Text, View } from 'react-native';
+import {
+	ActivityIndicator,
+	Pressable,
+	ScrollView,
+	Text,
+	View,
+} from 'react-native';
 import { VoiceListSkeletonItem } from '@/src/components/settings/VoiceListSkeletonItem';
 import { Screen } from '../../src/components/layout/Screen';
 import type { Voice } from '../../src/hooks/useTTS';
@@ -11,7 +17,14 @@ import { useSettingsStore } from '../../src/store/settingsStore';
 import { fetchTTSBlob, fetchVoices } from '../../src/utils/api';
 import { cn } from '@/src/lib/cn';
 
-const AVATAR_COLORS = ['#F3D9C4', '#CFE0DF', '#E8D9F0', '#D9E3F0', '#F0DDD9', '#DDEAD1'];
+const AVATAR_COLORS = [
+	'#F3D9C4',
+	'#CFE0DF',
+	'#E8D9F0',
+	'#D9E3F0',
+	'#F0DDD9',
+	'#DDEAD1',
+];
 
 const GENDER_LABEL: Record<string, string> = {
 	male: '남성',
@@ -146,9 +159,7 @@ export default function VoiceScreen() {
 
 										<View className='flex-1'>
 											<View className='flex-row items-center gap-1.5'>
-												<Text
-													className='text-[15px] font-pretendard-semibold text-[#111827]'
-												>
+												<Text className='text-[15px] font-pretendard-semibold text-[#111827]'>
 													{displayName}
 												</Text>
 												{selected && (
@@ -160,10 +171,7 @@ export default function VoiceScreen() {
 													{tags.map((tag) => (
 														<View
 															key={tag}
-															className='px-2 py-0.5 rounded-full'
-															style={{
-																backgroundColor: 'rgba(28,25,23,0.06)',
-															}}
+															className='px-2 py-0.5 rounded-full bg-[#1c19170f]'
 														>
 															<Text
 																className={cn(
@@ -192,11 +200,7 @@ export default function VoiceScreen() {
 											{previewingId === voice.voice_id ? (
 												<ActivityIndicator size='small' color='#3B82F6' />
 											) : (
-												<Ionicons
-													name='play'
-													size={15}
-													color='#3B82F6'
-												/>
+												<Ionicons name='play' size={15} color='#3B82F6' />
 											)}
 										</Pressable>
 									</View>
