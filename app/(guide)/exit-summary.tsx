@@ -1,7 +1,9 @@
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
+import * as Location from 'expo-location';
 import { StatusBar } from 'expo-status-bar';
 import { useRouter } from 'expo-router';
+import { useEffect, useState } from 'react';
 import { Image, Pressable, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -23,7 +25,15 @@ const TEXT_SHADOW = {
 // 다른 (guide) 화면들과 달리 흰 배경 — 종료의 산뜻한 느낌을 위해 의도적으로 다른 톤.
 export default function ExitSummaryScreen() {
 	const router = useRouter();
-	const places = useNearbyPlaces();
+
+	const [location, setLocation] = useState<{ latitude: number; longitude: number } | null>(null);
+	useEffect(() => {
+		Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Balanced })
+			.then((pos) => setLocation({ latitude: pos.coords.latitude, longitude: pos.coords.longitude }))
+			.catch(() => setLocation(null));
+	}, []);
+
+	const { data: places } = useNearbyPlaces(location);
 
 	return (
 		<SafeAreaView edges={['top', 'bottom']} className='flex-1 bg-[#F8F6F2] px-6'>
@@ -52,11 +62,15 @@ export default function ExitSummaryScreen() {
 				<View className='flex-row flex-wrap justify-between'>
 					{places.map((place) => (
 						<View key={place.id} className='rounded-2xl overflow-hidden mb-3 w-[48%]'>
-							<Image
-								source={{ uri: place.imageUrl }}
-								style={{ width: '100%', height: 130 }}
-								resizeMode='cover'
-							/>
+							{place.imageUrl ? (
+								<Image
+									source={{ uri: place.imageUrl }}
+									style={{ width: '100%', height: 130 }}
+									resizeMode='cover'
+								/>
+							) : (
+								<View style={{ width: '100%', height: 130, backgroundColor: '#E7E5E4' }} />
+							)}
 							<LinearGradient
 								colors={['transparent', 'rgba(0,0,0,0.55)', 'rgba(0,0,0,0.92)']}
 								locations={[0, 0.5, 1]}
