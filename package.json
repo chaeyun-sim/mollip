@@ -69,6 +69,9 @@
 		"ios": "expo run:ios",
 		"web": "expo start --web",
 		"test": "jest",
+		"e2e": "maestro test e2e/",
+		"e2e:single": "maestro test",
+		"gen:types": "supabase gen types typescript --project-id khlvoawqxhloepbcfvio --schema public > src/types/database.types.ts",
 		"prepare": "husky"
 	},
 	"jest": {

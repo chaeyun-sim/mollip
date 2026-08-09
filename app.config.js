@@ -53,6 +53,7 @@ module.exports = {
 						},
 					},
 				},
+				LSApplicationQueriesSchemes: ['kakaolink', 'kakaokompassauth', 'storykompassauth'],
 			},
 		},
 		android: {

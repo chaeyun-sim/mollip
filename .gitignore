@@ -56,3 +56,5 @@ yarn-error.*
 .docs/museum_exhibition_tab.md
 scripts/gallery_scan.log
 scripts/__pycache__/
+
+e2e/screenshots/
