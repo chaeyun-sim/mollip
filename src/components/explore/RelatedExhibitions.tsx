@@ -3,11 +3,15 @@ import { LinearGradient } from 'expo-linear-gradient';
 import * as Haptics from 'expo-haptics';
 import { useRouter } from 'expo-router';
 import { Pressable, ScrollView, Text, View } from 'react-native';
-import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
+import Animated, {
+	useAnimatedStyle,
+	useSharedValue,
+	withSpring,
+} from 'react-native-reanimated';
 
 import { ExhibitionPoster } from '@/src/components/common/EmptyImagePlaceholder';
 import type { Exhibition } from '@/src/data/exhibitions';
-import { getGenreTag } from '@/src/utils/exhibitionSearch';
+import { getDdayLabel } from '@/src/utils/exhibitionSearch';
 
 const POSTER_W = 148;
 const POSTER_H = 216;
@@ -47,7 +51,10 @@ interface RelatedExhibitionCardProps {
 	onPress: () => void;
 }
 
-function RelatedExhibitionCard({ exhibition, onPress }: RelatedExhibitionCardProps) {
+function RelatedExhibitionCard({
+	exhibition,
+	onPress,
+}: RelatedExhibitionCardProps) {
 	const scale = useSharedValue(1);
 	const animatedStyle = useAnimatedStyle(() => ({
 		transform: [{ scale: scale.value }],
@@ -81,7 +88,7 @@ function RelatedExhibitionCard({ exhibition, onPress }: RelatedExhibitionCardPro
 						className='absolute top-0 left-0 right-0 h-14'
 						pointerEvents='none'
 					/>
-					{getGenreTag(exhibition) ? (
+					{getDdayLabel(exhibition, undefined, Infinity) ? (
 						<View
 							className='absolute top-2.5 left-2.5 rounded-full px-2.5 py-1 bg-white/85'
 							style={{
@@ -93,7 +100,7 @@ function RelatedExhibitionCard({ exhibition, onPress }: RelatedExhibitionCardPro
 							}}
 						>
 							<Text className='text-[10px] font-pretendard-semibold text-[#1C1917]'>
-								{getGenreTag(exhibition)}
+								{getDdayLabel(exhibition, undefined, Infinity)}
 							</Text>
 						</View>
 					) : null}

@@ -14,7 +14,7 @@ export function ExhibitionInfoRow({
 }: ExhibitionInfoRowProps) {
 	return (
 		<View
-			className='flex-row items-start justify-between gap-4 py-3'
+			className='flex-row items-start justify-between gap-28 py-3'
 			style={
 				!isLast
 					? {
@@ -24,7 +24,7 @@ export function ExhibitionInfoRow({
 					: undefined
 			}
 		>
-			<Text className='text-gray-500 text-[12px] font-pretendard-semibold tracking-wider uppercase pt-1'>
+			<Text className='text-gray-500 text-[12px] font-pretendard-semibold tracking-wider uppercase pt-1 whitespace-pre'>
 				{label}
 			</Text>
 			<View className='flex-1 items-end'>

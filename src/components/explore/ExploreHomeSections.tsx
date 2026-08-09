@@ -212,14 +212,14 @@ function GridExhibitionCell({
 					className='mt-2 text-[#1C1917] text-[13px] leading-[18px] font-pretendard-semibold'
 					style={{ width: colWidth }}
 				>
-					{item.title}
+					{item.title.trim()}
 				</Text>
 				<Text
 					numberOfLines={1}
 					className='text-[#A8A29E] text-[11px] mt-0.5 font-pretendard-regular'
 					style={{ width: colWidth }}
 				>
-					{item.venue}
+					{item.venue.trim()}
 				</Text>
 			</View>
 		</Pressable>
@@ -277,13 +277,13 @@ export function RecommendedExhibitions({
 					numberOfLines={2}
 					className='mt-3 text-[#1C1917] text-[16px] leading-[22px] font-pretendard-semibold'
 				>
-					{lead.title}
+					{lead.title.trim()}
 				</Text>
 				<Text
 					numberOfLines={1}
 					className='text-[#A8A29E] text-[12px] mt-1 font-pretendard-regular'
 				>
-					{lead.venue}
+					{lead.venue.trim()}
 				</Text>
 			</Pressable>
 
