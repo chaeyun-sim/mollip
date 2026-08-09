@@ -10,6 +10,7 @@ import {
 import {
 	applyExhibitionDateFilters,
 	getExhibitionStatus,
+	getPopularTags,
 	isExhibitionListed,
 	isViewableOn,
 	matchesExcluded,
@@ -27,6 +28,8 @@ export interface SearchResult {
 }
 
 const DEBOUNCE_MS = 300;
+// @MX:NOTE: 전체 전시를 마운트 시 1회 fetch 후 클라이언트 사이드 필터링.
+// SEARCH_LIMIT 초과 건수는 검색 결과에 포함되지 않으므로 DB 전시 총 건수가 이 값보다 크면 조정 필요.
 const SEARCH_LIMIT = 120;
 
 export function useExhibitionSearch() {
@@ -39,6 +42,7 @@ export function useExhibitionSearch() {
 	const [currentCoord, setCurrentCoord] = useState<{ latitude: number; longitude: number } | null>(null);
 	const [remoteExhibitions, setRemoteExhibitions] = useState<Exhibition[]>([]);
 	const [remoteLoading, setRemoteLoading] = useState(false);
+	const [popularTags, setPopularTags] = useState<string[]>([]);
 	const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
 	useEffect(() => {
@@ -71,11 +75,14 @@ export function useExhibitionSearch() {
 		setSearchText(text);
 	}, []);
 
+	// 마운트 시 1회 전체 목록 fetch — 텍스트 필터링은 클라이언트 사이드(matchesQuery)로 처리.
+	// 서버 ilike 필터는 title/venue/artist만 커버해 tags 검색이 누락되고,
+	// 결과 0개 시 remoteExhibitions = [] → catalog 붕괴 문제가 있어 제거함.
 	useEffect(() => {
 		let cancelled = false;
 		(async () => {
 			setRemoteLoading(true);
-			let query = applyExhibitionDateFilters(
+			const { data, error } = await applyExhibitionDateFilters(
 				supabase
 					.from('exhibitions')
 					.select(`${EXHIBITION_COLUMNS}, museums ( gps_x, gps_y )`)
@@ -83,41 +90,32 @@ export function useExhibitionSearch() {
 					.order('start_date', { ascending: false })
 					.limit(SEARCH_LIMIT),
 			);
-			const q = searchText.trim();
-			if (q.length >= 1) {
-				const escaped = q.replace(/[%_]/g, (c) => `\\${c}`);
-				query = query.or(
-					`title.ilike.%${escaped}%,venue_name_fallback.ilike.%${escaped}%,artist.ilike.%${escaped}%`,
-				);
-			}
-			const { data, error } = await query;
 			if (cancelled) return;
 			if (error || !data) {
-				setRemoteExhibitions([]);
 				setRemoteLoading(false);
 				return;
 			}
 			type Row = ExhibitionRow & {
 				museums: { gps_x: string; gps_y: string } | { gps_x: string; gps_y: string }[] | null;
 			};
-			setRemoteExhibitions(
-				(data as unknown as Row[]).map((row) => {
-					const ex = mapExhibitionRowToExhibition(row);
-					const museum = Array.isArray(row.museums) ? row.museums[0] : row.museums;
-					const lat = Number(museum?.gps_y);
-					const lon = Number(museum?.gps_x);
-					if (Number.isFinite(lat) && Number.isFinite(lon)) {
-						ex.coordinates = { latitude: lat, longitude: lon };
-					}
-					return ex;
-				}),
-			);
+			const mapped = (data as unknown as Row[]).map((row) => {
+				const ex = mapExhibitionRowToExhibition(row);
+				const museum = Array.isArray(row.museums) ? row.museums[0] : row.museums;
+				const lat = Number(museum?.gps_y);
+				const lon = Number(museum?.gps_x);
+				if (Number.isFinite(lat) && Number.isFinite(lon)) {
+					ex.coordinates = { latitude: lat, longitude: lon };
+				}
+				return ex;
+			});
+			setRemoteExhibitions(mapped);
+			setPopularTags(getPopularTags(8, mapped));
 			setRemoteLoading(false);
 		})();
 		return () => {
 			cancelled = true;
 		};
-	}, [searchText]);
+	}, []);
 
 	const toggleStatusFilter = useCallback((key: ExhibitionStatus) => {
 		setStatusFilters((prev) => {
@@ -183,5 +181,6 @@ export function useExhibitionSearch() {
 		hasLocation: currentCoord !== null,
 		results,
 		isLoading: remoteLoading,
+		popularTags,
 	};
 }
