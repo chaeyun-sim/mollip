@@ -1,0 +1,27 @@
+appId: com.simune.aaa
+---
+- launchApp:
+    clearState: false
+- waitForAnimationToEnd
+- assertVisible: "mollip"
+
+# 홈(둘러보기) 탭으로 이동
+- tapOn:
+    point: "50%,96%"
+- waitForAnimationToEnd
+- assertVisible: "국공립 기관 전시"
+- takeScreenshot: e2e/screenshots/03-home-before-detail.png
+
+# 피처드 전시 카드 좌표 탭 (카드 중앙 약 47%)
+- tapOn:
+    point: "50%,47%"
+- waitForAnimationToEnd
+- takeScreenshot: e2e/screenshots/03-exhibition-detail.png
+
+# 상세 화면 검증 (관람 정보 섹션 헤더는 모든 전시 상세에 표시됨)
+- assertVisible: "관람 정보"
+
+# 뒤로가기 버튼 탭 (accessibilityLabel='뒤로가기')
+- tapOn: "뒤로가기"
+- waitForAnimationToEnd
+- assertVisible: "mollip"

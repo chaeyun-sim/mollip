@@ -79,23 +79,22 @@ def fetch_exhibitions(api_key: str) -> list[dict]:
             if key in seen:
                 continue
             seen.add(key)
-            out.append(
-                {
-                    "source": "sac",
-                    "venue_name_fallback": venue or "장소 정보 없음",
-                    "title": title,
-                    "start_date": start_date,
-                    "end_date": end_date,
-                    "artist": tag(b, "AUTHOR") or tag(b, "ACTOR") or None,
-                    "description": tag(b, "DESCRIPTION") or tag(b, "SUB_DESCRIPTION") or "",
-                    "image_url": tag(b, "IMAGE_OBJECT") or None,
-                    "open_hours": tag(b, "EVENT_PERIOD") or "운영시간 정보 없음",
-                    "admission": tag(b, "CHARGE") or "정보 없음",
-                    "ticket_url": tag(b, "URL") or None,
-                    "genre": "전시",
-                    "synced_at": __import__("datetime").datetime.now(__import__("datetime").timezone.utc).isoformat(),
-                }
-            )
+            entry: dict = {
+                "source": "sac",
+                "venue_name_fallback": venue or "장소 정보 없음",
+                "title": title,
+                "start_date": start_date,
+                "end_date": end_date,
+                "description": tag(b, "DESCRIPTION") or tag(b, "SUB_DESCRIPTION") or "",
+                "open_hours": tag(b, "EVENT_PERIOD") or "운영시간 정보 없음",
+                "admission": tag(b, "CHARGE") or "정보 없음",
+                "ticket_url": tag(b, "URL") or None,
+                "genre": "전시",
+                "synced_at": __import__("datetime").datetime.now(__import__("datetime").timezone.utc).isoformat(),
+            }
+            if img := tag(b, "IMAGE_OBJECT"):
+                entry["image_url"] = img
+            out.append(entry)
         if page_no * PAGE_SIZE >= total:
             break
         page_no += 1
@@ -124,7 +123,7 @@ def sb_request(method: str, path: str, base: str, key: str, body=None, prefer: s
 
 
 INSERT_PATH = "/rest/v1/exhibitions?on_conflict=title,start_date,end_date"
-INSERT_PREFER = "resolution=ignore-duplicates,return=minimal"
+INSERT_PREFER = "resolution=merge-duplicates,return=minimal"
 
 
 def main() -> None:

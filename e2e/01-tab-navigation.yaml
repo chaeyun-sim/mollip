@@ -1,0 +1,49 @@
+appId: com.simune.aaa
+---
+- launchApp:
+    clearState: false
+- waitForAnimationToEnd
+
+# 홈(둘러보기) 탭 확인
+- assertVisible: "mollip"
+- takeScreenshot: e2e/screenshots/01-home.png
+
+# 검색 탭
+- tapOn:
+    point: "10%,96%"
+- waitForAnimationToEnd
+- assertVisible: "전시·미술관·작가 검색"
+- takeScreenshot: e2e/screenshots/01-search-tab.png
+
+# 지도 탭
+- tapOn:
+    point: "30%,96%"
+- waitForAnimationToEnd
+- takeScreenshot: e2e/screenshots/01-map-tab.png
+
+# 둘러보기 탭 복귀
+- tapOn:
+    point: "50%,96%"
+- waitForAnimationToEnd
+- assertVisible: "mollip"
+- takeScreenshot: e2e/screenshots/01-explore-tab.png
+
+# 다이어리 탭 (로그인 상태 → 티켓 화면)
+- tapOn:
+    point: "70%,96%"
+- waitForAnimationToEnd
+- assertVisible: "Tickets"
+- takeScreenshot: e2e/screenshots/01-diary-tab.png
+
+# 마이페이지 탭
+- tapOn:
+    point: "90%,96%"
+- waitForAnimationToEnd
+- assertVisible: "계정"
+- takeScreenshot: e2e/screenshots/01-mypage-tab.png
+
+# 둘러보기 탭 복귀
+- tapOn:
+    point: "50%,96%"
+- waitForAnimationToEnd
+- assertVisible: "mollip"

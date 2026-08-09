@@ -74,17 +74,18 @@ def fetch_exhibitions(api_key: str) -> list[dict]:
         if not venue_sync_allowed(place, title):
             skipped_venue += 1
             continue
-        out.append(
-            {
-                "source": "culture",
-                "venue_name_fallback": place or "장소 정보 없음",
-                "title": title,
-                "start_date": f"{sd[:4]}.{sd[4:6]}.{sd[6:8]}",
-                "end_date": end_date,
-                "image_url": tag(b, "thumbnail") or None,
-                "synced_at": __import__("datetime").datetime.now(__import__("datetime").timezone.utc).isoformat(),
-            }
-        )
+        entry: dict = {
+            "source": "culture",
+            "venue_name_fallback": place or "장소 정보 없음",
+            "title": title,
+            "start_date": f"{sd[:4]}.{sd[4:6]}.{sd[6:8]}",
+            "end_date": end_date,
+            "synced_at": __import__("datetime").datetime.now(__import__("datetime").timezone.utc).isoformat(),
+        }
+        # null일 때 payload에서 제외 → merge-duplicates 시 기존 image_url 보존
+        if thumbnail := tag(b, "thumbnail"):
+            entry["image_url"] = thumbnail
+        out.append(entry)
     if skipped_end or skipped_venue:
         print(
             f"filtered out: end_date<{END_DATE_MIN} → {skipped_end}, venue blocklist → {skipped_venue}",
@@ -122,7 +123,7 @@ def sb_request(method: str, path: str, base: str, key: str, body=None, prefer: s
 
 
 INSERT_PATH = "/rest/v1/exhibitions?on_conflict=title,start_date,end_date"
-INSERT_PREFER = "resolution=ignore-duplicates,return=minimal"
+INSERT_PREFER = "resolution=merge-duplicates,return=minimal"
 
 
 def main() -> None:

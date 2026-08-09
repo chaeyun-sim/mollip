@@ -16,6 +16,8 @@ import urllib.request
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ENV = os.path.join(REPO, ".env")
+sys.path.insert(0, os.path.join(REPO, "scripts"))
+from exhibition_sync_filters import END_DATE_MIN, end_date_eligible  # noqa: E402
 
 DATE_RE = re.compile(r"^\d{4}\.\d{2}\.\d{2}$")
 # description / title 에서 기간 추출
@@ -134,7 +136,9 @@ def main() -> None:
 
         sd, ed = normalize_row_dates(r.get("start_date", ""), r.get("end_date", ""))
         if valid_pair(sd, ed):
-            if sd != r.get("start_date") or ed != r.get("end_date"):
+            if not end_date_eligible(ed):
+                to_delete.append(r["id"])
+            elif sd != r.get("start_date") or ed != r.get("end_date"):
                 to_update.append((r["id"], sd, ed))
             else:
                 kept += 1
@@ -144,7 +148,11 @@ def main() -> None:
         title = r.get("title") or ""
         parsed = parse_from_text(desc) or parse_from_text(title)
         if parsed:
-            to_update.append((r["id"], parsed[0], parsed[1]))
+            # 파싱된 end_date가 기준(2026.08.01) 이전이면 업데이트 대신 삭제
+            if not end_date_eligible(parsed[1]):
+                to_delete.append(r["id"])
+            else:
+                to_update.append((r["id"], parsed[0], parsed[1]))
             continue
 
         # description 에도 기간 없음 → 아카이브/옛 카탈로그로 보고 삭제

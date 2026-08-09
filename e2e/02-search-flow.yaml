@@ -1,0 +1,24 @@
+appId: com.simune.aaa
+---
+- launchApp:
+    clearState: false
+- waitForAnimationToEnd
+- assertVisible: "mollip"
+
+# 검색 탭 진입
+- tapOn:
+    point: "10%,96%"
+- waitForAnimationToEnd
+- assertVisible: "전시·미술관·작가 검색"
+- takeScreenshot: e2e/screenshots/02-search-before.png
+
+# 검색어 입력
+- tapOn: "전시·미술관·작가 검색"
+- waitForAnimationToEnd
+- inputText: "국립"
+- waitForAnimationToEnd
+- assertVisible: "검색 결과"
+- takeScreenshot: e2e/screenshots/02-search-results.png
+
+# 키보드 닫기
+- hideKeyboard

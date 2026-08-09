@@ -81,10 +81,8 @@ def fetch_exhibitions(api_key: str) -> list[dict]:
                     "title": title,
                     "start_date": start_date,
                     "end_date": end_date,
-                    "artist": tag(b, "person") or None,
                     "description": tag(b, "subDescription") or "",
                     "admission": "무료" if charge == "0" else (charge or "정보 없음"),
-                    "admission_free": charge == "0",
                     "synced_at": __import__("datetime").datetime.now(__import__("datetime").timezone.utc).isoformat(),
                 }
             )
@@ -116,7 +114,7 @@ def sb_request(method: str, path: str, base: str, key: str, body=None, prefer: s
 
 
 INSERT_PATH = "/rest/v1/exhibitions?on_conflict=title,start_date,end_date"
-INSERT_PREFER = "resolution=ignore-duplicates,return=minimal"
+INSERT_PREFER = "resolution=merge-duplicates,return=minimal"
 
 
 def main() -> None:
