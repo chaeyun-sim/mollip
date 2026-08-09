@@ -43,7 +43,8 @@ export function SearchBar({
 		>
 			<Ionicons name='search' size={16} color='rgba(0,0,0,0.35)' />
 			<TextInput
-				className='flex-1 text-black text-sm font-pretendard-regular line-height-0'
+				className='flex-1 text-black text-sm font-pretendard-regular'
+				style={{ lineHeight: 0 }}
 				placeholder={placeholder}
 				placeholderTextColor='rgba(0,0,0,0.3)'
 				value={value}

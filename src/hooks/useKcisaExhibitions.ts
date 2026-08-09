@@ -13,11 +13,18 @@ type Status = 'idle' | 'loading' | 'success' | 'error';
 
 const LIST_LIMIT = 10;
 
+let _cachedItems: KcisaExhibitionItem[] | null = null;
+
 export function useKcisaExhibitions() {
-	const [items, setItems] = useState<KcisaExhibitionItem[]>([]);
-	const [status, setStatus] = useState<Status>('idle');
+	const [items, setItems] = useState<KcisaExhibitionItem[]>(_cachedItems ?? []);
+	const [status, setStatus] = useState<Status>(_cachedItems ? 'success' : 'idle');
 
 	const fetchExhibitions = useCallback(async () => {
+		if (_cachedItems) {
+			setItems(_cachedItems);
+			setStatus('success');
+			return;
+		}
 		setStatus('loading');
 		const { data, error } = await applyExhibitionDateFilters(
 			supabase
@@ -34,14 +41,14 @@ export function useKcisaExhibitions() {
 			return;
 		}
 
-		setItems(
-			data.map((row) => ({
-				id: String(row.id),
-				title: row.title,
-				venue: [row.venue_name_fallback, row.event_site].filter(Boolean).join(' '),
-				thumbnail: row.image_url,
-			})),
-		);
+		const mapped = data.map((row) => ({
+			id: String(row.id),
+			title: row.title,
+			venue: [row.venue_name_fallback, row.event_site].filter(Boolean).join(' '),
+			thumbnail: row.image_url,
+		}));
+		_cachedItems = mapped;
+		setItems(mapped);
 		setStatus('success');
 	}, []);
 

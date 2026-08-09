@@ -74,7 +74,7 @@ async function syncCultureExhibitionsIfStale(): Promise<void> {
 			end_date,
 			genre,
 			type,
-			tags: tags.length > 0 ? tags : null,
+			tags: tags.length > 0 ? JSON.stringify(tags) : null,
 			image_url: item.thumbnail || null,
 			synced_at: new Date().toISOString(),
 		};
@@ -89,11 +89,18 @@ async function syncCultureExhibitionsIfStale(): Promise<void> {
 	await markSynced(CULTURE_SYNC_SOURCE);
 }
 
+let _cachedItems: CultureExhibitionItem[] | null = null;
+
 export function useCultureExhibitions() {
-	const [items, setItems] = useState<CultureExhibitionItem[]>([]);
-	const [status, setStatus] = useState<Status>('idle');
+	const [items, setItems] = useState<CultureExhibitionItem[]>(_cachedItems ?? []);
+	const [status, setStatus] = useState<Status>(_cachedItems ? 'success' : 'idle');
 
 	const fetchExhibitions = useCallback(async () => {
+		if (_cachedItems) {
+			setItems(_cachedItems);
+			setStatus('success');
+			return;
+		}
 		setStatus('loading');
 		try {
 			try {
@@ -111,24 +118,24 @@ export function useCultureExhibitions() {
 			if (error) throw error;
 
 			const today = todayStr();
-			setItems(
-				((data ?? []) as ExhibitionCultureRow[])
-					.filter(
-						(item): item is ExhibitionCultureRow & { start_date: string; end_date: string } =>
-							isValidExhibitionDateString(item.start_date) &&
-							isValidExhibitionDateString(item.end_date) &&
-							isOngoing(item.start_date, item.end_date, today),
-					)
-					.slice(0, RECOMMENDED_COUNT)
-					.map((item) => ({
-						id: String(item.id),
-						title: item.title,
-						venue: item.venue_name_fallback,
-						startDate: item.start_date,
-						endDate: item.end_date,
-						thumbnail: item.image_url ?? '',
-					})),
-			);
+			const mapped = ((data ?? []) as ExhibitionCultureRow[])
+				.filter(
+					(item): item is ExhibitionCultureRow & { start_date: string; end_date: string } =>
+						isValidExhibitionDateString(item.start_date) &&
+						isValidExhibitionDateString(item.end_date) &&
+						isOngoing(item.start_date, item.end_date, today),
+				)
+				.slice(0, RECOMMENDED_COUNT)
+				.map((item) => ({
+					id: String(item.id),
+					title: item.title,
+					venue: item.venue_name_fallback,
+					startDate: item.start_date,
+					endDate: item.end_date,
+					thumbnail: item.image_url ?? '',
+				}));
+			_cachedItems = mapped;
+			setItems(mapped);
 			setStatus('success');
 		} catch {
 			setStatus('error');

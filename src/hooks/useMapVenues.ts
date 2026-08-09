@@ -21,7 +21,7 @@ function isActiveOn(row: ExhibitionRow, filterDate: Date): boolean {
 	const d = new Date(filterDate);
 	d.setHours(0, 0, 0, 0);
 	const start = parseDate(row.start_date);
-	const end = parseDate(row.end_date);
+	const end = parseDate(row.end_date ?? '');
 	end.setHours(23, 59, 59, 999);
 	return d >= start && d <= end;
 }

@@ -15,7 +15,9 @@ interface JusoApiRow {
 }
 
 /** [행정안전부 도로명주소 검색 API](https://www.data.go.kr/data/15057017/openapi.do) */
-export async function searchJusoAddresses(keyword: string): Promise<JusoAddressResult[]> {
+export async function searchJusoAddresses(
+	keyword: string,
+): Promise<JusoAddressResult[]> {
 	const q = keyword.trim();
 	if (q.length < 2) return [];
 
@@ -30,7 +32,9 @@ export async function searchJusoAddresses(keyword: string): Promise<JusoAddressR
 		resultType: 'json',
 	});
 
-	const res = await fetch(`https://business.juso.go.kr/addrlink/addrLinkApi.do?${params.toString()}`);
+	const res = await fetch(
+		`https://business.juso.go.kr/addrlink/addrLinkApi.do?${params.toString()}`,
+	);
 	const json = (await res.json()) as {
 		results?: { common?: { errorCode?: string }; juso?: JusoApiRow[] };
 	};

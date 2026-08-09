@@ -87,8 +87,8 @@ describe('daysUntilEnd / getDdayLabel — 마감 임박', () => {
 	it('종료일 당일 → 0', () => {
 		expect(daysUntilEnd(base, new Date(2026, 7, 31))).toBe(0);
 	});
-	it('D-7 이내 → 마감 D-n 라벨', () => {
-		expect(getDdayLabel(base, new Date(2026, 7, 28))).toBe('마감 D-3');
+	it('D-7 이내 → D-n 라벨', () => {
+		expect(getDdayLabel(base, new Date(2026, 7, 28))).toBe('D-3');
 	});
 	it('종료일 당일 → 오늘 마감', () => {
 		expect(getDdayLabel(base, new Date(2026, 7, 31))).toBe('오늘 마감');

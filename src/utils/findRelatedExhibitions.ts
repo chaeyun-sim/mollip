@@ -79,7 +79,7 @@ async function findFromKcisa({
 			.from('exhibitions')
 			.select(EXHIBITION_COLUMNS)
 			.or(conditions.join(','))
-			.neq('id', excludeId)
+			.neq('id', Number(excludeId))
 			.gte('end_date', todayExhibitionDateString())
 			.limit(RELATED_LIMIT * 3),
 	);
@@ -88,7 +88,6 @@ async function findFromKcisa({
 		.map((row) => {
 			let score = 0;
 			if (venue && row.venue_name_fallback && venue.includes(row.venue_name_fallback)) score += 4;
-			if (artist && row.artist === artist) score += 3;
 			if (genre && row.genre === genre) score += 1;
 			return { exhibition: mapExhibitionRowToExhibition(row), score };
 		})
@@ -110,7 +109,7 @@ async function findBySameLocation({
 				.from('exhibitions')
 				.select(EXHIBITION_COLUMNS)
 				.eq('museum_id', museumId)
-				.neq('id', excludeId)
+				.neq('id', Number(excludeId))
 				.gte('end_date', todayExhibitionDateString())
 				.limit(24),
 		);
@@ -133,7 +132,7 @@ async function findBySameLocation({
 				.from('exhibitions')
 				.select(EXHIBITION_COLUMNS)
 				.or(orFilter)
-				.neq('id', excludeId)
+				.neq('id', Number(excludeId))
 				.gte('end_date', todayExhibitionDateString())
 				.limit(40),
 		);
@@ -166,7 +165,7 @@ async function findBySharedTags(
 			.from('exhibitions')
 			.select(EXHIBITION_COLUMNS)
 			.overlaps('tags', tags)
-			.neq('id', excludeId)
+			.neq('id', Number(excludeId))
 			.gte('end_date', todayExhibitionDateString())
 			.limit(60),
 	);
@@ -258,7 +257,7 @@ async function ensureMinimumRelated(
 		supabase
 			.from('exhibitions')
 			.select(EXHIBITION_COLUMNS)
-			.neq('id', params.excludeId)
+			.neq('id', Number(params.excludeId))
 			.gte('end_date', todayExhibitionDateString())
 			.order('start_date', { ascending: false })
 			.limit(12),

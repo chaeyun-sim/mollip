@@ -17,32 +17,52 @@ export interface Artwork {
 }
 
 export interface Exhibition {
+	// — 식별
 	id: string;
+	source?: string;
+	museumId?: number | null;
+
+	// — 전시 기본 정보
 	title: string;
+	artist?: string;
+	description: string;
+	genre: string;
+	exhibitionType?: string;
+	tags?: string[];
+	note?: string;
+
+	// — 장소
 	venue: string;
+	eventSite?: string;
 	venueAddress?: string;
+	venueGroupName?: string;
+	coordinates?: { latitude: number; longitude: number };
+
+	// — 기간
 	startDate: string;
 	endDate: string;
-	artist?: string;
-	curator?: string;
-	curatorNote?: string;
-	description: string;
-	posterColor: string;
-	posterImage?: ReturnType<typeof require>;
-	heroImageUri?: string;
+
+	// — 운영
 	openHours: string;
 	closedDays?: string;
 	admission: string;
 	admissionFree?: boolean;
-	ticketUrl?: string;
 	phone?: string;
-	coordinates?: { latitude: number; longitude: number };
-	genre: string;
-	exhibitionType?: string;
+
+	// — 링크
+	ticketUrl?: string;
+	web_site?: string;
+	homepage_url?: string;
+
+	// — 이미지
+	heroImageUri?: string;
+	posterColor: string;
+	posterImage?: ReturnType<typeof require>;
+
+	// — 관계
 	artworks: Artwork[];
 	relatedExhibitionIds: string[];
 	relatedExhibitions?: Exhibition[];
-	tags?: string[];
 }
 
 // 전시 본문은 Supabase exhibitions(kcisa/culture/manual)에서 조회한다.

@@ -1,5 +1,5 @@
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Animated, Modal, Pressable, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -24,6 +24,12 @@ export function DatePickerModal({
 }: Props) {
 	const insets = useSafeAreaInsets();
 	const slideAnim = useRef(new Animated.Value(400)).current;
+	const [draft, setDraft] = useState(value);
+
+	// 모달 열릴 때마다 현재 적용된 날짜로 draft 초기화
+	useEffect(() => {
+		if (visible) setDraft(value);
+	}, [visible]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	useEffect(() => {
 		if (visible) {
@@ -72,7 +78,10 @@ export function DatePickerModal({
 								<View />
 							)}
 							<Pressable
-								onPress={onDismiss}
+								onPress={() => {
+									onChange(draft);
+									onDismiss();
+								}}
 								className='bg-black rounded-full px-4 py-1.5'
 							>
 								<Text className='text-sm font-pretendard-semibold text-white'>
@@ -82,10 +91,10 @@ export function DatePickerModal({
 						</View>
 						<View className='w-full flex-row justify-center items-center h-[200px] mt-2'>
 							<DateTimePicker
-								value={value}
+								value={draft}
 								mode='date'
 								display='spinner'
-								onValueChange={(_event: any, date: Date) => onChange(date)}
+								onValueChange={(_event: any, date: Date) => setDraft(date)}
 								className='h-full w-full'
 							/>
 						</View>

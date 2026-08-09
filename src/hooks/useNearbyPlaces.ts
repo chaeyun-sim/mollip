@@ -1,65 +1,78 @@
+import { useEffect, useState } from 'react';
+
+import { searchNaverLocal, type NaverLocalItem } from '@/src/api/naver';
+import { distanceKm, formatDistance } from '@/src/utils/mapUtils';
+
 export interface NearbyPlace {
-	id: string;
-	name: string;
-	category: 'cafe' | 'restaurant';
-	distance: string;
-	address: string;
-	imageUrl: string;
+  id: string;
+  name: string;
+  category: 'cafe' | 'restaurant';
+  distance: string;
+  address: string;
+  imageUrl: string;
 }
 
-// TODO: Naver 지역검색 API 연동 예정 (Client ID/Secret 발급 후 교체) — 지금은 종료 화면
-// UI를 완성하기 위한 예시 데이터. imageUrl도 실제 업체 사진으로 교체될 예정.
-const PLACEHOLDER_PLACES: NearbyPlace[] = [
-	{
-		id: '1',
-		name: '어니언 안국',
-		category: 'cafe',
-		distance: '210m',
-		address: '서울 종로구 계동길',
-		imageUrl: 'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=500&q=70',
-	},
-	{
-		id: '2',
-		name: '몽로',
-		category: 'restaurant',
-		distance: '340m',
-		address: '서울 종로구 북촌로',
-		imageUrl: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=500&q=70',
-	},
-	{
-		id: '3',
-		name: '카페 온화',
-		category: 'cafe',
-		distance: '180m',
-		address: '서울 종로구 율곡로',
-		imageUrl: 'https://images.unsplash.com/photo-1445116572660-236099ec97a0?w=500&q=70',
-	},
-	{
-		id: '4',
-		name: '삼청동수제비',
-		category: 'restaurant',
-		distance: '420m',
-		address: '서울 종로구 삼청로',
-		imageUrl: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=500&q=70',
-	},
-	{
-		id: '5',
-		name: '커피한약방',
-		category: 'cafe',
-		distance: '390m',
-		address: '서울 종로구 익선동',
-		imageUrl: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=500&q=70',
-	},
-	{
-		id: '6',
-		name: '밀탑',
-		category: 'restaurant',
-		distance: '460m',
-		address: '서울 종로구 인사동길',
-		imageUrl: 'https://images.unsplash.com/photo-1552566626-52f8b828add9?w=500&q=70',
-	},
-];
+function classifyCategory(category: string): NearbyPlace['category'] {
+  if (category.includes('카페') || category.includes('커피')) return 'cafe';
+  return 'restaurant';
+}
 
-export function useNearbyPlaces(): NearbyPlace[] {
-	return PLACEHOLDER_PLACES;
+function mapNaverItemToPlace(
+  item: NaverLocalItem,
+  userLat: number,
+  userLon: number,
+  index: number,
+): NearbyPlace {
+  const lat = Number(item.mapy) / 10_000_000;
+  const lon = Number(item.mapx) / 10_000_000;
+  const km = distanceKm(userLat, userLon, lat, lon);
+
+  return {
+    id: String(index),
+    name: item.title.replace(/<[^>]+>/g, ''),
+    category: classifyCategory(item.category),
+    distance: formatDistance(km),
+    address: item.roadAddress || item.address,
+    imageUrl: '',
+  };
+}
+
+export function useNearbyPlaces(location: { latitude: number; longitude: number } | null): {
+  data: NearbyPlace[];
+  isLoading: boolean;
+  error: Error | null;
+} {
+  const [data, setData] = useState<NearbyPlace[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
+
+  useEffect(() => {
+    if (!location) return;
+
+    const { latitude, longitude } = location;
+    let cancelled = false;
+
+    setIsLoading(true);
+    setError(null);
+
+    searchNaverLocal('카페 OR 음식점', 6)
+      .then((items) => {
+        if (cancelled) return;
+        setData(items.map((item, i) => mapNaverItemToPlace(item, latitude, longitude, i)));
+      })
+      .catch((err: unknown) => {
+        if (cancelled) return;
+        setError(err instanceof Error ? err : new Error(String(err)));
+        setData([]);
+      })
+      .finally(() => {
+        if (!cancelled) setIsLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [location?.latitude, location?.longitude]);
+
+  return { data, isLoading, error };
 }

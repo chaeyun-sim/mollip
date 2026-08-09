@@ -57,7 +57,7 @@ export function useExhibitionDetail(id: string | undefined) {
 						excludeId: mapped.id,
 						venue: row.venue_name_fallback,
 						venueDisplay: mapped.venue,
-						artist: row.artist ?? undefined,
+						artist: mapped.artist,
 						genre: row.genre ?? undefined,
 						tags: mapped.tags,
 						museumId: row.museum_id,
