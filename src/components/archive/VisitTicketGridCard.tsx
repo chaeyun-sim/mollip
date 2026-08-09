@@ -1,162 +1,85 @@
-import { useState } from 'react';
-import { Image, LayoutChangeEvent, Pressable, Text, View } from 'react-native';
-
-import { archiveTintForKey, ARCHIVE_INK, ARCHIVE_SUBTLE } from './archivePalette';
-import { useVisitStore } from '@/src/store/visitStore';
-
-const CARD_HEIGHT = 224;
-const GAP = 12;
-
-function miniBarHeights(dateKey: string): number[] {
-	const seed = dateKey.split('').reduce((a, c) => a + c.charCodeAt(0), 0);
-	return Array.from({ length: 14 }, (_, i) => ((seed + i * 5) % 3) + 1);
-}
-
-function MiniBarcode({ dateKey, color }: { dateKey: string; color: string }) {
-	const heights = miniBarHeights(dateKey);
-	return (
-		<View className='flex-row items-end' style={{ gap: 2 }}>
-			{heights.map((h, i) => (
-				<View key={i} style={{ width: 2, height: h * 4, backgroundColor: color }} />
-			))}
-		</View>
-	);
-}
+import { Image, Pressable, Text, View } from 'react-native';
+import { MiniBarcode } from '@/src/components/archive/MiniBarcode';
+import { stringToTicketColor } from '@/src/utils/ticketColor';
 
 function formatDateLabel(dateKey: string): string {
 	const [y, m, d] = dateKey.split('-');
 	return `${y}.${m}.${d}`;
 }
 
-interface VisitTicketGridCardProps {
+export interface VisitTicketGridCardProps {
 	dateKey: string;
 	title: string;
 	imageUrl?: string;
-	width: number;
+	venue?: string;
 	onPress: () => void;
 }
 
-function VisitTicketGridCard({ dateKey, title, imageUrl, width, onPress }: VisitTicketGridCardProps) {
-	const [imgError, setImgError] = useState(false);
-	const tint = archiveTintForKey(dateKey);
-	const showImage = !!imageUrl && !imgError;
+export function VisitTicketGridCard({
+	dateKey,
+	title,
+	imageUrl,
+	venue,
+	onPress,
+}: VisitTicketGridCardProps) {
 	const dateLabel = formatDateLabel(dateKey);
-	const imageHeight = Math.round(CARD_HEIGHT * 0.58);
-	const bottomHeight = CARD_HEIGHT - imageHeight;
+	const [year, m, _] = dateKey.split('-');
+	const ticketColor = stringToTicketColor(venue ?? title);
 
 	return (
 		<Pressable
 			onPress={onPress}
 			accessibilityRole='button'
 			accessibilityLabel={`${dateLabel} ${title} 관람 기록`}
-			style={({ pressed }) => ({
-				opacity: pressed ? 0.88 : 1,
-				width,
-				height: CARD_HEIGHT,
-				borderRadius: 20,
-				overflow: 'hidden',
-				shadowColor: '#1C1917',
-				shadowOpacity: 0.08,
-				shadowRadius: 10,
-				shadowOffset: { width: 0, height: 4 },
-				elevation: 3,
-			})}
+			className='w-1/2 rounded-tl-2xl rounded-tr-2xl overflow-hidden bg-[#111]'
+			style={({ pressed }) => ({ opacity: pressed ? 0.88 : 1 })}
 		>
-			{showImage ? (
-				<View style={{ width, height: CARD_HEIGHT }}>
-					<Image
-						source={{ uri: imageUrl }}
-						style={{ width, height: imageHeight }}
-						resizeMode='cover'
-						onError={() => setImgError(true)}
-					/>
-					<View
-						className='px-3 justify-between'
-						style={{ height: bottomHeight, backgroundColor: '#FFFFFF', paddingVertical: 10 }}
-					>
-						<Text
-							numberOfLines={2}
-							style={{ fontFamily: 'Hahmlet_700Bold', color: ARCHIVE_INK, fontSize: 13, lineHeight: 18 }}
-						>
-							{title}
-						</Text>
-						<View>
-							<Text
-								className='mb-1.5'
-								style={{ fontFamily: 'Pretendard-Regular', fontSize: 10, color: ARCHIVE_SUBTLE }}
-							>
-								{dateLabel}
-							</Text>
-							<MiniBarcode dateKey={dateKey} color='#D6D3D1' />
-						</View>
-					</View>
-				</View>
-			) : (
-				<View
-					className='flex-1 px-4 justify-between'
-					style={{ backgroundColor: tint, paddingVertical: 16 }}
-				>
-					<Text
-						numberOfLines={5}
-						style={{
-							fontFamily: 'Hahmlet_700Bold',
-							color: ARCHIVE_INK,
-							fontSize: 18,
-							lineHeight: 24,
-							flex: 1,
-						}}
-					>
-						{title}
+			{/* 이미지 영역 */}
+			<View className='p-2 pb-3' style={{ backgroundColor: ticketColor }}>
+				<Image
+					source={{ uri: imageUrl }}
+					className='w-full h-[150px] rounded-xl'
+					resizeMode='cover'
+				/>
+			</View>
+			<View className='flex-row items-center relative'>
+				<View className='w-[16px] h-[16px] rounded-full bg-[#f4f4f1] -ml-[9px] absolute left-0' style={{ zIndex: 9999 }} />
+				<View className='w-[16px] h-[16px] rounded-full bg-[#f4f4f1] -mr-[9px] absolute right-0' style={{ zIndex: 9999 }} />
+			</View>
+
+			{/* 정보 영역 */}
+			<View
+				className='px-3 pt-3 border-t border-[#dbcbae] border-dashed'
+				style={{ backgroundColor: ticketColor }}
+			>
+				<View className='flex-row items-center mb-[6px]'>
+					<Text className='text-[14px] text-[#1C1917] font-hahmlet-semibold'>
+						{year}
 					</Text>
-					<View>
-						<Text
-							className='mb-1.5'
-							style={{ fontFamily: 'Pretendard-Regular', fontSize: 10, color: ARCHIVE_SUBTLE }}
-						>
-							{dateLabel}
-						</Text>
-						<MiniBarcode dateKey={dateKey} color='rgba(28,25,23,0.2)' />
-					</View>
+					<View className='flex-1 mx-[6px] bg-[#1C1917] h-[0.5px]' />
+					<Text className='text-[14px] text-[#1C1917] font-hahmlet-bold'>{m}</Text>
 				</View>
-			)}
+				<View className='mx-auto'>
+					<Text
+						numberOfLines={2}
+						className='text-[17px] w-[120px] text-[#1C1917] text-center pb-[10px] leading-normal tracking-[0.5px] font-hahmlet-bold'
+					>
+						{venue ?? title.replace(/[\[\]\/]/g, '')}
+					</Text>
+				</View>
+			</View>
+
+			{/* 스텁 */}
+			<View className='pt-2 pb-4' style={{ backgroundColor: ticketColor }}>
+				<View className='pb-[6px] flex-row items-center justify-center'>
+					<MiniBarcode dateKey={dateKey} color='rgba(68,64,60,0.4)' />
+				</View>
+				<View className='absolute -bottom-1.5 w-full flex-row justify-around'>
+					{Array.from({ length: 11 }).map((_, i) => (
+						<View className='rounded-full w-3 h-3 bg-[#f4f4f1]' key={i} />
+					))}
+				</View>
+			</View>
 		</Pressable>
-	);
-}
-
-interface VisitTicketGridProps {
-	onPress: (dateKey: string) => void;
-}
-
-export function VisitTicketGrid({ onPress }: VisitTicketGridProps) {
-	const visits = useVisitStore((s) => s.visits);
-	const [containerWidth, setContainerWidth] = useState(0);
-
-	const handleLayout = (e: LayoutChangeEvent) => {
-		const w = e.nativeEvent.layout.width;
-		if (w > 0 && w !== containerWidth) setContainerWidth(w);
-	};
-
-	const cardWidth = containerWidth > 0 ? (containerWidth - GAP) / 2 : 0;
-	const sortedDateKeys = Object.keys(visits).sort((a, b) => b.localeCompare(a));
-
-	return (
-		<View onLayout={handleLayout} style={{ flexDirection: 'row', flexWrap: 'wrap', gap: GAP }}>
-			{containerWidth > 0 &&
-				sortedDateKeys.map((dateKey) => {
-					const visit = visits[dateKey];
-					const title = visit?.exhibitionTitle?.trim() || '관람 기록';
-					const imageUrl = visit?.listened.find((l) => l.imageUrl)?.imageUrl;
-					return (
-						<VisitTicketGridCard
-							key={dateKey}
-							dateKey={dateKey}
-							title={title}
-							imageUrl={imageUrl}
-							width={cardWidth}
-							onPress={() => onPress(dateKey)}
-						/>
-					);
-				})}
-		</View>
 	);
 }

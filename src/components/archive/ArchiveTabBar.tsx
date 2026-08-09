@@ -31,7 +31,7 @@ export function ArchiveTabBar({ value, onChange }: ArchiveTabBarProps) {
 	const slideIndex = useSharedValue(tabIndex);
 
 	useEffect(() => {
-		slideIndex.value = withSpring(tabIndex, { damping: 22, stiffness: 280 });
+		slideIndex.value = withSpring(tabIndex, { damping: 40, stiffness: 300 });
 	}, [tabIndex, slideIndex]);
 
 	const onTrackLayout = (e: LayoutChangeEvent) => {

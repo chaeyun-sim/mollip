@@ -1,10 +1,7 @@
 import { Pressable, Text, View } from 'react-native';
 
 import { ArchiveSectionTitle } from '@/src/components/archive/ArchiveSectionTitle';
-import {
-	ARCHIVE_INK,
-	ARCHIVE_MUTED,
-} from '@/src/components/archive/archivePalette';
+import { ARCHIVE_INK } from '@/src/components/archive/archivePalette';
 
 interface ArchiveDiaryEmptyProps {
 	onExplore: () => void;

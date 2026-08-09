@@ -436,22 +436,15 @@ export function VisitTicket({
 						]}
 					>
 						<View className='flex flex-col' style={{ height: TICKET_BODY_HEIGHT }}>
-							<Pressable
-								onPress={() => snapTo(false)}
-								className='px-6 pt-4 pb-1 self-start'
-								accessibilityRole='button'
-								accessibilityLabel='티켓 앞면 보기'
-								style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
-							>
-								<Text className='text-[13px] font-pretendard-medium text-[#78716C]'>
-									← 앞면 보기
-								</Text>
-							</Pressable>
 							<ScrollView
 								style={{ flex: 1, minHeight: 0 }}
 								showsVerticalScrollIndicator={false}
 								nestedScrollEnabled
-								contentContainerStyle={{ paddingBottom: 8, flexGrow: 1 }}
+								contentContainerStyle={{
+									paddingTop: 16,
+									paddingBottom: 8,
+									flexGrow: 1,
+								}}
 							>
 								<View className='px-6 pt-2 pb-2'>
 									<View className='flex-row items-baseline justify-between mb-1'>
