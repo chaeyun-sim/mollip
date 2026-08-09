@@ -12,7 +12,7 @@ import {
 	TextInput,
 	View,
 } from 'react-native';
-import { Screen } from '../../src/components/layout/Screen';
+import { Screen } from '../../../src/components/layout/Screen';
 import { supabase } from '@/src/utils/supabase';
 import { cn } from '@/src/lib/cn';
 import { useAuthStore } from '@/src/store/authStore';

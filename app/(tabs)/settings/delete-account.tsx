@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 
 import { cn } from '@/src/lib/cn';
-import { Screen } from '../../src/components/layout/Screen';
+import { Screen } from '../../../src/components/layout/Screen';
 import { useAuthStore } from '@/src/store/authStore';
 import { deleteAccount } from '@/src/utils/api';
 import { supabase } from '@/src/utils/supabase';

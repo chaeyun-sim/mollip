@@ -11,10 +11,10 @@ import {
 	View,
 } from 'react-native';
 import { VoiceListSkeletonItem } from '@/src/components/settings/VoiceListSkeletonItem';
-import { Screen } from '../../src/components/layout/Screen';
-import type { Voice } from '../../src/hooks/useTTS';
-import { useSettingsStore } from '../../src/store/settingsStore';
-import { fetchTTSBlob, fetchVoices } from '../../src/utils/api';
+import { Screen } from '../../../src/components/layout/Screen';
+import type { Voice } from '../../../src/hooks/useTTS';
+import { useSettingsStore } from '../../../src/store/settingsStore';
+import { fetchTTSBlob, fetchVoices } from '../../../src/utils/api';
 import { cn } from '@/src/lib/cn';
 
 const AVATAR_COLORS = [

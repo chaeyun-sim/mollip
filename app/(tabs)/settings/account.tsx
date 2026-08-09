@@ -4,8 +4,8 @@ import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { ActivityIndicator, Modal, Pressable, Text, View } from 'react-native';
 
-import { Screen } from '../../src/components/layout/Screen';
-import { useAuthStore } from '../../src/store/authStore';
+import { Screen } from '../../../src/components/layout/Screen';
+import { useAuthStore } from '../../../src/store/authStore';
 
 export default function AccountScreen() {
 	const router = useRouter();
