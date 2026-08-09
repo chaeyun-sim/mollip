@@ -43,11 +43,11 @@ export function ExhibitionResultCard({
 						iconSize={40}
 					/>
 				)}
-				<StatusBadge status={status} />
 			</View>
 
 			{/* 정보 */}
 			<View className='flex-1 justify-center gap-1'>
+				<StatusBadge status={status} />
 				<Text
 					numberOfLines={1}
 					className='text-[#1C1917] text-[15px] font-pretendard-semibold'

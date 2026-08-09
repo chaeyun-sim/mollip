@@ -1,4 +1,4 @@
-import { Text, View } from 'react-native';
+import { Text } from 'react-native';
 import {
 	STATUS_LABELS,
 	type ExhibitionStatus,
@@ -8,13 +8,10 @@ interface StatusBadgeProps {
 	status: ExhibitionStatus;
 }
 
-/** 포스터 위에 올리는 반투명 상태 배지 */
 export function StatusBadge({ status }: StatusBadgeProps) {
 	return (
-		<View className='absolute top-1.5 left-1.5 rounded-full px-2 py-0.5 bg-black/35'>
-			<Text className='text-white text-[10px] font-pretendard-semibold'>
-				{STATUS_LABELS[status]}
-			</Text>
-		</View>
+		<Text className='text-black text-[10px] font-pretendard-semibold px-2 py-0.5 bg-black/10 rounded-full self-start'>
+			{STATUS_LABELS[status]}
+		</Text>
 	);
 }
