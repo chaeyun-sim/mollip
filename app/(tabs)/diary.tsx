@@ -1,0 +1,195 @@
+import { Ionicons } from '@expo/vector-icons';
+import * as Haptics from 'expo-haptics';
+import { useRouter } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
+import { useCallback, useMemo, useState } from 'react';
+import { Pressable, ScrollView, Text, View } from 'react-native';
+import { ArchiveDiaryEmpty } from '@/src/components/archive/ArchiveDiaryEmpty';
+import { ArchiveLoginPrompt } from '@/src/components/archive/ArchiveLoginPrompt';
+import { DiaryCalendar } from '@/src/components/archive/DiaryCalendar';
+import { TicketFocusOverlay } from '@/src/components/archive/TicketFocusOverlay';
+import { VisitTicketGrid } from '@/src/components/archive/VisitTicketGrid';
+import { Screen } from '@/src/components/layout/Screen';
+import { useDayImages } from '@/src/hooks/useDayImages';
+import { useAuthStore } from '@/src/store/authStore';
+import { useVisitStore } from '@/src/store/visitStore';
+
+type DiaryViewMode = 'grid' | 'calendar';
+
+export default function DiaryScreen() {
+	const router = useRouter();
+	const session = useAuthStore((s) => s.session);
+	const authLoading = useAuthStore((s) => s.isLoading);
+	const [diaryViewMode, setDiaryViewMode] = useState<DiaryViewMode>('grid');
+	const [focusedDateKey, setFocusedDateKey] = useState<string | null>(null);
+
+	const today = new Date();
+	const [calYear, setCalYear] = useState(today.getFullYear());
+	const [calMonth, setCalMonth] = useState(today.getMonth() + 1);
+
+	const visits = useVisitStore((s) => s.visits);
+	const visitDateKeys = useMemo(() => Object.keys(visits), [visits]);
+	const ticketCount = visitDateKeys.length;
+
+	const dayImages = useDayImages(visits);
+
+	const handleChangeMonth = useCallback(
+		(offset: -1 | 1) => {
+			setCalMonth((prev) => {
+				let m = prev + offset;
+				let y = calYear;
+				if (m > 12) {
+					m = 1;
+					y += 1;
+				}
+				if (m < 1) {
+					m = 12;
+					y -= 1;
+				}
+				setCalYear(y);
+				return m;
+			});
+		},
+		[calYear],
+	);
+
+	const handleSelectDate = useCallback(
+		(dateKey: string) => {
+			router.push(`/diary/${dateKey}`);
+		},
+		[router],
+	);
+
+	const handleGridTicketPress = useCallback((dateKey: string) => {
+		setFocusedDateKey(dateKey);
+	}, []);
+
+	const handleToggleViewMode = useCallback(() => {
+		Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+		setDiaryViewMode((prev) => (prev === 'grid' ? 'calendar' : 'grid'));
+	}, []);
+
+	const handleLogin = useCallback(() => {
+		router.push({
+			pathname: '/auth/login',
+			params: { returnTo: '/(tabs)/diary' },
+		});
+	}, [router]);
+
+	const hasDiaryRecords = ticketCount > 0;
+
+	if (authLoading) return null;
+
+	if (!session) {
+		return (
+			<Screen variant='warm' className='bg-[#f4f4f1]'>
+				<StatusBar style='dark' />
+				<Screen.Header>
+					<Screen.Header.Logo />
+				</Screen.Header>
+				<ArchiveLoginPrompt onLogin={handleLogin} />
+			</Screen>
+		);
+	}
+
+	return (
+		<>
+			<Screen variant='warm' className='bg-[#f4f4f1]'>
+				<StatusBar style='dark' />
+				<Screen.Header>
+					<Screen.Header.Logo />
+				</Screen.Header>
+
+				<ScrollView
+					showsVerticalScrollIndicator={false}
+					bounces={false}
+					contentContainerStyle={{ paddingBottom: 48, alignItems: 'stretch' }}
+				>
+					<View
+						className='flex-row items-end justify-between'
+						style={{ marginBottom: 20 }}
+					>
+						<View>
+							<Text
+								style={{
+									fontFamily: 'Hahmlet_700Bold',
+									fontSize: 48,
+									lineHeight: 52,
+									color: '#1C1917',
+									letterSpacing: -1,
+								}}
+							>
+								{ticketCount}
+							</Text>
+							<Text
+								style={{
+									fontFamily: 'Hahmlet_700Bold',
+									fontSize: 28,
+									lineHeight: 32,
+									color: '#1C1917',
+									letterSpacing: -0.5,
+								}}
+							>
+								Tickets
+							</Text>
+						</View>
+
+						{hasDiaryRecords && (
+							<Pressable
+								onPress={handleToggleViewMode}
+								accessibilityRole='button'
+								accessibilityLabel={
+									diaryViewMode === 'grid' ? '캘린더 보기로 전환' : '그리드 보기로 전환'
+								}
+								hitSlop={8}
+								style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
+								className='flex-row items-center gap-1 pb-[9px]'
+							>
+								<Ionicons
+									name={diaryViewMode === 'grid' ? 'calendar-outline' : 'grid-outline'}
+									size={16}
+									color='#1C1917'
+								/>
+								<Text
+									className='text-[13px] text-[#1C1917]'
+									style={{ fontFamily: 'Pretendard-Medium' }}
+								>
+									{diaryViewMode === 'grid' ? '캘린더' : '그리드'}
+								</Text>
+							</Pressable>
+						)}
+					</View>
+
+					<View className='mt-6'>
+						{!hasDiaryRecords ? (
+							<ArchiveDiaryEmpty
+								onExplore={() => router.push('/(tabs)/')}
+								onMap={() => router.push('/(tabs)/map')}
+							/>
+						) : diaryViewMode === 'grid' ? (
+							<View className='px-1'>
+								<VisitTicketGrid onPress={handleGridTicketPress} />
+							</View>
+						) : (
+							<View className='px-2'>
+								<DiaryCalendar
+									year={calYear}
+									month={calMonth}
+									markedDates={visitDateKeys}
+									dayImages={dayImages}
+									onSelectDate={handleSelectDate}
+									onChangeMonth={handleChangeMonth}
+								/>
+							</View>
+						)}
+					</View>
+				</ScrollView>
+			</Screen>
+
+			<TicketFocusOverlay
+				dateKey={focusedDateKey}
+				onClose={() => setFocusedDateKey(null)}
+			/>
+		</>
+	);
+}
