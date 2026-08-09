@@ -61,7 +61,7 @@ export default function ArtworkDetailScreen() {
 
 	if (!result) {
 		return (
-			<SafeAreaView className='flex-1 items-center justify-center bg-black'>
+			<Screen className='flex-1 items-center justify-center bg-black'>
 				<Text className='text-white/50 text-base font-pretendard-regular mb-4'>
 					작품을 찾을 수 없어요
 				</Text>
@@ -70,7 +70,7 @@ export default function ArtworkDetailScreen() {
 						돌아가기
 					</Text>
 				</Pressable>
-			</SafeAreaView>
+			</Screen>
 		);
 	}
 
@@ -106,7 +106,10 @@ export default function ArtworkDetailScreen() {
 					</Animated.View>
 
 					{/* Contain 이미지 (꾹 누를 때) */}
-					<Animated.View className='absolute w-full h-full' style={containImageStyle}>
+					<Animated.View
+						className='absolute w-full h-full'
+						style={containImageStyle}
+					>
 						<Image
 							source={artwork.imageSource}
 							className='w-full h-full'
@@ -115,7 +118,10 @@ export default function ArtworkDetailScreen() {
 					</Animated.View>
 				</>
 			) : (
-				<EmptyImagePlaceholder className='absolute w-full h-full items-center justify-center bg-[#E5E1D8]' iconSize={160} />
+				<EmptyImagePlaceholder
+					className='absolute w-full h-full items-center justify-center bg-[#E5E1D8]'
+					iconSize={160}
+				/>
 			)}
 
 			{/* 다크 오버레이 + 텍스트 UI */}
