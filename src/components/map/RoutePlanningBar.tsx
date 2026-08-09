@@ -9,8 +9,9 @@ import {
 	View,
 	type LayoutChangeEvent,
 } from 'react-native';
-import { searchJusoAddresses, type JusoAddressResult } from '@/src/api/juso';
+import { searchKakaoKeyword, type KakaoLocalItem } from '@/src/api/kakao';
 import type { RouteEndpoint } from '@/src/hooks/useDirections';
+import type { RecentLocation } from '@/src/hooks/useRecentLocations';
 import type { VenueGroup } from '@/src/data/venues';
 
 type EditingField = 'origin' | 'destination' | null;
@@ -27,9 +28,12 @@ interface RoutePlanningBarProps {
 	destination: RouteEndpoint | null;
 	venues: VenueGroup[];
 	hasCurrentLocation: boolean;
+	recentLocations: RecentLocation[];
 	onSelectOrigin: (endpoint: RouteEndpoint) => void;
 	onSelectDestination: (endpoint: RouteEndpoint) => void;
 	onUseCurrentLocation: () => void;
+	onFocusLocation: (coord: { latitude: number; longitude: number }) => void;
+	onAddRecent: (endpoint: RouteEndpoint, subtitle?: string) => void;
 	onSwap: () => void;
 	onConfirm: () => void;
 	onClose: () => void;
@@ -47,7 +51,10 @@ function venueToEndpoint(venue: VenueGroup): RouteEndpoint {
 	return { name: venue.venueName, coord: venue.coordinates };
 }
 
-function buildVenueSuggestions(venues: VenueGroup[], query: string): RouteSearchSuggestion[] {
+function buildVenueSuggestions(
+	venues: VenueGroup[],
+	query: string,
+): RouteSearchSuggestion[] {
 	const q = query.trim().toLowerCase();
 	const list = q
 		? venues.filter((v) => v.venueName.toLowerCase().includes(q))
@@ -60,14 +67,17 @@ function buildVenueSuggestions(venues: VenueGroup[], query: string): RouteSearch
 	}));
 }
 
-function jusoToSuggestion(row: JusoAddressResult, index: number): RouteSearchSuggestion {
+function kakaoToSuggestion(
+	item: KakaoLocalItem,
+	index: number,
+): RouteSearchSuggestion {
 	return {
-		key: `juso-${row.roadAddress}-${index}`,
-		label: row.roadAddress,
-		subtitle: row.jibunAddress || undefined,
+		key: `kakao-${item.place_name}-${index}`,
+		label: item.place_name,
+		subtitle: item.road_address_name || item.address_name || undefined,
 		endpoint: {
-			name: row.roadAddress,
-			coord: { latitude: row.latitude, longitude: row.longitude },
+			name: item.place_name,
+			coord: { latitude: parseFloat(item.y), longitude: parseFloat(item.x) },
 		},
 	};
 }
@@ -77,9 +87,12 @@ export function RoutePlanningBar({
 	destination,
 	venues,
 	hasCurrentLocation,
+	recentLocations,
 	onSelectOrigin,
 	onSelectDestination,
 	onUseCurrentLocation,
+	onFocusLocation,
+	onAddRecent,
 	onSwap,
 	onConfirm,
 	onClose,
@@ -87,32 +100,32 @@ export function RoutePlanningBar({
 	const [editing, setEditing] = useState<EditingField>(null);
 	const [query, setQuery] = useState('');
 	const [barHeight, setBarHeight] = useState(0);
-	const [jusoRows, setJusoRows] = useState<JusoAddressResult[]>([]);
-	const [jusoLoading, setJusoLoading] = useState(false);
+	const [kakaoRows, setKakaoRows] = useState<KakaoLocalItem[]>([]);
+	const [kakaoLoading, setKakaoLoading] = useState(false);
 
 	useEffect(() => {
 		if (editing == null) {
-			setJusoRows([]);
+			setKakaoRows([]);
 			return;
 		}
 		const q = query.trim();
-		if (q.length < 2) {
-			setJusoRows([]);
-			setJusoLoading(false);
+		if (q.length < 1) {
+			setKakaoRows([]);
+			setKakaoLoading(false);
 			return;
 		}
 		let cancelled = false;
-		setJusoLoading(true);
+		setKakaoLoading(true);
 		const timer = setTimeout(() => {
-			searchJusoAddresses(q)
+			searchKakaoKeyword(q)
 				.then((rows) => {
-					if (!cancelled) setJusoRows(rows);
+					if (!cancelled) setKakaoRows(rows);
 				})
 				.catch(() => {
-					if (!cancelled) setJusoRows([]);
+					if (!cancelled) setKakaoRows([]);
 				})
 				.finally(() => {
-					if (!cancelled) setJusoLoading(false);
+					if (!cancelled) setKakaoLoading(false);
 				});
 		}, 280);
 		return () => {
@@ -127,11 +140,22 @@ export function RoutePlanningBar({
 	);
 
 	const addressSuggestions = useMemo(
-		() => jusoRows.map((row, i) => jusoToSuggestion(row, i)),
-		[jusoRows],
+		() => kakaoRows.map((item, i) => kakaoToSuggestion(item, i)),
+		[kakaoRows],
 	);
 
+	const recentSuggestions = useMemo((): RouteSearchSuggestion[] => {
+		if (query.trim().length > 0) return [];
+		return recentLocations.map((r, i) => ({
+			key: `recent-${i}`,
+			label: r.name,
+			subtitle: r.subtitle,
+			endpoint: { name: r.name, coord: r.coord },
+		}));
+	}, [query, recentLocations]);
+
 	const suggestions = useMemo(() => {
+		if (query.trim().length === 0) return recentSuggestions;
 		const seen = new Set<string>();
 		const merged: RouteSearchSuggestion[] = [];
 		for (const item of [...venueSuggestions, ...addressSuggestions]) {
@@ -141,28 +165,30 @@ export function RoutePlanningBar({
 			if (merged.length >= 10) break;
 		}
 		return merged;
-	}, [venueSuggestions, addressSuggestions]);
+	}, [query, recentSuggestions, venueSuggestions, addressSuggestions]);
 
 	const canConfirm = origin != null && destination != null;
 
 	const openEditor = (field: EditingField) => {
 		setEditing(field);
 		setQuery('');
-		setJusoRows([]);
+		setKakaoRows([]);
 	};
 
 	const pickSuggestion = (item: RouteSearchSuggestion) => {
 		if (editing === 'origin') onSelectOrigin(item.endpoint);
 		else if (editing === 'destination') onSelectDestination(item.endpoint);
+		onFocusLocation(item.endpoint.coord);
+		onAddRecent(item.endpoint, item.subtitle);
 		setEditing(null);
 		setQuery('');
-		setJusoRows([]);
+		setKakaoRows([]);
 	};
 
 	const closeDropdown = () => {
 		setEditing(null);
 		setQuery('');
-		setJusoRows([]);
+		setKakaoRows([]);
 	};
 
 	const onBarLayout = (e: LayoutChangeEvent) => {
@@ -172,7 +198,10 @@ export function RoutePlanningBar({
 	return (
 		<View>
 			<View className='flex-row items-start gap-2' onLayout={onBarLayout}>
-				<View className='flex-1 rounded-2xl bg-white px-3 py-2.5' style={CARD_SHADOW}>
+				<View
+					className='flex-1 rounded-2xl bg-white px-3 py-2.5'
+					style={CARD_SHADOW}
+				>
 					<Pressable
 						onPress={() => openEditor('origin')}
 						className='flex-row items-center gap-2.5 min-h-[36px]'
@@ -211,7 +240,10 @@ export function RoutePlanningBar({
 						onPress={onSwap}
 						disabled={!origin || !destination}
 						className='w-10 h-10 rounded-full bg-white items-center justify-center'
-						style={[CARD_SHADOW, !origin || !destination ? { opacity: 0.4 } : undefined]}
+						style={[
+							CARD_SHADOW,
+							!origin || !destination ? { opacity: 0.4 } : undefined,
+						]}
 						accessibilityRole='button'
 						accessibilityLabel='출발지와 도착지 바꾸기'
 					>
@@ -252,9 +284,14 @@ export function RoutePlanningBar({
 							placeholderTextColor='rgba(0,0,0,0.3)'
 							value={query}
 							onChangeText={setQuery}
+							style={{ lineHeight: 0 }}
 							autoFocus
 						/>
-						<Pressable onPress={closeDropdown} hitSlop={8} accessibilityLabel='검색 닫기'>
+						<Pressable
+							onPress={closeDropdown}
+							hitSlop={8}
+							accessibilityLabel='검색 닫기'
+						>
 							<Ionicons name='close-circle' size={18} color='rgba(0,0,0,0.25)' />
 						</Pressable>
 					</View>
@@ -269,18 +306,27 @@ export function RoutePlanningBar({
 							accessibilityRole='button'
 						>
 							<Ionicons name='locate' size={18} color='#1C1917' />
-							<Text className='text-[14px] font-pretendard-semibold text-[#1C1917]'>현재 위치</Text>
+							<Text className='text-[14px] font-pretendard-semibold text-[#1C1917]'>
+								현재 위치
+							</Text>
 						</Pressable>
 					)}
 
-					{jusoLoading && (
+					{kakaoLoading && (
 						<View className='flex-row items-center gap-2 px-4 py-3'>
 							<ActivityIndicator size='small' color='#1C1917' />
-							<Text className='text-[12px] text-black/45 font-pretendard-regular'>주소 검색 중…</Text>
+							<Text className='text-[12px] text-black/45 font-pretendard-regular'>
+								검색 중…
+							</Text>
 						</View>
 					)}
 
 					<ScrollView keyboardShouldPersistTaps='handled' style={{ maxHeight: 240 }}>
+						{query.trim().length === 0 && recentSuggestions.length > 0 && (
+							<Text className='px-4 pt-3 pb-1 text-[11px] font-pretendard-medium text-black/35'>
+								최근 검색
+							</Text>
+						)}
 						{suggestions.map((item) => (
 							<Pressable
 								key={item.key}
@@ -288,24 +334,38 @@ export function RoutePlanningBar({
 								className='px-4 py-3 border-b border-black/[0.04]'
 								accessibilityRole='button'
 							>
-								<Text className='text-[14px] font-pretendard-medium text-[#1C1917]' numberOfLines={2}>
-									{item.label}
-								</Text>
-								{item.subtitle ? (
-									<Text
-										className='text-[12px] font-pretendard-regular text-black/45 mt-0.5'
-										numberOfLines={1}
-									>
-										{item.subtitle}
-									</Text>
-								) : null}
+								<View className='flex-row items-center gap-2.5'>
+									{query.trim().length === 0 ? (
+										<Ionicons name='time-outline' size={14} color='rgba(0,0,0,0.3)' />
+									) : (
+										<Ionicons name='location-outline' size={14} color='rgba(0,0,0,0.3)' />
+									)}
+									<View className='flex-1'>
+										<Text
+											className='text-[14px] font-pretendard-medium text-[#1C1917]'
+											numberOfLines={1}
+										>
+											{item.label}
+										</Text>
+										{item.subtitle ? (
+											<Text
+												className='text-[12px] font-pretendard-regular text-black/45 mt-0.5'
+												numberOfLines={1}
+											>
+												{item.subtitle}
+											</Text>
+										) : null}
+									</View>
+								</View>
 							</Pressable>
 						))}
-						{!jusoLoading && suggestions.length === 0 && query.trim().length >= 2 && (
-							<Text className='px-4 py-4 text-[13px] text-black/40 font-pretendard-regular'>
-								검색 결과가 없어요
-							</Text>
-						)}
+						{!kakaoLoading &&
+							suggestions.length === 0 &&
+							query.trim().length >= 1 && (
+								<Text className='px-4 py-4 text-[13px] text-black/40 font-pretendard-regular'>
+									검색 결과가 없어요
+								</Text>
+							)}
 					</ScrollView>
 				</View>
 			)}
@@ -319,7 +379,9 @@ export function RoutePlanningBar({
 					accessibilityRole='button'
 					accessibilityLabel='경로 찾기'
 				>
-					<Text className='text-white text-[15px] font-pretendard-bold'>경로 찾기</Text>
+					<Text className='text-white text-[15px] font-pretendard-bold'>
+						경로 찾기
+					</Text>
 				</Pressable>
 			)}
 		</View>

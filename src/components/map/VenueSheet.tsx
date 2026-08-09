@@ -206,6 +206,19 @@ export function VenueSheet({
 							/>
 						</Pressable>
 					)}
+					{activeVenue.note && (
+						<View className='mt-3 px-3.5 py-3 rounded-2xl bg-black/[0.04] flex-row gap-2.5'>
+							<Ionicons
+								name='information-circle-outline'
+								size={15}
+								color='rgba(0,0,0,0.45)'
+								style={{ marginTop: 1 }}
+							/>
+							<Text className='flex-1 text-[13px] leading-[20px] text-black/55 font-pretendard-regular'>
+								{activeVenue.note}
+							</Text>
+						</View>
+					)}
 				</View>
 
 				{activeVenue.amenities && activeVenue.amenities.length > 0 && (

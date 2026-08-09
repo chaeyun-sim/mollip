@@ -1,4 +1,7 @@
-import BottomSheet, { BottomSheetBackdrop, BottomSheetModal } from '@gorhom/bottom-sheet';
+import BottomSheet, {
+	BottomSheetBackdrop,
+	BottomSheetModal,
+} from '@gorhom/bottom-sheet';
 import {
 	NaverMapMarkerOverlay,
 	NaverMapPathOverlay,
@@ -22,9 +25,15 @@ import { useDirections, type DirectionsMode } from '@/src/hooks/useDirections';
 import { useMapCamera, DEFAULT_CAMERA } from '@/src/hooks/useMapCamera';
 import { useMapFilter } from '@/src/hooks/useMapFilter';
 import { useMapVenues } from '@/src/hooks/useMapVenues';
+import { useRecentLocations } from '@/src/hooks/useRecentLocations';
 import { useVenueExhibitions } from '@/src/hooks/useVenueExhibitions';
 import { useMapStore } from '@/src/store/mapStore';
-import { declutterMarkers, distanceKm, formatDistance, latOffsetForPixels } from '@/src/utils/mapUtils';
+import {
+	declutterMarkers,
+	distanceKm,
+	formatDistance,
+	latOffsetForPixels,
+} from '@/src/utils/mapUtils';
 import { legColor } from '@/src/utils/routeColors';
 import type { RouteCoord, RouteLeg } from '@/src/api/tmap';
 
@@ -49,6 +58,7 @@ export default function MapScreen() {
 	const { selectedVenueName, selectVenue, clearSelection } = useMapStore();
 	const [filterDate, setFilterDate] = useState(new Date());
 	const dbVenues = useMapVenues(filterDate);
+	const { recents: recentLocations, addRecent } = useRecentLocations();
 	const {
 		mode: directionsMode,
 		route,
@@ -95,7 +105,9 @@ export default function MapScreen() {
 		if (pinnedVenueName) pinNames.add(pinnedVenueName);
 		if (pinNames.size === 0) return mapVenues;
 		const missing = dbVenues.filter(
-			(v) => pinNames.has(v.venueName) && !mapVenues.some((m) => m.venueName === v.venueName),
+			(v) =>
+				pinNames.has(v.venueName) &&
+				!mapVenues.some((m) => m.venueName === v.venueName),
 		);
 		return missing.length > 0 ? [...mapVenues, ...missing] : mapVenues;
 	}, [mapVenues, dbVenues, selectedVenueName, pinnedVenueName]);
@@ -114,7 +126,9 @@ export default function MapScreen() {
 
 	const selectedVenue = useMemo(
 		() =>
-			[...venueGroups, ...dbVenues].find((v) => v.venueName === selectedVenueName) ?? null,
+			[...venueGroups, ...dbVenues].find(
+				(v) => v.venueName === selectedVenueName,
+			) ?? null,
 		[selectedVenueName, dbVenues],
 	);
 
@@ -131,11 +145,16 @@ export default function MapScreen() {
 		// 미술관 API로 추가된 마커는 주소가 없는데, 같은 장소의 API 전시 데이터에는
 		// 주소(institutionInfo 보강분)가 있는 경우가 있어 그걸로 보강한다.
 		const venueAddress =
-			selectedVenue.venueAddress ?? apiExhibitions.find((ex) => ex.venueAddress)?.venueAddress;
+			selectedVenue.venueAddress ??
+			apiExhibitions.find((ex) => ex.venueAddress)?.venueAddress;
 		if (apiExhibitions.length === 0) return { ...selectedVenue, venueAddress };
 		const merged = new Map(selectedVenue.exhibitions.map((ex) => [ex.id, ex]));
 		for (const ex of apiExhibitions) merged.set(ex.id, ex);
-		return { ...selectedVenue, venueAddress, exhibitions: Array.from(merged.values()) };
+		return {
+			...selectedVenue,
+			venueAddress,
+			exhibitions: Array.from(merged.values()),
+		};
 	}, [selectedVenue, apiExhibitions]);
 
 	const distanceText = useMemo(() => {
@@ -182,10 +201,11 @@ export default function MapScreen() {
 		}
 
 		// 경로가 화면에 꽉 차지 않도록 사방에 여유를 둬서 한 단계 더 축소된 느낌을 준다.
+		// 바텀시트에 가리지 않도록 아래쪽 여유를 위쪽보다 크게 준다.
 		const latPad = (maxLat - minLat) * 0.25 || 0.0015;
 		const lonPad = (maxLon - minLon) * 0.25 || 0.0015;
 		mapRef.current?.animateCameraWithTwoCoords({
-			coord1: { latitude: minLat - latPad, longitude: minLon - lonPad },
+			coord1: { latitude: minLat - latPad * 20, longitude: minLon - lonPad },
 			coord2: { latitude: maxLat + latPad, longitude: maxLon + lonPad },
 		});
 	}, [route, directionsStatus, mapRef]);
@@ -312,7 +332,11 @@ export default function MapScreen() {
 						activeFilters={activeFilters}
 						matchesFilters={matchesFilters}
 						onTap={(v) =>
-							handleMarkerPress(v.venueName, v.coordinates.latitude, v.coordinates.longitude)
+							handleMarkerPress(
+								v.venueName,
+								v.coordinates.latitude,
+								v.coordinates.longitude,
+							)
 						}
 					/>
 				))}
@@ -325,7 +349,11 @@ export default function MapScreen() {
 						activeFilters={activeFilters}
 						matchesFilters={matchesFilters}
 						onTap={(v) =>
-							handleMarkerPress(v.venueName, v.coordinates.latitude, v.coordinates.longitude)
+							handleMarkerPress(
+								v.venueName,
+								v.coordinates.latitude,
+								v.coordinates.longitude,
+							)
 						}
 					/>
 				))}
@@ -403,6 +431,7 @@ export default function MapScreen() {
 						destination={destination}
 						venues={dbVenues}
 						hasCurrentLocation={currentCoord != null}
+						recentLocations={recentLocations}
 						onSelectOrigin={setRouteOrigin}
 						onSelectDestination={setRouteDestination}
 						onUseCurrentLocation={() => {
@@ -410,6 +439,10 @@ export default function MapScreen() {
 								setRouteOrigin({ name: '현재 위치', coord: currentCoord });
 							}
 						}}
+						onFocusLocation={(coord) =>
+							mapRef.current?.animateCameraTo({ ...coord, zoom: 14 })
+						}
+						onAddRecent={addRecent}
 						onSwap={swapEndpoints}
 						onConfirm={handleConfirmRoutePlan}
 						onClose={handleCloseRoute}
@@ -435,24 +468,26 @@ export default function MapScreen() {
 			</View>
 
 			{/* 검색 결과 없음 */}
-			{directionsStatus === 'idle' && searchText.length > 0 && mapVenues.length === 0 && (
-				<View
-					className='absolute left-4 right-4 items-center bg-white rounded-2xl px-4 py-3'
-					style={{
-						top: insets.top + 56,
-						zIndex: 20,
-						shadowColor: '#000',
-						shadowOpacity: 0.1,
-						shadowRadius: 8,
-						shadowOffset: { width: 0, height: 2 },
-						elevation: 4,
-					}}
-				>
-					<Text className='text-sm font-pretendard-medium text-black/40'>
-						"{searchText}"에 해당하는 미술관이 없어요
-					</Text>
-				</View>
-			)}
+			{directionsStatus === 'idle' &&
+				searchText.length > 0 &&
+				mapVenues.length === 0 && (
+					<View
+						className='absolute left-4 right-4 items-center bg-white rounded-2xl px-4 py-3'
+						style={{
+							top: insets.top + 56,
+							zIndex: 20,
+							shadowColor: '#000',
+							shadowOpacity: 0.1,
+							shadowRadius: 8,
+							shadowOffset: { width: 0, height: 2 },
+							elevation: 4,
+						}}
+					>
+						<Text className='text-sm font-pretendard-medium text-black/40'>
+							"{searchText}"에 해당하는 미술관이 없어요
+						</Text>
+					</View>
+				)}
 
 			{/* 줌 버튼 — 길찾기 패널은 드래그로 접을 수 있는 진짜 바텀시트라 버튼 위치를 따로 옮기지 않는다 */}
 			<ZoomControls mapRef={mapRef} cameraRef={cameraRef} />
@@ -521,7 +556,9 @@ export default function MapScreen() {
 					accessibilityRole='button'
 				>
 					<Ionicons name='navigate' size={16} color='white' />
-					<Text className='text-white text-[13px] font-pretendard-bold'>경로 보기</Text>
+					<Text className='text-white text-[13px] font-pretendard-bold'>
+						경로 보기
+					</Text>
 				</Pressable>
 			)}
 
