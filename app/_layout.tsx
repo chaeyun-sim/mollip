@@ -81,7 +81,6 @@ export default function RootLayout() {
 							<Stack.Screen name='(tabs)' options={{ headerShown: false }} />
 							<Stack.Screen name='(guide)' options={{ headerShown: false }} />
 							<Stack.Screen name='(explore)' options={{ headerShown: false }} />
-							<Stack.Screen name='settings' options={{ headerShown: false }} />
 							<Stack.Screen name='auth' options={{ headerShown: false }} />
 							<Stack.Screen name='diary/[date]' options={{ headerShown: false }} />
 							<Stack.Screen

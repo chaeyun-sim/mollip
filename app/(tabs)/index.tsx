@@ -15,23 +15,38 @@ import {
 	ExploreSectionTitle,
 	FeaturedExhibitionHero,
 	RecommendedExhibitions,
-	type RecommendableItem,
 } from '@/src/components/explore/ExploreHomeSections';
 import { Screen } from '@/src/components/layout/Screen';
 import { useCultureExhibitions } from '@/src/hooks/useCultureExhibitions';
 import { useKcisaExhibitions } from '@/src/hooks/useKcisaExhibitions';
-
-/** 추천 전시: 1장 hero + 그리드 4장 */
-const RECOMMENDED_TOTAL = 5;
+import { usePreferences } from '@/src/hooks/usePreferences';
+import { useRecommendedExhibitions } from '@/src/hooks/useRecommendedExhibitions';
+import { useAuthStore } from '@/src/store/authStore';
+import { useBookmarkStore } from '@/src/store/bookmarkStore';
+import { useVisitStore } from '@/src/store/visitStore';
 
 export default function ExploreScreen() {
 	const router = useRouter();
+	const userId = useAuthStore((s) => s.user?.id);
 	const { items, status, refetch } = useCultureExhibitions();
 	const {
 		items: kcisaItems,
 		status: kcisaStatus,
 		refetch: kcisaRefetch,
 	} = useKcisaExhibitions();
+
+	// 사용자 선호 데이터 (REQ-UI002-005)
+	const { preferredGenres, preferredArtists } = usePreferences(userId);
+
+	const visits = useVisitStore((s) => s.visits);
+	const visitedIds = useMemo(
+		() =>
+			Object.values(visits)
+				.map((v) => v.exhibitionId)
+				.filter((id): id is string => id !== null),
+		[visits],
+	);
+	const bookmarkedIds = useBookmarkStore((s) => s.ids);
 
 	const openExhibition = (id: string) => router.push(`/(explore)/${id}`);
 
@@ -69,33 +84,26 @@ export default function ExploreScreen() {
 		return items.slice(1);
 	}, [items, featured]);
 
-	const recommendedItems = useMemo((): RecommendableItem[] => {
-		const culturePart = cultureList.slice(0, RECOMMENDED_TOTAL);
-		if (culturePart.length >= RECOMMENDED_TOTAL) return culturePart;
-		// culture가 부족하면 kcisa 캐러셀 항목으로 채움
-		const kcisaPart = kcisaCarousel.slice(
-			0,
-			RECOMMENDED_TOTAL - culturePart.length,
-		);
-		return [...culturePart, ...kcisaPart];
-	}, [cultureList, kcisaCarousel]);
+	// 취향 기반 추천 (REQ-UI002-002, REQ-UI002-008, REQ-UI002-011)
+	const { items: recommendedItems, isPersonalized } = useRecommendedExhibitions(
+		preferredGenres,
+		preferredArtists,
+		visitedIds,
+		bookmarkedIds,
+	);
+
+	// 추천 훅이 아직 데이터를 불러오지 못한 경우 기존 목록으로 fallback
+	const displayedRecommended = useMemo(() => {
+		if (recommendedItems.length > 0) return recommendedItems;
+		const culturePart = cultureList.slice(0, 5);
+		if (culturePart.length >= 5) return culturePart;
+		return [...culturePart, ...kcisaCarousel.slice(0, 5 - culturePart.length)];
+	}, [recommendedItems, cultureList, kcisaCarousel]);
 
 	return (
-		<Screen variant='warm' className='bg-[#F8F6F2]'>
+		<Screen variant='warm' className='bg-[#f4f4f1]'>
 			<Screen.Header>
 				<Screen.Header.Logo />
-				<Screen.Header.Right>
-					<Pressable
-						onPress={() => router.push('/settings')}
-						hitSlop={12}
-						accessibilityLabel='설정'
-						accessibilityRole='button'
-						className='h-10 w-10 items-center justify-center rounded-full bg-white/80'
-						style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
-					>
-						<Ionicons name='settings-outline' size={20} color='#57534E' />
-					</Pressable>
-				</Screen.Header.Right>
 			</Screen.Header>
 
 			<ScrollView
@@ -182,7 +190,11 @@ export default function ExploreScreen() {
 				})()}
 
 				<View>
-					<ExploreSectionTitle eyebrow='FOR YOU' title='추천 전시' />
+					{/* 레이블: 선호 데이터 있으면 "당신의 취향" (REQ-UI002-009, REQ-UI002-010) */}
+					<ExploreSectionTitle
+						eyebrow='FOR YOU'
+						title={isPersonalized ? '추천 전시 · 당신의 취향' : '추천 전시'}
+					/>
 					{status === 'loading' && items.length === 0 ? (
 						<View className='items-center justify-center py-16'>
 							<ActivityIndicator color='#A8A29E' />
@@ -202,13 +214,13 @@ export default function ExploreScreen() {
 								</Text>
 							</Pressable>
 						</View>
-					) : recommendedItems.length === 0 ? (
+					) : displayedRecommended.length === 0 ? (
 						<Text className='text-[#A8A29E] text-[13px] font-pretendard-regular'>
 							추천할 전시가 없어요
 						</Text>
 					) : (
 						<RecommendedExhibitions
-							items={recommendedItems}
+							items={displayedRecommended}
 							onPress={openExhibition}
 						/>
 					)}

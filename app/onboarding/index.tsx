@@ -11,6 +11,8 @@ import {
 	type OnboardingArtItem,
 } from '@/src/components/onboarding/OnboardingSwipeCard';
 import { Screen } from '@/src/components/layout/Screen';
+import { useAuthStore } from '@/src/store/authStore';
+import { supabase } from '@/src/utils/supabase';
 
 // 12개 하드코딩
 const ART_ITEMS = [
@@ -159,6 +161,7 @@ function shuffle<T>(items: T[]): T[] {
 
 export default function OnboardingScreen() {
 	const router = useRouter();
+	const userId = useAuthStore((s) => s.user?.id);
 	const [cards, setCards] = useState(() => shuffle(ART_ITEMS));
 	const [liked, setLiked] = useState<OnboardingArtItem[]>([]);
 	const [done, setDone] = useState(false);
@@ -181,6 +184,33 @@ export default function OnboardingScreen() {
 			return next;
 		});
 	}, []);
+
+	// 선호 데이터 저장 후 다음 화면으로 이동 (REQ-UI002-003, REQ-UI002-004, REQ-UI002-006)
+	const handleNext = useCallback(() => {
+		if (userId) {
+			const genres = [
+				...new Set(
+					liked.flatMap((item) =>
+						[item.mainGenre, item.subGenre].filter((g): g is string => Boolean(g)),
+					),
+				),
+			];
+			const artists = [
+				...new Set(
+					liked.map((item) => item.artist).filter((a): a is string => Boolean(a?.trim())),
+				),
+			];
+			// 저장 실패 시 온보딩 플로우를 차단하지 않음
+			supabase
+				.from('profiles')
+				.update({ preferred_genres: genres, preferred_artists: artists })
+				.eq('id', userId)
+				.then(({ error }) => {
+					if (error) console.error('[onboarding] preference save failed:', error.message);
+				});
+		}
+		router.push('/onboarding/location');
+	}, [router, userId, liked]);
 
 	return (
 		<Screen className='flex-1 bg-[#F8F6F2]'>
@@ -216,7 +246,7 @@ export default function OnboardingScreen() {
 						<Pressable
 							className='w-full bg-[#1C1917] flex-row items-center justify-center rounded-[18px] py-[18px] gap-2.5 border-[0.5px] border-white/25'
 							style={({ pressed }) => ({ opacity: pressed ? 0.85 : 1 })}
-							onPress={() => router.push('/onboarding/location')}
+							onPress={handleNext}
 							accessibilityRole='button'
 							accessibilityLabel='다음으로'
 						>

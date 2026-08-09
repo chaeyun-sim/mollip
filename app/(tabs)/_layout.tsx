@@ -1,6 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Tabs, useRouter } from 'expo-router';
-
 import { useAuthStore } from '@/src/store/authStore';
 
 export default function TabsLayout() {
@@ -40,19 +39,6 @@ export default function TabsLayout() {
 				}}
 			/>
 			<Tabs.Screen
-				name='index'
-				options={{
-					title: '둘러보기',
-					tabBarIcon: ({ focused, color, size }) => (
-						<Ionicons
-							name={focused ? 'compass' : 'compass-outline'}
-							size={size}
-							color={color}
-						/>
-					),
-				}}
-			/>
-			<Tabs.Screen
 				name='map'
 				options={{
 					title: '지도',
@@ -66,22 +52,59 @@ export default function TabsLayout() {
 				}}
 			/>
 			<Tabs.Screen
-				name='archive'
+				name='index'
+				options={{
+					title: '둘러보기',
+					tabBarIcon: ({ focused, color, size }) => (
+						<Ionicons
+							name={focused ? 'compass' : 'compass-outline'}
+							size={size}
+							color={color}
+						/>
+					),
+				}}
+			/>
+			<Tabs.Screen
+				name='diary'
 				listeners={{
 					tabPress: (e) => {
 						if (authLoading || session) return;
 						e.preventDefault();
 						router.push({
 							pathname: '/auth/login',
-							params: { returnTo: '/(tabs)/archive' },
+							params: { returnTo: '/(tabs)/diary' },
 						});
 					},
 				}}
 				options={{
-					title: '아카이브',
+					title: '다이어리',
 					tabBarIcon: ({ focused, color, size }) => (
 						<Ionicons
-							name={focused ? 'bookmark' : 'bookmark-outline'}
+							name={focused ? 'calendar' : 'calendar-outline'}
+							size={size}
+							color={color}
+						/>
+					),
+				}}
+			/>
+			<Tabs.Screen
+				name='settings'
+				listeners={{
+					tabPress: (e) => {
+						if (!authLoading && !session) {
+							e.preventDefault();
+							router.push({
+								pathname: '/auth/login',
+								params: { returnTo: '/(tabs)/settings' },
+							});
+						}
+					},
+				}}
+				options={{
+					title: '마이페이지',
+					tabBarIcon: ({ focused, color, size }) => (
+						<Ionicons
+							name={focused ? 'person' : 'person-outline'}
 							size={size}
 							color={color}
 						/>
