@@ -247,15 +247,152 @@ app/               # expo-router 화면 — default export 1개(스크린)만
 
 ---
 
-## 10. Import 순서
+## 10. 컴포넌트 내부 선언 순서
 
-1. 외부 라이브러리 (react, react-native, expo-*)
-2. 내부 절대 경로 (`@/src/...`) — 컴포넌트 → 훅 → 스토어 → 유틸 → 타입 순
+컴포넌트 함수 내부는 아래 순서로 작성한다. 훅 블록과 나머지 블록 사이에 빈 줄 1개를 넣는다.
+
+```
+1. 플랫폼 공식 훅   (useRouter, useNavigation, useSafeAreaInsets 등)
+2. useState
+3. 커스텀 훅        (프로젝트에서 만든 훅)
+   ↕ 빈 줄
+4. 상수             (const foo = ...)
+5. 일반 함수        (순수 계산, 이벤트 핸들러 등)
+6. 렌더 함수        (renderXxx — JSX를 반환하는 함수)
+7. return           (컴포넌트 JSX)
+```
+
+```tsx
+export default function ExploreScreen() {
+  // 1. 플랫폼 공식 훅
+  const router = useRouter();
+  const insets = useSafeAreaInsets();
+  // 2. useState
+  const [query, setQuery] = useState('');
+  // 3. 커스텀 훅
+  const { items, status } = useExploreScreenData();
+
+  // 4. 상수
+  const carousel = resolveCarousel();
+  // 5. 일반 함수
+  const openExhibition = (id: string) => router.push(`/(explore)/${id}`);
+  function resolveCarousel() { ... }
+  // 6. 렌더 함수
+  function renderContent() { ... }
+
+  // 7. return
+  return (...);
+}
+```
+
+---
+
+## 11. 조건부 렌더링
+
+null을 렌더링하는 분기는 `&&` 연산자를 사용한다. 삼항 연산자의 `: null` 분기는 쓰지 않는다.
+
+```tsx
+// Good
+{featured && <FeaturedExhibitionHero {...featured} />}
+
+// Bad — `: null` 분기는 불필요하게 길다
+{featured ? <FeaturedExhibitionHero {...featured} /> : null}
+```
+
+단, 두 분기 모두 무언가를 렌더링하는 경우에는 삼항 연산자를 사용한다.
+
+```tsx
+// Good — 두 분기 모두 렌더링
+{isPersonalized ? '추천 전시 · 당신의 취향' : '추천 전시'}
+```
+
+함수 내에 `if` 블록이 여러 개면 블록 사이에 빈 줄을 넣는다.
+
+```tsx
+// Good
+function renderContent() {
+  if (status === 'loading') {
+    return <Spinner />;
+  }
+
+  if (status === 'error') {
+    return <ErrorView />;
+  }
+
+  return <List />;
+}
+
+// Bad — 블록 사이 빈 줄 없음
+function renderContent() {
+  if (status === 'loading') {
+    return <Spinner />;
+  }
+  if (status === 'error') {
+    return <ErrorView />;
+  }
+  return <List />;
+}
+```
+
+삼항 연산자가 `A ? B : C` 기본 형태를 넘어 중첩되면 상수나 함수로 분리한다.
+
+```tsx
+// Bad — 중첩 삼항
+{status === 'loading'
+  ? <Spinner />
+  : status === 'error'
+    ? <ErrorView />
+    : items.length === 0
+      ? <EmptyView />
+      : <List />}
+
+// Good — 함수로 분리
+function renderContent() {
+  if (status === 'loading') return <Spinner />;
+  if (status === 'error') return <ErrorView />;
+  if (items.length === 0) return <EmptyView />;
+  return <List />;
+}
+
+// JSX에서는 호출만
+{renderContent()}
+```
+
+JSX 안에서 즉시 실행 함수(IIFE)를 사용하지 않는다. 로직이 필요하면 컴포넌트 내부 렌더 함수(`renderXxx`)나 별도 컴포넌트로 분리한다.
+
+```tsx
+// Bad — JSX 안에서 IIFE
+{(() => {
+  const entries = buildEntries(data);
+  if (entries.length === 0) return null;
+  return entries.map((e) => <Row key={e.label} {...e} />);
+})()}
+
+// Good — 렌더 함수로 분리 (컴포넌트 내부, 섹션 10 선언 순서 6번 위치)
+function renderEntries() {
+  const entries = buildEntries(data);
+  if (entries.length === 0) return null;
+  return entries.map((e) => <Row key={e.label} {...e} />);
+}
+
+{renderEntries()}
+```
+
+---
+
+## 11. Import 순서
+
+외부 라이브러리 블록과 내부 경로 블록, 두 블록만 구분한다. 빈 줄은 **블록 사이에만** 넣는다. 블록 내부에는 빈 줄을 넣지 않는다.
+
+1. 외부 라이브러리 (react, react-native, expo-*, 서드파티) — 블록 내 빈 줄 없음
+2. *(빈 줄 1개)*
+3. 내부 절대 경로 (`@/src/...`) — 컴포넌트 → 훅 → 스토어 → 유틸 → 타입 순, 블록 내 빈 줄 없음
 
 ```tsx
 import { useCallback, useMemo } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ExhibitionCard } from '@/src/components/map/ExhibitionCard';
 import { useMapFilter } from '@/src/hooks/useMapFilter';
