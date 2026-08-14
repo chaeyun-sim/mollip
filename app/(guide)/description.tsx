@@ -6,6 +6,7 @@ import {
 	ActivityIndicator,
 	Dimensions,
 	GestureResponderEvent,
+	Image,
 	LayoutChangeEvent,
 	Pressable,
 	ScrollView,
@@ -19,25 +20,17 @@ import {
 	withTiming,
 } from 'react-native-reanimated';
 import { Screen } from '../../src/components/layout/Screen';
-import { DESCRIPTION_PROMPT } from '../../src/constants/prompts';
 import { useTTS } from '../../src/hooks/useTTS';
-import { store } from '../../src/store';
+import { useDescriptionStream } from '../../src/hooks/useDescriptionStream';
 import { useImmersiveStore } from '../../src/store/immersiveStore';
-import { todayKey, useVisitStore } from '../../src/store/visitStore';
 import {
 	FONT_SIZE_VALUE,
 	useSettingsStore,
 } from '../../src/store/settingsStore';
-import {
-	streamDescription,
-	streamDescriptionFromImage,
-} from '../../src/utils/api';
 import { formatTime } from '../../src/utils/text';
 import { ScreenHeader } from '../../src/components/layout/ScreenHeader';
 import { MarkdownBoldText } from '@/src/components/common/MarkdownBoldText';
 import { cn } from '@/src/lib/cn';
-
-const CHAR_INTERVAL_MS = 25;
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -46,27 +39,19 @@ export default function DescriptionScreen() {
 	const navigation = useNavigation();
 	const sessionId = useRef(Date.now().toString()).current;
 	const isImmersive = useImmersiveStore((s) => s.isImmersiveMode);
-	const addToPlaylist = useImmersiveStore((s) => s.addToPlaylist);
 	const { fontSize } = useSettingsStore();
 	const bodyFontSize = FONT_SIZE_VALUE[fontSize];
-	const [displayed, setDisplayed] = useState('');
-	const [isStreaming, setIsStreaming] = useState(true);
-	const [hasError, setHasError] = useState(false);
-	const [retryCount, setRetryCount] = useState(0);
-	const [loadingStep, setLoadingStep] = useState(0);
 
-	// 인디케이터 progress bar
-	const barTranslate = useSharedValue(-SCREEN_WIDTH);
-	// 0: 그림 찾는 중, 1: 그림 분석 중, 2: 해설 생성 중
-	const scrollRef = useRef<ScrollView>(null);
-	const progressWidth = useRef(0);
-	const bufferRef = useRef('');
-	const fullTextRef = useRef('');
-	const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
-	const mountedRef = useRef(true);
-	const savedToPlaylistRef = useRef(false);
-	const savedToVisitRef = useRef(false);
-	const recordListened = useVisitStore((s) => s.recordListened);
+	const {
+		displayed,
+		isStreaming,
+		hasError,
+		isTyping,
+		loadingStep,
+		fullTextRef,
+		artworkImageUrl,
+		handleRetry,
+	} = useDescriptionStream();
 
 	const {
 		isSpeaking,
@@ -81,8 +66,7 @@ export default function DescriptionScreen() {
 		seekTo,
 	} = useTTS();
 
-	// 화면을 벗어나는 모든 경로(헤더 버튼, 스와이프 제스처, 하드웨어 back)에서 재생 중인
-	// 오디오를 확실히 멈춘다 — 헤더 버튼 onPress에만 stop()을 걸어두면 제스처로 나갈 때 놓친다.
+	// 화면을 벗어나는 모든 경로에서 재생 중인 오디오를 확실히 멈춘다
 	useEffect(() => {
 		const unsubscribe = navigation.addListener('beforeRemove', () => {
 			stop();
@@ -90,109 +74,10 @@ export default function DescriptionScreen() {
 		return unsubscribe;
 	}, [navigation, stop]);
 
-	// 로딩 단계 자동 진행 (5초, 10초)
-	useEffect(() => {
-		const t1 = setTimeout(() => {
-			if (mountedRef.current) setLoadingStep(1);
-		}, 5000);
-		const t2 = setTimeout(() => {
-			if (mountedRef.current) setLoadingStep(2);
-		}, 10000);
-		return () => {
-			clearTimeout(t1);
-			clearTimeout(t2);
-		};
-	}, []);
-
-	useEffect(() => {
-		mountedRef.current = true;
-		timerRef.current = setInterval(() => {
-			if (!mountedRef.current || bufferRef.current.length === 0) return;
-			const char = bufferRef.current[0];
-			bufferRef.current = bufferRef.current.slice(1);
-			setDisplayed((prev) => prev + char);
-		}, CHAR_INTERVAL_MS);
-
-		return () => {
-			mountedRef.current = false;
-			if (timerRef.current) clearInterval(timerRef.current);
-		};
-	}, []);
-
-	useEffect(() => {
-		// 재생목록에서 진입한 경우 — store에 미리 채워진 해설 사용 (API 호출 없음)
-		if (!fullTextRef.current && store.artworkDescription) {
-			fullTextRef.current = store.artworkDescription;
-			store.artworkDescription = '';
-		}
-
-		if (fullTextRef.current) {
-			setDisplayed(fullTextRef.current);
-			setIsStreaming(false);
-			return;
-		}
-
-		setHasError(false);
-		setIsStreaming(true);
-
-		let cancelled = false;
-		const run = async () => {
-			try {
-				const gen =
-					store.inputMode === 'manual'
-						? streamDescription(
-								`${DESCRIPTION_PROMPT}작품명: ${store.manualTitle}\n작가명: ${store.manualArtist}`,
-							)
-						: streamDescriptionFromImage(
-								store.imageBase64,
-								store.imageMediaType,
-								DESCRIPTION_PROMPT,
-							);
-				for await (const chunk of gen) {
-					if (cancelled || !mountedRef.current) break;
-					bufferRef.current += chunk;
-					fullTextRef.current += chunk;
-				}
-			} catch (e) {
-				if (!cancelled && mountedRef.current) {
-					setHasError(true);
-				}
-			} finally {
-				if (!cancelled && mountedRef.current) {
-					store.artworkDescription = fullTextRef.current;
-					setIsStreaming(false);
-				}
-			}
-		};
-		run();
-		return () => {
-			cancelled = true;
-		};
-	}, [retryCount]);
-
-	const handleRetry = () => {
-		bufferRef.current = '';
-		fullTextRef.current = '';
-		setDisplayed('');
-		setLoadingStep(0);
-		setRetryCount((c) => c + 1);
-	};
-
-	const handlePlayPause = () => {
-		if (isTTSLoading || isTyping) return;
-		if (isSpeaking) pause();
-		else if (elapsed > 0) resume();
-		else speak(fullTextRef.current);
-	};
-
-	const handleProgressTap = (e: GestureResponderEvent) => {
-		if (!duration || !progressWidth.current) return;
-		const ratio = e.nativeEvent.locationX / progressWidth.current;
-		seekTo(ratio * duration);
-	};
-
-	const progress = duration > 0 ? elapsed / duration : 0;
-	const isTyping = isStreaming || bufferRef.current.length > 0;
+	// 인디케이터 progress bar 애니메이션
+	const barTranslate = useSharedValue(-SCREEN_WIDTH);
+	const scrollRef = useRef<ScrollView>(null);
+	const progressWidth = useRef(0);
 
 	useEffect(() => {
 		if (isTyping) {
@@ -209,37 +94,27 @@ export default function DescriptionScreen() {
 		}
 	}, [isTyping]);
 
+	// 스트리밍 완료 시 TTS 프리로드
 	useEffect(() => {
 		if (!isTyping && fullTextRef.current) {
 			preload(fullTextRef.current);
 		}
 	}, [isTyping]);
 
-	// 스트리밍 완료(성공/실패 무관) 시 재생목록에 저장 (몰입 모드 전용, 중복 방지)
-	useEffect(() => {
-		if (!isTyping && isImmersive && !savedToPlaylistRef.current) {
-			savedToPlaylistRef.current = true;
-			addToPlaylist({
-				title: store.inputMode === 'manual' ? store.manualTitle : '촬영한 작품',
-				imageUrl: store.artworkImageUrl || undefined,
-				description: fullTextRef.current || '해설 생성에 실패했어요.',
-			});
-		}
-	}, [isTyping]);
+	const handlePlayPause = () => {
+		if (isTTSLoading || isTyping) return;
+		if (isSpeaking) pause();
+		else if (elapsed > 0) resume();
+		else speak(fullTextRef.current);
+	};
 
-	// 해설 생성 성공 시 관람 다이어리용 들은 기록 저장 (모드 무관, 중복 방지)
-	useEffect(() => {
-		if (!isTyping && fullTextRef.current && !savedToVisitRef.current) {
-			savedToVisitRef.current = true;
-			recordListened(todayKey(), {
-				title: store.inputMode === 'manual' ? store.manualTitle : '촬영한 작품',
-				imageUrl: store.artworkImageUrl || undefined,
-				descriptionPreview: fullTextRef.current
-					? fullTextRef.current.replace(/\s+/g, ' ').trim().slice(0, 280)
-					: undefined,
-			});
-		}
-	}, [isTyping]);
+	const handleProgressTap = (e: GestureResponderEvent) => {
+		if (!duration || !progressWidth.current) return;
+		const ratio = e.nativeEvent.locationX / progressWidth.current;
+		seekTo(ratio * duration);
+	};
+
+	const progress = duration > 0 ? elapsed / duration : 0;
 
 	return (
 		<Screen edges={['top', 'bottom']}>
@@ -282,14 +157,24 @@ export default function DescriptionScreen() {
 						</Text>
 					</View>
 				) : (
-					<MarkdownBoldText
-						text={displayed}
-						className='text-[#e8e8e8] font-pretendard-medium'
-						style={{
-							fontSize: bodyFontSize,
-							lineHeight: bodyFontSize * 1.9,
-						}}
-					/>
+					<>
+						<MarkdownBoldText
+							text={displayed}
+							className='text-[#e8e8e8] font-pretendard-medium'
+							style={{
+								fontSize: bodyFontSize,
+								lineHeight: bodyFontSize * 1.9,
+							}}
+						/>
+						{!isTyping && artworkImageUrl ? (
+							<Image
+								source={{ uri: artworkImageUrl }}
+								className='w-full rounded-xl mt-8'
+								style={{ aspectRatio: 1, resizeMode: 'contain' }}
+								accessibilityLabel='작품 이미지'
+							/>
+						) : null}
+					</>
 				)}
 			</ScrollView>
 
@@ -321,7 +206,9 @@ export default function DescriptionScreen() {
 					<View className='w-9 items-center'>
 						{!isTyping && (
 							<Pressable
-								onPress={() => router.push({ pathname: '/chat', params: { sessionId } })}
+								onPress={() =>
+									router.push({ pathname: '/chat', params: { sessionId } })
+								}
 								hitSlop={8}
 								accessibilityLabel='작품에 대해 질문하기'
 								accessibilityRole='button'

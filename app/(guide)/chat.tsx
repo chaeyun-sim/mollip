@@ -3,26 +3,22 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 import {
 	Pressable,
-	ActivityIndicator,
 	FlatList,
-	Image,
 	Keyboard,
 	KeyboardAvoidingView,
 	Platform,
-	StyleSheet,
 	Text,
 	TextInput,
 	View,
 } from 'react-native';
 import { Screen } from '../../src/components/layout/Screen';
 import { ScreenHeader } from '../../src/components/layout/ScreenHeader';
+import { ChatMessage } from '@/src/components/guide/ChatMessage';
 import { CHAT_SYSTEM_PROMPT } from '../../src/constants/prompts';
 import { store } from '../../src/store';
 import { useChatStore } from '../../src/store/chatStore';
 import { streamChat } from '../../src/utils/api';
 import { cn } from '@/src/lib/cn';
-
-const DOCENT_AVATAR = require('../../assets/images/marker/gogh.png');
 
 export default function ChatScreen() {
 	const router = useRouter();
@@ -96,53 +92,9 @@ export default function ChatScreen() {
 		}
 	}, [messages]);
 
-	const renderMessage = ({
-		item,
-	}: {
-		item: ReturnType<typeof getMessages>[0];
-	}) => {
-		const isUser = item.role === 'user';
-		return (
-			<View className={`mb-4 ${isUser ? 'items-end' : 'items-start'}`}>
-				{!isUser && <Image source={DOCENT_AVATAR} className='w-7 h-7 mb-1' />}
-				{item.isError ? (
-					<Pressable
-						className='flex-row items-center gap-2 px-4 py-3 rounded-2xl rounded-tl-sm bg-[#2a1a1a]'
-						onPress={() => retryMessage(item)}
-						style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
-					>
-						<Ionicons name='refresh' size={14} color='#e05050' />
-						<Text className='font-pretendard-regular text-[#e05050] text-[13px]'>
-							답변 실패 — 다시 시도
-						</Text>
-					</Pressable>
-				) : (
-					<View
-						className={cn(
-							'rounded-2xl px-4 py-3 max-w-[80%]',
-							isUser
-								? 'rounded-tr-sm bg-[#3B82F6]'
-								: 'rounded-tl-sm bg-[#1C1917] border-white/[0.08]',
-						)}
-						style={{ borderWidth: isUser ? 0 : StyleSheet.hairlineWidth }}
-					>
-						{item.text === '' && !isUser ? (
-							<ActivityIndicator size='small' color='#60A5FA' />
-						) : (
-							<Text
-								className={cn(
-									'text-sm leading-5',
-									isUser ? 'text-white' : 'text-[#e8e8e8]',
-								)}
-							>
-								{item.text}
-							</Text>
-						)}
-					</View>
-				)}
-			</View>
-		);
-	};
+	const renderMessage = ({ item }: { item: ReturnType<typeof getMessages>[0] }) => (
+		<ChatMessage item={item} onRetry={retryMessage} />
+	);
 
 	return (
 		<Screen>

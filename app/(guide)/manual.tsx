@@ -113,7 +113,7 @@ export default function ManualScreen() {
 						)}
 					</View>
 
-					<Screen.BottomAbsolute>
+					<Screen.BottomAbsolute className='bottom-10'>
 						<Pressable
 							className='w-full rounded-lg items-center bg-[#3B82F6] py-3.5'
 							onPress={handleSubmit}
