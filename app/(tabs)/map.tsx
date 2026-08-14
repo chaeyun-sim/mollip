@@ -55,7 +55,7 @@ export default function MapScreen() {
 	const { mapRef, cameraRef, currentCoord, displayZoom, handleCameraChanged } =
 		useMapCamera();
 
-	const { selectedVenueName, selectVenue, clearSelection } = useMapStore();
+	const { selectedVenueName, selectVenue, clearSelection, pendingCamera, clearPendingCamera } = useMapStore();
 	const [filterDate, setFilterDate] = useState(new Date());
 	const dbVenues = useMapVenues(filterDate);
 	const { recents: recentLocations, addRecent } = useRecentLocations();
@@ -284,6 +284,22 @@ export default function MapScreen() {
 			router.push(`/(explore)/${exhibitionId}` as never);
 		},
 		[router],
+	);
+
+	// 전시 상세에서 지도 탭으로 진입 시 해당 위치로 카메라 이동
+	useFocusEffect(
+		useCallback(() => {
+			if (!pendingCamera) return;
+			const offset = latOffsetForPixels(MARKER_ZOOM, -25);
+			mapRef.current?.animateCameraTo({
+				latitude: pendingCamera.latitude + offset,
+				longitude: pendingCamera.longitude,
+				zoom: MARKER_ZOOM,
+			});
+			selectVenue(pendingCamera.venueName);
+			bottomSheetRef.current?.present();
+			clearPendingCamera();
+		}, [pendingCamera, mapRef, selectVenue, clearPendingCamera]),
 	);
 
 	// 상세 화면에서 뒤로가기로 지도 탭에 돌아왔을 때, 선택이 남아있으면 시트를 다시 연다.
