@@ -1,13 +1,27 @@
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { Pressable, Text, View } from 'react-native';
-import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
+import Animated, {
+	useAnimatedStyle,
+	useSharedValue,
+	withSpring,
+} from 'react-native-reanimated';
+
+const FAB_SHADOW = {
+	shadowColor: '#000',
+	shadowOpacity: 0.25,
+	shadowRadius: 8,
+	shadowOffset: { width: 0, height: 3 },
+	elevation: 6,
+} as const;
 
 interface ExhibitionImmersiveFabProps {
 	onPress: () => void;
 }
 
-export function ExhibitionImmersiveFab({ onPress }: ExhibitionImmersiveFabProps) {
+export function ExhibitionImmersiveFab({
+	onPress,
+}: ExhibitionImmersiveFabProps) {
 	const pressScale = useSharedValue(1);
 	const pressStyle = useAnimatedStyle(() => ({
 		transform: [{ scale: pressScale.value }],
@@ -29,13 +43,10 @@ export function ExhibitionImmersiveFab({ onPress }: ExhibitionImmersiveFabProps)
 			accessibilityRole='button'
 			hitSlop={8}
 		>
-			<Animated.View style={pressStyle} className='items-center'>
-				<View className='w-14 h-14 rounded-full items-center justify-center bg-white/18 border-[1.5px] border-white/45'>
-					<Ionicons name='headset' size={24} color='white' />
+			<Animated.View style={[pressStyle, FAB_SHADOW]} className='items-center'>
+				<View className='w-16 h-16 rounded-full items-center justify-center bg-[#1C1917]'>
+					<Ionicons name='headset' size={28} color='white' />
 				</View>
-				<Text className='text-white/70 text-[10px] font-pretendard-medium text-center mt-1.5'>
-					몰입하기
-				</Text>
 			</Animated.View>
 		</Pressable>
 	);

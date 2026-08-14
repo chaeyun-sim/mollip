@@ -49,6 +49,31 @@ export interface Exhibition {
 	admissionFree?: boolean;
 	phone?: string;
 
+	// — 접근성 (한국관광공사_무장애 여행정보 KorWithService2)
+	accessibility?: {
+		// 이동/접근
+		route?: string;
+		exit?: string;
+		elevator?: string;
+		// 주차
+		parking?: string;
+		// 편의시설
+		wheelchair?: string;
+		restroom?: string;
+		auditorium?: string;
+		stroller?: string;
+		lactationroom?: string;
+		// 시각장애
+		audioguide?: string;
+		braileblock?: string;
+		brailepromotion?: string;
+		bigprint?: string;
+		guidehuman?: string;
+		// 청각장애
+		signguide?: string;
+		videoguide?: string;
+	} | null;
+
 	// — 링크
 	ticketUrl?: string;
 	web_site?: string;

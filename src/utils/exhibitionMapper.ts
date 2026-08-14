@@ -23,6 +23,7 @@ export type MuseumJoinRow = Pick<
 	Database['public']['Tables']['museums']['Row'],
 	| 'name' | 'address' | 'phone' | 'homepage_url'
 	| 'open_hours' | 'rstdeInfo' | 'gps_x' | 'gps_y' | 'venue_group_name'
+	| 'accessibility'
 >;
 
 function isAdmissionFree(admission: string): boolean {
@@ -107,6 +108,7 @@ export function mapExhibitionRowToExhibition(
 		ticketUrl: row.ticket_url || undefined,
 		web_site: row.web_site || undefined,
 		homepage_url: museum?.homepage_url?.trim() || undefined,
+		accessibility: (museum?.accessibility as Exhibition['accessibility']) ?? undefined,
 		heroImageUri: row.image_url?.trim() || undefined,
 		posterColor: '#E8E4DC',
 		artworks: [],

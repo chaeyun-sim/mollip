@@ -1,4 +1,3 @@
-import * as Location from 'expo-location';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { EXHIBITIONS, type Exhibition } from '../data/exhibitions';
 import { supabase } from '../utils/supabase';
@@ -19,6 +18,7 @@ import {
 	type ExhibitionStatus,
 } from '../utils/exhibitionSearch';
 import { distanceKm } from '../utils/mapUtils';
+import { useUserLocation } from './useUserLocation';
 
 export interface SearchResult {
 	exhibition: Exhibition;
@@ -39,25 +39,11 @@ export function useExhibitionSearch() {
 	const [filterDate, setFilterDate] = useState<Date | null>(null);
 	const [excludedWords, setExcludedWords] = useState<string[]>([]);
 	const [freeOnly, setFreeOnly] = useState(false);
-	const [currentCoord, setCurrentCoord] = useState<{ latitude: number; longitude: number } | null>(null);
+	const { currentCoord } = useUserLocation();
 	const [remoteExhibitions, setRemoteExhibitions] = useState<Exhibition[]>([]);
 	const [remoteLoading, setRemoteLoading] = useState(false);
 	const [popularTags, setPopularTags] = useState<string[]>([]);
 	const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-	useEffect(() => {
-		(async () => {
-			// 온보딩에서 이미 요청했으므로 현재 상태만 확인.
-			// undetermined면 한 번 요청한다(기존 사용자 fallback).
-			let { status } = await Location.getForegroundPermissionsAsync();
-			if (status === 'undetermined') {
-				({ status } = await Location.requestForegroundPermissionsAsync());
-			}
-			if (status !== 'granted') return;
-			const loc = await Location.getCurrentPositionAsync({});
-			setCurrentCoord({ latitude: loc.coords.latitude, longitude: loc.coords.longitude });
-		})();
-	}, []);
 
 	const handleInputChange = useCallback((text: string) => {
 		setInputText(text);

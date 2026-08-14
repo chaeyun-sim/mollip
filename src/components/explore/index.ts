@@ -3,6 +3,7 @@ export { ExhibitionDetailFloatingActions } from './ExhibitionDetailFloatingActio
 export { ExhibitionTicketCTA } from './ExhibitionImmersiveCTA';
 export { ExhibitionImmersiveFab } from './ExhibitionImmersiveFab';
 export { ExhibitionInfoRow } from './ExhibitionInfoRow';
+export { ExhibitionMapPreview } from './ExhibitionMapPreview';
 export { ExhibitionMetaPill } from './ExhibitionMetaPill';
 export { ExhibitionOfficialLink } from './ExhibitionOfficialLink';
 export { ExploreHomeHero } from './ExploreHomeHero';

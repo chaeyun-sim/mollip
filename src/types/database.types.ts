@@ -180,6 +180,7 @@ export type Database = {
       }
       museums: {
         Row: {
+          accessibility: Json | null
           address: string | null
           amenities: string | null
           created_at: string
@@ -198,6 +199,7 @@ export type Database = {
           venue_group_name: string | null
         }
         Insert: {
+          accessibility?: Json | null
           address?: string | null
           amenities?: string | null
           created_at?: string
@@ -216,6 +218,7 @@ export type Database = {
           venue_group_name?: string | null
         }
         Update: {
+          accessibility?: Json | null
           address?: string | null
           amenities?: string | null
           created_at?: string

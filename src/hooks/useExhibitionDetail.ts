@@ -38,7 +38,7 @@ export function useExhibitionDetail(id: string | undefined) {
 		setStatus('loading');
 		supabase
 			.from('exhibitions')
-			.select(`${EXHIBITION_COLUMNS}, museums ( name, address, phone, homepage_url, open_hours, rstdeInfo )`)
+			.select(`${EXHIBITION_COLUMNS}, museums ( name, address, phone, homepage_url, open_hours, rstdeInfo, gps_x, gps_y, venue_group_name, accessibility )`)
 			.eq('id', numericId)
 			.maybeSingle()
 			.then(async ({ data, error }) => {

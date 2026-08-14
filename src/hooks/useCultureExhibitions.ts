@@ -2,7 +2,8 @@ import { useCallback, useEffect, useState } from 'react';
 import { getCultureExhibitionList } from '@/src/api/culture';
 import { inferGenreAndTags } from '@/src/utils/exhibitionClassification';
 import { supabase } from '@/src/utils/supabase';
-import { applyExhibitionDateFilters, isValidExhibitionDateString } from '@/src/utils/exhibitionSearch';
+import { applyExhibitionDateFilters, isValidExhibitionDateString, todayExhibitionDateString } from '@/src/utils/exhibitionSearch';
+import { formatDate } from '@/src/utils/cultureExhibitionMapper';
 import { isStale, markSynced } from '@/src/utils/syncCache';
 
 export interface CultureExhibitionItem {
@@ -22,16 +23,6 @@ const RECOMMENDED_COUNT = 5;
 const CULTURE_SYNC_STORE_SIZE = 300;
 /** data_sync_meta key — 바꾸면 다음 앱 실행 시 재동기화 */
 const CULTURE_SYNC_SOURCE = 'culture_period_v2';
-
-function formatDate(raw: string): string {
-	if (raw.length !== 8) return raw;
-	return `${raw.slice(0, 4)}.${raw.slice(4, 6)}.${raw.slice(6, 8)}`;
-}
-
-function todayStr(): string {
-	const now = new Date();
-	return `${now.getFullYear()}.${String(now.getMonth() + 1).padStart(2, '0')}.${String(now.getDate()).padStart(2, '0')}`;
-}
 
 function isOngoing(startDate: string, endDate: string, today: string): boolean {
 	return startDate <= today && today <= endDate;
@@ -117,7 +108,7 @@ export function useCultureExhibitions() {
 			);
 			if (error) throw error;
 
-			const today = todayStr();
+			const today = todayExhibitionDateString();
 			const mapped = ((data ?? []) as ExhibitionCultureRow[])
 				.filter(
 					(item): item is ExhibitionCultureRow & { start_date: string; end_date: string } =>

@@ -59,6 +59,7 @@ function RelatedExhibitionCard({
 	const animatedStyle = useAnimatedStyle(() => ({
 		transform: [{ scale: scale.value }],
 	}));
+	const ddayLabel = getDdayLabel(exhibition, undefined, Infinity);
 
 	return (
 		<Pressable
@@ -88,7 +89,7 @@ function RelatedExhibitionCard({
 						className='absolute top-0 left-0 right-0 h-14'
 						pointerEvents='none'
 					/>
-					{getDdayLabel(exhibition, undefined, Infinity) ? (
+					{ddayLabel ? (
 						<View
 							className='absolute top-2.5 left-2.5 rounded-full px-2.5 py-1 bg-white/85'
 							style={{
@@ -100,17 +101,17 @@ function RelatedExhibitionCard({
 							}}
 						>
 							<Text className='text-[10px] font-pretendard-semibold text-[#1C1917]'>
-								{getDdayLabel(exhibition, undefined, Infinity)}
+								{ddayLabel}
 							</Text>
 						</View>
 					) : null}
 				</ExhibitionPoster>
 				<View className='pt-2.5' style={{ width: POSTER_W }}>
 					<Text
-						className='font-pretendard-semibold text-[14px] text-gray-900 leading-[19px]'
+						className='font-pretendard-semibold text-[14px] text-gray-900'
 						numberOfLines={2}
 					>
-						{exhibition.title}
+						{exhibition.title.trim()}
 					</Text>
 					<View className='flex-row items-center gap-1 mt-1'>
 						<Ionicons name='location-outline' size={11} color='#9CA3AF' />

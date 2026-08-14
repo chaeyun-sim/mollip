@@ -1,6 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Image, StyleSheet, View } from 'react-native';
-import type { ImageResizeMode, ImageSourcePropType, StyleProp, ViewStyle } from 'react-native';
+import type {
+	ImageResizeMode,
+	ImageSourcePropType,
+	StyleProp,
+	ViewStyle,
+} from 'react-native';
 
 /** 화면 배경(#F8F6F2)보다 한 톤 진한 포스터 빈 상태 배경 */
 export const EXHIBITION_POSTER_PLACEHOLDER_BG = '#F2EFE9';
@@ -46,6 +51,7 @@ interface ExhibitionPosterProps {
 	children?: React.ReactNode;
 	/** 실제 포스터가 보일 때만 살짝 어둡게 (히어로 상단 버튼 대비) */
 	dimOverlay?: boolean;
+	accessibilityLabel?: string;
 }
 
 /** 포스터 URI·로컬 소스가 없거나 로드 실패 시 question.png 빈 상태 */
@@ -58,6 +64,7 @@ export function ExhibitionPoster({
 	resizeMode = 'cover',
 	children,
 	dimOverlay = false,
+	accessibilityLabel,
 }: ExhibitionPosterProps) {
 	const [loadFailed, setLoadFailed] = useState(false);
 	const remoteUri = heroImageUri?.trim();
@@ -77,7 +84,12 @@ export function ExhibitionPoster({
 	return (
 		<View
 			className={className}
-			style={[{ backgroundColor: EXHIBITION_POSTER_PLACEHOLDER_BG, overflow: 'hidden' }, style]}
+			style={[
+				{ backgroundColor: EXHIBITION_POSTER_PLACEHOLDER_BG, overflow: 'hidden' },
+				style,
+			]}
+			accessibilityLabel={accessibilityLabel}
+			accessibilityRole={accessibilityLabel ? 'image' : undefined}
 		>
 			{showRemote ? (
 				<Image
@@ -101,7 +113,10 @@ export function ExhibitionPoster({
 				/>
 			) : null}
 			{showPlaceholder ? (
-				<View style={StyleSheet.absoluteFill} className='items-center justify-center'>
+				<View
+					style={StyleSheet.absoluteFill}
+					className='items-center justify-center'
+				>
 					<Image
 						source={QUESTION_MARK}
 						style={{ width: iconSize, height: iconSize }}

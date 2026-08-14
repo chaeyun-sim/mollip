@@ -30,7 +30,6 @@ export interface UseRecommendedExhibitionsResult {
 function scoreExhibition(
 	row: ExhibitionRow,
 	preferredGenres: string[],
-	preferredArtists: string[],
 	visitedSet: Set<string>,
 	bookmarkedSet: Set<string>,
 ): number {
@@ -110,12 +109,12 @@ export function useRecommendedExhibitions(
 		return [...rows]
 			.map((row) => ({
 				row,
-				score: scoreExhibition(row, preferredGenres, preferredArtists, visitedSet, bookmarkedSet),
+				score: scoreExhibition(row, preferredGenres, visitedSet, bookmarkedSet),
 			}))
 			.sort((a, b) => b.score - a.score)
 			.slice(0, MAX_RECOMMENDED)
 			.map(({ row }) => toRecommendableItem(row));
-	}, [rows, preferredGenres, preferredArtists, visitedIds, bookmarkedIds, isPersonalized]);
+	}, [rows, preferredGenres, visitedIds, bookmarkedIds, isPersonalized]);
 
 	return { items, isPersonalized };
 }
