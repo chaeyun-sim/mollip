@@ -29,37 +29,68 @@ type Props = { ... };
 
 ## 2. Styling — className vs style
 
-NativeWind(Tailwind) className을 기본으로 쓰고, Tailwind로 표현할 수 없는 값만 `style` prop에 작성한다.
+**원칙: NativeWind 임의값(arbitrary value) 문법으로 표현 가능하면 반드시 `className`으로 쓴다. `style={{}}`은 아래 예외만 허용.**
 
-| 상황 | 사용 |
+### className으로 써야 하는 것들 (임의값 포함)
+
+| 값 유형 | className 예시 |
 |---|---|
-| Tailwind 유틸리티로 커버되는 값 | `className` |
-| rgba 투명도 (예: `rgba(0,0,0,0.35)`) | `style` |
-| 픽셀 단위 커스텀 값 (예: `width: 80, height: 100`) | `style` |
-| 동적 색상·크기 변수 (예: `backgroundColor: ex.posterColor`) | `style` |
-| 그림자 (`shadowColor`, `shadowOpacity` 등) | `style` |
-| pressed 상태 opacity | `style` (Pressable style 함수) |
+| 고정 픽셀 크기 | `w-[82px]` `h-[124px]` `w-7` |
+| rgba 색상 (배경) | `bg-[rgba(61,43,26,0.06)]` `bg-[rgba(0,0,0,0.35)]` |
+| rgba 색상 (텍스트) | `text-[rgba(61,43,26,0.42)]` |
+| rgba 색상 (테두리) | `border-[rgba(61,43,26,0.2)]` |
+| 불투명도 슬래시 | `bg-white/15` `text-black/70` |
+| hex 색상 | `bg-[#FAF7F2]` `text-[#3D2B1A]` |
+| 테두리 두께 | `border-[0.5px]` `border-l-[1.5px]` |
+| 레이아웃 | `flex-row` `items-center` `absolute` `overflow-hidden` |
+| 폰트 (tailwind.config.js 등록됨) | `font-hahmlet-bold` `font-pretendard-medium` |
+| 폰트 크기·행간·자간 | `text-[13.5px]` `leading-[19px]` `tracking-[1.2px]` |
+| 라운드 | `rounded-tl-[14px]` `rounded-xl` |
+| 패딩·마진 | `px-[11px]` `pt-3` `mb-0.5` `mt-px` |
+| z-index | `z-10` `z-20` |
+
+### style={{}}만 허용되는 예외
+
+| 상황 | 이유 |
+|---|---|
+| JS 변수/상수 참조 (`width: STUB_WIDTH`) | Tailwind는 런타임 변수 불가 |
+| 계산값 (`top: -(NOTCH / 2)`, `borderRadius: NOTCH / 2`) | 동적 계산 |
+| 동적 색상 (`backgroundColor: stubColor`) | 런타임 결정값 |
+| 그림자 (`shadowColor`, `shadowOffset`, `shadowOpacity`, `shadowRadius`, `elevation`) | Tailwind 미지원 |
+| `transform: [{ rotate: '90deg' }]` | RN transform 배열 문법 |
+| Pressable pressed 상태 opacity (`opacity: pressed ? 0.85 : 1`) | 동적 boolean |
+| `insets.top + 16` 등 SafeArea 계산값 | 동적 계산 |
 
 ```tsx
-// Good
+// ✅ Good — rgba도 className으로
+<View className='bg-[rgba(61,43,26,0.06)] w-[82px] h-full' />
+<Text className='text-[rgba(61,43,26,0.42)] font-pretendard-regular text-[9px]' />
+
+// ❌ Bad — className으로 쓸 수 있는 값을 style에 작성
+<View style={{ backgroundColor: 'rgba(61,43,26,0.06)', width: 82 }} />
+<Text style={{ color: 'rgba(61,43,26,0.42)', fontSize: 9 }} />
+
+// ✅ Good — 변수/계산값은 style
 <View
-  className='rounded-xl items-center justify-center'
-  style={{ width: 80, height: 100, backgroundColor: ex.posterColor }}
+  className='rounded-xl items-center'
+  style={{ width: STUB_WIDTH, height: CARD_HEIGHT, backgroundColor: stubColor }}
 />
-
-// Bad — Tailwind로 가능한 값을 style에 작성
-<View style={{ borderRadius: 12, alignItems: 'center' }} />
 ```
 
-커스텀 폰트는 NativeWind가 처리하지 못하므로 항상 `style`에 작성한다.
+### 폰트 — 반드시 className
+
+`tailwind.config.js`에 모든 폰트가 등록되어 있으므로 `style={{ fontFamily }}` 절대 금지.
 
 ```tsx
-// Good
-<Text style={{ fontFamily: 'Pretendard-SemiBold' }}>...</Text>
+// ✅ Good
+<Text className='font-hahmlet-bold text-[16px]'>제목</Text>
+<Text className='font-pretendard-regular text-[9px]'>설명</Text>
 
-// Bad
-<Text className='font-pretendard-semibold'>...</Text>  // 동작하지 않음
+// ❌ Bad
+<Text style={{ fontFamily: 'Hahmlet_700Bold', fontSize: 16 }}>제목</Text>
 ```
+
+등록된 폰트: `font-pretendard-light` / `font-pretendard-regular` / `font-pretendard-medium` / `font-pretendard-semibold` / `font-pretendard-bold` / `font-hahmlet` / `font-hahmlet-semibold` / `font-hahmlet-bold`
 
 ---
 
@@ -289,6 +320,60 @@ export default function ExploreScreen() {
 
 ## 11. 조건부 렌더링
 
+### 11.1 긍정 조건 우선
+
+`if-else` 또는 삼항 연산자는 **긍정 조건을 먼저** 작성한다. 부정 연산자(`!`)로 시작하는 분기는 조건을 뒤집어 긍정으로 만든다.
+
+```tsx
+// Good
+if (isLoggedIn) {
+  return <Dashboard />;
+} else {
+  return <Login />;
+}
+
+// Bad — 부정으로 시작
+if (!isLoggedIn) {
+  return <Login />;
+} else {
+  return <Dashboard />;
+}
+```
+
+JSX 삼항도 동일하게 적용한다.
+
+```tsx
+// Good
+{hasItems ? <List /> : <Empty />}
+
+// Bad — 부정으로 시작
+{!hasItems ? <Empty /> : <List />}
+```
+
+### 11.2 삼항 연산자 중첩 금지
+
+삼항 연산자는 **2중 이상 중첩하지 않는다.** 분기가 3개 이상이면 렌더 함수(`renderXxx`)로 분리한다.
+
+```tsx
+// Bad — 2중 중첩 삼항
+{isLoading
+  ? <Spinner />
+  : hasError
+    ? <ErrorView />
+    : <List />}
+
+// Good — 렌더 함수로 분리
+function renderContent() {
+  if (isLoading) return <Spinner />;
+  if (hasError) return <ErrorView />;
+  return <List />;
+}
+
+{renderContent()}
+```
+
+### 11.3 null 분기
+
 null을 렌더링하는 분기는 `&&` 연산자를 사용한다. 삼항 연산자의 `: null` 분기는 쓰지 않는다.
 
 ```tsx
@@ -305,6 +390,8 @@ null을 렌더링하는 분기는 `&&` 연산자를 사용한다. 삼항 연산�
 // Good — 두 분기 모두 렌더링
 {isPersonalized ? '추천 전시 · 당신의 취향' : '추천 전시'}
 ```
+
+### 11.4 if 블록 간격
 
 함수 내에 `if` 블록이 여러 개면 블록 사이에 빈 줄을 넣는다.
 
@@ -334,30 +421,6 @@ function renderContent() {
 }
 ```
 
-삼항 연산자가 `A ? B : C` 기본 형태를 넘어 중첩되면 상수나 함수로 분리한다.
-
-```tsx
-// Bad — 중첩 삼항
-{status === 'loading'
-  ? <Spinner />
-  : status === 'error'
-    ? <ErrorView />
-    : items.length === 0
-      ? <EmptyView />
-      : <List />}
-
-// Good — 함수로 분리
-function renderContent() {
-  if (status === 'loading') return <Spinner />;
-  if (status === 'error') return <ErrorView />;
-  if (items.length === 0) return <EmptyView />;
-  return <List />;
-}
-
-// JSX에서는 호출만
-{renderContent()}
-```
-
 JSX 안에서 즉시 실행 함수(IIFE)를 사용하지 않는다. 로직이 필요하면 컴포넌트 내부 렌더 함수(`renderXxx`)나 별도 컴포넌트로 분리한다.
 
 ```tsx
@@ -380,7 +443,7 @@ function renderEntries() {
 
 ---
 
-## 11. Import 순서
+## 12. Import 순서
 
 외부 라이브러리 블록과 내부 경로 블록, 두 블록만 구분한다. 빈 줄은 **블록 사이에만** 넣는다. 블록 내부에는 빈 줄을 넣지 않는다.
 
