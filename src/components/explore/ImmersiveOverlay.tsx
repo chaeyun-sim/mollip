@@ -28,7 +28,12 @@ const EDGE_SIZE = 150;
 /** explore 상세 화면 위에 라이트하게 덧입는 모달 — 다른 라우트로 이동하지 않고, 화면
  * 테두리만 서서히 어두워지는 비네트 + 옅은 black/5 스크림을 깐 다음 중앙에 전시 제목이
  * 천천히 fade-in 된다. 닫을 때는 역순(제목 fade-out → 비네트/스크림 fade-out). */
-export function ImmersiveOverlay({ visible, exhibition, onStart, onClose }: ImmersiveOverlayProps) {
+export function ImmersiveOverlay({
+	visible,
+	exhibition,
+	onStart,
+	onClose,
+}: ImmersiveOverlayProps) {
 	const insets = useSafeAreaInsets();
 	const [mounted, setMounted] = useState(visible);
 	const scrimOpacity = useSharedValue(0);
@@ -49,7 +54,10 @@ export function ImmersiveOverlay({ visible, exhibition, onStart, onClose }: Imme
 			);
 			titleY.value = withDelay(
 				SCRIM_DURATION * 0.45,
-				withTiming(0, { duration: TITLE_DURATION, easing: Easing.out(Easing.cubic) }),
+				withTiming(0, {
+					duration: TITLE_DURATION,
+					easing: Easing.out(Easing.cubic),
+				}),
 			);
 		} else {
 			titleOpacity.value = withTiming(0, { duration: TITLE_DURATION * 0.5 });
@@ -68,7 +76,9 @@ export function ImmersiveOverlay({ visible, exhibition, onStart, onClose }: Imme
 		opacity: titleOpacity.value,
 		transform: [{ translateY: titleY.value }],
 	}));
-	const blackoutStyle = useAnimatedStyle(() => ({ opacity: blackoutOpacity.value }));
+	const blackoutStyle = useAnimatedStyle(() => ({
+		opacity: blackoutOpacity.value,
+	}));
 
 	// 시작하기 — 제목/버튼 fade out 후 배경 전체가 검은색으로 fade, 다 어두워지면 라우팅.
 	const handleStartPress = () => {
@@ -85,18 +95,31 @@ export function ImmersiveOverlay({ visible, exhibition, onStart, onClose }: Imme
 	if (!mounted) return null;
 
 	return (
-		<View style={StyleSheet.absoluteFill} pointerEvents={visible ? 'auto' : 'none'}>
+		<View
+			style={StyleSheet.absoluteFill}
+			pointerEvents={visible ? 'auto' : 'none'}
+		>
 			{/* 배경 전체 — black/60 스크림, explore 화면이 어둡게 비쳐 보인다 */}
 			<Animated.View
-				style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(0,0,0,0.6)' }, scrimStyle]}
+				style={[
+					StyleSheet.absoluteFill,
+					{ backgroundColor: 'rgba(0,0,0,0.6)' },
+					scrimStyle,
+				]}
 			/>
 
 			{/* 테두리 비네트 — 네 변만 살짝 더 어둡게 */}
 			<Animated.View style={[styles.edgeTop, scrimStyle]} pointerEvents='none'>
-				<LinearGradient colors={['rgba(0,0,0,0.8)', 'transparent']} style={{ flex: 1 }} />
+				<LinearGradient
+					colors={['rgba(0,0,0,0.8)', 'transparent']}
+					style={{ flex: 1 }}
+				/>
 			</Animated.View>
 			<Animated.View style={[styles.edgeBottom, scrimStyle]} pointerEvents='none'>
-				<LinearGradient colors={['transparent', 'rgba(0,0,0,0.8)']} style={{ flex: 1 }} />
+				<LinearGradient
+					colors={['transparent', 'rgba(0,0,0,0.8)']}
+					style={{ flex: 1 }}
+				/>
 			</Animated.View>
 			<Animated.View style={[styles.edgeLeft, scrimStyle]} pointerEvents='none'>
 				<LinearGradient
@@ -116,7 +139,10 @@ export function ImmersiveOverlay({ visible, exhibition, onStart, onClose }: Imme
 			</Animated.View>
 
 			{/* 중앙 전시 제목 + 시작하기 */}
-			<View className='flex-1 items-center justify-center px-10' pointerEvents='box-none'>
+			<View
+				className='flex-1 items-center justify-center px-10'
+				pointerEvents='box-none'
+			>
 				<Animated.View style={titleStyle} className='items-center'>
 					<Text
 						className='text-white font-hahmlet-bold text-center text-[30px] leading-snug'
@@ -135,14 +161,19 @@ export function ImmersiveOverlay({ visible, exhibition, onStart, onClose }: Imme
 						accessibilityRole='button'
 						accessibilityLabel='시작하기'
 					>
-						<Text className='text-white font-pretendard-semibold text-[15px]'>셀프 가이드 시작하기</Text>
+						<Text className='text-white font-pretendard-semibold text-[15px]'>
+							셀프 가이드 시작하기
+						</Text>
 					</Pressable>
 				</Animated.View>
 			</View>
 
 			{/* 닫기 버튼 */}
 			<Animated.View
-				style={[{ position: 'absolute', left: 20, top: insets.top + 16 }, titleStyle]}
+				style={[
+					{ position: 'absolute', left: 20, top: insets.top + 16 },
+					titleStyle,
+				]}
 			>
 				<Pressable
 					onPress={onClose}
@@ -157,7 +188,11 @@ export function ImmersiveOverlay({ visible, exhibition, onStart, onClose }: Imme
 
 			{/* 시작하기 전환 — 배경 전체를 검은색으로 fade */}
 			<Animated.View
-				style={[StyleSheet.absoluteFill, { backgroundColor: '#000' }, blackoutStyle]}
+				style={[
+					StyleSheet.absoluteFill,
+					{ backgroundColor: '#000' },
+					blackoutStyle,
+				]}
 				pointerEvents='none'
 			/>
 		</View>
@@ -165,8 +200,32 @@ export function ImmersiveOverlay({ visible, exhibition, onStart, onClose }: Imme
 }
 
 const styles = StyleSheet.create({
-	edgeTop: { position: 'absolute', top: 0, left: 0, right: 0, height: EDGE_SIZE },
-	edgeBottom: { position: 'absolute', bottom: 0, left: 0, right: 0, height: EDGE_SIZE },
-	edgeLeft: { position: 'absolute', top: 0, bottom: 0, left: 0, width: EDGE_SIZE },
-	edgeRight: { position: 'absolute', top: 0, bottom: 0, right: 0, width: EDGE_SIZE },
+	edgeTop: {
+		position: 'absolute',
+		top: 0,
+		left: 0,
+		right: 0,
+		height: EDGE_SIZE,
+	},
+	edgeBottom: {
+		position: 'absolute',
+		bottom: 0,
+		left: 0,
+		right: 0,
+		height: EDGE_SIZE,
+	},
+	edgeLeft: {
+		position: 'absolute',
+		top: 0,
+		bottom: 0,
+		left: 0,
+		width: EDGE_SIZE,
+	},
+	edgeRight: {
+		position: 'absolute',
+		top: 0,
+		bottom: 0,
+		right: 0,
+		width: EDGE_SIZE,
+	},
 });

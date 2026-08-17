@@ -1,4 +1,9 @@
+export { AccessibilityBadges } from './AccessibilityBadges';
+export { DeadlineLabel } from './DeadlineLabel';
 export { ExhibitionArtworkCard } from './ExhibitionArtworkCard';
+export { ExhibitionDescription } from './ExhibitionDescription';
+export { ExhibitionDetailHeader } from './ExhibitionDetailHeader';
+export { ExhibitionVenueInfo } from './ExhibitionVenueInfo';
 export { ExhibitionDetailFloatingActions } from './ExhibitionDetailFloatingActions';
 export { ExhibitionTicketCTA } from './ExhibitionImmersiveCTA';
 export { ExhibitionImmersiveFab } from './ExhibitionImmersiveFab';

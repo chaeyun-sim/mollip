@@ -14,13 +14,18 @@ import {
 	SafeAreaView,
 	useSafeAreaInsets,
 } from 'react-native-safe-area-context';
+import { Ionicons } from '@expo/vector-icons';
+
 import {
+	AccessibilityBadges,
+	ExhibitionDescription,
 	ExhibitionDetailFloatingActions,
+	ExhibitionDetailHeader,
 	ExhibitionImmersiveFab,
-	ExhibitionInfoRow,
 	ExhibitionMapPreview,
 	ExhibitionMetaPill,
 	ExhibitionTicketCTA,
+	ExhibitionVenueInfo,
 	ImmersiveOverlay,
 	RelatedExhibitions,
 } from '@/src/components/explore';
@@ -34,44 +39,14 @@ import { useBookmarkStore } from '@/src/store/bookmarkStore';
 import { useImmersiveStore } from '@/src/store/immersiveStore';
 import { todayKey, useVisitStore } from '@/src/store/visitStore';
 import { getExhibitionTypeDisplay } from '@/src/utils/exhibitionSearch';
-import * as Haptics from 'expo-haptics';
-import * as WebBrowser from 'expo-web-browser';
-import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
-import { cn } from '@/src/lib/cn';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 const HERO_HEIGHT = SCREEN_HEIGHT * 0.62;
-
-const icons = {
-	엘리베이터: 'elevator-passenger',
-	전용주차: 'parking',
-	휠체어: 'human-wheelchair',
-	유모차: 'baby-carriage',
-	수유실: 'mother-nurse',
-	음성안내: 'headphones',
-	오디오가이드: 'headphones',
-	장애인화장실: 'toilet',
-	전시해설: 'account-tie-voice',
-	안내데스크: 'information-slab-circle',
-} as const satisfies Record<
-	string,
-	React.ComponentProps<typeof MaterialCommunityIcons>['name']
->;
-
-/** "YYYY.MM.DD" 문자열을 파싱해 오늘로부터 남은 일수를 반환. 이미 지났으면 음수. */
-function getDaysRemaining(dateStr: string): number {
-	const [y, m, d] = dateStr.split('.').map(Number);
-	const end = new Date(y, m - 1, d);
-	const today = new Date();
-	today.setHours(0, 0, 0, 0);
-	return Math.round((end.getTime() - today.getTime()) / 86_400_000);
-}
 
 export default function ExhibitionDetailScreen() {
 	const { id } = useLocalSearchParams<{ id: string }>();
 	const router = useRouter();
 	const insets = useSafeAreaInsets();
-	const [descriptionExpanded, setDescriptionExpanded] = useState(false);
 	const [immersiveOpen, setImmersiveOpen] = useState(false);
 	const enterImmersive = useImmersiveStore((s) => s.enter);
 	const recordVisit = useVisitStore((s) => s.recordExhibition);
@@ -107,59 +82,6 @@ export default function ExhibitionDetailScreen() {
 					</Text>
 				</Pressable>
 			</SafeAreaView>
-		);
-	}
-
-	function renderAccessibility() {
-		if (!exhibition?.accessibility) return null;
-		const raw = exhibition.accessibility as string;
-
-		if (!raw.length) return null;
-
-		return (
-			<View className='flex-row flex-wrap gap-1.5'>
-				{raw.split(', ').map((item) => {
-					const itemText = item.trim().split(' ').join('');
-					const iconKey = Object.keys(icons).find((key) => itemText.startsWith(key));
-					const iconName = iconKey
-						? icons[iconKey as keyof typeof icons]
-						: undefined;
-					return (
-						<View
-							key={item}
-							className='flex-row items-center rounded-full px-2.5 py-1 gap-1.5'
-							style={{ backgroundColor: 'rgba(28,25,23,0.06)' }}
-						>
-							{iconName && (
-								<MaterialCommunityIcons name={iconName} size={13} color='#57534E' />
-							)}
-							{itemText.includes('경사로') && (
-								<MaterialCommunityIcons
-									name='wheelchair-accessibility'
-									size={13}
-									color='#57534E'
-								/>
-							)}
-							{itemText.includes('주출입구단차없음') && (
-								<MaterialCommunityIcons
-									name={raw.includes('자동문') ? 'door-sliding-open' : 'door-open'}
-									size={13}
-									color='#57534E'
-								/>
-							)}
-							{itemText.startsWith('점자') &&
-								(itemText === '점자블록' ? (
-									<MaterialCommunityIcons name='dots-grid' size={13} color='#57534E' />
-								) : (
-									<MaterialCommunityIcons name='braille' size={13} color='#57534E' />
-								))}
-							<Text className='text-[12px] font-pretendard-medium text-[#57534E]'>
-								{item.trim()}
-							</Text>
-						</View>
-					);
-				})}
-			</View>
 		);
 	}
 
@@ -216,79 +138,17 @@ export default function ExhibitionDetailScreen() {
 				</FadeInView>
 
 				<FadeInView delay={170}>
-					<View className='px-6 pb-3'>
-						<Text className='text-gray-900 text-[26px] leading-[34px] font-pretendard-bold'>
-							{exhibition.title.trim()}
-						</Text>
-						<View className='flex-row items-center flex-wrap gap-x-3 gap-y-1 mt-3'>
-							<Text className='text-gray-400 text-[13px] font-pretendard-regular'>
-								{exhibition.startDate} - {exhibition.endDate}
-							</Text>
-							{(() => {
-								const days = getDaysRemaining(exhibition.endDate);
-								if (days > 14 || days < 0) return null;
-								const label = days === 0 ? '오늘 마감' : `D-${days}`;
-								const bg = days <= 3 ? '#EF4444' : days <= 7 ? '#F97316' : '#EAB308';
-								return (
-									<View
-										className='px-2 py-0.5 rounded-full'
-										style={{ backgroundColor: bg }}
-									>
-										<Text
-											style={{
-												fontFamily: 'Pretendard-SemiBold',
-												fontSize: 11,
-												color: 'white',
-											}}
-										>
-											{label}
-										</Text>
-									</View>
-								);
-							})()}
-							{(exhibition.web_site ?? exhibition.homepage_url) && (
-								<Pressable
-									onPress={() => {
-										Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-										WebBrowser.openBrowserAsync(
-											(exhibition.web_site ?? exhibition.homepage_url)!,
-										);
-									}}
-									hitSlop={6}
-									className='flex-row items-center gap-0.5'
-									accessibilityRole='link'
-									accessibilityLabel='공식 웹사이트 외부 브라우저에서 열기'
-								>
-									<Text className='text-[#1C1917] text-[13px] font-pretendard-medium'>
-										공식 웹사이트
-									</Text>
-									<Ionicons name='open-outline' size={12} color='#1C1917' />
-								</Pressable>
-							)}
-						</View>
-					</View>
+					<ExhibitionDetailHeader
+						title={exhibition.title}
+						startDate={exhibition.startDate}
+						endDate={exhibition.endDate}
+						webSite={exhibition.web_site ?? exhibition.homepage_url}
+					/>
 				</FadeInView>
 
 				{exhibition.description && (
 					<FadeInView delay={200}>
-						<View className='px-6'>
-							<Text
-								className='font-pretendard-light text-[15px] leading-[26px] text-gray-600'
-								numberOfLines={descriptionExpanded ? undefined : 3}
-							>
-								{exhibition.description}
-							</Text>
-							<Pressable
-								onPress={() => setDescriptionExpanded((prev) => !prev)}
-								className='mt-2'
-								accessibilityRole='button'
-								accessibilityLabel={descriptionExpanded ? '설명 접기' : '설명 더보기'}
-							>
-								<Text className='text-gray-400 text-[13px] font-pretendard-medium'>
-									{descriptionExpanded ? '접기' : '더보기'}
-								</Text>
-							</Pressable>
-						</View>
+						<ExhibitionDescription description={exhibition.description} />
 					</FadeInView>
 				)}
 
@@ -328,40 +188,16 @@ export default function ExhibitionDetailScreen() {
 				)}
 
 				<FadeInView delay={300}>
-					<View
-						className={cn(
-							'px-6',
-							exhibition.note || exhibition.tags || exhibition.description
-								? 'pt-8'
-								: 'pt-2',
-						)}
-					>
-						<Text className='font-pretendard-semibold text-[18px] text-gray-900 mb-4'>
-							관람 정보
-						</Text>
-						<View className='h-0.5 w-full bg-[#1C1917]' />
-						{exhibition.venueAddress && (
-							<ExhibitionInfoRow label='위치'>
-								{exhibition.venueAddress}
-							</ExhibitionInfoRow>
-						)}
-						{exhibition.eventSite && (
-							<ExhibitionInfoRow label='전시 공간'>
-								{exhibition.eventSite}
-							</ExhibitionInfoRow>
-						)}
-						<ExhibitionInfoRow label='전화번호'>
-							{exhibition.phone ?? '정보 없음'}
-						</ExhibitionInfoRow>
-						<ExhibitionInfoRow label='운영시간'>
-							{exhibition.openHours}
-						</ExhibitionInfoRow>
-						<ExhibitionInfoRow label='관람료' isLast>
-							{exhibition.admission.replaceAll(' / ', '\n')}
-						</ExhibitionInfoRow>
-
-						<View className='h-0.5 w-full bg-[#1C1917]' />
-					</View>
+					<ExhibitionVenueInfo
+						venueAddress={exhibition.venueAddress}
+						eventSite={exhibition.eventSite}
+						phone={exhibition.phone}
+						openHours={exhibition.openHours}
+						admission={exhibition.admission}
+						hasTopSpacing={
+							!!(exhibition.note || exhibition.tags || exhibition.description)
+						}
+					/>
 				</FadeInView>
 
 				{exhibition.accessibility && (
@@ -369,7 +205,11 @@ export default function ExhibitionDetailScreen() {
 						<Text className='font-pretendard-semibold text-[18px] text-gray-900 mb-4 px-6 mt-10'>
 							접근성 정보
 						</Text>
-						<View className='px-6'>{renderAccessibility()}</View>
+						<View className='px-6'>
+							<AccessibilityBadges
+								accessibility={exhibition.accessibility as string}
+							/>
+						</View>
 					</FadeInView>
 				)}
 
@@ -404,7 +244,6 @@ export default function ExhibitionDetailScreen() {
 				insetTop={insets.top}
 			/>
 
-			{/* 하단 CTA */}
 			{exhibition.ticketUrl && (
 				<View className='absolute bottom-0 left-0 right-0 bg-white border-t border-gray-100'>
 					<SafeAreaView edges={['bottom']}>
@@ -428,6 +267,7 @@ export default function ExhibitionDetailScreen() {
 					recordVisit(todayKey(), id, {
 						title: exhibition.title,
 						venue: exhibition.venue,
+						thumbnail: exhibition.posterImage ?? exhibition.heroImageUri,
 					});
 					setImmersiveMode(true);
 					router.push('/(guide)/create-description');
