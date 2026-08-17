@@ -488,10 +488,7 @@ function RouteSummaryHeader({
 	return (
 		<>
 			<View className='flex-row items-baseline gap-2'>
-				<Text
-					className='text-[#1C1917] text-[30px] leading-[34px] font-pretendard-bold'
-					style={{ letterSpacing: -0.8 }}
-				>
+				<Text className='text-[#1C1917] text-[30px] leading-[34px] font-pretendard-bold tracking-[-0.8px]'>
 					{summary.totalTime}
 				</Text>
 				<View className='flex flex-row items-center gap-2'>
@@ -619,8 +616,8 @@ function RouteTimeline({
 							)}
 							{!isLast && (
 								<View
-									className='w-[2px] rounded-full mt-1 mb-1 flex-1 min-h-[26px]'
-									style={{ backgroundColor: connectorColor, opacity: 0.55 }}
+									className='w-[2px] rounded-full mt-1 mb-1 flex-1 min-h-[26px] opacity-55'
+									style={{ backgroundColor: connectorColor }}
 								/>
 							)}
 						</View>

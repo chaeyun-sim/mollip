@@ -27,7 +27,6 @@ export function SettingsPillGroup<T extends string | number>({
 		>
 			{options.map((opt) => {
 				const selected = value === opt.value;
-				const fontSize = labelFontSize ? labelFontSize(opt.value) : 12;
 				return (
 					<Pressable
 						key={String(opt.value)}
@@ -62,7 +61,7 @@ export function SettingsPillGroup<T extends string | number>({
 								'font-pretendard-semibold',
 								selected ? 'text-white' : 'text-[#A8A29E]',
 							)}
-							style={{ fontSize }}
+							style={{ fontSize: labelFontSize ? labelFontSize(opt.value) : 12 }}
 						>
 							{opt.label}
 						</Text>

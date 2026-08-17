@@ -10,6 +10,7 @@ export interface CardRowProps {
 	onPress?: () => void;
 	children?: React.ReactNode;
 	last?: boolean;
+	className?: string;
 }
 
 export function CardRow({
@@ -19,6 +20,7 @@ export function CardRow({
 	onPress,
 	children,
 	last = false,
+	className,
 }: CardRowProps) {
 	const inner = (pressed: boolean) => (
 		<View
@@ -26,6 +28,7 @@ export function CardRow({
 				'flex-row items-center justify-between px-4 py-[15px] border-[rgba(28,25,23,0.06)]',
 				pressed ? 'opacity-50' : 'opacity-100',
 				last ? 'border-b-0' : 'border-b',
+				className,
 			)}
 		>
 			<View className='flex-row items-center gap-3'>
@@ -51,7 +54,11 @@ export function CardRow({
 
 	if (onPress) {
 		return (
-			<Pressable onPress={onPress} accessibilityRole='button' accessibilityLabel={label}>
+			<Pressable
+				onPress={onPress}
+				accessibilityRole='button'
+				accessibilityLabel={label}
+			>
 				{({ pressed }) => inner(pressed)}
 			</Pressable>
 		);

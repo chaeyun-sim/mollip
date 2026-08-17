@@ -105,6 +105,7 @@ export default function ManualScreen() {
 							}}
 							returnKeyType='done'
 							onSubmitEditing={handleSubmit}
+							style={{ lineHeight: 0 }}
 						/>
 						{artistError && (
 							<Text className='text-xs mt-1.5 font-pretendard-regular text-[#EF4444]'>

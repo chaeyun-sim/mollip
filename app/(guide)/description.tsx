@@ -31,6 +31,9 @@ import { formatTime } from '../../src/utils/text';
 import { ScreenHeader } from '../../src/components/layout/ScreenHeader';
 import { MarkdownBoldText } from '@/src/components/common/MarkdownBoldText';
 import { cn } from '@/src/lib/cn';
+import { useHistoryStore } from '@/src/store/historyStore';
+import { store } from '@/src/store';
+import { fetchWikidataImage } from '@/src/utils/wikidataImage';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -41,6 +44,11 @@ export default function DescriptionScreen() {
 	const isImmersive = useImmersiveStore((s) => s.isImmersiveMode);
 	const { fontSize } = useSettingsStore();
 	const bodyFontSize = FONT_SIZE_VALUE[fontSize];
+
+	const addHistory = useHistoryStore((s) => s.add);
+	const removeHistory = useHistoryStore((s) => s.remove);
+	const updateHistory = useHistoryStore((s) => s.update);
+	const [savedId, setSavedId] = useState<string | null>(null);
 
 	const {
 		displayed,
@@ -125,6 +133,42 @@ export default function DescriptionScreen() {
 							router.back();
 						}}
 					/>
+					<Screen.Header.Right>
+						<Pressable
+							onPress={() => {
+								Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+								if (savedId) {
+									removeHistory(savedId);
+									setSavedId(null);
+								} else {
+									const title = store.manualTitle || store.extractedText || '작품 해설';
+									const artist = store.manualArtist || undefined;
+									const id = addHistory({
+										text: fullTextRef.current,
+										title,
+										artist,
+										imageUrl: artworkImageUrl || undefined,
+									});
+									setSavedId(id);
+									if (!artworkImageUrl && title !== '작품 해설') {
+										fetchWikidataImage(title, artist).then((url) => {
+											if (url) updateHistory(id, { imageUrl: url });
+										});
+									}
+								}
+							}}
+							hitSlop={8}
+							accessibilityLabel={savedId ? '히스토리에서 제거' : '히스토리에 저장'}
+							accessibilityRole='button'
+							style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
+						>
+							<Ionicons
+								name={savedId ? 'heart' : 'heart-outline'}
+								size={22}
+								color={savedId ? '#F87171' : '#78716C'}
+							/>
+						</Pressable>
+					</Screen.Header.Right>
 				</Screen.Header>
 			)}
 

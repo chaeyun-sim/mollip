@@ -106,9 +106,9 @@ export function useDescriptionStream() {
 		}
 	}, [isTyping]);
 
-	// 해설 생성 성공 시 관람 기록 저장
+	// 해설 생성 성공 시 관람 기록 저장 (몰입 모드 전용)
 	useEffect(() => {
-		if (!isTyping && fullTextRef.current && !savedToVisitRef.current) {
+		if (!isTyping && isImmersive && fullTextRef.current && !savedToVisitRef.current) {
 			savedToVisitRef.current = true;
 			recordListened(todayKey(), {
 				title: store.inputMode === 'manual' ? store.manualTitle : '촬영한 작품',

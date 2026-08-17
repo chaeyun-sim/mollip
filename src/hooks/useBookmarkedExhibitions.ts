@@ -29,7 +29,7 @@ export function useBookmarkedExhibitions(): {
     supabase
       .from('exhibitions')
       .select(EXHIBITION_COLUMNS)
-      .in('id', ids.map(Number))
+      .in('id', ids.map(Number).filter((n) => !isNaN(n)))
       .then(({ data: rows, error: sbError }) => {
         if (sbError) {
           setError(new Error(sbError.message));

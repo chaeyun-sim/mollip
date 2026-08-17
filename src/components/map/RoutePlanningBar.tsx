@@ -321,7 +321,7 @@ export function RoutePlanningBar({
 						</View>
 					)}
 
-					<ScrollView keyboardShouldPersistTaps='handled' style={{ maxHeight: 240 }}>
+					<ScrollView keyboardShouldPersistTaps='handled' className='max-h-60'>
 						{query.trim().length === 0 && recentSuggestions.length > 0 && (
 							<Text className='px-4 pt-3 pb-1 text-[11px] font-pretendard-medium text-black/35'>
 								최근 검색

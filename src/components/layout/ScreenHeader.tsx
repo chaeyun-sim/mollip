@@ -25,10 +25,7 @@ function ScreenHeader({ children, className, style }: SlotProps) {
 function Logo({ className, style }: SlotProps) {
 	return (
 		<View className={cn('flex-1 items-start', className)} style={style}>
-			<Text
-				className='text-[#1C1917] text-[24px] font-hahmlet-bold'
-				style={{ letterSpacing: -0.5 }}
-			>
+			<Text className='text-[#1C1917] text-[24px] font-hahmlet-bold tracking-[-0.5px]'>
 				{SERVICE_NAME}
 			</Text>
 		</View>
