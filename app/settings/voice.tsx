@@ -11,10 +11,10 @@ import {
 	View,
 } from 'react-native';
 import { VoiceListSkeletonItem } from '@/src/components/settings/VoiceListSkeletonItem';
-import { Screen } from '../../../src/components/layout/Screen';
-import type { Voice } from '../../../src/hooks/useTTS';
-import { useSettingsStore } from '../../../src/store/settingsStore';
-import { fetchTTSBlob, fetchVoices } from '../../../src/utils/api';
+import { Screen } from '@/src/components/layout/Screen';
+import type { Voice } from '@/src/hooks/useTTS';
+import { useSettingsStore } from '@/src/store/settingsStore';
+import { fetchTTSBlob, fetchVoices } from '@/src/utils/api';
 import { cn } from '@/src/lib/cn';
 
 const AVATAR_COLORS = [
@@ -136,7 +136,9 @@ export default function VoiceScreen() {
 									key={voice.voice_id}
 									className='rounded-[22px] py-3.5'
 									style={({ pressed }) => ({
-										backgroundColor: selected ? '#1C1917' : '#F2EFE9',
+										backgroundColor: selected ? '#F7F3EE' : '#F2EFE9',
+										borderWidth: selected ? 1.5 : 0,
+										borderColor: selected ? '#1C1917' : 'transparent',
 										transform: [{ scale: pressed ? 0.98 : 1 }],
 									})}
 									accessibilityRole='radio'
@@ -148,13 +150,28 @@ export default function VoiceScreen() {
 									}}
 								>
 									<View className='flex-row items-center gap-3'>
-										<View
-											className='w-11 h-11 rounded-full items-center justify-center'
-											style={{ backgroundColor: avatarColor(displayName) }}
-										>
-											<Text className='font-pretendard-bold text-[15px] text-[#1C1917]'>
-												{displayName.charAt(0)}
-											</Text>
+										<View className='relative'>
+											<View
+												className='w-11 h-11 rounded-full items-center justify-center'
+												style={{ backgroundColor: avatarColor(displayName) }}
+											>
+												<Text className='font-pretendard-bold text-[15px] text-[#1C1917]'>
+													{displayName.charAt(0)}
+												</Text>
+											</View>
+											{selected && (
+												<View
+													className='absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full bg-[#1C1917] items-center justify-center'
+													style={{
+														shadowColor: '#fff',
+														shadowOffset: { width: 0, height: 0 },
+														shadowOpacity: 1,
+														shadowRadius: 2,
+													}}
+												>
+													<Ionicons name='checkmark' size={10} color='#fff' />
+												</View>
+											)}
 										</View>
 
 										<View className='flex-1'>
@@ -162,9 +179,6 @@ export default function VoiceScreen() {
 												<Text className='text-[15px] font-pretendard-semibold text-[#111827]'>
 													{displayName}
 												</Text>
-												{selected && (
-													<Ionicons name='checkmark-circle' size={15} color='#60A5FA' />
-												)}
 											</View>
 											{tags.length > 0 && (
 												<View className='flex-row flex-wrap gap-1.5 mt-1.5'>

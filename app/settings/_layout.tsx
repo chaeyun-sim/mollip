@@ -9,7 +9,6 @@ export default function SettingsLayout() {
 			<Stack.Screen name='inquiry' options={{ headerShown: false }} />
 			<Stack.Screen name='delete-account' options={{ headerShown: false }} />
 			<Stack.Screen name='bookmark/exhibition' options={{ headerShown: false }} />
-			<Stack.Screen name='bookmark/artworks' options={{ headerShown: false }} />
 			<Stack.Screen name='bookmark/audio' options={{ headerShown: false }} />
 		</Stack>
 	);

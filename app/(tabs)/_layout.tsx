@@ -39,12 +39,12 @@ export default function TabsLayout() {
 				}}
 			/>
 			<Tabs.Screen
-				name='map'
+				name='index'
 				options={{
-					title: '지도',
+					title: '둘러보기',
 					tabBarIcon: ({ focused, color, size }) => (
 						<Ionicons
-							name={focused ? 'map' : 'map-outline'}
+							name={focused ? 'compass' : 'compass-outline'}
 							size={size}
 							color={color}
 						/>
@@ -52,12 +52,12 @@ export default function TabsLayout() {
 				}}
 			/>
 			<Tabs.Screen
-				name='index'
+				name='map'
 				options={{
-					title: '둘러보기',
+					title: '지도',
 					tabBarIcon: ({ focused, color, size }) => (
 						<Ionicons
-							name={focused ? 'compass' : 'compass-outline'}
+							name={focused ? 'map' : 'map-outline'}
 							size={size}
 							color={color}
 						/>
@@ -87,7 +87,7 @@ export default function TabsLayout() {
 					),
 				}}
 			/>
-			<Tabs.Screen
+			{/* <Tabs.Screen
 				name='settings'
 				listeners={{
 					tabPress: (e) => {
@@ -110,7 +110,7 @@ export default function TabsLayout() {
 						/>
 					),
 				}}
-			/>
+			/> */}
 		</Tabs>
 	);
 }

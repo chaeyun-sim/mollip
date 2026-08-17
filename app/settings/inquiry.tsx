@@ -1,7 +1,6 @@
-import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { useRouter } from 'expo-router';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import {
 	ActivityIndicator,
 	KeyboardAvoidingView,
@@ -12,18 +11,18 @@ import {
 	TextInput,
 	View,
 } from 'react-native';
-import { Screen } from '../../../src/components/layout/Screen';
-import { supabase } from '@/src/utils/supabase';
+
+import { Screen } from '@/src/components/layout/Screen';
 import { cn } from '@/src/lib/cn';
 import { useAuthStore } from '@/src/store/authStore';
+import { supabase } from '@/src/utils/supabase';
 
 type SubmitStatus = 'idle' | 'submitting' | 'success' | 'error';
-type Category = 'bug' | 'feature' | 'other';
+type Category = 'bug' | 'other';
 
-const CATEGORY_OPTIONS: { value: Category; label: string }[] = [
-	{ value: 'bug', label: '버그 제보' },
-	{ value: 'feature', label: '기능 제안' },
-	{ value: 'other', label: '기타' },
+const CATEGORY_OPTIONS: { value: Category; label: string; emoji: string }[] = [
+	{ value: 'bug', label: '버그 제보', emoji: '🐛' },
+	{ value: 'other', label: '기타', emoji: '✉️' },
 ];
 
 export default function InquiryScreen() {
@@ -32,11 +31,11 @@ export default function InquiryScreen() {
 	const [category, setCategory] = useState<Category>('bug');
 	const [content, setContent] = useState('');
 	const [contact, setContact] = useState('');
+	const [status, setStatus] = useState<SubmitStatus>('idle');
 
 	useEffect(() => {
 		if (userEmail && !contact) setContact(userEmail);
-	}, [userEmail, contact]);
-	const [status, setStatus] = useState<SubmitStatus>('idle');
+	}, [userEmail]);
 
 	const canSubmit = content.trim().length > 0 && status !== 'submitting';
 
@@ -49,10 +48,12 @@ export default function InquiryScreen() {
 			content: content.trim(),
 			contact: contact.trim() || null,
 		});
+
 		if (error) {
 			setStatus('error');
 			return;
 		}
+
 		setStatus('success');
 	};
 
@@ -60,34 +61,32 @@ export default function InquiryScreen() {
 		return (
 			<Screen variant='warm'>
 				<Screen.Header>
-					<Screen.Header.Left>
-						<Screen.Header.Back color='#1C1917' onPress={() => router.back()} />
-					</Screen.Header.Left>
+					<Screen.Header.Back color='#1C1917' onPress={() => router.back()} />
 					<Screen.Header.Center>
-						<Text className='text-[18px] text-gray-900 font-hahmlet-semibold'>
+						<Text className='text-[18px] text-[#1C1917] font-hahmlet-semibold'>
 							문의하기
 						</Text>
 					</Screen.Header.Center>
-					<Screen.Header.Right />
 				</Screen.Header>
 
 				<View className='flex-1 items-center justify-center gap-4 px-6'>
-					<View className='w-16 h-16 rounded-full bg-[#EFF6FF] items-center justify-center'>
-						<Ionicons name='checkmark' size={32} color='#3B82F6' />
+					<View className='w-[72px] h-[72px] rounded-full bg-[#E8E3DB] items-center justify-center mb-1'>
+						<Text style={{ fontSize: 32 }}>✓</Text>
 					</View>
-					<Text className='text-gray-900 text-[17px] font-pretendard-semibold text-center'>
+					<Text className='text-[#1C1917] text-[17px] font-pretendard-semibold text-center'>
 						문의가 접수됐어요
 					</Text>
-					<Text className='text-gray-400 text-[13px] font-pretendard-regular text-center'>
-						확인 후 남겨주신 연락처로 답변드릴게요
+					<Text className='text-[#78716C] text-[13px] font-pretendard-regular text-center leading-[20px]'>
+						확인 후 남겨주신 연락처로{'\n'}답변드릴게요
 					</Text>
 					<Pressable
 						onPress={() => router.back()}
-						className='mt-4 px-6 py-3 rounded-full bg-[#1C1917]'
+						className='mt-4 px-8 py-[14px] rounded-2xl bg-[#1C1917]'
 						accessibilityRole='button'
 						accessibilityLabel='설정으로 돌아가기'
+						style={({ pressed }) => ({ opacity: pressed ? 0.8 : 1 })}
 					>
-						<Text className='text-white text-[14px] font-pretendard-semibold'>
+						<Text className='text-white text-[15px] font-pretendard-semibold'>
 							확인
 						</Text>
 					</Pressable>
@@ -99,15 +98,12 @@ export default function InquiryScreen() {
 	return (
 		<Screen variant='warm'>
 			<Screen.Header>
-				<Screen.Header.Left>
-					<Screen.Header.Back color='#1C1917' onPress={() => router.back()} />
-				</Screen.Header.Left>
+				<Screen.Header.Back color='#1C1917' onPress={() => router.back()} />
 				<Screen.Header.Center>
-					<Text className='text-[18px] text-gray-900 font-hahmlet-semibold'>
+					<Text className='text-[18px] text-[#1C1917] font-hahmlet-semibold'>
 						문의하기
 					</Text>
 				</Screen.Header.Center>
-				<Screen.Header.Right />
 			</Screen.Header>
 
 			<KeyboardAvoidingView
@@ -116,23 +112,15 @@ export default function InquiryScreen() {
 			>
 				<ScrollView
 					className='flex-1'
-					contentContainerStyle={{ paddingTop: 12, paddingBottom: 24 }}
+					contentContainerStyle={{ paddingTop: 8, paddingBottom: 120 }}
 					showsVerticalScrollIndicator={false}
 					keyboardShouldPersistTaps='handled'
 				>
-					<Text className='text-[12px] mb-2 px-1 font-pretendard-semibold text-gray-400 tracking-[0.8]'>
+					{/* 카테고리 */}
+					<Text className='text-[12px] mb-3 font-pretendard-medium text-[#A8A29E] tracking-[0.6px] uppercase'>
 						유형
 					</Text>
-					<View
-						className='flex-row gap-2 rounded-3xl bg-[#F2EFE9] p-2 mb-6'
-						style={{
-							shadowColor: '#1C1917',
-							shadowOpacity: 0.05,
-							shadowRadius: 12,
-							shadowOffset: { width: 0, height: 4 },
-							elevation: 2,
-						}}
-					>
+					<View className='flex-row gap-2 mb-8'>
 						{CATEGORY_OPTIONS.map((opt) => {
 							const selected = category === opt.value;
 							return (
@@ -142,27 +130,20 @@ export default function InquiryScreen() {
 										Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
 										setCategory(opt.value);
 									}}
-									className='flex-1 h-11 rounded-2xl items-center justify-center'
-									style={{
-										backgroundColor: selected ? '#3B82F6' : '#FFFFFF',
-										...(selected
-											? {
-													shadowColor: '#3B82F6',
-													shadowOpacity: 0.25,
-													shadowRadius: 6,
-													shadowOffset: { width: 0, height: 2 },
-													elevation: 3,
-												}
-											: null),
-									}}
+									className={cn(
+										'flex-1 py-[13px] rounded-2xl items-center justify-center gap-1',
+										selected ? 'bg-[#1C1917]' : 'bg-[#F2EFE9]',
+									)}
 									accessibilityRole='radio'
 									accessibilityState={{ checked: selected }}
 									accessibilityLabel={opt.label}
+									style={({ pressed }) => ({ opacity: pressed ? 0.8 : 1 })}
 								>
+									<Text style={{ fontSize: 18 }}>{opt.emoji}</Text>
 									<Text
 										className={cn(
-											'text-[13px] font-pretendard-semibold',
-											selected ? 'text-white' : 'text-gray-500',
+											'text-[12px] font-pretendard-semibold',
+											selected ? 'text-white' : 'text-[#78716C]',
 										)}
 									>
 										{opt.label}
@@ -172,26 +153,32 @@ export default function InquiryScreen() {
 						})}
 					</View>
 
-					<Text className='text-[12px] mb-2 px-1 font-pretendard-semibold text-gray-400 tracking-[0.8]'>
+					{/* 내용 */}
+					<Text className='text-[12px] mb-3 font-pretendard-medium text-[#A8A29E] tracking-[0.6px] uppercase'>
 						내용
 					</Text>
 					<TextInput
-						className='rounded-3xl bg-[#F2EFE9] px-4 py-4 text-gray-900 text-[15px] min-h-[160px] text-top font-pretendard-regular'
+						className='rounded-2xl bg-[#F2EFE9] px-4 py-4 text-[#1C1917] text-[15px] font-pretendard-regular'
+						style={{ minHeight: 160, textAlignVertical: 'top' }}
 						placeholder='내용을 입력해주세요'
-						placeholderTextColor='#A8A29E'
+						placeholderTextColor='#C7C3BD'
 						value={content}
 						onChangeText={setContent}
 						multiline
 						maxLength={2000}
 					/>
+					<Text className='text-right text-[12px] font-pretendard-regular text-[#C7C3BD] mt-1.5 pr-1'>
+						{content.length}/2000
+					</Text>
 
-					<Text className='text-[12px] mt-6 mb-2 px-1 font-pretendard-semibold text-gray-400 tracking-[0.8]'>
+					{/* 연락처 */}
+					<Text className='text-[12px] mt-6 mb-3 font-pretendard-medium text-[#A8A29E] tracking-[0.6px] uppercase'>
 						연락처 (선택)
 					</Text>
 					<TextInput
-						className='rounded-3xl bg-[#F2EFE9] px-4 text-gray-900 text-[15px] h-[52px] font-pretendard-regular'
-						placeholder='답변받을 이메일을 입력해주세요'
-						placeholderTextColor='#A8A29E'
+						className='rounded-2xl bg-[#F2EFE9] px-4 text-[#1C1917] text-[15px] h-[52px] font-pretendard-regular'
+						placeholder='답변받을 이메일'
+						placeholderTextColor='#C7C3BD'
 						value={contact}
 						onChangeText={setContact}
 						keyboardType='email-address'
@@ -199,11 +186,11 @@ export default function InquiryScreen() {
 						returnKeyType='done'
 					/>
 
-					{status === 'error' ? (
-						<Text className='mt-4 px-1 text-[13px] font-pretendard-regular text-red-500'>
-							전송에 실패했어요. 잠시 후 다시 시도해주세요
+					{status === 'error' && (
+						<Text className='mt-4 text-[13px] font-pretendard-regular text-[#EF4444]'>
+							전송에 실패했어요. 잠시 후 다시 시도해주세요.
 						</Text>
-					) : null}
+					)}
 				</ScrollView>
 
 				<Screen.BottomAbsolute className='bottom-10'>
@@ -212,11 +199,12 @@ export default function InquiryScreen() {
 						disabled={!canSubmit}
 						className={cn(
 							'h-14 rounded-2xl items-center justify-center',
-							canSubmit ? 'bg-[#1C1917]' : 'bg-black/10',
+							canSubmit ? 'bg-[#1C1917]' : 'bg-[#E7E5E4]',
 						)}
 						accessibilityRole='button'
 						accessibilityLabel='문의 보내기'
 						accessibilityState={{ disabled: !canSubmit }}
+						style={({ pressed }) => ({ opacity: pressed && canSubmit ? 0.8 : 1 })}
 					>
 						{status === 'submitting' ? (
 							<ActivityIndicator size='small' color='#fff' />
@@ -224,7 +212,7 @@ export default function InquiryScreen() {
 							<Text
 								className={cn(
 									'text-[15px] font-pretendard-semibold',
-									canSubmit ? 'text-white' : 'text-gray-400',
+									canSubmit ? 'text-white' : 'text-[#A8A29E]',
 								)}
 							>
 								보내기

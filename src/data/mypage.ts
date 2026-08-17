@@ -17,12 +17,6 @@ export const SCRAP_TILES = [
 		route: '/settings/bookmark/exhibition' as const,
 	},
 	{
-		key: 'artworks',
-		label: '좋아요한 그림',
-		icon: 'image-outline' as const,
-		route: '/settings/bookmark/artworks' as const,
-	},
-	{
 		key: 'audio',
 		label: '다시 듣고 싶은 오디오',
 		icon: 'headset-outline' as const,

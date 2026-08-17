@@ -100,13 +100,13 @@ export default function ExploreScreen() {
 				<Screen.Header.Logo />
 				<Screen.Header.Right>
 					<Pressable
-						onPress={() => router.push('/notifications')}
-						accessibilityLabel='알림'
+						onPress={() => router.push('/settings')}
+						hitSlop={8}
 						accessibilityRole='button'
-						hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-						className='items-center justify-center w-11 h-11'
+						accessibilityLabel='마이페이지'
+						style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
 					>
-						<Ionicons name='notifications-outline' size={24} color='#1C1917' />
+						<Ionicons name='person-outline' size={24} color='#1C1917' />
 					</Pressable>
 				</Screen.Header.Right>
 			</Screen.Header>

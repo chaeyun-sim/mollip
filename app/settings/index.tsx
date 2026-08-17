@@ -1,7 +1,7 @@
 import { Redirect, useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, ScrollView, View } from 'react-native';
+import { ActivityIndicator, ScrollView, Switch, View } from 'react-native';
 import { useAuthStore } from '@/src/store/authStore';
 import { Screen } from '@/src/components/layout/Screen';
 import {
@@ -19,7 +19,13 @@ export default function SettingsScreen() {
 	const router = useRouter();
 	const session = useAuthStore((s) => s.session);
 	const authLoading = useAuthStore((s) => s.isLoading);
-	const { voiceId, voiceSpeed, setVoiceSpeed } = useSettingsStore();
+	const {
+		voiceId,
+		voiceSpeed,
+		setVoiceSpeed,
+		pushNotificationsEnabled,
+		setPushNotificationsEnabled,
+	} = useSettingsStore();
 	const [currentVoiceName, setCurrentVoiceName] = useState<string>('');
 
 	useEffect(() => {
@@ -44,7 +50,6 @@ export default function SettingsScreen() {
 			<ScrollView
 				showsVerticalScrollIndicator={false}
 				contentContainerStyle={{ paddingBottom: 60 }}
-				scrollEnabled={false}
 			>
 				<View className='w-full gap-6'>
 					{/* 계정 */}
@@ -94,6 +99,28 @@ export default function SettingsScreen() {
 								onPress={() => router.push('/settings/voice')}
 								last
 							/>
+						</SettingsCard>
+					</View>
+
+					{/* 알림 */}
+					<View className='gap-2'>
+						<SectionLabel>알림</SectionLabel>
+						<SettingsCard>
+							<CardRow
+								icon='notifications-outline'
+								label='푸시 알림'
+								last
+								className='py-2.5'
+							>
+								<Switch
+									value={pushNotificationsEnabled}
+									onValueChange={setPushNotificationsEnabled}
+									trackColor={{ false: '#E7E5E4', true: '#1C1917' }}
+									thumbColor='#FFFFFF'
+									ios_backgroundColor='#E7E5E4'
+									style={{ transform: [{ scaleX: 0.8 }, { scaleY: 0.8 }] }}
+								/>
+							</CardRow>
 						</SettingsCard>
 					</View>
 
