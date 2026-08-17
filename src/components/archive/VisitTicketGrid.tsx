@@ -1,43 +1,10 @@
-import { useState } from 'react';
-import { LayoutChangeEvent, View } from 'react-native';
-
-import { useCultureExhibitions, type CultureExhibitionItem } from '@/src/hooks/useCultureExhibitions';
-import { useKcisaExhibitions, type KcisaExhibitionItem } from '@/src/hooks/useKcisaExhibitions';
-import { useVisitStore } from '@/src/store/visitStore';
+import { useMemo } from 'react';
+import { View } from 'react-native';
+import { useCultureExhibitions } from '@/src/hooks/useCultureExhibitions';
+import { useKcisaExhibitions } from '@/src/hooks/useKcisaExhibitions';
+import { useExhibitionsByIds } from '@/src/hooks/useExhibitionsByIds';
+import { DayVisit, useVisitStore } from '@/src/store/visitStore';
 import { VisitTicketGridCard } from '@/src/components/archive/VisitTicketGridCard';
-
-const GAP = 12;
-
-interface VisitTicketGridCardContainerProps {
-	dateKey: string;
-	data: KcisaExhibitionItem | CultureExhibitionItem | undefined;
-	onPress: (dateKey: string) => void;
-}
-
-function VisitTicketGridCardContainer({
-	dateKey,
-	data,
-	onPress,
-}: VisitTicketGridCardContainerProps) {
-	if (!data) {
-		return (
-			<View
-				className='w-1/2 rounded-tl-2xl rounded-tr-2xl bg-[#F0EDE8]'
-				style={{ height: 310 }}
-			/>
-		);
-	}
-
-	return (
-		<VisitTicketGridCard
-			dateKey={dateKey}
-			title={data.title ?? ''}
-			imageUrl={data.thumbnail ?? ''}
-			venue={data.venue ?? ''}
-			onPress={() => onPress(dateKey)}
-		/>
-	);
-}
 
 interface VisitTicketGridProps {
 	onPress: (dateKey: string) => void;
@@ -45,35 +12,61 @@ interface VisitTicketGridProps {
 
 export function VisitTicketGrid({ onPress }: VisitTicketGridProps) {
 	const visits = useVisitStore((s) => s.visits);
-	const [containerWidth, setContainerWidth] = useState(0);
 
 	const { items } = useCultureExhibitions();
 	const { items: kcisaItems } = useKcisaExhibitions();
 
-	const handleLayout = (e: LayoutChangeEvent) => {
-		const w = e.nativeEvent.layout.width;
-		if (w > 0 && w !== containerWidth) setContainerWidth(w);
-	};
+	const sortedDateKeys = useMemo(
+		() =>
+			Object.keys(visits)
+				.filter((k) => typeof visits[k].exhibitionId === 'string')
+				.sort((a, b) => b.localeCompare(a)),
+		[visits],
+	);
 
-	const sortedDateKeys = Object.keys(visits).sort((a, b) => b.localeCompare(a));
+	// 캐시에 없는 전시 ID만 추려서 날짜 필터 없이 조회 (만료된 전시 대응)
+	const missingIds = useMemo(() => {
+		const cachedIds = new Set([
+			...kcisaItems.map((i) => i.id),
+			...items.map((i) => i.id),
+		]);
+		return sortedDateKeys
+			.map((dk) => visits[dk].exhibitionId)
+			.filter((id): id is string => !!id && !cachedIds.has(id));
+	}, [sortedDateKeys, visits, kcisaItems, items]);
+
+	const fetchedItems = useExhibitionsByIds(missingIds);
+
+	const getData = (visit: DayVisit) =>
+		kcisaItems.find((item) => item.id === visit.exhibitionId) ||
+		items.find((item) => item.id === visit.exhibitionId) ||
+		fetchedItems.find((item) => item.id === visit.exhibitionId);
 
 	return (
-		<View onLayout={handleLayout} className='flex-row flex-wrap gap-3'>
-			{containerWidth > 0 &&
-				sortedDateKeys.map((dateKey) => {
-					const visit = visits[dateKey];
-					const data =
-						kcisaItems.find((item) => item.id === visit.exhibitionId) ||
-						items.find((item) => item.id === visit.exhibitionId);
+		<View className='flex-col gap-4'>
+			{sortedDateKeys.map((dateKey) => {
+				const data = getData(visits[dateKey]);
+
+				if (!data?.title) {
 					return (
-						<VisitTicketGridCardContainer
+						<View
 							key={dateKey}
-							dateKey={dateKey}
-							data={data}
-							onPress={onPress}
+							className='w-full rounded-2xl bg-[#F0EDE8]'
+							style={{ height: 116 }}
 						/>
 					);
-				})}
+				}
+
+				return (
+					<VisitTicketGridCard
+						key={dateKey}
+						dateKey={dateKey}
+						title={data.title}
+						venue={data.venue}
+						onPress={() => onPress(dateKey)}
+					/>
+				);
+			})}
 		</View>
 	);
 }

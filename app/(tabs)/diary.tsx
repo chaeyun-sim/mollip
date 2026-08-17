@@ -28,8 +28,13 @@ export default function DiaryScreen() {
 	const [calMonth, setCalMonth] = useState(today.getMonth() + 1);
 
 	const visits = useVisitStore((s) => s.visits);
-	const visitDateKeys = useMemo(() => Object.keys(visits), [visits]);
-	const ticketCount = visitDateKeys.length;
+	const visitDateKeys = useMemo(
+		() =>
+			Object.keys(visits).filter(
+				(k) => typeof visits[k].exhibitionId === 'string',
+			),
+		[visits],
+	);
 
 	const dayImages = useDayImages(visits);
 
@@ -76,8 +81,6 @@ export default function DiaryScreen() {
 		});
 	}, [router]);
 
-	const hasDiaryRecords = ticketCount > 0;
-
 	if (authLoading) return null;
 
 	if (!session) {
@@ -109,32 +112,22 @@ export default function DiaryScreen() {
 						className='flex-row items-end justify-between'
 						style={{ marginBottom: 20 }}
 					>
-						<View>
+						<View className='flex-row items-end gap-[6px]'>
 							<Text
-								style={{
-									fontFamily: 'Hahmlet_700Bold',
-									fontSize: 48,
-									lineHeight: 52,
-									color: '#1C1917',
-									letterSpacing: -1,
-								}}
+								className='font-hahmlet-bold text-[60px] text-[#1C1917] tracking-[-1.5px]'
+								style={{ lineHeight: 68 }}
 							>
-								{ticketCount}
+								{visitDateKeys.length}
 							</Text>
 							<Text
-								style={{
-									fontFamily: 'Hahmlet_700Bold',
-									fontSize: 28,
-									lineHeight: 32,
-									color: '#1C1917',
-									letterSpacing: -0.5,
-								}}
+								className='font-hahmlet-bold text-[19px] text-[#1C1917] tracking-[-0.3px] pb-[10px]'
+								style={{ lineHeight: 22 }}
 							>
 								Tickets
 							</Text>
 						</View>
 
-						{hasDiaryRecords && (
+						{visitDateKeys.length && (
 							<Pressable
 								onPress={handleToggleViewMode}
 								accessibilityRole='button'
@@ -160,29 +153,30 @@ export default function DiaryScreen() {
 						)}
 					</View>
 
-					<View className='mt-6'>
-						{!hasDiaryRecords ? (
-							<ArchiveDiaryEmpty
-								onExplore={() => router.push('/(tabs)/')}
-								onMap={() => router.push('/(tabs)/map')}
+					{!visitDateKeys.length ? (
+						<ArchiveDiaryEmpty
+							onExplore={() => router.push('/(tabs)/')}
+							onMap={() => router.push('/(tabs)/map')}
+						/>
+					) : diaryViewMode === 'grid' ? (
+						<View className='px-1'>
+							<VisitTicketGrid onPress={handleGridTicketPress} />
+							<Text className='font-pretendard-regular text-[11px] text-[rgba(61,43,26,0.28)] tracking-[0.3px] text-center mt-10'>
+								방문한 전시를 기록하면 티켓이 쌓여요
+							</Text>
+						</View>
+					) : (
+						<View className='px-2'>
+							<DiaryCalendar
+								year={calYear}
+								month={calMonth}
+								markedDates={visitDateKeys}
+								dayImages={dayImages}
+								onSelectDate={handleSelectDate}
+								onChangeMonth={handleChangeMonth}
 							/>
-						) : diaryViewMode === 'grid' ? (
-							<View className='px-1'>
-								<VisitTicketGrid onPress={handleGridTicketPress} />
-							</View>
-						) : (
-							<View className='px-2'>
-								<DiaryCalendar
-									year={calYear}
-									month={calMonth}
-									markedDates={visitDateKeys}
-									dayImages={dayImages}
-									onSelectDate={handleSelectDate}
-									onChangeMonth={handleChangeMonth}
-								/>
-							</View>
-						)}
-					</View>
+						</View>
+					)}
 				</ScrollView>
 			</Screen>
 
