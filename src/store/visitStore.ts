@@ -14,6 +14,7 @@ export interface DayVisit {
 	exhibitionId: string | null;
 	exhibitionTitle?: string;
 	venue?: string;
+	thumbnail?: string;
 	listened: ListenedItem[];
 	/** 사용자가 직접 적는 관람 메모 (티켓 뒷면) */
 	memo?: string;
@@ -25,7 +26,7 @@ interface VisitStore {
 	recordExhibition: (
 		dateKey: string,
 		exhibitionId: string,
-		meta?: { title?: string; venue?: string },
+		meta?: { title?: string; venue?: string; thumbnail?: string },
 	) => void;
 	recordListened: (dateKey: string, item: ListenedItem) => void;
 	setVisitMemo: (dateKey: string, memo: string) => void;
@@ -52,6 +53,7 @@ export const useVisitStore = create<VisitStore>()(
 								exhibitionId,
 								exhibitionTitle: meta?.title ?? prev?.exhibitionTitle,
 								venue: meta?.venue ?? prev?.venue,
+								thumbnail: meta?.thumbnail ?? prev?.thumbnail,
 								listened: prev?.listened ?? [],
 							},
 						},
