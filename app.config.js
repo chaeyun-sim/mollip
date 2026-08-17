@@ -87,6 +87,15 @@ module.exports = {
 			'expo-font',
 			'expo-splash-screen',
 			'expo-apple-authentication',
+			[
+				'expo-notifications',
+				{
+					icon: './assets/icon.png',
+					color: '#1C1917',
+					sounds: [],
+					mode: 'production',
+				},
+			],
 			// NMFClientId를 마지막에 강제 주입 (다른 플러그인이 덮어쓰는 것 방지)
 			(config) =>
 				withInfoPlist(config, (c) => {

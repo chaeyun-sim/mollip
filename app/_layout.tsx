@@ -22,6 +22,8 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useImmersiveStore } from '../src/store/immersiveStore';
 import { AuthProvider } from '../src/providers/AuthProvider';
 import { useAuthStore } from '../src/store/authStore';
+import { usePushNotifications } from '../src/hooks/usePushNotifications';
+import * as Notifications from 'expo-notifications';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -48,9 +50,30 @@ export default function RootLayout() {
 	const authLoading = useAuthStore((s) => s.isLoading);
 	const user = useAuthStore((s) => s.user);
 	const onboardingCompleted = useAuthStore((s) => s.onboardingCompleted);
+	usePushNotifications(user?.id); // 네이티브 빌드 후 활성화
+
 	const isImmersive = useImmersiveStore((s) => s.isImmersiveMode);
 	const exhibitionId = useImmersiveStore((s) => s.exhibitionId);
 	const router = useRouter();
+
+	// 알림 탭 딥링크 처리
+	useEffect(() => {
+		let sub: ReturnType<typeof Notifications.addNotificationResponseReceivedListener>;
+		try {
+			sub = Notifications.addNotificationResponseReceivedListener((response) => {
+				const data = response.notification.request.content.data as Record<string, unknown>;
+				const id = data?.exhibitionId;
+				if (typeof id === 'string' && id) {
+					router.push(`/(explore)/${id}`);
+				} else {
+					router.push('/(tabs)/');
+				}
+			});
+		} catch {
+			// 네이티브 모듈 미빌드 환경에서 무시
+		}
+		return () => sub?.remove();
+	}, [router]);
 
 	useEffect(() => {
 		if (!fontsLoaded || !hasHydrated || authLoading) return;
@@ -77,7 +100,7 @@ export default function RootLayout() {
 			<AuthProvider>
 				<QueryClientProvider client={queryClient}>
 					<BottomSheetModalProvider>
-						<Stack screenOptions={{ headerShown: false}}>
+						<Stack screenOptions={{ headerShown: false }}>
 							<Stack.Screen name='(tabs)' options={{ headerShown: false }} />
 							<Stack.Screen name='(guide)' options={{ headerShown: false }} />
 							<Stack.Screen name='(explore)' options={{ headerShown: false }} />
