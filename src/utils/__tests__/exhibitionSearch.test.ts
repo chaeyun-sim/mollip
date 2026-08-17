@@ -116,6 +116,15 @@ describe('getPopularTags — 추천 태그', () => {
 	it('태그 없는 전시만 → 빈 배열', () => {
 		expect(getPopularTags(5, [{ ...base, tags: undefined }])).toEqual([]);
 	});
+	it('한 전시가 쿼터(2개) 초과 시 나머지 태그는 다른 전시로 채움', () => {
+		// '명화'(3전시), '인상주의'(2전시) → 상위 2개
+		// '조각', '미디어아트'는 각 1전시 → p2/p3 쿼터 초과 시 등장 가능
+		expect(getPopularTags(2, list)).toEqual(['명화', '인상주의']);
+	});
+	it('단일 전시 독점 방지 — 태그가 한 전시에만 있으면 최대 2개까지만', () => {
+		const solo = [{ ...base, id: 's1', tags: ['a', 'b', 'c', 'd'] }];
+		expect(getPopularTags(10, solo)).toEqual(['a', 'b']);
+	});
 });
 
 describe('isViewableOn — 날짜 필터', () => {

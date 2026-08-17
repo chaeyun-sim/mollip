@@ -148,21 +148,42 @@ export function getDdayLabel(
 	return days === 0 ? '오늘 마감' : `D-${days}`;
 }
 
-/** 전시 태그를 빈도순으로 집계해 상위 N개 반환 */
+/** 전시 태그를 빈도순으로 집계해 상위 N개 반환.
+ * 한 전시가 결과를 독점하지 않도록 전시당 최대 2개 태그로 제한. */
 export function getPopularTags(
 	limit: number,
 	exhibitions: Exhibition[] = EXHIBITIONS,
 ): string[] {
-	const counts = new Map<string, number>();
+	// tag → 이 태그를 가진 전시 ID 집합
+	const tagExIds = new Map<string, Set<string>>();
 	for (const ex of exhibitions) {
 		for (const tag of ex.tags ?? []) {
-			counts.set(tag, (counts.get(tag) ?? 0) + 1);
+			if (!tagExIds.has(tag)) tagExIds.set(tag, new Set());
+			tagExIds.get(tag)!.add(ex.id);
 		}
 	}
-	return Array.from(counts.entries())
-		.sort((a, b) => b[1] - a[1])
-		.slice(0, limit)
-		.map(([tag]) => tag);
+
+	// 등장 전시 수 내림차순 정렬
+	const sorted = Array.from(tagExIds.entries()).sort(
+		(a, b) => b[1].size - a[1].size,
+	);
+
+	// 전시당 최대 2개 쿼터로 결과 구성
+	const MAX_PER_EX = 2;
+	const exContrib = new Map<string, number>();
+	const result: string[] = [];
+
+	for (const [tag, exIds] of sorted) {
+		if (result.length >= limit) break;
+		const hasRoom = [...exIds].some((id) => (exContrib.get(id) ?? 0) < MAX_PER_EX);
+		if (!hasRoom) continue;
+		result.push(tag);
+		for (const id of exIds) {
+			exContrib.set(id, (exContrib.get(id) ?? 0) + 1);
+		}
+	}
+
+	return result;
 }
 
 /** 지정 날짜에 관람 가능한 전시인지 (시작일~종료일 사이) */
