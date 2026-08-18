@@ -73,12 +73,10 @@ export function useTTS() {
 		const cleaned = cleanTextForTTS(text);
 		const cacheKey = `${voiceId}::${voiceSpeed}::${cleaned}`;
 		try {
-			let uri = audioCache.current.get(cacheKey);
-			if (!uri) {
-				uri = await fetchTTSBlob(voiceId, cleaned, voiceSpeed);
+			if (!audioCache.current.has(cacheKey)) {
+				const uri = await fetchTTSBlob(voiceId, cleaned, voiceSpeed);
 				audioCache.current.set(cacheKey, uri);
 			}
-			player.replace(uri);
 		} catch {
 			/* silent fail */
 		}

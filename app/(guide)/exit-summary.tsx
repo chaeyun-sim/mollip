@@ -42,14 +42,13 @@ export default function ExitSummaryScreen() {
 				className='flex-1'
 				contentContainerStyle={{ paddingTop: 20, paddingBottom: 24 }}
 				showsVerticalScrollIndicator={false}
-				scrollEnabled={false}
 			>
 				<View className='items-center mb-10'>
 					<View className='w-16 h-16 rounded-full items-center justify-center mb-5 bg-[#F2EFE9]'>
 						<Ionicons name='checkmark' size={28} color='#3B82F6' />
 					</View>
 					<Text className='text-[#1C1917] font-pretendard-bold text-[22px] text-center mb-2'>
-						오디오 가이드를 종료합니다
+						오디오 가이드가 종료되었습니다.
 					</Text>
 					<Text className='text-[#78716C] font-pretendard-regular text-[14px] text-center leading-6'>
 						오늘 전시, 즐거우셨나요?{'\n'}관람 기록은 아카이브에서 다시 볼 수 있어요

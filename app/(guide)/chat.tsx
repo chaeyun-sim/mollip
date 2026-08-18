@@ -92,6 +92,13 @@ export default function ChatScreen() {
 		}
 	}, [messages]);
 
+	useEffect(() => {
+		const sub = Keyboard.addListener('keyboardDidShow', () => {
+			setTimeout(() => flatListRef.current?.scrollToEnd({ animated: true }), 100);
+		});
+		return () => sub.remove();
+	}, []);
+
 	const renderMessage = ({ item }: { item: ReturnType<typeof getMessages>[0] }) => (
 		<ChatMessage item={item} onRetry={retryMessage} />
 	);
@@ -100,7 +107,7 @@ export default function ChatScreen() {
 		<Screen>
 			<ScreenHeader>
 				<ScreenHeader.Left>
-					<ScreenHeader.Back onPress={() => router.back()} />
+					<ScreenHeader.Back onPress={() => router.back()} color='rgba(255,255,255,0.9)' />
 				</ScreenHeader.Left>
 				<ScreenHeader.Center>
 					<Text className='text-base text-white font-pretendard-semibold'>
@@ -144,7 +151,7 @@ export default function ChatScreen() {
 				{/* 입력창 */}
 				<View className='mb-10 flex-row items-end gap-2 py-3 border-t-[1px] border-t-[#1C1917]'>
 					<TextInput
-						className='flex-1 rounded-2xl px-4 pt-3 pb-3 text-sm font-pretendard-regular bg-[#1C1917] text-[#e8e8e8] min-h-[44px] max-h-[120px]'
+						className='flex-1 rounded-2xl px-4 pt-3 pb-3 text-[15px] font-pretendard-regular bg-[#1C1917] text-[#e8e8e8] min-h-[44px] max-h-[120px]'
 						returnKeyType='send'
 						value={input}
 						onChangeText={(t) => {
@@ -156,6 +163,7 @@ export default function ChatScreen() {
 						}}
 						placeholder='질문을 입력하세요...'
 						placeholderTextColor='#57534E'
+						keyboardAppearance='dark'
 						multiline
 					/>
 					<Pressable

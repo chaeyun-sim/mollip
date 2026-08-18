@@ -3,7 +3,6 @@ import * as Haptics from 'expo-haptics';
 import { useRouter } from 'expo-router';
 import {
 	Pressable,
-	Image,
 	ScrollView,
 	StyleSheet,
 	Text,
@@ -11,6 +10,7 @@ import {
 } from 'react-native';
 import { Screen } from '../../src/components/layout/Screen';
 import { ScreenHeader } from '../../src/components/layout/ScreenHeader';
+import { ExhibitionPoster } from '@/src/components/common/EmptyImagePlaceholder';
 import { store } from '../../src/store';
 import { useChatStore } from '../../src/store/chatStore';
 import { useImmersiveStore } from '../../src/store/immersiveStore';
@@ -41,6 +41,7 @@ export default function PlaylistScreen() {
 					onPress={() => {
 						router.back();
 					}}
+					color='rgba(255,255,255,0.9)'
 				/>
 				<ScreenHeader.Center>
 					<Text className='font-pretendard-semibold text-[#E8E8E8] text-[16px]'>
@@ -84,17 +85,12 @@ export default function PlaylistScreen() {
 							}}
 						>
 							{/* 썸네일 */}
-							{item.imageUrl ? (
-								<Image
-									source={{ uri: item.imageUrl }}
-									className='w-14 h-14 rounded-[10px]'
-									resizeMode='cover'
-								/>
-							) : (
-								<View className='w-14 h-14 rounded-[10px] bg-[#1C1917] items-center justify-center'>
-									<Ionicons name='image-outline' size={22} color='#57534E' />
-								</View>
-							)}
+							<ExhibitionPoster
+								heroImageUri={item.imageUrl}
+								className='w-14 h-14 rounded-[10px]'
+								iconSize={22}
+								resizeMode='cover'
+							/>
 							{/* 텍스트 */}
 							<View className='flex-1 gap-1'>
 								<Text

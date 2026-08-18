@@ -116,6 +116,8 @@ export default function IndexScreen() {
 		store.artworkDescription = '';
 		store.inputMode = 'manual';
 		clearChat();
+		setSearchQuery('');
+		setSearchResults([]);
 		router.push('/description');
 	};
 
@@ -190,11 +192,22 @@ export default function IndexScreen() {
 	return (
 		<Screen>
 			<Screen.Header>
-				<ScreenHeader.Back
-					onPress={() => {
-						router.back();
-					}}
-				/>
+				{isImmersive ? (
+					<Pressable
+						onPress={() => router.back()}
+						hitSlop={8}
+						accessibilityLabel='가이드 종료'
+						accessibilityRole='button'
+						style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
+					>
+						<Ionicons name='close' size={24} color='rgba(255,255,255,0.9)' />
+					</Pressable>
+				) : (
+					<ScreenHeader.Back
+						onPress={() => router.back()}
+						color='rgba(255,255,255,0.9)'
+					/>
+				)}
 			</Screen.Header>
 
 			{/* 상단 타이틀 */}
@@ -227,6 +240,7 @@ export default function IndexScreen() {
 							onChangeText={setSearchQuery}
 							returnKeyType='search'
 							clearButtonMode='while-editing'
+							keyboardAppearance='dark'
 						/>
 						{isSearching && <ActivityIndicator size='small' color='#57534E' />}
 					</View>

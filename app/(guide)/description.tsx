@@ -8,6 +8,7 @@ import {
 	GestureResponderEvent,
 	Image,
 	LayoutChangeEvent,
+	Modal,
 	Pressable,
 	ScrollView,
 	Text,
@@ -61,6 +62,8 @@ export default function DescriptionScreen() {
 		handleRetry,
 	} = useDescriptionStream();
 
+	const [imageModalVisible, setImageModalVisible] = useState(false);
+
 	const {
 		isSpeaking,
 		isLoading: isTTSLoading,
@@ -110,10 +113,10 @@ export default function DescriptionScreen() {
 	}, [isTyping]);
 
 	const handlePlayPause = () => {
-		if (isTTSLoading || isTyping) return;
+		if (isTTSLoading) return;
 		if (isSpeaking) pause();
 		else if (elapsed > 0) resume();
-		else speak(fullTextRef.current);
+		else speak(isTyping ? displayed : fullTextRef.current);
 	};
 
 	const handleProgressTap = (e: GestureResponderEvent) => {
@@ -132,6 +135,7 @@ export default function DescriptionScreen() {
 						onPress={() => {
 							router.back();
 						}}
+						color='rgba(255,255,255,0.9)'
 					/>
 					<Screen.Header.Right>
 						<Pressable
@@ -211,12 +215,18 @@ export default function DescriptionScreen() {
 							}}
 						/>
 						{!isTyping && artworkImageUrl ? (
-							<Image
-								source={{ uri: artworkImageUrl }}
-								className='w-full rounded-xl mt-8'
-								style={{ aspectRatio: 1, resizeMode: 'contain' }}
-								accessibilityLabel='작품 이미지'
-							/>
+							<Pressable
+								onPress={() => setImageModalVisible(true)}
+								accessibilityLabel='작품 이미지 확대'
+								accessibilityRole='button'
+							>
+								<Image
+									source={{ uri: artworkImageUrl }}
+									className='w-full rounded-xl mt-8'
+									style={{ aspectRatio: 1, resizeMode: 'contain' }}
+									accessibilityLabel='작품 이미지'
+								/>
+							</Pressable>
 						) : null}
 					</>
 				)}
@@ -267,18 +277,18 @@ export default function DescriptionScreen() {
 					<Pressable
 						className={cn(
 							'w-16 h-16 rounded-[32px] items-center justify-center',
-							isTTSLoading || isTyping ? 'bg-[#292524]' : 'bg-[#3B82F6]',
+							isTTSLoading || !displayed ? 'bg-[#292524]' : 'bg-[#3B82F6]',
 						)}
 						style={({ pressed }) => ({
 							transform: [
-								{ scale: pressed && !(isTTSLoading || isTyping) ? 0.93 : 1 },
+								{ scale: pressed && !(isTTSLoading || !displayed) ? 0.93 : 1 },
 							],
 						})}
 						onPress={() => {
 							Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
 							handlePlayPause();
 						}}
-						disabled={isTTSLoading || isTyping}
+						disabled={isTTSLoading || !displayed}
 						accessibilityLabel={isSpeaking ? '일시정지' : '재생'}
 						accessibilityRole='button'
 					>
@@ -305,6 +315,48 @@ export default function DescriptionScreen() {
 					</View>
 				</View>
 			</Screen.BottomAbsolute>
+
+			{/* 이미지 전체화면 뷰어 */}
+			<Modal
+				visible={imageModalVisible}
+				transparent
+				statusBarTranslucent
+				animationType='fade'
+				onRequestClose={() => setImageModalVisible(false)}
+			>
+				<View style={{ flex: 1, backgroundColor: 'black' }}>
+					<Pressable
+						onPress={() => setImageModalVisible(false)}
+						hitSlop={12}
+						accessibilityLabel='닫기'
+						accessibilityRole='button'
+						style={({ pressed }) => ({
+							position: 'absolute',
+							top: 56,
+							right: 20,
+							zIndex: 10,
+							opacity: pressed ? 0.6 : 1,
+						})}
+					>
+						<Ionicons name='close' size={28} color='white' />
+					</Pressable>
+					<ScrollView
+						contentContainerStyle={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
+						maximumZoomScale={4}
+						minimumZoomScale={1}
+						showsVerticalScrollIndicator={false}
+						showsHorizontalScrollIndicator={false}
+						centerContent
+					>
+						<Image
+							source={{ uri: artworkImageUrl ?? '' }}
+							style={{ width: SCREEN_WIDTH, height: SCREEN_WIDTH }}
+							resizeMode='contain'
+							accessibilityLabel='작품 이미지 전체화면'
+						/>
+					</ScrollView>
+				</View>
+			</Modal>
 		</Screen>
 	);
 }

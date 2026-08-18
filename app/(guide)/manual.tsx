@@ -49,7 +49,7 @@ export default function ManualScreen() {
 			>
 				<ScreenHeader>
 					<ScreenHeader.Left>
-						<ScreenHeader.Back />
+						<ScreenHeader.Back color='rgba(255,255,255,0.9)' />
 					</ScreenHeader.Left>
 				</ScreenHeader>
 
