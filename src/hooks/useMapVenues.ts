@@ -50,7 +50,7 @@ export function useMapVenues(filterDate: Date): VenueGroup[] {
 					.not('museum_id', 'is', null)
 					.gte('end_date', key)
 					.order('start_date', { ascending: false })
-					.limit(8000),
+					.limit(2000),
 			);
 			if (cancelled || error || !data) return;
 

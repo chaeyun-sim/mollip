@@ -97,32 +97,40 @@ export function RoutePlanningBar({
 	onConfirm,
 	onClose,
 }: RoutePlanningBarProps) {
-	const [editing, setEditing] = useState<EditingField>(null);
+	// 출발지가 없으면 마운트 시 바로 출발지 검색창을 열어준다
+	const [editing, setEditing] = useState<EditingField>(() => (origin == null ? 'origin' : null));
 	const [query, setQuery] = useState('');
 	const [barHeight, setBarHeight] = useState(0);
 	const [kakaoRows, setKakaoRows] = useState<KakaoLocalItem[]>([]);
 	const [kakaoLoading, setKakaoLoading] = useState(false);
+	const [kakaoError, setKakaoError] = useState(false);
 
 	useEffect(() => {
 		if (editing == null) {
 			setKakaoRows([]);
+			setKakaoError(false);
 			return;
 		}
 		const q = query.trim();
 		if (q.length < 1) {
 			setKakaoRows([]);
 			setKakaoLoading(false);
+			setKakaoError(false);
 			return;
 		}
 		let cancelled = false;
 		setKakaoLoading(true);
+		setKakaoError(false);
 		const timer = setTimeout(() => {
 			searchKakaoKeyword(q)
 				.then((rows) => {
 					if (!cancelled) setKakaoRows(rows);
 				})
 				.catch(() => {
-					if (!cancelled) setKakaoRows([]);
+					if (!cancelled) {
+						setKakaoRows([]);
+						setKakaoError(true);
+					}
 				})
 				.finally(() => {
 					if (!cancelled) setKakaoLoading(false);
@@ -359,7 +367,13 @@ export function RoutePlanningBar({
 								</View>
 							</Pressable>
 						))}
+						{!kakaoLoading && kakaoError && (
+							<Text className='px-4 py-4 text-[13px] text-black/40 font-pretendard-regular'>
+								검색 중 오류가 발생했어요. 다시 시도해 주세요.
+							</Text>
+						)}
 						{!kakaoLoading &&
+							!kakaoError &&
 							suggestions.length === 0 &&
 							query.trim().length >= 1 && (
 								<Text className='px-4 py-4 text-[13px] text-black/40 font-pretendard-regular'>
@@ -372,8 +386,15 @@ export function RoutePlanningBar({
 
 			{editing == null && (
 				<Pressable
-					onPress={onConfirm}
-					disabled={!canConfirm}
+					onPress={() => {
+						if (!canConfirm) {
+							// 출발지/도착지가 없으면 해당 필드를 열어 안내
+							if (!origin) openEditor('origin');
+							else if (!destination) openEditor('destination');
+							return;
+						}
+						onConfirm();
+					}}
 					className='h-12 rounded-2xl bg-[#1C1917] items-center justify-center mt-2'
 					style={!canConfirm ? { opacity: 0.45 } : undefined}
 					accessibilityRole='button'

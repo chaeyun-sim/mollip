@@ -56,6 +56,8 @@ export function formatDistance(km: number): string {
 }
 
 const DECLUTTER_RADIUS_PX = 40;
+/** 화면에 동시에 렌더링할 최대 마커 수 (full + dots 합산) — 초과분은 버린다 */
+const MAX_MARKERS = 300;
 
 /**
  * 카카오맵 스타일 마커 밀집 처리 — 클러스터처럼 좌표를 평균 내 옮기지 않고, 각 장소는
@@ -88,6 +90,8 @@ export function declutterMarkers(
 	const dots: VenueGroup[] = [];
 
 	for (const v of sorted) {
+		if (full.length + dots.length >= MAX_MARKERS && !isPinned(v)) break;
+
 		const isSelected = isPinned(v);
 		const tooCloseToFullMarker = full.some(
 			(u) =>

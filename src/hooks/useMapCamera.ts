@@ -24,7 +24,6 @@ export function useMapCamera() {
 			const loc = await Location.getCurrentPositionAsync({});
 			const coord = { latitude: loc.coords.latitude, longitude: loc.coords.longitude };
 			setCurrentCoord(coord);
-			mapRef.current?.animateCameraTo({ ...coord, zoom: 12 });
 		})();
 	}, []);
 

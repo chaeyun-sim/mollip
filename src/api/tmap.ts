@@ -3,6 +3,45 @@
 // https://lab.odsay.com/ 에서 앱 등록 후 apiKey 발급 (무료 Basic 요금제 일 1,000건).
 const ODSAY_API_KEY = process.env.EXPO_PUBLIC_ODSAY_API_KEY ?? '';
 
+// ODsay API 응답 내부 타입 — 공개 문서 기준으로 실제 접근하는 필드만 정의한다.
+interface OdsayXyInfo {
+	x: number;
+	y: number;
+}
+
+interface OdsayRoute {
+	xyInfos?: OdsayXyInfo[];
+}
+
+interface OdsayLane {
+	busNo?: string;
+	name?: string;
+	type?: number;
+}
+
+interface OdsayStation {
+	stationID: number;
+}
+
+interface OdsayRp {
+	trafficType: 1 | 2 | 3; // 1=지하철, 2=버스, 3=도보
+	duration?: number; // 분
+	distance?: number; // 미터
+	startName?: string;
+	endName?: string;
+	graph?: string; // "경도 위도|..." 폴리라인 (버스·지하철)
+	lane?: OdsayLane[];
+	passStopList?: { stations?: OdsayStation[] };
+	routes?: OdsayRoute[]; // 도보 상세 좌표
+}
+
+interface OdsayPath {
+	rps?: OdsayRp[];
+	totalDistance: number;
+	totalTime: number; // 분
+	totalPayment?: number;
+}
+
 export interface RouteCoord {
 	latitude: number;
 	longitude: number;
@@ -43,8 +82,8 @@ function parseGraphPolyline(graph: string | undefined): RouteCoord[] {
 	});
 }
 
-function transitLegCount(path: any): number {
-	return (path.rps ?? []).filter((rp: any) => rp.trafficType === 1 || rp.trafficType === 2).length;
+function transitLegCount(path: OdsayPath): number {
+	return (path.rps ?? []).filter((rp) => rp.trafficType === 1 || rp.trafficType === 2).length;
 }
 
 function formatSearchTime(date: Date): string {
@@ -59,7 +98,7 @@ async function searchMaasPaths(
 	start: RouteCoord,
 	end: RouteCoord,
 	searchMethod: '1' | '2',
-): Promise<any[]> {
+): Promise<OdsayPath[]> {
 	const params = new URLSearchParams({
 		apiKey: ODSAY_API_KEY,
 		lang: '0',
@@ -74,21 +113,21 @@ async function searchMaasPaths(
 	if (!res.ok) throw new Error(`ODsay 경로 요청 실패 (${res.status})`);
 	const json = await res.json();
 	if (json.error) {
-		console.log('[DEBUG maasRP error]', JSON.stringify(json.error));
+		console.warn('[ODsay] 경로 조회 오류:', json.error.msg ?? json.error.code);
 		return [];
 	}
 	if (!json.result) {
-		console.log('[DEBUG maasRP unexpected response]', JSON.stringify(json));
+		console.warn('[ODsay] 예상치 못한 응답 형식');
 	}
 	return json.result?.paths ?? [];
 }
 
-function buildRouteResult(path: any): RouteResult {
-	const legs: RouteLeg[] = (path.rps ?? []).map((rp: any): RouteLeg => {
+function buildRouteResult(path: OdsayPath): RouteResult {
+	const legs: RouteLeg[] = (path.rps ?? []).map((rp): RouteLeg => {
 		if (rp.trafficType === 3) {
 			// 도보 — routes[].xyInfos에 실제 도로를 따르는 상세 좌표가 들어있다.
-			const coords: RouteCoord[] = (rp.routes ?? []).flatMap((route: any) =>
-				(route.xyInfos ?? []).map((p: any) => ({ latitude: p.y, longitude: p.x })),
+			const coords: RouteCoord[] = (rp.routes ?? []).flatMap((route) =>
+				(route.xyInfos ?? []).map((p) => ({ latitude: p.y, longitude: p.x })),
 			);
 			return {
 				mode: 'walk',

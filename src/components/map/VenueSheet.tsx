@@ -11,6 +11,141 @@ import { parseDate } from '@/src/utils/mapUtils';
 import { openPhoneDialer } from '@/src/utils/venueContactActions';
 import type { VenueGroup } from '@/src/data/venues';
 
+// ── 운영시간 파싱 ─────────────────────────────────────────────────────────────
+
+const DAY_NAMES = ['일', '월', '화', '수', '목', '금', '토'] as const;
+type DayName = (typeof DAY_NAMES)[number];
+
+interface HoursEntry {
+	days: string;
+	hours: string;
+	isClosed: boolean;
+}
+
+function expandDayLabel(label: string): DayName[] {
+	const rangeMatch = label.match(/^([월화수목금토일])~([월화수목금토일])$/);
+	if (rangeMatch) {
+		const start = DAY_NAMES.indexOf(rangeMatch[1] as DayName);
+		const end = DAY_NAMES.indexOf(rangeMatch[2] as DayName);
+		if (start !== -1 && end !== -1) return Array.from(DAY_NAMES).slice(start, end + 1) as DayName[];
+	}
+	return label.split(/[·,]/).map((d) => d.trim()) as DayName[];
+}
+
+function parseHoursEntries(openHours: string, closedDays?: string): HoursEntry[] {
+	if (!openHours || openHours.includes('정보 없음')) return [];
+	const entries: HoursEntry[] = openHours
+		.split('\n')
+		.map((l) => l.trim())
+		.filter(Boolean)
+		.map((line) => {
+			const m = line.match(/^([월화수목금토일,·~]+)\s*:\s*(.+)$/);
+			if (m) return { days: m[1].replace(/,/g, '·'), hours: m[2].trim(), isClosed: false };
+			return { days: '매일', hours: line, isClosed: false };
+		});
+	if (closedDays) entries.push({ days: closedDays.replace(/,/g, '·'), hours: '휴무', isClosed: true });
+	return entries;
+}
+
+function getTodayEntry(entries: HoursEntry[], date: Date): HoursEntry | null {
+	const dayName = DAY_NAMES[date.getDay()];
+	for (const entry of entries) {
+		if (entry.days === '매일') return entry;
+		if (expandDayLabel(entry.days).includes(dayName)) return entry;
+	}
+	return null;
+}
+
+// ── HoursSection ─────────────────────────────────────────────────────────────
+
+interface HoursSectionProps {
+	openHours: string;
+	closedDays?: string;
+	filterDate: Date;
+}
+
+function HoursSection({ openHours, closedDays, filterDate }: HoursSectionProps) {
+	const [expanded, setExpanded] = useState(false);
+
+	const entries = useMemo(() => parseHoursEntries(openHours, closedDays), [openHours, closedDays]);
+	const todayEntry = useMemo(() => getTodayEntry(entries, filterDate), [entries, filterDate]);
+	const todayDayName = DAY_NAMES[filterDate.getDay()];
+	const showChevron = entries.length > 1;
+
+	const displayLabel =
+		entries.length === 0
+			? openHours
+			: todayEntry
+				? `${todayDayName}  ${todayEntry.hours}`
+				: openHours;
+
+	return (
+		<View>
+			<Pressable
+				className='flex-row items-center gap-1'
+				onPress={() => showChevron && setExpanded((e) => !e)}
+				accessibilityRole='button'
+				accessibilityLabel={`운영시간 ${displayLabel}`}
+			>
+				<Ionicons name='time-outline' size={13} color='rgba(0,0,0,0.45)' style={{ marginTop: 1 }} />
+				<Text className='text-black/60 text-[13px] font-pretendard-medium flex-1'>
+					{displayLabel}
+				</Text>
+				{showChevron && (
+					<Ionicons
+						name={expanded ? 'chevron-up' : 'chevron-down'}
+						size={12}
+						color='rgba(0,0,0,0.35)'
+					/>
+				)}
+			</Pressable>
+			{expanded && (
+				<View
+					className='mt-2 rounded-xl overflow-hidden border border-black/[0.06]'
+					style={{
+						shadowColor: '#000',
+						shadowOffset: { width: 0, height: 1 },
+						shadowOpacity: 0.06,
+						shadowRadius: 4,
+					}}
+				>
+					{entries.map((entry, i) => {
+						const isToday =
+							entry.days === '매일' || expandDayLabel(entry.days).includes(todayDayName);
+						return (
+							<View
+								key={i}
+								className={cn(
+									'flex-row items-center px-3 py-2',
+									isToday ? 'bg-[#EDEAE4]' : 'bg-[#F5F3EF]',
+									i > 0 && 'border-t border-black/[0.05]',
+								)}
+							>
+								<Text
+									className={cn(
+										'w-[84px] text-[12.5px] font-pretendard-medium',
+										isToday ? 'text-black/70' : 'text-black/38',
+									)}
+								>
+									{entry.days}
+								</Text>
+								<Text
+									className={cn(
+										'flex-1 text-[12.5px] font-pretendard-medium',
+										entry.isClosed ? 'text-black/30' : isToday ? 'text-black/70' : 'text-black/50',
+									)}
+								>
+									{entry.hours}
+								</Text>
+							</View>
+						);
+					})}
+				</View>
+			)}
+		</View>
+	);
+}
+
 interface VenueSheetProps {
 	venue: VenueGroup;
 	filterDate: Date;
@@ -120,22 +255,11 @@ export function VenueSheet({
 								</Pressable>
 							)}
 
-							<View className='flex-row items-center flex-wrap gap-x-1.5 gap-y-1'>
-								<View className='flex-row items-center gap-1'>
-									<Ionicons name='time-outline' size={13} color='rgba(0,0,0,0.45)' />
-									<Text className='text-black/60 text-[13px] font-pretendard-medium'>
-										{activeVenue.openHours}
-									</Text>
-								</View>
-								{activeVenue.closedDays && (
-									<View className='flex-row items-center gap-1.5'>
-										<View className='w-[3px] h-[3px] rounded-full bg-black/25' />
-										<Text className='text-black/55 text-[13px] font-pretendard-regular'>
-											{activeVenue.closedDays} 휴무
-										</Text>
-									</View>
-								)}
-							</View>
+							<HoursSection
+								openHours={activeVenue.openHours}
+								closedDays={activeVenue.closedDays}
+								filterDate={filterDate}
+							/>
 							{activeVenue.phone && (
 								<Pressable
 									onPress={() => callVenue(activeVenue.phone!)}
@@ -155,6 +279,17 @@ export function VenueSheet({
 										{activeVenue.phone}
 									</Text>
 								</Pressable>
+							)}
+							{activeVenue.parking && (
+								<View className='flex-row items-start gap-1'>
+									<Ionicons name='car-outline' size={13} color='rgba(0,0,0,0.45)' style={{ marginTop: 2 }} />
+									<Text
+										className='text-black/60 text-[13px] font-pretendard-medium flex-1'
+										numberOfLines={2}
+									>
+										{activeVenue.parking}
+									</Text>
+								</View>
 							)}
 						</View>
 					</View>

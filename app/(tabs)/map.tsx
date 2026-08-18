@@ -9,7 +9,15 @@ import {
 } from '@mj-studio/react-native-naver-map';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import {
+	ActivityIndicator,
+	Keyboard,
+	Pressable,
+	ScrollView,
+	Text,
+	useWindowDimensions,
+	View,
+} from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { DatePickerModal } from '@/src/components/common/DatePickerModal';
@@ -28,6 +36,7 @@ import { useMapVenues } from '@/src/hooks/useMapVenues';
 import { useRecentLocations } from '@/src/hooks/useRecentLocations';
 import { useVenueExhibitions } from '@/src/hooks/useVenueExhibitions';
 import { useMapStore } from '@/src/store/mapStore';
+import { cn } from '@/src/lib/cn';
 import {
 	declutterMarkers,
 	distanceKm,
@@ -47,15 +56,34 @@ const MARKER_ZOOM = 14;
 export default function MapScreen() {
 	const router = useRouter();
 	const insets = useSafeAreaInsets();
+	const { height: screenHeight } = useWindowDimensions();
 	const bottomSheetRef = useRef<BottomSheetModal>(null);
 	const routeSheetRef = useRef<BottomSheet>(null);
+	// 경로 시트 snap index 추적 — 카메라 세로 중심 보정용
+	const routeSheetIndexRef = useRef(-1);
 	// 전시 상세로 이동하기 위해 프로그램적으로 시트를 닫을 때는 선택 상태를 지우지 않도록 하는 플래그.
 	const suppressClearOnDismissRef = useRef(false);
+	// 바텀시트 현재 index — onChange 콜백 기반 상태 추적
+	const venueSheetIndexRef = useRef(-1);
+	// present() 호출 후 onChange 완료까지 true — double-present 방지용
+	const sheetPresentingRef = useRef(false);
 
 	const { mapRef, cameraRef, currentCoord, displayZoom, handleCameraChanged } =
 		useMapCamera();
 
-	const { selectedVenueName, selectVenue, clearSelection, pendingCamera, clearPendingCamera } = useMapStore();
+	const {
+		selectedVenueName,
+		selectVenue,
+		clearSelection,
+		pendingCamera,
+		clearPendingCamera,
+	} = useMapStore();
+	// 전시 상세에서 지도로 진입했는지 추적 — currentCoord 자동 포커스를 막기 위해 사용
+	const cameFromExhibitionRef = useRef(false);
+	// 현재 위치 첫 포커스 여부 — GPS 갱신마다 카메라가 튀는 걸 막기 위해 사용
+	const hasInitialCameraRef = useRef(false);
+	// venue 바텀시트가 현재 열려있는지 — 핀이 선택된 채 시트만 닫혔을 때 재오픈 버튼을 표시하기 위해
+	const [isVenueSheetOpen, setIsVenueSheetOpen] = useState(false);
 	const [filterDate, setFilterDate] = useState(new Date());
 	const dbVenues = useMapVenues(filterDate);
 	const { recents: recentLocations, addRecent } = useRecentLocations();
@@ -103,6 +131,24 @@ export default function MapScreen() {
 		const pinNames = new Set<string>();
 		if (selectedVenueName) pinNames.add(selectedVenueName);
 		if (pinnedVenueName) pinNames.add(pinnedVenueName);
+
+		// 경로 모드: 출발지·목적지 핀만 표시
+		if (directionsStatus !== 'idle') {
+			const routePinNames = new Set<string>();
+			if (routeOrigin?.name) routePinNames.add(routeOrigin.name);
+			if (destination?.name) routePinNames.add(destination.name);
+			const routeVenues = [...mapVenues, ...dbVenues].filter((v) =>
+				routePinNames.has(v.venueName),
+			);
+			// 중복 제거
+			const seen = new Set<string>();
+			return routeVenues.filter((v) => {
+				if (seen.has(v.venueName)) return false;
+				seen.add(v.venueName);
+				return true;
+			});
+		}
+
 		if (pinNames.size === 0) return mapVenues;
 		const missing = dbVenues.filter(
 			(v) =>
@@ -110,7 +156,15 @@ export default function MapScreen() {
 				!mapVenues.some((m) => m.venueName === v.venueName),
 		);
 		return missing.length > 0 ? [...mapVenues, ...missing] : mapVenues;
-	}, [mapVenues, dbVenues, selectedVenueName, pinnedVenueName]);
+	}, [
+		mapVenues,
+		dbVenues,
+		selectedVenueName,
+		pinnedVenueName,
+		directionsStatus,
+		routeOrigin?.name,
+		destination?.name,
+	]);
 
 	const { full: fullMarkerVenues, dots: dotVenues } = useMemo(
 		() =>
@@ -124,13 +178,26 @@ export default function MapScreen() {
 		[markerVenues, displayZoom, selectedVenueName, filterDate, pinnedVenueName],
 	);
 
-	const selectedVenue = useMemo(
-		() =>
-			[...venueGroups, ...dbVenues].find(
-				(v) => v.venueName === selectedVenueName,
-			) ?? null,
-		[selectedVenueName, dbVenues],
-	);
+	const selectedVenue = useMemo(() => {
+		if (!selectedVenueName) return null;
+		const allVenues = [...venueGroups, ...dbVenues];
+		// 직접 매칭
+		const direct = allVenues.find((v) => v.venueName === selectedVenueName);
+		if (direct) return direct;
+		// 하위 미술관 이름으로 부모 venue 찾기 — exhibition.venue가 sub-venue 이름일 때 대응
+		return (
+			allVenues.find((v) =>
+				v.subVenues?.some((sv) => sv.venueName === selectedVenueName),
+			) ?? null
+		);
+	}, [selectedVenueName, dbVenues]);
+
+	// present() 중복 호출 방지 — 애니메이션 중(onChange 미발화)에도 중복 차단
+	const openVenueSheet = useCallback(() => {
+		if (sheetPresentingRef.current || venueSheetIndexRef.current !== -1) return;
+		sheetPresentingRef.current = true;
+		bottomSheetRef.current?.present();
+	}, []);
 
 	// 하위 미술관을 묶은 부모 venue(예: 예술의전당)는 exhibitions가 이미 useMapVenues에서
 	// 하위 미술관별로 채워져 있으므로 추가 API 조회 불필요 — 빈 이름/id를 전달해 쿼리를 건너뛴다.
@@ -168,8 +235,9 @@ export default function MapScreen() {
 		return formatDistance(km);
 	}, [currentCoord, selectedVenue]);
 
-	// 검색 결과 1개일 때 카메라 자동 이동
+	// 검색 결과 1개일 때 카메라 자동 이동 — 길찾기 진행 중에는 카메라를 뺏지 않는다
 	useEffect(() => {
+		if (directionsStatus !== 'idle') return;
 		if (mapVenues.length === 1) {
 			const v = mapVenues[0];
 			const offset = latOffsetForPixels(MARKER_ZOOM, -25);
@@ -179,11 +247,17 @@ export default function MapScreen() {
 				zoom: MARKER_ZOOM,
 			});
 		}
-	}, [mapVenues, mapRef]);
+	}, [mapVenues, mapRef, directionsStatus]);
 
-	// 경로 조회에 성공하면 출발/도착 두 좌표의 중점이 화면 정중앙에 오도록 카메라를 맞춘다.
-	// pivot을 따로 주지 않으면 기본값 0.5(중앙)라 별도 보정 애니메이션 없이 한 번에 끝난다 —
-	// 두 단계로 나누면(맞춤 → 위로 보정) 카메라가 튀는 것처럼 보여서 단일 애니메이션으로 처리한다.
+	// routeSheet snap 비율 → 카메라 세로 오프셋(px) 계산
+	// 시트 열림: 타겟을 스크린 1/4 지점에 고정 (카메라 중심을 1/4만큼 아래로 이동)
+	// 시트 닫힘: 오프셋 없음 (스크린 중앙)
+	const routeSnapFractions = [0.24, 0.5, 0.85] as const;
+	const routeCameraOffsetPx = useCallback((): number => {
+		return routeSheetIndexRef.current >= 0 ? -(screenHeight * 0.25) : 0;
+	}, [screenHeight]);
+
+	// 경로 조회에 성공하면 경로 전체가 시트 위의 맵 영역 중앙에 오도록 카메라를 맞춘다.
 	useEffect(() => {
 		if (directionsStatus !== 'success' || !route) return;
 		const allCoords = route.legs.flatMap((leg) => leg.coords);
@@ -200,15 +274,26 @@ export default function MapScreen() {
 			if (c.longitude > maxLon) maxLon = c.longitude;
 		}
 
-		// 경로가 화면에 꽉 차지 않도록 사방에 여유를 둬서 한 단계 더 축소된 느낌을 준다.
-		// 바텀시트에 가리지 않도록 아래쪽 여유를 위쪽보다 크게 준다.
-		const latPad = (maxLat - minLat) * 0.25 || 0.0015;
-		const lonPad = (maxLon - minLon) * 0.25 || 0.0015;
+		const latRange = maxLat - minLat;
+		const lonRange = maxLon - minLon;
+		const latPad = latRange * 0.1 || 0.001;
+		const lonPad = lonRange * 0.1 || 0.001;
+
+		// 시트가 화면의 sheetFrac만큼 올라와 있으면, 남은 맵 영역(1-sheetFrac)에
+		// 경로가 들어가야 하므로 남쪽 경계를 sheetFrac / (1 - sheetFrac) 비율만큼 더 내린다.
+		const idx = routeSheetIndexRef.current;
+		const sheetFrac = idx >= 0 ? (routeSnapFractions[idx] ?? 0.5) : 0;
+		const bottomBias =
+			sheetFrac > 0 ? (latRange + 2 * latPad) * (sheetFrac / (1 - sheetFrac)) : 0;
+
 		mapRef.current?.animateCameraWithTwoCoords({
-			coord1: { latitude: minLat - latPad * 20, longitude: minLon - lonPad },
+			coord1: {
+				latitude: minLat - latPad - bottomBias,
+				longitude: minLon - lonPad,
+			},
 			coord2: { latitude: maxLat + latPad, longitude: maxLon + lonPad },
 		});
-	}, [route, directionsStatus, mapRef]);
+	}, [route, directionsStatus, mapRef, routeCameraOffsetPx]);
 
 	const handleMarkerPress = useCallback(
 		(venueName: string, lat: number, lon: number) => {
@@ -277,19 +362,31 @@ export default function MapScreen() {
 
 	const handleGoToExhibition = useCallback(
 		(exhibitionId: string) => {
-			// 시트가 화면 최상단에 떠 있어서 상세 페이지를 가리므로 일단 닫지만, 선택 상태는
-			// 지우지 않는다 — 뒤로가기로 지도 탭에 돌아오면 useFocusEffect가 같은 장소를 다시 연다.
+			// 네비게이션을 먼저 시작하고 시트를 닫아 빈 지도가 잠깐 보이는 현상을 방지한다.
 			suppressClearOnDismissRef.current = true;
+			router.push(`/(explore)/${exhibitionId}`);
 			bottomSheetRef.current?.dismiss();
-			router.push(`/(explore)/${exhibitionId}` as never);
 		},
 		[router],
 	);
+
+	// 시트를 열어야 함을 기록 — displayVenue가 준비되면 openVenueSheet() 호출
+	const wantToOpenRef = useRef(false);
+
+	// displayVenue 준비 완료 시 시트 오픈 (빈 sheet present → content 마운트 시 dismiss 버그 방지)
+	useEffect(() => {
+		if (!wantToOpenRef.current) return;
+		if (!selectedVenueName || !displayVenue || directionsStatus !== 'idle')
+			return;
+		openVenueSheet();
+		wantToOpenRef.current = false;
+	}, [displayVenue, selectedVenueName, directionsStatus, openVenueSheet]);
 
 	// 전시 상세에서 지도 탭으로 진입 시 해당 위치로 카메라 이동
 	useFocusEffect(
 		useCallback(() => {
 			if (!pendingCamera) return;
+			cameFromExhibitionRef.current = true;
 			const offset = latOffsetForPixels(MARKER_ZOOM, -25);
 			mapRef.current?.animateCameraTo({
 				latitude: pendingCamera.latitude + offset,
@@ -297,7 +394,7 @@ export default function MapScreen() {
 				zoom: MARKER_ZOOM,
 			});
 			selectVenue(pendingCamera.venueName);
-			bottomSheetRef.current?.present();
+			wantToOpenRef.current = true;
 			clearPendingCamera();
 		}, [pendingCamera, mapRef, selectVenue, clearPendingCamera]),
 	);
@@ -305,11 +402,23 @@ export default function MapScreen() {
 	// 상세 화면에서 뒤로가기로 지도 탭에 돌아왔을 때, 선택이 남아있으면 시트를 다시 연다.
 	useFocusEffect(
 		useCallback(() => {
-			if (selectedVenueName && directionsStatus === 'idle') {
-				bottomSheetRef.current?.present();
+			if (!selectedVenueName || directionsStatus !== 'idle') return;
+			if (displayVenue) {
+				openVenueSheet();
+			} else {
+				wantToOpenRef.current = true;
 			}
-		}, [selectedVenueName, directionsStatus]),
+		}, [selectedVenueName, directionsStatus, displayVenue, openVenueSheet]),
 	);
+
+	// 첫 진입 시 현재 위치로 카메라 이동 — GPS 갱신마다 반복하지 않도록 한 번만 실행
+	useEffect(() => {
+		if (!currentCoord) return;
+		if (cameFromExhibitionRef.current) return;
+		if (hasInitialCameraRef.current) return;
+		hasInitialCameraRef.current = true;
+		mapRef.current?.animateCameraTo({ ...currentCoord, zoom: 12 });
+	}, [currentCoord, mapRef]);
 
 	const renderBackdrop = useCallback(
 		(props: any) => (
@@ -347,13 +456,22 @@ export default function MapScreen() {
 						isSelected={false}
 						activeFilters={activeFilters}
 						matchesFilters={matchesFilters}
-						onTap={(v) =>
+						onTap={(v) => {
+							if (directionsStatus !== 'idle') {
+								// 경로 모드: dot 탭 시 해당 위치로 zoom
+								mapRef.current?.animateCameraTo({
+									latitude: v.coordinates.latitude,
+									longitude: v.coordinates.longitude,
+									zoom: MARKER_ZOOM,
+								});
+								return;
+							}
 							handleMarkerPress(
 								v.venueName,
 								v.coordinates.latitude,
 								v.coordinates.longitude,
-							)
-						}
+							);
+						}}
 					/>
 				))}
 				{fullMarkerVenues.map((venue) => (
@@ -404,6 +522,15 @@ export default function MapScreen() {
 							height={size}
 							anchor={{ x: 0.5, y: 0.5 }}
 							zIndex={50}
+							onTap={() => {
+								// dot 탭 시 sheet 최소화 → 지도 영역 최대 확보, 오프셋 없이 스크린 중앙
+								routeSheetRef.current?.snapToIndex(0);
+								mapRef.current?.animateCameraTo({
+									latitude: point.latitude,
+									longitude: point.longitude,
+									zoom: MARKER_ZOOM,
+								});
+							}}
 						>
 							<View
 								collapsable={false}
@@ -420,7 +547,7 @@ export default function MapScreen() {
 				})}
 			</NaverMapView>
 
-			{/* 필터 칩 — 길찾기·출발/도착 설정 중에는 숨긴다 */}
+			{/* 필터 칩 — 길찾기·출발/도착 설정 중이면 숨긴다 */}
 			{directionsStatus === 'idle' && (
 				<FilterChips
 					topOffset={insets.top + 56}
@@ -436,11 +563,68 @@ export default function MapScreen() {
 				style={{ top: insets.top + 12, zIndex: 20 }}
 			>
 				{directionsStatus === 'idle' ? (
-					<SearchBar
-						value={searchText}
-						onChangeText={setSearchText}
-						placeholder='미술관 또는 전시 검색'
-					/>
+					<>
+						<SearchBar
+							value={searchText}
+							onChangeText={setSearchText}
+							placeholder='미술관 또는 전시 검색'
+						/>
+						{searchText.length > 0 && mapVenues.length > 0 && (
+							<ScrollView
+								className='rounded-2xl bg-white overflow-hidden mt-2'
+								style={{
+									maxHeight: 240,
+									shadowColor: '#000',
+									shadowOpacity: 0.1,
+									shadowRadius: 8,
+									shadowOffset: { width: 0, height: 2 },
+									elevation: 4,
+								}}
+								keyboardShouldPersistTaps='handled'
+								showsVerticalScrollIndicator={false}
+							>
+								{mapVenues.slice(0, 8).map((venue, index) => (
+									<Pressable
+										key={venue.venueName}
+										onPress={() => {
+											Keyboard.dismiss();
+											handleMarkerPress(
+												venue.venueName,
+												venue.coordinates.latitude,
+												venue.coordinates.longitude,
+											);
+											setSearchText('');
+										}}
+										className={cn(
+											'flex-row items-center px-4 py-3',
+											index < Math.min(mapVenues.length, 8) - 1 &&
+												'border-b border-black/[0.05]',
+										)}
+										accessibilityRole='button'
+										accessibilityLabel={`${venue.venueName} 선택`}
+									>
+										<Ionicons name='location-outline' size={15} color='#78716C' />
+										<View className='ml-2.5 flex-1'>
+											<Text
+												className='font-pretendard-medium text-[14px] text-[#1C1917]'
+												numberOfLines={1}
+											>
+												{venue.venueName}
+											</Text>
+											{venue.venueAddress && (
+												<Text
+													className='font-pretendard-regular text-[12px] text-[#78716C] mt-0.5'
+													numberOfLines={1}
+												>
+													{venue.venueAddress}
+												</Text>
+											)}
+										</View>
+									</Pressable>
+								))}
+							</ScrollView>
+						)}
+					</>
 				) : directionsStatus === 'planning' ? (
 					<RoutePlanningBar
 						origin={routeOrigin}
@@ -535,6 +719,9 @@ export default function MapScreen() {
 				snapPoints={snapPoints}
 				enableDynamicSizing={false}
 				onChange={(index) => {
+					venueSheetIndexRef.current = index;
+					sheetPresentingRef.current = false;
+					setIsVenueSheetOpen(index !== -1);
 					if (index !== -1) return;
 					if (suppressClearOnDismissRef.current) {
 						suppressClearOnDismissRef.current = false;
@@ -551,7 +738,7 @@ export default function MapScreen() {
 				}}
 				backdropComponent={renderBackdrop}
 			>
-				{displayVenue && (
+				{displayVenue ? (
 					<VenueSheet
 						venue={displayVenue}
 						filterDate={filterDate}
@@ -559,8 +746,28 @@ export default function MapScreen() {
 						onGoToExhibition={handleGoToExhibition}
 						onRequestDirections={handleBeginDirections}
 					/>
-				)}
+				) : isVenueSheetOpen ? (
+					<View className='flex-1 items-center justify-center py-12'>
+						<ActivityIndicator color='#78716C' />
+					</View>
+				) : null}
 			</BottomSheetModal>
+
+			{/* 선택된 핀이 있지만 venue 시트가 닫힌 경우 재오픈 버튼 */}
+			{selectedVenueName && !isVenueSheetOpen && directionsStatus === 'idle' && (
+				<Pressable
+					onPress={openVenueSheet}
+					className='absolute left-5 bottom-8 flex-row items-center gap-2 h-12 px-5 rounded-full bg-[rgba(15,14,13,0.92)] border border-white/15'
+					style={{ zIndex: 50 }}
+					accessibilityLabel='장소 정보 보기'
+					accessibilityRole='button'
+				>
+					<Ionicons name='business-outline' size={16} color='white' />
+					<Text className='text-white text-[13px] font-pretendard-bold'>
+						장소 정보 보기
+					</Text>
+				</Pressable>
+			)}
 
 			{/* 길찾기 패널을 다시 열 수 있는 버튼 — 패널을 드래그로 내려도(index -1) 항상 떠 있고,
 			    아래의 BottomSheet가 나중에 그려지며(JSX 순서상 위 레이어) 패널이 열리면 이 버튼을 자연히 덮는다. */}
@@ -568,6 +775,7 @@ export default function MapScreen() {
 				<Pressable
 					onPress={() => routeSheetRef.current?.snapToIndex(1)}
 					className='absolute left-5 bottom-8 flex-row items-center gap-2 h-12 px-5 rounded-full bg-[rgba(15,14,13,0.92)] border border-white/15'
+					style={({ pressed }) => ({ zIndex: 50, opacity: pressed ? 0.6 : 1 })}
 					accessibilityLabel='경로 패널 다시 보기'
 					accessibilityRole='button'
 				>
@@ -586,6 +794,9 @@ export default function MapScreen() {
 				snapPoints={routeSnapPoints}
 				enableDynamicSizing={false}
 				enablePanDownToClose
+				onChange={(index) => {
+					routeSheetIndexRef.current = index;
+				}}
 				backgroundStyle={{ backgroundColor: '#F5F3EF' }}
 				handleIndicatorStyle={{
 					backgroundColor: 'rgba(0,0,0,0.15)',

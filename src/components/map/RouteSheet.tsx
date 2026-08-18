@@ -68,7 +68,11 @@ const INK = '#1C1917';
 const BAR_WIDTH_SCALE = 220;
 
 function formatMinutes(seconds: number): string {
-	return `${Math.max(1, Math.round(seconds / 60))}분`;
+	const total = Math.max(1, Math.round(seconds / 60));
+	if (total < 60) return `${total}분`;
+	const h = Math.floor(total / 60);
+	const m = total % 60;
+	return `${h}시간 ${String(m).padStart(2, '0')}분`;
 }
 
 function formatDistanceM(meters: number): string {

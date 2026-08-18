@@ -55,10 +55,16 @@ export function useNearbyPlaces(location: { latitude: number; longitude: number 
     setIsLoading(true);
     setError(null);
 
-    searchNaverLocal('카페 OR 음식점', 6)
-      .then((items) => {
+    // 카페·음식점 각각 조회 후 합산 (OR 문법 미지원)
+    const loc = { latitude, longitude };
+    Promise.all([
+      searchNaverLocal('카페', 4, loc),
+      searchNaverLocal('음식점', 4, loc),
+    ])
+      .then(([cafes, restaurants]) => {
         if (cancelled) return;
-        setData(items.map((item, i) => mapNaverItemToPlace(item, latitude, longitude, i)));
+        const all = [...cafes, ...restaurants];
+        setData(all.map((item, i) => mapNaverItemToPlace(item, latitude, longitude, i)));
       })
       .catch((err: unknown) => {
         if (cancelled) return;
