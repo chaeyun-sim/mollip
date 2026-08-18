@@ -58,3 +58,5 @@ scripts/gallery_scan.log
 scripts/__pycache__/
 
 e2e/screenshots/
+
+coverage/

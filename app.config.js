@@ -53,15 +53,18 @@ module.exports = {
 						},
 					},
 				},
-				LSApplicationQueriesSchemes: ['kakaolink', 'kakaokompassauth', 'storykompassauth'],
+				LSApplicationQueriesSchemes: [
+					'kakaolink',
+					'kakaokompassauth',
+					'storykompassauth',
+				],
 			},
 		},
 		android: {
+			package: "com.simune.aaa",
 			adaptiveIcon: {
 				backgroundColor: '#E6F4FE',
-				foregroundImage: './assets/android-icon-foreground.png',
-				backgroundImage: './assets/android-icon-background.png',
-				monochromeImage: './assets/android-icon-monochrome.png',
+				foregroundImage: './assets/icon.png',
 			},
 			predictiveBackGestureEnabled: false,
 		},
@@ -69,6 +72,25 @@ module.exports = {
 			favicon: './assets/favicon.png',
 		},
 		plugins: [
+			[
+				'expo-build-properties',
+				{
+					android: {
+						extraMavenRepos: [
+							'https://devrepo.kakao.com/nexus/content/groups/public/',
+						],
+					},
+				},
+			],
+			[
+				'@react-native-kakao/core',
+				{
+					nativeAppKey: process.env.EXPO_PUBLIC_KAKAO_API_KEY,
+					android: {
+						forwardKakaoLinkIntentFilterToMainActivity: true,
+					},
+				},
+			],
 			[
 				'@mj-studio/react-native-naver-map',
 				{
