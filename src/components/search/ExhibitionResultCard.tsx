@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
-import { Image, Pressable, Text, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 import { useBookmarkStore } from '@/src/store/bookmarkStore';
-import { EmptyImagePlaceholder } from '@/src/components/common/EmptyImagePlaceholder';
+import { ExhibitionPoster } from '@/src/components/common/EmptyImagePlaceholder';
 import { formatDistance } from '@/src/utils/mapUtils';
 import { getDdayLabel, STATUS_LABELS } from '@/src/utils/exhibitionSearch';
 import { StatusBadge } from './StatusBadge';
@@ -30,20 +30,13 @@ export function ExhibitionResultCard({
 			style={({ pressed }) => ({ opacity: pressed ? 0.85 : 1 })}
 		>
 			{/* 썸네일 + 상태 배지 오버레이 */}
-			<View className='rounded-lg overflow-hidden w-[76px] h-[100px]'>
-				{ex.heroImageUri || ex.posterImage ? (
-					<Image
-						source={ex.heroImageUri ? { uri: ex.heroImageUri } : ex.posterImage}
-						resizeMode='cover'
-						className='w-full h-full'
-					/>
-				) : (
-					<EmptyImagePlaceholder
-						className='w-full h-full items-center justify-center bg-[#E5E1D8]'
-						iconSize={40}
-					/>
-				)}
-			</View>
+			<ExhibitionPoster
+				heroImageUri={ex.heroImageUri}
+				posterImage={ex.posterImage}
+				className='rounded-lg w-[76px] h-[100px]'
+				iconSize={36}
+				resizeMode='cover'
+			/>
 
 			{/* 정보 */}
 			<View className='flex-1 justify-center gap-1'>

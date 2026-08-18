@@ -1,4 +1,5 @@
 import Constants from 'expo-constants';
+import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 import { useEffect } from 'react';
 import { Platform } from 'react-native';
@@ -16,6 +17,9 @@ Notifications.setNotificationHandler({
 });
 
 async function registerForPushNotifications(): Promise<string | null> {
+	// 실기기에서만 APNs 토큰 발급이 가능하다 — 시뮬레이터/에뮬레이터에서는 건너뜀
+	if (!Device.isDevice) return null;
+
 	try {
 		const { status: existingStatus } = await Notifications.getPermissionsAsync();
 		let finalStatus = existingStatus;
@@ -34,7 +38,9 @@ async function registerForPushNotifications(): Promise<string | null> {
 			});
 		}
 
-		const projectId = Constants.expoConfig?.extra?.eas?.projectId as string | undefined;
+		const projectId = Constants.expoConfig?.extra?.eas?.projectId as
+			| string
+			| undefined;
 		const token = await Notifications.getExpoPushTokenAsync({ projectId });
 
 		return token.data;
@@ -55,8 +61,7 @@ export function usePushNotifications(userId: string | undefined) {
 			if (!token) return;
 			supabase
 				.from('profiles')
-				// push_token은 migration으로 추가된 컬럼 — 타입 생성 전 단언
-				.update({ push_token: token } as never)
+				.update({ push_token: token })
 				.eq('id', userId)
 				.then(({ error }) => {
 					if (error) console.error('[push] token 저장 실패:', error.message);

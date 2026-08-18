@@ -203,7 +203,6 @@ async function findFromCultureArea({
 					openHours: '운영시간 정보 없음',
 					admission: '정보 없음',
 					artworks: [],
-					relatedExhibitionIds: [],
 				};
 				return { exhibition, score };
 			})

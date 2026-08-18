@@ -44,12 +44,13 @@ export default function SettingsScreen() {
 		<Screen className='flex-1 bg-[#f4f4f1]'>
 			<StatusBar style='dark' />
 			<Screen.Header>
-				<Screen.Header.Logo />
+				<Screen.Header.Back />
 			</Screen.Header>
 
 			<ScrollView
 				showsVerticalScrollIndicator={false}
 				contentContainerStyle={{ paddingBottom: 60 }}
+				scrollEnabled={false}
 			>
 				<View className='w-full gap-6'>
 					{/* 계정 */}

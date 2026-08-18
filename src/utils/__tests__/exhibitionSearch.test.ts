@@ -22,7 +22,6 @@ const base: Exhibition = {
 	openHours: '10:00 – 20:00',
 	admission: '18,000원',
 	artworks: [],
-	relatedExhibitionIds: [],
 	tags: ['인상주의', '명화'],
 };
 

@@ -86,7 +86,6 @@ export interface Exhibition {
 
 	// — 관계
 	artworks: Artwork[];
-	relatedExhibitionIds: string[];
 	relatedExhibitions?: Exhibition[];
 }
 

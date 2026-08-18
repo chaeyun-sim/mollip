@@ -38,6 +38,7 @@ export const useSettingsStore = create<SettingsStore>()(
 		{
 			name: 'settings',
 			version: 1,
+			migrate: (persistedState) => persistedState as SettingsStore,
 			storage: createJSONStorage(() => AsyncStorage),
 			onRehydrateStorage: () => (_state, error) => {
 				if (error) console.warn('[settingsStore] rehydration failed:', error);

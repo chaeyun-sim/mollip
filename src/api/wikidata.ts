@@ -150,7 +150,7 @@ export async function searchWikiArtworks(query: string): Promise<WikiArtwork[]> 
 			const p800 = (claims.P800 ?? [])
 				.map((c: { mainsnak?: { datavalue?: { value?: { id?: string } } } }) => c?.mainsnak?.datavalue?.value?.id)
 				.filter(Boolean)
-				.slice(0, 8) as string[];
+				.slice(0, 15) as string[];
 			for (const workId of p800) notableWorkArtistId.set(workId, id);
 			notableWorkIds.push(...p800);
 		}

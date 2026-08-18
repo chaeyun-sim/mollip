@@ -3,7 +3,6 @@ import * as Haptics from 'expo-haptics';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { ActivityIndicator, Modal, Pressable, Text, View } from 'react-native';
-
 import { Screen } from '@/src/components/layout/Screen';
 import { useAuthStore } from '@/src/store/authStore';
 
@@ -25,44 +24,7 @@ export default function AccountScreen() {
 		}
 	};
 
-	const initial = user?.email?.[0]?.toUpperCase() ?? '?';
-
-	if (!user) {
-		return (
-			<Screen variant='warm'>
-				<Screen.Header>
-					<Screen.Header.Back color='#1C1917' onPress={() => router.back()} />
-					<Screen.Header.Center>
-						<Text className='text-[18px] text-[#1C1917] font-hahmlet-semibold'>
-							계정 정보
-						</Text>
-					</Screen.Header.Center>
-				</Screen.Header>
-
-				<View className='flex-1 px-6 pt-10'>
-					<Text className='font-pretendard-regular text-[#78716C] text-[15px] mb-8 leading-[22px]'>
-						아카이브·저장한 전시를 이용하려면 로그인해 주세요.
-					</Text>
-					<Pressable
-						onPress={() =>
-							router.push({
-								pathname: '/auth/login',
-								params: { returnTo: '/settings/account' },
-							})
-						}
-						className='rounded-3xl bg-[#1C1917] items-center justify-center min-h-[52px]'
-						accessibilityRole='button'
-						accessibilityLabel='로그인하기'
-						style={({ pressed }) => ({ opacity: pressed ? 0.8 : 1 })}
-					>
-						<Text className='font-pretendard-semibold text-[15px] text-white'>
-							로그인하기
-						</Text>
-					</Pressable>
-				</View>
-			</Screen>
-		);
-	}
+	if (!user) return null;
 
 	return (
 		<Screen variant='warm'>
@@ -87,6 +49,21 @@ export default function AccountScreen() {
 							numberOfLines={1}
 						>
 							{user.email}
+						</Text>
+					</View>
+				)}
+				{user.email && (
+					<View className='flex-row items-center justify-between px-1 py-3 mb-6'>
+						<Text className='font-pretendard-medium text-[14px] text-[#1C1917]'>
+							로그인 방법
+						</Text>
+						<Text
+							className='font-pretendard-regular text-[13px] text-[#A8A29E] max-w-[60%]'
+							numberOfLines={1}
+						>
+							{user.app_metadata.provider?.toUpperCase() === 'KAKAO'
+								? '카카오 로그인'
+								: '애플 로그인'}
 						</Text>
 					</View>
 				)}

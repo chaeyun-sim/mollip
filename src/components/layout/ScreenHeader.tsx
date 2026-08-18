@@ -72,7 +72,7 @@ function Back({ onPress, color }: { onPress?: () => void; color?: string }) {
 			accessibilityRole='button'
 			style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
 		>
-			<Ionicons name='arrow-back' size={24} color={color || '#4da3ff'} />
+			<Ionicons name='arrow-back' size={24} color={color || '#1C1917'} />
 		</Pressable>
 	);
 }

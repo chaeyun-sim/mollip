@@ -64,11 +64,11 @@ function RelatedExhibitionCard({
 	return (
 		<Pressable
 			onPressIn={() => {
-				scale.value = withSpring(0.96, { damping: 15 });
+				scale.value = withSpring(0.96, { damping: 30, stiffness: 300 });
 				Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
 			}}
 			onPressOut={() => {
-				scale.value = withSpring(1, { damping: 15 });
+				scale.value = withSpring(1, { damping: 30, stiffness: 300 });
 			}}
 			onPress={onPress}
 			style={{ width: POSTER_W }}

@@ -17,6 +17,17 @@ import { ExhibitionResultCard } from '@/src/components/search/ExhibitionResultCa
 import { useExhibitionSearch } from '@/src/hooks/useExhibitionSearch';
 import { useRecentSearchStore } from '@/src/store/recentSearchStore';
 
+const FIXED_TAGS = [
+	'문화유산',
+	'소장품전',
+	'사유',
+	'과학',
+	'현대미술',
+	'사진',
+	'조각',
+	'드로잉',
+];
+
 const ITEM_ENTERING = FadeIn.duration(220);
 const ITEM_EXITING = FadeOut.duration(160);
 // 스프링 대신 시간 기반 — 오버슈트(바운스) 없음
@@ -30,6 +41,7 @@ export default function SearchScreen() {
 
 	const {
 		searchText,
+		debouncedSearchText,
 		setSearchText,
 		commitSearchText,
 		statusFilters,
@@ -101,7 +113,7 @@ export default function SearchScreen() {
 			/>
 
 			{/* 필터 칩 */}
-			{searchText && (
+			{debouncedSearchText && (
 				<View className='mt-3 mb-6'>
 					<SearchFilterBar
 						statusFilters={statusFilters}
@@ -122,32 +134,30 @@ export default function SearchScreen() {
 				keyboardShouldPersistTaps='handled'
 				keyboardDismissMode='on-drag'
 			>
-				{!searchText ? (
+				{!debouncedSearchText ? (
 					/* 검색 전 — 추천 태그 + 최근 검색어 */
 					<View>
-						{popularTags.length > 0 && (
-							<View className='mt-7'>
-								<Text className='text-[#1C1917] text-[16px] mb-3 font-pretendard-bold'>
-									추천 태그
-								</Text>
-								<View className='flex-row flex-wrap gap-2'>
-									{popularTags.map((tag) => (
-										<Pressable
-											key={tag}
-											onPress={() => handlePressTag(tag)}
-											accessibilityLabel={`${tag} 태그로 검색`}
-											accessibilityRole='button'
-											className='rounded-full bg-[#F2EFE9] px-3.5 py-2'
-											style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
-										>
-											<Text className='text-[#57534E] text-[13px] font-pretendard-medium'>
-												{tag}
-											</Text>
-										</Pressable>
-									))}
-								</View>
+						<View className='mt-7'>
+							<Text className='text-[#1C1917] text-[16px] mb-3 font-pretendard-bold'>
+								추천 태그
+							</Text>
+							<View className='flex-row flex-wrap gap-2'>
+								{FIXED_TAGS.map((tag) => (
+									<Pressable
+										key={tag}
+										onPress={() => handlePressTag(tag)}
+										accessibilityLabel={`${tag} 태그로 검색`}
+										accessibilityRole='button'
+										className='rounded-full bg-[#F2EFE9] px-3.5 py-2'
+										style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
+									>
+										<Text className='text-[#57534E] text-[13px] font-pretendard-medium'>
+											{tag}
+										</Text>
+									</Pressable>
+								))}
 							</View>
-						)}
+						</View>
 
 						{recentWords.length > 0 && (
 							<View className='mt-7'>

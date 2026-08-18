@@ -112,6 +112,5 @@ export function mapExhibitionRowToExhibition(
 		heroImageUri: row.image_url?.trim() || undefined,
 		posterColor: '#E8E4DC',
 		artworks: [],
-		relatedExhibitionIds: [],
 	};
 }

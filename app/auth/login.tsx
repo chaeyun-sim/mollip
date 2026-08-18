@@ -44,12 +44,12 @@ export default function LoginScreen() {
 			setOnboardingCompleted(completed);
 
 			if (!completed) {
-				router.replace('/onboarding' as never);
+				router.replace('/onboarding');
 				return;
 			}
 		}
 
-		router.replace(destination as never);
+		router.replace(destination);
 	}, [router, destination, setOnboardingCompleted]);
 
 	const run = async (provider: 'kakao' | 'apple') => {

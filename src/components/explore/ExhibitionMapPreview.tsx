@@ -4,7 +4,8 @@ import {
 } from '@mj-studio/react-native-naver-map';
 import * as Haptics from 'expo-haptics';
 import { useRouter } from 'expo-router';
-import { Pressable, Text, View } from 'react-native';
+import { useState } from 'react';
+import { ActivityIndicator, Pressable, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 import { useMapStore } from '@/src/store/mapStore';
@@ -20,9 +21,12 @@ export function ExhibitionMapPreview({
 }: ExhibitionMapPreviewProps) {
 	const router = useRouter();
 	const setPendingCamera = useMapStore((s) => s.setPendingCamera);
+	const [isNavigating, setIsNavigating] = useState(false);
 
 	const handlePress = () => {
+		if (isNavigating) return;
 		Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+		setIsNavigating(true);
 		setPendingCamera({ ...coordinates, venueName });
 		router.push('/(tabs)/map');
 	};
@@ -32,6 +36,7 @@ export function ExhibitionMapPreview({
 			onPress={handlePress}
 			accessibilityLabel={`${venueName} 지도에서 보기`}
 			accessibilityRole='button'
+			style={({ pressed }) => ({ opacity: pressed ? 0.85 : 1 })}
 		>
 			<View
 				className='mx-6 rounded-md overflow-hidden border border-gray-200'
@@ -81,15 +86,13 @@ export function ExhibitionMapPreview({
 						shadowOffset: { width: 0, height: 1 },
 					}}
 				>
-					<Ionicons name='map-outline' size={12} color='#1C1917' />
-					<Text
-						style={{
-							fontFamily: 'Pretendard-Medium',
-							fontSize: 11,
-							color: '#1C1917',
-						}}
-					>
-						지도에서 보기
+					{isNavigating ? (
+						<ActivityIndicator size='small' color='#1C1917' style={{ width: 12, height: 12 }} />
+					) : (
+						<Ionicons name='map-outline' size={12} color='#1C1917' />
+					)}
+					<Text className='font-pretendard-medium text-[11px] text-[#1C1917]'>
+						{isNavigating ? '이동 중...' : '지도에서 보기'}
 					</Text>
 				</View>
 			</View>

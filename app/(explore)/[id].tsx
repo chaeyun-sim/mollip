@@ -1,21 +1,13 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
-import {
-	ActivityIndicator,
-	Dimensions,
-	Pressable,
-	ScrollView,
-	Text,
-	View,
-} from 'react-native';
+import { Dimensions, Pressable, ScrollView, Text, View } from 'react-native';
 import Animated from 'react-native-reanimated';
 import {
 	SafeAreaView,
 	useSafeAreaInsets,
 } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-
 import {
 	AccessibilityBadges,
 	ExhibitionDescription,
@@ -31,6 +23,7 @@ import {
 } from '@/src/components/explore';
 import { FadeInView } from '@/src/components/common/FadeInView';
 import { ExhibitionPoster } from '@/src/components/common/EmptyImagePlaceholder';
+import { ExhibitionDetailSkeleton } from '@/src/components/layout/Loading';
 import { useExhibitionData } from '@/src/hooks/useExhibitionData';
 import { useHeroAnimation } from '@/src/hooks/useHeroAnimation';
 import { useRequireAuth } from '@/src/hooks/useRequireAuth';
@@ -40,9 +33,6 @@ import { useImmersiveStore } from '@/src/store/immersiveStore';
 import { todayKey, useVisitStore } from '@/src/store/visitStore';
 import { getExhibitionTypeDisplay } from '@/src/utils/exhibitionSearch';
 
-const { height: SCREEN_HEIGHT } = Dimensions.get('window');
-const HERO_HEIGHT = SCREEN_HEIGHT * 0.62;
-
 export default function ExhibitionDetailScreen() {
 	const { id } = useLocalSearchParams<{ id: string }>();
 	const router = useRouter();
@@ -50,7 +40,6 @@ export default function ExhibitionDetailScreen() {
 	const [immersiveOpen, setImmersiveOpen] = useState(false);
 	const enterImmersive = useImmersiveStore((s) => s.enter);
 	const recordVisit = useVisitStore((s) => s.recordExhibition);
-	const setImmersiveMode = useImmersiveStore((s) => s.setImmersiveMode);
 
 	const { exhibition, isLoading } = useExhibitionData(id);
 	const isBookmarked = useBookmarkStore((s) => s.isBookmarked(id));
@@ -61,14 +50,9 @@ export default function ExhibitionDetailScreen() {
 	const { handleShare } = useShareExhibition(exhibition ?? null);
 
 	const fabBottom = insets.bottom + 20 + (exhibition?.ticketUrl ? 68 : 0);
+	const HERO_HEIGHT = Dimensions.get('window').height * 0.62;
 
-	if (isLoading) {
-		return (
-			<SafeAreaView className='flex-1 items-center justify-center bg-[#F8F6F2]'>
-				<ActivityIndicator color='#9CA3AF' />
-			</SafeAreaView>
-		);
-	}
+	if (isLoading) return <ExhibitionDetailSkeleton />;
 
 	if (!exhibition) {
 		return (
@@ -220,7 +204,7 @@ export default function ExhibitionDetailScreen() {
 						</Text>
 						<ExhibitionMapPreview
 							coordinates={exhibition.coordinates}
-							venueName={exhibition.venue}
+							venueName={exhibition.venueGroupName ?? exhibition.venue}
 						/>
 					</FadeInView>
 				)}
@@ -269,7 +253,6 @@ export default function ExhibitionDetailScreen() {
 						venue: exhibition.venue,
 						thumbnail: exhibition.posterImage ?? exhibition.heroImageUri,
 					});
-					setImmersiveMode(true);
 					router.push('/(guide)/create-description');
 				}}
 				onClose={() => setImmersiveOpen(false)}

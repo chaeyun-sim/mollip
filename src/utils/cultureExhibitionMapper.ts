@@ -47,6 +47,5 @@ export function mapCultureItemToExhibition(item: {
 		phone: item.phone || undefined,
 		coordinates: latitude != null && longitude != null ? { latitude, longitude } : undefined,
 		artworks: [],
-		relatedExhibitionIds: [],
 	};
 }

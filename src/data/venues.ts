@@ -14,6 +14,7 @@ export type VenueGroup = {
 	description?: string;
 	note?: string;
 	amenities?: string[];
+	parking?: string;
 	/** 같은 건물/캠퍼스 안에 묶인 하위 미술관 (예: 예술의전당 → 한가람미술관 등) */
 	subVenues?: VenueGroup[];
 };

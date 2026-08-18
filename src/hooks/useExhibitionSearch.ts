@@ -153,6 +153,7 @@ export function useExhibitionSearch() {
 
 	return {
 		searchText: inputText,
+		debouncedSearchText: searchText,
 		setSearchText: handleInputChange,
 		commitSearchText,
 		statusFilters,

@@ -192,6 +192,7 @@ export type Database = {
           name: string
           notes: string | null
           open_hours: string | null
+          parking: string | null
           phone: string | null
           rstdeInfo: string | null
           synced_at: string | null
@@ -211,6 +212,7 @@ export type Database = {
           name: string
           notes?: string | null
           open_hours?: string | null
+          parking?: string | null
           phone?: string | null
           rstdeInfo?: string | null
           synced_at?: string | null
@@ -230,6 +232,7 @@ export type Database = {
           name?: string
           notes?: string | null
           open_hours?: string | null
+          parking?: string | null
           phone?: string | null
           rstdeInfo?: string | null
           synced_at?: string | null
@@ -247,6 +250,7 @@ export type Database = {
           onboarding_completed: boolean
           preferred_artists: string[]
           preferred_genres: string[]
+          push_token: string | null
           updated_at: string
         }
         Insert: {
@@ -257,6 +261,7 @@ export type Database = {
           onboarding_completed?: boolean
           preferred_artists?: string[]
           preferred_genres?: string[]
+          push_token?: string | null
           updated_at?: string
         }
         Update: {
@@ -267,6 +272,7 @@ export type Database = {
           onboarding_completed?: boolean
           preferred_artists?: string[]
           preferred_genres?: string[]
+          push_token?: string | null
           updated_at?: string
         }
         Relationships: []
