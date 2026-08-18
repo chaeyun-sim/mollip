@@ -29,8 +29,8 @@ export interface SearchResult {
 
 const DEBOUNCE_MS = 300;
 // @MX:NOTE: 전체 전시를 마운트 시 1회 fetch 후 클라이언트 사이드 필터링.
-// SEARCH_LIMIT 초과 건수는 검색 결과에 포함되지 않으므로 DB 전시 총 건수가 이 값보다 크면 조정 필요.
-const SEARCH_LIMIT = 120;
+// 렌더링은 화면 단에서 PAGE_SIZE(20)씩 무한스크롤로 처리하므로 fetch 한도는 크게 잡는다.
+const SEARCH_LIMIT = 2000;
 
 export function useExhibitionSearch() {
 	const [inputText, setInputText] = useState('');

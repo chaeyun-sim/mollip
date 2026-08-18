@@ -1,8 +1,8 @@
 import { Ionicons } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useCallback, useEffect, useState } from 'react';
-import { Keyboard, Pressable, ScrollView, Text, View } from 'react-native';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { FlatList, Keyboard, Pressable, ScrollView, Text, View } from 'react-native';
 import Animated, {
 	FadeIn,
 	FadeOut,
@@ -14,8 +14,10 @@ import { DatePickerModal } from '@/src/components/common/DatePickerModal';
 import { SearchFilterBar } from '@/src/components/search/SearchFilterBar';
 import { ExcludeWordsModal } from '@/src/components/search/ExcludeWordsModal';
 import { ExhibitionResultCard } from '@/src/components/search/ExhibitionResultCard';
-import { useExhibitionSearch } from '@/src/hooks/useExhibitionSearch';
+import { useExhibitionSearch, type SearchResult } from '@/src/hooks/useExhibitionSearch';
+import { usePreferences } from '@/src/hooks/usePreferences';
 import { useRecentSearchStore } from '@/src/store/recentSearchStore';
+import { useAuthStore } from '@/src/store/authStore';
 
 const FIXED_TAGS = [
 	'문화유산',
@@ -28,16 +30,26 @@ const FIXED_TAGS = [
 	'드로잉',
 ];
 
+const PAGE_SIZE = 20;
+
 const ITEM_ENTERING = FadeIn.duration(220);
 const ITEM_EXITING = FadeOut.duration(160);
 // 스프링 대신 시간 기반 — 오버슈트(바운스) 없음
 const ITEM_LAYOUT = LinearTransition.duration(200);
+
+type ResultListItem =
+	| { kind: 'section'; label: string }
+	| { kind: 'result'; result: SearchResult };
 
 export default function SearchScreen() {
 	const router = useRouter();
 	const { q } = useLocalSearchParams<{ q?: string }>();
 	const [showDatePicker, setShowDatePicker] = useState(false);
 	const [showExcludeModal, setShowExcludeModal] = useState(false);
+	const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+
+	const user = useAuthStore((s) => s.user);
+	const { preferredGenres } = usePreferences(user?.id);
 
 	const {
 		searchText,
@@ -68,6 +80,11 @@ export default function SearchScreen() {
 		if (q) commitSearchText(q);
 	}, [q, commitSearchText]);
 
+	// 필터 변경 시 무한스크롤 위치 초기화
+	useEffect(() => {
+		setVisibleCount(PAGE_SIZE);
+	}, [debouncedSearchText, statusFilters, filterDate, freeOnly]);
+
 	const handlePressExhibition = useCallback(
 		(id: string) => router.push(`/(explore)/${id}`),
 		[router],
@@ -94,6 +111,88 @@ export default function SearchScreen() {
 		},
 		[commitSearchText],
 	);
+
+	const handleLoadMore = useCallback(() => {
+		setVisibleCount((prev) => prev + PAGE_SIZE);
+	}, []);
+
+	// 취향 매칭: 선호 장르가 전시 genre 또는 tags에 포함되는 경우
+	const preferredResults = useMemo(() => {
+		if (!preferredGenres.length) return [];
+		return results.filter((r) =>
+			preferredGenres.some((g) => {
+				const gLower = g.toLowerCase();
+				const genre = r.exhibition.genre?.toLowerCase() ?? '';
+				const tags = r.exhibition.tags?.map((t) => t.toLowerCase()) ?? [];
+				return genre.includes(gLower) || tags.some((t) => t.includes(gLower));
+			}),
+		);
+	}, [results, preferredGenres]);
+
+	const preferredSet = useMemo(
+		() => new Set(preferredResults.map((r) => r.exhibition.id)),
+		[preferredResults],
+	);
+
+	const otherResults = useMemo(
+		() => results.filter((r) => !preferredSet.has(r.exhibition.id)),
+		[results, preferredSet],
+	);
+
+	const showSections = preferredResults.length > 0 && otherResults.length > 0;
+
+	const displayName =
+		(user?.user_metadata?.full_name as string | undefined) ??
+		(user?.user_metadata?.name as string | undefined) ??
+		null;
+
+	const listData = useMemo<ResultListItem[]>(() => {
+		if (!showSections) {
+			return results
+				.slice(0, visibleCount)
+				.map((r) => ({ kind: 'result' as const, result: r }));
+		}
+		return [
+			{
+				kind: 'section',
+				label: displayName ? `${displayName}님이 관심있어할 것 같아요!` : '취향 맞춤 전시',
+			},
+			...preferredResults.map((r) => ({ kind: 'result' as const, result: r })),
+			{ kind: 'section', label: '전체' },
+			...otherResults
+				.slice(0, visibleCount)
+				.map((r) => ({ kind: 'result' as const, result: r })),
+		];
+	}, [showSections, results, visibleCount, preferredResults, otherResults, displayName]);
+
+	const hasMore = showSections
+		? visibleCount < otherResults.length
+		: visibleCount < results.length;
+
+	const keyExtractor = useCallback(
+		(item: ResultListItem, index: number) =>
+			item.kind === 'section' ? `section-${index}` : item.result.exhibition.id,
+		[],
+	);
+
+	function renderItem({ item }: { item: ResultListItem }) {
+		if (item.kind === 'section') {
+			return (
+				<Text className='text-[#1C1917] text-[16px] font-pretendard-bold mt-6 mb-3'>
+					{item.label}
+				</Text>
+			);
+		}
+		return (
+			<Animated.View
+				entering={ITEM_ENTERING}
+				exiting={ITEM_EXITING}
+				layout={ITEM_LAYOUT}
+			>
+				<ExhibitionResultCard result={item.result} onPress={handlePressExhibition} />
+			</Animated.View>
+		);
+	}
 
 	return (
 		<Screen className='bg-white'>
@@ -128,83 +227,93 @@ export default function SearchScreen() {
 				</View>
 			)}
 
-			<ScrollView
-				showsVerticalScrollIndicator={false}
-				contentContainerStyle={{ paddingBottom: 48 }}
-				keyboardShouldPersistTaps='handled'
-				keyboardDismissMode='on-drag'
-			>
-				{!debouncedSearchText ? (
-					/* 검색 전 — 추천 태그 + 최근 검색어 */
-					<View>
+			{!debouncedSearchText ? (
+				/* 검색 전 — 추천 태그 + 최근 검색어 */
+				<ScrollView
+					showsVerticalScrollIndicator={false}
+					contentContainerStyle={{ paddingBottom: 48 }}
+					keyboardShouldPersistTaps='handled'
+					keyboardDismissMode='on-drag'
+				>
+					<View className='mt-7'>
+						<Text className='text-[#1C1917] text-[16px] mb-3 font-pretendard-bold'>
+							추천 태그
+						</Text>
+						<View className='flex-row flex-wrap gap-2'>
+							{FIXED_TAGS.map((tag) => (
+								<Pressable
+									key={tag}
+									onPress={() => handlePressTag(tag)}
+									accessibilityLabel={`${tag} 태그로 검색`}
+									accessibilityRole='button'
+									className='rounded-full bg-[#F2EFE9] px-3.5 py-2'
+									style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
+								>
+									<Text className='text-[#57534E] text-[13px] font-pretendard-medium'>
+										{tag}
+									</Text>
+								</Pressable>
+							))}
+						</View>
+					</View>
+
+					{recentWords.length > 0 && (
 						<View className='mt-7'>
-							<Text className='text-[#1C1917] text-[16px] mb-3 font-pretendard-bold'>
-								추천 태그
-							</Text>
-							<View className='flex-row flex-wrap gap-2'>
-								{FIXED_TAGS.map((tag) => (
+							<View className='flex-row items-center justify-between mb-2'>
+								<Text className='text-[#1C1917] text-[16px] font-pretendard-bold'>
+									최근 검색
+								</Text>
+								<Pressable
+									onPress={clearRecent}
+									hitSlop={8}
+									accessibilityLabel='최근 검색어 전체 삭제'
+									accessibilityRole='button'
+								>
+									<Text className='text-[#A8A29E] text-[13px] font-pretendard-regular'>
+										전체 삭제
+									</Text>
+								</Pressable>
+							</View>
+							{recentWords.map((word) => (
+								<View key={word} className='flex-row items-center gap-2.5 py-3'>
+									<Ionicons name='time-outline' size={15} color='#A8A29E' />
 									<Pressable
-										key={tag}
-										onPress={() => handlePressTag(tag)}
-										accessibilityLabel={`${tag} 태그로 검색`}
+										onPress={() => handlePressRecent(word)}
+										accessibilityLabel={`${word} 검색`}
 										accessibilityRole='button'
-										className='rounded-full bg-[#F2EFE9] px-3.5 py-2'
-										style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
+										className='flex-1'
 									>
-										<Text className='text-[#57534E] text-[13px] font-pretendard-medium'>
-											{tag}
+										<Text className='text-[#44403C] text-[15px] font-pretendard-regular'>
+											{word}
 										</Text>
 									</Pressable>
-								))}
-							</View>
-						</View>
-
-						{recentWords.length > 0 && (
-							<View className='mt-7'>
-								<View className='flex-row items-center justify-between mb-2'>
-									<Text className='text-[#1C1917] text-[16px] font-pretendard-bold'>
-										최근 검색
-									</Text>
 									<Pressable
-										onPress={clearRecent}
+										onPress={() => removeRecent(word)}
 										hitSlop={8}
-										accessibilityLabel='최근 검색어 전체 삭제'
+										accessibilityLabel={`최근 검색어 ${word} 삭제`}
 										accessibilityRole='button'
 									>
-										<Text className='text-[#A8A29E] text-[13px] font-pretendard-regular'>
-											전체 삭제
-										</Text>
+										<Ionicons name='close' size={15} color='#D6D3D1' />
 									</Pressable>
 								</View>
-								{recentWords.map((word) => (
-									<View key={word} className='flex-row items-center gap-2.5 py-3'>
-										<Ionicons name='time-outline' size={15} color='#A8A29E' />
-										<Pressable
-											onPress={() => handlePressRecent(word)}
-											accessibilityLabel={`${word} 검색`}
-											accessibilityRole='button'
-											className='flex-1'
-										>
-											<Text className='text-[#44403C] text-[15px] font-pretendard-regular'>
-												{word}
-											</Text>
-										</Pressable>
-										<Pressable
-											onPress={() => removeRecent(word)}
-											hitSlop={8}
-											accessibilityLabel={`최근 검색어 ${word} 삭제`}
-											accessibilityRole='button'
-										>
-											<Ionicons name='close' size={15} color='#D6D3D1' />
-										</Pressable>
-									</View>
-								))}
-							</View>
-						)}
-					</View>
-				) : (
-					/* 검색 후 — 검색 결과 */
-					<View>
+							))}
+						</View>
+					)}
+				</ScrollView>
+			) : (
+				/* 검색 후 — 무한스크롤 결과 */
+				<FlatList
+					data={listData}
+					keyExtractor={keyExtractor}
+					renderItem={renderItem}
+					onEndReached={hasMore ? handleLoadMore : undefined}
+					onEndReachedThreshold={0.3}
+					showsVerticalScrollIndicator={false}
+					contentContainerStyle={{ paddingBottom: 48 }}
+					keyboardShouldPersistTaps='handled'
+					keyboardDismissMode='on-drag'
+					ItemSeparatorComponent={() => <View className='h-5' />}
+					ListHeaderComponent={
 						<View className='flex-row items-end justify-between mb-3'>
 							<Text className='text-[#1C1917] text-[18px] font-pretendard-bold'>
 								검색 결과
@@ -213,33 +322,19 @@ export default function SearchScreen() {
 								{results.length}건{hasLocation ? ' · 가까운 순' : ''}
 							</Text>
 						</View>
-
-						{results.length === 0 ? (
-							<View className='items-center py-16 gap-2'>
-								<Text className='text-[#57534E] text-[15px] font-pretendard-semibold'>
-									조건에 맞는 전시가 없어요
-								</Text>
-								<Text className='text-[#A8A29E] text-[13px] font-pretendard-regular'>
-									검색어나 필터를 조정해 보세요
-								</Text>
-							</View>
-						) : (
-							<View className='gap-5'>
-								{results.map((r) => (
-									<Animated.View
-										key={r.exhibition.id}
-										entering={ITEM_ENTERING}
-										exiting={ITEM_EXITING}
-										layout={ITEM_LAYOUT}
-									>
-										<ExhibitionResultCard result={r} onPress={handlePressExhibition} />
-									</Animated.View>
-								))}
-							</View>
-						)}
-					</View>
-				)}
-			</ScrollView>
+					}
+					ListEmptyComponent={
+						<View className='items-center py-16 gap-2'>
+							<Text className='text-[#57534E] text-[15px] font-pretendard-semibold'>
+								조건에 맞는 전시가 없어요
+							</Text>
+							<Text className='text-[#A8A29E] text-[13px] font-pretendard-regular'>
+								검색어나 필터를 조정해 보세요
+							</Text>
+						</View>
+					}
+				/>
+			)}
 
 			<DatePickerModal
 				visible={showDatePicker}
