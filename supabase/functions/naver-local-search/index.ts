@@ -17,7 +17,7 @@ Deno.serve(async (req) => {
       );
     }
 
-    const { query, display = 6 } = await req.json();
+    const { query, display = 6, latitude, longitude } = await req.json();
     if (!query || typeof query !== 'string') {
       return new Response(
         JSON.stringify({ error: 'query is required' }),
@@ -26,6 +26,10 @@ Deno.serve(async (req) => {
     }
 
     const params = new URLSearchParams({ query, display: String(display) });
+    // 좌표가 있으면 거리순 정렬 활성화 (lon,lat 순서)
+    if (typeof longitude === 'number' && typeof latitude === 'number') {
+      params.set('coordinate', `${longitude},${latitude}`);
+    }
     const res = await fetch(`${NAVER_LOCAL_SEARCH_URL}?${params.toString()}`, {
       headers: {
         'X-Naver-Client-Id': clientId,
