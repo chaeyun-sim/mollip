@@ -53,15 +53,19 @@ export default function RootLayout() {
 	usePushNotifications(user?.id); // 네이티브 빌드 후 활성화
 
 	const isImmersive = useImmersiveStore((s) => s.isImmersiveMode);
-	const exhibitionId = useImmersiveStore((s) => s.exhibitionId);
 	const router = useRouter();
 
 	// 알림 탭 딥링크 처리
 	useEffect(() => {
-		let sub: ReturnType<typeof Notifications.addNotificationResponseReceivedListener>;
+		let sub: ReturnType<
+			typeof Notifications.addNotificationResponseReceivedListener
+		>;
 		try {
 			sub = Notifications.addNotificationResponseReceivedListener((response) => {
-				const data = response.notification.request.content.data as Record<string, unknown>;
+				const data = response.notification.request.content.data as Record<
+					string,
+					unknown
+				>;
 				const id = data?.exhibitionId;
 				if (typeof id === 'string' && id) {
 					router.push(`/(explore)/${id}`);
@@ -86,9 +90,9 @@ export default function RootLayout() {
 			return;
 		}
 
-		// 몰입 모드 복원이 있으면 replace 먼저, 그다음 스플래시 해제
-		if (isImmersive && exhibitionId) {
-			router.push(`/(guide)/immersive/${exhibitionId}`);
+		// 몰입 모드 복원 — 이미 isImmersiveMode가 true이므로 create-description으로 바로 진입
+		if (isImmersive) {
+			router.push('/(guide)/create-description');
 		}
 		SplashScreen.hideAsync();
 	}, [fontsLoaded, hasHydrated, authLoading, user, onboardingCompleted]);

@@ -19,7 +19,6 @@ interface ImmersiveStore {
 	enter: (exhibitionId: string) => void;
 	exit: () => void;
 	addToPlaylist: (item: Omit<PlaylistItem, 'id' | 'addedAt'>) => void;
-	setImmersiveMode: (value: boolean) => void;
 }
 
 export const useImmersiveStore = create<ImmersiveStore>()(
@@ -42,7 +41,6 @@ export const useImmersiveStore = create<ImmersiveStore>()(
 					],
 				}));
 			},
-			setImmersiveMode: (val) => set({ isImmersiveMode: val })
 		}),
 		{
 			name: 'immersive-store',
