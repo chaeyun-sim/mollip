@@ -1,9 +1,18 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useCallback, useMemo, useState } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { useCallback, useMemo, useRef, useState } from 'react';
+import {
+	KeyboardAvoidingView,
+	Modal,
+	Platform,
+	Pressable,
+	ScrollView,
+	Text,
+	TextInput,
+	TouchableWithoutFeedback,
+	View,
+} from 'react-native';
 
-import { PlaylistModal } from '@/src/components/archive/PlaylistModal';
 import { VisitTicket } from '@/src/components/archive/VisitTicket';
 import { useExhibitionDetail } from '@/src/hooks/useExhibitionDetail';
 import type { ListenedItem } from '@/src/store/visitStore';
@@ -34,7 +43,8 @@ export default function DiaryScreen() {
 	const visit = useVisitStore((s) => s.visits[dateKey]);
 	const setVisitMemo = useVisitStore((s) => s.setVisitMemo);
 	const playlist = useImmersiveStore((s) => s.playlist);
-	const [playlistVisible, setPlaylistVisible] = useState(false);
+	const [memoVisible, setMemoVisible] = useState(false);
+	const memoInputRef = useRef<TextInput>(null);
 
 	const visitExhibitionId = visit?.exhibitionId;
 	const { exhibition: visitExhibition } = useExhibitionDetail(
@@ -92,34 +102,72 @@ export default function DiaryScreen() {
 				</ScreenHeader.Center>
 				<ScreenHeader.Right>
 					<Pressable
-						onPress={() => setPlaylistVisible(true)}
+						onPress={() => setMemoVisible(true)}
 						hitSlop={8}
-						accessibilityLabel='오디오 관람 목록 보기'
+						accessibilityLabel='관람 메모 편집'
 						accessibilityRole='button'
 						style={({ pressed }) => ({ opacity: pressed ? 0.5 : 1 })}
 					>
-						<Ionicons name='musical-notes-outline' size={20} color='white' />
+						<Ionicons name='pencil-outline' size={20} color='white' />
 					</Pressable>
 				</ScreenHeader.Right>
 			</ScreenHeader>
 
-			<View className='justify-center pt-10 px-4'>
+			<View className='pt-4'>
 				<VisitTicket
 					exhibition={exhibition}
 					listenedTitles={listenedTitles}
 					listenedItems={listenedItems}
 					dateKey={dateKey}
 					dateLabel={dateLabel}
-					memo={memo}
-					onMemoChange={handleMemoChange}
 				/>
 			</View>
 
-			<PlaylistModal
-				visible={playlistVisible}
-				titles={listenedTitles}
-				onClose={() => setPlaylistVisible(false)}
-			/>
+			{/* 메모 편집 모달 */}
+			<Modal
+				visible={memoVisible}
+				transparent
+				animationType='slide'
+				onRequestClose={() => setMemoVisible(false)}
+				onShow={() => setTimeout(() => memoInputRef.current?.focus(), 100)}
+			>
+				<KeyboardAvoidingView
+					behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+					className='flex-1'
+				>
+					<TouchableWithoutFeedback onPress={() => setMemoVisible(false)}>
+						<View className='flex-1' />
+					</TouchableWithoutFeedback>
+					<View className='bg-[#1C1917] rounded-t-3xl px-6 pt-5 pb-10'>
+						<View className='flex-row items-center justify-between mb-4'>
+							<Text className='text-white font-pretendard-semibold text-[17px]'>
+								나의 관람 메모
+							</Text>
+							<Pressable
+								onPress={() => setMemoVisible(false)}
+								hitSlop={8}
+								accessibilityLabel='닫기'
+								accessibilityRole='button'
+								style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
+							>
+								<Ionicons name='checkmark' size={22} color='white' />
+							</Pressable>
+						</View>
+						<TextInput
+							ref={memoInputRef}
+							value={memo}
+							onChangeText={handleMemoChange}
+							placeholder='오늘 기억하고 싶은 것을 적어보세요'
+							placeholderTextColor='rgba(255,255,255,0.3)'
+							multiline
+							maxLength={400}
+							accessibilityLabel='관람 메모 입력'
+							className='text-white font-pretendard-regular text-[15px] leading-[24px] min-h-[120px]'
+							textAlignVertical='top'
+						/>
+					</View>
+				</KeyboardAvoidingView>
+			</Modal>
 		</Screen>
 	);
 }

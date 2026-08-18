@@ -30,7 +30,7 @@ const STAMP = '#C2410C';
 const STUB_HEIGHT = 112;
 /** 절취선 행(노치 20 + 점선) — 앞·뒤 동일 Y 고정용 */
 const PERFORATION_HEIGHT = 24;
-const TICKET_MIN_HEIGHT = 640;
+const TICKET_MIN_HEIGHT = 600;
 const TICKET_BODY_HEIGHT = TICKET_MIN_HEIGHT - STUB_HEIGHT - PERFORATION_HEIGHT;
 
 const ticketShellStyle = {
@@ -51,8 +51,6 @@ interface VisitTicketProps {
 	listenedItems: ListenedItem[];
 	dateKey: string;
 	dateLabel: string;
-	memo: string;
-	onMemoChange: (text: string) => void;
 }
 
 // dateKey 기반 고정 바코드 막대 폭 (렌더마다 동일)
@@ -178,12 +176,6 @@ function VisitStamp({ dateKey }: { dateKey: string }) {
 				<Text className='text-[13px] font-hahmlet-bold' style={{ color: STAMP }}>
 					관람 완료
 				</Text>
-				<Text
-					className='mt-0.5 tracking-[1px] text-[8px] font-pretendard-semibold'
-					style={{ color: STAMP }}
-				>
-					{dateKey.replaceAll('-', '.')}
-				</Text>
 			</View>
 		</View>
 	);
@@ -198,83 +190,24 @@ function ProgramRow({ index, item }: { index: number; item: ListenedItem }) {
 			<Text className='w-6 text-[13px] font-pretendard-medium text-[#A8A29E]'>
 				{index + 1}
 			</Text>
-			<View className='overflow-hidden rounded-lg mr-3 w-[44px] h-[44px] bg-[#E5E1D8]'>
-				{item.imageUrl ? (
-					<Image
-						source={{ uri: item.imageUrl }}
-						resizeMode='cover'
-						className='h-full w-full'
-					/>
-				) : (
-					<EmptyImagePlaceholder
-						className='h-full w-full items-center justify-center'
-						iconSize={20}
-					/>
-				)}
-			</View>
-			<View className='flex-1 min-w-0'>
-				<Text
-					className='text-[14px] leading-[19px] font-pretendard-semibold'
-					numberOfLines={2}
-					style={{ color: INK }}
-				>
-					{item.title}
-				</Text>
-				{item.descriptionPreview ? (
-					<Text
-						className='text-[12px] mt-1 leading-[17px] font-pretendard-regular text-[#78716C]'
-						numberOfLines={1}
-					>
-						{item.descriptionPreview}
-					</Text>
-				) : null}
-			</View>
-		</View>
-	);
-}
-
-function TicketVisitMemo({
-	memo,
-	onMemoChange,
-}: {
-	memo: string;
-	onMemoChange: (text: string) => void;
-}) {
-	return (
-		<View className='mt-5 pt-5 border-t border-[#E7E5E4]'>
 			<Text
-				className='text-[14px] mb-1 font-pretendard-semibold'
+				className='flex-1 text-[14px] leading-[19px] font-pretendard-semibold'
+				numberOfLines={2}
 				style={{ color: INK }}
 			>
-				나의 관람 메모
+				{item.title}
 			</Text>
-			<Text className='text-[12px] mb-3 leading-[18px] font-pretendard-regular text-[#78716C]'>
-				직접 적은 글이 이 티켓에 남아요
-			</Text>
-			<TextInput
-				value={memo}
-				onChangeText={onMemoChange}
-				placeholder='오늘 기억하고 싶은 것을 적어보세요'
-				placeholderTextColor='#A8A29E'
-				multiline
-				maxLength={400}
-				accessibilityLabel='관람 메모 입력'
-				className='h-[96px] rounded-xl border border-[#E7E5E4] p-3.5 py-3 bg-[#FAFAF9] text-[14px] leading-[22px] text-[#44403C] font-pretendard-regular'
-				textAlignVertical='top'
-			/>
 		</View>
 	);
 }
 
-// 관람 기록 입장권. 앞면 탭 → 뒷면(프로그램·메모). 뒷면은 입력 가능.
+// 관람 기록 입장권. 앞면 탭 → 뒷면(프로그램). 뒷면은 관람 프로그램만 표시.
 export function VisitTicket({
 	exhibition,
 	listenedTitles,
 	listenedItems,
 	dateKey,
 	dateLabel,
-	memo,
-	onMemoChange,
 }: VisitTicketProps) {
 	const [flipped, setFlipped] = useState(false);
 	const rotation = useSharedValue(0);
@@ -347,7 +280,7 @@ export function VisitTicket({
 	} as const;
 
 	return (
-		<View>
+		<View className='h-auto'>
 			<GestureDetector gesture={flipGesture}>
 				<View style={{ height: TICKET_MIN_HEIGHT, minHeight: TICKET_MIN_HEIGHT }}>
 					{/* 앞면 */}
@@ -480,13 +413,8 @@ export function VisitTicket({
 											>
 												이날 들은 작품이 없어요
 											</Text>
-											<Text className='text-[13px] text-center mt-2 leading-[20px] font-pretendard-regular text-[#78716C]'>
-												헤더의 ♪에서 목록을 확인할 수 있어요
-											</Text>
 										</View>
 									)}
-
-									<TicketVisitMemo memo={memo} onMemoChange={onMemoChange} />
 								</View>
 							</ScrollView>
 						</View>
@@ -526,8 +454,8 @@ export function VisitTicket({
 			>
 				<Text className='text-center text-[12px] font-pretendard-regular text-[#ffffff66]'>
 					{flipped
-						? '← 밀거나 탭하면 앞면 · 앞면 보기'
-						: '좌우로 밀거나 탭하면 프로그램·메모'}
+						? '← 밀거나 탭하면 앞면 보기'
+						: '좌우로 밀거나 탭하면 프로그램 보기'}
 				</Text>
 			</Pressable>
 		</View>
