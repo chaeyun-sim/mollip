@@ -30,9 +30,13 @@ export function VisitTicketGrid({ onPress }: VisitTicketGridProps) {
 			...kcisaItems.map((i) => i.id),
 			...items.map((i) => i.id),
 		]);
-		return sortedDateKeys
-			.map((dk) => visits[dk].exhibitionId)
-			.filter((id): id is string => !!id && !cachedIds.has(id));
+		return [
+			...new Set(
+				sortedDateKeys
+					.map((dk) => visits[dk].exhibitionId)
+					.filter((id): id is string => !!id && !cachedIds.has(id)),
+			),
+		];
 	}, [sortedDateKeys, visits, kcisaItems, items]);
 
 	const fetchedItems = useExhibitionsByIds(missingIds);

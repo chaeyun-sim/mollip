@@ -71,7 +71,6 @@ export function TicketFocusOverlay({ dateKey, onClose }: TicketFocusOverlayProps
 				openHours: '',
 				admission: '',
 				artworks: [],
-				relatedExhibitionIds: [],
 			},
 		[visitExhibition, visit],
 	);
@@ -114,13 +113,7 @@ export function TicketFocusOverlay({ dateKey, onClose }: TicketFocusOverlayProps
 					className='flex-row items-center justify-between px-5'
 					style={{ paddingTop: 56, paddingBottom: 12 }}
 				>
-					<Text
-						style={{
-							fontFamily: 'Pretendard-SemiBold',
-							fontSize: 15,
-							color: 'rgba(255,255,255,0.85)',
-						}}
-					>
+					<Text className='font-pretendard-semibold text-[15px] text-[rgba(255,255,255,0.85)]'>
 						{dateLabel}
 					</Text>
 					<Pressable
@@ -130,13 +123,7 @@ export function TicketFocusOverlay({ dateKey, onClose }: TicketFocusOverlayProps
 						accessibilityRole='button'
 						style={({ pressed }) => ({ opacity: pressed ? 0.5 : 1 })}
 					>
-						<Text
-							style={{
-								fontFamily: 'Pretendard-Regular',
-								fontSize: 14,
-								color: 'rgba(255,255,255,0.6)',
-							}}
-						>
+						<Text className='font-pretendard-regular text-[14px] text-[rgba(255,255,255,0.6)]'>
 							닫기 ✕
 						</Text>
 					</Pressable>
@@ -155,8 +142,6 @@ export function TicketFocusOverlay({ dateKey, onClose }: TicketFocusOverlayProps
 								listenedItems={listenedItems}
 								dateKey={dateKey}
 								dateLabel={dateLabel}
-								memo={memo}
-								onMemoChange={handleMemoChange}
 							/>
 						</ScrollView>
 					</Pressable>
