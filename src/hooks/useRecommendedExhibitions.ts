@@ -17,6 +17,7 @@ interface ExhibitionRow {
 	venue_name_fallback: string;
 	image_url: string | null;
 	genre: string | null;
+	tags: string[] | null;
 	synced_at: string | null;
 }
 
@@ -38,6 +39,8 @@ function scoreExhibition(
 	// 장르 매칭 +40pt (REQ-UI002-011)
 	if (row.genre && preferredGenres.includes(row.genre)) score += 40;
 
+	// 태그 교집합 +20pt: genre 컬럼이 없는 전시도 tags로 커버
+	if (row.tags && row.tags.some((t) => preferredGenres.includes(t))) score += 20;
 
 	// 신선도 +20pt: synced_at 기준 최근 7일 이내 (REQ-UI002-011)
 	if (row.synced_at) {
@@ -76,7 +79,7 @@ export function useRecommendedExhibitions(
 	useEffect(() => {
 		let query = supabase
 			.from('exhibitions')
-			.select('id, title, venue_name_fallback, image_url, genre, synced_at, end_date')
+			.select('id, title, venue_name_fallback, image_url, genre, tags, synced_at, end_date')
 			.gte('end_date', todayExhibitionDateString())
 			.order('synced_at', { ascending: false })
 			.limit(FETCH_LIMIT);
