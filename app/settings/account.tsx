@@ -117,7 +117,7 @@ export default function AccountScreen() {
 				<View className='flex-1 items-center justify-center bg-[rgba(0,0,0,0.5)] px-8'>
 					<View className='w-full rounded-3xl bg-white p-6'>
 						<Text className='text-[17px] font-pretendard-semibold text-[#1C1917] mb-2'>
-							정말 탈퇴하시겠어요?
+							정말 탈퇴할까요?
 						</Text>
 						<Text className='text-[13px] leading-[20px] font-pretendard-regular text-[#78716C] mb-6'>
 							계정 정보, 관람 기록, 저장한 전시가 모두 삭제되며{'\n'}이 작업은 되돌릴
