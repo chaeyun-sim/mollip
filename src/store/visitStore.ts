@@ -2,6 +2,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
+import { useAuthStore } from './authStore';
+import { supabase } from '../utils/supabase';
+
 export interface ListenedItem {
 	title: string;
 	imageUrl?: string;
@@ -25,11 +28,14 @@ interface VisitStore {
 	visits: Record<string, DayVisit>;
 	recordExhibition: (
 		dateKey: string,
-		exhibitionId: string,
+		exhibitionId: string | null,
 		meta?: { title?: string; venue?: string; thumbnail?: string },
 	) => void;
 	recordListened: (dateKey: string, item: ListenedItem) => void;
 	setVisitMemo: (dateKey: string, memo: string) => void;
+	deleteVisit: (dateKey: string) => Promise<void>;
+	/** 로그인 후 원격 visits로 로컬 상태를 교체 */
+	loadFromRemote: (visits: Record<string, DayVisit>) => void;
 }
 
 export function todayKey(): string {
@@ -41,10 +47,10 @@ export function todayKey(): string {
 
 export const useVisitStore = create<VisitStore>()(
 	persist(
-		set => ({
+		(set) => ({
 			visits: {},
-			recordExhibition: (dateKey, exhibitionId, meta) =>
-				set(state => {
+			recordExhibition: (dateKey, exhibitionId, meta) => {
+				set((state) => {
 					const prev = state.visits[dateKey];
 					return {
 						visits: {
@@ -58,12 +64,29 @@ export const useVisitStore = create<VisitStore>()(
 							},
 						},
 					};
-				}),
+				});
+
+				if (!exhibitionId) return;
+
+				const userId = useAuthStore.getState().user?.id;
+				if (userId) {
+					supabase
+						.from('visits')
+						.upsert({
+							user_id: userId,
+							date: dateKey,
+							exhibition_id: Number(exhibitionId) || null,
+						})
+						.then(({ error }) => {
+							if (error) console.warn('[visit] upsert failed:', error.message);
+						});
+				}
+			},
 			recordListened: (dateKey, item) =>
-				set(state => {
+				set((state) => {
 					const prev = state.visits[dateKey] ?? { exhibitionId: null, listened: [] };
 					// 같은 제목은 하루에 한 번만 기록
-					if (prev.listened.some(l => l.title === item.title)) return state;
+					if (prev.listened.some((l) => l.title === item.title)) return state;
 					return {
 						visits: {
 							...state.visits,
@@ -71,8 +94,8 @@ export const useVisitStore = create<VisitStore>()(
 						},
 					};
 				}),
-			setVisitMemo: (dateKey, memo) =>
-				set(state => {
+			setVisitMemo: (dateKey, memo) => {
+				set((state) => {
 					const prev = state.visits[dateKey] ?? { exhibitionId: null, listened: [] };
 					return {
 						visits: {
@@ -80,7 +103,36 @@ export const useVisitStore = create<VisitStore>()(
 							[dateKey]: { ...prev, memo },
 						},
 					};
-				}),
+				});
+
+				const userId = useAuthStore.getState().user?.id;
+				if (userId) {
+					supabase
+						.from('visits')
+						.upsert({ user_id: userId, date: dateKey, memo })
+						.then(({ error }) => {
+							if (error) console.warn('[visit] memo upsert failed:', error.message);
+						});
+				}
+			},
+			deleteVisit: async (dateKey) => {
+				set((state) => {
+					const next = { ...state.visits };
+					delete next[dateKey];
+					return { visits: next };
+				});
+
+				const userId = useAuthStore.getState().user?.id;
+				if (userId) {
+					const { error } = await supabase
+						.from('visits')
+						.delete()
+						.eq('user_id', userId)
+						.eq('date', dateKey);
+					if (error) console.warn('[visit] delete failed:', error.message);
+				}
+			},
+			loadFromRemote: (visits) => set({ visits }),
 		}),
 		{
 			name: 'visits',

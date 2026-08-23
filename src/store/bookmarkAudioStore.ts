@@ -5,43 +5,42 @@ import { createJSONStorage, persist } from 'zustand/middleware';
 import { useAuthStore } from './authStore';
 import { supabase } from '../utils/supabase';
 
-interface BookmarkStore {
+interface BookmarkAudioStore {
 	ids: string[];
-	toggle: (id: string) => void;
-	isBookmarked: (id: string) => boolean;
-	/** 로그인 후 원격 북마크로 로컬 상태를 교체 */
+	toggle: (audioGuideId: string) => void;
+	isBookmarked: (audioGuideId: string) => boolean;
+	/** 로그인 후 원격 bookmark_audio로 로컬 상태를 교체 */
 	loadFromRemote: (ids: string[]) => void;
 }
 
-export const useBookmarkStore = create<BookmarkStore>()(
+export const useBookmarkAudioStore = create<BookmarkAudioStore>()(
 	persist(
 		(set, get) => ({
 			ids: [],
-			toggle: (id) => {
+			toggle: (audioGuideId) => {
 				const current = get().ids;
-				const willAdd = !current.includes(id);
+				const willAdd = !current.includes(audioGuideId);
 				set({
-					ids: willAdd ? [...current, id] : current.filter((i) => i !== id),
+					ids: willAdd ? [...current, audioGuideId] : current.filter((i) => i !== audioGuideId),
 				});
 
-				// 로그인 상태일 때 Supabase 동기화 (fire-and-forget)
 				const userId = useAuthStore.getState().user?.id;
 				if (!userId) return;
 
 				if (willAdd) {
 					supabase
-						.from('bookmark_exhibitions')
-						.upsert({ user_id: userId, exhibition_id: id })
+						.from('bookmark_audio')
+						.upsert({ user_id: userId, audio_guide_id: audioGuideId })
 						.then(({ error }) => {
-							if (error) console.warn('[bookmark] upsert failed:', error.message);
+							if (error) console.warn('[bookmark_audio] upsert failed:', error.message);
 						});
 				} else {
 					supabase
-						.from('bookmark_exhibitions')
+						.from('bookmark_audio')
 						.delete()
-						.match({ user_id: userId, exhibition_id: id })
+						.match({ user_id: userId, audio_guide_id: audioGuideId })
 						.then(({ error }) => {
-							if (error) console.warn('[bookmark] delete failed:', error.message);
+							if (error) console.warn('[bookmark_audio] delete failed:', error.message);
 						});
 				}
 			},
@@ -49,7 +48,7 @@ export const useBookmarkStore = create<BookmarkStore>()(
 			loadFromRemote: (ids) => set({ ids }),
 		}),
 		{
-			name: 'bookmarks',
+			name: 'bookmark-audio',
 			storage: createJSONStorage(() => AsyncStorage),
 		},
 	),

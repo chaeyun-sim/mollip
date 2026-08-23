@@ -59,6 +59,20 @@ export async function* streamChat(
   yield* readSSEStream(res);
 }
 
+export async function* streamRoute(
+  systemPrompt: string,
+  prompt: string,
+): AsyncGenerator<string> {
+  const res = await fetch(edgeFunctionUrl('generate-route'), {
+    method: 'POST',
+    headers: authHeaders(),
+    body: JSON.stringify({ systemPrompt, prompt }),
+  });
+  if (!res.ok) throw new Error(`generate-route ${res.status}`);
+
+  yield* readSSEStream(res);
+}
+
 // -- ElevenLabs ---------------------------------------------------------------
 
 export async function fetchVoices() {

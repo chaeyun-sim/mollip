@@ -2,6 +2,10 @@ import type { Session, User } from '@supabase/supabase-js';
 import { create } from 'zustand';
 
 import { supabase } from '@/src/utils/supabase';
+import { useBookmarkStore } from './bookmarkStore';
+import { useBookmarkAudioStore } from './bookmarkAudioStore';
+import { useHistoryStore } from './historyStore';
+import { useVisitStore } from './visitStore';
 
 type AuthStore = {
 	session: Session | null;
@@ -32,6 +36,11 @@ export const useAuthStore = create<AuthStore>((set) => ({
 	signOut: async () => {
 		const { error } = await supabase.auth.signOut();
 		if (error) throw error;
+		// 로컬 유저 데이터 초기화 (다른 사용자 데이터 노출 방지)
+		useBookmarkStore.setState({ ids: [] });
+		useBookmarkAudioStore.setState({ ids: [] });
+		useHistoryStore.setState({ items: [] });
+		useVisitStore.setState({ visits: {} });
 	},
 }));
 

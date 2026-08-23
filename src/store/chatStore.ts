@@ -24,6 +24,8 @@ type ChatStore = {
 	pushHistory: (sessionId: string, entry: HistoryEntry) => void;
 	removeMessage: (sessionId: string, id: string) => void;
 	popHistory: (sessionId: string) => void;
+	/** 해설 화면 언마운트 시 해당 세션 데이터를 메모리에서 제거 */
+	flushSession: (sessionId: string) => void;
 	/** @deprecated 세션별 관리로 전환됨 — 각 해설은 고유 sessionId를 사용하므로 호출 불필요 */
 	clear: () => void;
 };
@@ -71,5 +73,11 @@ export const useChatStore = create<ChatStore>((set, get) => ({
 		set((s) =>
 			patch(s.sessions, sessionId, (c) => ({ history: c.history.slice(0, -1) })),
 		),
+	flushSession: (sessionId) =>
+		set((s) => {
+			const sessions = { ...s.sessions };
+			delete sessions[sessionId];
+			return { sessions };
+		}),
 	clear: () => {},
 }));
