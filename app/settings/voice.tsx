@@ -89,7 +89,7 @@ export default function VoiceScreen() {
 		} catch {
 			Alert.alert(
 				'미리 듣기 실패',
-				'음성을 재생할 수 없어요. 잠시 후 다시 시도해 주세요.',
+				'잠시 후 다시 시도해 주세요.',
 			);
 		} finally {
 			setPreviewingId(null);

@@ -144,7 +144,7 @@ export default function DiaryScreen() {
 
 	const handleDeletePress = useCallback(() => {
 		Alert.alert('티켓 삭제', '이 티켓을 삭제할까요?', [
-			{ text: '취소', style: 'cancel' },
+			{ text: '닫기', style: 'cancel' },
 			{
 				text: '삭제',
 				style: 'destructive',

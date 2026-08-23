@@ -57,8 +57,8 @@ export default function IndexScreen() {
 		const unsubscribe = navigation.addListener('beforeRemove', (e) => {
 			if (!isImmersive) return;
 			e.preventDefault();
-			Alert.alert('전시 관람 종료', '재생목록이 초기화됩니다.', [
-				{ text: '취소', style: 'cancel' },
+			Alert.alert('전시 관람 종료', '재생목록이 초기화돼요', [
+				{ text: '닫기', style: 'cancel' },
 				{
 					text: '종료',
 					style: 'destructive',
@@ -156,7 +156,7 @@ export default function IndexScreen() {
 
 		const asset = result.assets[0];
 		if (!asset.base64) {
-			Alert.alert('오류', '이미지를 읽을 수 없습니다. 다시 시도해 주세요.');
+			Alert.alert('오류', '이미지를 다시 선택해 주세요.');
 			setIsLoading(false);
 			return;
 		}

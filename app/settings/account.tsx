@@ -132,10 +132,10 @@ export default function AccountScreen() {
 								className='flex-1 rounded-2xl bg-[#F2EFE9] items-center justify-center py-[14px]'
 								style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
 								accessibilityRole='button'
-								accessibilityLabel='취소'
+								accessibilityLabel='닫기'
 							>
 								<Text className='font-pretendard-semibold text-[15px] text-[#1C1917]'>
-									취소
+									닫기
 								</Text>
 							</Pressable>
 							<Pressable
