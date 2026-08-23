@@ -187,7 +187,7 @@ export function VenueSheet({
 		const ok = await openPhoneDialer(phone);
 		if (!ok) {
 			Alert.alert(
-				'전화를 걸 수 없어요',
+				'전화번호를 확인해 주세요',
 				'기기에서 전화 앱을 사용할 수 없거나 번호 형식이 올바르지 않아요.',
 			);
 		}
