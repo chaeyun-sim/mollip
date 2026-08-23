@@ -13,17 +13,17 @@ export function PlaylistModal({ visible, titles, onClose }: PlaylistModalProps) 
 		<Modal
 			visible={visible}
 			transparent
-			animationType='fade'
+			animationType='slide'
 			onRequestClose={onClose}
 		>
 			<Pressable
-				className='flex-1 items-center justify-center bg-black/40 px-6'
+				className='flex-1 justify-end bg-black/40'
 				onPress={onClose}
 				accessibilityLabel='재생목록 닫기'
 				accessibilityRole='button'
 			>
 				<Pressable
-					className='w-full rounded-3xl bg-white px-5 py-6'
+					className='w-full rounded-t-3xl bg-white px-5 pt-6 pb-9'
 					onPress={() => {}}
 					style={{
 						shadowColor: '#000',
@@ -31,9 +31,12 @@ export function PlaylistModal({ visible, titles, onClose }: PlaylistModalProps) 
 						shadowRadius: 20,
 						shadowOffset: { width: 0, height: 8 },
 						elevation: 8,
-						maxHeight: '65%',
+						maxHeight: '75%',
 					}}
 				>
+					<View className='items-center pb-3'>
+						<View className='w-9 h-1 rounded-full bg-black/15' />
+					</View>
 					<View className='flex-row items-center justify-between'>
 						<View className='flex-row items-center gap-2'>
 							<Ionicons name='musical-notes-outline' size={17} color='#111827' />

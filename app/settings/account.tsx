@@ -112,11 +112,17 @@ export default function AccountScreen() {
 			<Modal
 				visible={showWithdrawWarning}
 				transparent
-				animationType='fade'
+				animationType='slide'
 				onRequestClose={() => setShowWithdrawWarning(false)}
 			>
-				<View className='flex-1 items-center justify-center bg-[rgba(0,0,0,0.5)] px-8'>
-					<View className='w-full rounded-3xl bg-white p-6'>
+				<Pressable
+					className='flex-1 justify-end bg-[rgba(0,0,0,0.5)]'
+					onPress={() => setShowWithdrawWarning(false)}
+				>
+					<Pressable
+						className='w-full rounded-t-3xl bg-white p-6 pb-9'
+						onPress={(e) => e.stopPropagation()}
+					>
 						<Text className='text-[17px] font-pretendard-semibold text-primary mb-2'>
 							정말 탈퇴할까요?
 						</Text>
@@ -155,8 +161,8 @@ export default function AccountScreen() {
 								</Text>
 							</Pressable>
 						</View>
-					</View>
-				</View>
+					</Pressable>
+				</Pressable>
 			</Modal>
 		</Screen>
 	);
