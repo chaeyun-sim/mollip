@@ -9,21 +9,12 @@ import {
 } from '@mj-studio/react-native-naver-map';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import {
-	ActivityIndicator,
-	Keyboard,
-	Pressable,
-	ScrollView,
-	Text,
-	useWindowDimensions,
-	View,
-} from 'react-native';
+import { ActivityIndicator, useWindowDimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Ionicons } from '@expo/vector-icons';
 import { DatePickerModal } from '@/src/components/common/DatePickerModal';
-import { SearchBar } from '@/src/components/common/SearchBar';
 import { FilterChips } from '@/src/components/map/FilterChips';
-import { RoutePlanningBar } from '@/src/components/map/RoutePlanningBar';
+import { MapBottomControls } from '@/src/components/map/MapBottomControls';
+import { MapTopBar } from '@/src/components/map/MapTopBar';
 import { RouteSheet } from '@/src/components/map/RouteSheet';
 import { VenueMarker } from '@/src/components/map/VenueMarker';
 import { VenueSheet } from '@/src/components/map/VenueSheet';
@@ -32,17 +23,12 @@ import { venueGroups } from '@/src/data/venues';
 import { useDirections, type DirectionsMode } from '@/src/hooks/useDirections';
 import { useMapCamera, DEFAULT_CAMERA } from '@/src/hooks/useMapCamera';
 import { useMapFilter } from '@/src/hooks/useMapFilter';
+import { useMapMarkers } from '@/src/hooks/useMapMarkers';
 import { useMapVenues } from '@/src/hooks/useMapVenues';
 import { useRecentLocations } from '@/src/hooks/useRecentLocations';
 import { useVenueExhibitions } from '@/src/hooks/useVenueExhibitions';
 import { useMapStore } from '@/src/store/mapStore';
-import { cn } from '@/src/lib/cn';
-import {
-	declutterMarkers,
-	distanceKm,
-	formatDistance,
-	latOffsetForPixels,
-} from '@/src/utils/mapUtils';
+import { distanceKm, formatDistance, latOffsetForPixels } from '@/src/utils/mapUtils';
 import { legColor } from '@/src/utils/routeColors';
 import type { RouteCoord, RouteLeg } from '@/src/api/tmap';
 
@@ -82,9 +68,13 @@ export default function MapScreen() {
 	const cameFromExhibitionRef = useRef(false);
 	// 현재 위치 첫 포커스 여부 — GPS 갱신마다 카메라가 튀는 걸 막기 위해 사용
 	const hasInitialCameraRef = useRef(false);
+	// 직전 displayZoom — MARKER_ZOOM 임계값 교차 감지용
+	const prevDisplayZoomRef = useRef(displayZoom);
 	// venue 바텀시트가 현재 열려있는지 — 핀이 선택된 채 시트만 닫혔을 때 재오픈 버튼을 표시하기 위해
 	const [isVenueSheetOpen, setIsVenueSheetOpen] = useState(false);
 	const [filterDate, setFilterDate] = useState(new Date());
+	// 줌 임계값 교차 시 마커 전환 인디케이터 표시 여부
+	const [isZoomTransitioning, setIsZoomTransitioning] = useState(false);
 	const dbVenues = useMapVenues(filterDate);
 	const { recents: recentLocations, addRecent } = useRecentLocations();
 	const {
@@ -122,61 +112,16 @@ export default function MapScreen() {
 	const routeSnapPoints = useMemo(() => ['24%', '50%', '85%'], []);
 
 	// 카카오맵처럼 좌표를 옮기지 않고, 밀집 지역에서만 큰 마커 대신 점으로 줄인다.
-	const pinnedVenueName = useMemo(() => {
-		if (directionsStatus === 'idle') return null;
-		return destination?.name ?? selectedVenueName;
-	}, [directionsStatus, destination?.name, selectedVenueName]);
-
-	const markerVenues = useMemo(() => {
-		const pinNames = new Set<string>();
-		if (selectedVenueName) pinNames.add(selectedVenueName);
-		if (pinnedVenueName) pinNames.add(pinnedVenueName);
-
-		// 경로 모드: 출발지·목적지 핀만 표시
-		if (directionsStatus !== 'idle') {
-			const routePinNames = new Set<string>();
-			if (routeOrigin?.name) routePinNames.add(routeOrigin.name);
-			if (destination?.name) routePinNames.add(destination.name);
-			const routeVenues = [...mapVenues, ...dbVenues].filter((v) =>
-				routePinNames.has(v.venueName),
-			);
-			// 중복 제거
-			const seen = new Set<string>();
-			return routeVenues.filter((v) => {
-				if (seen.has(v.venueName)) return false;
-				seen.add(v.venueName);
-				return true;
-			});
-		}
-
-		if (pinNames.size === 0) return mapVenues;
-		const missing = dbVenues.filter(
-			(v) =>
-				pinNames.has(v.venueName) &&
-				!mapVenues.some((m) => m.venueName === v.venueName),
-		);
-		return missing.length > 0 ? [...mapVenues, ...missing] : mapVenues;
-	}, [
+	const { pinnedVenueName, fullMarkerVenues, dotVenues } = useMapMarkers({
 		mapVenues,
 		dbVenues,
 		selectedVenueName,
-		pinnedVenueName,
+		displayZoom,
+		filterDate,
 		directionsStatus,
-		routeOrigin?.name,
-		destination?.name,
-	]);
-
-	const { full: fullMarkerVenues, dots: dotVenues } = useMemo(
-		() =>
-			declutterMarkers(
-				markerVenues,
-				displayZoom,
-				selectedVenueName,
-				filterDate,
-				pinnedVenueName,
-			),
-		[markerVenues, displayZoom, selectedVenueName, filterDate, pinnedVenueName],
-	);
+		routeOriginName: routeOrigin?.name,
+		destinationName: destination?.name,
+	});
 
 	const selectedVenue = useMemo(() => {
 		if (!selectedVenueName) return null;
@@ -382,6 +327,13 @@ export default function MapScreen() {
 		wantToOpenRef.current = false;
 	}, [displayVenue, selectedVenueName, directionsStatus, openVenueSheet]);
 
+	// suppressClearOnDismissRef 리셋 — 전시 상세에서 뒤로가기 시 dismiss가 소비되지 않아 ref가 남는 경우 방지
+	useFocusEffect(
+		useCallback(() => {
+			suppressClearOnDismissRef.current = false;
+		}, []),
+	);
+
 	// 전시 상세에서 지도 탭으로 진입 시 해당 위치로 카메라 이동
 	useFocusEffect(
 		useCallback(() => {
@@ -419,6 +371,19 @@ export default function MapScreen() {
 		hasInitialCameraRef.current = true;
 		mapRef.current?.animateCameraTo({ ...currentCoord, zoom: 12 });
 	}, [currentCoord, mapRef]);
+
+	// 줌 레벨이 MARKER_ZOOM(14) 임계값을 교차할 때 짧은 전환 인디케이터 표시
+	useEffect(() => {
+		const prevZoom = prevDisplayZoomRef.current;
+		prevDisplayZoomRef.current = displayZoom;
+		const crossed =
+			(prevZoom < MARKER_ZOOM && displayZoom >= MARKER_ZOOM) ||
+			(prevZoom >= MARKER_ZOOM && displayZoom < MARKER_ZOOM);
+		if (!crossed) return;
+		setIsZoomTransitioning(true);
+		const timer = setTimeout(() => setIsZoomTransitioning(false), 350);
+		return () => clearTimeout(timer);
+	}, [displayZoom]);
 
 	const renderBackdrop = useCallback(
 		(props: any) => (
@@ -547,6 +512,17 @@ export default function MapScreen() {
 				})}
 			</NaverMapView>
 
+			{/* 줌 임계값(MARKER_ZOOM) 교차 시 마커 전환 인디케이터 */}
+			{isZoomTransitioning && (
+				<View
+					className='absolute inset-0 items-center justify-center'
+					pointerEvents='none'
+					style={{ zIndex: 5 }}
+				>
+					<ActivityIndicator size='small' color='rgba(0,0,0,0.4)' />
+				</View>
+			)}
+
 			{/* 필터 칩 — 길찾기·출발/도착 설정 중이면 숨긴다 */}
 			{directionsStatus === 'idle' && (
 				<FilterChips
@@ -558,136 +534,33 @@ export default function MapScreen() {
 				/>
 			)}
 
-			<View
-				className='absolute left-4 right-4'
-				style={{ top: insets.top + 12, zIndex: 20 }}
-			>
-				{directionsStatus === 'idle' ? (
-					<>
-						<SearchBar
-							value={searchText}
-							onChangeText={setSearchText}
-							placeholder='미술관 또는 전시 검색'
-						/>
-						{searchText.length > 0 && mapVenues.length > 0 && (
-							<ScrollView
-								className='rounded-2xl bg-white overflow-hidden mt-2'
-								style={{
-									maxHeight: 240,
-									shadowColor: '#000',
-									shadowOpacity: 0.1,
-									shadowRadius: 8,
-									shadowOffset: { width: 0, height: 2 },
-									elevation: 4,
-								}}
-								keyboardShouldPersistTaps='handled'
-								showsVerticalScrollIndicator={false}
-							>
-								{mapVenues.slice(0, 8).map((venue, index) => (
-									<Pressable
-										key={venue.venueName}
-										onPress={() => {
-											Keyboard.dismiss();
-											handleMarkerPress(
-												venue.venueName,
-												venue.coordinates.latitude,
-												venue.coordinates.longitude,
-											);
-											setSearchText('');
-										}}
-										className={cn(
-											'flex-row items-center px-4 py-3',
-											index < Math.min(mapVenues.length, 8) - 1 &&
-												'border-b border-black/[0.05]',
-										)}
-										accessibilityRole='button'
-										accessibilityLabel={`${venue.venueName} 선택`}
-									>
-										<Ionicons name='location-outline' size={15} color='#78716C' />
-										<View className='ml-2.5 flex-1'>
-											<Text
-												className='font-pretendard-medium text-[14px] text-[#1C1917]'
-												numberOfLines={1}
-											>
-												{venue.venueName}
-											</Text>
-											{venue.venueAddress && (
-												<Text
-													className='font-pretendard-regular text-[12px] text-[#78716C] mt-0.5'
-													numberOfLines={1}
-												>
-													{venue.venueAddress}
-												</Text>
-											)}
-										</View>
-									</Pressable>
-								))}
-							</ScrollView>
-						)}
-					</>
-				) : directionsStatus === 'planning' ? (
-					<RoutePlanningBar
-						origin={routeOrigin}
-						destination={destination}
-						venues={dbVenues}
-						hasCurrentLocation={currentCoord != null}
-						recentLocations={recentLocations}
-						onSelectOrigin={setRouteOrigin}
-						onSelectDestination={setRouteDestination}
-						onUseCurrentLocation={() => {
-							if (currentCoord) {
-								setRouteOrigin({ name: '현재 위치', coord: currentCoord });
-							}
-						}}
-						onFocusLocation={(coord) =>
-							mapRef.current?.animateCameraTo({ ...coord, zoom: 14 })
-						}
-						onAddRecent={addRecent}
-						onSwap={swapEndpoints}
-						onConfirm={handleConfirmRoutePlan}
-						onClose={handleCloseRoute}
-					/>
-				) : (
-					<Pressable
-						onPress={handleCloseRoute}
-						className='self-start w-11 h-11 items-center justify-center rounded-full bg-white'
-						style={{
-							shadowColor: '#000',
-							shadowOpacity: 0.1,
-							shadowRadius: 8,
-							shadowOffset: { width: 0, height: 2 },
-							elevation: 4,
-						}}
-						hitSlop={6}
-						accessibilityLabel='길찾기 닫기'
-						accessibilityRole='button'
-					>
-						<Ionicons name='close' size={22} color='#1C1917' />
-					</Pressable>
-				)}
-			</View>
-
-			{/* 검색 결과 없음 */}
-			{directionsStatus === 'idle' &&
-				searchText.length > 0 &&
-				mapVenues.length === 0 && (
-					<View
-						className='absolute left-4 right-4 items-center bg-white rounded-2xl px-4 py-3'
-						style={{
-							top: insets.top + 56,
-							zIndex: 20,
-							shadowColor: '#000',
-							shadowOpacity: 0.1,
-							shadowRadius: 8,
-							shadowOffset: { width: 0, height: 2 },
-							elevation: 4,
-						}}
-					>
-						<Text className='text-sm font-pretendard-medium text-black/40'>
-							"{searchText}"에 해당하는 미술관이 없어요
-						</Text>
-					</View>
-				)}
+			<MapTopBar
+				insetsTop={insets.top}
+				directionsStatus={directionsStatus}
+				searchText={searchText}
+				onChangeSearchText={setSearchText}
+				mapVenues={mapVenues}
+				onMarkerPress={handleMarkerPress}
+				routeOrigin={routeOrigin}
+				destination={destination}
+				dbVenues={dbVenues}
+				hasCurrentLocation={currentCoord != null}
+				recentLocations={recentLocations}
+				onSelectOrigin={setRouteOrigin}
+				onSelectDestination={setRouteDestination}
+				onUseCurrentLocation={() => {
+					if (currentCoord) {
+						setRouteOrigin({ name: '현재 위치', coord: currentCoord });
+					}
+				}}
+				onFocusLocation={(coord) =>
+					mapRef.current?.animateCameraTo({ ...coord, zoom: 14 })
+				}
+				onAddRecent={addRecent}
+				onSwap={swapEndpoints}
+				onConfirm={handleConfirmRoutePlan}
+				onClose={handleCloseRoute}
+			/>
 
 			{/* 줌 버튼 — 길찾기 패널은 드래그로 접을 수 있는 진짜 바텀시트라 버튼 위치를 따로 옮기지 않는다 */}
 			<ZoomControls mapRef={mapRef} cameraRef={cameraRef} />
@@ -701,16 +574,14 @@ export default function MapScreen() {
 				onReset={() => setFilterDate(new Date())}
 			/>
 
-			{/* FAB - 현재 위치 */}
-			<Pressable
-				onPress={handleLocate}
-				className='absolute right-5 bottom-8 w-12 h-12 rounded-full items-center justify-center bg-[rgba(15,14,13,0.92)] border border-white/15'
-				style={({ pressed }) => (pressed ? { opacity: 0.6 } : undefined)}
-				accessibilityLabel='내 위치로 이동'
-				accessibilityRole='button'
-			>
-				<Ionicons name='locate-outline' size={22} color='white' />
-			</Pressable>
+			<MapBottomControls
+				onLocate={handleLocate}
+				selectedVenueName={selectedVenueName}
+				isVenueSheetOpen={isVenueSheetOpen}
+				directionsStatus={directionsStatus}
+				onOpenVenueSheet={openVenueSheet}
+				routeSheetRef={routeSheetRef}
+			/>
 
 			{/* 바텀시트 — 장소 정보 (길찾기 모드에서는 닫혀 있고, 하단 경로 패널이 대신 보인다) */}
 			<BottomSheetModal
@@ -752,39 +623,6 @@ export default function MapScreen() {
 					</View>
 				) : null}
 			</BottomSheetModal>
-
-			{/* 선택된 핀이 있지만 venue 시트가 닫힌 경우 재오픈 버튼 */}
-			{selectedVenueName && !isVenueSheetOpen && directionsStatus === 'idle' && (
-				<Pressable
-					onPress={openVenueSheet}
-					className='absolute left-5 bottom-8 flex-row items-center gap-2 h-12 px-5 rounded-full bg-[rgba(15,14,13,0.92)] border border-white/15'
-					style={{ zIndex: 50 }}
-					accessibilityLabel='장소 정보 보기'
-					accessibilityRole='button'
-				>
-					<Ionicons name='business-outline' size={16} color='white' />
-					<Text className='text-white text-[13px] font-pretendard-bold'>
-						장소 정보 보기
-					</Text>
-				</Pressable>
-			)}
-
-			{/* 길찾기 패널을 다시 열 수 있는 버튼 — 패널을 드래그로 내려도(index -1) 항상 떠 있고,
-			    아래의 BottomSheet가 나중에 그려지며(JSX 순서상 위 레이어) 패널이 열리면 이 버튼을 자연히 덮는다. */}
-			{directionsStatus !== 'idle' && directionsStatus !== 'planning' && (
-				<Pressable
-					onPress={() => routeSheetRef.current?.snapToIndex(1)}
-					className='absolute left-5 bottom-8 flex-row items-center gap-2 h-12 px-5 rounded-full bg-[rgba(15,14,13,0.92)] border border-white/15'
-					style={({ pressed }) => ({ zIndex: 50, opacity: pressed ? 0.6 : 1 })}
-					accessibilityLabel='경로 패널 다시 보기'
-					accessibilityRole='button'
-				>
-					<Ionicons name='navigate' size={16} color='white' />
-					<Text className='text-white text-[13px] font-pretendard-bold'>
-						경로 보기
-					</Text>
-				</Pressable>
-			)}
 
 			{/* 길찾기 패널 — 모달이 아닌 BottomSheet라 지도를 자유롭게 탭/이동해도 닫히지 않고,
 			    손잡이로 드래그해서 접고 펼 수 있다. 재오픈 버튼보다 뒤에 그려서 패널이 열렸을 때 버튼을 덮는다. */}
