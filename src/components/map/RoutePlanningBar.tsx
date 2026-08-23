@@ -294,6 +294,7 @@ export function RoutePlanningBar({
 							onChangeText={setQuery}
 							style={{ lineHeight: 0 }}
 							autoFocus
+							returnKeyType='search'
 						/>
 						<Pressable
 							onPress={closeDropdown}
