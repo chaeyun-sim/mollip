@@ -141,9 +141,7 @@ export default function ExhibitionBookmarkScreen() {
 				renderItem={({ item }) => (
 					<ExhibitionCard ex={item} onPress={handlePress} />
 				)}
-				ItemSeparatorComponent={() => (
-					<View className='my-4 h-[1px] bg-[#eeeeee]' />
-				)}
+				ItemSeparatorComponent={() => <View className='h-4' />}
 				contentContainerStyle={{
 					paddingTop: 12,
 					paddingBottom: 32,
@@ -177,6 +175,10 @@ export default function ExhibitionBookmarkScreen() {
 				</View>
 			) : data.length === 0 ? (
 				<View className='flex-1 items-center justify-center gap-2'>
+					{/* TODO: 북마크 전시 빈 상태 일러스트
+						프롬프트: 따뜻한 베이지(#F8F6F2) 배경 위에 접힌 리본 북마크와 작은 액자 그림,
+						플랫 일러스트 스타일, 얇은 라인 아트, 잉크색(#1C1917) 윤곽선, 포인트 컬러는 은은한 테라코타,
+						미니멀하고 여백이 많은 구도, 사진 느낌 없이 손그림 느낌, 정사각형 120x120 */}
 					<Ionicons name='bookmark-outline' size={36} color='#D6D3D1' />
 					<Text className='text-[#A8A29E] text-[14px] font-pretendard-regular text-center'>
 						관심 있는 전시가 없어요{'\n'}전시를 탐색하고 북마크해보세요

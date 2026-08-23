@@ -130,6 +130,10 @@ export default function AudioHistoryScreen() {
 
 			{items.length === 0 ? (
 				<View className='flex-1 items-center justify-center gap-2'>
+					{/* TODO: 저장한 오디오 빈 상태 일러스트
+						프롬프트: 따뜻한 베이지(#F8F6F2) 배경 위에 놓인 헤드셋과 그 주위를 감도는 작은 음표들,
+						플랫 일러스트 스타일, 얇은 라인 아트, 잉크색(#1C1917) 윤곽선, 포인트 컬러는 은은한 테라코타,
+						고요하고 정적인 느낌, 사진 느낌 없이 손그림 느낌, 정사각형 120x120 */}
 					<Ionicons name='headset-outline' size={36} color='#D6D3D1' />
 					<Text className='text-[#A8A29E] text-[14px] font-pretendard-regular text-center'>
 						저장된 오디오가 없어요{'\n'}해설 화면에서 하트를 눌러 저장해보세요
@@ -147,7 +151,7 @@ export default function AudioHistoryScreen() {
 						/>
 					)}
 					ItemSeparatorComponent={() => (
-						<View className='h-[1px] bg-[#E7E5E4] my-4' />
+						<View className='h-[1px] bg-[#E7E5E4] my-2.5' />
 					)}
 					contentContainerStyle={{
 						paddingTop: 16,
