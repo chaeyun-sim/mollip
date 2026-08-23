@@ -40,7 +40,7 @@ function scoreExhibition(
 	if (row.genre && preferredGenres.includes(row.genre)) score += 40;
 
 	// 태그 교집합 +20pt: genre 컬럼이 없는 전시도 tags로 커버
-	if (row.tags && row.tags.some((t) => preferredGenres.includes(t))) score += 20;
+	if (Array.isArray(row.tags) && row.tags.some((t) => preferredGenres.includes(t))) score += 20;
 
 	// 신선도 +20pt: synced_at 기준 최근 7일 이내 (REQ-UI002-011)
 	if (row.synced_at) {

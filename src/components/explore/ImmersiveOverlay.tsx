@@ -12,11 +12,9 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import type { Exhibition } from '@/src/data/exhibitions';
-
 interface ImmersiveOverlayProps {
 	visible: boolean;
-	exhibition: Exhibition;
+	title: string;
 	onStart: () => void;
 	onClose: () => void;
 }
@@ -30,7 +28,7 @@ const EDGE_SIZE = 150;
  * 천천히 fade-in 된다. 닫을 때는 역순(제목 fade-out → 비네트/스크림 fade-out). */
 export function ImmersiveOverlay({
 	visible,
-	exhibition,
+	title,
 	onStart,
 	onClose,
 }: ImmersiveOverlayProps) {
@@ -153,7 +151,7 @@ export function ImmersiveOverlay({
 							textShadowRadius: 12,
 						}}
 					>
-						{exhibition.title}
+						{title}
 					</Text>
 					<Pressable
 						onPress={handleStartPress}

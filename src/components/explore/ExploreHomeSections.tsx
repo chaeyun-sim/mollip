@@ -132,7 +132,7 @@ interface RecommendedExhibitionsProps {
 	onPress: (id: string) => void;
 }
 
-function PosterFrame({
+export function PosterFrame({
 	thumbnail,
 	width,
 	height,
@@ -179,7 +179,7 @@ function PosterFrame({
 	);
 }
 
-function GridExhibitionCell({
+export function GridExhibitionCell({
 	item,
 	colWidth,
 	gridHeight,

@@ -3,46 +3,67 @@ import { useEffect, useState } from 'react';
 import { searchNaverLocal, type NaverLocalItem } from '@/src/api/naver';
 import { distanceKm, formatDistance } from '@/src/utils/mapUtils';
 
+const RADIUS_STEPS_KM = [5, 10, 15];
+
 export interface NearbyPlace {
   id: string;
   name: string;
-  category: 'cafe' | 'restaurant';
   distance: string;
   address: string;
   imageUrl: string;
 }
 
-function classifyCategory(category: string): NearbyPlace['category'] {
-  if (category.includes('카페') || category.includes('커피')) return 'cafe';
-  return 'restaurant';
+interface RatedPlace extends NearbyPlace {
+  _km: number;
 }
 
-function mapNaverItemToPlace(
+function toRatedPlace(
   item: NaverLocalItem,
   userLat: number,
   userLon: number,
+  prefix: string,
   index: number,
-): NearbyPlace {
+): RatedPlace {
   const lat = Number(item.mapy) / 10_000_000;
   const lon = Number(item.mapx) / 10_000_000;
   const km = distanceKm(userLat, userLon, lat, lon);
 
   return {
-    id: String(index),
+    _km: km,
+    id: `${prefix}-${index}`,
     name: item.title.replace(/<[^>]+>/g, ''),
-    category: classifyCategory(item.category),
     distance: formatDistance(km),
     address: item.roadAddress || item.address,
     imageUrl: '',
   };
 }
 
+/** 반경 단계적 확장: 5km → 10km → 15km, 각 단계에서 limit개 채워지면 중단 */
+function pickWithinRadius(candidates: RatedPlace[], limit: number): NearbyPlace[] {
+  for (const radius of RADIUS_STEPS_KM) {
+    const hits = candidates.filter((p) => p._km <= radius).slice(0, limit);
+    if (hits.length > 0) {
+      return hits.map(({ _km: _, ...rest }) => rest);
+    }
+  }
+  // 모든 반경에서 없으면 가장 가까운 것 최대 limit개
+  return candidates
+    .sort((a, b) => a._km - b._km)
+    .slice(0, limit)
+    .map(({ _km: _, ...rest }) => rest);
+}
+
+export interface NearbyPlaces {
+  cafes: NearbyPlace[];
+  attractions: NearbyPlace[];
+}
+
 export function useNearbyPlaces(location: { latitude: number; longitude: number } | null): {
-  data: NearbyPlace[];
+  data: NearbyPlaces;
   isLoading: boolean;
   error: Error | null;
 } {
-  const [data, setData] = useState<NearbyPlace[]>([]);
+  const [data, setData] = useState<NearbyPlaces>({ cafes: [], attractions: [] });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
@@ -55,21 +76,29 @@ export function useNearbyPlaces(location: { latitude: number; longitude: number 
     setIsLoading(true);
     setError(null);
 
-    // 카페·음식점 각각 조회 후 합산 (OR 문법 미지원)
     const loc = { latitude, longitude };
-    Promise.all([
-      searchNaverLocal('카페', 4, loc),
-      searchNaverLocal('음식점', 4, loc),
+    // Naver 지역검색 display 최대 5
+    // allSettled: 한 쿼리가 실패해도 나머지 결과는 살림
+    Promise.allSettled([
+      searchNaverLocal('카페', 5, loc),
+      searchNaverLocal('관광명소', 5, loc),
     ])
-      .then(([cafes, restaurants]) => {
+      .then(([cafeResult, attrResult]) => {
         if (cancelled) return;
-        const all = [...cafes, ...restaurants];
-        setData(all.map((item, i) => mapNaverItemToPlace(item, latitude, longitude, i)));
-      })
-      .catch((err: unknown) => {
-        if (cancelled) return;
-        setError(err instanceof Error ? err : new Error(String(err)));
-        setData([]);
+        console.log('[nearby] cafe:', cafeResult.status, cafeResult.status === 'rejected' ? String(cafeResult.reason) : cafeResult.value.length + '개');
+        console.log('[nearby] attr:', attrResult.status, attrResult.status === 'rejected' ? String(attrResult.reason) : attrResult.value.length + '개');
+        const cafeItems = cafeResult.status === 'fulfilled' ? cafeResult.value : [];
+        const attrItems = attrResult.status === 'fulfilled' ? attrResult.value : [];
+        const cafeRated = cafeItems.map((item, i) =>
+          toRatedPlace(item, latitude, longitude, 'cafe', i),
+        );
+        const attrRated = attrItems.map((item, i) =>
+          toRatedPlace(item, latitude, longitude, 'attr', i),
+        );
+        setData({
+          cafes: pickWithinRadius(cafeRated, 3),
+          attractions: pickWithinRadius(attrRated, 3),
+        });
       })
       .finally(() => {
         if (!cancelled) setIsLoading(false);

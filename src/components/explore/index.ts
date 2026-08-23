@@ -15,5 +15,6 @@ export { ExploreHomeHero } from './ExploreHomeHero';
 export { ExploreSectionTitle, FeaturedExhibitionHero, RecommendedExhibitions } from './ExploreHomeSections';
 export type { FeaturedExhibitionProps, RecommendableItem } from './ExploreHomeSections';
 export { ImmersiveOverlay } from './ImmersiveOverlay';
+export { RouteSheet } from './RouteSheet';
 export { KcisaExhibitionCard } from './KcisaExhibitionCard';
 export { RelatedExhibitions } from './RelatedExhibitions';

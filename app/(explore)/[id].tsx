@@ -20,6 +20,7 @@ import {
 	ExhibitionVenueInfo,
 	ImmersiveOverlay,
 	RelatedExhibitions,
+	RouteSheet,
 } from '@/src/components/explore';
 import { FadeInView } from '@/src/components/common/FadeInView';
 import { ExhibitionPoster } from '@/src/components/common/EmptyImagePlaceholder';
@@ -30,20 +31,27 @@ import { useRequireAuth } from '@/src/hooks/useRequireAuth';
 import { useShareExhibition } from '@/src/hooks/useShareExhibition';
 import { useBookmarkStore } from '@/src/store/bookmarkStore';
 import { useImmersiveStore } from '@/src/store/immersiveStore';
+import { useSettingsStore } from '@/src/store/settingsStore';
 import { todayKey, useVisitStore } from '@/src/store/visitStore';
 import { getExhibitionTypeDisplay } from '@/src/utils/exhibitionSearch';
+import {
+	cancelDeadlineNotifications,
+	scheduleDeadlineNotifications,
+} from '@/src/utils/notificationScheduler';
 
 export default function ExhibitionDetailScreen() {
 	const { id } = useLocalSearchParams<{ id: string }>();
 	const router = useRouter();
 	const insets = useSafeAreaInsets();
 	const [immersiveOpen, setImmersiveOpen] = useState(false);
+	const [routeOpen, setRouteOpen] = useState(false);
 	const enterImmersive = useImmersiveStore((s) => s.enter);
 	const recordVisit = useVisitStore((s) => s.recordExhibition);
 
 	const { exhibition, isLoading } = useExhibitionData(id);
 	const isBookmarked = useBookmarkStore((s) => s.isBookmarked(id));
 	const toggle = useBookmarkStore((s) => s.toggle);
+	const pushNotificationsEnabled = useSettingsStore((s) => s.pushNotificationsEnabled);
 	const { ensureAuth } = useRequireAuth();
 
 	const { scrollHandler, heroImageStyle } = useHeroAnimation(exhibition?.id);
@@ -220,9 +228,19 @@ export default function ExhibitionDetailScreen() {
 			<ExhibitionDetailFloatingActions
 				onBack={() => router.back()}
 				onShare={handleShare}
+				onRoute={() => router.push(`/(explore)/route?id=${id}`)}
 				onBookmark={() => {
 					if (!ensureAuth(`/(explore)/${id}`)) return;
+					const willAdd = !isBookmarked;
 					toggle(id);
+					if (!exhibition?.endDate) return;
+					if (willAdd) {
+						if (pushNotificationsEnabled) {
+							void scheduleDeadlineNotifications(id, exhibition.title, exhibition.endDate);
+						}
+					} else {
+						void cancelDeadlineNotifications(id);
+					}
 				}}
 				isBookmarked={isBookmarked}
 				insetTop={insets.top}
@@ -244,7 +262,7 @@ export default function ExhibitionDetailScreen() {
 
 			<ImmersiveOverlay
 				visible={immersiveOpen}
-				exhibition={exhibition}
+				title={exhibition.title}
 				onStart={() => {
 					setImmersiveOpen(false);
 					enterImmersive(id);
@@ -256,6 +274,14 @@ export default function ExhibitionDetailScreen() {
 					router.push('/(guide)/create-description');
 				}}
 				onClose={() => setImmersiveOpen(false)}
+			/>
+
+			<RouteSheet
+				visible={routeOpen}
+				exhibitionTitle={exhibition.title}
+				venue={exhibition.venue}
+				artworks={exhibition.artworks}
+				onClose={() => setRouteOpen(false)}
 			/>
 		</View>
 	);
