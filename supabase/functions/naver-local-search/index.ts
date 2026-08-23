@@ -12,8 +12,8 @@ Deno.serve(async (req) => {
     const clientSecret = Deno.env.get('NAVER_CLIENT_SECRET');
     if (!clientId || !clientSecret) {
       return new Response(
-        JSON.stringify({ error: 'NAVER_CLIENT_ID or NAVER_CLIENT_SECRET not configured' }),
-        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
+        JSON.stringify({ items: [], error: 'NAVER_CLIENT_ID or NAVER_CLIENT_SECRET not configured' }),
+        { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
       );
     }
 
@@ -40,8 +40,8 @@ Deno.serve(async (req) => {
     if (!res.ok) {
       const err = await res.text();
       return new Response(
-        JSON.stringify({ error: `Naver API ${res.status}: ${err}` }),
-        { status: res.status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
+        JSON.stringify({ items: [], error: `Naver API ${res.status}: ${err}` }),
+        { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
       );
     }
 

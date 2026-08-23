@@ -14,6 +14,44 @@ export type Database = {
   }
   public: {
     Tables: {
+      audio_guides: {
+        Row: {
+          artist: string | null
+          created_at: string
+          full_text: string
+          id: string
+          image_url: string | null
+          title: string
+          user_id: string
+        }
+        Insert: {
+          artist?: string | null
+          created_at?: string
+          full_text?: string
+          id?: string
+          image_url?: string | null
+          title: string
+          user_id: string
+        }
+        Update: {
+          artist?: string | null
+          created_at?: string
+          full_text?: string
+          id?: string
+          image_url?: string | null
+          title?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "audio_guides_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       account_deletion_feedback: {
         Row: {
           created_at: string
@@ -276,6 +314,104 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      bookmark_audio: {
+        Row: {
+          audio_guide_id: string | null
+          created_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          audio_guide_id?: string | null
+          created_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          audio_guide_id?: string | null
+          created_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bookmark_audio_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookmark_audio_audio_guide_id_fkey"
+            columns: ["audio_guide_id"]
+            isOneToOne: false
+            referencedRelation: "audio_guides"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      visits: {
+        Row: {
+          date: string
+          exhibition_id: number | null
+          memo: string | null
+          user_id: string
+        }
+        Insert: {
+          date: string
+          exhibition_id?: number | null
+          memo?: string | null
+          user_id: string
+        }
+        Update: {
+          date?: string
+          exhibition_id?: number | null
+          memo?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "visits_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "visits_exhibition_id_fkey"
+            columns: ["exhibition_id"]
+            isOneToOne: false
+            referencedRelation: "exhibitions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      bookmark_exhibitions: {
+        Row: {
+          created_at: string
+          exhibition_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          exhibition_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          exhibition_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_bookmarks_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
       }
     }
     Views: {
