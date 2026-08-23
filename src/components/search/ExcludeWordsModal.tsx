@@ -70,11 +70,17 @@ export function ExcludeWordsModal({
 								/>
 								<Pressable
 									onPress={handleSubmit}
+									disabled={!input.trim()}
 									hitSlop={8}
 									accessibilityLabel='제외어 추가'
 									accessibilityRole='button'
+									accessibilityState={{ disabled: !input.trim() }}
 								>
-									<Ionicons name='add-circle' size={22} color='#1C1917' />
+									<Ionicons
+										name='add-circle'
+										size={22}
+										color={input.trim() ? '#1C1917' : '#D6D3D1'}
+									/>
 								</Pressable>
 							</View>
 
