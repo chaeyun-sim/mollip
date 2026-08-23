@@ -1,14 +1,17 @@
 import { useEffect, useRef, useState } from 'react';
-import { DESCRIPTION_PROMPT } from '../constants/prompts';
+import { buildDescriptionPrompt } from '../constants/prompts';
+import { useSettingsStore } from '../store/settingsStore';
 import { store } from '../store';
 import { useImmersiveStore } from '../store/immersiveStore';
 import { todayKey, useVisitStore } from '../store/visitStore';
 import { streamDescription, streamDescriptionFromImage } from '../utils/api';
 
 const CHAR_INTERVAL_MS = 25;
+export const MAX_DESCRIPTION_RETRIES = 3;
 
 export function useDescriptionStream() {
 	const isImmersive = useImmersiveStore((s) => s.isImmersiveMode);
+	const descriptionFocus = useSettingsStore((s) => s.descriptionFocus);
 	const addToPlaylist = useImmersiveStore((s) => s.addToPlaylist);
 	const recordListened = useVisitStore((s) => s.recordListened);
 
@@ -67,12 +70,12 @@ export function useDescriptionStream() {
 				const gen =
 					store.inputMode === 'manual'
 						? streamDescription(
-								`${DESCRIPTION_PROMPT}작품명: ${store.manualTitle}\n작가명: ${store.manualArtist}`,
+								`${buildDescriptionPrompt(descriptionFocus)}작품명: ${store.manualTitle}\n작가명: ${store.manualArtist}`,
 							)
 						: streamDescriptionFromImage(
 								store.imageBase64,
 								store.imageMediaType,
-								DESCRIPTION_PROMPT,
+								buildDescriptionPrompt(descriptionFocus),
 							);
 				for await (const chunk of gen) {
 					if (cancelled || !mountedRef.current) break;
@@ -119,6 +122,7 @@ export function useDescriptionStream() {
 	}, [isTyping]);
 
 	const handleRetry = () => {
+		if (retryCount >= MAX_DESCRIPTION_RETRIES) return;
 		bufferRef.current = '';
 		fullTextRef.current = '';
 		setDisplayed('');
@@ -132,6 +136,7 @@ export function useDescriptionStream() {
 		hasError,
 		isTyping,
 		loadingStep,
+		retryCount,
 		fullTextRef,
 		artworkImageUrl,
 		handleRetry,

@@ -11,9 +11,12 @@ import {
 	Modal,
 	Pressable,
 	ScrollView,
+	Share,
 	Text,
 	View,
 } from 'react-native';
+import { shareFeedTemplate } from '@react-native-kakao/share';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
 	Easing,
 	useSharedValue,
@@ -22,10 +25,11 @@ import {
 } from 'react-native-reanimated';
 import { Screen } from '../../src/components/layout/Screen';
 import { useTTS } from '../../src/hooks/useTTS';
-import { useDescriptionStream } from '../../src/hooks/useDescriptionStream';
+import { useDescriptionStream, MAX_DESCRIPTION_RETRIES } from '../../src/hooks/useDescriptionStream';
 import { useImmersiveStore } from '../../src/store/immersiveStore';
 import {
 	FONT_SIZE_VALUE,
+	getEffectiveFontSize,
 	useSettingsStore,
 } from '../../src/store/settingsStore';
 import { formatTime } from '../../src/utils/text';
@@ -33,6 +37,8 @@ import { ScreenHeader } from '../../src/components/layout/ScreenHeader';
 import { MarkdownBoldText } from '@/src/components/common/MarkdownBoldText';
 import { cn } from '@/src/lib/cn';
 import { useHistoryStore } from '@/src/store/historyStore';
+import { useBookmarkAudioStore } from '@/src/store/bookmarkAudioStore';
+import { useChatStore } from '@/src/store/chatStore';
 import { store } from '@/src/store';
 import { fetchWikidataImage } from '@/src/utils/wikidataImage';
 
@@ -41,14 +47,18 @@ const SCREEN_WIDTH = Dimensions.get('window').width;
 export default function DescriptionScreen() {
 	const router = useRouter();
 	const navigation = useNavigation();
+	const insets = useSafeAreaInsets();
 	const sessionId = useRef(Date.now().toString()).current;
 	const isImmersive = useImmersiveStore((s) => s.isImmersiveMode);
-	const { fontSize } = useSettingsStore();
-	const bodyFontSize = FONT_SIZE_VALUE[fontSize];
+	const { fontSize, highContrast } = useSettingsStore();
+	const bodyFontSize = getEffectiveFontSize(fontSize, highContrast);
 
 	const addHistory = useHistoryStore((s) => s.add);
-	const removeHistory = useHistoryStore((s) => s.remove);
 	const updateHistory = useHistoryStore((s) => s.update);
+	const saveChatMessages = useHistoryStore((s) => s.saveChatMessages);
+	const toggleBookmarkAudio = useBookmarkAudioStore((s) => s.toggle);
+	const isAudioBookmarked = useBookmarkAudioStore((s) => s.isBookmarked);
+	const flushChatSession = useChatStore((s) => s.flushSession);
 	const [savedId, setSavedId] = useState<string | null>(null);
 
 	const {
@@ -57,6 +67,7 @@ export default function DescriptionScreen() {
 		hasError,
 		isTyping,
 		loadingStep,
+		retryCount,
 		fullTextRef,
 		artworkImageUrl,
 		handleRetry,
@@ -74,16 +85,28 @@ export default function DescriptionScreen() {
 		resume,
 		stop,
 		preload,
+		cancelPreload,
 		seekTo,
 	} = useTTS();
 
-	// 화면을 벗어나는 모든 경로에서 재생 중인 오디오를 확실히 멈춘다
+	// 화면을 벗어나는 모든 경로에서 오디오 정지, 프리로드 취소, 채팅 세션 플러시
 	useEffect(() => {
 		const unsubscribe = navigation.addListener('beforeRemove', () => {
 			stop();
+			cancelPreload();
+			if (savedId) {
+				const msgs = useChatStore.getState().getMessages(sessionId);
+				const chatMsgs = msgs
+					.filter((m) => !m.isError)
+					.map(({ id, role, text }) => ({ id, role, text }));
+				if (chatMsgs.length > 0) {
+					saveChatMessages(savedId, chatMsgs);
+				}
+			}
+			flushChatSession(sessionId);
 		});
 		return unsubscribe;
-	}, [navigation, stop]);
+	}, [navigation, stop, cancelPreload, flushChatSession, sessionId, savedId, saveChatMessages]);
 
 	// 인디케이터 progress bar 애니메이션
 	const barTranslate = useSharedValue(-SCREEN_WIDTH);
@@ -112,11 +135,61 @@ export default function DescriptionScreen() {
 		}
 	}, [isTyping]);
 
+	// 스트리밍 완료 시 audio_guides에 자동 저장 (들은 것 전체 기록)
+	useEffect(() => {
+		if (!isTyping && fullTextRef.current && !savedId) {
+			const title = store.manualTitle || store.extractedText || '작품 해설';
+			const artist = store.manualArtist || undefined;
+			const id = addHistory({
+				text: fullTextRef.current,
+				title,
+				artist,
+				imageUrl: artworkImageUrl || undefined,
+			});
+			setSavedId(id);
+			if (!artworkImageUrl && title !== '작품 해설') {
+				fetchWikidataImage(title, artist).then((url) => {
+					if (url) updateHistory(id, { imageUrl: url });
+				});
+			}
+		}
+	}, [isTyping]);
+
 	const handlePlayPause = () => {
 		if (isTTSLoading) return;
 		if (isSpeaking) pause();
 		else if (elapsed > 0) resume();
-		else speak(isTyping ? displayed : fullTextRef.current);
+		else speak(fullTextRef.current);
+	};
+
+	const handleShare = async () => {
+		const title = store.manualTitle || store.extractedText || '작품';
+		const fullText = fullTextRef.current ?? '';
+		const firstSentence = fullText.split(/[.\n]/)[0]?.trim() ?? '';
+		const description =
+			(firstSentence.length > 80 ? firstSentence.slice(0, 80) + '…' : firstSentence) +
+			'\nmollip에서 감상했어요 🎨';
+
+		const link = { mobileWebUrl: 'https://mollip.app', webUrl: 'https://mollip.app' };
+
+		try {
+			await shareFeedTemplate({
+				template: {
+					content: {
+						title,
+						description,
+						imageUrl: artworkImageUrl ?? '',
+						link,
+					},
+					buttons: [{ title: '해설 들으러 가기', link }],
+				},
+			});
+		} catch {
+			await Share.share({
+				message: `${title}\n${firstSentence}\nmollip에서 감상했어요 🎨`,
+				title,
+			});
+		}
 	};
 
 	const handleProgressTap = (e: GestureResponderEvent) => {
@@ -128,7 +201,7 @@ export default function DescriptionScreen() {
 	const progress = duration > 0 ? elapsed / duration : 0;
 
 	return (
-		<Screen edges={['top', 'bottom']}>
+		<Screen edges={['top', 'bottom']} highContrast={highContrast}>
 			{!isTyping && (
 				<Screen.Header>
 					<ScreenHeader.Back
@@ -140,36 +213,19 @@ export default function DescriptionScreen() {
 					<Screen.Header.Right>
 						<Pressable
 							onPress={() => {
+								if (!savedId) return;
 								Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-								if (savedId) {
-									removeHistory(savedId);
-									setSavedId(null);
-								} else {
-									const title = store.manualTitle || store.extractedText || '작품 해설';
-									const artist = store.manualArtist || undefined;
-									const id = addHistory({
-										text: fullTextRef.current,
-										title,
-										artist,
-										imageUrl: artworkImageUrl || undefined,
-									});
-									setSavedId(id);
-									if (!artworkImageUrl && title !== '작품 해설') {
-										fetchWikidataImage(title, artist).then((url) => {
-											if (url) updateHistory(id, { imageUrl: url });
-										});
-									}
-								}
+								toggleBookmarkAudio(savedId);
 							}}
 							hitSlop={8}
-							accessibilityLabel={savedId ? '히스토리에서 제거' : '히스토리에 저장'}
+							accessibilityLabel={savedId && isAudioBookmarked(savedId) ? '북마크 해제' : '북마크'}
 							accessibilityRole='button'
 							style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
 						>
 							<Ionicons
-								name={savedId ? 'heart' : 'heart-outline'}
+								name={savedId && isAudioBookmarked(savedId) ? 'heart' : 'heart-outline'}
 								size={22}
-								color={savedId ? '#F87171' : '#78716C'}
+								color={savedId && isAudioBookmarked(savedId) ? '#F87171' : '#78716C'}
 							/>
 						</Pressable>
 					</Screen.Header.Right>
@@ -182,18 +238,13 @@ export default function DescriptionScreen() {
 				contentContainerStyle={{ paddingBottom: 150, paddingTop: 12 }}
 			>
 				{hasError ? (
-					<View className='items-center mt-16 gap-4'>
+					<View className='items-center mt-16 gap-3'>
 						<Ionicons name='alert-circle-outline' size={40} color='#78716C' />
-						<Text className='text-[#78716C] text-[15px]'>해설 생성에 실패했어요</Text>
-						<Pressable
-							className='px-6 py-3 rounded-xl bg-[#1C1917]'
-							onPress={handleRetry}
-							style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
-						>
-							<Text className='font-pretendard-semibold text-[#60A5FA] text-[14px]'>
-								다시 시도
-							</Text>
-						</Pressable>
+						<Text className='text-[#78716C] text-[15px]'>
+							{retryCount >= MAX_DESCRIPTION_RETRIES
+								? '잠시 후 다시 시도해 주세요'
+								: '해설 생성에 실패했어요'}
+						</Text>
 					</View>
 				) : isStreaming && displayed === '' ? (
 					<View className='flex-row items-center mt-5 gap-2.5'>
@@ -208,7 +259,10 @@ export default function DescriptionScreen() {
 					<>
 						<MarkdownBoldText
 							text={displayed}
-							className='text-[#e8e8e8] font-pretendard-medium'
+							className={cn(
+								'font-pretendard-medium',
+								highContrast ? 'text-black' : 'text-[#e8e8e8]',
+							)}
 							style={{
 								fontSize: bodyFontSize,
 								lineHeight: bodyFontSize * 1.9,
@@ -233,7 +287,7 @@ export default function DescriptionScreen() {
 			</ScrollView>
 
 			{/* 플레이어 항상 표시, 타이핑 중엔 비활성 */}
-			<Screen.BottomAbsolute className='bottom-9 pt-6 px-6 bg-[#171412]'>
+			<Screen.BottomAbsolute className={cn('bottom-9 pt-6 px-6', highContrast ? 'bg-white' : 'bg-[#171412]')}>
 				<Pressable
 					className='h-1 rounded-sm overflow-hidden bg-[#292524]'
 					hitSlop={{ top: 16, bottom: 16 }}
@@ -277,18 +331,18 @@ export default function DescriptionScreen() {
 					<Pressable
 						className={cn(
 							'w-16 h-16 rounded-[32px] items-center justify-center',
-							isTTSLoading || !displayed ? 'bg-[#292524]' : 'bg-[#3B82F6]',
+							isTTSLoading || isTyping || !displayed ? 'bg-[#292524]' : 'bg-[#3B82F6]',
 						)}
 						style={({ pressed }) => ({
 							transform: [
-								{ scale: pressed && !(isTTSLoading || !displayed) ? 0.93 : 1 },
+								{ scale: pressed && !(isTTSLoading || isTyping || !displayed) ? 0.93 : 1 },
 							],
 						})}
 						onPress={() => {
 							Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
 							handlePlayPause();
 						}}
-						disabled={isTTSLoading || !displayed}
+						disabled={isTTSLoading || isTyping || !displayed}
 						accessibilityLabel={isSpeaking ? '일시정지' : '재생'}
 						accessibilityRole='button'
 					>
@@ -299,7 +353,7 @@ export default function DescriptionScreen() {
 						)}
 					</Pressable>
 
-					{/* 재생목록 버튼 — 몰입 모드 전용 */}
+					{/* 우측: 몰입 모드 → 재생목록, 일반 모드 → 공유 */}
 					<View className='w-9 items-center'>
 						{!isTyping && isImmersive && (
 							<Pressable
@@ -312,9 +366,47 @@ export default function DescriptionScreen() {
 								<Ionicons name='list' size={28} color='#78716C' />
 							</Pressable>
 						)}
+						{!isTyping && !isImmersive && (
+							<Pressable
+								onPress={() => {
+									Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+									void handleShare();
+								}}
+								hitSlop={8}
+								accessibilityLabel='작품 감상 공유'
+								accessibilityRole='button'
+								style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
+							>
+								<Ionicons name='share-outline' size={26} color='#78716C' />
+							</Pressable>
+						)}
 					</View>
 				</View>
 			</Screen.BottomAbsolute>
+
+			{/* 플레이어 위 재시도 버튼 — 오류 상태에서만 표시 */}
+			{hasError && retryCount < MAX_DESCRIPTION_RETRIES && (
+				<View
+					className='absolute left-0 right-0 items-center'
+					pointerEvents='box-none'
+					style={{ bottom: insets.bottom + 196, zIndex: 10 }}
+				>
+					<Pressable
+						onPress={handleRetry}
+						className='items-center gap-1.5'
+						accessibilityLabel={`재시도 ${retryCount + 1}/${MAX_DESCRIPTION_RETRIES}`}
+						accessibilityRole='button'
+						style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
+					>
+						<View className='w-12 h-12 rounded-full bg-[#1C1917] border border-white/10 items-center justify-center'>
+							<Ionicons name='refresh' size={20} color='#60A5FA' />
+						</View>
+						<Text className='text-[11px] text-[#78716C] font-pretendard-regular'>
+							{retryCount + 1}/{MAX_DESCRIPTION_RETRIES}
+						</Text>
+					</Pressable>
+				</View>
+			)}
 
 			{/* 이미지 전체화면 뷰어 */}
 			<Modal

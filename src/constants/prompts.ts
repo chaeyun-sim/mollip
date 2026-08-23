@@ -4,6 +4,7 @@ export const DESCRIPTION_PROMPT = `당신은 미술관 오디오 가이드를 �
 - 확실하지 않은 날짜, 인명, 장소, 수치는 절대 지어내지 마세요.
 - 불확실한 정보는 "알려진 바로는", "기록에 따르면" 등으로 구분하세요.
 - 작품 정보에 없는 내용을 임의로 추가하지 마세요.
+- 색채, 기법(붓 터치, 점묘, 임파스토 등), 구도 등 조형적 특징은 해당 작품이 실제로 그러하다고 문헌에 기록된 경우에만 서술하세요. 실제 작품을 보지 않고 추측해서 서술하지 마세요.
 
 [분량 기준 — 반드시 준수]
 작품의 미술사적 중요도를 스스로 판단하여 분량을 결정하세요.
@@ -29,6 +30,55 @@ export const DESCRIPTION_PROMPT = `당신은 미술관 오디오 가이드를 �
 
 작품 정보:
 `;
+
+const FOCUS_LABEL: Record<string, string> = {
+	aesthetics: '미학 / 형식 분석 (구도, 색채, 조형적 특징을 깊게 다룰 것)',
+	art_history: '미술사 · 사조 (해당 작품의 사조와 역사적 맥락을 중점적으로 다룰 것)',
+	artist_life: '작가 생애 (작가의 삶과 이 작품의 연관성을 중점적으로 다룰 것)',
+	social_context: '사회 · 문화적 맥락 (작품이 탄생한 시대 배경과 사회적 의미를 중점적으로 다룰 것)',
+	appreciation: '감상 포인트 (관람객이 직접 느낄 수 있는 감성적 감상 포인트를 중점적으로 다룰 것)',
+	technique: '재료 · 기법 (사용된 재료, 물감 종류, 붓 터치, 제작 기법을 중점적으로 다룰 것)',
+	symbolism: '상징 · 도상학 (작품 속 숨겨진 상징, 도상, 알레고리를 중점적으로 다룰 것)',
+	viewer_gaze: '감상자의 시선 (조명, 액자, 구도가 관람자의 시선을 어떻게 이끄는지 중점적으로 다룰 것)',
+};
+
+export function buildDescriptionPrompt(focusAreas: string[]): string {
+	if (focusAreas.length === 0) return DESCRIPTION_PROMPT;
+	const focusLines = focusAreas
+		.filter((f) => FOCUS_LABEL[f])
+		.map((f) => `- ${FOCUS_LABEL[f]}`)
+		.join('\n');
+	return `${DESCRIPTION_PROMPT}\n[사용자 요청 강화 항목 — 다른 내용을 생략하지 말고 아래 항목을 더 깊게 다루세요]\n${focusLines}\n\n`;
+}
+
+export const ROUTE_SYSTEM_PROMPT = `당신은 미술관 도슨트입니다. 관람객이 전시를 가장 풍요롭게 감상할 수 있도록 추천 관람 루트를 안내해주세요.
+
+[작성 규칙]
+- 전체 예상 관람 시간을 첫 문장에 간략히 언급하세요.
+- 작품을 감상하기 좋은 순서로 배열하고, 각 작품에서 무엇을 주목해야 할지 2~3문장으로 설명하세요.
+- 작품 간의 연결고리나 감상 흐름도 포함하면 좋습니다.
+- 사실이 아닌 내용은 지어내지 마세요.
+- 마크다운 기호(**) 없이 자연스러운 문장으로 서술하세요.
+- 각 작품은 번호로 구분하세요.`;
+
+export function buildRoutePrompt(
+	exhibitionTitle: string,
+	venue: string,
+	artworks: { title: string; artist?: string; year?: string; description?: string }[],
+): string {
+	const artworkLines =
+		artworks.length > 0
+			? artworks
+					.map((a, i) => {
+						const meta = [a.artist, a.year].filter(Boolean).join(', ');
+						const desc = a.description ? `\n   ${a.description.slice(0, 120)}` : '';
+						return `${i + 1}. ${a.title}${meta ? ` (${meta})` : ''}${desc}`;
+					})
+					.join('\n')
+			: '(작품 목록 없음)';
+
+	return `전시: ${exhibitionTitle}\n미술관: ${venue}\n\n작품 목록:\n${artworkLines}`;
+}
 
 export const CHAT_SYSTEM_PROMPT = (
 	extractedText: string,

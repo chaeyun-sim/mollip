@@ -15,6 +15,7 @@ import {
 
 import { cn } from '@/src/lib/cn';
 import type { Message } from '@/src/store/chatStore';
+import { getEffectiveFontSize, useSettingsStore } from '@/src/store/settingsStore';
 import { fetchWikidataImage } from '@/src/utils/wikidataImage';
 
 const DOCENT_AVATAR = require('../../../assets/images/marker/gogh.png');
@@ -50,6 +51,8 @@ interface ChatMessageProps {
 
 export function ChatMessage({ item, onRetry }: ChatMessageProps) {
 	const isUser = item.role === 'user';
+	const { fontSize, highContrast } = useSettingsStore();
+	const bodyFontSize = getEffectiveFontSize(fontSize, highContrast);
 
 	const [copyMenuVisible, setCopyMenuVisible] = useState(false);
 	const [selectCopyVisible, setSelectCopyVisible] = useState(false);
@@ -88,16 +91,17 @@ export function ChatMessage({ item, onRetry }: ChatMessageProps) {
 
 	function renderMessageText() {
 		const textClass = cn(
-			'text-[15px] leading-[23px]',
-			isUser ? 'text-white' : 'text-[#e8e8e8]',
+			isUser ? 'text-white' : (highContrast ? 'text-black' : 'text-[#e8e8e8]'),
 		);
 
+		const textStyle = { fontSize: bodyFontSize, lineHeight: bodyFontSize * 1.6 };
+
 		if (!hasArtwork) {
-			return <Text className={textClass}>{item.text}</Text>;
+			return <Text className={textClass} style={textStyle}>{item.text}</Text>;
 		}
 
 		return (
-			<Text className={textClass}>
+			<Text className={textClass} style={textStyle}>
 				{segments.map((seg, i) =>
 					seg.type === 'artwork' ? (
 						<Text
@@ -122,14 +126,16 @@ export function ChatMessage({ item, onRetry }: ChatMessageProps) {
 			{!isUser && <Image source={DOCENT_AVATAR} className='w-7 h-7 mb-1' />}
 			{item.isError ? (
 				<Pressable
-					className='flex-row items-center gap-2 px-4 py-3 rounded-2xl rounded-tl-sm bg-[#2a1a1a]'
+					className='flex-row items-center gap-1.5'
 					onPress={() => onRetry(item)}
+					accessibilityLabel='다시 시도'
+					accessibilityRole='button'
 					style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
 				>
-					<Ionicons name='refresh' size={14} color='#e05050' />
-					<Text className='font-pretendard-regular text-[#e05050] text-[13px]'>
-						답변 실패 — 다시 시도
+					<Text className='font-pretendard-regular text-[#78716C] text-[13px]'>
+						일시적인 오류가 발생했습니다
 					</Text>
+					<Ionicons name='refresh-outline' size={14} color='#78716C' />
 				</Pressable>
 			) : (
 				<Pressable
@@ -137,9 +143,9 @@ export function ChatMessage({ item, onRetry }: ChatMessageProps) {
 						'rounded-2xl px-4 py-3 max-w-[80%]',
 						isUser
 							? 'rounded-tr-sm bg-[#3B82F6]'
-							: 'rounded-tl-sm bg-[#1C1917] border-white/[0.08]',
+							: cn('rounded-tl-sm', highContrast ? 'bg-[#F0EFED]' : 'bg-[#1C1917] border-white/[0.08]'),
 					)}
-					style={{ borderWidth: isUser ? 0 : StyleSheet.hairlineWidth }}
+					style={{ borderWidth: isUser ? 0 : (highContrast ? 0 : StyleSheet.hairlineWidth) }}
 					onLongPress={!isUser ? () => setCopyMenuVisible(true) : undefined}
 					delayLongPress={450}
 				>

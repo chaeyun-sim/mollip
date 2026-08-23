@@ -22,6 +22,7 @@ export function useTTS() {
 	const { voiceId, voiceSpeed } = useSettingsStore();
 
 	const audioCache = useRef<Map<string, string>>(new Map());
+	const preloadAbortRef = useRef<AbortController | null>(null);
 	const player = useAudioPlayer(null);
 	const status = useAudioPlayerStatus(player);
 
@@ -51,7 +52,7 @@ export function useTTS() {
 
 		try {
 			const cleaned = cleanTextForTTS(text);
-			const cacheKey = `${voiceId}::${voiceSpeed}::${cleaned}`;
+			const cacheKey = `${voiceId}\x00${voiceSpeed}\x00${cleaned}`;
 			let uri = audioCache.current.get(cacheKey);
 
 			if (!uri) {
@@ -70,16 +71,29 @@ export function useTTS() {
 	};
 
 	const preload = async (text: string) => {
+		// 이전 프리로드 취소 후 새 컨트롤러 등록
+		preloadAbortRef.current?.abort();
+		const ac = new AbortController();
+		preloadAbortRef.current = ac;
+
 		const cleaned = cleanTextForTTS(text);
-		const cacheKey = `${voiceId}::${voiceSpeed}::${cleaned}`;
+		const cacheKey = `${voiceId}\x00${voiceSpeed}\x00${cleaned}`;
 		try {
 			if (!audioCache.current.has(cacheKey)) {
 				const uri = await fetchTTSBlob(voiceId, cleaned, voiceSpeed);
-				audioCache.current.set(cacheKey, uri);
+				// 이탈 후 응답이 돌아온 경우 캐시하지 않음
+				if (!ac.signal.aborted) {
+					audioCache.current.set(cacheKey, uri);
+				}
 			}
 		} catch {
 			/* silent fail */
 		}
+	};
+
+	const cancelPreload = () => {
+		preloadAbortRef.current?.abort();
+		preloadAbortRef.current = null;
 	};
 
 	const pause = () => player.pause();
@@ -96,6 +110,7 @@ export function useTTS() {
 		voices,
 		speak,
 		preload,
+		cancelPreload,
 		pause,
 		resume,
 		stop,

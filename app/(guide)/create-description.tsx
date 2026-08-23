@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet';
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
-import { useNavigation, useRouter } from 'expo-router';
+import { Stack, useNavigation, useRouter } from 'expo-router';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
 	Pressable,
@@ -20,8 +20,11 @@ import * as Haptics from 'expo-haptics';
 import { store } from '../../src/store';
 import { useChatStore } from '../../src/store/chatStore';
 import { useImmersiveStore } from '../../src/store/immersiveStore';
+import { useSettingsStore } from '@/src/store/settingsStore';
 import { ScreenHeader } from '@/src/components/layout/ScreenHeader';
 import { searchWikiArtworks, type WikiArtwork } from '../../src/api/wikidata';
+import { PillSelector } from '@/src/components/mypage';
+import { FONT_SIZE_OPTIONS, SPEED_OPTIONS } from '@/src/data/mypage';
 
 const STORAGE_KEY = 'example_modal_hidden';
 
@@ -41,10 +44,11 @@ export default function IndexScreen() {
 	const navigation = useNavigation();
 	const clearChat = useChatStore((s) => s.clear);
 	const bottomSheetRef = useRef<BottomSheetModal>(null);
+	const settingsSheetRef = useRef<BottomSheetModal>(null);
 	const pendingCameraRef = useRef<boolean>(false);
 	const isImmersive = useImmersiveStore((s) => s.isImmersiveMode);
 	const exitImmersive = useImmersiveStore((s) => s.exit);
-
+	const { voiceSpeed, setVoiceSpeed, fontSize, setFontSize } = useSettingsStore();
 	const [isLoading, setIsLoading] = useState(false);
 
 	// 셀프 가이드 진입점(작품 선택 화면) — 헤더 버튼뿐 아니라 스와이프 제스처/하드웨어 back
@@ -191,22 +195,83 @@ export default function IndexScreen() {
 
 	return (
 		<Screen>
+			<Stack.Screen options={{ gestureEnabled: !isImmersive }} />
 			<Screen.Header>
 				{isImmersive ? (
-					<Pressable
-						onPress={() => router.back()}
-						hitSlop={8}
-						accessibilityLabel='가이드 종료'
-						accessibilityRole='button'
-						style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
-					>
-						<Ionicons name='close' size={24} color='rgba(255,255,255,0.9)' />
-					</Pressable>
+					<>
+						<ScreenHeader.Left>
+							<Pressable
+								onPress={() => router.back()}
+								hitSlop={8}
+								accessibilityLabel='가이드 종료'
+								accessibilityRole='button'
+								style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
+							>
+								<Ionicons name='close' size={24} color='rgba(255,255,255,0.9)' />
+							</Pressable>
+						</ScreenHeader.Left>
+						<ScreenHeader.Right>
+							<View className='flex-row items-center gap-4'>
+								<Pressable
+									onPress={() => router.push('/manual')}
+									hitSlop={8}
+									accessibilityLabel='작품 없이 바로 질문하기'
+									accessibilityRole='button'
+									style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
+								>
+									<Ionicons name='chatbubble-outline' size={22} color='rgba(255,255,255,0.9)' />
+								</Pressable>
+								<Pressable
+									onPress={() => settingsSheetRef.current?.present()}
+									hitSlop={8}
+									accessibilityLabel='해설 생성 설정'
+									accessibilityRole='button'
+									style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
+								>
+									<Ionicons name='settings-outline' size={22} color='rgba(255,255,255,0.9)' />
+								</Pressable>
+							</View>
+						</ScreenHeader.Right>
+					</>
 				) : (
-					<ScreenHeader.Back
-						onPress={() => router.back()}
-						color='rgba(255,255,255,0.9)'
-					/>
+					<>
+						<ScreenHeader.Left>
+							<ScreenHeader.Back
+								onPress={() => router.back()}
+								color='rgba(255,255,255,0.9)'
+							/>
+						</ScreenHeader.Left>
+						<ScreenHeader.Right>
+							<View className='flex-row items-center gap-4'>
+								<Pressable
+									onPress={() => router.push('/manual')}
+									hitSlop={8}
+									accessibilityLabel='작품 없이 바로 질문하기'
+									accessibilityRole='button'
+									style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
+								>
+									<Ionicons name='chatbubble-outline' size={20} color='rgba(255,255,255,0.7)' />
+								</Pressable>
+								<Pressable
+									className='flex-row items-center gap-1.5'
+									onPress={() => router.push('/(guide)/immersive-start')}
+									hitSlop={8}
+									accessibilityLabel='몰입 모드로 시작'
+									accessibilityRole='button'
+									style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
+								>
+									<Ionicons
+										name='headset-outline'
+										size={18}
+										color='rgba(255,255,255,0.7)'
+									/>
+									<Text className='text-sm font-pretendard-regular text-white/70'>
+										몰입 모드
+									</Text>
+								</Pressable>
+							</View>
+						</ScreenHeader.Right>
+					</>
 				)}
 			</Screen.Header>
 
@@ -233,7 +298,7 @@ export default function IndexScreen() {
 					>
 						<Ionicons name='search' size={18} color='#57534E' />
 						<TextInput
-							className='flex-1 text-white font-pretendard-regular text-[14px] pb-0 leading-0'
+							className='flex-1 text-white font-pretendard-regular text-[16px] pb-0 leading-0'
 							placeholder='작품명으로 검색 (예: 별이 빛나는 밤)'
 							placeholderTextColor='#57534E'
 							value={searchQuery}
@@ -241,6 +306,7 @@ export default function IndexScreen() {
 							returnKeyType='search'
 							clearButtonMode='while-editing'
 							keyboardAppearance='dark'
+							style={{ lineHeight: 0 }}
 						/>
 						{isSearching && <ActivityIndicator size='small' color='#57534E' />}
 					</View>
@@ -446,6 +512,39 @@ export default function IndexScreen() {
 							다시 보지 않기
 						</Text>
 					</Pressable>
+				</BottomSheetView>
+			</BottomSheetModal>
+
+			{/* 해설 생성 설정 바텀시트 */}
+			<BottomSheetModal
+				ref={settingsSheetRef}
+				snapPoints={['40%']}
+				enablePanDownToClose
+				backgroundStyle={{ backgroundColor: '#1C1917' }}
+				handleIndicatorStyle={{ backgroundColor: '#57534E' }}
+			>
+				<BottomSheetView className='px-6 pb-10'>
+					<Text className='text-lg text-white mt-2 mb-6 font-pretendard-bold'>
+						해설 생성 설정
+					</Text>
+					<View className='gap-5'>
+						<View className='flex-row items-center justify-between'>
+							<Text className='text-sm font-pretendard-medium text-[#E8E8E8]'>재생 속도</Text>
+							<PillSelector
+								options={SPEED_OPTIONS}
+								value={voiceSpeed}
+								onChange={setVoiceSpeed}
+							/>
+						</View>
+						<View className='flex-row items-center justify-between'>
+							<Text className='text-sm font-pretendard-medium text-[#E8E8E8]'>텍스트 크기</Text>
+							<PillSelector
+								options={FONT_SIZE_OPTIONS}
+								value={fontSize}
+								onChange={setFontSize}
+							/>
+						</View>
+					</View>
 				</BottomSheetView>
 			</BottomSheetModal>
 		</Screen>
