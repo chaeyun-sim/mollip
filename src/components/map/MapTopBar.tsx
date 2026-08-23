@@ -7,6 +7,7 @@ import { cn } from '@/src/lib/cn';
 import type { VenueGroup } from '@/src/data/venues';
 import type { DirectionsStatus, RouteEndpoint } from '@/src/hooks/useDirections';
 import type { RecentLocation } from '@/src/hooks/useRecentLocations';
+import { colors } from '@/src/constants/colors';
 
 interface MapTopBarProps {
 	insetsTop: number;
@@ -98,17 +99,17 @@ export function MapTopBar({
 										accessibilityRole='button'
 										accessibilityLabel={`${venue.venueName} 선택`}
 									>
-										<Ionicons name='location-outline' size={15} color='#78716C' />
+										<Ionicons name='location-outline' size={15} color={colors.tertiary} />
 										<View className='ml-2.5 flex-1'>
 											<Text
-												className='font-pretendard-medium text-[14px] text-[#1C1917]'
+												className='font-pretendard-medium text-[14px] text-primary'
 												numberOfLines={1}
 											>
 												{venue.venueName}
 											</Text>
 											{venue.venueAddress && (
 												<Text
-													className='font-pretendard-regular text-[12px] text-[#78716C] mt-0.5'
+													className='font-pretendard-regular text-[12px] text-tertiary mt-0.5'
 													numberOfLines={1}
 												>
 													{venue.venueAddress}
@@ -151,7 +152,7 @@ export function MapTopBar({
 						accessibilityLabel='길찾기 닫기'
 						accessibilityRole='button'
 					>
-						<Ionicons name='close' size={22} color='#1C1917' />
+						<Ionicons name='close' size={22} color={colors.primary} />
 					</Pressable>
 				)}
 			</View>

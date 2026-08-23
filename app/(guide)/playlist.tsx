@@ -14,6 +14,7 @@ import { ExhibitionPoster } from '@/src/components/common/EmptyImagePlaceholder'
 import { store } from '../../src/store';
 import { useChatStore } from '../../src/store/chatStore';
 import { useImmersiveStore } from '../../src/store/immersiveStore';
+import { colors } from '@/src/constants/colors';
 
 export default function PlaylistScreen() {
 	const router = useRouter();
@@ -52,12 +53,12 @@ export default function PlaylistScreen() {
 
 			{playlist.length === 0 ? (
 				<View className='flex-1 items-center justify-center gap-3'>
-					<Ionicons name='musical-notes-outline' size={40} color='#57534E' />
-					<Text className='font-pretendard-regular text-[#57534E] text-[15px]'>
+					<Ionicons name='musical-notes-outline' size={40} color={colors.secondary} />
+					<Text className='font-pretendard-regular text-secondary text-[15px]'>
 						아직 들은 작품이 없어요
 					</Text>
 					<Pressable
-						className='mt-2 flex-row items-center gap-2 px-5 py-3 rounded-xl bg-[#1C1917]'
+						className='mt-2 flex-row items-center gap-2 px-5 py-3 rounded-xl bg-primary'
 						onPress={() => router.push('/(guide)/create-description')}
 						style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
 					>
@@ -72,7 +73,7 @@ export default function PlaylistScreen() {
 					className='flex-1'
 					contentContainerStyle={{ paddingBottom: 32 }}
 				>
-					<Text className='mb-4 mt-1 font-pretendard-regular text-[#57534E] text-[13px]'>
+					<Text className='mb-4 mt-1 font-pretendard-regular text-secondary text-[13px]'>
 						{playlist.length}개의 작품
 					</Text>
 
@@ -100,7 +101,7 @@ export default function PlaylistScreen() {
 									{item.title}
 								</Text>
 								<Text
-									className='font-pretendard-regular text-[#78716C] text-[13px]'
+									className='font-pretendard-regular text-tertiary text-[13px]'
 									numberOfLines={2}
 								>
 									{item.description}
@@ -114,7 +115,7 @@ export default function PlaylistScreen() {
 											: 'play-circle-outline'
 									}
 									size={26}
-									color={item.description === FAILED_DESCRIPTION ? '#78716C' : '#3B82F6'}
+									color={item.description === FAILED_DESCRIPTION ? colors.tertiary : colors.accent}
 								/>
 							</Pressable>
 						</View>

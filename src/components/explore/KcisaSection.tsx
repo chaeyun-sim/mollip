@@ -3,6 +3,7 @@ import { ActivityIndicator, Pressable, ScrollView, Text, View } from 'react-nati
 import { KcisaExhibitionCard } from '@/src/components/explore/KcisaExhibitionCard';
 import { ExploreSectionTitle } from '@/src/components/explore/ExploreHomeSections';
 import type { ExhibitionSummary, FeaturedExhibition } from '@/src/hooks/useExploreScreenData';
+import { colors } from '@/src/constants/colors';
 
 export interface KcisaSectionProps {
 	kcisaStatus: 'idle' | 'loading' | 'error' | 'success';
@@ -35,11 +36,11 @@ export function KcisaSection({
 
 			{kcisaStatus === 'loading' && kcisaItems.length === 0 ? (
 				<View className='items-center justify-center py-8'>
-					<ActivityIndicator color='#A8A29E' />
+					<ActivityIndicator color={colors.muted} />
 				</View>
 			) : kcisaStatus === 'error' ? (
 				<View className='items-center justify-center py-8 gap-2'>
-					<Text className='text-[#A8A29E] text-[13px] font-pretendard-regular'>
+					<Text className='text-muted text-[13px] font-pretendard-regular'>
 						전시 정보를 불러오지 못했어요
 					</Text>
 					<Pressable
@@ -48,13 +49,13 @@ export function KcisaSection({
 						accessibilityRole='button'
 						hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
 					>
-						<Text className='text-[#1C1917] text-[13px] font-pretendard-semibold'>
+						<Text className='text-primary text-[13px] font-pretendard-semibold'>
 							다시 시도
 						</Text>
 					</Pressable>
 				</View>
 			) : carousel.length === 0 ? (
-				<Text className='text-[#A8A29E] text-[13px] font-pretendard-regular'>
+				<Text className='text-muted text-[13px] font-pretendard-regular'>
 					진행 중인 전시가 없어요
 				</Text>
 			) : (

@@ -1,5 +1,6 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import { Image, Text, View } from 'react-native';
+import { colors } from '@/src/constants/colors';
 
 const SCULPTURE = require('@/assets/images/skulpture/default.png');
 
@@ -7,7 +8,7 @@ export function ExploreHomeHero() {
 	return (
 		<View>
 			<LinearGradient
-				colors={['#E8E0F4', '#F5F0EB', '#F8F6F2']}
+				colors={['#E8E0F4', '#F5F0EB', colors.bgLight]}
 				start={{ x: 0, y: 0 }}
 				end={{ x: 1, y: 1 }}
 				style={{
@@ -23,16 +24,16 @@ export function ExploreHomeHero() {
 					className='absolute -top-10 -right-10 w-40 h-40 rounded-[80px] bg-[#ffffff45]'
 				/>
 
-				<Text className='text-[11px] text-[#78716C] mb-3 font-pretendard-semibold leading-[2.4px]'>
+				<Text className='text-[11px] text-tertiary mb-3 font-pretendard-semibold leading-[2.4px]'>
 					ABSORBED IN ART
 				</Text>
 
 				<View className='flex-row items-end justify-between'>
 					<View className='flex-1 pr-3'>
-						<Text className='text-[#1C1917] text-[34px] leading-[40px] font-hahmlet-bold'>
+						<Text className='text-primary text-[34px] leading-[40px] font-hahmlet-bold'>
 							{'어떤 이야기를\n담고 있을까요?'}
 						</Text>
-						<Text className='text-[14px] text-[#57534E] mt-3 leading-[21px] font-pretendard-regular'>
+						<Text className='text-[14px] text-secondary mt-3 leading-[21px] font-pretendard-regular'>
 							전시를 발견하고, 몰입하고, 기록까지.
 						</Text>
 					</View>

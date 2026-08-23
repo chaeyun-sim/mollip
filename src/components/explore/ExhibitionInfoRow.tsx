@@ -28,7 +28,7 @@ export function ExhibitionInfoRow({
 				{label}
 			</Text>
 			<View className='flex-1 items-end'>
-				<Text className='text-[#1C1917] text-[14px] font-pretendard-regular text-right leading-5'>
+				<Text className='text-primary text-[14px] font-pretendard-regular text-right leading-5'>
 					{children}
 				</Text>
 			</View>

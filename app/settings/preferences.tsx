@@ -19,6 +19,7 @@ import {
 } from '@/src/components/onboarding/OnboardingSwipeCard';
 import { useAuthStore } from '@/src/store/authStore';
 import { supabase } from '@/src/utils/supabase';
+import { colors } from '@/src/constants/colors';
 
 const ART_ITEMS: OnboardingArtItem[] = [
 	{
@@ -237,18 +238,18 @@ export default function PreferencesScreen() {
 	}, [router, userId, liked, saving]);
 
 	return (
-		<Screen className='flex-1 bg-[#F8F6F2]'>
+		<Screen className='flex-1 bg-bg-light'>
 			<StatusBar style='dark' />
 			<LinearGradient
-				colors={['#FFF3E6', '#F7DFCE', '#E4CCE8', '#F8F6F2']}
+				colors={['#FFF3E6', '#F7DFCE', '#E4CCE8', colors.bgLight]}
 				locations={[0, 0.32, 0.68, 1]}
 				style={StyleSheet.absoluteFill}
 			/>
 
 			<Screen.Header>
-				<Screen.Header.Back color='#1C1917' onPress={() => router.back()} />
+				<Screen.Header.Back color={colors.primary} onPress={() => router.back()} />
 				<Screen.Header.Center>
-					<Text className='font-pretendard-semibold text-[16px] text-[#1C1917]'>
+					<Text className='font-pretendard-semibold text-[16px] text-primary'>
 						내 취향 수정
 					</Text>
 				</Screen.Header.Center>
@@ -256,13 +257,13 @@ export default function PreferencesScreen() {
 
 			{isLoading ? (
 				<View className='flex-1 items-center justify-center'>
-					<ActivityIndicator color='#1C1917' />
+					<ActivityIndicator color={colors.primary} />
 				</View>
 			) : done ? (
 				<>
 					<View className='flex-1 items-center justify-center gap-4'>
 						<Text className='text-5xl'>🎨</Text>
-						<Text className='text-[#1C1917] text-xl font-pretendard-bold'>완료!</Text>
+						<Text className='text-primary text-xl font-pretendard-bold'>완료!</Text>
 						<Text className='text-[#6B6360] text-[13px] font-pretendard-regular text-center leading-5'>
 							{liked.length > 0
 								? `${liked.length}개의 취향을 저장했어요\n맞춤 전시를 추천해드릴게요`
@@ -271,7 +272,7 @@ export default function PreferencesScreen() {
 					</View>
 					<Screen.Bottom className='pb-12'>
 						<Pressable
-							className='w-full bg-[#1C1917] flex-row items-center justify-center rounded-[18px] py-[18px] gap-2.5 border-[0.5px] border-white/25'
+							className='w-full bg-primary flex-row items-center justify-center rounded-[18px] py-[18px] gap-2.5 border-[0.5px] border-white/25'
 							style={({ pressed }) => ({ opacity: pressed || saving ? 0.6 : 1 })}
 							onPress={handleSave}
 							accessibilityRole='button'
@@ -296,7 +297,7 @@ export default function PreferencesScreen() {
 							<View
 								key={i}
 								className={`h-1 flex-1 rounded-full ${
-									i < totalSwiped ? 'bg-[#1C1917]' : 'bg-[#E7E5E4]'
+									i < totalSwiped ? 'bg-primary' : 'bg-divider'
 								}`}
 							/>
 						))}
@@ -339,14 +340,14 @@ export default function PreferencesScreen() {
 							<View
 								className='w-16 h-16 rounded-full bg-white items-center justify-center'
 								style={{
-									shadowColor: '#f43f5e',
+									shadowColor: colors.errorAlt,
 									shadowOffset: { width: 0, height: 4 },
 									shadowOpacity: 0.2,
 									shadowRadius: 12,
 									elevation: 6,
 								}}
 							>
-								<Ionicons name='close' size={28} color='#f43f5e' />
+								<Ionicons name='close' size={28} color={colors.errorAlt} />
 							</View>
 							<Text className='text-[#6B6360] text-xs font-pretendard-regular'>
 								패스
@@ -362,14 +363,14 @@ export default function PreferencesScreen() {
 							<View
 								className='w-16 h-16 rounded-full bg-white items-center justify-center'
 								style={{
-									shadowColor: '#00bc7d',
+									shadowColor: colors.success,
 									shadowOffset: { width: 0, height: 4 },
 									shadowOpacity: 0.08,
 									shadowRadius: 12,
 									elevation: 4,
 								}}
 							>
-								<Ionicons name='heart' size={30} color='#00bc7d' />
+								<Ionicons name='heart' size={30} color={colors.success} />
 							</View>
 							<Text className='text-[#6B6360] text-xs font-pretendard-regular'>
 								선택!

@@ -16,6 +16,7 @@ import {
 	type RecommendableItem,
 } from '@/src/components/explore/ExploreHomeSections';
 import { useAllExhibitions } from '@/src/hooks/useAllExhibitions';
+import { colors } from '@/src/constants/colors';
 
 const HORIZONTAL_PADDING = 16;
 const GRID_GAP = 12;
@@ -67,9 +68,9 @@ export default function ExhibitionsScreen() {
 		return (
 			<View className='items-center justify-center' style={{ height: 56 }}>
 				{isLoadingMore ? (
-					<ActivityIndicator color='#A8A29E' />
+					<ActivityIndicator color={colors.muted} />
 				) : !hasMore ? (
-					<Text className='text-[#A8A29E] text-[12px] font-pretendard-regular'>
+					<Text className='text-muted text-[12px] font-pretendard-regular'>
 						모든 전시를 불러왔어요
 					</Text>
 				) : null}
@@ -81,7 +82,7 @@ export default function ExhibitionsScreen() {
 		if (status === 'loading') {
 			return (
 				<View className='flex-1 items-center justify-center py-24'>
-					<ActivityIndicator color='#A8A29E' />
+					<ActivityIndicator color={colors.muted} />
 				</View>
 			);
 		}
@@ -89,7 +90,7 @@ export default function ExhibitionsScreen() {
 		if (status === 'error') {
 			return (
 				<View className='flex-1 items-center justify-center py-24 gap-2'>
-					<Text className='text-[#A8A29E] text-[13px] font-pretendard-regular'>
+					<Text className='text-muted text-[13px] font-pretendard-regular'>
 						전시 정보를 불러오지 못했어요
 					</Text>
 					<Pressable
@@ -98,7 +99,7 @@ export default function ExhibitionsScreen() {
 						accessibilityRole='button'
 						hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
 					>
-						<Text className='text-[#1C1917] text-[13px] font-pretendard-semibold'>
+						<Text className='text-primary text-[13px] font-pretendard-semibold'>
 							다시 시도
 						</Text>
 					</Pressable>
@@ -113,7 +114,7 @@ export default function ExhibitionsScreen() {
 		<View className='flex-1 bg-[#F4F4F1]' style={{ paddingTop: insets.top }}>
 			{/* 헤더 */}
 			<View className='px-4 pt-4 pb-3'>
-				<Text className='text-[#1C1917] text-[22px] font-hahmlet-bold'>전시</Text>
+				<Text className='text-primary text-[22px] font-hahmlet-bold'>전시</Text>
 			</View>
 
 			<FlatList

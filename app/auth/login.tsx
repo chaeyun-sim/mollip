@@ -11,6 +11,7 @@ import { SERVICE_NAME } from '@/src/constants/service-name';
 import { signInWithApple, signInWithKakao } from '@/src/utils/authOAuth';
 import { supabase } from '@/src/utils/supabase';
 import { useAuthStore } from '@/src/store/authStore';
+import { colors } from '@/src/constants/colors';
 
 function safeReturnTo(raw: string | string[] | undefined): string {
 	const value = Array.isArray(raw) ? raw[0] : raw;
@@ -72,10 +73,10 @@ export default function LoginScreen() {
 	const busyAny = !!busy;
 
 	return (
-		<View className='flex-1 bg-[#F8F6F2]'>
+		<View className='flex-1 bg-bg-light'>
 			<StatusBar style='dark' />
 			<LinearGradient
-				colors={['#FFF3E6', '#F7DFCE', '#E4CCE8', '#F8F6F2']}
+				colors={['#FFF3E6', '#F7DFCE', '#E4CCE8', colors.bgLight]}
 				locations={[0, 0.32, 0.68, 1]}
 				style={StyleSheet.absoluteFill}
 			/>
@@ -100,7 +101,7 @@ export default function LoginScreen() {
 				<View className='flex-1 justify-center mt-12 relative'>
 					<View className='items-center mt-4 mb-9 flex-1 justify-center'>
 						<Text
-							className='text-[56px] text-[#1C1917] mb-2.5 tracking-[-1px]'
+							className='text-[56px] text-primary mb-2.5 tracking-[-1px]'
 							style={{ fontFamily: 'CormorantGaramond_700Bold' }}
 						>
 							{SERVICE_NAME}
@@ -133,7 +134,7 @@ export default function LoginScreen() {
 								disabled={busyAny}
 								loading={busy === 'apple'}
 								onPress={() => run('apple')}
-								icon={<Ionicons name='logo-apple' size={22} color='#1C1917' />}
+								icon={<Ionicons name='logo-apple' size={22} color={colors.primary} />}
 							/>
 						) : null}
 
@@ -144,7 +145,7 @@ export default function LoginScreen() {
 						) : null}
 
 						<View className='mt-7 px-2 flex-col justify-center gap-1'>
-							<Text className='text-[11px] leading-[16px] text-[#A8A29E] text-center font-pretendard-regular'>
+							<Text className='text-[11px] leading-[16px] text-muted text-center font-pretendard-regular'>
 								회원가입 시 서비스의 필수 동의 항목인
 							</Text>
 							<View className='flex-row gap-1 justify-center'>
@@ -154,7 +155,7 @@ export default function LoginScreen() {
 											개인정보처리방침
 										</Text>
 									</Pressable>
-									<Text className='text-[11px] leading-[16px] text-[#A8A29E] text-center font-pretendard-regular'>
+									<Text className='text-[11px] leading-[16px] text-muted text-center font-pretendard-regular'>
 										과
 									</Text>
 								</View>
@@ -164,7 +165,7 @@ export default function LoginScreen() {
 											서비스 이용약관
 										</Text>
 									</Pressable>
-									<Text className='text-[11px] leading-[16px] text-[#A8A29E] text-center font-pretendard-regular'>
+									<Text className='text-[11px] leading-[16px] text-muted text-center font-pretendard-regular'>
 										에 동의한 것으로 간주됩니다.
 									</Text>
 								</View>

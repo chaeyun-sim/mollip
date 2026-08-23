@@ -10,6 +10,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNearbyPlaces, type NearbyPlace } from '@/src/hooks/useNearbyPlaces';
 import { supabase } from '@/src/utils/supabase';
 import { todayKey, useVisitStore } from '@/src/store/visitStore';
+import { colors } from '@/src/constants/colors';
 
 const TEXT_SHADOW = {
 	textShadowColor: 'rgba(0,0,0,0.6)',
@@ -19,7 +20,7 @@ const TEXT_SHADOW = {
 
 function PlaceCard({ place }: { place: NearbyPlace }) {
 	return (
-		<View className='rounded-2xl overflow-hidden mb-3 w-[48%] h-[130px] bg-[#E7E5E4]'>
+		<View className='rounded-2xl overflow-hidden mb-3 w-[48%] h-[130px] bg-divider'>
 			<LinearGradient
 				colors={['transparent', 'rgba(0,0,0,0.55)', 'rgba(0,0,0,0.92)']}
 				locations={[0, 0.5, 1]}
@@ -46,7 +47,7 @@ function PlaceCard({ place }: { place: NearbyPlace }) {
 }
 
 function SkeletonCard() {
-	return <View className='rounded-2xl mb-3 w-[48%] h-[130px] bg-[#E7E5E4]' />;
+	return <View className='rounded-2xl mb-3 w-[48%] h-[130px] bg-divider' />;
 }
 
 // 셀프 가이드를 종료할 때 보여주는 마무리 화면 — create-description의 종료 확인 후 진입.
@@ -118,7 +119,7 @@ export default function ExitSummaryScreen() {
 	function renderNearbySection(label: string, places: NearbyPlace[]) {
 		return (
 			<View className='mb-5'>
-				<Text className='text-[#78716C] font-pretendard-semibold text-[13px] mb-2.5'>
+				<Text className='text-tertiary font-pretendard-semibold text-[13px] mb-2.5'>
 					{label}
 				</Text>
 				<View className='flex-row flex-wrap justify-between'>
@@ -127,7 +128,7 @@ export default function ExitSummaryScreen() {
 					) : places.length > 0 ? (
 						places.map((place) => <PlaceCard key={place.id} place={place} />)
 					) : (
-						<Text className='text-[#A8A29E] font-pretendard-regular text-[13px]'>
+						<Text className='text-muted font-pretendard-regular text-[13px]'>
 							주변 장소를 찾지 못했어요
 						</Text>
 					)}
@@ -137,7 +138,7 @@ export default function ExitSummaryScreen() {
 	}
 
 	return (
-		<SafeAreaView edges={['top', 'bottom']} className='flex-1 bg-[#F8F6F2] px-6'>
+		<SafeAreaView edges={['top', 'bottom']} className='flex-1 bg-bg-light px-6'>
 			<StatusBar style='dark' />
 			<ScrollView
 				className='flex-1'
@@ -145,18 +146,18 @@ export default function ExitSummaryScreen() {
 				showsVerticalScrollIndicator={false}
 			>
 				<View className='items-center mb-10'>
-					<View className='w-16 h-16 rounded-full items-center justify-center mb-5 bg-[#F2EFE9]'>
-						<Ionicons name='checkmark' size={28} color='#3B82F6' />
+					<View className='w-16 h-16 rounded-full items-center justify-center mb-5 bg-bg-tonal'>
+						<Ionicons name='checkmark' size={28} color={colors.accent} />
 					</View>
-					<Text className='text-[#1C1917] font-pretendard-bold text-[22px] text-center mb-2'>
+					<Text className='text-primary font-pretendard-bold text-[22px] text-center mb-2'>
 						오디오 가이드가 종료되었습니다.
 					</Text>
-					<Text className='text-[#78716C] font-pretendard-regular text-[14px] text-center leading-6'>
+					<Text className='text-tertiary font-pretendard-regular text-[14px] text-center leading-6'>
 						오늘 전시, 즐거우셨나요?{'\n'}관람 기록은 아카이브에서 다시 볼 수 있어요
 					</Text>
 				</View>
 
-				<Text className='text-[#1C1917] font-pretendard-semibold text-[16px] mb-4'>
+				<Text className='text-primary font-pretendard-semibold text-[16px] mb-4'>
 					주변 즐길거리
 				</Text>
 
@@ -166,7 +167,7 @@ export default function ExitSummaryScreen() {
 
 			<View className='absolute left-0 right-0 bottom-0 px-6 pb-10'>
 				<Pressable
-					className='rounded-2xl items-center py-4 bg-[#3B82F6]'
+					className='rounded-2xl items-center py-4 bg-accent'
 					onPress={() => router.dismissTo('/(tabs)')}
 					accessibilityRole='button'
 					accessibilityLabel='다른 전시 보러가기'

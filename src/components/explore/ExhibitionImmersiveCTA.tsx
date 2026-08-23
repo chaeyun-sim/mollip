@@ -7,6 +7,7 @@ import Animated, {
 	useSharedValue,
 	withTiming,
 } from 'react-native-reanimated';
+import { colors } from '@/src/constants/colors';
 
 interface ExhibitionTicketCTAProps {
 	ticketUrl: string;
@@ -36,7 +37,7 @@ export function ExhibitionTicketCTA({ ticketUrl }: ExhibitionTicketCTAProps) {
 			accessibilityRole='button'
 		>
 			<Animated.View
-				style={[animatedStyle, { backgroundColor: '#1C1917' }]}
+				style={[animatedStyle, { backgroundColor: colors.primary }]}
 				className='mx-5 my-3 rounded-2xl py-[18px] flex-row items-center justify-center gap-2.5'
 			>
 				<Ionicons name='ticket-outline' size={20} color='white' />

@@ -34,7 +34,7 @@ export function ArchiveDiaryEmpty({
 			</Pressable>
 			<Pressable
 				onPress={onMap}
-				className='rounded-full py-3.5 items-center border border-[#E7E5E4] bg-white'
+				className='rounded-full py-3.5 items-center border border-divider bg-white'
 				accessibilityRole='button'
 				accessibilityLabel='지도에서 찾기'
 				style={({ pressed }) => ({ opacity: pressed ? 0.9 : 1 })}

@@ -12,7 +12,7 @@ interface ArchiveSummaryHeroProps {
 
 function StatPill({ label, value }: { label: string; value: number }) {
 	return (
-		<View className='flex-row items-baseline gap-1.5 rounded-full border border-[#E7E5E4] bg-white px-3.5 py-2'>
+		<View className='flex-row items-baseline gap-1.5 rounded-full border border-divider bg-white px-3.5 py-2'>
 			<Text
 				className='text-[13px] font-pretendard-medium'
 				style={{ color: ARCHIVE_MUTED }}

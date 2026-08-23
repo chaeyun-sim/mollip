@@ -22,6 +22,7 @@ import {
 	type ExhibitionSummary,
 } from '@/src/hooks/useExploreScreenData';
 import { cn } from '@/src/lib/cn';
+import { colors } from '@/src/constants/colors';
 
 export default function ExploreScreen() {
 	const router = useRouter();
@@ -53,7 +54,7 @@ export default function ExploreScreen() {
 		if (cultureStatus === 'loading' && displayedRecommended.length === 0) {
 			return (
 				<View className='items-center justify-center py-16'>
-					<ActivityIndicator color='#A8A29E' />
+					<ActivityIndicator color={colors.muted} />
 				</View>
 			);
 		}
@@ -61,7 +62,7 @@ export default function ExploreScreen() {
 		if (cultureStatus === 'error') {
 			return (
 				<View className='items-center justify-center py-16 gap-2'>
-					<Text className='text-[#A8A29E] text-[13px] font-pretendard-regular'>
+					<Text className='text-muted text-[13px] font-pretendard-regular'>
 						전시 정보를 불러오지 못했어요
 					</Text>
 					<Pressable
@@ -70,7 +71,7 @@ export default function ExploreScreen() {
 						accessibilityRole='button'
 						hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
 					>
-						<Text className='text-[#1C1917] text-[13px] font-pretendard-semibold'>
+						<Text className='text-primary text-[13px] font-pretendard-semibold'>
 							다시 시도
 						</Text>
 					</Pressable>
@@ -80,7 +81,7 @@ export default function ExploreScreen() {
 
 		if (displayedRecommended.length === 0) {
 			return (
-				<Text className='text-[#A8A29E] text-[13px] font-pretendard-regular'>
+				<Text className='text-muted text-[13px] font-pretendard-regular'>
 					추천할 전시가 없어요
 				</Text>
 			);
@@ -106,7 +107,7 @@ export default function ExploreScreen() {
 						accessibilityLabel='마이페이지'
 						style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
 					>
-						<Ionicons name='person-outline' size={24} color='#1C1917' />
+						<Ionicons name='person-outline' size={24} color={colors.primary} />
 					</Pressable>
 				</Screen.Header.Right>
 			</Screen.Header>
@@ -151,7 +152,7 @@ export default function ExploreScreen() {
 				className='absolute right-6 items-end gap-3'
 				style={{
 					bottom: Math.max(insets.bottom + 16, 24),
-					shadowColor: '#1C1917',
+					shadowColor: colors.primary,
 					shadowOpacity: 0.28,
 					shadowRadius: 14,
 					shadowOffset: { width: 0, height: 6 },
@@ -163,10 +164,10 @@ export default function ExploreScreen() {
 					onPress={() => router.push('/(guide)/immersive-start')}
 					accessibilityLabel='몰입 모드로 시작하기'
 					accessibilityRole='button'
-					className='h-[58px] w-[58px] items-center justify-center rounded-full bg-[#1C1917]'
+					className='h-[58px] w-[58px] items-center justify-center rounded-full bg-primary'
 					style={({ pressed }) => ({ opacity: pressed ? 0.88 : 1 })}
 				>
-					<Ionicons name='headset-outline' size={26} color='#F2EFE9' />
+					<Ionicons name='headset-outline' size={26} color={colors.bgTonal} />
 				</Pressable>
 
 				{/* 카메라 FAB */}
@@ -175,10 +176,10 @@ export default function ExploreScreen() {
 					accessibilityLabel='작품 해설 만들기'
 					accessibilityHint='카메라로 작품을 촬영하거나 직접 입력하여 AI 해설을 받을 수 있어요'
 					accessibilityRole='button'
-					className='h-[58px] w-[58px] items-center justify-center rounded-full bg-[#1C1917]'
+					className='h-[58px] w-[58px] items-center justify-center rounded-full bg-primary'
 					style={({ pressed }) => ({ opacity: pressed ? 0.88 : 1 })}
 				>
-					<Ionicons name='camera' size={26} color='#F2EFE9' />
+					<Ionicons name='camera' size={26} color={colors.bgTonal} />
 				</Pressable>
 			</View>
 		</Screen>

@@ -13,6 +13,7 @@ import { searchKakaoKeyword, type KakaoLocalItem } from '@/src/api/kakao';
 import type { RouteEndpoint } from '@/src/hooks/useDirections';
 import type { RecentLocation } from '@/src/hooks/useRecentLocations';
 import type { VenueGroup } from '@/src/data/venues';
+import { colors } from '@/src/constants/colors';
 
 type EditingField = 'origin' | 'destination' | null;
 
@@ -218,7 +219,7 @@ export function RoutePlanningBar({
 					>
 						<View className='w-2.5 h-2.5 rounded-full bg-[#22C55E]' />
 						<Text
-							className='flex-1 text-[14px] font-pretendard-medium text-[#1C1917]'
+							className='flex-1 text-[14px] font-pretendard-medium text-primary'
 							numberOfLines={1}
 						>
 							{origin?.name ?? '출발지를 선택하세요'}
@@ -233,9 +234,9 @@ export function RoutePlanningBar({
 						accessibilityRole='button'
 						accessibilityLabel='도착지 선택'
 					>
-						<View className='w-2.5 h-2.5 rounded-full bg-[#EF4444]' />
+						<View className='w-2.5 h-2.5 rounded-full bg-error' />
 						<Text
-							className='flex-1 text-[14px] font-pretendard-medium text-[#1C1917]'
+							className='flex-1 text-[14px] font-pretendard-medium text-primary'
 							numberOfLines={1}
 						>
 							{destination?.name ?? '도착지를 선택하세요'}
@@ -255,7 +256,7 @@ export function RoutePlanningBar({
 						accessibilityRole='button'
 						accessibilityLabel='출발지와 도착지 바꾸기'
 					>
-						<Ionicons name='swap-vertical' size={18} color='#1C1917' />
+						<Ionicons name='swap-vertical' size={18} color={colors.primary} />
 					</Pressable>
 					<Pressable
 						onPress={() => {
@@ -267,7 +268,7 @@ export function RoutePlanningBar({
 						accessibilityRole='button'
 						accessibilityLabel='길찾기 취소'
 					>
-						<Ionicons name='close' size={20} color='#1C1917' />
+						<Ionicons name='close' size={20} color={colors.primary} />
 					</Pressable>
 				</View>
 			</View>
@@ -314,8 +315,8 @@ export function RoutePlanningBar({
 							className='flex-row items-center gap-2 px-4 py-3 border-b border-black/[0.04]'
 							accessibilityRole='button'
 						>
-							<Ionicons name='locate' size={18} color='#1C1917' />
-							<Text className='text-[14px] font-pretendard-semibold text-[#1C1917]'>
+							<Ionicons name='locate' size={18} color={colors.primary} />
+							<Text className='text-[14px] font-pretendard-semibold text-primary'>
 								현재 위치
 							</Text>
 						</Pressable>
@@ -323,7 +324,7 @@ export function RoutePlanningBar({
 
 					{kakaoLoading && (
 						<View className='flex-row items-center gap-2 px-4 py-3'>
-							<ActivityIndicator size='small' color='#1C1917' />
+							<ActivityIndicator size='small' color={colors.primary} />
 							<Text className='text-[12px] text-black/45 font-pretendard-regular'>
 								검색 중…
 							</Text>
@@ -351,7 +352,7 @@ export function RoutePlanningBar({
 									)}
 									<View className='flex-1'>
 										<Text
-											className='text-[14px] font-pretendard-medium text-[#1C1917]'
+											className='text-[14px] font-pretendard-medium text-primary'
 											numberOfLines={1}
 										>
 											{item.label}
@@ -396,7 +397,7 @@ export function RoutePlanningBar({
 						}
 						onConfirm();
 					}}
-					className='h-12 rounded-2xl bg-[#1C1917] items-center justify-center mt-2'
+					className='h-12 rounded-2xl bg-primary items-center justify-center mt-2'
 					style={!canConfirm ? { opacity: 0.45 } : undefined}
 					accessibilityRole='button'
 					accessibilityLabel='경로 찾기'

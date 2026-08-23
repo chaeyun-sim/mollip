@@ -13,7 +13,7 @@ interface ArchiveLoginPromptProps {
 export function ArchiveLoginPrompt({ onLogin }: ArchiveLoginPromptProps) {
 	return (
 		<View className='flex-1 items-center justify-center px-8 py-16'>
-			<View className='rounded-full bg-[#F8F6F2] p-5 mb-5'>
+			<View className='rounded-full bg-bg-light p-5 mb-5'>
 				<Ionicons name='lock-closed-outline' size={28} color='#9B8AB8' />
 			</View>
 			<Text

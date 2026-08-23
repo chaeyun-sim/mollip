@@ -3,6 +3,7 @@ import * as Haptics from 'expo-haptics';
 import { Pressable, Text, View } from 'react-native';
 
 import { cn } from '@/src/lib/cn';
+import { colors } from '@/src/constants/colors';
 
 interface SettingsRowProps {
 	label: string;
@@ -31,7 +32,7 @@ export function SettingsRow({
 		>
 			<View className='flex-row items-center gap-3 flex-1'>
 				{icon ? (
-					<Ionicons name={icon} size={14} color={danger ? '#EF4444' : '#57534E'} />
+					<Ionicons name={icon} size={14} color={danger ? colors.error : colors.secondary} />
 				) : null}
 				<Text
 					className={cn(

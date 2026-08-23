@@ -2,6 +2,7 @@ import { Image, Pressable, Text, View } from 'react-native';
 
 import { EmptyImagePlaceholder } from '@/src/components/common/EmptyImagePlaceholder';
 import type { KcisaExhibitionItem } from '@/src/hooks/useKcisaExhibitions';
+import { colors } from '@/src/constants/colors';
 
 const CARD_WIDTH = 148;
 const CARD_HEIGHT = Math.round((CARD_WIDTH * 4) / 3);
@@ -27,7 +28,7 @@ export function KcisaExhibitionCard({
 				style={{
 					width: CARD_WIDTH,
 					height: CARD_HEIGHT,
-					shadowColor: '#1C1917',
+					shadowColor: colors.primary,
 					shadowOpacity: 0.1,
 					shadowRadius: 10,
 					shadowOffset: { width: 0, height: 4 },
@@ -50,14 +51,14 @@ export function KcisaExhibitionCard({
 			<Text
 				numberOfLines={2}
 				style={{ width: CARD_WIDTH }}
-				className='mt-2.5 text-[#1C1917] text-[13px] leading-[18px] font-pretendard-semibold'
+				className='mt-2.5 text-primary text-[13px] leading-[18px] font-pretendard-semibold'
 			>
 				{item.title}
 			</Text>
 			<Text
 				numberOfLines={1}
 				style={{ width: CARD_WIDTH }}
-				className='text-[#A8A29E] text-[11px] mt-0.5 font-pretendard-regular'
+				className='text-muted text-[11px] mt-0.5 font-pretendard-regular'
 			>
 				{item.venue}
 			</Text>

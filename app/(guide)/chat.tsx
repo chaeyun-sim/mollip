@@ -21,6 +21,7 @@ import { useChatStore } from '../../src/store/chatStore';
 import { useSettingsStore } from '@/src/store/settingsStore';
 import { streamChat } from '../../src/utils/api';
 import { cn } from '@/src/lib/cn';
+import { colors } from '@/src/constants/colors';
 
 const MAX_EXCHANGES = 6;
 
@@ -134,14 +135,14 @@ export default function ChatScreen() {
 				<ScreenHeader.Left>
 					<ScreenHeader.Back
 						onPress={() => router.back()}
-						color={highContrast ? '#1C1917' : 'rgba(255,255,255,0.9)'}
+						color={highContrast ? colors.primary : 'rgba(255,255,255,0.9)'}
 					/>
 				</ScreenHeader.Left>
 				<ScreenHeader.Center>
 					<Text
 						className={cn(
 							'text-base font-pretendard-semibold',
-							highContrast ? 'text-[#1C1917]' : 'text-white',
+							highContrast ? 'text-primary' : 'text-white',
 						)}
 					>
 						작품에 대해 물어보기
@@ -158,7 +159,7 @@ export default function ChatScreen() {
 						<Ionicons
 							name='globe-outline'
 							size={22}
-							color={highContrast ? '#1C1917' : 'rgba(255,255,255,0.9)'}
+							color={highContrast ? colors.primary : 'rgba(255,255,255,0.9)'}
 						/>
 					</Pressable>
 				</ScreenHeader.Right>
@@ -181,24 +182,24 @@ export default function ChatScreen() {
 							<View
 								className={cn(
 									'w-16 h-16 rounded-full items-center justify-center',
-									highContrast ? 'bg-[#F0EFED]' : 'bg-[#1C1917]',
+									highContrast ? 'bg-[#F0EFED]' : 'bg-primary',
 								)}
 							>
 								<Ionicons
 									name='chatbubble-ellipses-outline'
 									size={28}
-									color='#57534E'
+									color={colors.secondary}
 								/>
 							</View>
 							<Text
 								className={cn(
 									'text-base text-center font-pretendard-bold',
-									highContrast ? 'text-[#1C1917]' : 'text-[#e8e8e8]',
+									highContrast ? 'text-primary' : 'text-[#e8e8e8]',
 								)}
 							>
 								작품이 궁금하신가요?
 							</Text>
-							<Text className='text-sm text-center text-[#78716C] leading-5'>
+							<Text className='text-sm text-center text-tertiary leading-5'>
 								{'작가, 시대적 배경, 기법 등\n무엇이든 물어보세요'}
 							</Text>
 						</View>
@@ -210,10 +211,10 @@ export default function ChatScreen() {
 					<View
 						className={cn(
 							'mb-10 py-4 border-t-[1px] items-center',
-							highContrast ? 'border-t-[#E7E5E4]' : 'border-t-[#1C1917]',
+							highContrast ? 'border-t-divider' : 'border-t-primary',
 						)}
 					>
-						<Text className='text-[#57534E] text-[13px] font-pretendard-regular'>
+						<Text className='text-secondary text-[13px] font-pretendard-regular'>
 							대화는 최대 {MAX_EXCHANGES}번까지 가능해요
 						</Text>
 					</View>
@@ -221,15 +222,15 @@ export default function ChatScreen() {
 					<View
 						className={cn(
 							'mb-10 flex-row items-end gap-2 py-3 border-t-[1px]',
-							highContrast ? 'border-t-[#E7E5E4]' : 'border-t-[#1C1917]',
+							highContrast ? 'border-t-divider' : 'border-t-primary',
 						)}
 					>
 						<TextInput
 							className={cn(
 								'flex-1 rounded-2xl px-4 pt-3 pb-3 text-[14px] font-pretendard-regular min-h-[48px] max-h-[120px]',
 								highContrast
-									? 'bg-[#F0EFED] text-[#1C1917]'
-									: 'bg-[#1C1917] text-[#e8e8e8]',
+									? 'bg-[#F0EFED] text-primary'
+									: 'bg-primary text-[#e8e8e8]',
 							)}
 							returnKeyType='send'
 							value={input}
@@ -241,7 +242,7 @@ export default function ChatScreen() {
 								}
 							}}
 							placeholder='질문을 입력하세요...'
-							placeholderTextColor='#57534E'
+							placeholderTextColor={colors.secondary}
 							keyboardAppearance={highContrast ? 'light' : 'dark'}
 							multiline
 						/>
@@ -249,10 +250,10 @@ export default function ChatScreen() {
 							className={cn(
 								'w-11 h-11 rounded-full items-center justify-center',
 								input.trim() && !isLoading
-									? 'bg-[#3B82F6]'
+									? 'bg-accent'
 									: highContrast
 										? 'bg-[#F0EFED]'
-										: 'bg-[#1C1917]',
+										: 'bg-primary',
 							)}
 							onPress={() => sendMessage()}
 							disabled={!input.trim() || isLoading}
@@ -263,7 +264,7 @@ export default function ChatScreen() {
 							<Ionicons
 								name='arrow-up'
 								size={20}
-								color={input.trim() && !isLoading ? '#fff' : '#57534E'}
+								color={input.trim() && !isLoading ? '#fff' : colors.secondary}
 							/>
 						</Pressable>
 					</View>

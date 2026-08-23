@@ -1,6 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Pressable, Text } from 'react-native';
 import { cn } from '@/src/lib/cn';
+import { colors } from '@/src/constants/colors';
 
 interface FilterChipProps {
 	label: string;
@@ -25,20 +26,20 @@ export function FilterChip({
 			accessibilityState={{ selected: active }}
 			className={cn(
 				'flex-row items-center gap-1 rounded-full px-3.5 py-2',
-				active ? 'bg-[#1C1917]' : 'bg-[#F2EFE9]',
+				active ? 'bg-primary' : 'bg-bg-tonal',
 			)}
 			style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
 		>
 			{active && !icon && <Ionicons name='checkmark' size={13} color='#FFFFFF' />}
 			{icon && (
-				<Ionicons name={icon} size={13} color={active ? '#FFFFFF' : '#57534E'} />
+				<Ionicons name={icon} size={13} color={active ? '#FFFFFF' : colors.secondary} />
 			)}
 			<Text
 				className={cn(
 					'text-[13px]',
 					active
 						? 'text-white font-pretendard-semibold'
-						: 'text-[#57534E] font-pretendard-medium',
+						: 'text-secondary font-pretendard-medium',
 				)}
 			>
 				{label}

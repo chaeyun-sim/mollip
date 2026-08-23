@@ -9,6 +9,7 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { Screen } from '@/src/components/layout/Screen';
 import { useAuthStore } from '@/src/store/authStore';
 import { supabase } from '@/src/utils/supabase';
+import { colors } from '@/src/constants/colors';
 
 export default function OnboardingLocationScreen() {
 	const router = useRouter();
@@ -38,10 +39,10 @@ export default function OnboardingLocationScreen() {
 	}, [saveAndNavigate]);
 
 	return (
-		<Screen className='flex-1 bg-[#F8F6F2]'>
+		<Screen className='flex-1 bg-bg-light'>
 			<StatusBar style='dark' />
 			<LinearGradient
-				colors={['#FFF3E6', '#F7DFCE', '#E4CCE8', '#F8F6F2']}
+				colors={['#FFF3E6', '#F7DFCE', '#E4CCE8', colors.bgLight]}
 				locations={[0, 0.32, 0.68, 1]}
 				style={StyleSheet.absoluteFill}
 			/>
@@ -49,9 +50,9 @@ export default function OnboardingLocationScreen() {
 			<View className='flex-1 items-center justify-center px-2 gap-8'>
 				{/* 아이콘 */}
 				<View
-					className='w-20 h-20 rounded-full bg-[#1C1917] items-center justify-center'
+					className='w-20 h-20 rounded-full bg-primary items-center justify-center'
 					style={{
-						shadowColor: '#1C1917',
+						shadowColor: colors.primary,
 						shadowOpacity: 0.18,
 						shadowRadius: 20,
 						shadowOffset: { width: 0, height: 6 },
@@ -63,7 +64,7 @@ export default function OnboardingLocationScreen() {
 
 				{/* 설명 */}
 				<View className='gap-2 items-center'>
-					<Text className='text-[#1C1917] text-[24px] font-hahmlet-bold text-center leading-[30px]'>
+					<Text className='text-primary text-[24px] font-hahmlet-bold text-center leading-[30px]'>
 						주변 전시를{'\n'}바로 찾을 수 있어요
 					</Text>
 					<Text className='text-[#6B6360] text-[13px] font-pretendard-regular text-center leading-[20px] mt-1'>
@@ -83,7 +84,7 @@ export default function OnboardingLocationScreen() {
 					}}
 				>
 					<View className='px-5 py-8 items-center gap-0.5'>
-						<Text className='text-[#1C1917] text-[15px] font-pretendard-semibold'>
+						<Text className='text-primary text-[15px] font-pretendard-semibold'>
 							위치 접근 허용
 						</Text>
 						<Text className='text-[#6B6360] text-[12px] font-pretendard-regular mt-1'>
@@ -92,17 +93,17 @@ export default function OnboardingLocationScreen() {
 					</View>
 					<View className='h-px bg-black/[0.07]' />
 					<View className='py-3.5 items-center border-b border-black/[0.07]'>
-						<Text className='text-[#1C1917] text-[15px] font-pretendard-semibold'>
+						<Text className='text-primary text-[15px] font-pretendard-semibold'>
 							앱을 사용하는 동안 허용
 						</Text>
 					</View>
 					<View className='py-3.5 items-center border-b border-black/[0.07]'>
-						<Text className='text-[#1C1917] text-[15px] font-pretendard-regular'>
+						<Text className='text-primary text-[15px] font-pretendard-regular'>
 							한 번 허용
 						</Text>
 					</View>
 					<View className='py-3.5 items-center'>
-						<Text className='text-[#1C1917]/40 text-[15px] font-pretendard-regular'>
+						<Text className='text-primary/40 text-[15px] font-pretendard-regular'>
 							허용 안 함
 						</Text>
 					</View>
@@ -111,7 +112,7 @@ export default function OnboardingLocationScreen() {
 
 			<Screen.Bottom className='pb-10 gap-3'>
 				<Pressable
-					className='w-full bg-[#1C1917] items-center justify-center rounded-[18px] py-[18px] border-[0.5px] border-white/25'
+					className='w-full bg-primary items-center justify-center rounded-[18px] py-[18px] border-[0.5px] border-white/25'
 					style={({ pressed }) => ({ opacity: pressed ? 0.85 : 1 })}
 					onPress={handleAllow}
 					accessibilityRole='button'

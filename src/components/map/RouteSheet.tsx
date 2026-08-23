@@ -28,6 +28,7 @@ import { cn } from '@/src/lib/cn';
 import type { DirectionsMode } from '@/src/hooks/useDirections';
 import { legColor } from '@/src/utils/routeColors';
 import { EXTERNAL_MAP_APPS, openExternalMap } from '@/src/utils/externalMaps';
+import { colors } from '@/src/constants/colors';
 
 interface RouteSheetProps {
 	mode: DirectionsMode;
@@ -61,7 +62,7 @@ const LEG_ICON: Record<RouteLeg['mode'], keyof typeof Ionicons.glyphMap> = {
 	subway: 'train',
 };
 
-const INK = '#1C1917';
+const INK = colors.primary;
 
 // 구간 바 너비 계산 기준 — 구간 비중(flex)에 이 값을 곱해 픽셀 너비를 만든다.
 // 구간이 많아 합산 너비가 카드 폭을 넘으면 가로 스크롤로 넘어간다.
@@ -305,7 +306,7 @@ function ModeToggle({ mode, onChangeMode }: ModeToggleProps) {
 			{pillWidth > 0 && (
 				<Animated.View
 					pointerEvents='none'
-					className='absolute rounded-xl bg-[#1C1917]'
+					className='absolute rounded-xl bg-primary'
 					style={[
 						{
 							top: TOGGLE_PADDING,
@@ -378,7 +379,7 @@ function SortChips({ criterion, onChangeCriterion }: SortChipsProps) {
 						className={cn(
 							'px-3 h-8 rounded-full items-center justify-center border',
 							active
-								? 'bg-[#1C1917] border-transparent'
+								? 'bg-primary border-transparent'
 								: 'bg-transparent border-black/10',
 						)}
 						hitSlop={4}
@@ -466,7 +467,7 @@ function ExternalMapSheet({ target, onClose }: ExternalMapSheetProps) {
 							<View className='w-9 h-9 rounded-full items-center justify-center bg-black/[0.045]'>
 								<Ionicons name='map-outline' size={17} color={INK} />
 							</View>
-							<Text className='text-[15px] font-pretendard-medium text-[#1C1917]'>
+							<Text className='text-[15px] font-pretendard-medium text-primary'>
 								{app.label}
 							</Text>
 						</Pressable>
@@ -492,7 +493,7 @@ function RouteSummaryHeader({
 	return (
 		<>
 			<View className='flex-row items-baseline gap-2'>
-				<Text className='text-[#1C1917] text-[30px] leading-[34px] font-pretendard-bold tracking-[-0.8px]'>
+				<Text className='text-primary text-[30px] leading-[34px] font-pretendard-bold tracking-[-0.8px]'>
 					{summary.totalTime}
 				</Text>
 				<View className='flex flex-row items-center gap-2'>
@@ -630,13 +631,13 @@ function RouteTimeline({
 							const content = (
 								<>
 									{mode === 'bus' && item.type === 'endpoint' && (
-										<Text className='text-[#1C1917] text-[14px] font-pretendard-bold pt-0.5'>
+										<Text className='text-primary text-[14px] font-pretendard-bold pt-0.5'>
 											{item.label}
 										</Text>
 									)}
 									{item.type === 'walk' && (
 										<View className='gap-1'>
-											<Text className='text-[#1C1917] text-[14px] font-pretendard-medium'>
+											<Text className='text-primary text-[14px] font-pretendard-medium'>
 												{item.routeLabel}
 											</Text>
 											<Text className='text-black/45 text-[12px] font-pretendard-regular'>
@@ -657,7 +658,7 @@ function RouteTimeline({
 														</Text>
 													</View>
 												)}
-												<Text className='text-[#1C1917] text-[14px] font-pretendard-medium'>
+												<Text className='text-primary text-[14px] font-pretendard-medium'>
 													{item.title}역 승차
 												</Text>
 											</View>
@@ -667,7 +668,7 @@ function RouteTimeline({
 										</View>
 									)}
 									{item.type === 'alight' && (
-										<Text className='text-[#1C1917] text-[14px] font-pretendard-medium pt-1'>
+										<Text className='text-primary text-[14px] font-pretendard-medium pt-1'>
 											{item.title}
 											{item.stopSuffix} 하차
 										</Text>

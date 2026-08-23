@@ -6,9 +6,10 @@ import type {
 	StyleProp,
 	ViewStyle,
 } from 'react-native';
+import { colors } from '@/src/constants/colors';
 
 /** 화면 배경(#F8F6F2)보다 한 톤 진한 포스터 빈 상태 배경 */
-export const EXHIBITION_POSTER_PLACEHOLDER_BG = '#F2EFE9';
+export const EXHIBITION_POSTER_PLACEHOLDER_BG = colors.bgTonal;
 
 const QUESTION_MARK = require('@/assets/images/skulpture/question.png');
 

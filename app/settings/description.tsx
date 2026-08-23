@@ -9,6 +9,7 @@ import {
 	type DescriptionFocus,
 	useSettingsStore,
 } from '@/src/store/settingsStore';
+import { colors } from '@/src/constants/colors';
 
 interface FocusOption {
 	key: DescriptionFocus;
@@ -60,9 +61,9 @@ export default function DescriptionSettingsScreen() {
 	return (
 		<Screen className='flex-1 bg-[#f4f4f1]'>
 			<Screen.Header>
-				<Screen.Header.Back color='#1C1917' onPress={() => router.back()} />
+				<Screen.Header.Back color={colors.primary} onPress={() => router.back()} />
 				<Screen.Header.Center>
-					<Text className='font-pretendard-semibold text-[16px] text-[#1C1917]'>
+					<Text className='font-pretendard-semibold text-[16px] text-primary'>
 						해설 강화 항목
 					</Text>
 				</Screen.Header.Center>
@@ -72,7 +73,7 @@ export default function DescriptionSettingsScreen() {
 				showsVerticalScrollIndicator={false}
 				contentContainerStyle={{ paddingBottom: 60 }}
 			>
-				<Text className='text-[13px] font-pretendard-regular text-[#78716C] mt-4 mb-3'>
+				<Text className='text-[13px] font-pretendard-regular text-tertiary mt-4 mb-3'>
 					{`선택한 항목을 해설에서 더 깊게 다뤄요.\n여러 개 선택할 수 있어요.`}
 				</Text>
 
@@ -94,19 +95,19 @@ export default function DescriptionSettingsScreen() {
 									<View
 										className={cn(
 											'flex-row items-center px-4 py-4 gap-3',
-											!isLast && 'border-b border-[#E7E5E4]',
+											!isLast && 'border-b border-divider',
 										)}
 									>
 										<View
 											className={cn(
 												'w-5 h-5 rounded items-center justify-center',
-												isSelected ? 'bg-[#1C1917]' : 'border border-[#D6D3D1] bg-white',
+												isSelected ? 'bg-primary' : 'border border-[#D6D3D1] bg-white',
 											)}
 										>
 											{isSelected && <Ionicons name='checkmark' size={13} color='white' />}
 										</View>
 										<View className='flex-1'>
-											<Text className='text-[14px] font-pretendard-medium text-[#1C1917]'>
+											<Text className='text-[14px] font-pretendard-medium text-primary'>
 												{option.label}
 											</Text>
 										</View>

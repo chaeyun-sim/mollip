@@ -1,8 +1,10 @@
+import { colors } from '@/src/constants/colors';
+
 /** Archive hub — warm scrapbook palette (no system blue). */
 
-export const ARCHIVE_INK = '#1C1917';
-export const ARCHIVE_MUTED = '#57534E';
-export const ARCHIVE_SUBTLE = '#78716C';
+export const ARCHIVE_INK = colors.primary;
+export const ARCHIVE_MUTED = colors.secondary;
+export const ARCHIVE_SUBTLE = colors.tertiary;
 
 /** Per-metric accent (receipt zone dots · card stack hues) */
 export const ARCHIVE_STAT_ACCENTS = {

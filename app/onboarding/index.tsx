@@ -13,6 +13,7 @@ import {
 import { Screen } from '@/src/components/layout/Screen';
 import { useAuthStore } from '@/src/store/authStore';
 import { supabase } from '@/src/utils/supabase';
+import { colors } from '@/src/constants/colors';
 
 // 12개 하드코딩
 const ART_ITEMS = [
@@ -213,16 +214,16 @@ export default function OnboardingScreen() {
 	}, [router, userId, liked]);
 
 	return (
-		<Screen className='flex-1 bg-[#F8F6F2]'>
+		<Screen className='flex-1 bg-bg-light'>
 			<StatusBar style='dark' />
 			<LinearGradient
-				colors={['#FFF3E6', '#F7DFCE', '#E4CCE8', '#F8F6F2']}
+				colors={['#FFF3E6', '#F7DFCE', '#E4CCE8', colors.bgLight]}
 				locations={[0, 0.32, 0.68, 1]}
 				style={StyleSheet.absoluteFill}
 			/>
 			{/* 헤더 */}
 			<View className='pt-4 pb-2 gap-1'>
-				<Text className='text-[#1C1917] text-[26px] font-hahmlet-bold'>
+				<Text className='text-primary text-[26px] font-hahmlet-bold'>
 					당신의 취향을{'\n'}골라보세요
 				</Text>
 				<Text className='text-[#6B6360] text-[13px] font-pretendard-regular'>
@@ -235,7 +236,7 @@ export default function OnboardingScreen() {
 				<>
 					<View className='flex-1 items-center justify-center gap-4'>
 						<Text className='text-5xl'>🎨</Text>
-						<Text className='text-[#1C1917] text-xl font-pretendard-bold'>완료!</Text>
+						<Text className='text-primary text-xl font-pretendard-bold'>완료!</Text>
 						<Text className='text-[#6B6360] text-[13px] font-pretendard-regular text-center leading-5'>
 							{liked.length > 0
 								? `${liked.length}개의 취향을 저장했어요\n맞춤 전시를 추천해드릴게요`
@@ -244,7 +245,7 @@ export default function OnboardingScreen() {
 					</View>
 					<Screen.Bottom className='pb-12'>
 						<Pressable
-							className='w-full bg-[#1C1917] flex-row items-center justify-center rounded-[18px] py-[18px] gap-2.5 border-[0.5px] border-white/25'
+							className='w-full bg-primary flex-row items-center justify-center rounded-[18px] py-[18px] gap-2.5 border-[0.5px] border-white/25'
 							style={({ pressed }) => ({ opacity: pressed ? 0.85 : 1 })}
 							onPress={handleNext}
 							accessibilityRole='button'
@@ -264,7 +265,7 @@ export default function OnboardingScreen() {
 							<View
 								key={i}
 								className={`h-1 flex-1 rounded-full ${
-									i < totalSwiped ? 'bg-[#1C1917]' : 'bg-[#E7E5E4]'
+									i < totalSwiped ? 'bg-primary' : 'bg-divider'
 								}`}
 							/>
 						))}
@@ -306,14 +307,14 @@ export default function OnboardingScreen() {
 							<View
 								className='w-16 h-16 rounded-full bg-white items-center justify-center'
 								style={{
-									shadowColor: '#f43f5e',
+									shadowColor: colors.errorAlt,
 									shadowOffset: { width: 0, height: 4 },
 									shadowOpacity: 0.2,
 									shadowRadius: 12,
 									elevation: 6,
 								}}
 							>
-								<Ionicons name='close' size={28} color='#f43f5e' />
+								<Ionicons name='close' size={28} color={colors.errorAlt} />
 							</View>
 							<Text className='text-[#6B6360] text-xs font-pretendard-regular'>
 								패스
@@ -329,14 +330,14 @@ export default function OnboardingScreen() {
 							<View
 								className='w-16 h-16 rounded-full bg-white items-center justify-center'
 								style={{
-									shadowColor: '#00bc7d',
+									shadowColor: colors.success,
 									shadowOffset: { width: 0, height: 4 },
 									shadowOpacity: 0.08,
 									shadowRadius: 12,
 									elevation: 4,
 								}}
 							>
-								<Ionicons name='heart' size={30} color='#00bc7d' />
+								<Ionicons name='heart' size={30} color={colors.success} />
 							</View>
 							<Text className='text-[#6B6360] text-xs font-pretendard-regular'>
 								선택!

@@ -8,6 +8,7 @@ import {
 	View,
 	type ImageSourcePropType,
 } from 'react-native';
+import { colors } from '@/src/constants/colors';
 
 export interface DayImage {
 	source?: ImageSourcePropType;
@@ -78,7 +79,7 @@ export function DiaryCalendar({
 					})}
 					className='bg-[#3D3733] h-8 w-8 rounded-2xl items-center justify-center'
 				>
-					<Ionicons name='chevron-back' size={15} color='#A8A29E' />
+					<Ionicons name='chevron-back' size={15} color={colors.muted} />
 				</Pressable>
 				<Text className='font-pretendard-semibold text-[17px] text-white'>
 					{year}년 {month}월
@@ -93,7 +94,7 @@ export function DiaryCalendar({
 					})}
 					className='bg-[#3D3733] h-8 w-8 rounded-2xl items-center justify-center'
 				>
-					<Ionicons name='chevron-forward' size={15} color='#A8A29E' />
+					<Ionicons name='chevron-forward' size={15} color={colors.muted} />
 				</Pressable>
 			</View>
 

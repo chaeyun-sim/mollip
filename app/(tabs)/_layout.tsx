@@ -1,6 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Tabs, useRouter } from 'expo-router';
 import { useAuthStore } from '@/src/store/authStore';
+import { colors } from '@/src/constants/colors';
 
 export default function TabsLayout() {
 	const router = useRouter();
@@ -11,7 +12,7 @@ export default function TabsLayout() {
 		<Tabs
 			screenOptions={{
 				headerShown: false,
-				tabBarActiveTintColor: '#3B82F6',
+				tabBarActiveTintColor: colors.accent,
 				tabBarInactiveTintColor: '#9CA3AF',
 				tabBarLabelStyle: {
 					fontFamily: 'Pretendard-Medium',

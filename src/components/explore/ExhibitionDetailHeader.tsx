@@ -4,6 +4,7 @@ import { Pressable, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 import { DeadlineLabel } from './DeadlineLabel';
+import { colors } from '@/src/constants/colors';
 
 interface ExhibitionDetailHeaderProps {
 	title: string;
@@ -39,10 +40,10 @@ export function ExhibitionDetailHeader({
 						accessibilityRole='link'
 						accessibilityLabel='공식 웹사이트 외부 브라우저에서 열기'
 					>
-						<Text className='text-[#1C1917] text-[13px] font-pretendard-medium'>
+						<Text className='text-primary text-[13px] font-pretendard-medium'>
 							공식 웹사이트
 						</Text>
-						<Ionicons name='open-outline' size={12} color='#1C1917' />
+						<Ionicons name='open-outline' size={12} color={colors.primary} />
 					</Pressable>
 				)}
 			</View>

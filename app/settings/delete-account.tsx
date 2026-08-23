@@ -18,6 +18,7 @@ import { Screen } from '@/src/components/layout/Screen';
 import { useAuthStore } from '@/src/store/authStore';
 import { deleteAccount } from '@/src/utils/api';
 import { supabase } from '@/src/utils/supabase';
+import { colors } from '@/src/constants/colors';
 
 type SubmitStatus = 'idle' | 'submitting' | 'success' | 'error';
 type Reason =
@@ -80,7 +81,7 @@ export default function DeleteAccountScreen() {
 		return (
 			<Screen variant='warm'>
 				<View className='flex-1 items-center justify-center gap-4 px-6'>
-					<View className='w-16 h-16 rounded-full bg-[#F2EFE9] items-center justify-center'>
+					<View className='w-16 h-16 rounded-full bg-bg-tonal items-center justify-center'>
 						<Ionicons name='heart-outline' size={30} color='#B8935A' />
 					</View>
 					<Text className='text-gray-900 text-[18px] font-hahmlet-semibold text-center'>
@@ -91,7 +92,7 @@ export default function DeleteAccountScreen() {
 					</Text>
 					<Pressable
 						onPress={() => router.replace('/(tabs)')}
-						className='mt-4 px-6 py-3 rounded-full bg-[#1C1917]'
+						className='mt-4 px-6 py-3 rounded-full bg-primary'
 						accessibilityRole='button'
 						accessibilityLabel='메인으로 가기'
 					>
@@ -108,7 +109,7 @@ export default function DeleteAccountScreen() {
 		<Screen variant='warm'>
 			<Screen.Header>
 				<Screen.Header.Left>
-					<Screen.Header.Back color='#1C1917' onPress={() => router.back()} />
+					<Screen.Header.Back color={colors.primary} onPress={() => router.back()} />
 				</Screen.Header.Left>
 				<Screen.Header.Center>
 					<Text className='text-[18px] text-gray-900 font-hahmlet-semibold'>
@@ -132,9 +133,9 @@ export default function DeleteAccountScreen() {
 						탈퇴하시는 이유를 알려주세요
 					</Text>
 					<View
-						className='rounded-3xl overflow-hidden bg-[#F2EFE9] mb-3'
+						className='rounded-3xl overflow-hidden bg-bg-tonal mb-3'
 						style={{
-							shadowColor: '#1C1917',
+							shadowColor: colors.primary,
 							shadowOpacity: 0.05,
 							shadowRadius: 12,
 							shadowOffset: { width: 0, height: 4 },
@@ -164,7 +165,7 @@ export default function DeleteAccountScreen() {
 									<Ionicons
 										name={selected ? 'radio-button-on' : 'radio-button-off'}
 										size={20}
-										color={selected ? '#1C1917' : '#D6D3D1'}
+										color={selected ? colors.primary : '#D6D3D1'}
 									/>
 								</Pressable>
 							);
@@ -176,7 +177,7 @@ export default function DeleteAccountScreen() {
 							<Ionicons
 								name='bulb-outline'
 								size={16}
-								color='#3B82F6'
+								color={colors.accent}
 								style={{ marginTop: 1 }}
 							/>
 							<Text className='flex-1 text-[13px] leading-[19px] font-pretendard-regular text-[#1D4ED8]'>
@@ -187,14 +188,14 @@ export default function DeleteAccountScreen() {
 
 					{reason === 'other' ? (
 						<TextInput
-							className='rounded-3xl bg-[#F2EFE9] px-4 py-4 text-gray-900 text-[15px]'
+							className='rounded-3xl bg-bg-tonal px-4 py-4 text-gray-900 text-[15px]'
 							style={{
 								fontFamily: 'Pretendard-Regular',
 								minHeight: 120,
 								textAlignVertical: 'top',
 							}}
 							placeholder='어떤 점이 아쉬웠는지 알려주세요 (선택)'
-							placeholderTextColor='#A8A29E'
+							placeholderTextColor={colors.muted}
 							value={detail}
 							onChangeText={setDetail}
 							multiline

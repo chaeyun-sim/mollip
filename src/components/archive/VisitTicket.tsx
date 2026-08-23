@@ -22,10 +22,11 @@ import { EmptyImagePlaceholder } from '@/src/components/common/EmptyImagePlaceho
 import type { Exhibition } from '@/src/data/exhibitions';
 import type { ListenedItem } from '@/src/store/visitStore';
 import { cn } from '@/src/lib/cn';
+import { colors } from '@/src/constants/colors';
 
 // 다이어리 화면의 어두운 그라데이션(#0C0A09→#171412) 중간값 — 절취선 노치가 뚫린 것처럼 보이게 함
 const NOTCH = '#110F0E';
-const INK = '#1C1917';
+const INK = colors.primary;
 const STAMP = '#C2410C';
 const STUB_HEIGHT = 112;
 /** 절취선 행(노치 20 + 점선) — 앞·뒤 동일 Y 고정용 */
@@ -70,7 +71,7 @@ function Perforation() {
 				className='rounded-full w-[20px] h-[20px] ml-[-10px]'
 				style={{ backgroundColor: NOTCH }}
 			/>
-			<View className='mx-2 flex-1 border-b-[1.5px] border-dashed border-[#E7E5E4]' />
+			<View className='mx-2 flex-1 border-b-[1.5px] border-dashed border-divider' />
 			<View
 				className='rounded-full w-[20px] h-[20px] mr-[-10px]'
 				style={{ backgroundColor: NOTCH }}
@@ -106,7 +107,7 @@ function TicketStubFront({
 						/>
 					))}
 				</View>
-				<Text className='mt-1.5 text-[10px] tracking-[4px] text-[#78716C] font-pretendard-medium'>
+				<Text className='mt-1.5 text-[10px] tracking-[4px] text-tertiary font-pretendard-medium'>
 					{ticketNo}
 				</Text>
 			</View>
@@ -122,14 +123,14 @@ function TicketStubBack({ ticketNo }: { ticketNo: string }) {
 			style={{ height: STUB_HEIGHT }}
 		>
 			<View>
-				<Text className='text-[10px] tracking-[3px] text-[#A8A29E] font-pretendard-semibold'>
+				<Text className='text-[10px] tracking-[3px] text-muted font-pretendard-semibold'>
 					MUSEUM TICKET
 				</Text>
 				<Text className='mt-1 text-[10px] tracking-[3px] text-[#D6D3D1] font-pretendard-semibold'>
 					ADMIT ONE
 				</Text>
 			</View>
-			<Text className='text-[10px] tracking-[4px] text-[#78716C] font-pretendard-medium'>
+			<Text className='text-[10px] tracking-[4px] text-tertiary font-pretendard-medium'>
 				{ticketNo}
 			</Text>
 		</View>
@@ -187,7 +188,7 @@ function ProgramRow({ index, item }: { index: number; item: ListenedItem }) {
 			className='flex-row items-center py-3 border-b border-[#F5F5F4]'
 			accessibilityLabel={`${index + 1}번, ${item.title}`}
 		>
-			<Text className='w-6 text-[13px] font-pretendard-medium text-[#A8A29E]'>
+			<Text className='w-6 text-[13px] font-pretendard-medium text-muted'>
 				{index + 1}
 			</Text>
 			<Text
@@ -315,11 +316,11 @@ export function VisitTicket({
 							</View>
 
 							<View className='px-6 pt-5'>
-								<Text className='text-[10px] tracking-[3px] text-[#A8A29E] font-pretendard-semibold'>
+								<Text className='text-[10px] tracking-[3px] text-muted font-pretendard-semibold'>
 									EXHIBITION
 								</Text>
 								<Text
-									className='mt-1.5 text-[24px] leading-[32px] text-[#1C1917] font-hahmlet-bold'
+									className='mt-1.5 text-[24px] leading-[32px] text-primary font-hahmlet-bold'
 									numberOfLines={2}
 								>
 									{exhibition.title}
@@ -334,11 +335,11 @@ export function VisitTicket({
 									{ label: '들은 해설', value: `${listenedTitles.length}개` },
 								].map((cell) => (
 									<View key={cell.label} className='flex-1 pr-2'>
-										<Text className='text-[11px] text-[#A8A29E] font-pretendard-medium'>
+										<Text className='text-[11px] text-muted font-pretendard-medium'>
 											{cell.label}
 										</Text>
 										<Text
-											className='mt-1 text-[14px] text-[#1C1917] font-pretendard-semibold'
+											className='mt-1 text-[14px] text-primary font-pretendard-semibold'
 											numberOfLines={2}
 										>
 											{cell.value}
@@ -388,12 +389,12 @@ export function VisitTicket({
 											오늘의 프로그램
 										</Text>
 										{listenedItems.length > 0 ? (
-											<Text className='text-[12px] font-pretendard-regular text-[#A8A29E]'>
+											<Text className='text-[12px] font-pretendard-regular text-muted'>
 												{listenedItems.length}작품
 											</Text>
 										) : null}
 									</View>
-									<Text className='text-[11px] mb-3 font-pretendard-medium text-[#A8A29E]'>
+									<Text className='text-[11px] mb-3 font-pretendard-medium text-muted'>
 										{dateLabel}
 									</Text>
 
@@ -434,13 +435,13 @@ export function VisitTicket({
 				<View
 					className={cn(
 						'h-1.5 rounded-full',
-						flipped ? 'w-[6px] bg-[#bbb9b7]' : 'w-[18px] bg-[#F8F6F2]',
+						flipped ? 'w-[6px] bg-[#bbb9b7]' : 'w-[18px] bg-bg-light',
 					)}
 				/>
 				<View
 					className={cn(
 						'h-1.5 rounded-full',
-						flipped ? 'w-[18px] bg-[#F8F6F2]' : 'w-[6px] bg-[#bbb9b7]',
+						flipped ? 'w-[18px] bg-bg-light' : 'w-[6px] bg-[#bbb9b7]',
 					)}
 				/>
 			</View>

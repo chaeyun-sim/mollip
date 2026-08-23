@@ -12,6 +12,7 @@ import { Screen } from '@/src/components/layout/Screen';
 import { useDayImages } from '@/src/hooks/useDayImages';
 import { useAuthStore } from '@/src/store/authStore';
 import { useVisitStore } from '@/src/store/visitStore';
+import { colors } from '@/src/constants/colors';
 
 type DiaryViewMode = 'grid' | 'calendar';
 
@@ -109,7 +110,7 @@ export default function DiaryScreen() {
 						accessibilityLabel='마이페이지'
 						style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
 					>
-						<Ionicons name='person-outline' size={24} color='#1C1917' />
+						<Ionicons name='person-outline' size={24} color={colors.primary} />
 					</Pressable>
 				</Screen.Header.Right>
 			</Screen.Header>
@@ -125,13 +126,13 @@ export default function DiaryScreen() {
 				>
 					<View className='flex-row items-end gap-[6px]'>
 						<Text
-							className='font-hahmlet-bold text-[60px] text-[#1C1917] tracking-[-1.5px]'
+							className='font-hahmlet-bold text-[60px] text-primary tracking-[-1.5px]'
 							style={{ lineHeight: 68 }}
 						>
 							{visitDateKeys.length}
 						</Text>
 						<Text
-							className='font-hahmlet-bold text-[19px] text-[#1C1917] tracking-[-0.3px] pb-[10px]'
+							className='font-hahmlet-bold text-[19px] text-primary tracking-[-0.3px] pb-[10px]'
 							style={{ lineHeight: 22 }}
 						>
 							Tickets
@@ -152,10 +153,10 @@ export default function DiaryScreen() {
 							<Ionicons
 								name={diaryViewMode === 'grid' ? 'calendar-outline' : 'grid-outline'}
 								size={16}
-								color='#1C1917'
+								color={colors.primary}
 							/>
 							<Text
-								className='text-[13px] text-[#1C1917]'
+								className='text-[13px] text-primary'
 								style={{ fontFamily: 'Pretendard-Medium' }}
 							>
 								{diaryViewMode === 'grid' ? '캘린더' : '그리드'}

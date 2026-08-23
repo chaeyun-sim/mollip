@@ -10,6 +10,7 @@ import Animated, {
 	withSpring,
 	withTiming,
 } from 'react-native-reanimated';
+import { colors } from '@/src/constants/colors';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 export const ONBOARDING_CARD_HEIGHT = 500;
@@ -182,7 +183,7 @@ export function OnboardingSwipeCard({
 						className='absolute top-4 right-4 w-9 h-9 rounded-full items-center justify-center'
 						style={{ backgroundColor: 'rgba(0,0,0,0.45)' }}
 					>
-						<Ionicons name='heart' size={18} color='#00bc7d' />
+						<Ionicons name='heart' size={18} color={colors.success} />
 					</View>
 				)}
 

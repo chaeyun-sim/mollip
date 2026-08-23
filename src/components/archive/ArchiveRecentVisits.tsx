@@ -51,7 +51,7 @@ export function ArchiveRecentVisits({
 		<View className='mb-5'>
 			<ExploreSectionTitle eyebrow='RECENT' title='최근 관람' />
 
-			<View className='rounded-[22px] bg-[#F8F6F2] overflow-hidden'>
+			<View className='rounded-[22px] bg-bg-light overflow-hidden'>
 				{dateKeys.map((dateKey, index) => {
 					const visit = visits[dateKey];
 					const title = visit?.exhibitionTitle?.trim() || '관람 기록';

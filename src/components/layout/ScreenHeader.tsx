@@ -4,6 +4,7 @@ import { ReactNode } from 'react';
 import { Pressable, Text, View, ViewStyle } from 'react-native';
 import { cn } from '../../lib/cn';
 import { SERVICE_NAME } from '@/src/constants/service-name';
+import { colors } from '@/src/constants/colors';
 
 interface SlotProps {
 	children?: ReactNode;
@@ -25,7 +26,7 @@ function ScreenHeader({ children, className, style }: SlotProps) {
 function Logo({ className, style }: SlotProps) {
 	return (
 		<View className={cn('flex-1 items-start', className)} style={style}>
-			<Text className='text-[#1C1917] text-[24px] font-hahmlet-bold tracking-[-0.5px]'>
+			<Text className='text-primary text-[24px] font-hahmlet-bold tracking-[-0.5px]'>
 				{SERVICE_NAME}
 			</Text>
 		</View>
@@ -72,7 +73,7 @@ function Back({ onPress, color }: { onPress?: () => void; color?: string }) {
 			accessibilityRole='button'
 			style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
 		>
-			<Ionicons name='arrow-back' size={24} color={color || '#1C1917'} />
+			<Ionicons name='arrow-back' size={24} color={color || colors.primary} />
 		</Pressable>
 	);
 }

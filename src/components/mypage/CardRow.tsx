@@ -33,7 +33,7 @@ export function CardRow({
 		>
 			<View className='flex-row items-center gap-3'>
 				<Ionicons name={icon} size={17} color='#9C8F85' />
-				<Text className='font-pretendard-regular text-[#1C1917] text-[15px]'>
+				<Text className='font-pretendard-regular text-primary text-[15px]'>
 					{label}
 				</Text>
 			</View>

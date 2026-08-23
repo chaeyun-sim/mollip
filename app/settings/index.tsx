@@ -14,6 +14,7 @@ import type { Voice } from '@/src/hooks/useTTS';
 import { useSettingsStore } from '@/src/store/settingsStore';
 import { fetchVoices } from '@/src/utils/api';
 import { APP_VERSION, FONT_SIZE_OPTIONS, SCRAP_TILES, SPEED_OPTIONS } from '@/src/data/mypage';
+import { colors } from '@/src/constants/colors';
 
 export default function SettingsScreen() {
 	const router = useRouter();
@@ -135,9 +136,9 @@ export default function SettingsScreen() {
 								<Switch
 									value={pushNotificationsEnabled}
 									onValueChange={setPushNotificationsEnabled}
-									trackColor={{ false: '#E7E5E4', true: '#1C1917' }}
+									trackColor={{ false: colors.border, true: colors.primary }}
 									thumbColor='#FFFFFF'
-									ios_backgroundColor='#E7E5E4'
+									ios_backgroundColor={colors.border}
 									style={{ transform: [{ scaleX: 0.8 }, { scaleY: 0.8 }] }}
 								/>
 							</CardRow>
@@ -157,9 +158,9 @@ export default function SettingsScreen() {
 								<Switch
 									value={highContrast}
 									onValueChange={setHighContrast}
-									trackColor={{ false: '#E7E5E4', true: '#1C1917' }}
+									trackColor={{ false: colors.border, true: colors.primary }}
 									thumbColor='#FFFFFF'
-									ios_backgroundColor='#E7E5E4'
+									ios_backgroundColor={colors.border}
 									style={{ transform: [{ scaleX: 0.8 }, { scaleY: 0.8 }] }}
 								/>
 							</CardRow>

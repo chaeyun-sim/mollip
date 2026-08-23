@@ -18,6 +18,7 @@ import { useExhibitionSearch, type SearchResult } from '@/src/hooks/useExhibitio
 import { usePreferences } from '@/src/hooks/usePreferences';
 import { useRecentSearchStore } from '@/src/store/recentSearchStore';
 import { useAuthStore } from '@/src/store/authStore';
+import { colors } from '@/src/constants/colors';
 
 const FIXED_TAGS = [
 	'문화유산',
@@ -178,7 +179,7 @@ export default function SearchScreen() {
 	function renderItem({ item }: { item: ResultListItem }) {
 		if (item.kind === 'section') {
 			return (
-				<Text className='text-[#1C1917] text-[16px] font-pretendard-bold mt-6 mb-3'>
+				<Text className='text-primary text-[16px] font-pretendard-bold mt-6 mb-3'>
 					{item.label}
 				</Text>
 			);
@@ -236,7 +237,7 @@ export default function SearchScreen() {
 					keyboardDismissMode='on-drag'
 				>
 					<View className='mt-7'>
-						<Text className='text-[#1C1917] text-[16px] mb-3 font-pretendard-bold'>
+						<Text className='text-primary text-[16px] mb-3 font-pretendard-bold'>
 							추천 태그
 						</Text>
 						<View className='flex-row flex-wrap gap-2'>
@@ -246,10 +247,10 @@ export default function SearchScreen() {
 									onPress={() => handlePressTag(tag)}
 									accessibilityLabel={`${tag} 태그로 검색`}
 									accessibilityRole='button'
-									className='rounded-full bg-[#F2EFE9] px-3.5 py-2'
+									className='rounded-full bg-bg-tonal px-3.5 py-2'
 									style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
 								>
-									<Text className='text-[#57534E] text-[13px] font-pretendard-medium'>
+									<Text className='text-secondary text-[13px] font-pretendard-medium'>
 										{tag}
 									</Text>
 								</Pressable>
@@ -260,7 +261,7 @@ export default function SearchScreen() {
 					{recentWords.length > 0 && (
 						<View className='mt-7'>
 							<View className='flex-row items-center justify-between mb-2'>
-								<Text className='text-[#1C1917] text-[16px] font-pretendard-bold'>
+								<Text className='text-primary text-[16px] font-pretendard-bold'>
 									최근 검색
 								</Text>
 								<Pressable
@@ -269,14 +270,14 @@ export default function SearchScreen() {
 									accessibilityLabel='최근 검색어 전체 삭제'
 									accessibilityRole='button'
 								>
-									<Text className='text-[#A8A29E] text-[13px] font-pretendard-regular'>
+									<Text className='text-muted text-[13px] font-pretendard-regular'>
 										전체 삭제
 									</Text>
 								</Pressable>
 							</View>
 							{recentWords.map((word) => (
 								<View key={word} className='flex-row items-center gap-2.5 py-3'>
-									<Ionicons name='time-outline' size={15} color='#A8A29E' />
+									<Ionicons name='time-outline' size={15} color={colors.muted} />
 									<Pressable
 										onPress={() => handlePressRecent(word)}
 										accessibilityLabel={`${word} 검색`}
@@ -315,20 +316,20 @@ export default function SearchScreen() {
 					ItemSeparatorComponent={() => <View className='h-5' />}
 					ListHeaderComponent={
 						<View className='flex-row items-end justify-between mb-3'>
-							<Text className='text-[#1C1917] text-[18px] font-pretendard-bold'>
+							<Text className='text-primary text-[18px] font-pretendard-bold'>
 								검색 결과
 							</Text>
-							<Text className='text-[#A8A29E] text-[13px] font-pretendard-regular'>
+							<Text className='text-muted text-[13px] font-pretendard-regular'>
 								{results.length}건{hasLocation ? ' · 가까운 순' : ''}
 							</Text>
 						</View>
 					}
 					ListEmptyComponent={
 						<View className='items-center py-16 gap-2'>
-							<Text className='text-[#57534E] text-[15px] font-pretendard-semibold'>
+							<Text className='text-secondary text-[15px] font-pretendard-semibold'>
 								조건에 맞는 전시가 없어요
 							</Text>
-							<Text className='text-[#A8A29E] text-[13px] font-pretendard-regular'>
+							<Text className='text-muted text-[13px] font-pretendard-regular'>
 								검색어나 필터를 조정해 보세요
 							</Text>
 						</View>

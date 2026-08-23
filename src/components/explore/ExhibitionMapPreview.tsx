@@ -9,6 +9,7 @@ import { ActivityIndicator, Pressable, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 import { useMapStore } from '@/src/store/mapStore';
+import { colors } from '@/src/constants/colors';
 
 interface ExhibitionMapPreviewProps {
 	coordinates: { latitude: number; longitude: number };
@@ -68,7 +69,7 @@ export function ExhibitionMapPreview({
 					>
 						<View
 							collapsable={false}
-							className='w-8 h-8 rounded-full bg-[#1C1917] items-center justify-center'
+							className='w-8 h-8 rounded-full bg-primary items-center justify-center'
 							style={{ borderWidth: 2, borderColor: 'white' }}
 						>
 							<Ionicons name='location' size={14} color='white' />
@@ -87,11 +88,11 @@ export function ExhibitionMapPreview({
 					}}
 				>
 					{isNavigating ? (
-						<ActivityIndicator size='small' color='#1C1917' style={{ width: 12, height: 12 }} />
+						<ActivityIndicator size='small' color={colors.primary} style={{ width: 12, height: 12 }} />
 					) : (
-						<Ionicons name='map-outline' size={12} color='#1C1917' />
+						<Ionicons name='map-outline' size={12} color={colors.primary} />
 					)}
-					<Text className='font-pretendard-medium text-[11px] text-[#1C1917]'>
+					<Text className='font-pretendard-medium text-[11px] text-primary'>
 						{isNavigating ? '이동 중...' : '지도에서 보기'}
 					</Text>
 				</View>

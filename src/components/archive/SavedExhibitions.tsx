@@ -19,6 +19,7 @@ import {
 	isExhibitionListed,
 } from '@/src/utils/exhibitionSearch';
 import type { SearchResult } from '@/src/hooks/useExhibitionSearch';
+import { colors } from '@/src/constants/colors';
 
 const ITEM_LAYOUT = LinearTransition.duration(200);
 
@@ -90,18 +91,18 @@ export function SavedExhibitions({ onPressExhibition }: SavedExhibitionsProps) {
 	if (loading && results.length === 0) {
 		return (
 			<View className='items-center py-16'>
-				<ActivityIndicator color='#78716C' />
+				<ActivityIndicator color={colors.tertiary} />
 			</View>
 		);
 	}
 
 	if (results.length === 0) {
 		return (
-			<View className='rounded-[22px] bg-[#F8F6F2] px-6 py-10 items-center'>
-				<Text className='text-[15px] text-center font-pretendard-semibold text-[#1C1917]'>
+			<View className='rounded-[22px] bg-bg-light px-6 py-10 items-center'>
+				<Text className='text-[15px] text-center font-pretendard-semibold text-primary'>
 					저장한 전시가 없어요
 				</Text>
-				<Text className='text-[13px] text-center mt-2 leading-[20px] font-pretendard-regular text-[#57534E]'>
+				<Text className='text-[13px] text-center mt-2 leading-[20px] font-pretendard-regular text-secondary'>
 					둘러보기에서 마음에 드는 전시를 저장해 보세요
 				</Text>
 			</View>

@@ -7,6 +7,7 @@ import Animated, {
 	useSharedValue,
 	withSpring,
 } from 'react-native-reanimated';
+import { colors } from '@/src/constants/colors';
 
 export type ArchiveTab = 'diary' | 'saved';
 
@@ -15,9 +16,9 @@ const TABS: { value: ArchiveTab; label: string }[] = [
 	{ value: 'saved', label: '저장한 전시' },
 ];
 
-const TRACK = '#F8F6F2';
-const INK = '#1C1917';
-const MUTED = '#78716C';
+const TRACK = colors.bgLight;
+const INK = colors.primary;
+const MUTED = colors.tertiary;
 
 interface ArchiveTabBarProps {
 	value: ArchiveTab;

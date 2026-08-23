@@ -21,6 +21,7 @@ import { cn } from '@/src/lib/cn';
 import { useImmersiveStore } from '../../src/store/immersiveStore';
 import { useVisitStore, todayKey } from '../../src/store/visitStore';
 import { supabase } from '../../src/utils/supabase';
+import { colors } from '@/src/constants/colors';
 
 interface ExhibitionSuggestion {
 	id: string;
@@ -136,19 +137,19 @@ export default function ImmersiveStartScreen() {
 					<Text className='text-[22px] mb-1.5 font-pretendard-bold text-white'>
 						몰입 모드로 시작하기
 					</Text>
-					<Text className='text-sm mb-9 font-pretendard-regular text-[#78716C]'>
+					<Text className='text-sm mb-9 font-pretendard-regular text-tertiary'>
 						관람 중인 전시를 검색하거나 직접 입력하세요
 					</Text>
 
 					{/* 전시명 + autocomplete */}
 					<View className='mb-5 z-10'>
-						<Text className='text-xs mb-2 font-pretendard-semibold text-[#A8A29E] tracking-wider'>
+						<Text className='text-xs mb-2 font-pretendard-semibold text-muted tracking-wider'>
 							전시명
 						</Text>
 						<View
 							className={cn(
-								'rounded-lg border bg-[#1C1917]',
-								titleError ? 'border-[#EF4444]' : 'border-[#292524]',
+								'rounded-lg border bg-primary',
+								titleError ? 'border-error' : 'border-divider-dark',
 							)}
 							style={{ height: 52, overflow: 'hidden' }}
 						>
@@ -158,7 +159,7 @@ export default function ImmersiveStartScreen() {
 									className='flex-1 px-4 text-base text-[#e8e8e8] font-pretendard-regular'
 									textAlignVertical='center'
 									placeholder='예) 이우환: 시간의 여백'
-									placeholderTextColor='#57534E'
+									placeholderTextColor={colors.secondary}
 									value={titleText}
 									onChangeText={handleTitleChange}
 									returnKeyType='next'
@@ -181,7 +182,7 @@ export default function ImmersiveStartScreen() {
 									<Text
 										numberOfLines={1}
 										className='text-base font-pretendard-regular'
-										style={{ color: titleText ? '#e8e8e8' : '#57534E' }}
+										style={{ color: titleText ? '#e8e8e8' : colors.secondary }}
 									>
 										{titleText || '예) 이우환: 시간의 여백'}
 									</Text>
@@ -190,20 +191,20 @@ export default function ImmersiveStartScreen() {
 							{isSearching && (
 								<ActivityIndicator
 									size='small'
-									color='#57534E'
+									color={colors.secondary}
 									style={{ position: 'absolute', right: 14, top: 16 }}
 								/>
 							)}
 						</View>
 						{titleError && (
-							<Text className='text-xs mt-1.5 font-pretendard-regular text-[#EF4444]'>
+							<Text className='text-xs mt-1.5 font-pretendard-regular text-error'>
 								전시명을 입력해 주세요
 							</Text>
 						)}
 
 						{suggestions.length > 0 && (
 							<View
-								className='mt-1 rounded-xl overflow-hidden bg-[#1C1917]'
+								className='mt-1 rounded-xl overflow-hidden bg-primary'
 								style={{
 									borderWidth: StyleSheet.hairlineWidth,
 									borderColor: '#3C3A38',
@@ -220,7 +221,7 @@ export default function ImmersiveStartScreen() {
 										})}
 										onPress={() => handleSelectSuggestion(s)}
 									>
-										<Ionicons name='search' size={14} color='#57534E' />
+										<Ionicons name='search' size={14} color={colors.secondary} />
 										<View className='flex-1'>
 											<Text
 												className='text-[#e8e8e8] text-sm font-pretendard-semibold'
@@ -230,14 +231,14 @@ export default function ImmersiveStartScreen() {
 											</Text>
 											{s.venue ? (
 												<Text
-													className='text-xs mt-0.5 font-pretendard-regular text-[#78716C]'
+													className='text-xs mt-0.5 font-pretendard-regular text-tertiary'
 													numberOfLines={1}
 												>
 													{s.venue}
 												</Text>
 											) : null}
 										</View>
-										<Ionicons name='return-down-back' size={14} color='#57534E' />
+										<Ionicons name='return-down-back' size={14} color={colors.secondary} />
 									</Pressable>
 								))}
 							</View>
@@ -246,13 +247,13 @@ export default function ImmersiveStartScreen() {
 
 					{/* 위치 */}
 					<View className='mb-8'>
-						<Text className='text-xs mb-2 font-pretendard-semibold text-[#A8A29E] tracking-wider'>
+						<Text className='text-xs mb-2 font-pretendard-semibold text-muted tracking-wider'>
 							위치
 						</Text>
 						<View
 							className={cn(
-								'rounded-lg border bg-[#1C1917]',
-								venueError ? 'border-[#EF4444]' : 'border-[#292524]',
+								'rounded-lg border bg-primary',
+								venueError ? 'border-error' : 'border-divider-dark',
 							)}
 							style={{ height: 52, overflow: 'hidden' }}
 						>
@@ -261,7 +262,7 @@ export default function ImmersiveStartScreen() {
 									autoFocus
 									className='flex-1 px-4 text-base font-pretendard-regular text-[#E8E8E8]'
 									placeholder='예) 국립현대미술관 과천관'
-									placeholderTextColor='#57534E'
+									placeholderTextColor={colors.secondary}
 									value={venueText}
 									onChangeText={(t) => {
 										setVenueText(t);
@@ -283,7 +284,7 @@ export default function ImmersiveStartScreen() {
 									<Text
 										numberOfLines={1}
 										className='text-base font-pretendard-regular'
-										style={{ color: venueText ? '#E8E8E8' : '#57534E' }}
+										style={{ color: venueText ? '#E8E8E8' : colors.secondary }}
 									>
 										{venueText || '예) 국립현대미술관 과천관'}
 									</Text>
@@ -291,7 +292,7 @@ export default function ImmersiveStartScreen() {
 							)}
 						</View>
 						{venueError && (
-							<Text className='text-xs mt-1.5 font-pretendard-regular text-[#EF4444]'>
+							<Text className='text-xs mt-1.5 font-pretendard-regular text-error'>
 								위치를 입력해 주세요
 							</Text>
 						)}
@@ -300,20 +301,20 @@ export default function ImmersiveStartScreen() {
 					{/* 안내 */}
 					<View className='gap-2.5 px-1'>
 						<View className='flex-row items-center gap-2'>
-							<Ionicons name='time-outline' size={14} color='#57534E' />
-							<Text className='text-xs font-pretendard-regular text-[#57534E]'>
+							<Ionicons name='time-outline' size={14} color={colors.secondary} />
+							<Text className='text-xs font-pretendard-regular text-secondary'>
 								관람이 끝날 때까지 몰입 모드가 유지돼요
 							</Text>
 						</View>
 						<View className='flex-row items-center gap-2'>
-							<Ionicons name='headset-outline' size={14} color='#57534E' />
-							<Text className='text-xs font-pretendard-regular text-[#57534E]'>
+							<Ionicons name='headset-outline' size={14} color={colors.secondary} />
+							<Text className='text-xs font-pretendard-regular text-secondary'>
 								작품을 스캔하면 해설을 바로 받을 수 있어요
 							</Text>
 						</View>
 						<View className='flex-row items-center gap-2'>
-							<Ionicons name='list-outline' size={14} color='#57534E' />
-							<Text className='text-xs font-pretendard-regular text-[#57534E]'>
+							<Ionicons name='list-outline' size={14} color={colors.secondary} />
+							<Text className='text-xs font-pretendard-regular text-secondary'>
 								들은 해설은 재생목록에 자동으로 저장돼요
 							</Text>
 						</View>
@@ -321,7 +322,7 @@ export default function ImmersiveStartScreen() {
 
 					<Screen.BottomAbsolute className='bottom-2'>
 						<Pressable
-							className='w-full rounded-lg items-center bg-[#3B82F6] py-3.5'
+							className='w-full rounded-lg items-center bg-accent py-3.5'
 							onPress={handleSubmit}
 							style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
 							accessibilityLabel='몰입 모드 시작하기'

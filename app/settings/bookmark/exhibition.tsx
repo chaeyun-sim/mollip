@@ -23,6 +23,7 @@ import {
 } from '@/src/utils/exhibitionSearch';
 import type { Exhibition } from '@/src/data/exhibitions';
 import type { ExhibitionStatus } from '@/src/utils/exhibitionSearch';
+import { colors } from '@/src/constants/colors';
 
 type FilterOption = ExhibitionStatus | 'all';
 
@@ -71,12 +72,12 @@ function ExhibitionCard({ ex, onPress }: ExhibitionCardProps) {
 				<StatusBadge status={status} />
 				<Text
 					numberOfLines={2}
-					className='text-[#1C1917] text-[15px] font-pretendard-semibold leading-[21px]'
+					className='text-primary text-[15px] font-pretendard-semibold leading-[21px]'
 				>
 					{ex.title}
 				</Text>
 				<View className='flex-row items-center gap-1.5'>
-					<Text className='text-[#A8A29E] text-[12px] font-pretendard-regular'>
+					<Text className='text-muted text-[12px] font-pretendard-regular'>
 						{ex.startDate} – {ex.endDate}
 					</Text>
 					{ddayLabel && (
@@ -97,7 +98,7 @@ function ExhibitionCard({ ex, onPress }: ExhibitionCardProps) {
 				<Ionicons
 					name={isBookmarked ? 'bookmark' : 'bookmark-outline'}
 					size={20}
-					color={isBookmarked ? '#1C1917' : '#D6D3D1'}
+					color={isBookmarked ? colors.primary : '#D6D3D1'}
 				/>
 			</Pressable>
 		</Pressable>
@@ -127,7 +128,7 @@ export default function ExhibitionBookmarkScreen() {
 			return (
 				<View className='flex-1 items-center justify-center gap-2'>
 					<Ionicons name='bookmark-outline' size={36} color='#D6D3D1' />
-					<Text className='text-[#A8A29E] text-[14px] font-pretendard-regular text-center'>
+					<Text className='text-muted text-[14px] font-pretendard-regular text-center'>
 						해당하는 전시가 없어요
 					</Text>
 				</View>
@@ -155,9 +156,9 @@ export default function ExhibitionBookmarkScreen() {
 	return (
 		<Screen variant='warm'>
 			<Screen.Header>
-				<Screen.Header.Back color='#78716C' />
+				<Screen.Header.Back color={colors.tertiary} />
 				<Screen.Header.Center>
-					<Text className='font-pretendard-semibold text-[16px] text-[#1C1917]'>
+					<Text className='font-pretendard-semibold text-[16px] text-primary'>
 						관심 있는 전시
 					</Text>
 				</Screen.Header.Center>
@@ -165,11 +166,11 @@ export default function ExhibitionBookmarkScreen() {
 
 			{isLoading ? (
 				<View className='flex-1 items-center justify-center'>
-					<ActivityIndicator color='#78716C' />
+					<ActivityIndicator color={colors.tertiary} />
 				</View>
 			) : error ? (
 				<View className='flex-1 items-center justify-center'>
-					<Text className='text-[#78716C] text-[14px] font-pretendard-regular text-center'>
+					<Text className='text-tertiary text-[14px] font-pretendard-regular text-center'>
 						전시 정보를 불러오지 못했어요
 					</Text>
 				</View>
@@ -180,14 +181,14 @@ export default function ExhibitionBookmarkScreen() {
 						플랫 일러스트 스타일, 얇은 라인 아트, 잉크색(#1C1917) 윤곽선, 포인트 컬러는 은은한 테라코타,
 						미니멀하고 여백이 많은 구도, 사진 느낌 없이 손그림 느낌, 정사각형 120x120 */}
 					<Ionicons name='bookmark-outline' size={36} color='#D6D3D1' />
-					<Text className='text-[#A8A29E] text-[14px] font-pretendard-regular text-center'>
+					<Text className='text-muted text-[14px] font-pretendard-regular text-center'>
 						관심 있는 전시가 없어요{'\n'}전시를 탐색하고 북마크해보세요
 					</Text>
 				</View>
 			) : (
 				<View className='flex-1 '>
 					<View className='flex-row items-center justify-between py-3'>
-						<Text className='text-[#A8A29E] text-[13px] font-pretendard-regular'>
+						<Text className='text-muted text-[13px] font-pretendard-regular'>
 							{filteredData.length}개의 전시
 						</Text>
 						<Pressable
@@ -197,10 +198,10 @@ export default function ExhibitionBookmarkScreen() {
 							className='flex-row items-center gap-0.5'
 							style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
 						>
-							<Text className='text-[#78716C] text-[13px] font-pretendard-medium'>
+							<Text className='text-tertiary text-[13px] font-pretendard-medium'>
 								{activeLabel}
 							</Text>
-							<Ionicons name='chevron-down' size={14} color='#78716C' />
+							<Ionicons name='chevron-down' size={14} color={colors.tertiary} />
 						</Pressable>
 					</View>
 					{renderList()}
@@ -243,14 +244,14 @@ export default function ExhibitionBookmarkScreen() {
 										<Text
 											className={
 												activeFilter === option.value
-													? 'text-[#1C1917] text-[14px] font-pretendard-semibold'
-													: 'text-[#78716C] text-[14px] font-pretendard-regular'
+													? 'text-primary text-[14px] font-pretendard-semibold'
+													: 'text-tertiary text-[14px] font-pretendard-regular'
 											}
 										>
 											{option.label}
 										</Text>
 										{activeFilter === option.value && (
-											<Ionicons name='checkmark' size={15} color='#1C1917' />
+											<Ionicons name='checkmark' size={15} color={colors.primary} />
 										)}
 									</View>
 								</Pressable>

@@ -1,4 +1,5 @@
 import { Text, View } from 'react-native';
+import { colors } from '@/src/constants/colors';
 
 interface SettingsSectionProps {
 	title: string;
@@ -12,9 +13,9 @@ export function SettingsSection({ title, children }: SettingsSectionProps) {
 				{title.toUpperCase()}
 			</Text>
 			<View
-				className='rounded-3xl overflow-hidden bg-[#F2EFE9]'
+				className='rounded-3xl overflow-hidden bg-bg-tonal'
 				style={{
-					shadowColor: '#1C1917',
+					shadowColor: colors.primary,
 					shadowOpacity: 0.05,
 					shadowRadius: 12,
 					shadowOffset: { width: 0, height: 4 },

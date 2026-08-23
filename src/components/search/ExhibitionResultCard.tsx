@@ -6,6 +6,7 @@ import { formatDistance } from '@/src/utils/mapUtils';
 import { getDdayLabel, STATUS_LABELS } from '@/src/utils/exhibitionSearch';
 import { StatusBadge } from './StatusBadge';
 import type { SearchResult } from '@/src/hooks/useExhibitionSearch';
+import { colors } from '@/src/constants/colors';
 
 interface ExhibitionResultCardProps {
 	result: SearchResult;
@@ -43,21 +44,21 @@ export function ExhibitionResultCard({
 				<StatusBadge status={status} />
 				<Text
 					numberOfLines={1}
-					className='text-[#1C1917] text-[15px] font-pretendard-semibold'
+					className='text-primary text-[15px] font-pretendard-semibold'
 				>
 					{ex.title}
 				</Text>
 
 				<Text
 					numberOfLines={1}
-					className='text-[#78716C] text-[13px] font-pretendard-regular'
+					className='text-tertiary text-[13px] font-pretendard-regular'
 				>
 					{ex.venue}
 					{distanceKm !== null && ` · ${formatDistance(distanceKm)}`}
 				</Text>
 
 				<View className='flex-row items-center gap-1.5'>
-					<Text className='text-[#A8A29E] text-[12px] font-pretendard-regular'>
+					<Text className='text-muted text-[12px] font-pretendard-regular'>
 						{ex.startDate} – {ex.endDate}
 					</Text>
 					{ddayLabel && (
@@ -79,7 +80,7 @@ export function ExhibitionResultCard({
 				<Ionicons
 					name={isBookmarked ? 'bookmark' : 'bookmark-outline'}
 					size={20}
-					color={isBookmarked ? '#1C1917' : '#D6D3D1'}
+					color={isBookmarked ? colors.primary : '#D6D3D1'}
 				/>
 			</Pressable>
 		</Pressable>

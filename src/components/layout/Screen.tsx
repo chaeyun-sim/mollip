@@ -5,6 +5,7 @@ import { View } from 'react-native';
 import { Edges, SafeAreaView } from 'react-native-safe-area-context';
 import { cn } from '../../lib/cn';
 import { ScreenHeader } from './ScreenHeader';
+import { colors } from '@/src/constants/colors';
 
 interface ScreenProps {
 	className?: string;
@@ -42,7 +43,7 @@ function Screen({
 		return (
 			<>
 				<StatusBar style='dark' />
-				<View className='flex-1 bg-[#F8F6F2]'>
+				<View className='flex-1 bg-bg-light'>
 					<SafeAreaView
 						edges={edges || ['top', 'left', 'right']}
 						className={cn('px-6 flex-1', className)}
@@ -60,7 +61,7 @@ function Screen({
 				<StatusBar style='dark' />
 				<View className='flex-1'>
 					<LinearGradient
-						colors={['#FFF3E6', '#F7DFCE', '#F8F6F2']}
+						colors={['#FFF3E6', '#F7DFCE', colors.bgLight]}
 						locations={[0, 0.3, 0.75]}
 						style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
 					/>
@@ -78,7 +79,7 @@ function Screen({
 	return (
 		<>
 			<StatusBar style='light' />
-			<LinearGradient colors={['#0C0A09', '#171412']} style={{ flex: 1 }}>
+			<LinearGradient colors={['#0C0A09', colors.bgDark]} style={{ flex: 1 }}>
 				<SafeAreaView
 					edges={edges || ['top', 'left', 'right']}
 					className={cn('px-6 flex-1', className)}

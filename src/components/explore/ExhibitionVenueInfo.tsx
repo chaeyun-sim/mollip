@@ -37,7 +37,7 @@ export function ExhibitionVenueInfo({
 			<Text className='font-pretendard-semibold text-[18px] text-gray-900 mb-4'>
 				관람 정보
 			</Text>
-			<View className='h-0.5 w-full bg-[#1C1917]' />
+			<View className='h-0.5 w-full bg-primary' />
 			{venueAddress && (
 				<View
 					className='flex-row items-start justify-between gap-28 py-3'
@@ -50,7 +50,7 @@ export function ExhibitionVenueInfo({
 						위치
 					</Text>
 					<View className='flex-1 flex-row items-center justify-end gap-2'>
-						<Text className='text-[#1C1917] text-[14px] font-pretendard-regular text-right leading-5 flex-1'>
+						<Text className='text-primary text-[14px] font-pretendard-regular text-right leading-5 flex-1'>
 							{venueAddress}
 						</Text>
 						<Pressable
@@ -79,7 +79,7 @@ export function ExhibitionVenueInfo({
 			<ExhibitionInfoRow label='관람료' isLast>
 				{admission.replaceAll(' / ', '\n')}
 			</ExhibitionInfoRow>
-			<View className='h-0.5 w-full bg-[#1C1917]' />
+			<View className='h-0.5 w-full bg-primary' />
 		</View>
 	);
 }

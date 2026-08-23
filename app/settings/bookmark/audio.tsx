@@ -8,6 +8,7 @@ import { useHistoryStore } from '@/src/store/historyStore';
 import type { HistoryItem } from '@/src/store/historyStore';
 import { useTTS } from '@/src/hooks/useTTS';
 import { fetchWikidataImage } from '@/src/utils/wikidataImage';
+import { colors } from '@/src/constants/colors';
 
 function formatDate(iso: string) {
 	const d = new Date(iso);
@@ -46,19 +47,19 @@ function AudioHistoryCard({ item, onPress, onDelete }: AudioHistoryCardProps) {
 				/>
 			) : (
 				<View className='w-[40px] h-[40px] rounded-full bg-[#E8E3DB] items-center justify-center'>
-					<Ionicons name='headset-outline' size={18} color='#78716C' />
+					<Ionicons name='headset-outline' size={18} color={colors.tertiary} />
 				</View>
 			)}
 
 			<View className='flex-1'>
 				<Text
 					numberOfLines={1}
-					className='text-[#1C1917] text-[14px] font-pretendard-semibold leading-[20px]'
+					className='text-primary text-[14px] font-pretendard-semibold leading-[20px]'
 				>
 					{item.title}
 				</Text>
 				{item.artist && (
-					<Text className='text-[#A8A29E] text-[12px] font-pretendard-regular'>
+					<Text className='text-muted text-[12px] font-pretendard-regular'>
 						{item.artist}
 					</Text>
 				)}
@@ -120,9 +121,9 @@ export default function AudioHistoryScreen() {
 	return (
 		<Screen variant='warm'>
 			<Screen.Header>
-				<Screen.Header.Back color='#78716C' />
+				<Screen.Header.Back color={colors.tertiary} />
 				<Screen.Header.Center>
-					<Text className='font-pretendard-semibold text-[16px] text-[#1C1917]'>
+					<Text className='font-pretendard-semibold text-[16px] text-primary'>
 						다시 듣고 싶은 오디오
 					</Text>
 				</Screen.Header.Center>
@@ -135,7 +136,7 @@ export default function AudioHistoryScreen() {
 						플랫 일러스트 스타일, 얇은 라인 아트, 잉크색(#1C1917) 윤곽선, 포인트 컬러는 은은한 테라코타,
 						고요하고 정적인 느낌, 사진 느낌 없이 손그림 느낌, 정사각형 120x120 */}
 					<Ionicons name='headset-outline' size={36} color='#D6D3D1' />
-					<Text className='text-[#A8A29E] text-[14px] font-pretendard-regular text-center'>
+					<Text className='text-muted text-[14px] font-pretendard-regular text-center'>
 						저장된 오디오가 없어요{'\n'}해설 화면에서 하트를 눌러 저장해보세요
 					</Text>
 				</View>
@@ -151,7 +152,7 @@ export default function AudioHistoryScreen() {
 						/>
 					)}
 					ItemSeparatorComponent={() => (
-						<View className='h-[1px] bg-[#E7E5E4] my-2.5' />
+						<View className='h-[1px] bg-divider my-2.5' />
 					)}
 					contentContainerStyle={{
 						paddingTop: 16,
@@ -168,8 +169,8 @@ export default function AudioHistoryScreen() {
 				snapPoints={['70%']}
 				enablePanDownToClose
 				onClose={() => setSelected(null)}
-				backgroundStyle={{ backgroundColor: '#1C1917' }}
-				handleIndicatorStyle={{ backgroundColor: '#57534E' }}
+				backgroundStyle={{ backgroundColor: colors.primary }}
+				handleIndicatorStyle={{ backgroundColor: colors.secondary }}
 			>
 				{selected && (
 					<BottomSheetScrollView
@@ -181,7 +182,7 @@ export default function AudioHistoryScreen() {
 									{selected.title}
 								</Text>
 								{selected.artist && (
-									<Text className='text-[#A8A29E] text-[13px] font-pretendard-regular mt-0.5'>
+									<Text className='text-muted text-[13px] font-pretendard-regular mt-0.5'>
 										{selected.artist}
 									</Text>
 								)}
@@ -211,7 +212,7 @@ export default function AudioHistoryScreen() {
 									accessibilityRole='button'
 									style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
 								>
-									<Ionicons name='close' size={22} color='#78716C' />
+									<Ionicons name='close' size={22} color={colors.tertiary} />
 								</Pressable>
 							</View>
 						</View>

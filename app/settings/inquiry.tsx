@@ -16,6 +16,7 @@ import { Screen } from '@/src/components/layout/Screen';
 import { cn } from '@/src/lib/cn';
 import { useAuthStore } from '@/src/store/authStore';
 import { supabase } from '@/src/utils/supabase';
+import { colors } from '@/src/constants/colors';
 
 type SubmitStatus = 'idle' | 'submitting' | 'success' | 'error';
 type Category = 'bug' | 'other';
@@ -61,9 +62,9 @@ export default function InquiryScreen() {
 		return (
 			<Screen variant='warm'>
 				<Screen.Header>
-					<Screen.Header.Back color='#1C1917' onPress={() => router.back()} />
+					<Screen.Header.Back color={colors.primary} onPress={() => router.back()} />
 					<Screen.Header.Center>
-						<Text className='text-[18px] text-[#1C1917] font-hahmlet-semibold'>
+						<Text className='text-[18px] text-primary font-hahmlet-semibold'>
 							문의하기
 						</Text>
 					</Screen.Header.Center>
@@ -73,15 +74,15 @@ export default function InquiryScreen() {
 					<View className='w-[72px] h-[72px] rounded-full bg-[#E8E3DB] items-center justify-center mb-1'>
 						<Text style={{ fontSize: 32 }}>✓</Text>
 					</View>
-					<Text className='text-[#1C1917] text-[17px] font-pretendard-semibold text-center'>
+					<Text className='text-primary text-[17px] font-pretendard-semibold text-center'>
 						문의가 접수됐어요
 					</Text>
-					<Text className='text-[#78716C] text-[13px] font-pretendard-regular text-center leading-[20px]'>
+					<Text className='text-tertiary text-[13px] font-pretendard-regular text-center leading-[20px]'>
 						확인 후 남겨주신 연락처로{'\n'}답변드릴게요
 					</Text>
 					<Pressable
 						onPress={() => router.back()}
-						className='mt-4 px-8 py-[14px] rounded-2xl bg-[#1C1917]'
+						className='mt-4 px-8 py-[14px] rounded-2xl bg-primary'
 						accessibilityRole='button'
 						accessibilityLabel='설정으로 돌아가기'
 						style={({ pressed }) => ({ opacity: pressed ? 0.8 : 1 })}
@@ -98,9 +99,9 @@ export default function InquiryScreen() {
 	return (
 		<Screen variant='warm'>
 			<Screen.Header>
-				<Screen.Header.Back color='#1C1917' onPress={() => router.back()} />
+				<Screen.Header.Back color={colors.primary} onPress={() => router.back()} />
 				<Screen.Header.Center>
-					<Text className='text-[18px] text-[#1C1917] font-hahmlet-semibold'>
+					<Text className='text-[18px] text-primary font-hahmlet-semibold'>
 						문의하기
 					</Text>
 				</Screen.Header.Center>
@@ -117,7 +118,7 @@ export default function InquiryScreen() {
 					keyboardShouldPersistTaps='handled'
 				>
 					{/* 카테고리 */}
-					<Text className='text-[12px] mb-3 font-pretendard-medium text-[#A8A29E] tracking-[0.6px] uppercase'>
+					<Text className='text-[12px] mb-3 font-pretendard-medium text-muted tracking-[0.6px] uppercase'>
 						유형
 					</Text>
 					<View className='flex-row gap-2 mb-8'>
@@ -132,7 +133,7 @@ export default function InquiryScreen() {
 									}}
 									className={cn(
 										'flex-1 py-[13px] rounded-2xl items-center justify-center gap-1',
-										selected ? 'bg-[#1C1917]' : 'bg-[#F2EFE9]',
+										selected ? 'bg-primary' : 'bg-bg-tonal',
 									)}
 									accessibilityRole='radio'
 									accessibilityState={{ checked: selected }}
@@ -143,7 +144,7 @@ export default function InquiryScreen() {
 									<Text
 										className={cn(
 											'text-[12px] font-pretendard-semibold',
-											selected ? 'text-white' : 'text-[#78716C]',
+											selected ? 'text-white' : 'text-tertiary',
 										)}
 									>
 										{opt.label}
@@ -154,11 +155,11 @@ export default function InquiryScreen() {
 					</View>
 
 					{/* 내용 */}
-					<Text className='text-[12px] mb-3 font-pretendard-medium text-[#A8A29E] tracking-[0.6px] uppercase'>
+					<Text className='text-[12px] mb-3 font-pretendard-medium text-muted tracking-[0.6px] uppercase'>
 						내용
 					</Text>
 					<TextInput
-						className='rounded-2xl bg-[#F2EFE9] px-4 py-4 text-[#1C1917] text-[15px] font-pretendard-regular'
+						className='rounded-2xl bg-bg-tonal px-4 py-4 text-primary text-[15px] font-pretendard-regular'
 						style={{ minHeight: 160, textAlignVertical: 'top' }}
 						placeholder='내용을 입력해주세요'
 						placeholderTextColor='#C7C3BD'
@@ -172,11 +173,11 @@ export default function InquiryScreen() {
 					</Text>
 
 					{/* 연락처 */}
-					<Text className='text-[12px] mt-6 mb-3 font-pretendard-medium text-[#A8A29E] tracking-[0.6px] uppercase'>
+					<Text className='text-[12px] mt-6 mb-3 font-pretendard-medium text-muted tracking-[0.6px] uppercase'>
 						연락처 (선택)
 					</Text>
 					<TextInput
-						className='rounded-2xl bg-[#F2EFE9] px-4 text-[#1C1917] text-[15px] h-[52px] font-pretendard-regular'
+						className='rounded-2xl bg-bg-tonal px-4 text-primary text-[15px] h-[52px] font-pretendard-regular'
 						placeholder='답변받을 이메일'
 						placeholderTextColor='#C7C3BD'
 						value={contact}
@@ -187,7 +188,7 @@ export default function InquiryScreen() {
 					/>
 
 					{status === 'error' && (
-						<Text className='mt-4 text-[13px] font-pretendard-regular text-[#EF4444]'>
+						<Text className='mt-4 text-[13px] font-pretendard-regular text-error'>
 							전송에 실패했어요. 잠시 후 다시 시도해주세요.
 						</Text>
 					)}
@@ -199,7 +200,7 @@ export default function InquiryScreen() {
 						disabled={!canSubmit}
 						className={cn(
 							'h-14 rounded-2xl items-center justify-center',
-							canSubmit ? 'bg-[#1C1917]' : 'bg-[#E7E5E4]',
+							canSubmit ? 'bg-primary' : 'bg-divider',
 						)}
 						accessibilityRole='button'
 						accessibilityLabel='문의 보내기'
@@ -212,7 +213,7 @@ export default function InquiryScreen() {
 							<Text
 								className={cn(
 									'text-[15px] font-pretendard-semibold',
-									canSubmit ? 'text-white' : 'text-[#A8A29E]',
+									canSubmit ? 'text-white' : 'text-muted',
 								)}
 							>
 								보내기

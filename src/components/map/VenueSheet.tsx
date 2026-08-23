@@ -10,6 +10,7 @@ import { cn } from '@/src/lib/cn';
 import { parseDate } from '@/src/utils/mapUtils';
 import { openPhoneDialer } from '@/src/utils/venueContactActions';
 import type { VenueGroup } from '@/src/data/venues';
+import { colors } from '@/src/constants/colors';
 
 // ── 운영시간 파싱 ─────────────────────────────────────────────────────────────
 
@@ -213,7 +214,7 @@ export function VenueSheet({
 	const heroExhibition = activeExhibitions[0] ?? upcomingExhibitions[0];
 	const listExhibitions =
 		tab === 'active' ? activeExhibitions : upcomingExhibitions;
-	const accentColor = heroExhibition?.posterColor ?? '#1C1917';
+	const accentColor = heroExhibition?.posterColor ?? colors.primary;
 
 	// 하위 미술관 변경 시 전시 탭을 '진행 중'으로 초기화
 	const handleSubVenueChange = (idx: number) => {
@@ -299,7 +300,7 @@ export function VenueSheet({
 							onPress={onRequestDirections}
 							hitSlop={6}
 							style={({ pressed }) => (pressed ? { opacity: 0.7 } : undefined)}
-							className='items-center justify-center rounded-full bg-[#1C1917] w-11 h-11'
+							className='items-center justify-center rounded-full bg-primary w-11 h-11'
 							accessibilityRole='button'
 							accessibilityLabel={`${venue.venueName}까지 길찾기`}
 						>
@@ -336,7 +337,7 @@ export function VenueSheet({
 							<Ionicons
 								name='arrow-up-outline'
 								size={11}
-								color='#1C1917'
+								color={colors.primary}
 								style={{ transform: [{ rotate: '45deg' }] }}
 							/>
 						</Pressable>
@@ -385,7 +386,7 @@ export function VenueSheet({
 								className={cn(
 									'px-3.5 py-2 rounded-full border',
 									subVenueIdx === idx
-										? 'bg-[#1C1917] border-[#1C1917]'
+										? 'bg-primary border-primary'
 										: 'bg-transparent border-black/15',
 								)}
 								accessibilityRole='tab'

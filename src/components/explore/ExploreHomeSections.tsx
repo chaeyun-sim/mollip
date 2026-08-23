@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 
 import { EmptyImagePlaceholder } from '@/src/components/common/EmptyImagePlaceholder';
+import { colors } from '@/src/constants/colors';
 
 const GRID_GAP = 12;
 
@@ -43,7 +44,7 @@ export function FeaturedExhibitionHero({
 			<View
 				className='rounded-[28px] overflow-hidden'
 				style={{
-					shadowColor: '#1C1917',
+					shadowColor: colors.primary,
 					shadowOpacity: 0.14,
 					shadowRadius: 20,
 					shadowOffset: { width: 0, height: 10 },
@@ -76,10 +77,10 @@ export function FeaturedExhibitionHero({
 								{venue}
 							</Text>
 							<View className='flex-row items-center gap-1.5 self-start rounded-full bg-white/95 px-4 py-2'>
-								<Text className='text-[#1C1917] text-[13px] font-pretendard-semibold'>
+								<Text className='text-primary text-[13px] font-pretendard-semibold'>
 									자세히 보기
 								</Text>
-								<Ionicons name='arrow-forward' size={14} color='#1C1917' />
+								<Ionicons name='arrow-forward' size={14} color={colors.primary} />
 							</View>
 						</LinearGradient>
 					</ImageBackground>
@@ -87,12 +88,12 @@ export function FeaturedExhibitionHero({
 					<View className='h-[300px] bg-[#E5E1D8] items-center justify-center px-6'>
 						<EmptyImagePlaceholder iconSize={100} className='mb-4' />
 						<Text
-							className='text-[#1C1917] text-[22px] text-center font-hahmlet-bold'
+							className='text-primary text-[22px] text-center font-hahmlet-bold'
 							numberOfLines={2}
 						>
 							{title}
 						</Text>
-						<Text className='text-[#78716C] text-[13px] mt-2 text-center font-pretendard-regular'>
+						<Text className='text-tertiary text-[13px] mt-2 text-center font-pretendard-regular'>
 							{venue}
 						</Text>
 					</View>
@@ -110,10 +111,10 @@ interface SectionTitleProps {
 export function ExploreSectionTitle({ eyebrow, title }: SectionTitleProps) {
 	return (
 		<View className='mb-4'>
-			<Text className='text-[11px] text-[#A8A29E] mb-1 font-pretendard-semibold leading-[1.6px]'>
+			<Text className='text-[11px] text-muted mb-1 font-pretendard-semibold leading-[1.6px]'>
 				{eyebrow}
 			</Text>
-			<Text className='text-[#1C1917] text-[20px] font-hahmlet-semibold'>
+			<Text className='text-primary text-[20px] font-hahmlet-semibold'>
 				{title}
 			</Text>
 		</View>
@@ -155,7 +156,7 @@ export function PosterFrame({
 			style={{
 				...sizeStyle,
 				borderRadius,
-				shadowColor: '#1C1917',
+				shadowColor: colors.primary,
 				shadowOpacity: 0.08,
 				shadowRadius: 10,
 				shadowOffset: { width: 0, height: 3 },
@@ -209,14 +210,14 @@ export function GridExhibitionCell({
 			/>
 			<View className='flex-1'>
 				<Text
-					className='mt-2 text-[#1C1917] text-[13px] leading-[18px] font-pretendard-semibold'
+					className='mt-2 text-primary text-[13px] leading-[18px] font-pretendard-semibold'
 					style={{ width: colWidth }}
 				>
 					{item.title.trim()}
 				</Text>
 				<Text
 					numberOfLines={1}
-					className='text-[#A8A29E] text-[11px] mt-0.5 font-pretendard-regular'
+					className='text-muted text-[11px] mt-0.5 font-pretendard-regular'
 					style={{ width: colWidth }}
 				>
 					{item.venue.trim()}
@@ -275,13 +276,13 @@ export function RecommendedExhibitions({
 				/>
 				<Text
 					numberOfLines={2}
-					className='mt-3 text-[#1C1917] text-[16px] leading-[22px] font-pretendard-semibold'
+					className='mt-3 text-primary text-[16px] leading-[22px] font-pretendard-semibold'
 				>
 					{lead.title.trim()}
 				</Text>
 				<Text
 					numberOfLines={1}
-					className='text-[#A8A29E] text-[12px] mt-1 font-pretendard-regular'
+					className='text-muted text-[12px] mt-1 font-pretendard-regular'
 				>
 					{lead.venue.trim()}
 				</Text>

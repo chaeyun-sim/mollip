@@ -1,9 +1,10 @@
 import { ActivityIndicator, Pressable, Text, View } from 'react-native';
 
 import { cn } from '@/src/lib/cn';
+import { colors } from '@/src/constants/colors';
 
 const APPLE_PILL_SHADOW = {
-	shadowColor: '#1C1917',
+	shadowColor: colors.primary,
 	shadowOpacity: 0.06,
 	shadowRadius: 12,
 	shadowOffset: { width: 0, height: 4 },
@@ -54,7 +55,7 @@ export function SocialPill({
 					}
 				>
 					{loading ? (
-						<ActivityIndicator color={isKakao ? '#191919' : '#1C1917'} />
+						<ActivityIndicator color={isKakao ? '#191919' : colors.primary} />
 					) : (
 						<>
 							{icon}
@@ -65,7 +66,7 @@ export function SocialPill({
 										? 'text-[#191919]'
 										: isGhost
 											? 'text-[#44403C]'
-											: 'text-[#1C1917]',
+											: 'text-primary',
 								)}
 							>
 								{label}

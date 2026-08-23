@@ -1,6 +1,7 @@
 import { cn } from '@/src/lib/cn';
 import * as Haptics from 'expo-haptics';
 import { Pressable, Text, View } from 'react-native';
+import { colors } from '@/src/constants/colors';
 
 interface SettingsPillGroupProps<T extends string | number> {
 	options: { value: T; label: string }[];
@@ -34,11 +35,11 @@ export function SettingsPillGroup<T extends string | number>({
 						style={({ pressed }) => ({
 							height: 32,
 							...(equalWidth ? { flex: 1, flexBasis: 0 } : null),
-							backgroundColor: selected ? '#1C1917' : 'transparent',
+							backgroundColor: selected ? colors.primary : 'transparent',
 							transform: [{ scale: pressed ? 0.95 : 1 }],
 							...(selected
 								? {
-										shadowColor: '#1C1917',
+										shadowColor: colors.primary,
 										shadowOpacity: 0.25,
 										shadowRadius: 6,
 										shadowOffset: { width: 0, height: 2 },
@@ -59,7 +60,7 @@ export function SettingsPillGroup<T extends string | number>({
 							numberOfLines={1}
 							className={cn(
 								'font-pretendard-semibold',
-								selected ? 'text-white' : 'text-[#A8A29E]',
+								selected ? 'text-white' : 'text-muted',
 							)}
 							style={{ fontSize: labelFontSize ? labelFontSize(opt.value) : 12 }}
 						>

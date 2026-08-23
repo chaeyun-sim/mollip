@@ -100,7 +100,7 @@ function RelatedExhibitionCard({
 								elevation: 2,
 							}}
 						>
-							<Text className='text-[10px] font-pretendard-semibold text-[#1C1917]'>
+							<Text className='text-[10px] font-pretendard-semibold text-primary'>
 								{ddayLabel}
 							</Text>
 						</View>

@@ -24,6 +24,7 @@ import { useMuseums } from '@/src/hooks/useMuseums';
 import { useUserLocation } from '@/src/hooks/useUserLocation';
 import { supabase } from '@/src/utils/supabase';
 import { distanceKm } from '@/src/utils/mapUtils';
+import { colors } from '@/src/constants/colors';
 
 interface Waypoint {
 	id: string;
@@ -366,7 +367,7 @@ export default function RouteScreen() {
 							className='w-[34px] h-[34px] rounded-full items-center justify-center'
 							style={{
 								backgroundColor:
-									i === 0 ? '#1C1917' : i === waypoints.length - 1 ? ROUTE_COLOR : '#D97706',
+									i === 0 ? colors.primary : i === waypoints.length - 1 ? ROUTE_COLOR : '#D97706',
 							}}
 						>
 							<Text className='text-white font-pretendard-bold text-[14px]'>
@@ -436,7 +437,7 @@ export default function RouteScreen() {
 						<Ionicons name='chevron-back' size={22} color='#1a1a1a' />
 					</Pressable>
 					<View className='flex-1 bg-white/90 rounded-2xl px-4 py-2.5'>
-						<Text className='font-pretendard-semibold text-[15px] text-[#1C1917]'>
+						<Text className='font-pretendard-semibold text-[15px] text-primary'>
 							관람 루트
 						</Text>
 						<Text className='font-pretendard-regular text-[11px] text-gray-400 mt-0.5'>
@@ -451,7 +452,7 @@ export default function RouteScreen() {
 							accessibilityLabel='초기화'
 							accessibilityRole='button'
 						>
-							<Text className='font-pretendard-medium text-[13px] text-[#1C1917]'>
+							<Text className='font-pretendard-medium text-[13px] text-primary'>
 								초기화
 							</Text>
 						</Pressable>
@@ -471,13 +472,13 @@ export default function RouteScreen() {
 						{waypoints.map((wp, i) => (
 							<View
 								key={wp.id}
-								className='flex-row items-center gap-1.5 bg-[#F8F6F2] rounded-full px-3 py-1.5'
+								className='flex-row items-center gap-1.5 bg-bg-light rounded-full px-3 py-1.5'
 							>
 								<View
 									className='w-5 h-5 rounded-full items-center justify-center'
 									style={{
 										backgroundColor:
-											i === 0 ? '#1C1917' : i === waypoints.length - 1 ? ROUTE_COLOR : '#D97706',
+											i === 0 ? colors.primary : i === waypoints.length - 1 ? ROUTE_COLOR : '#D97706',
 									}}
 								>
 									<Text className='text-white font-pretendard-bold text-[10px]'>
@@ -485,7 +486,7 @@ export default function RouteScreen() {
 									</Text>
 								</View>
 								<Text
-									className='font-pretendard-regular text-[13px] text-[#1C1917]'
+									className='font-pretendard-regular text-[13px] text-primary'
 									numberOfLines={1}
 									style={{ maxWidth: 120 }}
 								>
@@ -527,7 +528,7 @@ export default function RouteScreen() {
 						style={{
 							flex: routeReady && nearbyExhibitions.length > 0 ? undefined : 1,
 							minWidth: routeReady && nearbyExhibitions.length > 0 ? 120 : undefined,
-							backgroundColor: waypoints.length < 2 ? '#E7E5E4' : '#1C1917',
+							backgroundColor: waypoints.length < 2 ? colors.border : colors.primary,
 						}}
 						accessibilityLabel={routeReady ? '경로 재생성' : '경로 생성'}
 						accessibilityRole='button'
@@ -562,7 +563,7 @@ export default function RouteScreen() {
 						style={{ paddingBottom: insets.bottom + 24, maxHeight: '65%' }}
 					>
 						<View className='flex-row items-center justify-between mb-1'>
-							<Text className='font-pretendard-semibold text-[17px] text-[#1C1917]'>
+							<Text className='font-pretendard-semibold text-[17px] text-primary'>
 								가는 길에서 볼 수 있는 전시
 							</Text>
 							<Pressable
@@ -571,7 +572,7 @@ export default function RouteScreen() {
 								accessibilityLabel='닫기'
 								accessibilityRole='button'
 							>
-								<Ionicons name='close' size={22} color='#1C1917' />
+								<Ionicons name='close' size={22} color={colors.primary} />
 							</Pressable>
 						</View>
 						<Text className='font-pretendard-regular text-[13px] text-gray-400 mb-4'>
@@ -593,7 +594,7 @@ export default function RouteScreen() {
 											accessibilityRole='button'
 										>
 											<Text
-												className='font-pretendard-medium text-[15px] text-[#1C1917]'
+												className='font-pretendard-medium text-[15px] text-primary'
 												numberOfLines={1}
 											>
 												{ex.title}
@@ -608,12 +609,12 @@ export default function RouteScreen() {
 									</View>
 									<Pressable
 										onPress={() => addNearbyAsWaypoint(ex)}
-										className='self-start flex-row items-center gap-1.5 bg-[#F8F6F2] rounded-full px-3 py-1.5'
+										className='self-start flex-row items-center gap-1.5 bg-bg-light rounded-full px-3 py-1.5'
 										accessibilityLabel='경로에 추가'
 										accessibilityRole='button'
 									>
-										<Ionicons name='add-circle-outline' size={15} color='#1C1917' />
-										<Text className='font-pretendard-medium text-[13px] text-[#1C1917]'>
+										<Ionicons name='add-circle-outline' size={15} color={colors.primary} />
+										<Text className='font-pretendard-medium text-[13px] text-primary'>
 											경로에 추가
 										</Text>
 									</Pressable>

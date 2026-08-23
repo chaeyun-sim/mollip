@@ -17,6 +17,7 @@ import type { Voice } from '@/src/hooks/useTTS';
 import { useSettingsStore } from '@/src/store/settingsStore';
 import { fetchTTSBlob, fetchVoices } from '@/src/utils/api';
 import { cn } from '@/src/lib/cn';
+import { colors } from '@/src/constants/colors';
 
 const AVATAR_COLORS = [
 	'#F3D9C4',
@@ -100,10 +101,10 @@ export default function VoiceScreen() {
 		<Screen variant='warm'>
 			<Screen.Header>
 				<Screen.Header.Left>
-					<Screen.Header.Back color='#1C1917' onPress={() => router.back()} />
+					<Screen.Header.Back color={colors.primary} onPress={() => router.back()} />
 				</Screen.Header.Left>
 				<Screen.Header.Center>
-					<Text className='font-pretendard-semibold text-[16px] text-[#1C1917]'>
+					<Text className='font-pretendard-semibold text-[16px] text-primary'>
 						음성 선택
 					</Text>
 				</Screen.Header.Center>
@@ -140,9 +141,9 @@ export default function VoiceScreen() {
 									key={voice.voice_id}
 									className='rounded-[22px] py-3.5'
 									style={({ pressed }) => ({
-										backgroundColor: selected ? '#F7F3EE' : '#F2EFE9',
+										backgroundColor: selected ? '#F7F3EE' : colors.bgTonal,
 										borderWidth: selected ? 1.5 : 0,
-										borderColor: selected ? '#1C1917' : 'transparent',
+										borderColor: selected ? colors.primary : 'transparent',
 										transform: [{ scale: pressed ? 0.98 : 1 }],
 									})}
 									accessibilityRole='radio'
@@ -159,13 +160,13 @@ export default function VoiceScreen() {
 												className='w-11 h-11 rounded-full items-center justify-center'
 												style={{ backgroundColor: avatarColor(displayName) }}
 											>
-												<Text className='font-pretendard-bold text-[15px] text-[#1C1917]'>
+												<Text className='font-pretendard-bold text-[15px] text-primary'>
 													{displayName.charAt(0)}
 												</Text>
 											</View>
 											{selected && (
 												<View
-													className='absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full bg-[#1C1917] items-center justify-center'
+													className='absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full bg-primary items-center justify-center'
 													style={{
 														shadowColor: '#fff',
 														shadowOffset: { width: 0, height: 0 },
@@ -216,9 +217,9 @@ export default function VoiceScreen() {
 											disabled={!!previewingId}
 										>
 											{previewingId === voice.voice_id ? (
-												<ActivityIndicator size='small' color='#3B82F6' />
+												<ActivityIndicator size='small' color={colors.accent} />
 											) : (
-												<Ionicons name='play' size={15} color='#3B82F6' />
+												<Ionicons name='play' size={15} color={colors.accent} />
 											)}
 										</Pressable>
 									</View>

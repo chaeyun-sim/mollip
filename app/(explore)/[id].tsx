@@ -38,6 +38,7 @@ import {
 	cancelDeadlineNotifications,
 	scheduleDeadlineNotifications,
 } from '@/src/utils/notificationScheduler';
+import { colors } from '@/src/constants/colors';
 
 export default function ExhibitionDetailScreen() {
 	const { id } = useLocalSearchParams<{ id: string }>();
@@ -64,7 +65,7 @@ export default function ExhibitionDetailScreen() {
 
 	if (!exhibition) {
 		return (
-			<SafeAreaView className='flex-1 items-center justify-center bg-[#F8F6F2]'>
+			<SafeAreaView className='flex-1 items-center justify-center bg-bg-light'>
 				<Text className='text-gray-500 text-base font-pretendard-regular mb-4'>
 					전시를 찾을 수 없어요
 				</Text>
@@ -78,7 +79,7 @@ export default function ExhibitionDetailScreen() {
 	}
 
 	return (
-		<View className='flex-1 bg-[#F8F6F2]'>
+		<View className='flex-1 bg-bg-light'>
 			<Animated.ScrollView
 				onScroll={scrollHandler}
 				scrollEventThrottle={16}
@@ -169,10 +170,10 @@ export default function ExhibitionDetailScreen() {
 							<Ionicons
 								name='information-circle-outline'
 								size={17}
-								color='#78716C'
+								color={colors.tertiary}
 								style={{ marginTop: 1 }}
 							/>
-							<Text className='flex-1 text-[13px] leading-[20px] text-[#57534E] font-pretendard-regular'>
+							<Text className='flex-1 text-[13px] leading-[20px] text-secondary font-pretendard-regular'>
 								{exhibition.note}
 							</Text>
 						</View>

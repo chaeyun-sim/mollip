@@ -13,7 +13,7 @@ export function ExhibitionDetailSkeleton() {
 	const insets = useSafeAreaInsets();
 
 	return (
-		<View className='flex-1 bg-[#F8F6F2]'>
+		<View className='flex-1 bg-bg-light'>
 			{/* Hero */}
 			<SkeletonBox className='w-full bg-[#E0DCD5]' style={{ height: HERO_HEIGHT }} />
 

@@ -36,7 +36,7 @@ export function PillSelector<T extends string | number>({
 						className={cn(
 							'px-3 py-1.5 rounded-full',
 							selected
-								? 'bg-[#1C1917] border-2 border-[#1C1917]'
+								? 'bg-primary border-2 border-primary'
 								: 'border border-[rgba(28,25,23,0.15)]',
 						)}
 					>
@@ -45,7 +45,7 @@ export function PillSelector<T extends string | number>({
 							className={cn(
 								selected
 									? 'font-pretendard-medium text-white'
-									: 'font-pretendard-regular text-[#A8A29E]',
+									: 'font-pretendard-regular text-muted',
 							)}
 						>
 							{opt.label}

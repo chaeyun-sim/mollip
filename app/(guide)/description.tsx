@@ -41,6 +41,7 @@ import { useBookmarkAudioStore } from '@/src/store/bookmarkAudioStore';
 import { useChatStore } from '@/src/store/chatStore';
 import { store } from '@/src/store';
 import { fetchWikidataImage } from '@/src/utils/wikidataImage';
+import { colors } from '@/src/constants/colors';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -225,7 +226,7 @@ export default function DescriptionScreen() {
 							<Ionicons
 								name={savedId && isAudioBookmarked(savedId) ? 'heart' : 'heart-outline'}
 								size={22}
-								color={savedId && isAudioBookmarked(savedId) ? '#F87171' : '#78716C'}
+								color={savedId && isAudioBookmarked(savedId) ? '#F87171' : colors.tertiary}
 							/>
 						</Pressable>
 					</Screen.Header.Right>
@@ -239,8 +240,8 @@ export default function DescriptionScreen() {
 			>
 				{hasError ? (
 					<View className='items-center mt-16 gap-3'>
-						<Ionicons name='alert-circle-outline' size={40} color='#78716C' />
-						<Text className='text-[#78716C] text-[15px]'>
+						<Ionicons name='alert-circle-outline' size={40} color={colors.tertiary} />
+						<Text className='text-tertiary text-[15px]'>
 							{retryCount >= MAX_DESCRIPTION_RETRIES
 								? '잠시 후 다시 시도해 주세요'
 								: '해설 생성에 실패했어요'}
@@ -249,7 +250,7 @@ export default function DescriptionScreen() {
 				) : isStreaming && displayed === '' ? (
 					<View className='flex-row items-center mt-5 gap-2.5'>
 						<ActivityIndicator color='#60A5FA' />
-						<Text className='text-[15px] text-[#A8A29E]'>
+						<Text className='text-[15px] text-muted'>
 							{loadingStep === 0 && '그림 찾는 중...'}
 							{loadingStep === 1 && '그림 분석 중...'}
 							{loadingStep === 2 && '해설 생성 중...'}
@@ -287,9 +288,9 @@ export default function DescriptionScreen() {
 			</ScrollView>
 
 			{/* 플레이어 항상 표시, 타이핑 중엔 비활성 */}
-			<Screen.BottomAbsolute className={cn('bottom-9 pt-6 px-6', highContrast ? 'bg-white' : 'bg-[#171412]')}>
+			<Screen.BottomAbsolute className={cn('bottom-9 pt-6 px-6', highContrast ? 'bg-white' : 'bg-bg-dark')}>
 				<Pressable
-					className='h-1 rounded-sm overflow-hidden bg-[#292524]'
+					className='h-1 rounded-sm overflow-hidden bg-divider-dark'
 					hitSlop={{ top: 16, bottom: 16 }}
 					onLayout={(e: LayoutChangeEvent) => {
 						progressWidth.current = e.nativeEvent.layout.width;
@@ -303,8 +304,8 @@ export default function DescriptionScreen() {
 				</Pressable>
 
 				<View className='flex-row justify-between mt-1 mb-2'>
-					<Text className='text-[11px] text-[#78716C]'>{formatTime(elapsed)}</Text>
-					<Text className='text-[11px] text-[#78716C]'>
+					<Text className='text-[11px] text-tertiary'>{formatTime(elapsed)}</Text>
+					<Text className='text-[11px] text-tertiary'>
 						{duration > 0 ? formatTime(duration) : '--:--'}
 					</Text>
 				</View>
@@ -322,7 +323,7 @@ export default function DescriptionScreen() {
 								accessibilityRole='button'
 								style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
 							>
-								<Ionicons name='chatbubble' size={26} color='#78716C' />
+								<Ionicons name='chatbubble' size={26} color={colors.tertiary} />
 							</Pressable>
 						)}
 					</View>
@@ -331,7 +332,7 @@ export default function DescriptionScreen() {
 					<Pressable
 						className={cn(
 							'w-16 h-16 rounded-[32px] items-center justify-center',
-							isTTSLoading || isTyping || !displayed ? 'bg-[#292524]' : 'bg-[#3B82F6]',
+							isTTSLoading || isTyping || !displayed ? 'bg-divider-dark' : 'bg-accent',
 						)}
 						style={({ pressed }) => ({
 							transform: [
@@ -363,7 +364,7 @@ export default function DescriptionScreen() {
 								accessibilityRole='button'
 								style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
 							>
-								<Ionicons name='list' size={28} color='#78716C' />
+								<Ionicons name='list' size={28} color={colors.tertiary} />
 							</Pressable>
 						)}
 						{!isTyping && !isImmersive && (
@@ -377,7 +378,7 @@ export default function DescriptionScreen() {
 								accessibilityRole='button'
 								style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
 							>
-								<Ionicons name='share-outline' size={26} color='#78716C' />
+								<Ionicons name='share-outline' size={26} color={colors.tertiary} />
 							</Pressable>
 						)}
 					</View>
@@ -398,10 +399,10 @@ export default function DescriptionScreen() {
 						accessibilityRole='button'
 						style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
 					>
-						<View className='w-12 h-12 rounded-full bg-[#1C1917] border border-white/10 items-center justify-center'>
+						<View className='w-12 h-12 rounded-full bg-primary border border-white/10 items-center justify-center'>
 							<Ionicons name='refresh' size={20} color='#60A5FA' />
 						</View>
-						<Text className='text-[11px] text-[#78716C] font-pretendard-regular'>
+						<Text className='text-[11px] text-tertiary font-pretendard-regular'>
 							{retryCount + 1}/{MAX_DESCRIPTION_RETRIES}
 						</Text>
 					</Pressable>

@@ -27,7 +27,7 @@ export function SearchBar({
 		<View
 			className={cn(
 				'flex-row items-center rounded-2xl px-3 py-2.5 gap-2',
-				elevated ? 'bg-white' : 'bg-[#F2EFE9]',
+				elevated ? 'bg-white' : 'bg-bg-tonal',
 			)}
 			style={
 				elevated

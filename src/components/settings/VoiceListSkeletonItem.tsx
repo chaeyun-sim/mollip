@@ -7,6 +7,7 @@ import Animated, {
 	withRepeat,
 	withTiming,
 } from 'react-native-reanimated';
+import { colors } from '@/src/constants/colors';
 
 export function VoiceListSkeletonItem() {
 	const opacity = useSharedValue(1);
@@ -31,7 +32,7 @@ export function VoiceListSkeletonItem() {
 					borderRadius: 20,
 					paddingHorizontal: 16,
 					height: 76,
-					backgroundColor: '#F2EFE9',
+					backgroundColor: colors.bgTonal,
 					gap: 12,
 				},
 			]}

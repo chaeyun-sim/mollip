@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { ActivityIndicator, Modal, Pressable, Text, View } from 'react-native';
 import { Screen } from '@/src/components/layout/Screen';
 import { useAuthStore } from '@/src/store/authStore';
+import { colors } from '@/src/constants/colors';
 
 export default function AccountScreen() {
 	const router = useRouter();
@@ -29,9 +30,9 @@ export default function AccountScreen() {
 	return (
 		<Screen variant='warm'>
 			<Screen.Header>
-				<Screen.Header.Back color='#1C1917' onPress={() => router.back()} />
+				<Screen.Header.Back color={colors.primary} onPress={() => router.back()} />
 				<Screen.Header.Center>
-					<Text className='text-[18px] text-[#1C1917] font-hahmlet-semibold'>
+					<Text className='text-[18px] text-primary font-hahmlet-semibold'>
 						계정 정보
 					</Text>
 				</Screen.Header.Center>
@@ -41,11 +42,11 @@ export default function AccountScreen() {
 				{/* 이메일 행 */}
 				{user.email && (
 					<View className='flex-row items-center justify-between px-1 py-3 mb-6'>
-						<Text className='font-pretendard-medium text-[14px] text-[#1C1917]'>
+						<Text className='font-pretendard-medium text-[14px] text-primary'>
 							이메일
 						</Text>
 						<Text
-							className='font-pretendard-regular text-[13px] text-[#A8A29E] max-w-[60%]'
+							className='font-pretendard-regular text-[13px] text-muted max-w-[60%]'
 							numberOfLines={1}
 						>
 							{user.email}
@@ -54,11 +55,11 @@ export default function AccountScreen() {
 				)}
 				{user.email && (
 					<View className='flex-row items-center justify-between px-1 py-3 mb-6'>
-						<Text className='font-pretendard-medium text-[14px] text-[#1C1917]'>
+						<Text className='font-pretendard-medium text-[14px] text-primary'>
 							로그인 방법
 						</Text>
 						<Text
-							className='font-pretendard-regular text-[13px] text-[#A8A29E] max-w-[60%]'
+							className='font-pretendard-regular text-[13px] text-muted max-w-[60%]'
 							numberOfLines={1}
 						>
 							{user.app_metadata.provider?.toUpperCase() === 'KAKAO'
@@ -72,17 +73,17 @@ export default function AccountScreen() {
 				<Pressable
 					onPress={handleSignOut}
 					disabled={signingOut}
-					className='rounded-2xl bg-[#F2EFE9] flex-row items-center justify-center gap-2 py-[15px]'
+					className='rounded-2xl bg-bg-tonal flex-row items-center justify-center gap-2 py-[15px]'
 					style={({ pressed }) => ({ opacity: pressed || signingOut ? 0.6 : 1 })}
 					accessibilityRole='button'
 					accessibilityLabel='로그아웃'
 				>
 					{signingOut ? (
-						<ActivityIndicator color='#1C1917' />
+						<ActivityIndicator color={colors.primary} />
 					) : (
 						<>
-							<Ionicons name='log-out-outline' size={18} color='#1C1917' />
-							<Text className='font-pretendard-semibold text-[15px] text-[#1C1917]'>
+							<Ionicons name='log-out-outline' size={18} color={colors.primary} />
+							<Text className='font-pretendard-semibold text-[15px] text-primary'>
 								로그아웃
 							</Text>
 						</>
@@ -101,7 +102,7 @@ export default function AccountScreen() {
 						accessibilityLabel='탈퇴하기'
 						style={({ pressed }) => ({ opacity: pressed ? 0.5 : 1 })}
 					>
-						<Text className='font-pretendard-regular text-[13px] text-[#A8A29E] underline'>
+						<Text className='font-pretendard-regular text-[13px] text-muted underline'>
 							탈퇴하기
 						</Text>
 					</Pressable>
@@ -116,10 +117,10 @@ export default function AccountScreen() {
 			>
 				<View className='flex-1 items-center justify-center bg-[rgba(0,0,0,0.5)] px-8'>
 					<View className='w-full rounded-3xl bg-white p-6'>
-						<Text className='text-[17px] font-pretendard-semibold text-[#1C1917] mb-2'>
+						<Text className='text-[17px] font-pretendard-semibold text-primary mb-2'>
 							정말 탈퇴할까요?
 						</Text>
-						<Text className='text-[13px] leading-[20px] font-pretendard-regular text-[#78716C] mb-6'>
+						<Text className='text-[13px] leading-[20px] font-pretendard-regular text-tertiary mb-6'>
 							계정 정보, 관람 기록, 저장한 전시가 모두 삭제되며{'\n'}이 작업은 되돌릴
 							수 없어요.
 						</Text>
@@ -129,12 +130,12 @@ export default function AccountScreen() {
 									Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
 									setShowWithdrawWarning(false);
 								}}
-								className='flex-1 rounded-2xl bg-[#F2EFE9] items-center justify-center py-[14px]'
+								className='flex-1 rounded-2xl bg-bg-tonal items-center justify-center py-[14px]'
 								style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
 								accessibilityRole='button'
 								accessibilityLabel='닫기'
 							>
-								<Text className='font-pretendard-semibold text-[15px] text-[#1C1917]'>
+								<Text className='font-pretendard-semibold text-[15px] text-primary'>
 									닫기
 								</Text>
 							</Pressable>
@@ -144,7 +145,7 @@ export default function AccountScreen() {
 									setShowWithdrawWarning(false);
 									router.push('/settings/delete-account');
 								}}
-								className='flex-1 rounded-2xl bg-[#EF4444] items-center justify-center py-[14px]'
+								className='flex-1 rounded-2xl bg-error items-center justify-center py-[14px]'
 								style={({ pressed }) => ({ opacity: pressed ? 0.85 : 1 })}
 								accessibilityRole='button'
 								accessibilityLabel='그래도 탈퇴할래요'

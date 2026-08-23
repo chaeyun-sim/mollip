@@ -1,4 +1,5 @@
 import { View } from 'react-native';
+import { colors } from '@/src/constants/colors';
 
 interface SettingsCardProps {
 	children: React.ReactNode;
@@ -9,7 +10,7 @@ export function SettingsCard({ children }: SettingsCardProps) {
 		<View
 			className='bg-white rounded-2xl overflow-hidden'
 			style={{
-				shadowColor: '#1C1917',
+				shadowColor: colors.primary,
 				shadowOpacity: 0.06,
 				shadowRadius: 10,
 				shadowOffset: { width: 0, height: 2 },
