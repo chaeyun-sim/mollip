@@ -39,6 +39,19 @@ export default function TabsLayout() {
 				}}
 			/>
 			<Tabs.Screen
+				name='exhibitions'
+				options={{
+					title: '전시',
+					tabBarIcon: ({ focused, color, size }) => (
+						<Ionicons
+							name={focused ? 'images' : 'images-outline'}
+							size={size}
+							color={color}
+						/>
+					),
+				}}
+			/>
+			<Tabs.Screen
 				name='index'
 				options={{
 					title: '둘러보기',

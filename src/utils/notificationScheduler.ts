@@ -30,7 +30,7 @@ export async function scheduleDeadlineNotifications(
 
 	const triggers: Array<{ daysLeft: number; body: string }> = [
 		{ daysLeft: 7, body: '북마크한 전시가 7일 후 마감이에요' },
-		{ daysLeft: 3, body: '북마크한 전시가 3일 후 마감이에요' },
+		{ daysLeft: 2, body: '북마크한 전시가 이틀 후 마감이에요' },
 	];
 
 	for (const { daysLeft, body } of triggers) {

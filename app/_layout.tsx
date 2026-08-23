@@ -1,6 +1,5 @@
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import '../global.css';
-
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import {
 	CormorantGaramond_400Regular,
@@ -23,6 +22,10 @@ import { useImmersiveStore } from '../src/store/immersiveStore';
 import { AuthProvider } from '../src/providers/AuthProvider';
 import { useAuthStore } from '../src/store/authStore';
 import { usePushNotifications } from '../src/hooks/usePushNotifications';
+import { useBookmarkSync } from '../src/hooks/useBookmarkSync';
+import { useHistorySync } from '../src/hooks/useHistorySync';
+import { useVisitSync } from '../src/hooks/useVisitSync';
+import { useBookmarkAudioSync } from '../src/hooks/useBookmarkAudioSync';
 import * as Notifications from 'expo-notifications';
 
 SplashScreen.preventAutoHideAsync();
@@ -51,6 +54,10 @@ export default function RootLayout() {
 	const user = useAuthStore((s) => s.user);
 	const onboardingCompleted = useAuthStore((s) => s.onboardingCompleted);
 	usePushNotifications(user?.id); // 네이티브 빌드 후 활성화
+	useBookmarkSync(); // 로그인 시 Supabase 북마크 동기화
+	useHistorySync(); // 로그인 시 Supabase 오디오 가이드 히스토리 동기화
+	useVisitSync(); // 로그인 시 Supabase 관람 기록 동기화
+	useBookmarkAudioSync(); // 로그인 시 Supabase 오디오 북마크 동기화
 
 	const isImmersive = useImmersiveStore((s) => s.isImmersiveMode);
 	const router = useRouter();
@@ -106,7 +113,10 @@ export default function RootLayout() {
 					<BottomSheetModalProvider>
 						<Stack screenOptions={{ headerShown: false }}>
 							<Stack.Screen name='(tabs)' options={{ headerShown: false }} />
-							<Stack.Screen name='(guide)' options={{ headerShown: false }} />
+							<Stack.Screen
+								name='(guide)'
+								options={{ headerShown: false, gestureEnabled: !isImmersive }}
+							/>
 							<Stack.Screen name='(explore)' options={{ headerShown: false }} />
 							<Stack.Screen name='auth' options={{ headerShown: false }} />
 							<Stack.Screen name='diary/[date]' options={{ headerShown: false }} />

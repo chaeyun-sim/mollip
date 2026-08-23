@@ -19,7 +19,7 @@ export async function searchNaverLocal(
   display = 6,
   location?: { latitude: number; longitude: number },
 ): Promise<NaverLocalItem[]> {
-  const { data, error } = await supabase.functions.invoke<{ items: NaverLocalItem[] }>(
+  const { data, error } = await supabase.functions.invoke<{ items: NaverLocalItem[]; error?: string }>(
     'naver-local-search',
     {
       body: {
@@ -32,6 +32,10 @@ export async function searchNaverLocal(
 
   if (error) {
     throw new Error(`Naver search failed: ${error.message}`);
+  }
+
+  if (data?.error) {
+    console.warn('[naver] API error:', data.error);
   }
 
   return data?.items ?? [];

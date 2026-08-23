@@ -1,6 +1,12 @@
-import type { VoiceSpeed } from '@/src/store/settingsStore';
+import type { FontSize, VoiceSpeed } from '@/src/store/settingsStore';
 
 export const APP_VERSION = '1.0.0';
+
+export const FONT_SIZE_OPTIONS: { value: FontSize; label: string }[] = [
+	{ value: 'small', label: '소' },
+	{ value: 'medium', label: '중' },
+	{ value: 'large', label: '대' },
+];
 
 export const SPEED_OPTIONS: { value: VoiceSpeed; label: string }[] = [
 	{ value: 0.7, label: '0.7x' },

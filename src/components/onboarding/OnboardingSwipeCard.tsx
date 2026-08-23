@@ -1,3 +1,4 @@
+import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Dimensions, Image, StyleSheet, Text, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
@@ -37,6 +38,7 @@ interface OnboardingSwipeCardProps {
 	onSwipeRight: () => void;
 	isTop: boolean;
 	index: number;
+	isPreviouslyLiked?: boolean;
 }
 
 export function OnboardingSwipeCard({
@@ -45,6 +47,7 @@ export function OnboardingSwipeCard({
 	onSwipeRight,
 	isTop,
 	index,
+	isPreviouslyLiked = false,
 }: OnboardingSwipeCardProps) {
 	const translateX = useSharedValue(0);
 	const translateY = useSharedValue(0);
@@ -173,6 +176,16 @@ export function OnboardingSwipeCard({
 					</Text>
 				</Animated.View>
 
+				{/* 이전 선택 배지 */}
+				{isPreviouslyLiked && (
+					<View
+						className='absolute top-4 right-4 w-9 h-9 rounded-full items-center justify-center'
+						style={{ backgroundColor: 'rgba(0,0,0,0.45)' }}
+					>
+						<Ionicons name='heart' size={18} color='#00bc7d' />
+					</View>
+				)}
+
 				{/* 카드 콘텐츠 */}
 				<View className='absolute bottom-0 left-0 right-0 px-6 pb-8 pt-24'>
 					<LinearGradient
@@ -215,4 +228,3 @@ export function OnboardingSwipeCard({
 		</GestureDetector>
 	);
 }
-

@@ -146,9 +146,9 @@ export default function ExploreScreen() {
 				</View>
 			</ScrollView>
 
-			{/* FAB: safe area 하단 인셋 반영 (홈 인디케이터 겹침 방지) */}
+			{/* FAB 영역 */}
 			<View
-				className={cn('absolute right-6')}
+				className='absolute right-6 items-end gap-3'
 				style={{
 					bottom: Math.max(insets.bottom + 16, 24),
 					shadowColor: '#1C1917',
@@ -158,6 +158,18 @@ export default function ExploreScreen() {
 					elevation: 8,
 				}}
 			>
+				{/* 몰입 모드 pill */}
+				<Pressable
+					onPress={() => router.push('/(guide)/immersive-start')}
+					accessibilityLabel='몰입 모드로 시작하기'
+					accessibilityRole='button'
+					className='h-[58px] w-[58px] items-center justify-center rounded-full bg-[#1C1917]'
+					style={({ pressed }) => ({ opacity: pressed ? 0.88 : 1 })}
+				>
+					<Ionicons name='headset-outline' size={26} color='#F2EFE9' />
+				</Pressable>
+
+				{/* 카메라 FAB */}
 				<Pressable
 					onPress={() => router.push('/(guide)/create-description')}
 					accessibilityLabel='작품 해설 만들기'
