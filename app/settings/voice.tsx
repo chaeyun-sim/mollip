@@ -87,7 +87,10 @@ export default function VoiceScreen() {
 			previewPlayer.replace(uri);
 			previewPlayer.play();
 		} catch {
-			Alert.alert('미리 듣기 실패', '음성을 재생할 수 없어요. 잠시 후 다시 시도해 주세요.');
+			Alert.alert(
+				'미리 듣기 실패',
+				'음성을 재생할 수 없어요. 잠시 후 다시 시도해 주세요.',
+			);
 		} finally {
 			setPreviewingId(null);
 		}
@@ -100,7 +103,7 @@ export default function VoiceScreen() {
 					<Screen.Header.Back color='#1C1917' onPress={() => router.back()} />
 				</Screen.Header.Left>
 				<Screen.Header.Center>
-					<Text className='text-[18px] text-gray-900 font-hahmlet-semibold'>
+					<Text className='font-pretendard-semibold text-[16px] text-[#1C1917]'>
 						음성 선택
 					</Text>
 				</Screen.Header.Center>

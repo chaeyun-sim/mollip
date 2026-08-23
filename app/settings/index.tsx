@@ -13,7 +13,7 @@ import {
 import type { Voice } from '@/src/hooks/useTTS';
 import { useSettingsStore } from '@/src/store/settingsStore';
 import { fetchVoices } from '@/src/utils/api';
-import { APP_VERSION, SCRAP_TILES, SPEED_OPTIONS } from '@/src/data/mypage';
+import { APP_VERSION, FONT_SIZE_OPTIONS, SCRAP_TILES, SPEED_OPTIONS } from '@/src/data/mypage';
 
 export default function SettingsScreen() {
 	const router = useRouter();
@@ -23,8 +23,12 @@ export default function SettingsScreen() {
 		voiceId,
 		voiceSpeed,
 		setVoiceSpeed,
+		fontSize,
+		setFontSize,
 		pushNotificationsEnabled,
 		setPushNotificationsEnabled,
+		highContrast,
+		setHighContrast,
 	} = useSettingsStore();
 	const [currentVoiceName, setCurrentVoiceName] = useState<string>('');
 
@@ -50,7 +54,6 @@ export default function SettingsScreen() {
 			<ScrollView
 				showsVerticalScrollIndicator={false}
 				contentContainerStyle={{ paddingBottom: 60 }}
-				scrollEnabled={false}
 			>
 				<View className='w-full gap-6'>
 					{/* 계정 */}
@@ -61,6 +64,11 @@ export default function SettingsScreen() {
 								icon='person-outline'
 								label='계정 정보'
 								onPress={() => router.push('/settings/account')}
+							/>
+							<CardRow
+								icon='heart-outline'
+								label='내 취향 수정'
+								onPress={() => router.push('/settings/preferences')}
 								last
 							/>
 						</SettingsCard>
@@ -86,7 +94,7 @@ export default function SettingsScreen() {
 					<View className='gap-2'>
 						<SectionLabel>해설 생성 설정</SectionLabel>
 						<SettingsCard>
-							<CardRow icon='speedometer-outline' label='재생 속도'>
+							<CardRow icon='speedometer-outline' label='재생 속도' className='py-3.5'>
 								<PillSelector
 									options={SPEED_OPTIONS}
 									value={voiceSpeed}
@@ -98,8 +106,19 @@ export default function SettingsScreen() {
 								label='음성 선택'
 								value={currentVoiceName ? currentVoiceName.split(' - ')[0] : undefined}
 								onPress={() => router.push('/settings/voice')}
-								last
 							/>
+							<CardRow
+								icon='sparkles-outline'
+								label='해설 강화 항목'
+								onPress={() => router.push('/settings/description')}
+							/>
+							<CardRow icon='text-outline' label='텍스트 크기' last className='py-3.5'>
+								<PillSelector
+									options={FONT_SIZE_OPTIONS}
+									value={fontSize}
+									onChange={setFontSize}
+								/>
+							</CardRow>
 						</SettingsCard>
 					</View>
 
@@ -111,11 +130,33 @@ export default function SettingsScreen() {
 								icon='notifications-outline'
 								label='푸시 알림'
 								last
-								className='py-2.5'
+								className='py-3.5'
 							>
 								<Switch
 									value={pushNotificationsEnabled}
 									onValueChange={setPushNotificationsEnabled}
+									trackColor={{ false: '#E7E5E4', true: '#1C1917' }}
+									thumbColor='#FFFFFF'
+									ios_backgroundColor='#E7E5E4'
+									style={{ transform: [{ scaleX: 0.8 }, { scaleY: 0.8 }] }}
+								/>
+							</CardRow>
+						</SettingsCard>
+					</View>
+
+					{/* 접근성 */}
+					<View className='gap-2'>
+						<SectionLabel>접근성</SectionLabel>
+						<SettingsCard>
+							<CardRow
+								icon='accessibility-outline'
+								label='고대비 모드'
+								last
+								className='py-3.5'
+							>
+								<Switch
+									value={highContrast}
+									onValueChange={setHighContrast}
 									trackColor={{ false: '#E7E5E4', true: '#1C1917' }}
 									thumbColor='#FFFFFF'
 									ios_backgroundColor='#E7E5E4'

@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { FlatList, Image, Pressable, Text, View } from 'react-native';
+import { ActivityIndicator, FlatList, Image, Pressable, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { Screen } from '@/src/components/layout/Screen';
 import { useHistoryStore } from '@/src/store/historyStore';
 import type { HistoryItem } from '@/src/store/historyStore';
+import { useTTS } from '@/src/hooks/useTTS';
 import { fetchWikidataImage } from '@/src/utils/wikidataImage';
 
 function formatDate(iso: string) {
@@ -87,11 +88,13 @@ export default function AudioHistoryScreen() {
 	const remove = useHistoryStore((s) => s.remove);
 	const [selected, setSelected] = useState<HistoryItem | null>(null);
 	const sheetRef = useRef<BottomSheet>(null);
+	const { isSpeaking, isLoading: isTTSLoading, speak, pause, stop } = useTTS();
 
 	const handleCardPress = useCallback((item: HistoryItem) => {
+		stop();
 		setSelected(item);
 		sheetRef.current?.expand();
-	}, []);
+	}, [stop]);
 
 	const handleDelete = useCallback(
 		(id: string) => {
@@ -101,8 +104,18 @@ export default function AudioHistoryScreen() {
 	);
 
 	const handleSheetClose = useCallback(() => {
+		stop();
 		sheetRef.current?.close();
-	}, []);
+	}, [stop]);
+
+	const handlePlayPause = useCallback(() => {
+		if (!selected) return;
+		if (isSpeaking) {
+			pause();
+		} else {
+			void speak(selected.text);
+		}
+	}, [selected, isSpeaking, pause, speak]);
 
 	return (
 		<Screen variant='warm'>
@@ -169,15 +182,34 @@ export default function AudioHistoryScreen() {
 									</Text>
 								)}
 							</View>
-							<Pressable
-								onPress={handleSheetClose}
-								hitSlop={8}
-								accessibilityLabel='닫기'
-								accessibilityRole='button'
-								style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
-							>
-								<Ionicons name='close' size={22} color='#78716C' />
-							</Pressable>
+							<View className='flex-row items-center gap-4'>
+								<Pressable
+									onPress={handlePlayPause}
+									hitSlop={8}
+									accessibilityLabel={isSpeaking ? '일시정지' : '해설 듣기'}
+									accessibilityRole='button'
+									style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
+								>
+									{isTTSLoading ? (
+										<ActivityIndicator size='small' color='#60A5FA' />
+									) : (
+										<Ionicons
+											name={isSpeaking ? 'pause-circle' : 'play-circle'}
+											size={28}
+											color='#60A5FA'
+										/>
+									)}
+								</Pressable>
+								<Pressable
+									onPress={handleSheetClose}
+									hitSlop={8}
+									accessibilityLabel='닫기'
+									accessibilityRole='button'
+									style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
+								>
+									<Ionicons name='close' size={22} color='#78716C' />
+								</Pressable>
+							</View>
 						</View>
 
 						<Text className='text-[#E8E8E8] font-pretendard-medium leading-[28px] text-[15px]'>
