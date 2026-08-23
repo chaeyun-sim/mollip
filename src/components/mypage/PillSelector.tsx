@@ -34,10 +34,10 @@ export function PillSelector<T extends string | number>({
 							transform: [{ scale: pressed ? 0.93 : 1 }],
 						})}
 						className={cn(
-							'px-3 py-1.5 rounded-full border',
+							'px-3 py-1.5 rounded-full',
 							selected
-								? 'bg-[#1C1917] border-[#1C1917]'
-								: 'border-[rgba(28,25,23,0.15)]',
+								? 'bg-[#1C1917] border-2 border-[#1C1917]'
+								: 'border border-[rgba(28,25,23,0.15)]',
 						)}
 					>
 						<Text

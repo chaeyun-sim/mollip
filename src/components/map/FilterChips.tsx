@@ -62,6 +62,9 @@ export function FilterChips({
 								elevation: 2,
 							}}
 						>
+							{active && (
+								<Ionicons name='checkmark' size={13} color='#FFFFFF' />
+							)}
 							<Text
 								className={`text-sm font-pretendard-medium ${active ? 'text-white' : 'text-black/70'}`}
 							>

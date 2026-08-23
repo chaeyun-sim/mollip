@@ -29,6 +29,7 @@ export function FilterChip({
 			)}
 			style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
 		>
+			{active && !icon && <Ionicons name='checkmark' size={13} color='#FFFFFF' />}
 			{icon && (
 				<Ionicons name={icon} size={13} color={active ? '#FFFFFF' : '#57534E'} />
 			)}
