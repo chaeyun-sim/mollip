@@ -83,3 +83,24 @@ G6 전 “완료” 보고 금지. `06-handoff-to-user.md` + evidence table.
 ## 7. 커밋
 
 사용자 요청 전 commit 금지.
+
+---
+
+## 8. 템플릿 사용 (MANDATORY — 항상 적용)
+
+**사용자가 `/moai:plan`을 실행하지 않아도** 모든 개발·리팩토링 작업은 `.docs/templates/feature/` 템플릿을 기준으로 진행한다.
+
+### 규칙
+
+- 작업 시작 시 `.docs/templates/feature/` 내 템플릿 목록을 확인한다.
+- 티어(S/M/L)에 맞는 아티팩트를 `.docs/wip/{feature-slug}/`에 생성한다.
+- `/moai:plan` 호출 여부와 무관하게 파이프라인 게이트(G1~G6)를 준수한다.
+- 템플릿 없이 코드부터 작성하는 것은 금지. 항상 spec → design → dev → QA 순서를 따른다.
+
+### 티어별 최소 아티팩트
+
+| 티어 | 필수 아티팩트 |
+|------|------------|
+| S | 인라인 evidence 표 (06-handoff 대체) |
+| M | 01-spec, 02-design-brief, 05-qa-report, 06-handoff-to-user |
+| L | 01-spec, 02-design-brief, 03-design-review, 04-dev-notes, 05-qa-report, 06-handoff-to-user |

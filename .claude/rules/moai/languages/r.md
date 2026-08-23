@@ -1,15 +1,12 @@
 ---
-paths: "**/*.R,**/*.Rmd,**/DESCRIPTION,**/NAMESPACE"
+paths: '**/*.R,**/*.Rmd,**/DESCRIPTION,**/NAMESPACE'
 ---
 
 # R Development Guide
 
-
 ---
 
-
 R 4.4+ Development Specialist - tidyverse, ggplot2, Shiny, renv, and modern R patterns.
-
 
 Core Capabilities:
 
@@ -37,7 +34,6 @@ Shiny Basic App Pattern:
 Load shiny library. Create ui using fluidPage with selectInput for variable selection from mtcars column names and plotOutput for plot. Create server function with input, output, and session parameters. In server, assign renderPlot to output plot using ggplot with mtcars and aes using .data pronoun with input variable for histogram. Create app with shinyApp passing ui and server.
 
 ---
-
 
 ### R 4.4 Modern Features
 
@@ -126,7 +122,6 @@ See:
 
 ---
 
-
 - moai-lang-python for Python and R interoperability with reticulate
 - moai-domain-database for SQL patterns and database optimization
 - moai-workflow-testing for DDD and testing strategies
@@ -161,4 +156,3 @@ ggplot2 Font Issues:
 Load showtext library. Call font_add_google with font name and family. Call showtext_auto to enable for all graphics devices.
 
 ---
-
