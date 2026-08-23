@@ -171,6 +171,7 @@ export default function ImmersiveStartScreen() {
 									multiline={false}
 									numberOfLines={1}
 									onBlur={() => setTitleFocused(false)}
+									clearButtonMode='while-editing'
 								/>
 							) : (
 								<Pressable
@@ -338,7 +339,7 @@ export default function ImmersiveStartScreen() {
 			<ImmersiveOverlay
 				visible={overlayVisible}
 				title={titleText.trim()}
-				onStart={() => router.replace('/(guide)/create-description')}
+				onStart={() => router.replace('/(guide)/playlist')}
 				onClose={() => setOverlayVisible(false)}
 			/>
 		</Screen>
