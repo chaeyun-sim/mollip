@@ -45,6 +45,22 @@ import { colors } from '@/src/constants/colors';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
+// 해설 첫 문장엔 항상 "누구의 어떤 작품"이 언급되므로, 제목이 따로 없을 때(사진 촬영 흐름) 대신 쓴다.
+// "작품 해설" 같은 머리말 한 줄만 있는 경우 등, 실제 작품명이 아닐 가능성이 큰 문장
+const GENERIC_FALLBACK_TITLES = new Set(['작품 해설', '해설', '작품 소개', '오디오 가이드']);
+
+// 해설은 항상 "작가의 작품명은/이다" 형태로 시작하지만, 가끔 머리말 한 줄이 먼저 나올 때가 있다.
+// 머리말을 건너뛰고 실제 작가·작품이 언급되는 첫 문장을 찾는다.
+function extractFallbackTitle(text: string): string {
+	const sentences = text.split(/[.\n]/).map((s) => s.trim()).filter(Boolean);
+	const candidate = sentences.find(
+		(s) => s.length >= 4 && !GENERIC_FALLBACK_TITLES.has(s),
+	);
+	if (!candidate) return '촬영한 작품';
+
+	return candidate.length > 40 ? `${candidate.slice(0, 40)}…` : candidate;
+}
+
 export default function DescriptionScreen() {
 	const router = useRouter();
 	const navigation = useNavigation();
@@ -139,7 +155,12 @@ export default function DescriptionScreen() {
 	// 스트리밍 완료 시 audio_guides에 자동 저장 (들은 것 전체 기록)
 	useEffect(() => {
 		if (!isTyping && fullTextRef.current && !savedId) {
-			const title = store.manualTitle || store.extractedText || '작품 해설';
+			// 사진 촬영 흐름은 manualTitle/extractedText가 비어있다 —
+			// 해설 첫 문장에 항상 "누구의 어떤 작품"이 언급되므로 그걸 제목으로 대신 쓴다.
+			const title =
+				store.manualTitle ||
+				store.extractedText ||
+				extractFallbackTitle(fullTextRef.current);
 			const artist = store.manualArtist || undefined;
 			const id = addHistory({
 				text: fullTextRef.current,
@@ -148,7 +169,7 @@ export default function DescriptionScreen() {
 				imageUrl: artworkImageUrl || undefined,
 			});
 			setSavedId(id);
-			if (!artworkImageUrl && title !== '작품 해설') {
+			if (!artworkImageUrl) {
 				fetchWikidataImage(title, artist).then((url) => {
 					if (url) updateHistory(id, { imageUrl: url });
 				});
@@ -164,8 +185,9 @@ export default function DescriptionScreen() {
 	};
 
 	const handleShare = async () => {
-		const title = store.manualTitle || store.extractedText || '작품';
 		const fullText = fullTextRef.current ?? '';
+		const title =
+			store.manualTitle || store.extractedText || extractFallbackTitle(fullText);
 		const firstSentence = fullText.split(/[.\n]/)[0]?.trim() ?? '';
 		const description =
 			(firstSentence.length > 80 ? firstSentence.slice(0, 80) + '…' : firstSentence) +
@@ -354,19 +376,8 @@ export default function DescriptionScreen() {
 						)}
 					</Pressable>
 
-					{/* 우측: 몰입 모드 → 재생목록, 일반 모드 → 공유 */}
+					{/* 우측: 공유 (몰입 모드에서는 뒤로가기로 재생목록에 돌아가므로 버튼 없음) */}
 					<View className='w-9 items-center'>
-						{!isTyping && isImmersive && (
-							<Pressable
-								onPress={() => router.push('/playlist')}
-								hitSlop={8}
-								accessibilityLabel='재생목록 보기'
-								accessibilityRole='button'
-								style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
-							>
-								<Ionicons name='list' size={28} color={colors.tertiary} />
-							</Pressable>
-						)}
 						{!isTyping && !isImmersive && (
 							<Pressable
 								onPress={() => {
