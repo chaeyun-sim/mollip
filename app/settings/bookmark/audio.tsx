@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { ActivityIndicator, FlatList, Image, Pressable, Text, View } from 'react-native';
+import { ActivityIndicator, Alert, FlatList, Image, Pressable, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
@@ -71,7 +71,14 @@ function AudioHistoryCard({ item, onPress, onDelete }: AudioHistoryCardProps) {
 			<Pressable
 				onPress={() => {
 					Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-					onDelete(item.id);
+					Alert.alert('저장 취소', `"${item.title}"을 저장 목록에서 지울까요?`, [
+						{ text: '닫기', style: 'cancel' },
+						{
+							text: '지우기',
+							style: 'destructive',
+							onPress: () => onDelete(item.id),
+						},
+					]);
 				}}
 				hitSlop={8}
 				accessibilityLabel='저장 취소'
