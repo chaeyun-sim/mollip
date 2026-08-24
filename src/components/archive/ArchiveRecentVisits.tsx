@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Image, Pressable, Text, View } from 'react-native';
 
 import { EmptyImagePlaceholder } from '@/src/components/common/EmptyImagePlaceholder';
-import { ExploreSectionTitle } from '@/src/components/explore/ExploreHomeSections';
+import { SectionTitle } from '@/src/components/common/SectionTitle';
 import {
 	archiveTintForKey,
 	ARCHIVE_INK,
@@ -49,7 +49,7 @@ export function ArchiveRecentVisits({
 
 	return (
 		<View className='mb-5'>
-			<ExploreSectionTitle eyebrow='RECENT' title='최근 관람' />
+			<SectionTitle eyebrow='RECENT' title='최근 관람' />
 
 			<View className='rounded-[22px] bg-bg-light overflow-hidden'>
 				{dateKeys.map((dateKey, index) => {

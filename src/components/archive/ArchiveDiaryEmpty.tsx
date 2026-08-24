@@ -1,7 +1,7 @@
 import { Pressable, Text, View } from 'react-native';
 
-import { ArchiveSectionTitle } from '@/src/components/archive/ArchiveSectionTitle';
 import { ARCHIVE_INK } from '@/src/components/archive/archivePalette';
+import { SectionTitle } from '@/src/components/common/SectionTitle';
 
 interface ArchiveDiaryEmptyProps {
 	onExplore: () => void;
@@ -14,7 +14,7 @@ export function ArchiveDiaryEmpty({
 }: ArchiveDiaryEmptyProps) {
 	return (
 		<View className='border border-dashed border-[#D6D3D1] rounded-[24px] px-5 py-8'>
-			<ArchiveSectionTitle
+			<SectionTitle
 				title='아직 관람 기록이 없어요'
 				subtitle='전시 가이드를 들으면 이 달력이 채워져요'
 			/>

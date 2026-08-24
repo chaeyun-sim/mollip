@@ -12,7 +12,7 @@ export { ExhibitionMapPreview } from './ExhibitionMapPreview';
 export { ExhibitionMetaPill } from './ExhibitionMetaPill';
 export { ExhibitionOfficialLink } from './ExhibitionOfficialLink';
 export { ExploreHomeHero } from './ExploreHomeHero';
-export { ExploreSectionTitle, FeaturedExhibitionHero, RecommendedExhibitions } from './ExploreHomeSections';
+export { FeaturedExhibitionHero, RecommendedExhibitions } from './ExploreHomeSections';
 export type { FeaturedExhibitionProps, RecommendableItem } from './ExploreHomeSections';
 export { ImmersiveOverlay } from './ImmersiveOverlay';
 export { RouteSheet } from './RouteSheet';

@@ -18,6 +18,7 @@ import {
 } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { FloatingBackButton } from '@/src/components/common/FloatingBackButton';
 import { getWalkingRoute, type RouteCoord, type RouteResult } from '@/src/api/tmap';
 import { useExhibitionData } from '@/src/hooks/useExhibitionData';
 import { useMuseums } from '@/src/hooks/useMuseums';
@@ -426,16 +427,12 @@ export default function RouteScreen() {
 				pointerEvents='box-none'
 			>
 				<View className='flex-row items-center px-5 pt-2 gap-3'>
-					<Pressable
+					<FloatingBackButton
 						onPress={() => router.back()}
-						className='w-10 h-10 rounded-full bg-white/90 items-center justify-center'
-						hitSlop={8}
-						accessibilityLabel='뒤로가기'
-						accessibilityRole='button'
-						style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
-					>
-						<Ionicons name='chevron-back' size={22} color='#1a1a1a' />
-					</Pressable>
+						backgroundClassName='bg-white/90'
+						iconColor='#1a1a1a'
+						pressedOpacity={0.7}
+					/>
 					<View className='flex-1 bg-white/90 rounded-2xl px-4 py-2.5'>
 						<Text className='font-pretendard-semibold text-[15px] text-primary'>
 							관람 루트
