@@ -1,18 +1,11 @@
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import {
-	ActivityIndicator,
-	FlatList,
-	Modal,
-	Pressable,
-	Text,
-	TouchableWithoutFeedback,
-	View,
-} from 'react-native';
+import { ActivityIndicator, FlatList, Pressable, Text, View } from 'react-native';
 import { Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Screen } from '@/src/components/layout/Screen';
 import { EmptyImagePlaceholder } from '@/src/components/common/EmptyImagePlaceholder';
+import { FilterChip } from '@/src/components/search/FilterChip';
 import { StatusBadge } from '@/src/components/search/StatusBadge';
 import { useBookmarkedExhibitions } from '@/src/hooks/useBookmarkedExhibitions';
 import { useBookmarkStore } from '@/src/store/bookmarkStore';
@@ -108,7 +101,6 @@ function ExhibitionCard({ ex, onPress }: ExhibitionCardProps) {
 export default function ExhibitionBookmarkScreen() {
 	const router = useRouter();
 	const [activeFilter, setActiveFilter] = useState<FilterOption>('all');
-	const [dropdownOpen, setDropdownOpen] = useState(false);
 	const { data, isLoading, error } = useBookmarkedExhibitions();
 
 	const handlePress = (id: string) => {
@@ -119,9 +111,6 @@ export default function ExhibitionBookmarkScreen() {
 		if (activeFilter === 'all') return true;
 		return getExhibitionStatus(ex) === activeFilter;
 	});
-
-	const activeLabel =
-		FILTER_OPTIONS.find((o) => o.value === activeFilter)?.label ?? '전체';
 
 	function renderList() {
 		if (filteredData.length === 0) {
@@ -191,75 +180,21 @@ export default function ExhibitionBookmarkScreen() {
 						<Text className='text-muted text-[13px] font-pretendard-regular'>
 							{filteredData.length}개의 전시
 						</Text>
-						<Pressable
-							onPress={() => setDropdownOpen(true)}
-							accessibilityLabel={`시기 필터: ${activeLabel}`}
-							accessibilityRole='button'
-							className='flex-row items-center gap-0.5'
-							style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
-						>
-							<Text className='text-tertiary text-[13px] font-pretendard-medium'>
-								{activeLabel}
-							</Text>
-							<Ionicons name='chevron-down' size={14} color={colors.tertiary} />
-						</Pressable>
+					</View>
+					<View className='flex-row gap-2 pb-3'>
+						{FILTER_OPTIONS.map((option) => (
+							<FilterChip
+								key={option.value}
+								label={option.label}
+								active={activeFilter === option.value}
+								onPress={() => setActiveFilter(option.value)}
+								accessibilityLabel={`${option.label} 필터`}
+							/>
+						))}
 					</View>
 					{renderList()}
 				</View>
 			)}
-
-			<Modal
-				visible={dropdownOpen}
-				transparent
-				animationType='fade'
-				onRequestClose={() => setDropdownOpen(false)}
-			>
-				<TouchableWithoutFeedback onPress={() => setDropdownOpen(false)}>
-					<View className='flex-1'>
-						<View
-							className='absolute right-4 bg-white rounded-xl overflow-hidden'
-							style={{
-								top: 136,
-								shadowColor: '#000',
-								shadowOffset: { width: 0, height: 4 },
-								shadowOpacity: 0.1,
-								shadowRadius: 12,
-								elevation: 8,
-								minWidth: 110,
-							}}
-						>
-							{FILTER_OPTIONS.map((option, index) => (
-								<Pressable
-									key={option.value}
-									onPress={() => {
-										setActiveFilter(option.value);
-										setDropdownOpen(false);
-									}}
-									accessibilityLabel={option.label}
-									accessibilityRole='menuitem'
-									className={index > 0 ? 'border-t border-[#F5F5F4]' : ''}
-									style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
-								>
-									<View className='flex-row items-center justify-between px-4 py-3'>
-										<Text
-											className={
-												activeFilter === option.value
-													? 'text-primary text-[14px] font-pretendard-semibold'
-													: 'text-tertiary text-[14px] font-pretendard-regular'
-											}
-										>
-											{option.label}
-										</Text>
-										{activeFilter === option.value && (
-											<Ionicons name='checkmark' size={15} color={colors.primary} />
-										)}
-									</View>
-								</Pressable>
-							))}
-						</View>
-					</View>
-				</TouchableWithoutFeedback>
-			</Modal>
 		</Screen>
 	);
 }

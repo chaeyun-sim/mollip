@@ -331,7 +331,7 @@ export function VenueSheet({
 							accessibilityLabel='홈페이지로 이동'
 							accessibilityRole='link'
 						>
-							<Text className='text-black text-[13px] font-pretendard-semibold underline'>
+							<Text className='text-black text-[13px] font-pretendard-semibold'>
 								홈페이지
 							</Text>
 							<Ionicons

@@ -70,7 +70,7 @@ export default function ExhibitionDetailScreen() {
 					전시를 찾을 수 없어요
 				</Text>
 				<Pressable onPress={() => router.back()}>
-					<Text className='text-gray-900 text-sm font-pretendard-medium underline'>
+					<Text className='text-gray-900 text-sm font-pretendard-medium'>
 						돌아가기
 					</Text>
 				</Pressable>

@@ -107,7 +107,7 @@ export function ChatMessage({ item, onRetry }: ChatMessageProps) {
 					seg.type === 'artwork' ? (
 						<Text
 							key={i}
-							className='text-[#60A5FA] underline'
+							className='text-[#60A5FA] font-pretendard-semibold'
 							onPress={() => handleArtworkTap(seg.content)}
 							accessibilityLabel={`${seg.content} 이미지 보기`}
 							accessibilityRole='button'

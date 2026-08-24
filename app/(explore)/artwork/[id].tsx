@@ -66,7 +66,7 @@ export default function ArtworkDetailScreen() {
 					작품을 찾을 수 없어요
 				</Text>
 				<Pressable onPress={() => router.back()}>
-					<Text className='text-white text-sm font-pretendard-medium underline'>
+					<Text className='text-white text-sm font-pretendard-medium'>
 						돌아가기
 					</Text>
 				</Pressable>

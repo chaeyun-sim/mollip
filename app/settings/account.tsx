@@ -102,7 +102,7 @@ export default function AccountScreen() {
 						accessibilityLabel='탈퇴하기'
 						style={({ pressed }) => ({ opacity: pressed ? 0.5 : 1 })}
 					>
-						<Text className='font-pretendard-regular text-[13px] text-muted underline'>
+						<Text className='font-pretendard-regular text-[13px] text-muted'>
 							탈퇴하기
 						</Text>
 					</Pressable>
