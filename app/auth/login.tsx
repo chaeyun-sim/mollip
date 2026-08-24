@@ -12,6 +12,7 @@ import { signInWithApple, signInWithKakao } from '@/src/utils/authOAuth';
 import { supabase } from '@/src/utils/supabase';
 import { useAuthStore } from '@/src/store/authStore';
 import { colors } from '@/src/constants/colors';
+import { Screen } from '@/src/components/layout/Screen';
 
 function safeReturnTo(raw: string | string[] | undefined): string {
 	const value = Array.isArray(raw) ? raw[0] : raw;
@@ -73,14 +74,7 @@ export default function LoginScreen() {
 	const busyAny = !!busy;
 
 	return (
-		<View className='flex-1 bg-bg-light'>
-			<StatusBar style='dark' />
-			<LinearGradient
-				colors={['#FFF3E6', '#F7DFCE', '#E4CCE8', colors.bgLight]}
-				locations={[0, 0.32, 0.68, 1]}
-				style={StyleSheet.absoluteFill}
-			/>
-
+		<Screen variant='warm'>
 			<View
 				className='flex-1 px-7'
 				style={{ paddingTop: insets.top, paddingBottom: insets.bottom + 12 }}
@@ -91,7 +85,7 @@ export default function LoginScreen() {
 						hitSlop={12}
 						accessibilityRole='button'
 						accessibilityLabel='닫기'
-						className='w-10 h-10 rounded-full items-center justify-center border border-[rgba(255,255,255,0.85)] bg-[rgba(255,255,255,0.55)]'
+						className='w-10 h-10 rounded-full items-center justify-center border border-white/85 bg-white/55'
 						style={({ pressed }) => (pressed ? { opacity: 0.7 } : undefined)}
 					>
 						<Ionicons name='close' size={20} color='#44403C' />
@@ -174,6 +168,6 @@ export default function LoginScreen() {
 					</View>
 				</View>
 			</View>
-		</View>
+		</Screen>
 	);
 }

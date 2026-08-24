@@ -101,30 +101,6 @@ export default function TabsLayout() {
 					),
 				}}
 			/>
-			{/* <Tabs.Screen
-				name='settings'
-				listeners={{
-					tabPress: (e) => {
-						if (!authLoading && !session) {
-							e.preventDefault();
-							router.push({
-								pathname: '/auth/login',
-								params: { returnTo: '/(tabs)/settings' },
-							});
-						}
-					},
-				}}
-				options={{
-					title: '마이페이지',
-					tabBarIcon: ({ focused, color, size }) => (
-						<Ionicons
-							name={focused ? 'person' : 'person-outline'}
-							size={size}
-							color={color}
-						/>
-					),
-				}}
-			/> */}
 		</Tabs>
 	);
 }

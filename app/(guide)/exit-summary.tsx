@@ -10,7 +10,9 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNearbyPlaces, type NearbyPlace } from '@/src/hooks/useNearbyPlaces';
 import { supabase } from '@/src/utils/supabase';
 import { todayKey, useVisitStore } from '@/src/store/visitStore';
+import { useImmersiveStore } from '@/src/store/immersiveStore';
 import { colors } from '@/src/constants/colors';
+import { Screen } from '@/src/components/layout/Screen';
 
 const TEXT_SHADOW = {
 	textShadowColor: 'rgba(0,0,0,0.6)',
@@ -55,6 +57,7 @@ function SkeletonCard() {
 // 다른 (guide) 화면들과 달리 흰 배경 — 종료의 산뜻한 느낌을 위해 의도적으로 다른 톤.
 export default function ExitSummaryScreen() {
 	const router = useRouter();
+	const exitImmersive = useImmersiveStore((s) => s.exit);
 
 	const exhibitionId = useVisitStore((s) => s.visits[todayKey()]?.exhibitionId);
 
@@ -138,8 +141,7 @@ export default function ExitSummaryScreen() {
 	}
 
 	return (
-		<SafeAreaView edges={['top', 'bottom']} className='flex-1 bg-bg-light px-6'>
-			<StatusBar style='dark' />
+		<Screen variant='warm' edges={['top', 'bottom']}>
 			<ScrollView
 				className='flex-1'
 				contentContainerStyle={{ paddingTop: 20, paddingBottom: 120 }}
@@ -168,7 +170,11 @@ export default function ExitSummaryScreen() {
 			<View className='absolute left-0 right-0 bottom-0 px-6 pb-10'>
 				<Pressable
 					className='rounded-2xl items-center py-4 bg-accent'
-					onPress={() => router.dismissTo('/(tabs)')}
+					onPress={() => {
+						// 방어적으로 한 번 더 리셋 — 진입 경로가 늘어나도 몰입 모드가 남지 않도록
+						exitImmersive();
+						router.dismissTo('/(tabs)');
+					}}
 					accessibilityRole='button'
 					accessibilityLabel='다른 전시 보러가기'
 				>
@@ -177,6 +183,6 @@ export default function ExitSummaryScreen() {
 					</Text>
 				</Pressable>
 			</View>
-		</SafeAreaView>
+		</Screen>
 	);
 }

@@ -83,6 +83,20 @@ export default function ManualScreen() {
 					<ScreenHeader.Left>
 						<ScreenHeader.Back color='rgba(255,255,255,0.9)' />
 					</ScreenHeader.Left>
+					<ScreenHeader.Right>
+						<Pressable
+							onPress={handleSubmit}
+							hitSlop={8}
+							accessibilityLabel='AI 해설 생성'
+							accessibilityRole='button'
+							className='rounded-full px-3.5 py-1.5 bg-accent'
+							style={({ pressed }) => ({ opacity: pressed ? 0.8 : 1 })}
+						>
+							<Text className='text-[14px] font-pretendard-semibold text-white'>
+								해설 생성
+							</Text>
+						</Pressable>
+					</ScreenHeader.Right>
 				</ScreenHeader>
 
 				<View className='flex-1 pt-4'>
@@ -195,30 +209,17 @@ export default function ManualScreen() {
 						/>
 					</View>
 
-					<Screen.BottomAbsolute className='bottom-10 gap-y-2.5'>
-						<Pressable
-							className='w-full rounded-lg items-center bg-accent py-3.5'
-							onPress={handleSubmit}
-							accessibilityLabel='AI 해설 생성'
-							accessibilityRole='button'
-							style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
-						>
-							<Text className='text-base font-pretendard-semibold text-white'>
-								해설 생성
-							</Text>
-						</Pressable>
-						<Pressable
-							className='w-full rounded-lg items-center border border-accent py-3.5'
-							onPress={handleDirectChat}
-							accessibilityLabel='해설 없이 채팅으로 바로 이동'
-							accessibilityRole='button'
-							style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
-						>
-							<Text className='text-base font-pretendard-semibold text-accent'>
-								바로 질문하기
-							</Text>
-						</Pressable>
-					</Screen.BottomAbsolute>
+					<Pressable
+						className='w-full rounded-lg items-center border border-accent py-3.5 mb-6'
+						onPress={handleDirectChat}
+						accessibilityLabel='해설 없이 채팅으로 바로 이동'
+						accessibilityRole='button'
+						style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
+					>
+						<Text className='text-base font-pretendard-semibold text-accent'>
+							바로 질문하기
+						</Text>
+					</Pressable>
 				</View>
 				</View>
 			</TouchableWithoutFeedback>

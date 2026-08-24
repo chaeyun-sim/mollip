@@ -32,6 +32,7 @@ import { distanceKm, formatDistance, latOffsetForPixels } from '@/src/utils/mapU
 import { legColor } from '@/src/utils/routeColors';
 import type { RouteCoord, RouteLeg } from '@/src/api/tmap';
 import { colors } from '@/src/constants/colors';
+import { Screen } from '@/src/components/layout/Screen';
 
 // 도보만 지도에서 진한 잉크색으로 강조 — 버스/지하철은 legColor(지하철은 호선별)를 그대로 쓴다.
 function pathColor(leg: RouteLeg): string {
@@ -399,7 +400,7 @@ export default function MapScreen() {
 	);
 
 	return (
-		<View className='flex-1 bg-black'>
+		<Screen variant='dark'>
 			{/* 지도 */}
 			<NaverMapView
 				ref={mapRef}
@@ -660,6 +661,6 @@ export default function MapScreen() {
 					/>
 				)}
 			</BottomSheet>
-		</View>
+		</Screen>
 	);
 }

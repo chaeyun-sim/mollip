@@ -99,6 +99,10 @@ export function SavedExhibitions({ onPressExhibition }: SavedExhibitionsProps) {
 	if (results.length === 0) {
 		return (
 			<View className='rounded-[22px] bg-bg-light px-6 py-10 items-center'>
+				{/* TODO: 저장한 전시 빈 상태 일러스트
+					프롬프트: 따뜻한 베이지(#F8F6F2) 배경 위에 접힌 리본 북마크와 작은 액자 그림,
+					플랫 일러스트 스타일, 얇은 라인 아트, 잉크색(#1C1917) 윤곽선, 포인트 컬러는 은은한 테라코타,
+					위 북마크 빈 상태 일러스트와 톤·구도를 맞춤, 정사각형 120x120 */}
 				<Text className='text-[15px] text-center font-pretendard-semibold text-primary'>
 					저장한 전시가 없어요
 				</Text>

@@ -87,8 +87,7 @@ export default function DiaryScreen() {
 
 	if (!session) {
 		return (
-			<Screen variant='warm' className='bg-[#f4f4f1]'>
-				<StatusBar style='dark' />
+			<Screen variant='warm'>
 				<Screen.Header>
 					<Screen.Header.Logo />
 				</Screen.Header>
@@ -98,8 +97,7 @@ export default function DiaryScreen() {
 	}
 
 	return (
-		<Screen variant='warm' className='bg-[#f4f4f1]'>
-			<StatusBar style='dark' />
+		<Screen variant='warm'>
 			<Screen.Header>
 				<Screen.Header.Logo />
 				<Screen.Header.Right>

@@ -116,7 +116,34 @@ export default function DeleteAccountScreen() {
 						탈퇴하기
 					</Text>
 				</Screen.Header.Center>
-				<Screen.Header.Right />
+				<Screen.Header.Right>
+					<Pressable
+						onPress={handleSubmit}
+						disabled={!canSubmit}
+						hitSlop={8}
+						accessibilityRole='button'
+						accessibilityLabel='탈퇴하기'
+						accessibilityState={{ disabled: !canSubmit }}
+						className={cn(
+							'rounded-full px-3.5 py-1.5',
+							canSubmit ? 'bg-red-500' : 'bg-black/10',
+						)}
+						style={({ pressed }) => ({ opacity: pressed && canSubmit ? 0.8 : 1 })}
+					>
+						{status === 'submitting' ? (
+							<ActivityIndicator size='small' color='#fff' />
+						) : (
+							<Text
+								className={cn(
+									'text-[14px] font-pretendard-semibold',
+									canSubmit ? 'text-white' : 'text-gray-400',
+								)}
+							>
+								탈퇴하기
+							</Text>
+						)}
+					</Pressable>
+				</Screen.Header.Right>
 			</Screen.Header>
 
 			<KeyboardAvoidingView
@@ -209,33 +236,6 @@ export default function DeleteAccountScreen() {
 						</Text>
 					) : null}
 				</ScrollView>
-
-				<Screen.BottomAbsolute className='bottom-10'>
-					<Pressable
-						onPress={handleSubmit}
-						disabled={!canSubmit}
-						className={cn(
-							'h-14 rounded-2xl items-center justify-center',
-							canSubmit ? 'bg-red-500' : 'bg-black/10',
-						)}
-						accessibilityRole='button'
-						accessibilityLabel='탈퇴하기'
-						accessibilityState={{ disabled: !canSubmit }}
-					>
-						{status === 'submitting' ? (
-							<ActivityIndicator size='small' color='#fff' />
-						) : (
-							<Text
-								className={cn(
-									'text-[15px] font-pretendard-semibold',
-									canSubmit ? 'text-white' : 'text-gray-400',
-								)}
-							>
-								탈퇴하기
-							</Text>
-						)}
-					</Pressable>
-				</Screen.BottomAbsolute>
 			</KeyboardAvoidingView>
 		</Screen>
 	);

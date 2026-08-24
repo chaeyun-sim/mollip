@@ -39,6 +39,7 @@ import {
 	scheduleDeadlineNotifications,
 } from '@/src/utils/notificationScheduler';
 import { colors } from '@/src/constants/colors';
+import { Screen } from '@/src/components/layout/Screen';
 
 export default function ExhibitionDetailScreen() {
 	const { id } = useLocalSearchParams<{ id: string }>();
@@ -79,7 +80,7 @@ export default function ExhibitionDetailScreen() {
 	}
 
 	return (
-		<View className='flex-1 bg-bg-light'>
+		<Screen variant='warm'>
 			<Animated.ScrollView
 				onScroll={scrollHandler}
 				scrollEventThrottle={16}
@@ -266,13 +267,13 @@ export default function ExhibitionDetailScreen() {
 				title={exhibition.title}
 				onStart={() => {
 					setImmersiveOpen(false);
-					enterImmersive(id);
+					enterImmersive(id, exhibition.title);
 					recordVisit(todayKey(), id, {
 						title: exhibition.title,
 						venue: exhibition.venue,
 						thumbnail: exhibition.posterImage ?? exhibition.heroImageUri,
 					});
-					router.push('/(guide)/create-description');
+					router.replace('/(guide)/playlist');
 				}}
 				onClose={() => setImmersiveOpen(false)}
 			/>
@@ -284,6 +285,6 @@ export default function ExhibitionDetailScreen() {
 				artworks={exhibition.artworks}
 				onClose={() => setRouteOpen(false)}
 			/>
-		</View>
+		</Screen>
 	);
 }

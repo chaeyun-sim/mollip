@@ -1,18 +1,14 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import {
-	ActivityIndicator,
-	Pressable,
-	ScrollView,
-	Text,
-	View,
-} from 'react-native';
+import { Pressable, ScrollView, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { CenteredLoader } from '@/src/components/common/CenteredLoader';
+import { RetryErrorState } from '@/src/components/common/RetryErrorState';
+import { SectionTitle } from '@/src/components/common/SectionTitle';
 import { ExploreHomeHero } from '@/src/components/explore/ExploreHomeHero';
 import { KcisaSection } from '@/src/components/explore/KcisaSection';
 import {
-	ExploreSectionTitle,
 	FeaturedExhibitionHero,
 	RecommendedExhibitions,
 } from '@/src/components/explore/ExploreHomeSections';
@@ -22,6 +18,7 @@ import {
 	type ExhibitionSummary,
 } from '@/src/hooks/useExploreScreenData';
 import { cn } from '@/src/lib/cn';
+import { LoginRequiredPressable } from '@/src/components/auth/LoginRequiredPressable';
 import { colors } from '@/src/constants/colors';
 
 export default function ExploreScreen() {
@@ -52,30 +49,17 @@ export default function ExploreScreen() {
 
 	function renderRecommendedContent() {
 		if (cultureStatus === 'loading' && displayedRecommended.length === 0) {
-			return (
-				<View className='items-center justify-center py-16'>
-					<ActivityIndicator color={colors.muted} />
-				</View>
-			);
+			return <CenteredLoader className='py-16' />;
 		}
 
 		if (cultureStatus === 'error') {
 			return (
-				<View className='items-center justify-center py-16 gap-2'>
-					<Text className='text-muted text-[13px] font-pretendard-regular'>
-						전시 정보를 불러오지 못했어요
-					</Text>
-					<Pressable
-						onPress={refetch}
-						accessibilityLabel='추천 전시 다시 불러오기'
-						accessibilityRole='button'
-						hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-					>
-						<Text className='text-primary text-[13px] font-pretendard-semibold'>
-							다시 시도
-						</Text>
-					</Pressable>
-				</View>
+				<RetryErrorState
+					message='전시 정보를 불러오지 못했어요'
+					onRetry={refetch}
+					retryAccessibilityLabel='추천 전시 다시 불러오기'
+					className='py-16'
+				/>
 			);
 		}
 
@@ -96,7 +80,7 @@ export default function ExploreScreen() {
 	}
 
 	return (
-		<Screen variant='warm' className='bg-[#f4f4f1]'>
+		<Screen variant='warm'>
 			<Screen.Header>
 				<Screen.Header.Logo />
 				<Screen.Header.Right>
@@ -139,7 +123,7 @@ export default function ExploreScreen() {
 
 				<View>
 					{/* 레이블: 선호 데이터 있으면 "당신의 취향" (REQ-UI002-009, REQ-UI002-010) */}
-					<ExploreSectionTitle
+					<SectionTitle
 						eyebrow='FOR YOU'
 						title={isPersonalized ? '추천 전시 · 당신의 취향' : '추천 전시'}
 					/>
@@ -160,7 +144,7 @@ export default function ExploreScreen() {
 				}}
 			>
 				{/* 몰입 모드 pill */}
-				<Pressable
+				<LoginRequiredPressable
 					onPress={() => router.push('/(guide)/immersive-start')}
 					accessibilityLabel='몰입 모드로 시작하기'
 					accessibilityRole='button'
@@ -168,10 +152,10 @@ export default function ExploreScreen() {
 					style={({ pressed }) => ({ opacity: pressed ? 0.88 : 1 })}
 				>
 					<Ionicons name='headset-outline' size={26} color={colors.bgTonal} />
-				</Pressable>
+				</LoginRequiredPressable>
 
 				{/* 카메라 FAB */}
-				<Pressable
+				<LoginRequiredPressable
 					onPress={() => router.push('/(guide)/create-description')}
 					accessibilityLabel='작품 해설 만들기'
 					accessibilityHint='카메라로 작품을 촬영하거나 직접 입력하여 AI 해설을 받을 수 있어요'
@@ -180,7 +164,7 @@ export default function ExploreScreen() {
 					style={({ pressed }) => ({ opacity: pressed ? 0.88 : 1 })}
 				>
 					<Ionicons name='camera' size={26} color={colors.bgTonal} />
-				</Pressable>
+				</LoginRequiredPressable>
 			</View>
 		</Screen>
 	);

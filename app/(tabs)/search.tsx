@@ -196,9 +196,7 @@ export default function SearchScreen() {
 	}
 
 	return (
-		<Screen className='bg-white'>
-			<StatusBar style='dark' />
-
+		<Screen variant='warm'>
 			<Screen.Header>
 				<Screen.Header.Logo />
 			</Screen.Header>
@@ -326,6 +324,10 @@ export default function SearchScreen() {
 					}
 					ListEmptyComponent={
 						<View className='items-center py-16 gap-2'>
+							{/* TODO: 검색 결과 없음 일러스트
+								프롬프트: 따뜻한 베이지(#F8F6F2) 배경 위에 놓인 돋보기와 물음표,
+								플랫 일러스트 스타일, 얇은 라인 아트, 잉크색(#1C1917) 윤곽선, 포인트 컬러는 은은한 테라코타,
+								가볍고 장난스러운 느낌, 사진 느낌 없이 손그림 느낌, 정사각형 100x100 */}
 							<Text className='text-secondary text-[15px] font-pretendard-semibold'>
 								조건에 맞는 전시가 없어요
 							</Text>

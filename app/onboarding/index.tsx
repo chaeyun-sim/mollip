@@ -214,8 +214,7 @@ export default function OnboardingScreen() {
 	}, [router, userId, liked]);
 
 	return (
-		<Screen className='flex-1 bg-bg-light'>
-			<StatusBar style='dark' />
+		<Screen variant='warm'>
 			<LinearGradient
 				colors={['#FFF3E6', '#F7DFCE', '#E4CCE8', colors.bgLight]}
 				locations={[0, 0.32, 0.68, 1]}

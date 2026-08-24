@@ -46,8 +46,7 @@ export default function SettingsScreen() {
 	if (!session) return <Redirect href='/auth/login' />;
 
 	return (
-		<Screen className='flex-1 bg-[#f4f4f1]'>
-			<StatusBar style='dark' />
+		<Screen variant='warm'>
 			<Screen.Header>
 				<Screen.Header.Back />
 			</Screen.Header>
@@ -147,11 +146,11 @@ export default function SettingsScreen() {
 
 					{/* 접근성 */}
 					<View className='gap-2'>
-						<SectionLabel>접근성</SectionLabel>
+						<SectionLabel>고대비 모드</SectionLabel>
 						<SettingsCard>
 							<CardRow
 								icon='accessibility-outline'
-								label='고대비 모드'
+								label='몰입모드'
 								last
 								className='py-3.5'
 							>

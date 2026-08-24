@@ -59,7 +59,7 @@ export default function DescriptionSettingsScreen() {
 	);
 
 	return (
-		<Screen className='flex-1 bg-[#f4f4f1]'>
+		<Screen variant='warm'>
 			<Screen.Header>
 				<Screen.Header.Back color={colors.primary} onPress={() => router.back()} />
 				<Screen.Header.Center>

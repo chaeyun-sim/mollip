@@ -105,6 +105,34 @@ export default function InquiryScreen() {
 						문의하기
 					</Text>
 				</Screen.Header.Center>
+				<Screen.Header.Right>
+					<Pressable
+						onPress={handleSubmit}
+						disabled={!canSubmit}
+						hitSlop={8}
+						accessibilityRole='button'
+						accessibilityLabel='문의 보내기'
+						accessibilityState={{ disabled: !canSubmit }}
+						className={cn(
+							'rounded-full px-3.5 py-1.5',
+							canSubmit ? 'bg-primary' : 'bg-divider',
+						)}
+						style={({ pressed }) => ({ opacity: pressed && canSubmit ? 0.8 : 1 })}
+					>
+						{status === 'submitting' ? (
+							<ActivityIndicator size='small' color='#fff' />
+						) : (
+							<Text
+								className={cn(
+									'text-[14px] font-pretendard-semibold',
+									canSubmit ? 'text-white' : 'text-muted',
+								)}
+							>
+								보내기
+							</Text>
+						)}
+					</Pressable>
+				</Screen.Header.Right>
 			</Screen.Header>
 
 			<KeyboardAvoidingView
@@ -113,7 +141,7 @@ export default function InquiryScreen() {
 			>
 				<ScrollView
 					className='flex-1'
-					contentContainerStyle={{ paddingTop: 8, paddingBottom: 120 }}
+					contentContainerStyle={{ paddingTop: 8, paddingBottom: 40 }}
 					showsVerticalScrollIndicator={false}
 					keyboardShouldPersistTaps='handled'
 				>
@@ -193,34 +221,6 @@ export default function InquiryScreen() {
 						</Text>
 					)}
 				</ScrollView>
-
-				<Screen.BottomAbsolute className='bottom-10'>
-					<Pressable
-						onPress={handleSubmit}
-						disabled={!canSubmit}
-						className={cn(
-							'h-14 rounded-2xl items-center justify-center',
-							canSubmit ? 'bg-primary' : 'bg-divider',
-						)}
-						accessibilityRole='button'
-						accessibilityLabel='문의 보내기'
-						accessibilityState={{ disabled: !canSubmit }}
-						style={({ pressed }) => ({ opacity: pressed && canSubmit ? 0.8 : 1 })}
-					>
-						{status === 'submitting' ? (
-							<ActivityIndicator size='small' color='#fff' />
-						) : (
-							<Text
-								className={cn(
-									'text-[15px] font-pretendard-semibold',
-									canSubmit ? 'text-white' : 'text-muted',
-								)}
-							>
-								보내기
-							</Text>
-						)}
-					</Pressable>
-				</Screen.BottomAbsolute>
 			</KeyboardAvoidingView>
 		</Screen>
 	);
