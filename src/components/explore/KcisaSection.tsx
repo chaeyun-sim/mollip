@@ -1,9 +1,10 @@
-import { ActivityIndicator, Pressable, ScrollView, Text, View } from 'react-native';
+import { ScrollView, Text, View } from 'react-native';
 
+import { CenteredLoader } from '@/src/components/common/CenteredLoader';
+import { RetryErrorState } from '@/src/components/common/RetryErrorState';
+import { SectionTitle } from '@/src/components/common/SectionTitle';
 import { KcisaExhibitionCard } from '@/src/components/explore/KcisaExhibitionCard';
-import { ExploreSectionTitle } from '@/src/components/explore/ExploreHomeSections';
 import type { ExhibitionSummary, FeaturedExhibition } from '@/src/hooks/useExploreScreenData';
-import { colors } from '@/src/constants/colors';
 
 export interface KcisaSectionProps {
 	kcisaStatus: 'idle' | 'loading' | 'error' | 'success';
@@ -32,28 +33,17 @@ export function KcisaSection({
 
 	return (
 		<View>
-			<ExploreSectionTitle eyebrow='PUBLIC MUSEUMS' title='국공립 기관 전시' />
+			<SectionTitle eyebrow='PUBLIC MUSEUMS' title='국공립 기관 전시' />
 
 			{kcisaStatus === 'loading' && kcisaItems.length === 0 ? (
-				<View className='items-center justify-center py-8'>
-					<ActivityIndicator color={colors.muted} />
-				</View>
+				<CenteredLoader className='py-8' />
 			) : kcisaStatus === 'error' ? (
-				<View className='items-center justify-center py-8 gap-2'>
-					<Text className='text-muted text-[13px] font-pretendard-regular'>
-						전시 정보를 불러오지 못했어요
-					</Text>
-					<Pressable
-						onPress={onRefetch}
-						accessibilityLabel='국공립 전시 다시 불러오기'
-						accessibilityRole='button'
-						hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-					>
-						<Text className='text-primary text-[13px] font-pretendard-semibold'>
-							다시 시도
-						</Text>
-					</Pressable>
-				</View>
+				<RetryErrorState
+					message='전시 정보를 불러오지 못했어요'
+					onRetry={onRefetch}
+					retryAccessibilityLabel='국공립 전시 다시 불러오기'
+					className='py-8'
+				/>
 			) : carousel.length === 0 ? (
 				<Text className='text-muted text-[13px] font-pretendard-regular'>
 					진행 중인 전시가 없어요

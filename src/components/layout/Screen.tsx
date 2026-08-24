@@ -1,7 +1,7 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import { StatusBar } from 'expo-status-bar';
 import { PropsWithChildren } from 'react';
-import { View } from 'react-native';
+import { View, ViewStyle } from 'react-native';
 import { Edges, SafeAreaView } from 'react-native-safe-area-context';
 import { cn } from '../../lib/cn';
 import { ScreenHeader } from './ScreenHeader';
@@ -91,9 +91,15 @@ function Screen({
 	);
 }
 
-function Bottom({ children, className }: PropsWithChildren<ScreenProps>) {
+function Bottom({
+	children,
+	className,
+	style,
+}: PropsWithChildren<ScreenProps & { style?: ViewStyle }>) {
 	return (
-		<View className={cn('pt-3 pb-2 bg-transparent', className)}>{children}</View>
+		<View className={cn('pt-3 pb-2 bg-transparent', className)} style={style}>
+			{children}
+		</View>
 	);
 }
 
