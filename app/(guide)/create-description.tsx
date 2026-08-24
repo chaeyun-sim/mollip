@@ -383,7 +383,7 @@ export default function IndexScreen() {
 				<Pressable
 					className='rounded-2xl overflow-hidden'
 					onPress={() => pickAndGo(true)}
-					style={({ pressed }) => ({ opacity: pressed ? 0.85 : 1 })}
+					style={({ pressed }) => ({ opacity: isLoading ? 0.4 : pressed ? 0.85 : 1 })}
 					disabled={isLoading}
 					accessibilityLabel='카메라로 촬영'
 					accessibilityRole='button'
@@ -412,7 +412,7 @@ export default function IndexScreen() {
 				<Pressable
 					className='rounded-2xl overflow-hidden'
 					onPress={() => pickAndGo(false)}
-					style={({ pressed }) => ({ opacity: pressed ? 0.85 : 1 })}
+					style={({ pressed }) => ({ opacity: isLoading ? 0.4 : pressed ? 0.85 : 1 })}
 					disabled={isLoading}
 					accessibilityLabel='갤러리에서 선택'
 					accessibilityRole='button'
@@ -442,7 +442,7 @@ export default function IndexScreen() {
 				<Pressable
 					className='flex-row items-center justify-center gap-2 py-4'
 					onPress={() => router.push('/manual')}
-					style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
+					style={({ pressed }) => ({ opacity: isLoading ? 0.4 : pressed ? 0.6 : 1 })}
 					disabled={isLoading}
 					accessibilityLabel='작품명 직접 입력'
 					accessibilityRole='button'
