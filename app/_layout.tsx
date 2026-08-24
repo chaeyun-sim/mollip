@@ -19,6 +19,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useImmersiveStore } from '../src/store/immersiveStore';
+import { useHistoryStore } from '../src/store/historyStore';
 import { AuthProvider } from '../src/providers/AuthProvider';
 import { useAuthStore } from '../src/store/authStore';
 import { usePushNotifications } from '../src/hooks/usePushNotifications';
@@ -85,6 +86,12 @@ export default function RootLayout() {
 		}
 		return () => sub?.remove();
 	}, [router]);
+
+	// wikidataImage.ts가 작가명 검증 없이 매칭하던 시절 저장된 오매칭 이미지 정리 (1회성)
+	useEffect(() => {
+		if (!hasHydrated) return;
+		useHistoryStore.getState().clearUntrustedWikiImages();
+	}, [hasHydrated]);
 
 	useEffect(() => {
 		if (!fontsLoaded || !hasHydrated || authLoading) return;

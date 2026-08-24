@@ -5,6 +5,8 @@ import { createJSONStorage, persist } from 'zustand/middleware';
 export interface PlaylistItem {
 	id: string;
 	title: string;
+	artist?: string;
+	year?: string;
 	imageUrl?: string;
 	description: string;
 	addedAt: number;

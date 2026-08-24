@@ -1,9 +1,9 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
 import { useAuthStore } from './authStore';
 import { supabase } from '../utils/supabase';
+import { createAuthAwareStorage } from '../utils/authAwareStorage';
 
 export interface ListenedItem {
 	title: string;
@@ -76,6 +76,8 @@ export const useVisitStore = create<VisitStore>()(
 							user_id: userId,
 							date: dateKey,
 							exhibition_id: Number(exhibitionId) || null,
+							exhibition_title: meta?.title ?? null,
+							venue: meta?.venue ?? null,
 						})
 						.then(({ error }) => {
 							if (error) console.warn('[visit] upsert failed:', error.message);
@@ -136,7 +138,7 @@ export const useVisitStore = create<VisitStore>()(
 		}),
 		{
 			name: 'visits',
-			storage: createJSONStorage(() => AsyncStorage),
+			storage: createJSONStorage(createAuthAwareStorage),
 		},
 	),
 );

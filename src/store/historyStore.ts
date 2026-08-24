@@ -1,10 +1,10 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Crypto from 'expo-crypto';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
 import { useAuthStore } from './authStore';
 import { supabase } from '../utils/supabase';
+import { createAuthAwareStorage } from '../utils/authAwareStorage';
 
 export interface StoredChatMessage {
 	id: string;
@@ -31,6 +31,8 @@ interface HistoryStore {
 	saveChatMessages: (id: string, messages: StoredChatMessage[]) => void;
 	/** 로그인 후 원격 오디오 가이드로 로컬 상태를 교체 */
 	loadFromRemote: (items: HistoryItem[]) => void;
+	/** blind 매칭 시절 저장된 신뢰할 수 없는 위키 이미지를 일괄 제거 */
+	clearUntrustedWikiImages: () => void;
 }
 
 export const useHistoryStore = create<HistoryStore>()(
@@ -101,10 +103,33 @@ export const useHistoryStore = create<HistoryStore>()(
 				}));
 			},
 			loadFromRemote: (items) => set({ items }),
+			// wikidataImage.ts가 작가명 검증 없이 blind 매칭하던 시절 저장된, 신뢰할 수 없는 위키 이미지 정리
+			clearUntrustedWikiImages: () => {
+				const targets = get().items.filter((i) => i.imageUrl?.includes('wikipedia.org'));
+				if (targets.length === 0) return;
+
+				set((s) => ({
+					items: s.items.map((i) =>
+						i.imageUrl?.includes('wikipedia.org') ? { ...i, imageUrl: undefined } : i,
+					),
+				}));
+
+				const userId = useAuthStore.getState().user?.id;
+				if (!userId) return;
+				for (const item of targets) {
+					supabase
+						.from('audio_guides')
+						.update({ image_url: null })
+						.match({ id: item.id, user_id: userId })
+						.then(({ error }) => {
+							if (error) console.warn('[history] wiki image cleanup failed:', error.message);
+						});
+				}
+			},
 		}),
 		{
 			name: 'audio-history',
-			storage: createJSONStorage(() => AsyncStorage),
+			storage: createJSONStorage(createAuthAwareStorage),
 		},
 	),
 );

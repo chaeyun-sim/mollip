@@ -1,9 +1,9 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
 import { useAuthStore } from './authStore';
 import { supabase } from '../utils/supabase';
+import { createAuthAwareStorage } from '../utils/authAwareStorage';
 
 interface BookmarkAudioStore {
 	ids: string[];
@@ -49,7 +49,7 @@ export const useBookmarkAudioStore = create<BookmarkAudioStore>()(
 		}),
 		{
 			name: 'bookmark-audio',
-			storage: createJSONStorage(() => AsyncStorage),
+			storage: createJSONStorage(createAuthAwareStorage),
 		},
 	),
 );
