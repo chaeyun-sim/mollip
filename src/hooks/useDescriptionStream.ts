@@ -103,6 +103,8 @@ export function useDescriptionStream() {
 			savedToPlaylistRef.current = true;
 			addToPlaylist({
 				title: store.inputMode === 'manual' ? store.manualTitle : '촬영한 작품',
+				artist: store.inputMode === 'manual' ? store.manualArtist || undefined : undefined,
+				year: store.inputMode === 'manual' ? store.manualYear || undefined : undefined,
 				imageUrl: artworkImageUrl || undefined,
 				description: fullTextRef.current || '해설 생성에 실패했어요.',
 			});

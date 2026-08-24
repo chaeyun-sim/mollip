@@ -25,6 +25,8 @@ import { ScreenHeader } from '@/src/components/layout/ScreenHeader';
 import { searchWikiArtworks, type WikiArtwork } from '../../src/api/wikidata';
 import { PillSelector } from '@/src/components/mypage';
 import { FONT_SIZE_OPTIONS, SPEED_OPTIONS } from '@/src/data/mypage';
+import { fetchVoices } from '@/src/utils/api';
+import type { Voice } from '@/src/hooks/useTTS';
 import { colors } from '@/src/constants/colors';
 
 const STORAGE_KEY = 'example_modal_hidden';
@@ -48,32 +50,19 @@ export default function IndexScreen() {
 	const settingsSheetRef = useRef<BottomSheetModal>(null);
 	const pendingCameraRef = useRef<boolean>(false);
 	const isImmersive = useImmersiveStore((s) => s.isImmersiveMode);
-	const exitImmersive = useImmersiveStore((s) => s.exit);
-	const { voiceSpeed, setVoiceSpeed, fontSize, setFontSize } = useSettingsStore();
+	const { voiceId, voiceSpeed, setVoiceSpeed, fontSize, setFontSize, descriptionFocus } =
+		useSettingsStore();
 	const [isLoading, setIsLoading] = useState(false);
+	const [currentVoiceName, setCurrentVoiceName] = useState('');
 
-	// 셀프 가이드 진입점(작품 선택 화면) — 헤더 버튼뿐 아니라 스와이프 제스처/하드웨어 back
-	// 까지 전부 가로채서, 몰입 모드일 때는 확인 없이 메인 서비스로 빠져나가지 못하게 막는다.
 	useEffect(() => {
-		const unsubscribe = navigation.addListener('beforeRemove', (e) => {
-			if (!isImmersive) return;
-			e.preventDefault();
-			Alert.alert('전시 관람 종료', '재생목록이 초기화돼요', [
-				{ text: '닫기', style: 'cancel' },
-				{
-					text: '종료',
-					style: 'destructive',
-					onPress: () => {
-						exitImmersive();
-						// 바로 나가지 않고, 관람 마무리 화면(종료 요약 + 주변 추천)을 먼저 보여준다.
-						// replace — 뒤로가기로 다시 가이드 화면으로 못 돌아오게 스택에서 제거.
-						router.replace('/(guide)/exit-summary');
-					},
-				},
-			]);
-		});
-		return unsubscribe;
-	}, [navigation, isImmersive, exitImmersive, router]);
+		fetchVoices()
+			.then((voices) => {
+				const found = voices.find((v: Voice) => v.voice_id === voiceId);
+				if (found) setCurrentVoiceName(found.name);
+			})
+			.catch(console.error);
+	}, [voiceId]);
 
 	// Wikidata 검색 상태 (몰입 모드 전용)
 	const [searchQuery, setSearchQuery] = useState('');
@@ -117,13 +106,14 @@ export default function IndexScreen() {
 		Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
 		store.manualTitle = artwork.label;
 		store.manualArtist = artwork.artist ?? '';
+		store.manualYear = artwork.year ?? '';
 		store.artworkImageUrl = artwork.imageUrl ?? '';
 		store.artworkDescription = '';
 		store.inputMode = 'manual';
 		clearChat();
 		setSearchQuery('');
 		setSearchResults([]);
-		router.push('/description');
+		router.replace('/description');
 	};
 
 	const launchPicker = async (useCamera: boolean) => {
@@ -169,7 +159,11 @@ export default function IndexScreen() {
 		store.artworkDescription = '';
 		clearChat();
 		setIsLoading(false);
-		router.push('/description');
+		if (isImmersive) {
+			router.replace('/description');
+		} else {
+			router.push('/description');
+		}
 	};
 
 	const pickAndGo = async (useCamera: boolean) => {
@@ -200,17 +194,10 @@ export default function IndexScreen() {
 			<Screen.Header>
 				{isImmersive ? (
 					<>
-						<ScreenHeader.Left>
-							<Pressable
-								onPress={() => router.back()}
-								hitSlop={8}
-								accessibilityLabel='가이드 종료'
-								accessibilityRole='button'
-								style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
-							>
-								<Ionicons name='close' size={24} color='rgba(255,255,255,0.9)' />
-							</Pressable>
-						</ScreenHeader.Left>
+						<ScreenHeader.Back
+							onPress={() => router.back()}
+							color='rgba(255,255,255,0.9)'
+						/>
 						<ScreenHeader.Right>
 							<View className='flex-row items-center gap-4'>
 								<Pressable
@@ -537,6 +524,36 @@ export default function IndexScreen() {
 								onChange={setVoiceSpeed}
 							/>
 						</View>
+						<Pressable
+							className='flex-row items-center justify-between'
+							onPress={() => router.push('/settings/voice')}
+							accessibilityLabel='목소리 변경'
+							accessibilityRole='button'
+							style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
+						>
+							<Text className='text-sm font-pretendard-medium text-[#E8E8E8]'>목소리 변경</Text>
+							<View className='flex-row items-center gap-1.5'>
+								<Text className='text-sm font-pretendard-regular text-tertiary' numberOfLines={1}>
+									{currentVoiceName ? currentVoiceName.split(' - ')[0] : ''}
+								</Text>
+								<Ionicons name='chevron-forward' size={16} color={colors.secondary} />
+							</View>
+						</Pressable>
+						<Pressable
+							className='flex-row items-center justify-between'
+							onPress={() => router.push('/settings/description')}
+							accessibilityLabel='해설 강화 항목'
+							accessibilityRole='button'
+							style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
+						>
+							<Text className='text-sm font-pretendard-medium text-[#E8E8E8]'>강화 항목</Text>
+							<View className='flex-row items-center gap-1.5'>
+								<Text className='text-sm font-pretendard-regular text-tertiary'>
+									{descriptionFocus.length > 0 ? `${descriptionFocus.length}개 선택` : '선택 안 함'}
+								</Text>
+								<Ionicons name='chevron-forward' size={16} color={colors.secondary} />
+							</View>
+						</Pressable>
 						<View className='flex-row items-center justify-between'>
 							<Text className='text-sm font-pretendard-medium text-[#E8E8E8]'>텍스트 크기</Text>
 							<PillSelector

@@ -7,6 +7,7 @@ export const store = {
   inputMode: 'image' as InputMode,
   manualTitle: '',
   manualArtist: '',
+  manualYear: '',
   artworkDescription: '',
   artworkImageUrl: '',
 };

@@ -19,7 +19,7 @@ export function useVisitSync() {
 
 		supabase
 			.from('visits')
-			.select('date, exhibition_id, memo')
+			.select('date, exhibition_id, memo, exhibition_title, venue')
 			.eq('user_id', userId)
 			.then(({ data, error }) => {
 				if (cancelled) return;
@@ -28,8 +28,8 @@ export function useVisitSync() {
 					return;
 				}
 				if (data) {
-					// 로컬 listened/exhibitionTitle/venue/thumbnail은 Supabase에 저장되지 않으므로
-					// 원격 데이터와 병합하여 로컬 데이터가 덮어씌워지지 않도록 한다
+					// listened/thumbnail은 Supabase에 저장되지 않으므로 로컬 값을 유지한다.
+					// title/venue는 서버에도 기록해두므로, 로컬 캐시가 없어도(재설치·다른 기기) 복원 가능하다
 					const localVisits = useVisitStore.getState().visits;
 					const visits: Record<string, DayVisit> = {};
 					for (const r of data) {
@@ -38,8 +38,8 @@ export function useVisitSync() {
 							exhibitionId: r.exhibition_id ? String(r.exhibition_id) : null,
 							listened: local?.listened ?? [],
 							memo: r.memo ?? undefined,
-							exhibitionTitle: local?.exhibitionTitle,
-							venue: local?.venue,
+							exhibitionTitle: local?.exhibitionTitle ?? r.exhibition_title ?? undefined,
+							venue: local?.venue ?? r.venue ?? undefined,
 							thumbnail: local?.thumbnail,
 						};
 					}

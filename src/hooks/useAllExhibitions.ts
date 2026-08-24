@@ -37,7 +37,9 @@ export function useAllExhibitions(): UseAllExhibitionsResult {
 			.from('exhibitions')
 			.select('id, title, venue_name_fallback, image_url')
 			.gte('end_date', todayExhibitionDateString())
+			// synced_at은 같은 배치로 동기화된 행이 전부 동일해 동률이 흔함 — id로 2차 정렬해 페이지 경계를 고정
 			.order('synced_at', { ascending: false })
+			.order('id', { ascending: false })
 			.range(pageIndex * PAGE_SIZE, (pageIndex + 1) * PAGE_SIZE - 1);
 
 		loadingRef.current = false;

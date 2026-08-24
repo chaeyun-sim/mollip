@@ -49,9 +49,13 @@ export function VisitTicketGrid({ onPress }: VisitTicketGridProps) {
 	return (
 		<View className='flex-col gap-4'>
 			{sortedDateKeys.map((dateKey) => {
-				const data = getData(visits[dateKey]);
+				const visit = visits[dateKey];
+				const data = getData(visit);
+				// 실시간 조회 실패 시(만료·리싱크로 id 불일치) 기록 당시 저장해둔 값으로 대체
+				const title = data?.title ?? visit.exhibitionTitle;
+				const venue = data?.venue ?? visit.venue;
 
-				if (!data?.title) {
+				if (!title) {
 					return (
 						<View
 							key={dateKey}
@@ -65,8 +69,8 @@ export function VisitTicketGrid({ onPress }: VisitTicketGridProps) {
 					<VisitTicketGridCard
 						key={dateKey}
 						dateKey={dateKey}
-						title={data.title}
-						venue={data.venue}
+						title={title}
+						venue={venue}
 						onPress={() => onPress(dateKey)}
 					/>
 				);
