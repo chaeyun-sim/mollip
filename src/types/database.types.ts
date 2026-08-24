@@ -355,20 +355,26 @@ export type Database = {
         Row: {
           date: string
           exhibition_id: number | null
+          exhibition_title: string | null
           memo: string | null
           user_id: string
+          venue: string | null
         }
         Insert: {
           date: string
           exhibition_id?: number | null
+          exhibition_title?: string | null
           memo?: string | null
           user_id: string
+          venue?: string | null
         }
         Update: {
           date?: string
           exhibition_id?: number | null
+          exhibition_title?: string | null
           memo?: string | null
           user_id?: string
+          venue?: string | null
         }
         Relationships: [
           {
