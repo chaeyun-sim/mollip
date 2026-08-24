@@ -183,7 +183,7 @@ export default function DiaryScreen() {
 							accessibilityRole='button'
 							style={({ pressed }) => ({ opacity: pressed ? 0.5 : 1 })}
 						>
-							<Ionicons name='trash-outline' size={20} color='white' />
+							<Ionicons name='trash-outline' size={20} color='rgba(255,255,255,0.4)' />
 						</Pressable>
 					</View>
 				</ScreenHeader.Right>
