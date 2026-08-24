@@ -3,15 +3,18 @@ import { LinearGradient } from 'expo-linear-gradient';
 import * as Haptics from 'expo-haptics';
 import { useState } from 'react';
 import {
+	ActivityIndicator,
 	Image,
 	ImageBackground,
 	LayoutChangeEvent,
 	Pressable,
+	StyleSheet,
 	Text,
 	View,
 } from 'react-native';
 
 import { EmptyImagePlaceholder } from '@/src/components/common/EmptyImagePlaceholder';
+import { proxiedImageUrl } from '@/src/utils/imageProxy';
 import { colors } from '@/src/constants/colors';
 
 const GRID_GAP = 12;
@@ -42,7 +45,7 @@ export function FeaturedExhibitionHero({
 			style={({ pressed }) => ({ opacity: pressed ? 0.94 : 1 })}
 		>
 			<View
-				className='rounded-[28px] overflow-hidden'
+				className='rounded-[28px] overflow-hidden w-full'
 				style={{
 					shadowColor: colors.primary,
 					shadowOpacity: 0.14,
@@ -103,24 +106,6 @@ export function FeaturedExhibitionHero({
 	);
 }
 
-interface SectionTitleProps {
-	eyebrow: string;
-	title: string;
-}
-
-export function ExploreSectionTitle({ eyebrow, title }: SectionTitleProps) {
-	return (
-		<View className='mb-4'>
-			<Text className='text-[11px] text-muted mb-1 font-pretendard-semibold leading-[1.6px]'>
-				{eyebrow}
-			</Text>
-			<Text className='text-primary text-[20px] font-hahmlet-semibold'>
-				{title}
-			</Text>
-		</View>
-	);
-}
-
 export interface RecommendableItem {
 	id: string;
 	title: string;
@@ -147,6 +132,9 @@ export function PosterFrame({
 	iconSize?: number;
 }) {
 	const [imgError, setImgError] = useState(false);
+	// 프록시가 실패하면(예: 원본 서버가 클라우드망 자체를 차단) 원본 URL로 한 번 더 시도
+	const [useProxy, setUseProxy] = useState(true);
+	const [imgLoading, setImgLoading] = useState(true);
 	const sizeStyle = { width, height };
 	const showImage = !!thumbnail && !imgError;
 
@@ -163,12 +151,30 @@ export function PosterFrame({
 			}}
 		>
 			{showImage ? (
-				<Image
-					source={{ uri: thumbnail }}
-					style={{ ...sizeStyle, borderRadius }}
-					resizeMode='cover'
-					onError={() => setImgError(true)}
-				/>
+				<>
+					<Image
+						source={{ uri: (useProxy ? proxiedImageUrl(thumbnail) : thumbnail) ?? thumbnail }}
+						style={{ ...sizeStyle, borderRadius }}
+						resizeMode='cover'
+						onLoadEnd={() => setImgLoading(false)}
+						onError={() => {
+							if (useProxy) {
+								setUseProxy(false);
+								setImgLoading(true);
+								return;
+							}
+							setImgError(true);
+						}}
+					/>
+					{imgLoading && (
+						<View
+							className='items-center justify-center'
+							style={StyleSheet.absoluteFill}
+						>
+							<ActivityIndicator color={colors.muted} />
+						</View>
+					)}
+				</>
 			) : (
 				<EmptyImagePlaceholder
 					className='items-center justify-center bg-[#E5E1D8]'
@@ -190,7 +196,7 @@ export function GridExhibitionCell({
 	colWidth: number;
 	gridHeight: number;
 	onPress: (id: string) => void;
-}) {
+	}) {
 	return (
 		<Pressable
 			onPress={() => {
@@ -199,7 +205,7 @@ export function GridExhibitionCell({
 			}}
 			accessibilityRole='button'
 			accessibilityLabel={`${item.title}, ${item.venue}`}
-			style={({ pressed }) => ({ opacity: pressed ? 0.92 : 1, width: colWidth })}
+			style={({ pressed }) => ({ opacity: pressed ? 0.92 : 1, width: '100%' })}
 		>
 			<PosterFrame
 				thumbnail={item.thumbnail}
@@ -208,7 +214,7 @@ export function GridExhibitionCell({
 				borderRadius={16}
 				iconSize={40}
 			/>
-			<View className='flex-1'>
+			<View>
 				<Text
 					className='mt-2 text-primary text-[13px] leading-[18px] font-pretendard-semibold'
 					style={{ width: colWidth }}
