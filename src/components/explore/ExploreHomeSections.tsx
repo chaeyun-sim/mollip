@@ -50,14 +50,16 @@ export function FeaturedExhibitionHero({
 						imageStyle={{ resizeMode: 'cover' }}
 					>
 						<LinearGradient
-							colors={['transparent', 'rgba(12,10,9,0.55)', 'rgba(12,10,9,0.92)']}
+							colors={['transparent', 'rgba(12,10,9,0.55)', 'rgba(12,10,9,0.95)']}
 							style={{ paddingHorizontal: 22, paddingBottom: 22, paddingTop: 80 }}
 						>
-							<Text className="text-[11px] text-white/80 mb-2 font-pretendard-semibold leading-[1.8px]">
-								오늘의 전시
-							</Text>
+							<View className="flex-row self-start rounded-full bg-white/95 px-3 py-1 mb-3">
+								<Text className="text-[11px] text-primary font-pretendard-semibold leading-[1.8px]">
+									오늘의 전시
+								</Text>
+							</View>
 							<Text
-								className="text-white text-[26px] leading-[32px] mb-2 font-hahmlet-bold"
+								className="text-white text-[28px] leading-[34px] mb-2 font-hahmlet-bold"
 								numberOfLines={2}
 							>
 								{title}
@@ -234,13 +236,18 @@ export function RecommendedExhibitions({ items, onPress }: RecommendedExhibition
 				accessibilityLabel={`${lead.title}, ${lead.venue}`}
 				style={({ pressed }) => ({ opacity: pressed ? 0.92 : 1 })}
 			>
-				<PosterFrame
-					thumbnail={lead.thumbnail}
-					width={containerWidth}
-					height={leadHeight}
-					borderRadius={22}
-					iconSize={80}
-				/>
+				<View>
+					<PosterFrame
+						thumbnail={lead.thumbnail}
+						width={containerWidth}
+						height={leadHeight}
+						borderRadius={22}
+						iconSize={80}
+					/>
+					<View className="absolute top-3 left-3 rounded-full bg-primary/90 px-2.5 py-1">
+						<Text className="text-white text-[10px] font-pretendard-bold">PICK</Text>
+					</View>
+				</View>
 				<Text
 					numberOfLines={2}
 					className="mt-3 text-primary text-[16px] leading-[22px] font-pretendard-semibold"

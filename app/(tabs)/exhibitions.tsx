@@ -29,10 +29,13 @@ export default function ExhibitionsScreen() {
 	const colWidth = (windowWidth - HORIZONTAL_PADDING * 2 - GRID_GAP) / 2;
 	const gridHeight = Math.round((colWidth * 4) / 3);
 
-	const openExhibition = (id: string) => {
-		Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-		router.push(`/(explore)/${id}`);
-	};
+	const openExhibition = useCallback(
+		(id: string) => {
+			Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+			router.push(`/(explore)/${id}`);
+		},
+		[router],
+	);
 
 	const handleEndReached = useCallback(() => {
 		if (endReachedCalledRef.current) return;
@@ -44,37 +47,59 @@ export default function ExhibitionsScreen() {
 		endReachedCalledRef.current = false;
 	}, []);
 
-	function renderItem({ item, index }: { item: RecommendableItem; index: number }) {
-		const rowIndex = Math.floor(index / 2);
-		return (
-			<View style={{ marginTop: rowIndex === 0 ? 0 : ROW_GAP }}>
-				<GridExhibitionCell
-					item={item}
-					colWidth={colWidth}
-					gridHeight={gridHeight}
-					onPress={openExhibition}
-				/>
-			</View>
-		);
+	const renderItem = useCallback(
+		({ item, index }: { item: RecommendableItem; index: number }) => {
+			const rowIndex = Math.floor(index / 2);
+			return (
+				<View style={{ marginTop: rowIndex === 0 ? 0 : ROW_GAP }}>
+					<GridExhibitionCell
+						item={item}
+						colWidth={colWidth}
+						gridHeight={gridHeight}
+						onPress={openExhibition}
+					/>
+				</View>
+			);
+		},
+		[colWidth, gridHeight, openExhibition],
+	);
+
+	const getItemLayout = useCallback(
+		(_: unknown, index: number) => {
+			const rowIndex = Math.floor(index / 2);
+			const rowHeight = gridHeight + ROW_GAP;
+			return { length: rowHeight, offset: rowIndex === 0 ? 0 : rowHeight * rowIndex, index };
+		},
+		[gridHeight],
+	);
+
+	function renderFooterContent() {
+		if (isLoadingMore) {
+			return <ActivityIndicator color={colors.secondary} />;
+		}
+
+		if (!hasMore) {
+			return (
+				<Text className="text-muted text-[12px] font-pretendard-regular">
+					모든 전시를 불러왔어요
+				</Text>
+			);
+		}
+
+		return null;
 	}
 
-	function renderFooter() {
+	const renderFooter = useCallback(() => {
 		if (items.length === 0) return null;
 
 		return (
 			<View className="items-center justify-center" style={{ height: 56 }}>
-				{isLoadingMore ? (
-					<ActivityIndicator color={colors.secondary} />
-				) : !hasMore ? (
-					<Text className="text-muted text-[12px] font-pretendard-regular">
-						모든 전시를 불러왔어요
-					</Text>
-				) : null}
+				{renderFooterContent()}
 			</View>
 		);
-	}
+	}, [items.length, isLoadingMore, hasMore]);
 
-	function renderEmpty() {
+	const renderEmpty = useCallback(() => {
 		if (status === 'loading') {
 			return <CenteredLoader className="flex-1 py-24" />;
 		}
@@ -91,7 +116,7 @@ export default function ExhibitionsScreen() {
 		}
 
 		return null;
-	}
+	}, [status, refetch]);
 
 	return (
 		<Screen variant="warm">
@@ -107,6 +132,7 @@ export default function ExhibitionsScreen() {
 				keyExtractor={(item) => item.id}
 				numColumns={2}
 				renderItem={renderItem}
+				getItemLayout={getItemLayout}
 				columnWrapperStyle={{ gap: GRID_GAP }}
 				contentContainerStyle={{
 					paddingBottom: insets.bottom + 24,
