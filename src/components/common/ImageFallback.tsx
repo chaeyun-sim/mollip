@@ -1,48 +1,21 @@
 import { useEffect, useState } from 'react';
-import { Image, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, Image, StyleSheet, View } from 'react-native';
 import type {
 	ImageResizeMode,
 	ImageSourcePropType,
 	StyleProp,
 	ViewStyle,
 } from 'react-native';
-import { colors } from '@/src/constants/colors';
+import { proxiedImageUrl } from '@/src/utils/imageProxy';
+import { cn } from '@/src/lib/cn';
 
-/** 화면 배경(#F8F6F2)보다 한 톤 진한 포스터 빈 상태 배경 */
-export const EXHIBITION_POSTER_PLACEHOLDER_BG = colors.bgTonal;
-
-const QUESTION_MARK = require('@/assets/images/skulpture/question.png');
-
-interface EmptyImagePlaceholderProps {
-	className?: string;
-	style?: StyleProp<ViewStyle>;
-	iconSize?: number;
-}
-
-export function EmptyImagePlaceholder({
-	className = 'flex-1 items-center justify-center',
-	style,
-	iconSize = 96,
-}: EmptyImagePlaceholderProps) {
-	return (
-		<View
-			className={className}
-			style={[{ backgroundColor: EXHIBITION_POSTER_PLACEHOLDER_BG }, style]}
-		>
-			<Image
-				source={QUESTION_MARK}
-				style={{ width: iconSize, height: iconSize }}
-				resizeMode='contain'
-			/>
-		</View>
-	);
-}
+export const QUESTION_MARK = require('@/assets/images/skulpture/question.png');
 
 function isUsableRemoteUri(uri?: string | null): boolean {
 	return Boolean(uri?.trim());
 }
 
-interface ExhibitionPosterProps {
+interface ImageFallbackProps {
 	heroImageUri?: string | null;
 	posterImage?: ImageSourcePropType;
 	className?: string;
@@ -50,13 +23,17 @@ interface ExhibitionPosterProps {
 	iconSize?: number;
 	resizeMode?: ImageResizeMode;
 	children?: React.ReactNode;
-	/** 실제 포스터가 보일 때만 살짝 어둡게 (히어로 상단 버튼 대비) */
+	/** 실제 이미지가 보일 때만 살짝 어둡게 (히어로 상단 버튼 대비) */
 	dimOverlay?: boolean;
 	accessibilityLabel?: string;
+	/** true면 원격 URI를 image-proxy 경유로 먼저 시도하고, 실패 시 원본 URL로 재시도한다 */
+	useImageProxy?: boolean;
+	/** 지정하면 원격 이미지 로딩 중 해당 색상으로 스피너를 겹쳐 보여준다 */
+	loadingIndicatorColor?: string;
 }
 
-/** 포스터 URI·로컬 소스가 없거나 로드 실패 시 question.png 빈 상태 */
-export function ExhibitionPoster({
+/** 원격 URI·로컬 소스가 없거나 로드 실패 시 question.png 빈 상태로 대체하는 이미지. */
+export function ImageFallback({
 	heroImageUri,
 	posterImage,
 	className,
@@ -66,8 +43,12 @@ export function ExhibitionPoster({
 	children,
 	dimOverlay = false,
 	accessibilityLabel,
-}: ExhibitionPosterProps) {
+	useImageProxy = false,
+	loadingIndicatorColor,
+}: ImageFallbackProps) {
 	const [loadFailed, setLoadFailed] = useState(false);
+	const [proxyFailed, setProxyFailed] = useState(false);
+	const [loading, setLoading] = useState(true);
 	const remoteUri = heroImageUri?.trim();
 	const hasRemote = isUsableRemoteUri(remoteUri);
 	const hasLocal = posterImage != null;
@@ -75,6 +56,8 @@ export function ExhibitionPoster({
 
 	useEffect(() => {
 		setLoadFailed(false);
+		setProxyFailed(false);
+		setLoading(true);
 	}, [sourceKey]);
 
 	const showRemote = hasRemote && !loadFailed;
@@ -82,22 +65,32 @@ export function ExhibitionPoster({
 	const showPlaceholder = !showRemote && !showLocal;
 	const showImage = showRemote || showLocal;
 
+	const remoteSource =
+		useImageProxy && !proxyFailed && remoteUri ? proxiedImageUrl(remoteUri) : remoteUri;
+
+	const handleRemoteError = () => {
+		if (useImageProxy && !proxyFailed) {
+			setProxyFailed(true);
+			setLoading(true);
+			return;
+		}
+		setLoadFailed(true);
+	};
+
 	return (
 		<View
-			className={className}
-			style={[
-				{ backgroundColor: EXHIBITION_POSTER_PLACEHOLDER_BG, overflow: 'hidden' },
-				style,
-			]}
+			className={cn('bg-bg-tonal overflow-hidden', className)}
+			style={style}
 			accessibilityLabel={accessibilityLabel}
 			accessibilityRole={accessibilityLabel ? 'image' : undefined}
 		>
 			{showRemote ? (
 				<Image
-					source={{ uri: remoteUri }}
+					source={{ uri: remoteSource ?? remoteUri }}
 					style={StyleSheet.absoluteFill}
 					resizeMode={resizeMode}
-					onError={() => setLoadFailed(true)}
+					onLoadEnd={() => setLoading(false)}
+					onError={handleRemoteError}
 				/>
 			) : showLocal ? (
 				<Image
@@ -107,6 +100,11 @@ export function ExhibitionPoster({
 					onError={() => setLoadFailed(true)}
 				/>
 			) : null}
+			{showImage && loadingIndicatorColor && loading ? (
+				<View style={StyleSheet.absoluteFill} className='items-center justify-center'>
+					<ActivityIndicator color={loadingIndicatorColor} />
+				</View>
+			) : null}
 			{showImage && dimOverlay ? (
 				<View
 					pointerEvents='none'
@@ -114,10 +112,7 @@ export function ExhibitionPoster({
 				/>
 			) : null}
 			{showPlaceholder ? (
-				<View
-					style={StyleSheet.absoluteFill}
-					className='items-center justify-center'
-				>
+				<View style={StyleSheet.absoluteFill} className='items-center justify-center'>
 					<Image
 						source={QUESTION_MARK}
 						style={{ width: iconSize, height: iconSize }}

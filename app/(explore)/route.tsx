@@ -17,7 +17,6 @@ import {
 	View,
 } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
-
 import { FloatingBackButton } from '@/src/components/common/FloatingBackButton';
 import { getWalkingRoute, type RouteCoord, type RouteResult } from '@/src/api/tmap';
 import { useExhibitionData } from '@/src/hooks/useExhibitionData';
@@ -25,7 +24,7 @@ import { useMuseums } from '@/src/hooks/useMuseums';
 import { useUserLocation } from '@/src/hooks/useUserLocation';
 import { supabase } from '@/src/utils/supabase';
 import { distanceKm } from '@/src/utils/mapUtils';
-import { colors } from '@/src/constants/colors';
+import { cn } from '@/src/lib/cn';
 
 interface Waypoint {
 	id: string;
@@ -324,8 +323,7 @@ export default function RouteScreen() {
 					>
 						<View
 							collapsable={false}
-							className='w-2 h-2 rounded-full'
-							style={{ backgroundColor: 'rgba(28,25,23,0.25)' }}
+							className='w-2 h-2 rounded-full bg-primary/25'
 						/>
 					</NaverMapMarkerOverlay>
 				))}
@@ -365,11 +363,7 @@ export default function RouteScreen() {
 					>
 						<View
 							collapsable={false}
-							className='w-[34px] h-[34px] rounded-full items-center justify-center'
-							style={{
-								backgroundColor:
-									i === 0 ? colors.primary : i === waypoints.length - 1 ? ROUTE_COLOR : '#D97706',
-							}}
+							className={cn('w-[34px] h-[34px] rounded-full items-center justify-center', i === 0 ? 'bg-primary' : i === waypoints.length - 1 ? 'bg-[#FF2D78]' : 'bg-orange-600')}
 						>
 							<Text className='text-white font-pretendard-bold text-[14px]'>
 								{i + 1}
@@ -395,25 +389,15 @@ export default function RouteScreen() {
 							<View className='bg-amber-400 rounded-xl px-3 py-2 mb-1 flex-row items-center gap-1.5'>
 								<Ionicons name='star' size={13} color='white' />
 								<Text
-									className='text-white font-pretendard-semibold text-[13px]'
+									className='text-white font-pretendard-semibold text-[13px] max-w-[140px]'
 									numberOfLines={1}
-									style={{ maxWidth: 140 }}
 								>
 									{ex.venue || ex.title}
 								</Text>
 							</View>
 							{/* 핀 꼭지 */}
 							<View
-								style={{
-									width: 0,
-									height: 0,
-									borderLeftWidth: 6,
-									borderRightWidth: 6,
-									borderTopWidth: 7,
-									borderLeftColor: 'transparent',
-									borderRightColor: 'transparent',
-									borderTopColor: '#F59E0B',
-								}}
+							className="w-0 h-0 border-l-[6px] border-r-[6px] border-t-[7px] border-l-transparent border-r-transparent border-t-amber-500"
 							/>
 						</View>
 					</NaverMapMarkerOverlay>
@@ -427,12 +411,7 @@ export default function RouteScreen() {
 				pointerEvents='box-none'
 			>
 				<View className='flex-row items-center px-5 pt-2 gap-3'>
-					<FloatingBackButton
-						onPress={() => router.back()}
-						backgroundClassName='bg-white/90'
-						iconColor='#1a1a1a'
-						pressedOpacity={0.7}
-					/>
+					<FloatingBackButton onPress={() => router.back()} variant='onLight' />
 					<View className='flex-1 bg-white/90 rounded-2xl px-4 py-2.5'>
 						<Text className='font-pretendard-semibold text-[15px] text-primary'>
 							관람 루트
@@ -472,20 +451,15 @@ export default function RouteScreen() {
 								className='flex-row items-center gap-1.5 bg-bg-light rounded-full px-3 py-1.5'
 							>
 								<View
-									className='w-5 h-5 rounded-full items-center justify-center'
-									style={{
-										backgroundColor:
-											i === 0 ? colors.primary : i === waypoints.length - 1 ? ROUTE_COLOR : '#D97706',
-									}}
+									className={cn('w-5 h-5 rounded-full items-center justify-center', i === 0 ? 'bg-primary' : i === waypoints.length - 1 ? 'bg-[#FF2D78]' : 'bg-amber-600')}
 								>
 									<Text className='text-white font-pretendard-bold text-[10px]'>
 										{i + 1}
 									</Text>
 								</View>
 								<Text
-									className='font-pretendard-regular text-[13px] text-primary'
+									className='font-pretendard-regular text-[13px] text-primary max-w-[120px]'
 									numberOfLines={1}
-									style={{ maxWidth: 120 }}
 								>
 									{renderWaypointLabel(i, waypoints.length)}
 								</Text>
@@ -508,8 +482,7 @@ export default function RouteScreen() {
 					{routeReady && nearbyExhibitions.length > 0 && (
 						<Pressable
 							onPress={() => setSheetVisible(true)}
-							className='rounded-2xl py-4 items-center bg-amber-400'
-							style={{ flex: 1 }}
+							className='rounded-2xl py-4 items-center bg-amber-400 flex-1'
 							accessibilityLabel='근처 전시 보기'
 							accessibilityRole='button'
 						>
@@ -521,12 +494,7 @@ export default function RouteScreen() {
 					<Pressable
 						onPress={handleBuildRoute}
 						disabled={waypoints.length < 2 || building}
-						className='rounded-2xl py-4 items-center'
-						style={{
-							flex: routeReady && nearbyExhibitions.length > 0 ? undefined : 1,
-							minWidth: routeReady && nearbyExhibitions.length > 0 ? 120 : undefined,
-							backgroundColor: waypoints.length < 2 ? colors.border : colors.primary,
-						}}
+						className={cn('rounded-2xl py-4 items-center', waypoints.length < 2 ? 'bg-border' : 'bg-primary', routeReady && nearbyExhibitions.length > 0 ? 'flex-1' : 'min-w-[120px]')}
 						accessibilityLabel={routeReady ? '경로 재생성' : '경로 생성'}
 						accessibilityRole='button'
 					>
@@ -556,8 +524,8 @@ export default function RouteScreen() {
 						accessibilityRole='button'
 					/>
 					<View
-						className='bg-white rounded-t-3xl px-6 pt-5'
-						style={{ paddingBottom: insets.bottom + 24, maxHeight: '65%' }}
+						className='bg-white rounded-t-3xl px-6 pt-5 max-h-[65%]'
+						style={{ paddingBottom: insets.bottom + 24 }}
 					>
 						<View className='flex-row items-center justify-between mb-1'>
 							<Text className='font-pretendard-semibold text-[17px] text-primary'>
@@ -569,7 +537,7 @@ export default function RouteScreen() {
 								accessibilityLabel='닫기'
 								accessibilityRole='button'
 							>
-								<Ionicons name='close' size={22} color={colors.primary} />
+								<Ionicons name='close' size={22} className="text-primary" />
 							</Pressable>
 						</View>
 						<Text className='font-pretendard-regular text-[13px] text-gray-400 mb-4'>
@@ -610,7 +578,7 @@ export default function RouteScreen() {
 										accessibilityLabel='경로에 추가'
 										accessibilityRole='button'
 									>
-										<Ionicons name='add-circle-outline' size={15} color={colors.primary} />
+										<Ionicons name='add-circle-outline' size={15} className="text-primary" />
 										<Text className='font-pretendard-medium text-[13px] text-primary'>
 											경로에 추가
 										</Text>

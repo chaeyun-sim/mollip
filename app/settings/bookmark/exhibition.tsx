@@ -1,11 +1,10 @@
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { ActivityIndicator, FlatList, Pressable, Text, View } from 'react-native';
-import { Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Screen } from '@/src/components/layout/Screen';
-import { EmptyImagePlaceholder } from '@/src/components/common/EmptyImagePlaceholder';
-import { FilterChip } from '@/src/components/search/FilterChip';
+import { ImageFallback } from '@/src/components/common/ImageFallback';
+import { Chip } from '@/src/components/common/Chip';
 import { StatusBadge } from '@/src/components/search/StatusBadge';
 import { useBookmarkedExhibitions } from '@/src/hooks/useBookmarkedExhibitions';
 import { useBookmarkStore } from '@/src/store/bookmarkStore';
@@ -17,6 +16,7 @@ import {
 import type { Exhibition } from '@/src/data/exhibitions';
 import type { ExhibitionStatus } from '@/src/utils/exhibitionSearch';
 import { colors } from '@/src/constants/colors';
+import { cn } from '@/src/lib/cn';
 
 type FilterOption = ExhibitionStatus | 'all';
 
@@ -46,20 +46,13 @@ function ExhibitionCard({ ex, onPress }: ExhibitionCardProps) {
 			className='flex-row gap-4'
 			style={({ pressed }) => ({ opacity: pressed ? 0.85 : 1 })}
 		>
-			<View className='rounded-lg overflow-hidden w-[72px] aspect-[3/4]'>
-				{ex.heroImageUri || ex.posterImage ? (
-					<Image
-						source={ex.heroImageUri ? { uri: ex.heroImageUri } : ex.posterImage}
-						resizeMode='cover'
-						className='w-full h-full'
-					/>
-				) : (
-					<EmptyImagePlaceholder
-						className='w-full h-full items-center justify-center bg-[#E5E1D8]'
-						iconSize={40}
-					/>
-				)}
-			</View>
+			<ImageFallback
+				heroImageUri={ex.heroImageUri}
+				posterImage={ex.posterImage}
+				className='rounded-lg w-[72px] aspect-[3/4] bg-image-placeholder'
+				iconSize={40}
+				resizeMode='cover'
+			/>
 
 			<View className='flex-1 justify-center gap-1.5'>
 				<StatusBadge status={status} />
@@ -74,7 +67,7 @@ function ExhibitionCard({ ex, onPress }: ExhibitionCardProps) {
 						{ex.startDate} – {ex.endDate}
 					</Text>
 					{ddayLabel && (
-						<Text className='text-[#C2410C] text-[12px] font-pretendard-semibold'>
+						<Text className='text-orange-700 text-[12px] font-pretendard-semibold'>
 							{ddayLabel}
 						</Text>
 					)}
@@ -91,7 +84,7 @@ function ExhibitionCard({ ex, onPress }: ExhibitionCardProps) {
 				<Ionicons
 					name={isBookmarked ? 'bookmark' : 'bookmark-outline'}
 					size={20}
-					color={isBookmarked ? colors.primary : '#D6D3D1'}
+					className={cn(isBookmarked ? 'text-primary' : 'text-stone-300')}
 				/>
 			</Pressable>
 		</Pressable>
@@ -116,7 +109,7 @@ export default function ExhibitionBookmarkScreen() {
 		if (filteredData.length === 0) {
 			return (
 				<View className='flex-1 items-center justify-center gap-2'>
-					<Ionicons name='bookmark-outline' size={36} color='#D6D3D1' />
+					<Ionicons name='bookmark-outline' size={36} className="text-stone-300" />
 					<Text className='text-muted text-[14px] font-pretendard-regular text-center'>
 						해당하는 전시가 없어요
 					</Text>
@@ -145,7 +138,7 @@ export default function ExhibitionBookmarkScreen() {
 	return (
 		<Screen variant='warm'>
 			<Screen.Header>
-				<Screen.Header.Back color={colors.tertiary} />
+				<Screen.Header.Back color='muted' />
 				<Screen.Header.Center>
 					<Text className='font-pretendard-semibold text-[16px] text-primary'>
 						관심 있는 전시
@@ -169,7 +162,7 @@ export default function ExhibitionBookmarkScreen() {
 						프롬프트: 따뜻한 베이지(#F8F6F2) 배경 위에 접힌 리본 북마크와 작은 액자 그림,
 						플랫 일러스트 스타일, 얇은 라인 아트, 잉크색(#1C1917) 윤곽선, 포인트 컬러는 은은한 테라코타,
 						미니멀하고 여백이 많은 구도, 사진 느낌 없이 손그림 느낌, 정사각형 120x120 */}
-					<Ionicons name='bookmark-outline' size={36} color='#D6D3D1' />
+					<Ionicons name='bookmark-outline' size={36} className="text-stone-300" />
 					<Text className='text-muted text-[14px] font-pretendard-regular text-center'>
 						관심 있는 전시가 없어요{'\n'}전시를 탐색하고 북마크해보세요
 					</Text>
@@ -183,7 +176,7 @@ export default function ExhibitionBookmarkScreen() {
 					</View>
 					<View className='flex-row gap-2 pb-3'>
 						{FILTER_OPTIONS.map((option) => (
-							<FilterChip
+							<Chip
 								key={option.value}
 								label={option.label}
 								active={activeFilter === option.value}

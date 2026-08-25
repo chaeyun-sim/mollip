@@ -3,9 +3,21 @@ import { Pressable, Text, View } from 'react-native';
 import { cn } from '@/src/lib/cn';
 
 interface RetryErrorStateProps {
+	/**
+	 * 에러 메시지
+	 */
 	message: string;
+	/**
+	 * 다시 시도 버튼 클릭 시 호출되는 함수
+	 */
 	onRetry: () => void;
+	/**
+	 * 다시 시도 버튼 접근성 레이블
+	 */
 	retryAccessibilityLabel: string;
+	/**
+	 * 컴포넌트 스타일
+	 */
 	className?: string;
 }
 

@@ -5,10 +5,15 @@ export const colors = {
 	secondary: '#57534E',
 	tertiary: '#78716C',
 	muted: '#A8A29E',
+	
+	description: '#6B6360',
 
 	bgLight: '#F8F6F2',
 	bgDark: '#171412',
 	bgTonal: '#F2EFE9',
+
+	onDark: '#E8E8E8',
+	imagePlaceholder: '#E5E1D8',
 
 	border: '#E7E5E4',
 	borderDark: '#292524',
@@ -20,3 +25,7 @@ export const colors = {
 	errorAlt: '#F43F5E',
 	success: '#00BC7D',
 } as const;
+
+// F0EDE7 1
+// FF2D78 1
+// E8E4DC 1

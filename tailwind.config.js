@@ -16,6 +16,8 @@ module.exports = {
         'bg-light': '#f4f4f1',
         'bg-dark': '#171412',
         'bg-tonal': '#F2EFE9',
+        'on-dark': '#E8E8E8',
+        'image-placeholder': '#E5E1D8',
         divider: '#E7E5E4',
         'divider-dark': '#292524',
         accent: '#3B82F6',

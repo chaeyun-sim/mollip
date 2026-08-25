@@ -9,7 +9,7 @@ import Animated, {
 	withSpring,
 } from 'react-native-reanimated';
 
-import { ExhibitionPoster } from '@/src/components/common/EmptyImagePlaceholder';
+import { ImageFallback } from '@/src/components/common/ImageFallback';
 import type { Exhibition } from '@/src/data/exhibitions';
 import { getDdayLabel } from '@/src/utils/exhibitionSearch';
 
@@ -76,7 +76,7 @@ function RelatedExhibitionCard({
 			accessibilityRole='button'
 		>
 			<Animated.View style={animatedStyle}>
-				<ExhibitionPoster
+				<ImageFallback
 					heroImageUri={exhibition.heroImageUri}
 					posterImage={exhibition.posterImage}
 					style={{ width: POSTER_W, height: POSTER_H }}
@@ -105,7 +105,7 @@ function RelatedExhibitionCard({
 							</Text>
 						</View>
 					) : null}
-				</ExhibitionPoster>
+				</ImageFallback>
 				<View className='pt-2.5' style={{ width: POSTER_W }}>
 					<Text
 						className='font-pretendard-semibold text-[14px] text-gray-900'

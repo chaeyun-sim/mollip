@@ -1,8 +1,8 @@
 import * as Haptics from 'expo-haptics';
-import { Dimensions, Image, Pressable, Text, View } from 'react-native';
+import { Dimensions, Pressable, Text, View } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 
-import { EmptyImagePlaceholder } from '@/src/components/common/EmptyImagePlaceholder';
+import { ImageFallback } from '@/src/components/common/ImageFallback';
 import type { Artwork } from '@/src/data/exhibitions';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -32,20 +32,14 @@ export function ExhibitionArtworkCard({ artwork, onPress }: ExhibitionArtworkCar
 			style={{ width: cardSize }}
 		>
 			<Animated.View style={animatedStyle}>
-				{artwork.imageUri || artwork.imageSource ? (
-					<Image
-						source={artwork.imageUri ? { uri: artwork.imageUri } : artwork.imageSource}
-						style={{ height: cardSize, width: cardSize }}
-						className='rounded-[16px]'
-						resizeMode='cover'
-					/>
-				) : (
-					<EmptyImagePlaceholder
-						className='rounded-[16px] items-center justify-center bg-[#E5E1D8]'
-						style={{ height: cardSize, width: cardSize }}
-						iconSize={cardSize * 0.55}
-					/>
-				)}
+				<ImageFallback
+					heroImageUri={artwork.imageUri}
+					posterImage={artwork.imageSource}
+					className='rounded-[16px] bg-image-placeholder'
+					style={{ height: cardSize, width: cardSize }}
+					iconSize={cardSize * 0.55}
+					resizeMode='cover'
+				/>
 				<View className='pt-2'>
 					<Text className='font-pretendard-medium text-[13px] text-gray-800' numberOfLines={1}>
 						{artwork.title}

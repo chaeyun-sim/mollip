@@ -3,7 +3,6 @@ import { useRouter } from 'expo-router';
 import { ActivityIndicator, FlatList, Text, View, useWindowDimensions } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as Haptics from 'expo-haptics';
-
 import { CenteredLoader } from '@/src/components/common/CenteredLoader';
 import { RetryErrorState } from '@/src/components/common/RetryErrorState';
 import {
@@ -11,7 +10,6 @@ import {
   type RecommendableItem,
 } from '@/src/components/explore/ExploreHomeSections';
 import { useAllExhibitions } from '@/src/hooks/useAllExhibitions';
-import { ScreenHeader } from '@/src/components/layout/ScreenHeader';
 import { Screen } from '@/src/components/layout/Screen';
 import { colors } from '@/src/constants/colors';
 
@@ -69,7 +67,7 @@ export default function ExhibitionsScreen() {
         style={{ height: 56 }}
       >
         {isLoadingMore ? (
-          <ActivityIndicator color={colors.muted} />
+          <ActivityIndicator color={colors.secondary} />
         ) : !hasMore ? (
           <Text className='text-muted text-[12px] font-pretendard-regular'>
             모든 전시를 불러왔어요

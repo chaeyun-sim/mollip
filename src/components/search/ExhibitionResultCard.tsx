@@ -1,12 +1,11 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Pressable, Text, View } from 'react-native';
 import { useBookmarkStore } from '@/src/store/bookmarkStore';
-import { ExhibitionPoster } from '@/src/components/common/EmptyImagePlaceholder';
+import { ImageFallback } from '@/src/components/common/ImageFallback';
 import { formatDistance } from '@/src/utils/mapUtils';
 import { getDdayLabel, STATUS_LABELS } from '@/src/utils/exhibitionSearch';
 import { StatusBadge } from './StatusBadge';
 import type { SearchResult } from '@/src/hooks/useExhibitionSearch';
-import { colors } from '@/src/constants/colors';
 
 interface ExhibitionResultCardProps {
 	result: SearchResult;
@@ -31,7 +30,7 @@ export function ExhibitionResultCard({
 			style={({ pressed }) => ({ opacity: pressed ? 0.85 : 1 })}
 		>
 			{/* 썸네일 + 상태 배지 오버레이 */}
-			<ExhibitionPoster
+			<ImageFallback
 				heroImageUri={ex.heroImageUri}
 				posterImage={ex.posterImage}
 				className='rounded-lg w-[76px] h-[100px]'
@@ -62,7 +61,7 @@ export function ExhibitionResultCard({
 						{ex.startDate} – {ex.endDate}
 					</Text>
 					{ddayLabel && (
-						<Text className='text-[#C2410C] text-[12px] font-pretendard-semibold'>
+						<Text className='text-orange-700 text-[12px] font-pretendard-semibold'>
 							{ddayLabel}
 						</Text>
 					)}
@@ -80,7 +79,7 @@ export function ExhibitionResultCard({
 				<Ionicons
 					name={isBookmarked ? 'bookmark' : 'bookmark-outline'}
 					size={20}
-					color={isBookmarked ? colors.primary : '#D6D3D1'}
+					className={isBookmarked ? 'text-primary' : 'text-stone-300'}
 				/>
 			</Pressable>
 		</Pressable>

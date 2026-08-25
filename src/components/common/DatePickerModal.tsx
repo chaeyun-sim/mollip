@@ -3,13 +3,34 @@ import { useEffect, useRef, useState } from 'react';
 import { Animated, Modal, Pressable, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-type Props = {
+interface DatePickerModalProps {
+	/**
+	 * 모달 표시 여부
+	 */
 	visible: boolean;
+	/**
+	 * 선택된 날짜
+	 */
 	value: Date;
+	/**
+	 * 날짜 변경 시 호출되는 함수
+	 */
 	onChange: (date: Date) => void;
+	/**
+	 * 모달 닫기 시 호출되는 함수
+	 */
 	onDismiss: () => void;
+	/**
+	 * 초기화 버튼 클릭 시 호출되는 함수
+	 */
 	onReset?: () => void;
+	/**
+	 * 초기화 버튼 레이블
+	 */
 	resetLabel?: string;
+	/**
+	 * 확인 버튼 레이블
+	 */
 	confirmLabel?: string;
 };
 
@@ -21,7 +42,7 @@ export function DatePickerModal({
 	onReset,
 	resetLabel = '오늘로 초기화',
 	confirmLabel = '완료',
-}: Props) {
+}: DatePickerModalProps) {
 	const insets = useSafeAreaInsets();
 	const slideAnim = useRef(new Animated.Value(400)).current;
 	const [draft, setDraft] = useState(value);

@@ -2,7 +2,6 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { Pressable, ScrollView, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-
 import { CenteredLoader } from '@/src/components/common/CenteredLoader';
 import { RetryErrorState } from '@/src/components/common/RetryErrorState';
 import { SectionTitle } from '@/src/components/common/SectionTitle';
@@ -17,8 +16,7 @@ import {
 	useExploreScreenData,
 	type ExhibitionSummary,
 } from '@/src/hooks/useExploreScreenData';
-import { cn } from '@/src/lib/cn';
-import { LoginRequiredPressable } from '@/src/components/auth/LoginRequiredPressable';
+import { Fab } from '@/src/components/common/Fab';
 import { colors } from '@/src/constants/colors';
 
 export default function ExploreScreen() {
@@ -91,7 +89,7 @@ export default function ExploreScreen() {
 						accessibilityLabel='마이페이지'
 						style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
 					>
-						<Ionicons name='person-outline' size={24} color={colors.primary} />
+						<Ionicons name='person-outline' size={24} className="text-primary" />
 					</Pressable>
 				</Screen.Header.Right>
 			</Screen.Header>
@@ -135,7 +133,7 @@ export default function ExploreScreen() {
 			<View
 				className='absolute right-6 items-end gap-3'
 				style={{
-					bottom: Math.max(insets.bottom + 16, 24),
+					bottom: Math.max(insets.bottom, 16),
 					shadowColor: colors.primary,
 					shadowOpacity: 0.28,
 					shadowRadius: 14,
@@ -144,27 +142,21 @@ export default function ExploreScreen() {
 				}}
 			>
 				{/* 몰입 모드 pill */}
-				<LoginRequiredPressable
+				<Fab
 					onPress={() => router.push('/(guide)/immersive-start')}
+					icon='headset-outline'
 					accessibilityLabel='몰입 모드로 시작하기'
-					accessibilityRole='button'
-					className='h-[58px] w-[58px] items-center justify-center rounded-full bg-primary'
-					style={({ pressed }) => ({ opacity: pressed ? 0.88 : 1 })}
-				>
-					<Ionicons name='headset-outline' size={26} color={colors.bgTonal} />
-				</LoginRequiredPressable>
+					needsLogin
+				/>
 
 				{/* 카메라 FAB */}
-				<LoginRequiredPressable
+				<Fab
 					onPress={() => router.push('/(guide)/create-description')}
+					icon='camera'
 					accessibilityLabel='작품 해설 만들기'
 					accessibilityHint='카메라로 작품을 촬영하거나 직접 입력하여 AI 해설을 받을 수 있어요'
-					accessibilityRole='button'
-					className='h-[58px] w-[58px] items-center justify-center rounded-full bg-primary'
-					style={({ pressed }) => ({ opacity: pressed ? 0.88 : 1 })}
-				>
-					<Ionicons name='camera' size={26} color={colors.bgTonal} />
-				</LoginRequiredPressable>
+					needsLogin
+				/>
 			</View>
 		</Screen>
 	);

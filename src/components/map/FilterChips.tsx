@@ -1,6 +1,6 @@
-import { Ionicons } from '@expo/vector-icons';
-import { Pressable, ScrollView, Text, View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 
+import { Chip } from '@/src/components/common/Chip';
 import { FILTERS, type FilterKey } from '@/src/hooks/useMapFilter';
 
 interface FilterChipsProps {
@@ -28,51 +28,28 @@ export function FilterChips({
 				showsHorizontalScrollIndicator={false}
 				contentContainerStyle={{ paddingHorizontal: 16, gap: 8 }}
 			>
-				<Pressable
-					onPress={onDatePress}
-					className='flex-row items-center gap-1.5 px-3 py-2 rounded-full bg-white'
-					style={{
-						shadowColor: '#000',
-						shadowOpacity: 0.1,
-						shadowRadius: 4,
-						shadowOffset: { width: 0, height: 1 },
-						elevation: 2,
-					}}
-				>
-					<Ionicons name='calendar-outline' size={13} color='rgba(0,0,0,0.5)' />
-					<Text className='text-sm font-pretendard-medium text-black/70'>
-						{filterDate.toDateString() === new Date().toDateString()
+				<Chip
+					label={
+						filterDate.toDateString() === new Date().toDateString()
 							? '오늘'
-							: `${filterDate.getMonth() + 1}/${filterDate.getDate()}`}
-					</Text>
-				</Pressable>
+							: `${filterDate.getMonth() + 1}/${filterDate.getDate()}`
+					}
+					active={false}
+					onPress={onDatePress}
+					icon='calendar-outline'
+					variant='elevated'
+					accessibilityLabel='날짜 선택'
+				/>
 
-				{FILTERS.map((f) => {
-					const active = activeFilters.has(f.key);
-					return (
-						<Pressable
-							key={f.key}
-							onPress={() => toggleFilter(f.key)}
-							className={`flex-row items-center gap-1.5 px-3 py-2 rounded-full ${active ? 'bg-black' : 'bg-white'}`}
-							style={{
-								shadowColor: '#000',
-								shadowOpacity: 0.1,
-								shadowRadius: 4,
-								shadowOffset: { width: 0, height: 1 },
-								elevation: 2,
-							}}
-						>
-							{active && (
-								<Ionicons name='checkmark' size={13} color='#FFFFFF' />
-							)}
-							<Text
-								className={`text-sm font-pretendard-medium ${active ? 'text-white' : 'text-black/70'}`}
-							>
-								{f.label}
-							</Text>
-						</Pressable>
-					);
-				})}
+				{FILTERS.map((f) => (
+					<Chip
+						key={f.key}
+						label={f.label}
+						active={activeFilters.has(f.key)}
+						onPress={() => toggleFilter(f.key)}
+						variant='elevated'
+					/>
+				))}
 			</ScrollView>
 		</View>
 	);

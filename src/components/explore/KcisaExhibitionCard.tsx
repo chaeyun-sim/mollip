@@ -1,6 +1,5 @@
-import { Image, Pressable, Text, View } from 'react-native';
-
-import { EmptyImagePlaceholder } from '@/src/components/common/EmptyImagePlaceholder';
+import { Pressable, Text, View } from 'react-native';
+import { ImageFallback } from '@/src/components/common/ImageFallback';
 import type { KcisaExhibitionItem } from '@/src/hooks/useKcisaExhibitions';
 import { colors } from '@/src/constants/colors';
 
@@ -34,19 +33,13 @@ export function KcisaExhibitionCard({
 					shadowOffset: { width: 0, height: 4 },
 				}}
 			>
-				{item.thumbnail ? (
-					<Image
-						source={{ uri: item.thumbnail }}
-						style={{ width: CARD_WIDTH, height: CARD_HEIGHT, borderRadius: 18 }}
-						resizeMode='cover'
-					/>
-				) : (
-					<EmptyImagePlaceholder
-						className='items-center justify-center bg-[#E5E1D8]'
-						style={{ width: CARD_WIDTH, height: CARD_HEIGHT }}
-						iconSize={64}
-					/>
-				)}
+				<ImageFallback
+					heroImageUri={item.thumbnail}
+					className='bg-image-placeholder'
+					style={{ width: CARD_WIDTH, height: CARD_HEIGHT }}
+					iconSize={64}
+					resizeMode='cover'
+				/>
 			</View>
 			<Text
 				numberOfLines={2}

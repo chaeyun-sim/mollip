@@ -2,11 +2,7 @@ import BottomSheet, {
 	BottomSheetBackdrop,
 	BottomSheetModal,
 } from '@gorhom/bottom-sheet';
-import {
-	NaverMapMarkerOverlay,
-	NaverMapPathOverlay,
-	NaverMapView,
-} from '@mj-studio/react-native-naver-map';
+import { NaverMapView } from '@mj-studio/react-native-naver-map';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ActivityIndicator, useWindowDimensions, View } from 'react-native';
@@ -14,9 +10,9 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { DatePickerModal } from '@/src/components/common/DatePickerModal';
 import { FilterChips } from '@/src/components/map/FilterChips';
 import { MapBottomControls } from '@/src/components/map/MapBottomControls';
+import { MapMarkersLayer } from '@/src/components/map/MapMarkersLayer';
 import { MapTopBar } from '@/src/components/map/MapTopBar';
 import { RouteSheet } from '@/src/components/map/RouteSheet';
-import { VenueMarker } from '@/src/components/map/VenueMarker';
 import { VenueSheet } from '@/src/components/map/VenueSheet';
 import { ZoomControls } from '@/src/components/map/ZoomControls';
 import { venueGroups } from '@/src/data/venues';
@@ -29,17 +25,12 @@ import { useRecentLocations } from '@/src/hooks/useRecentLocations';
 import { useVenueExhibitions } from '@/src/hooks/useVenueExhibitions';
 import { useMapStore } from '@/src/store/mapStore';
 import { distanceKm, formatDistance, latOffsetForPixels } from '@/src/utils/mapUtils';
-import { legColor } from '@/src/utils/routeColors';
-import type { RouteCoord, RouteLeg } from '@/src/api/tmap';
-import { colors } from '@/src/constants/colors';
+import type { RouteCoord } from '@/src/api/tmap';
 import { Screen } from '@/src/components/layout/Screen';
-
-// 도보만 지도에서 진한 잉크색으로 강조 — 버스/지하철은 legColor(지하철은 호선별)를 그대로 쓴다.
-function pathColor(leg: RouteLeg): string {
-	return leg.mode === 'walk' ? colors.primary : legColor(leg);
-}
+import { colors } from '@/src/constants/colors';
 
 const MARKER_ZOOM = 14;
+const BACKGROUND_COLOR = '#F5F3EF'
 
 export default function MapScreen() {
 	const router = useRouter();
@@ -400,7 +391,7 @@ export default function MapScreen() {
 	);
 
 	return (
-		<Screen variant='dark'>
+		<Screen variant='dark' className="px-0" edges={[]}>
 			{/* 지도 */}
 			<NaverMapView
 				ref={mapRef}
@@ -414,104 +405,18 @@ export default function MapScreen() {
 				}
 				onCameraChanged={handleCameraChanged}
 			>
-				{/* 점(dot) 먼저, 큰 마커를 나중에 그려서 겹칠 때 큰 마커가 위로 오게 한다 */}
-				{dotVenues.map((venue) => (
-					<VenueMarker
-						key={venue.venueName}
-						venue={venue}
-						variant='dot'
-						isSelected={false}
-						activeFilters={activeFilters}
-						matchesFilters={matchesFilters}
-						onTap={(v) => {
-							if (directionsStatus !== 'idle') {
-								// 경로 모드: dot 탭 시 해당 위치로 zoom
-								mapRef.current?.animateCameraTo({
-									latitude: v.coordinates.latitude,
-									longitude: v.coordinates.longitude,
-									zoom: MARKER_ZOOM,
-								});
-								return;
-							}
-							handleMarkerPress(
-								v.venueName,
-								v.coordinates.latitude,
-								v.coordinates.longitude,
-							);
-						}}
-					/>
-				))}
-				{fullMarkerVenues.map((venue) => (
-					<VenueMarker
-						key={venue.venueName}
-						venue={venue}
-						variant='full'
-						isSelected={venue.venueName === selectedVenueName}
-						activeFilters={activeFilters}
-						matchesFilters={matchesFilters}
-						onTap={(v) =>
-							handleMarkerPress(
-								v.venueName,
-								v.coordinates.latitude,
-								v.coordinates.longitude,
-							)
-						}
-					/>
-				))}
-				{route?.legs.map((leg, i) => {
-					if (leg.coords.length < 2) return null;
-					// 도보 구간은 버스/지하철보다 얇게 표시해 시각적으로 덜 강조한다.
-					const isWalk = leg.mode === 'walk';
-					return (
-						<NaverMapPathOverlay
-							key={i}
-							coords={leg.coords}
-							width={isWalk ? 4 : 5}
-							color={pathColor(leg)}
-							outlineWidth={1}
-							outlineColor='white'
-						/>
-					);
-				})}
-				{/* 환승 지점 — 마지막 구간(목적지) 제외, 각 구간이 끝나는 지점에 표시 */}
-				{route?.legs.slice(0, -1).map((leg, i) => {
-					const point = leg.coords[leg.coords.length - 1];
-					if (!point) return null;
-					const nextLeg = route.legs[i + 1];
-					const nextColor = nextLeg ? pathColor(nextLeg) : pathColor(leg);
-					const size = 12;
-					return (
-						<NaverMapMarkerOverlay
-							key={`transfer-${i}`}
-							latitude={point.latitude}
-							longitude={point.longitude}
-							width={size}
-							height={size}
-							anchor={{ x: 0.5, y: 0.5 }}
-							zIndex={50}
-							onTap={() => {
-								// dot 탭 시 sheet 최소화 → 지도 영역 최대 확보, 오프셋 없이 스크린 중앙
-								routeSheetRef.current?.snapToIndex(0);
-								mapRef.current?.animateCameraTo({
-									latitude: point.latitude,
-									longitude: point.longitude,
-									zoom: MARKER_ZOOM,
-								});
-							}}
-						>
-							<View
-								collapsable={false}
-								className='border border-white'
-								style={{
-									width: size,
-									height: size,
-									borderRadius: size / 2,
-									backgroundColor: nextColor,
-								}}
-							/>
-						</NaverMapMarkerOverlay>
-					);
-				})}
+				<MapMarkersLayer
+					dotVenues={dotVenues}
+					fullMarkerVenues={fullMarkerVenues}
+					selectedVenueName={selectedVenueName}
+					activeFilters={activeFilters}
+					matchesFilters={matchesFilters}
+					directionsStatus={directionsStatus}
+					route={route}
+					mapRef={mapRef}
+					routeSheetRef={routeSheetRef}
+					onMarkerPress={handleMarkerPress}
+				/>
 			</NaverMapView>
 
 			{/* 줌 임계값(MARKER_ZOOM) 교차 시 마커 전환 인디케이터 */}
@@ -602,7 +507,7 @@ export default function MapScreen() {
 					}
 					clearSelection();
 				}}
-				backgroundStyle={{ backgroundColor: '#F5F3EF' }}
+				backgroundStyle={{ backgroundColor: BACKGROUND_COLOR }}
 				handleIndicatorStyle={{
 					backgroundColor: 'rgba(0,0,0,0.15)',
 					width: 40,
@@ -621,7 +526,7 @@ export default function MapScreen() {
 					/>
 				) : isVenueSheetOpen ? (
 					<View className='flex-1 items-center justify-center py-12'>
-						<ActivityIndicator color={colors.tertiary} />
+						<ActivityIndicator color={colors.secondary} />
 					</View>
 				) : null}
 			</BottomSheetModal>
@@ -637,7 +542,7 @@ export default function MapScreen() {
 				onChange={(index) => {
 					routeSheetIndexRef.current = index;
 				}}
-				backgroundStyle={{ backgroundColor: '#F5F3EF' }}
+				backgroundStyle={{ backgroundColor: BACKGROUND_COLOR }}
 				handleIndicatorStyle={{
 					backgroundColor: 'rgba(0,0,0,0.15)',
 					width: 40,

@@ -4,7 +4,6 @@ import { ReactNode } from 'react';
 import { Pressable, Text, View, ViewStyle } from 'react-native';
 import { cn } from '../../lib/cn';
 import { SERVICE_NAME } from '@/src/constants/service-name';
-import { colors } from '@/src/constants/colors';
 
 interface SlotProps {
 	children?: ReactNode;
@@ -63,8 +62,17 @@ function Right({ children, className, style }: SlotProps) {
 	);
 }
 
-function Back({ onPress, color }: { onPress?: () => void; color?: string }) {
+function Back({ onPress, color = 'default', className }: { onPress?: () => void; color?: 'default' | 'muted' | 'white-90' | 'white'; className?: string }) {
 	const router = useRouter();
+	const colorClass =
+		color === 'muted'
+			? 'text-tertiary'
+			: color === 'white-90'
+				? 'text-white/90'
+				: color === 'white'
+					? 'text-white'
+					: 'text-primary';
+
 	return (
 		<Pressable
 			onPress={onPress ?? (() => router.back())}
@@ -73,7 +81,7 @@ function Back({ onPress, color }: { onPress?: () => void; color?: string }) {
 			accessibilityRole='button'
 			style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
 		>
-			<Ionicons name='arrow-back' size={24} color={color || colors.primary} />
+			<Ionicons name='arrow-back' size={24} className={cn(colorClass, className)} />
 		</Pressable>
 	);
 }

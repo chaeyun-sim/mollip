@@ -1,13 +1,9 @@
 import { Ionicons } from '@expo/vector-icons';
-import { Image, Pressable, Text, View } from 'react-native';
-
-import { EmptyImagePlaceholder } from '@/src/components/common/EmptyImagePlaceholder';
+import { Pressable, Text, View } from 'react-native';
+import { ImageFallback } from '@/src/components/common/ImageFallback';
 import { SectionTitle } from '@/src/components/common/SectionTitle';
 import {
 	archiveTintForKey,
-	ARCHIVE_INK,
-	ARCHIVE_MUTED,
-	ARCHIVE_SUBTLE,
 } from '@/src/components/archive/archivePalette';
 import { useVisitStore } from '@/src/store/visitStore';
 
@@ -78,47 +74,37 @@ export function ArchiveRecentVisits({
 								className='overflow-hidden mr-3.5 w-[52px] h-[52px] rounded-[14px]'
 								style={{ backgroundColor: tint }}
 							>
-								{imageUrl ? (
-									<Image
-										source={{ uri: imageUrl }}
-										resizeMode='cover'
-										style={{ width: 52, height: 52 }}
-									/>
-								) : (
-									<EmptyImagePlaceholder
-										className='items-center justify-center'
-										style={{ width: 52, height: 52 }}
-										iconSize={22}
-									/>
-								)}
+								<ImageFallback
+									heroImageUri={imageUrl}
+									className='items-center justify-center'
+									style={{ width: 52, height: 52 }}
+									iconSize={22}
+									resizeMode='cover'
+								/>
 							</View>
 
 							<View className='flex-1 min-w-0'>
 								<View className='flex-row items-baseline gap-2 mb-0.5'>
 									<Text
-										className='text-[15px] font-pretendard-semibold'
-										style={{ color: ARCHIVE_INK }}
+										className='text-[15px] font-pretendard-semibold text-primary'
 									>
 										{primary}
 									</Text>
 									<Text
-										className='text-[12px] font-pretendard-regular'
-										style={{ color: ARCHIVE_SUBTLE }}
+										className='text-[12px] font-pretendard-regular text-tertiary'
 									>
 										{secondary}
 									</Text>
 								</View>
 								<Text
-									className='text-[14px] leading-[19px] font-pretendard-medium'
+									className='text-[14px] leading-[19px] font-pretendard-medium text-primary'
 									numberOfLines={1}
-									style={{ color: ARCHIVE_INK }}
 								>
 									{title}
 								</Text>
 								{listenedCount > 0 ? (
 									<Text
-										className='text-[12px] mt-1 font-pretendard-regular'
-										style={{ color: ARCHIVE_MUTED }}
+										className='text-[12px] mt-1 font-pretendard-regular text-secondary'
 									>
 										들은 작품 {listenedCount}개
 									</Text>

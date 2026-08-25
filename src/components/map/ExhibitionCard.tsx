@@ -1,11 +1,11 @@
-import { Image, Pressable, Text, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 import Animated, {
 	useAnimatedStyle,
 	useReducedMotion,
 	useSharedValue,
 	withSpring,
 } from 'react-native-reanimated';
-import { EmptyImagePlaceholder } from '@/src/components/common/EmptyImagePlaceholder';
+import { ImageFallback } from '@/src/components/common/ImageFallback';
 import { cn } from '@/src/lib/cn';
 import type { Exhibition } from '@/src/data/exhibitions';
 
@@ -41,26 +41,13 @@ export function ExhibitionCard({ ex, status, onPress }: ExhibitionCardProps) {
 				className='flex-row gap-3 rounded-2xl overflow-hidden bg-black/[0.03] p-2.5'
 			>
 				{/* 갤러리 엽서처럼 — 원본 비율을 자르지 않고 정사각 마운트 안에 담는다 */}
-				<View className='rounded-xl items-center justify-center overflow-hidden w-[88px] h-[88px] bg-[#FAFAF8]'>
-					{ex.heroImageUri ? (
-						<Image
-							source={{ uri: ex.heroImageUri }}
-							resizeMode='cover'
-							style={{ width: '100%', height: '100%' }}
-						/>
-					) : ex.posterImage ? (
-						<Image
-							source={ex.posterImage}
-							resizeMode='cover'
-							style={{ width: '100%', height: '100%' }}
-						/>
-					) : (
-						<EmptyImagePlaceholder
-							className='w-full h-full items-center justify-center bg-[#E5E1D8]'
-							iconSize={44}
-						/>
-					)}
-				</View>
+				<ImageFallback
+					heroImageUri={ex.heroImageUri}
+					posterImage={ex.posterImage}
+					className='rounded-xl w-[88px] h-[88px]'
+					iconSize={44}
+					resizeMode='cover'
+				/>
 				<View className='flex-1 justify-center gap-1.5'>
 					<View className='flex-row items-center gap-1.5'>
 						<View
