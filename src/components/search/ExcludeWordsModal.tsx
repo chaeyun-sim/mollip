@@ -17,6 +17,7 @@ interface ExcludeWordsModalProps {
 	words: string[];
 	onAdd: (word: string) => void;
 	onRemove: (word: string) => void;
+	onClearAll: () => void;
 	onDismiss: () => void;
 }
 
@@ -25,6 +26,7 @@ export function ExcludeWordsModal({
 	words,
 	onAdd,
 	onRemove,
+	onClearAll,
 	onDismiss,
 }: ExcludeWordsModalProps) {
 	const insets = useSafeAreaInsets();
@@ -37,9 +39,12 @@ export function ExcludeWordsModal({
 
 	return (
 		<Modal visible={visible} transparent animationType="fade">
-			<Pressable className="flex-1 justify-end bg-black/35" onPress={onDismiss}>
-				<Pressable onPress={(e) => e.stopPropagation()}>
-					<KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+			<KeyboardAvoidingView
+				behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+				style={{ flex: 1 }}
+			>
+				<Pressable className="flex-1 justify-end bg-black/35" onPress={onDismiss}>
+					<Pressable onPress={(e) => e.stopPropagation()}>
 						<View
 							className="bg-white rounded-t-3xl px-6 pt-3"
 							style={{ paddingBottom: insets.bottom + 16 }}
@@ -64,19 +69,20 @@ export function ExcludeWordsModal({
 									onSubmitEditing={handleSubmit}
 									returnKeyType="done"
 									submitBehavior="submit"
+									style={{ lineHeight: 0 }}
 								/>
 								<Pressable
-									onPress={handleSubmit}
-									disabled={!input.trim()}
+									onPress={onClearAll}
+									disabled={words.length === 0}
 									hitSlop={8}
-									accessibilityLabel="제외어 추가"
+									accessibilityLabel="제외어 전체 삭제"
 									accessibilityRole="button"
-									accessibilityState={{ disabled: !input.trim() }}
+									accessibilityState={{ disabled: words.length === 0 }}
 								>
 									<Ionicons
-										name="add-circle"
+										name="close-circle"
 										size={22}
-										className={input.trim() ? 'text-primary' : 'text-stone-300'}
+										className={words.length > 0 ? 'text-primary' : 'text-stone-300'}
 									/>
 								</Pressable>
 							</View>
@@ -109,9 +115,9 @@ export function ExcludeWordsModal({
 								<Text className="text-white text-[15px] font-pretendard-semibold">완료</Text>
 							</Pressable>
 						</View>
-					</KeyboardAvoidingView>
+					</Pressable>
 				</Pressable>
-			</Pressable>
+			</KeyboardAvoidingView>
 		</Modal>
 	);
 }

@@ -48,6 +48,7 @@ export default function SearchScreen() {
 		excludedWords,
 		addExcludedWord,
 		removeExcludedWord,
+		clearExcludedWords,
 		freeOnly,
 		toggleFreeOnly,
 		hasLocation,
@@ -67,7 +68,9 @@ export default function SearchScreen() {
 
 	// 필터 변경 시 무한스크롤 위치 초기화
 	useEffect(() => {
-		setVisibleCount(PAGE_SIZE);
+		requestAnimationFrame(() => {
+			setVisibleCount(PAGE_SIZE);
+		});
 	}, [debouncedSearchText, statusFilters, filterDate, freeOnly]);
 
 	const handlePressExhibition = useCallback(
@@ -157,7 +160,7 @@ export default function SearchScreen() {
 	function renderItem({ item }: { item: ResultListItem }) {
 		if (item.kind === 'section') {
 			return (
-				<Text className="text-primary text-[16px] font-pretendard-bold mt-6 mb-3">
+				<Text className="text-primary text-[16px] font-pretendard-bold">
 					{item.label}
 				</Text>
 			);
@@ -279,8 +282,7 @@ export default function SearchScreen() {
 					keyboardDismissMode="on-drag"
 					ItemSeparatorComponent={() => <View className="h-5" />}
 					ListHeaderComponent={
-						<View className="flex-row items-end justify-between mb-3">
-							<Text className="text-primary text-[18px] font-pretendard-bold">검색 결과</Text>
+						<View className="flex-row items-end justify-between mb-4">
 							<Text className="text-muted text-[13px] font-pretendard-regular">
 								{results.length}건{hasLocation ? ' · 가까운 순' : ''}
 							</Text>
@@ -288,10 +290,6 @@ export default function SearchScreen() {
 					}
 					ListEmptyComponent={
 						<View className="items-center py-16 gap-2">
-							{/* TODO: 검색 결과 없음 일러스트
-								프롬프트: 따뜻한 베이지(#F8F6F2) 배경 위에 놓인 돋보기와 물음표,
-								플랫 일러스트 스타일, 얇은 라인 아트, 잉크색(#1C1917) 윤곽선, 포인트 컬러는 은은한 테라코타,
-								가볍고 장난스러운 느낌, 사진 느낌 없이 손그림 느낌, 정사각형 100x100 */}
 							<Text className="text-secondary text-[15px] font-pretendard-semibold">
 								조건에 맞는 전시가 없어요
 							</Text>
@@ -317,6 +315,7 @@ export default function SearchScreen() {
 				words={excludedWords}
 				onAdd={addExcludedWord}
 				onRemove={removeExcludedWord}
+				onClearAll={clearExcludedWords}
 				onDismiss={() => setShowExcludeModal(false)}
 			/>
 		</Screen>

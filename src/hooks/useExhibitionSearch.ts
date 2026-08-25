@@ -125,6 +125,10 @@ export function useExhibitionSearch() {
 		setExcludedWords((prev) => prev.filter((w) => w !== word));
 	}, []);
 
+	const clearExcludedWords = useCallback(() => {
+		setExcludedWords([]);
+	}, []);
+
 	const catalog = remoteExhibitions.length > 0 ? remoteExhibitions : EXHIBITIONS;
 
 	const results = useMemo<SearchResult[]>(() => {
@@ -166,6 +170,7 @@ export function useExhibitionSearch() {
 		excludedWords,
 		addExcludedWord,
 		removeExcludedWord,
+		clearExcludedWords,
 		freeOnly,
 		toggleFreeOnly: () => setFreeOnly((prev) => !prev),
 		hasLocation: currentCoord !== null,
