@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import type { RecommendableItem } from '@/src/components/explore/ExploreHomeSections';
-import { todayExhibitionDateString } from '@/src/utils/exhibitionSearch';
+import { getExhibitionStatus, todayExhibitionDateString } from '@/src/utils/exhibitionSearch';
 import { supabase } from '@/src/utils/supabase';
 
 const PAGE_SIZE = 20;
@@ -35,7 +35,7 @@ export function useAllExhibitions(): UseAllExhibitionsResult {
 
 		const { data, error } = await supabase
 			.from('exhibitions')
-			.select('id, title, venue_name_fallback, image_url')
+			.select('id, title, venue_name_fallback, image_url, start_date, end_date')
 			.gte('end_date', todayExhibitionDateString())
 			// synced_at은 같은 배치로 동기화된 행이 전부 동일해 동률이 흔함 — id로 2차 정렬해 페이지 경계를 고정
 			.order('synced_at', { ascending: false })
@@ -55,6 +55,10 @@ export function useAllExhibitions(): UseAllExhibitionsResult {
 			title: (row.title ?? '').trim(),
 			venue: (row.venue_name_fallback ?? '').trim(),
 			thumbnail: row.image_url ?? null,
+			status: getExhibitionStatus({
+				startDate: row.start_date ?? '',
+				endDate: row.end_date ?? '',
+			}),
 		}));
 
 		setItems((prev) => (reset ? newItems : [...prev, ...newItems]));

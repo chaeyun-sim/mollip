@@ -4,8 +4,10 @@ import { inferGenreAndTags } from '@/src/utils/exhibitionClassification';
 import { supabase } from '@/src/utils/supabase';
 import {
 	applyExhibitionDateFilters,
+	getExhibitionStatus,
 	isValidExhibitionDateString,
 	todayExhibitionDateString,
+	type ExhibitionStatus,
 } from '@/src/utils/exhibitionSearch';
 import { formatDate } from '@/src/utils/cultureExhibitionMapper';
 import { isStale, markSynced } from '@/src/utils/syncCache';
@@ -17,6 +19,7 @@ export interface CultureExhibitionItem {
 	startDate: string;
 	endDate: string;
 	thumbnail: string;
+	status: ExhibitionStatus;
 }
 
 type Status = 'idle' | 'loading' | 'success' | 'error';
@@ -133,6 +136,7 @@ export function useCultureExhibitions() {
 					startDate: item.start_date,
 					endDate: item.end_date,
 					thumbnail: item.image_url ?? '',
+					status: getExhibitionStatus({ startDate: item.start_date, endDate: item.end_date }),
 				}));
 			_cachedItems = mapped;
 			setItems(mapped);

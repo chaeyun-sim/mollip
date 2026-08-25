@@ -37,7 +37,10 @@ export function hasValidExhibitionDates(ex: Pick<Exhibition, 'startDate' | 'endD
 }
 
 /** 기준 날짜 대비 전시 진행 상태 (날짜 없/형식 오류 → 마감 취급) */
-export function getExhibitionStatus(ex: Exhibition, base: Date = new Date()): ExhibitionStatus {
+export function getExhibitionStatus(
+	ex: Pick<Exhibition, 'startDate' | 'endDate'>,
+	base: Date = new Date(),
+): ExhibitionStatus {
 	if (!hasValidExhibitionDates(ex)) return 'ended';
 	const d = new Date(base);
 	d.setHours(0, 0, 0, 0);

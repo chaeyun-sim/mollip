@@ -15,6 +15,8 @@ import { Screen } from '@/src/components/layout/Screen';
 import { useExploreScreenData, type ExhibitionSummary } from '@/src/hooks/useExploreScreenData';
 import { Fab } from '@/src/components/common/Fab';
 import { colors } from '@/src/constants/colors';
+import { SERVICE_NAME } from '@/src/constants/service-name';
+import { useAuthStore } from '@/src/store/authStore';
 
 export default function ExploreScreen() {
 	const router = useRouter();
@@ -33,6 +35,7 @@ export default function ExploreScreen() {
 	} = useExploreScreenData();
 
 	const carousel = resolveKcisaCarousel();
+	const name = useAuthStore((s) => s.user?.user_metadata?.full_name);
 
 	const openExhibition = (id: string) => router.push(`/(explore)/${id}`);
 
@@ -69,7 +72,7 @@ export default function ExploreScreen() {
 
 	return (
 		<Screen variant="warm">
-			<Screen.Header>
+			<Screen.Header className="items-end pb-3">
 				<Screen.Header.Logo />
 				<Screen.Header.Right>
 					<Pressable
@@ -83,10 +86,9 @@ export default function ExploreScreen() {
 					</Pressable>
 				</Screen.Header.Right>
 			</Screen.Header>
-
 			<ScrollView
 				showsVerticalScrollIndicator={false}
-				contentContainerStyle={{ paddingBottom: 96, gap: 28 }}
+				contentContainerStyle={{ paddingBottom: 96, gap: 28, paddingTop: 16 }}
 			>
 				<ExploreHomeHero />
 
@@ -96,6 +98,7 @@ export default function ExploreScreen() {
 						title={featured.title}
 						venue={featured.venue}
 						thumbnail={featured.thumbnail}
+						status={featured.status}
 						onPress={openExhibition}
 					/>
 				)}
@@ -113,7 +116,7 @@ export default function ExploreScreen() {
 					{/* 레이블: 선호 데이터 있으면 "당신의 취향" (REQ-UI002-009, REQ-UI002-010) */}
 					<SectionTitle
 						eyebrow="FOR YOU"
-						title={isPersonalized ? '추천 전시 · 당신의 취향' : '추천 전시'}
+						title={isPersonalized && name ? `${name}님 취향 저격!` : '추천 전시'}
 					/>
 					{renderRecommendedContent()}
 				</View>

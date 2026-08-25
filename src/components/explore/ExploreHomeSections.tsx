@@ -4,15 +4,17 @@ import * as Haptics from 'expo-haptics';
 import { useState } from 'react';
 import { Image, ImageBackground, LayoutChangeEvent, Pressable, Text, View } from 'react-native';
 import { ImageFallback, QUESTION_MARK } from '@/src/components/common/ImageFallback';
+import { StatusBadge } from '@/src/components/search/StatusBadge';
+import { cn } from '@/src/lib/cn';
 import { colors } from '@/src/constants/colors';
-
-const GRID_GAP = 12;
+import { STATUS_LABELS, type ExhibitionStatus } from '@/src/utils/exhibitionSearch';
 
 export interface FeaturedExhibitionProps {
 	id: string;
 	title: string;
 	venue: string;
 	thumbnail: string | null;
+	status: ExhibitionStatus;
 	onPress: (id: string) => void;
 }
 
@@ -21,6 +23,7 @@ export function FeaturedExhibitionHero({
 	title,
 	venue,
 	thumbnail,
+	status,
 	onPress,
 }: FeaturedExhibitionProps) {
 	return (
@@ -34,7 +37,7 @@ export function FeaturedExhibitionHero({
 			style={({ pressed }) => ({ opacity: pressed ? 0.94 : 1 })}
 		>
 			<View
-				className="rounded-[28px] overflow-hidden w-full"
+				className="rounded-2xl overflow-hidden w-full"
 				style={{
 					shadowColor: colors.primary,
 					shadowOpacity: 0.14,
@@ -46,20 +49,22 @@ export function FeaturedExhibitionHero({
 				{thumbnail ? (
 					<ImageBackground
 						source={{ uri: thumbnail }}
-						className="h-[300px] justify-end"
+						className="h-[340px] justify-end"
 						imageStyle={{ resizeMode: 'cover' }}
 					>
 						<LinearGradient
 							colors={['transparent', 'rgba(12,10,9,0.55)', 'rgba(12,10,9,0.95)']}
 							style={{ paddingHorizontal: 22, paddingBottom: 22, paddingTop: 80 }}
 						>
-							<View className="flex-row self-start rounded-full bg-white/95 px-3 py-1 mb-3">
-								<Text className="text-[11px] text-primary font-pretendard-semibold leading-[1.8px]">
-									오늘의 전시
-								</Text>
-							</View>
 							<Text
-								className="text-white text-[28px] leading-[34px] mb-2 font-hahmlet-bold"
+								className="text-white/85 text-[11px] font-pretendard-semibold mb-2"
+								style={{ letterSpacing: 1.5 }}
+							>
+								COVER STORY
+							</Text>
+							<View className="h-[1px] bg-white/40 w-10 mb-3" />
+							<Text
+								className="text-white text-[32px] leading-[38px] mb-2 font-hahmlet-bold"
 								numberOfLines={2}
 							>
 								{title}
@@ -68,7 +73,7 @@ export function FeaturedExhibitionHero({
 								className="text-white/75 text-[13px] mb-4 font-pretendard-regular"
 								numberOfLines={1}
 							>
-								{venue}
+								{venue} · {STATUS_LABELS[status]}
 							</Text>
 							<View className="flex-row items-center gap-1.5 self-start rounded-full bg-white/95 px-4 py-2">
 								<Text className="text-primary text-[13px] font-pretendard-semibold">
@@ -93,7 +98,7 @@ export function FeaturedExhibitionHero({
 							{title}
 						</Text>
 						<Text className="text-tertiary text-[13px] mt-2 text-center font-pretendard-regular">
-							{venue}
+							{venue} · {STATUS_LABELS[status]}
 						</Text>
 					</View>
 				)}
@@ -107,6 +112,7 @@ export interface RecommendableItem {
 	title: string;
 	venue: string;
 	thumbnail: string | null;
+	status: ExhibitionStatus;
 }
 
 interface RecommendedExhibitionsProps {
@@ -180,18 +186,12 @@ export function GridExhibitionCell({
 				borderRadius={16}
 				iconSize={40}
 			/>
-			<View>
-				<Text
-					className="mt-2 text-primary text-[13px] leading-[18px] font-pretendard-semibold"
-					style={{ width: colWidth }}
-				>
+			<View style={{ width: colWidth }}>
+				<StatusBadge status={item.status} className="mt-3" />
+				<Text className="mt-1 text-primary text-[13px] leading-[18px] font-pretendard-semibold">
 					{item.title.trim()}
 				</Text>
-				<Text
-					numberOfLines={1}
-					className="text-muted text-[11px] mt-0.5 font-pretendard-regular"
-					style={{ width: colWidth }}
-				>
+				<Text numberOfLines={1} className="text-muted text-[11px] mt-0.5 font-pretendard-regular">
 					{item.venue.trim()}
 				</Text>
 			</View>
@@ -199,15 +199,48 @@ export function GridExhibitionCell({
 	);
 }
 
-function pairGridRows(items: RecommendableItem[]): RecommendableItem[][] {
-	const rows: RecommendableItem[][] = [];
-	for (let i = 0; i < items.length; i += 2) {
-		rows.push(items.slice(i, i + 2));
-	}
-	return rows;
+
+interface ListRowProps {
+	item: RecommendableItem;
+	onPress: (id: string) => void;
+	showDivider: boolean;
+}
+function ListRow({ item, onPress, showDivider }: ListRowProps) {
+	return (
+		<Pressable
+			onPress={() => {
+				Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+				onPress(item.id);
+			}}
+			accessibilityRole="button"
+			accessibilityLabel={`${item.title}, ${item.venue}`}
+			style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
+		>
+			<View
+				className={cn(
+					'flex-row items-center gap-3.5 py-3.5',
+					showDivider && 'border-b border-divider',
+				)}
+			>
+				<PosterFrame thumbnail={item.thumbnail} width={56} height={56} borderRadius={10} iconSize={24} />
+				<View className="flex-1">
+					<StatusBadge status={item.status} />
+					<Text
+						numberOfLines={1}
+						className="mt-1 text-primary text-[15px] leading-[20px] font-pretendard-semibold"
+					>
+						{item.title.trim()}
+					</Text>
+					<Text numberOfLines={1} className="text-muted text-[12px] mt-0.5 font-pretendard-regular">
+						{item.venue.trim()}
+					</Text>
+				</View>
+			</View>
+		</Pressable>
+	);
 }
 
-/** 추천 전시: 1장 full-width + 나머지 최대 4장 2열 그리드 */
+/** 추천 전시: 리드 피처 1개 + 나머지 최대 4개는 넘버링된 인덱스 리스트 */
 export function RecommendedExhibitions({ items, onPress }: RecommendedExhibitionsProps) {
 	const [containerWidth, setContainerWidth] = useState(0);
 	const handleLayout = (e: LayoutChangeEvent) => {
@@ -216,17 +249,14 @@ export function RecommendedExhibitions({ items, onPress }: RecommendedExhibition
 	};
 
 	const [lead, ...rest] = items;
-	const gridItems = rest.slice(0, 4);
-	const gridRows = pairGridRows(gridItems);
+	const listItems = rest.slice(0, 4);
 
 	if (!lead) return null;
 
-	const colWidth = containerWidth > 0 ? (containerWidth - GRID_GAP) / 2 : 0;
-	const gridHeight = Math.round((colWidth * 4) / 3);
 	const leadHeight = containerWidth > 0 ? Math.round(containerWidth * 0.56) : 0;
 
 	return (
-		<View className="gap-4" onLayout={handleLayout}>
+		<View onLayout={handleLayout}>
 			<Pressable
 				onPress={() => {
 					Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -248,9 +278,12 @@ export function RecommendedExhibitions({ items, onPress }: RecommendedExhibition
 						<Text className="text-white text-[10px] font-pretendard-bold">PICK</Text>
 					</View>
 				</View>
+				<View className="mt-3">
+					<StatusBadge status={lead.status} />
+				</View>
 				<Text
 					numberOfLines={2}
-					className="mt-3 text-primary text-[16px] leading-[22px] font-pretendard-semibold"
+					className="mt-1 text-primary text-[16px] leading-[22px] font-pretendard-semibold"
 				>
 					{lead.title.trim()}
 				</Text>
@@ -259,28 +292,18 @@ export function RecommendedExhibitions({ items, onPress }: RecommendedExhibition
 				</Text>
 			</Pressable>
 
-			{gridRows.length > 0 ? (
-				<View style={{ gap: GRID_GAP + 8 }}>
-					{gridRows.map((row, rowIndex) => (
-						<View
-							key={`row-${rowIndex}`}
-							className="flex-row items-start"
-							style={{ gap: GRID_GAP + 8 }}
-						>
-							{row.map((item) => (
-								<GridExhibitionCell
-									key={item.id}
-									item={item}
-									colWidth={colWidth}
-									gridHeight={gridHeight}
-									onPress={onPress}
-								/>
-							))}
-							{row.length === 1 ? <View style={{ width: colWidth }} /> : null}
-						</View>
+			{listItems.length > 0 && (
+				<View className="mt-3">
+					{listItems.map((item, i) => (
+						<ListRow
+							key={item.id}
+							item={item}
+							onPress={onPress}
+							showDivider={i < listItems.length - 1}
+						/>
 					))}
 				</View>
-			) : null}
+			)}
 		</View>
 	);
 }

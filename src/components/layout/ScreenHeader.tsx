@@ -4,6 +4,7 @@ import { ReactNode } from 'react';
 import { Pressable, Text, View, ViewStyle } from 'react-native';
 import { cn } from '../../lib/cn';
 import { SERVICE_NAME } from '@/src/constants/service-name';
+import { LinearGradient } from 'expo-linear-gradient';
 
 interface SlotProps {
 	children?: ReactNode;
@@ -21,10 +22,33 @@ function ScreenHeader({ children, className, style }: SlotProps) {
 
 function Logo({ className, style }: SlotProps) {
 	return (
-		<View className={cn('flex-1 items-start', className)} style={style}>
-			<Text className="text-primary text-[24px] font-hahmlet-bold tracking-[-0.5px]">
-				{SERVICE_NAME}
-			</Text>
+		<View className={cn('flex-1 flex-row items-start', className)} style={style}>
+			<Text className="text-primary text-[24px] font-hahmlet-bold">moll</Text>
+
+			<View className="relative">
+				<Text className="text-primary text-[24px] font-hahmlet-bold">ı</Text>
+
+				<View
+					className="absolute left-1/2 top-2 h-[6px] w-[6px]"
+					style={{
+						transform: [{ translateX: -3 }],
+					}}
+				>
+					<LinearGradient
+						colors={['#F7DCCB', '#EBCFD5', '#D4C5DD', '#CDD3E1']}
+						locations={[0, 0.35, 0.7, 1]}
+						start={{ x: 0, y: 0 }}
+						end={{ x: 1, y: 1 }}
+						style={{
+							width: '100%',
+							height: '100%',
+							borderRadius: 1,
+						}}
+					/>
+				</View>
+			</View>
+
+			<Text className="text-primary text-[24px] font-hahmlet-bold">p</Text>
 		</View>
 	);
 }

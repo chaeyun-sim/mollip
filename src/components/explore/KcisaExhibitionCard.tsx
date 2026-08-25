@@ -1,5 +1,6 @@
 import { Pressable, Text, View } from 'react-native';
 import { ImageFallback } from '@/src/components/common/ImageFallback';
+import { StatusBadge } from '@/src/components/search/StatusBadge';
 import type { KcisaExhibitionItem } from '@/src/hooks/useKcisaExhibitions';
 import { colors } from '@/src/constants/colors';
 
@@ -9,9 +10,10 @@ const CARD_HEIGHT = Math.round((CARD_WIDTH * 4) / 3);
 interface KcisaExhibitionCardProps {
 	item: KcisaExhibitionItem;
 	onPress: (id: string) => void;
+	index?: number;
 }
 
-export function KcisaExhibitionCard({ item, onPress }: KcisaExhibitionCardProps) {
+export function KcisaExhibitionCard({ item, onPress, index }: KcisaExhibitionCardProps) {
 	return (
 		<Pressable
 			onPress={() => onPress(item.id)}
@@ -37,11 +39,22 @@ export function KcisaExhibitionCard({ item, onPress }: KcisaExhibitionCardProps)
 					iconSize={64}
 					resizeMode="cover"
 				/>
+				{index !== undefined && (
+					<Text
+						className="absolute top-2.5 left-2.5 text-white text-[13px] font-hahmlet-bold"
+						style={{ textShadowColor: 'rgba(0,0,0,0.5)', textShadowRadius: 4 }}
+					>
+						{String(index).padStart(2, '0')}
+					</Text>
+				)}
+			</View>
+			<View style={{ width: CARD_WIDTH }} className="mt-2.5">
+				<StatusBadge status={item.status} />
 			</View>
 			<Text
 				numberOfLines={2}
 				style={{ width: CARD_WIDTH }}
-				className="mt-2.5 text-primary text-[13px] leading-[18px] font-pretendard-semibold"
+				className="mt-1 text-primary text-[13px] leading-[18px] font-pretendard-semibold"
 			>
 				{item.title}
 			</Text>

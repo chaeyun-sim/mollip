@@ -7,12 +7,14 @@ import { useRecommendedExhibitions } from '@/src/hooks/useRecommendedExhibitions
 import { useAuthStore } from '@/src/store/authStore';
 import { useBookmarkStore } from '@/src/store/bookmarkStore';
 import { useVisitStore } from '@/src/store/visitStore';
+import type { ExhibitionStatus } from '@/src/utils/exhibitionSearch';
 
 export type ExhibitionSummary = {
 	id: string;
 	title: string;
 	venue: string;
 	thumbnail: string | null;
+	status: ExhibitionStatus;
 };
 
 export type FeaturedExhibition = ExhibitionSummary & {
@@ -45,7 +47,14 @@ export function useExploreScreenData() {
 	const featured = useMemo<FeaturedExhibition | null>(() => {
 		if (kcisaItems.length > 0) {
 			const f = kcisaItems[0];
-			return { source: 'kcisa', id: f.id, title: f.title, venue: f.venue, thumbnail: f.thumbnail };
+			return {
+				source: 'kcisa',
+				id: f.id,
+				title: f.title,
+				venue: f.venue,
+				thumbnail: f.thumbnail,
+				status: f.status,
+			};
 		}
 		if (items.length > 0) {
 			const f = items[0];
@@ -55,6 +64,7 @@ export function useExploreScreenData() {
 				title: f.title,
 				venue: f.venue,
 				thumbnail: f.thumbnail,
+				status: f.status,
 			};
 		}
 		return null;

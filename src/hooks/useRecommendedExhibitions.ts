@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 
 import type { RecommendableItem } from '@/src/components/explore/ExploreHomeSections';
-import { todayExhibitionDateString } from '@/src/utils/exhibitionSearch';
+import { getExhibitionStatus, todayExhibitionDateString } from '@/src/utils/exhibitionSearch';
 import { supabase } from '@/src/utils/supabase';
 
 // @MX:NOTE: 온보딩 취향 기반 가중치 스코어링 알고리즘 (SPEC-UI-002 REQ-UI002-011)
@@ -19,6 +19,8 @@ interface ExhibitionRow {
 	genre: string | null;
 	tags: string[] | null;
 	synced_at: string | null;
+	start_date: string;
+	end_date: string;
 }
 
 // @MX:ANCHOR: RecommendableItem을 반환하는 공개 훅 — index.tsx에서 직접 소비
@@ -62,6 +64,7 @@ function toRecommendableItem(row: ExhibitionRow): RecommendableItem {
 		title: row.title.trim(),
 		venue: row.venue_name_fallback.trim(),
 		thumbnail: row.image_url,
+		status: getExhibitionStatus({ startDate: row.start_date, endDate: row.end_date }),
 	};
 }
 
@@ -79,7 +82,7 @@ export function useRecommendedExhibitions(
 	useEffect(() => {
 		let query = supabase
 			.from('exhibitions')
-			.select('id, title, venue_name_fallback, image_url, genre, tags, synced_at, end_date')
+			.select('id, title, venue_name_fallback, image_url, genre, tags, synced_at, start_date, end_date')
 			.gte('end_date', todayExhibitionDateString())
 			.order('synced_at', { ascending: false })
 			.limit(FETCH_LIMIT);
