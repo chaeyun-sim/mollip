@@ -11,6 +11,8 @@ export interface NearbyPlace {
   distance: string;
   address: string;
   imageUrl: string;
+  latitude: number;
+  longitude: number;
 }
 
 interface RatedPlace extends NearbyPlace {
@@ -35,6 +37,8 @@ function toRatedPlace(
     distance: formatDistance(km),
     address: item.roadAddress || item.address,
     imageUrl: '',
+    latitude: lat,
+    longitude: lon,
   };
 }
 

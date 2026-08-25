@@ -1,6 +1,8 @@
 import { corsHeaders } from '../_shared/cors.ts';
 
-const NAVER_LOCAL_SEARCH_URL = 'https://openapi.naver.com/v1/search/local.json';
+// 2026-07-31부로 네이버 개발자센터 검색 API 신규 발급이 막히고 NAVER API HUB(NCP)로 이관됨.
+// 엔드포인트·인증 헤더가 기존 openapi.naver.com과 다르다 (NAVER API HUB 문서 기준).
+const NAVER_LOCAL_SEARCH_URL = 'https://naverapihub.apigw.ntruss.com/search/v1/local';
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -17,7 +19,7 @@ Deno.serve(async (req) => {
       );
     }
 
-    const { query, display = 6, latitude, longitude } = await req.json();
+    const { query, display = 6 } = await req.json();
     if (!query || typeof query !== 'string') {
       return new Response(
         JSON.stringify({ error: 'query is required' }),
@@ -25,15 +27,12 @@ Deno.serve(async (req) => {
       );
     }
 
+    // NAVER API HUB 지역 검색은 좌표 기반 정렬 파라미터를 지원하지 않음 (문서 기준) — 거리순 정렬은 클라이언트에서 처리
     const params = new URLSearchParams({ query, display: String(display) });
-    // 좌표가 있으면 거리순 정렬 활성화 (lon,lat 순서)
-    if (typeof longitude === 'number' && typeof latitude === 'number') {
-      params.set('coordinate', `${longitude},${latitude}`);
-    }
     const res = await fetch(`${NAVER_LOCAL_SEARCH_URL}?${params.toString()}`, {
       headers: {
-        'X-Naver-Client-Id': clientId,
-        'X-Naver-Client-Secret': clientSecret,
+        'X-NCP-APIGW-API-KEY-ID': clientId,
+        'X-NCP-APIGW-API-KEY': clientSecret,
       },
     });
 
