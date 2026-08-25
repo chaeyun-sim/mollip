@@ -4,7 +4,7 @@ const { withInfoPlist } = require('@expo/config-plugins');
 
 // .env 파일을 prebuild 시에도 로드
 try {
-	const envFile = readFileSync(resolve(__dirname, '.env'), 'utf-8');
+	const envFile = readFileSync(resolve(process.cwd(), '.env'), 'utf-8');
 	envFile.split('\n').forEach((line) => {
 		const trimmed = line.trim();
 		if (!trimmed || trimmed.startsWith('#')) return;
@@ -101,6 +101,7 @@ module.exports = {
 				},
 			],
 			'expo-font',
+			'expo-image',
 			'expo-splash-screen',
 			'expo-apple-authentication',
 			[

@@ -1,8 +1,18 @@
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, Image, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import type { ImageResizeMode, ImageSourcePropType, StyleProp, ViewStyle } from 'react-native';
+import { Image, type ImageContentFit } from 'expo-image';
 import { proxiedImageUrl } from '@/src/utils/imageProxy';
 import { cn } from '@/src/lib/cn';
+
+const RESIZE_MODE_TO_CONTENT_FIT: Record<ImageResizeMode, ImageContentFit> = {
+	cover: 'cover',
+	contain: 'contain',
+	stretch: 'fill',
+	center: 'contain',
+	repeat: 'cover',
+	none: 'none',
+};
 
 export const QUESTION_MARK = require('@/assets/images/skulpture/question.png');
 
@@ -83,7 +93,7 @@ export function ImageFallback({
 				<Image
 					source={{ uri: remoteSource ?? remoteUri }}
 					style={StyleSheet.absoluteFill}
-					resizeMode={resizeMode}
+					contentFit={RESIZE_MODE_TO_CONTENT_FIT[resizeMode]}
 					onLoadEnd={() => setLoading(false)}
 					onError={handleRemoteError}
 				/>
@@ -91,7 +101,7 @@ export function ImageFallback({
 				<Image
 					source={posterImage}
 					style={StyleSheet.absoluteFill}
-					resizeMode={resizeMode}
+					contentFit={RESIZE_MODE_TO_CONTENT_FIT[resizeMode]}
 					onError={() => setLoadFailed(true)}
 				/>
 			) : null}
@@ -111,7 +121,7 @@ export function ImageFallback({
 					<Image
 						source={QUESTION_MARK}
 						style={{ width: iconSize, height: iconSize }}
-						resizeMode="contain"
+						contentFit="contain"
 					/>
 				</View>
 			) : null}
