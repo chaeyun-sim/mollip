@@ -1,7 +1,7 @@
 // ODsay Lab API — 도보/대중교통(버스/지하철) 길찾기.
 // SK Tmap 대중교통 API는 무료 요금제가 월 10건뿐이라 개발/운영이 불가능해 ODsay로 교체했다.
-// https://lab.odsay.com/ 에서 앱 등록 후 apiKey 발급 (무료 Basic 요금제 일 1,000건).
-const ODSAY_API_KEY = process.env.EXPO_PUBLIC_ODSAY_API_KEY ?? '';
+// API 키는 클라이언트에 두지 않고 Supabase Edge Function('odsay-route')이 보관한다.
+import { supabase } from '@/src/utils/supabase';
 
 // ODsay API 응답 내부 타입 — 공개 문서 기준으로 실제 접근하는 필드만 정의한다.
 interface OdsayXyInfo {
@@ -86,11 +86,6 @@ function transitLegCount(path: OdsayPath): number {
 	return (path.rps ?? []).filter((rp) => rp.trafficType === 1 || rp.trafficType === 2).length;
 }
 
-function formatSearchTime(date: Date): string {
-	const pad = (n: number) => String(n).padStart(2, '0');
-	return `${date.getFullYear()}${pad(date.getMonth() + 1)}${pad(date.getDate())}${pad(date.getHours())}${pad(date.getMinutes())}`;
-}
-
 // 멀티모달 길찾기(maasRP) — searchPubTransPathT와 달리 도보 구간도
 // routes[].xyInfos에 실제 도로를 따르는 상세 좌표가 들어있어 loadLane 없이 지도에 그릴 수 있다.
 // searchMethod: 1=도보, 2=대중교통.
@@ -99,27 +94,15 @@ async function searchMaasPaths(
 	end: RouteCoord,
 	searchMethod: '1' | '2',
 ): Promise<OdsayPath[]> {
-	const params = new URLSearchParams({
-		apiKey: ODSAY_API_KEY,
-		lang: '0',
-		SX: String(start.longitude),
-		SY: String(start.latitude),
-		EX: String(end.longitude),
-		EY: String(end.latitude),
-		SearchTime: formatSearchTime(new Date()),
-		SearchMethod: searchMethod,
-	});
-	const res = await fetch(`https://api.odsay.com/v1/api/maasRP?${params}`);
-	if (!res.ok) throw new Error(`ODsay 경로 요청 실패 (${res.status})`);
-	const json = await res.json();
-	if (json.error) {
-		console.warn('[ODsay] 경로 조회 오류:', json.error.msg ?? json.error.code);
+	const { data, error } = await supabase.functions.invoke<{ paths?: OdsayPath[] }>(
+		'odsay-route',
+		{ body: { start, end, searchMethod } },
+	);
+	if (error) {
+		console.warn('[ODsay] 경로 조회 오류:', error.message);
 		return [];
 	}
-	if (!json.result) {
-		console.warn('[ODsay] 예상치 못한 응답 형식');
-	}
-	return json.result?.paths ?? [];
+	return data?.paths ?? [];
 }
 
 function buildRouteResult(path: OdsayPath): RouteResult {
