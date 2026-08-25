@@ -51,7 +51,7 @@ Fail → Sam 또는 Chris.
 
 ## 4. QA 회귀 루프 (Taylor)
 
-AC마다 Q1~Q10. Fail → Chris 수정 후 전체 재실행. Self-fix **5회**/AC.
+AC마다 Q1~Q10. Fail → Chris 수정 후 전체 재실행. Self-fix 반복 횟수 제한 없음 — Q1~Q10 전부 Pass할 때까지 계속(예외 조건은 CLAUDE.md "자가 수정 루프" 참고).
 
 | # | 영역 |
 |---|------|
@@ -70,7 +70,7 @@ AC마다 Q1~Q10. Fail → Chris 수정 후 전체 재실행. Self-fix **5회**/A
 
 ## 5. Manager — 사용자 Handoff
 
-G6 전 “완료” 보고 금지. `06-handoff-to-user.md` + evidence table.
+G6 전 "완료" 보고 금지. `06-handoff-to-user.md` + evidence table.
 
 ---
 

@@ -43,9 +43,14 @@ yarn-error.*
 
 .env
 .moai
-.claude/**
-!.claude/rules/
-!.claude/rules/**
+.claude/agent-memory
+.claude/agents
+.claude/hooks
+.claude/output-styles
+.claude/scratch
+.claude/skills
+.claude/commands/moai/
+.claude/rules/moai/
 
 .omc
 .agents
