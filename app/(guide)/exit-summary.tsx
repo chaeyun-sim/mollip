@@ -1,56 +1,16 @@
 import { Ionicons } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
 import * as Location from 'expo-location';
-import { StatusBar } from 'expo-status-bar';
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Pressable, ScrollView, Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-
 import { useNearbyPlaces, type NearbyPlace } from '@/src/hooks/useNearbyPlaces';
 import { supabase } from '@/src/utils/supabase';
 import { todayKey, useVisitStore } from '@/src/store/visitStore';
 import { useImmersiveStore } from '@/src/store/immersiveStore';
-import { colors } from '@/src/constants/colors';
 import { Screen } from '@/src/components/layout/Screen';
-
-const TEXT_SHADOW = {
-	textShadowColor: 'rgba(0,0,0,0.6)',
-	textShadowOffset: { width: 0, height: 1 },
-	textShadowRadius: 6,
-};
-
-function PlaceCard({ place }: { place: NearbyPlace }) {
-	return (
-		<View className='rounded-2xl overflow-hidden mb-3 w-[48%] h-[130px] bg-divider'>
-			<LinearGradient
-				colors={['transparent', 'rgba(0,0,0,0.55)', 'rgba(0,0,0,0.92)']}
-				locations={[0, 0.5, 1]}
-				className='absolute left-0 right-0 bottom-0 h-[90px]'
-			/>
-			<View className='absolute left-2.5 right-2.5 bottom-2.5'>
-				<Text
-					className='text-white font-pretendard-semibold text-[13px]'
-					numberOfLines={1}
-					style={TEXT_SHADOW}
-				>
-					{place.name}
-				</Text>
-				<Text
-					className='text-white/80 font-pretendard-regular text-[10px] mt-0.5'
-					numberOfLines={1}
-					style={TEXT_SHADOW}
-				>
-					{place.distance} · {place.address}
-				</Text>
-			</View>
-		</View>
-	);
-}
-
-function SkeletonCard() {
-	return <View className='rounded-2xl mb-3 w-[48%] h-[130px] bg-divider' />;
-}
+import { ExternalMapSheet, type ExternalMapTarget } from '@/src/components/common/ExternalMapSheet';
+import { NearbyPlaceRow, type PlaceVariant } from '@/src/components/guide/NearbyPlaceRow';
+import { NearbyPlaceRowSkeleton } from '@/src/components/guide/NearbyPlaceRowSkeleton';
 
 // 셀프 가이드를 종료할 때 보여주는 마무리 화면 — create-description의 종료 확인 후 진입.
 // 여기서 "다른 전시 보러가기"를 눌러야 메인 서비스로 돌아간다 (create-description.tsx 참고).
@@ -116,22 +76,29 @@ export default function ExitSummaryScreen() {
 	}, [exhibitionId]);
 
 	const { data: nearby, isLoading: placesLoading } = useNearbyPlaces(location);
+	const [externalMapTarget, setExternalMapTarget] = useState<ExternalMapTarget | null>(null);
 
-	console.log(nearby);
-
-	function renderNearbySection(label: string, places: NearbyPlace[]) {
+	function renderNearbySection(label: string, places: NearbyPlace[], variant: PlaceVariant) {
 		return (
 			<View className='mb-5'>
 				<Text className='text-tertiary font-pretendard-semibold text-[13px] mb-2.5'>
 					{label}
 				</Text>
-				<View className='flex-row flex-wrap justify-between'>
+				<View>
 					{placesLoading ? (
-						[0, 1, 2].map((i) => <SkeletonCard key={i} />)
+						[0, 1, 2].map((i) => <NearbyPlaceRowSkeleton key={i} isFirst={i === 0} />)
 					) : places.length > 0 ? (
-						places.map((place) => <PlaceCard key={place.id} place={place} />)
+						places.map((place, index) => (
+							<NearbyPlaceRow
+								key={place.id}
+								place={place}
+								variant={variant}
+								isFirst={index === 0}
+								onOpenExternalMap={setExternalMapTarget}
+							/>
+						))
 					) : (
-						<Text className='text-muted font-pretendard-regular text-[13px]'>
+						<Text className='text-muted font-pretendard-regular text-[13px] py-2'>
 							주변 장소를 찾지 못했어요
 						</Text>
 					)}
@@ -149,7 +116,7 @@ export default function ExitSummaryScreen() {
 			>
 				<View className='items-center mb-10'>
 					<View className='w-16 h-16 rounded-full items-center justify-center mb-5 bg-bg-tonal'>
-						<Ionicons name='checkmark' size={28} color={colors.accent} />
+						<Ionicons name='checkmark' size={28} className="text-accent" />
 					</View>
 					<Text className='text-primary font-pretendard-bold text-[22px] text-center mb-2'>
 						오디오 가이드가 종료되었습니다.
@@ -163,8 +130,8 @@ export default function ExitSummaryScreen() {
 					주변 즐길거리
 				</Text>
 
-				{renderNearbySection('카페', nearby.cafes)}
-				{renderNearbySection('볼거리', nearby.attractions)}
+				{renderNearbySection('카페', nearby.cafes, 'cafe')}
+				{renderNearbySection('볼거리', nearby.attractions, 'attraction')}
 			</ScrollView>
 
 			<View className='absolute left-0 right-0 bottom-0 px-6 pb-10'>
@@ -183,6 +150,13 @@ export default function ExitSummaryScreen() {
 					</Text>
 				</Pressable>
 			</View>
+
+			{externalMapTarget && (
+				<ExternalMapSheet
+					target={externalMapTarget}
+					onClose={() => setExternalMapTarget(null)}
+				/>
+			)}
 		</Screen>
 	);
 }

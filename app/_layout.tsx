@@ -1,5 +1,6 @@
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import '../global.css';
+import '../src/lib/iconInterop';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import {
 	CormorantGaramond_400Regular,

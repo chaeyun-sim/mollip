@@ -13,7 +13,6 @@ import {
 import { Screen } from '../../src/components/layout/Screen';
 import * as Haptics from 'expo-haptics';
 import { store } from '../../src/store';
-import { useChatStore } from '../../src/store/chatStore';
 import { ScreenHeader } from '../../src/components/layout/ScreenHeader';
 import { cn } from '@/src/lib/cn';
 import { colors } from '@/src/constants/colors';
@@ -50,7 +49,6 @@ export default function ManualScreen() {
 		const artist = artistRef.current.trim();
 		setStoreValues(title, artist);
 		store.artworkDescription = '';
-		useChatStore.getState().clear();
 		Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
 		router.push('/description');
 	};
@@ -65,7 +63,6 @@ export default function ManualScreen() {
 		const artist = artistRef.current.trim();
 		setStoreValues(title, artist);
 		store.artworkDescription = captionRef.current.trim();
-		useChatStore.getState().clear();
 		const sessionId = Date.now().toString();
 		Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
 		router.push({ pathname: '/chat', params: { sessionId } });
@@ -81,7 +78,7 @@ export default function ManualScreen() {
 				<View className='flex-1'>
 				<ScreenHeader>
 					<ScreenHeader.Left>
-						<ScreenHeader.Back color='rgba(255,255,255,0.9)' />
+						<ScreenHeader.Back color="white-90" />
 					</ScreenHeader.Left>
 					<ScreenHeader.Right>
 						<Pressable
@@ -113,7 +110,7 @@ export default function ManualScreen() {
 						</Text>
 						<TextInput
 							className={cn(
-								'rounded-lg px-4 border text-base h-[52px] pt-0 pb-0 text-[#e8e8e8] leading-none font-pretendard-regular bg-primary',
+								'rounded-lg px-4 border text-base h-[52px] pt-0 pb-0 text-on-dark leading-none font-pretendard-regular bg-primary',
 								titleError ? 'border-error' : 'border-divider-dark',
 							)}
 							textAlignVertical='center'
@@ -142,7 +139,7 @@ export default function ManualScreen() {
 						<TextInput
 							ref={artistInputRef}
 							className={cn(
-								'rounded-lg px-4 border text-base bg-primary h-[52px] py-0 font-pretendard-regular text-[#E8E8E8]',
+								'rounded-lg px-4 border text-base bg-primary h-[52px] py-0 font-pretendard-regular text-on-dark',
 								artistError ? 'border-error' : 'border-divider-dark',
 							)}
 							placeholder='예) 빈센트 반 고흐'
@@ -174,7 +171,7 @@ export default function ManualScreen() {
 						</View>
 						<TextInput
 							ref={yearInputRef}
-							className='rounded-lg px-4 border border-divider-dark text-base bg-primary h-[52px] py-0 font-pretendard-regular text-[#E8E8E8]'
+							className='rounded-lg px-4 border border-divider-dark text-base bg-primary h-[52px] py-0 font-pretendard-regular text-on-dark'
 							placeholder='예) 1889'
 							placeholderTextColor={colors.secondary}
 							accessibilityLabel='제작 연도 (선택)'
@@ -197,7 +194,7 @@ export default function ManualScreen() {
 						</View>
 						<TextInput
 							ref={captionInputRef}
-							className='rounded-lg px-4 py-3 border border-divider-dark text-[15px] bg-primary font-pretendard-regular text-[#E8E8E8]'
+							className='rounded-lg px-4 py-3 border border-divider-dark text-[15px] bg-primary font-pretendard-regular text-on-dark'
 							placeholder='전시장 캡션이나 메모를 입력하면 더 정확하게 질문할 수 있어요'
 							placeholderTextColor={colors.secondary}
 							accessibilityLabel='캡션 또는 메모 (선택)'

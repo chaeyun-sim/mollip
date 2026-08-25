@@ -5,11 +5,10 @@ import { useEffect } from 'react';
 import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Screen } from '../../src/components/layout/Screen';
 import { ScreenHeader } from '../../src/components/layout/ScreenHeader';
-import { ExhibitionPoster } from '@/src/components/common/EmptyImagePlaceholder';
+import { ImageFallback } from '@/src/components/common/ImageFallback';
 import { store } from '../../src/store';
-import { useChatStore } from '../../src/store/chatStore';
 import { useImmersiveStore } from '../../src/store/immersiveStore';
-import { colors } from '@/src/constants/colors';
+import { cn } from '@/src/lib/cn';
 
 export default function PlaylistScreen() {
   const router = useRouter();
@@ -18,7 +17,6 @@ export default function PlaylistScreen() {
   const exhibitionTitle = useImmersiveStore(s => s.exhibitionTitle);
   const isImmersive = useImmersiveStore(s => s.isImmersiveMode);
   const exitImmersive = useImmersiveStore(s => s.exit);
-  const clearChat = useChatStore(s => s.clear);
 
   const confirmExit = () => {
     Alert.alert('전시 관람 종료', '재생목록이 초기화돼요', [
@@ -56,7 +54,6 @@ export default function PlaylistScreen() {
     store.artworkDescription = item.description === FAILED_DESCRIPTION ? '' : item.description;
     store.inputMode = 'manual';
     store.manualArtist = '';
-    clearChat();
     router.replace('/description');
   };
 
@@ -116,13 +113,13 @@ export default function PlaylistScreen() {
 				contentContainerStyle={{ paddingBottom: 32, flexGrow: 1 }}
 				scrollEnabled={playlist.length > 0}
       >
-        <Text className='mb-4 font-pretendard-semibold text-[#E8E8E8] text-[15px]'>재생목록</Text>
+        <Text className='mb-4 font-pretendard-semibold text-on-dark text-[15px]'>재생목록</Text>
         {playlist.length === 0 ? (
           <View className='flex-1 items-center justify-center gap-3 mb-20'>
             <Ionicons
               name='musical-notes-outline'
               size={40}
-              color={colors.secondary}
+              className="text-secondary"
             />
             <Text className='font-pretendard-regular text-secondary text-[15px]'>
               아직 들은 작품이 없어요
@@ -139,7 +136,7 @@ export default function PlaylistScreen() {
                 }}
               >
                 {/* 썸네일 */}
-                <ExhibitionPoster
+                <ImageFallback
                   heroImageUri={item.imageUrl}
                   className='w-14 h-14 rounded-[10px]'
                   iconSize={22}
@@ -148,7 +145,7 @@ export default function PlaylistScreen() {
                 {/* 텍스트 */}
                 <View className='flex-1 gap-1'>
                   <Text
-                    className='font-pretendard-semibold text-[#E8E8E8] text-[15px]'
+                    className='font-pretendard-semibold text-on-dark text-[15px]'
                     numberOfLines={1}
                   >
                     {item.title}
@@ -173,7 +170,7 @@ export default function PlaylistScreen() {
                         : 'play-circle-outline'
                     }
                     size={26}
-                    color={item.description === FAILED_DESCRIPTION ? colors.tertiary : colors.accent}
+                    className={cn(item.description === FAILED_DESCRIPTION ? 'text-tertiary' : 'text-accent')}
                   />
                 </Pressable>
               </View>
