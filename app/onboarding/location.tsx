@@ -1,12 +1,10 @@
 import { Ionicons } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
 import * as Location from 'expo-location';
 import { useRouter } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
 import { useCallback } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
-
+import { Pressable, Text, View } from 'react-native';
 import { Screen } from '@/src/components/layout/Screen';
+import { WarmGradientBackdrop } from '@/src/components/common/WarmGradientBackdrop';
 import { useAuthStore } from '@/src/store/authStore';
 import { supabase } from '@/src/utils/supabase';
 import { colors } from '@/src/constants/colors';
@@ -40,11 +38,7 @@ export default function OnboardingLocationScreen() {
 
 	return (
 		<Screen variant='warm'>
-			<LinearGradient
-				colors={['#FFF3E6', '#F7DFCE', '#E4CCE8', colors.bgLight]}
-				locations={[0, 0.32, 0.68, 1]}
-				style={StyleSheet.absoluteFill}
-			/>
+			<WarmGradientBackdrop />
 
 			<View className='flex-1 items-center justify-center px-2 gap-8'>
 				{/* 아이콘 */}
@@ -66,14 +60,15 @@ export default function OnboardingLocationScreen() {
 					<Text className='text-primary text-[24px] font-hahmlet-bold text-center leading-[30px]'>
 						주변 전시를{'\n'}바로 찾을 수 있어요
 					</Text>
-					<Text className='text-[#6B6360] text-[13px] font-pretendard-regular text-center leading-[20px] mt-1'>
+					<Text className='text-description text-[13px] font-pretendard-regular text-center leading-[20px] mt-1'>
 						위치를 허용하면 가까운 미술관을{'\n'}지도에서 바로 확인할 수 있어요
 					</Text>
 				</View>
 
 				{/* 시스템 다이얼로그 미리보기 카드 */}
 				<View
-					className='w-full rounded-[18px] bg-[#EFECE6] overflow-hidden'
+					className='w-full rounded-[18px] bg-[#
+					] overflow-hidden'
 					style={{
 						shadowColor: '#000',
 						shadowOpacity: 0.06,
@@ -86,7 +81,7 @@ export default function OnboardingLocationScreen() {
 						<Text className='text-primary text-[15px] font-pretendard-semibold'>
 							위치 접근 허용
 						</Text>
-						<Text className='text-[#6B6360] text-[12px] font-pretendard-regular mt-1'>
+						<Text className='text-description text-[12px] font-pretendard-regular mt-1'>
 							mollip이 내 위치에 접근하려고 합니다
 						</Text>
 					</View>
@@ -128,7 +123,7 @@ export default function OnboardingLocationScreen() {
 					accessibilityRole='button'
 					accessibilityLabel='나중에 설정'
 				>
-					<Text className='text-[14px] text-[#6B6360] font-pretendard-regular'>
+					<Text className='text-[14px] text-description font-pretendard-regular'>
 						나중에 설정할게요
 					</Text>
 				</Pressable>
