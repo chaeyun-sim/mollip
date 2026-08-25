@@ -60,3 +60,5 @@ scripts/__pycache__/
 e2e/screenshots/
 
 coverage/
+
+.docs/wip/
