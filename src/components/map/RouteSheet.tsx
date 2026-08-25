@@ -2,7 +2,6 @@ import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { Ionicons } from '@expo/vector-icons';
 import {
 	ActivityIndicator,
-	Modal,
 	Pressable,
 	ScrollView,
 	Text,
@@ -22,12 +21,11 @@ import Animated, {
 	withTiming,
 } from 'react-native-reanimated';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-
 import type { RouteCoord, RouteLeg, RouteResult } from '@/src/api/tmap';
 import { cn } from '@/src/lib/cn';
 import type { DirectionsMode } from '@/src/hooks/useDirections';
 import { legColor } from '@/src/utils/routeColors';
-import { EXTERNAL_MAP_APPS, openExternalMap } from '@/src/utils/externalMaps';
+import { ExternalMapSheet, type ExternalMapTarget } from '@/src/components/common/ExternalMapSheet';
 import { colors } from '@/src/constants/colors';
 
 interface RouteSheetProps {
@@ -61,8 +59,6 @@ const LEG_ICON: Record<RouteLeg['mode'], keyof typeof Ionicons.glyphMap> = {
 	bus: 'bus',
 	subway: 'train',
 };
-
-const INK = colors.primary;
 
 // 구간 바 너비 계산 기준 — 구간 비중(flex)에 이 값을 곱해 픽셀 너비를 만든다.
 // 구간이 많아 합산 너비가 카드 폭을 넘으면 가로 스크롤로 넘어간다.
@@ -336,7 +332,7 @@ function ModeToggle({ mode, onChangeMode }: ModeToggleProps) {
 						<Ionicons
 							name={item.icon}
 							size={15}
-							color={active ? '#fff' : 'rgba(28,25,23,0.45)'}
+							className={active ? 'text-white' : 'text-stone-900/45'}
 						/>
 						<Text
 							className={cn(
@@ -417,64 +413,6 @@ function MetaChip({ icon, label }: MetaChipProps) {
 				{label}
 			</Text>
 		</View>
-	);
-}
-
-interface ExternalMapTarget {
-	coord: RouteCoord;
-	label: string;
-}
-
-interface ExternalMapSheetProps {
-	target: ExternalMapTarget;
-	onClose: () => void;
-}
-
-// 승차/하차 위치를 외부 지도 앱(네이버/카카오/구글)에서 열기 위한 액션시트.
-function ExternalMapSheet({ target, onClose }: ExternalMapSheetProps) {
-	const handlePick = useCallback(
-		(app: (typeof EXTERNAL_MAP_APPS)[number]['key']) => {
-			onClose();
-			openExternalMap(app, target.coord, target.label);
-		},
-		[target, onClose],
-	);
-
-	return (
-		<Modal transparent animationType='fade' onRequestClose={onClose}>
-			<Pressable
-				className='flex-1 justify-end bg-black/35'
-				onPress={onClose}
-				accessibilityLabel='닫기'
-				accessibilityRole='button'
-			>
-				<Pressable
-					className='bg-white rounded-t-[28px] px-5 pt-2 pb-8'
-					onPress={(e) => e.stopPropagation()}
-				>
-					<View className='self-center w-9 h-1 rounded-full bg-black/15 mt-2 mb-4' />
-					<Text className='text-black/40 text-[12px] font-pretendard-semibold px-1 mb-2'>
-						{target.label} · 지도 앱에서 보기
-					</Text>
-					{EXTERNAL_MAP_APPS.map((app) => (
-						<Pressable
-							key={app.key}
-							onPress={() => handlePick(app.key)}
-							className='flex-row items-center gap-3 h-14 px-1'
-							accessibilityRole='button'
-							accessibilityLabel={app.label}
-						>
-							<View className='w-9 h-9 rounded-full items-center justify-center bg-black/[0.045]'>
-								<Ionicons name='map-outline' size={17} color={INK} />
-							</View>
-							<Text className='text-[15px] font-pretendard-medium text-primary'>
-								{app.label}
-							</Text>
-						</Pressable>
-					))}
-				</Pressable>
-			</Pressable>
-		</Modal>
 	);
 }
 
@@ -585,11 +523,10 @@ function RouteTimeline({
 								>
 									{item.variant === 'start' ? (
 										<View
-											className='w-[8px] h-[8px] rounded-full'
-											style={{ backgroundColor: INK }}
+											className='w-[8px] h-[8px] rounded-full bg-primary'
 										/>
 									) : (
-										<Ionicons name='flag' size={11} color={INK} />
+										<Ionicons name='flag' size={11} className='text-primary' />
 									)}
 								</View>
 							)}
@@ -909,7 +846,7 @@ export function RouteSheet({
 			<Animated.View key={`${mode}-${status}`} entering={FadeIn.duration(240)}>
 				{status === 'loading' && (
 					<View className='flex-row items-center gap-2 py-6'>
-						<ActivityIndicator size='small' color={INK} />
+						<ActivityIndicator size='small' color={colors.primary} />
 						<Text className='text-black/50 text-[13px] font-pretendard-regular'>
 							경로 찾는 중…
 						</Text>
