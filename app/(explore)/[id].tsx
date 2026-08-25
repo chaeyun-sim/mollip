@@ -252,6 +252,7 @@ export default function ExhibitionDetailScreen() {
 				title={exhibition.title}
 				onStart={() => {
 					setImmersiveOpen(false);
+					if (!ensureAuth(`/(explore)/${id}`)) return;
 					enterImmersive(id, exhibition.title);
 					recordVisit(todayKey(), id, {
 						title: exhibition.title,
