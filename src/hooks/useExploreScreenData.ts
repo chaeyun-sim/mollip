@@ -28,11 +28,7 @@ export type FeaturedExhibition = ExhibitionSummary & {
 export function useExploreScreenData() {
 	const userId = useAuthStore((s) => s.user?.id);
 	const { items, status, refetch } = useCultureExhibitions();
-	const {
-		items: kcisaItems,
-		status: kcisaStatus,
-		refetch: kcisaRefetch,
-	} = useKcisaExhibitions();
+	const { items: kcisaItems, status: kcisaStatus, refetch: kcisaRefetch } = useKcisaExhibitions();
 
 	const { preferredGenres, preferredArtists } = usePreferences(userId);
 
@@ -53,7 +49,13 @@ export function useExploreScreenData() {
 		}
 		if (items.length > 0) {
 			const f = items[0];
-			return { source: 'culture', id: f.id, title: f.title, venue: f.venue, thumbnail: f.thumbnail };
+			return {
+				source: 'culture',
+				id: f.id,
+				title: f.title,
+				venue: f.venue,
+				thumbnail: f.thumbnail,
+			};
 		}
 		return null;
 	}, [kcisaItems, items]);

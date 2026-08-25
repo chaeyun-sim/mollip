@@ -1,14 +1,7 @@
 import { cn } from '@/src/lib/cn';
 import { Ionicons } from '@expo/vector-icons';
 import { useMemo } from 'react';
-import {
-	Image,
-	Pressable,
-	Text,
-	View,
-	type ImageSourcePropType,
-} from 'react-native';
-import { colors } from '@/src/constants/colors';
+import { Image, Pressable, Text, View, type ImageSourcePropType } from 'react-native';
 
 export interface DayImage {
 	source?: ImageSourcePropType;
@@ -66,44 +59,44 @@ export function DiaryCalendar({
 	}, [year, month]);
 
 	return (
-		<View className='w-full rounded-[20px] py-4 px-3 bg-[#0F0D0C]'>
+		<View className="w-full rounded-[20px] py-4 px-3 bg-[#0F0D0C]">
 			{/* 월 네비게이션 */}
-			<View className='flex-row items-center justify-center gap-5 py-3'>
+			<View className="flex-row items-center justify-center gap-5 py-3">
 				<Pressable
 					onPress={() => onChangeMonth(-1)}
 					hitSlop={10}
-					accessibilityLabel='이전 달'
-					accessibilityRole='button'
+					accessibilityLabel="이전 달"
+					accessibilityRole="button"
 					style={({ pressed }) => ({
 						opacity: pressed ? 0.5 : 1,
 					})}
-					className='bg-[#3D3733] h-8 w-8 rounded-2xl items-center justify-center'
+					className="bg-[#3D3733] h-8 w-8 rounded-2xl items-center justify-center"
 				>
-					<Ionicons name='chevron-back' size={15} color={colors.muted} />
+					<Ionicons name="chevron-back" size={15} className="text-muted" />
 				</Pressable>
-				<Text className='font-pretendard-semibold text-[17px] text-white'>
+				<Text className="font-pretendard-semibold text-[17px] text-white">
 					{year}년 {month}월
 				</Text>
 				<Pressable
 					onPress={() => onChangeMonth(1)}
 					hitSlop={10}
-					accessibilityLabel='다음 달'
-					accessibilityRole='button'
+					accessibilityLabel="다음 달"
+					accessibilityRole="button"
 					style={({ pressed }) => ({
 						opacity: pressed ? 0.5 : 1,
 					})}
-					className='bg-[#3D3733] h-8 w-8 rounded-2xl items-center justify-center'
+					className="bg-[#3D3733] h-8 w-8 rounded-2xl items-center justify-center"
 				>
-					<Ionicons name='chevron-forward' size={15} color={colors.muted} />
+					<Ionicons name="chevron-forward" size={15} className="text-muted" />
 				</Pressable>
 			</View>
 
 			{/* 요일 헤더 */}
-			<View className='flex-row mt-4 justify-around'>
+			<View className="flex-row mt-4 justify-around">
 				{WEEK_LABELS.map((label) => (
 					<Text
 						key={label}
-						className='text-center text-[11px] text-white/40 font-pretendard-regular'
+						className="text-center text-[11px] text-white/40 font-pretendard-regular"
 					>
 						{label}
 					</Text>
@@ -112,7 +105,7 @@ export function DiaryCalendar({
 
 			{/* 날짜 그리드 */}
 			{weeks.map((week, wi) => (
-				<View key={wi} className='flex-row mt-1 overflow-hidden h-[52px]'>
+				<View key={wi} className="flex-row mt-1 overflow-hidden h-[52px]">
 					{week.map((day, di) => {
 						if (day === null) {
 							return <View key={`${wi}-${di}`} style={{ flex: 1 }} />;
@@ -132,16 +125,14 @@ export function DiaryCalendar({
 								onPress={() => hasEntry && onSelectDate(dateKey)}
 								disabled={!hasEntry}
 								accessibilityLabel={
-									hasEntry
-										? `${month}월 ${day}일 일기 보기`
-										: `${month}월 ${day}일, 기록 없음`
+									hasEntry ? `${month}월 ${day}일 일기 보기` : `${month}월 ${day}일, 기록 없음`
 								}
-								accessibilityRole='button'
+								accessibilityRole="button"
 								accessibilityState={{ disabled: !hasEntry }}
 								style={({ pressed }) => ({
 									opacity: pressed ? 0.5 : 1,
 								})}
-								className='flex-1 items-center justify-center'
+								className="flex-1 items-center justify-center"
 							>
 								{/* 날짜 숫자 — 항상 표시 */}
 								<View
@@ -162,20 +153,20 @@ export function DiaryCalendar({
 
 								{/* 이미지/컬러 — 날짜 위에 absolute 오버레이 */}
 								{(hasImage || hasColor) && (
-									<View className='absolute w-[40px] h-[40px] rounded-3xl bg-[#6c6560] items-center justify-center'>
+									<View className="absolute w-[40px] h-[40px] rounded-3xl bg-[#6c6560] items-center justify-center">
 										<View
-											className='w-10 h-10 rounded-lg overflow-hidden'
+											className="w-10 h-10 rounded-lg overflow-hidden"
 											style={{ transform: [{ rotate: `${rotation}deg` }] }}
 										>
 											{hasImage ? (
 												<Image
 													source={dayImage!.source!}
-													resizeMode='cover'
+													resizeMode="cover"
 													style={{ width: 40, height: 40 }}
 												/>
 											) : (
 												<View
-													className='w-10 h-10 '
+													className="w-10 h-10 "
 													style={{
 														backgroundColor: dayImage!.color,
 													}}

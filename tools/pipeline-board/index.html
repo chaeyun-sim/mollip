@@ -1,673 +1,925 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>mollip · pipeline board</title>
-  <style>
-    :root {
-      --bg: #0f0f10;
-      --panel: #1a1a1d;
-      --border: #2a2a2e;
-      --ink: #f5f5f4;
-      --muted: #a8a29e;
-      --accent: #3b82f6;
-      --pass: #22c55e;
-      --fail: #ef4444;
-      --work: #f59e0b;
-    }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: "Pretendard", system-ui, -apple-system, sans-serif;
-      background: var(--bg);
-      color: var(--ink);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-    .main-wrap { flex: 1; overflow: auto; }
-    header {
-      padding: 16px 20px;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 12px;
-    }
-    header h1 {
-      margin: 0;
-      font-size: 15px;
-      font-weight: 600;
-      letter-spacing: 0.02em;
-    }
-    header select, header input {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      color: var(--ink);
-      border-radius: 8px;
-      padding: 8px 12px;
-      font-size: 13px;
-    }
-    .gates {
-      display: flex;
-      gap: 6px;
-      margin-left: auto;
-      flex-wrap: wrap;
-    }
-    .gate {
-      font-size: 11px;
-      padding: 4px 10px;
-      border-radius: 999px;
-      border: 1px solid var(--border);
-      color: var(--muted);
-      cursor: help;
-      display: inline-flex;
-      flex-direction: column;
-      align-items: center;
-      line-height: 1.2;
-      min-width: 44px;
-    }
-    .gate strong { color: var(--ink); font-size: 11px; }
-    .gate-sub { font-size: 9px; opacity: 0.85; margin-top: 1px; }
-    .gates-label {
-      font-size: 11px;
-      color: var(--muted);
-      margin-right: 4px;
-    }
-    .gate.done { border-color: var(--pass); color: var(--pass); }
-    .gate.fail { border-color: var(--fail); color: var(--fail); }
-    .gate.working { border-color: var(--work); color: var(--work); animation: gate-work-pulse 1.2s ease-in-out infinite; }
-    @keyframes gate-work-pulse {
-      0%, 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.35); }
-      50% { box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.15); }
-    }
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 10px;
-      padding: 16px;
-      align-items: stretch;
-    }
-    @media (min-width: 1200px) {
-      .grid { grid-template-columns: repeat(4, 1fr); }
-    }
-    @media (min-width: 1600px) {
-      .grid { grid-template-columns: repeat(7, 1fr); }
-    }
-    .cell {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      display: flex;
-      flex-direction: column;
-      min-height: 200px;
-      overflow: hidden;
-      position: relative;
-      isolation: isolate;
-      transition: border-color 0.2s, box-shadow 0.2s;
-    }
-    .cell.working {
-      border-color: transparent;
-      box-shadow: 0 0 20px rgba(245, 158, 11, 0.12);
-    }
-    .cell.working::before {
-      content: "";
-      position: absolute;
-      inset: -50%;
-      z-index: 0;
-      background: conic-gradient(
-        from 0deg,
-        transparent 0deg 50deg,
-        #f59e0b 90deg,
-        #fde68a 130deg,
-        #f59e0b 170deg,
-        transparent 210deg 360deg
-      );
-      animation: work-border-spin 1.35s linear infinite;
-      pointer-events: none;
-    }
-    .cell.working::after {
-      content: "";
-      position: absolute;
-      inset: 2px;
-      border-radius: 12px;
-      background: var(--panel);
-      z-index: 0;
-      pointer-events: none;
-    }
-    .cell.working > * {
-      position: relative;
-      z-index: 1;
-    }
-    @keyframes work-border-spin {
-      to { transform: rotate(360deg); }
-    }
-    .cell.done {
-      border-color: rgba(34, 197, 94, 0.4);
-    }
-    .cell-head {
-      padding: 12px 14px;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .avatar {
-      width: 36px;
-      height: 36px;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 13px;
-      font-weight: 700;
-      flex-shrink: 0;
-    }
-    .cell-title { font-size: 13px; font-weight: 600; line-height: 1.2; }
-    .cell-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
-    .badge {
-      margin-left: auto;
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      padding: 3px 7px;
-      border-radius: 6px;
-      background: #252528;
-      color: var(--muted);
-    }
-    .badge.working { background: rgba(245, 158, 11, 0.15); color: var(--work); }
-    .badge.done { background: rgba(34, 197, 94, 0.12); color: var(--pass); }
-    .badge.fail { background: rgba(239, 68, 68, 0.12); color: var(--fail); }
-    .feed {
-      flex: 1;
-      overflow-y: auto;
-      padding: 10px 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      font-size: 12px;
-      line-height: 1.45;
-    }
-    .msg {
-      padding: 8px 10px;
-      background: #121214;
-      border-radius: 10px;
-      border: 1px solid #222;
-    }
-    .msg.gate { border-color: rgba(59, 130, 246, 0.35); }
-    .msg.chat { border-color: rgba(99, 102, 241, 0.35); }
-    .msg-meta { font-size: 10px; color: var(--muted); margin-bottom: 4px; }
-    .msg-body { color: #e7e5e4; white-space: pre-wrap; word-break: break-word; }
-    .empty-hint {
-      color: var(--muted);
-      font-size: 11px;
-      text-align: center;
-      padding: 24px 8px;
-    }
-    .history-btn {
-      margin-top: 8px;
-      width: 100%;
-      padding: 8px 10px;
-      border-radius: 10px;
-      border: 1px dashed var(--border);
-      background: transparent;
-      color: var(--muted);
-      font-size: 11px;
-      cursor: pointer;
-    }
-    .history-btn:hover { color: var(--ink); border-color: #555; }
-    footer {
-      padding: 10px 20px;
-      border-top: 1px solid var(--border);
-      font-size: 11px;
-      color: var(--muted);
-    }
-    code { color: var(--accent); }
-    .msg { cursor: pointer; }
-    .msg:hover { border-color: #444; background: #18181b; }
-    .msg-hint { font-size: 9px; color: var(--muted); margin-top: 6px; opacity: 0.85; }
-    .modal-backdrop {
-      position: fixed; inset: 0; background: rgba(0,0,0,0.65);
-      display: none; align-items: center; justify-content: center;
-      padding: 24px; z-index: 100;
-    }
-    .modal-backdrop.open { display: flex; }
-    .modal {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      max-width: 640px;
-      width: 100%;
-      max-height: min(85vh, 720px);
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      box-shadow: 0 24px 48px rgba(0,0,0,0.45);
-    }
-    .modal-head {
-      padding: 16px 18px;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
-    }
-    .modal-head h2 { margin: 0; font-size: 15px; font-weight: 600; flex: 1; }
-    .modal-head p { margin: 4px 0 0; font-size: 12px; color: var(--muted); }
-    .modal-close {
-      background: transparent; border: none; color: var(--muted);
-      font-size: 22px; line-height: 1; cursor: pointer; padding: 0 4px;
-    }
-    .modal-body {
-      padding: 16px 18px;
-      overflow-y: auto;
-      font-size: 13px;
-      line-height: 1.55;
-    }
-    .modal-section { margin-bottom: 16px; }
-    .modal-section h3 {
-      margin: 0 0 8px;
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--muted);
-    }
-    .modal-section h3 .artifact-filename {
-      text-transform: none;
-      letter-spacing: 0;
-      font-size: 12px;
-      color: #d6d3d1;
-    }
-    .modal-artifact {
-      background: #0c0c0d;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 12px 14px;
-      font-family: ui-monospace, monospace;
-      font-size: 11px;
-      white-space: pre-wrap;
-      word-break: break-word;
-      max-height: 40vh;
-      overflow-y: auto;
-      color: #d6d3d1;
-    }
-    .modal-artifact.loading { color: var(--muted); font-style: italic; }
-    .chat-panel {
-      border-top: 1px solid var(--border);
-      background: #141416;
-      display: flex;
-      flex-direction: column;
-      max-height: 42vh;
-      min-height: 200px;
-    }
-    .chat-head {
-      padding: 10px 16px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-      border-bottom: 1px solid var(--border);
-    }
-    .chat-head span { font-size: 13px; font-weight: 600; margin-right: 8px; }
-    .chat-quick {
-      font-size: 11px;
-      padding: 5px 10px;
-      border-radius: 999px;
-      border: 1px solid var(--border);
-      background: var(--panel);
-      color: var(--muted);
-      cursor: pointer;
-    }
-    .chat-quick:hover { color: var(--ink); border-color: #444; }
-    .chat-quick.chat-clear {
-      margin-left: auto;
-      border-color: rgba(248, 113, 113, 0.35);
-      color: #fca5a5;
-    }
-    .chat-quick.chat-clear:hover { color: #fecaca; border-color: rgba(248, 113, 113, 0.55); }
-    .chat-log {
-      flex: 1;
-      overflow-y: auto;
-      padding: 12px 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-    .chat-line {
-      font-size: 12px;
-      line-height: 1.45;
-      max-width: 92%;
-    }
-    .chat-line.self { align-self: flex-end; text-align: right; }
-    .chat-line .who { font-weight: 600; font-size: 11px; margin-bottom: 2px; }
-    .chat-line .bubble {
-      display: inline-block;
-      padding: 8px 11px;
-      border-radius: 12px;
-      background: var(--panel);
-      border: 1px solid var(--border);
-      text-align: left;
-      white-space: pre-wrap;
-    }
-    .chat-line.relay .bubble {
-      border-color: rgba(99, 102, 241, 0.45);
-      background: rgba(99, 102, 241, 0.08);
-    }
-    .chat-line.reply { margin-left: 16px; opacity: 0.95; }
-    .chat-line.self .bubble { background: #1e3a5f; border-color: #2563eb; }
-    .chat-line.chat-line-new .bubble {
-      animation: chat-pop 0.35s ease-out;
-      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.35);
-    }
-    @keyframes chat-pop {
-      from { opacity: 0; transform: translateY(6px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .chat-line.chat-typing .bubble.typing-dots {
-      display: inline-flex;
-      gap: 4px;
-      align-items: center;
-      min-width: 48px;
-      padding: 10px 14px;
-    }
-    .chat-line.chat-typing .typing-dots span {
-      width: 6px; height: 6px; border-radius: 50%;
-      background: #a8a29e;
-      animation: typing-bounce 1s ease-in-out infinite;
-    }
-    .chat-line.chat-typing .typing-dots span:nth-child(2) { animation-delay: 0.15s; }
-    .chat-line.chat-typing .typing-dots span:nth-child(3) { animation-delay: 0.3s; }
-    @keyframes typing-bounce {
-      0%, 60%, 100% { transform: translateY(0); opacity: 0.45; }
-      30% { transform: translateY(-4px); opacity: 1; }
-    }
-    .cell.cell-typing { border-color: rgba(59, 130, 246, 0.45); }
-    .cell.cell-typing [data-badge] { color: #3b82f6 !important; }
-    .chat-compose {
-      display: flex;
-      gap: 8px;
-      padding: 10px 16px 14px;
-      border-top: 1px solid var(--border);
-      position: relative;
-    }
-    .chat-compose input {
-      flex: 1;
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 10px 12px;
-      color: var(--ink);
-      font-size: 13px;
-    }
-    .mention-menu {
-      position: absolute;
-      left: 16px;
-      right: 88px;
-      bottom: 100%;
-      margin-bottom: 6px;
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      overflow: hidden;
-      display: none;
-      max-height: 200px;
-      overflow-y: auto;
-      z-index: 20;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
-    }
-    .mention-menu.open { display: block; }
-    .mention-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 12px;
-      cursor: pointer;
-      border: none;
-      width: 100%;
-      text-align: left;
-      background: transparent;
-      color: var(--ink);
-      font-size: 13px;
-    }
-    .mention-item:hover, .mention-item.active {
-      background: #252528;
-    }
-    .mention-item .m-abbr {
-      width: 28px; height: 28px; border-radius: 8px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 11px; font-weight: 700;
-    }
-    .mention-item .m-sub { font-size: 11px; color: var(--muted); }
-    .chat-banner {
-      display: none;
-      padding: 8px 16px;
-      background: rgba(245, 158, 11, 0.12);
-      color: var(--work);
-      font-size: 12px;
-      border-bottom: 1px solid var(--border);
-    }
-    .chat-banner.show { display: block; }
-    .live-dot {
-      width: 8px; height: 8px; border-radius: 50%;
-      background: var(--muted);
-      display: inline-block;
-      margin-left: 8px;
-    }
-    .live-dot.on { background: var(--pass); box-shadow: 0 0 6px var(--pass); }
-    .live-dot.warn { background: var(--work); }
-    .chat-compose button {
-      padding: 10px 16px;
-      border-radius: 10px;
-      border: none;
-      background: var(--accent);
-      color: white;
-      font-weight: 600;
-      font-size: 13px;
-      cursor: pointer;
-    }
-    .sheet-backdrop {
-      position: fixed; inset: 0; background: rgba(0,0,0,0.55);
-      display: none; align-items: flex-end; justify-content: center;
-      z-index: 110;
-    }
-    .sheet-backdrop.open { display: flex; }
-    .sheet {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 16px 16px 0 0;
-      width: 100%;
-      max-width: 520px;
-      max-height: 70vh;
-      display: flex;
-      flex-direction: column;
-    }
-    .sheet-head {
-      padding: 14px 18px;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .sheet-head h2 { margin: 0; font-size: 15px; }
-    .sheet-list {
-      overflow-y: auto;
-      padding: 12px 16px 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-  </style>
-</head>
-<body>
-  <header>
-    <h1>mollip pipeline <span class="live-dot" id="liveDot" title="실시간 연결"></span></h1>
-    <label>
-      <select id="slugSelect" aria-label="feature slug"></select>
-    </label>
-    <input id="slugManual" placeholder="feature-slug" style="width: 160px" />
-    <button id="connectBtn" type="button" style="padding:8px 14px;border-radius:8px;border:1px solid var(--border);background:var(--panel);color:var(--ink);cursor:pointer">연결</button>
-    <span class="gates-label" title="기능 만들 때 거치는 6단계 (①~⑥)">진행 단계</span>
-    <div class="gates" id="gates"></div>
-  </header>
-  <div class="main-wrap">
-    <div class="grid" id="grid"></div>
-  </div>
-  <section class="chat-panel" aria-label="팀 대화">
-    <div class="chat-banner" id="chatBanner"></div>
-    <div class="chat-head">
-      <span>팀 대화</span>
-      <button type="button" class="chat-quick" data-prompt="작업 현황 알려줘">작업 현황</button>
-      <button type="button" class="chat-quick" data-prompt="@Chris 지금 뭐 하고 있어?">@Chris</button>
-      <button type="button" class="chat-quick" data-prompt="팀 스탠드업">팀 스탠드업</button>
-      <button type="button" class="chat-quick chat-clear" id="chatClear" title="대화창만 비우기">대화 초기화</button>
-    </div>
-    <div class="chat-log" id="chatLog"></div>
-    <div class="chat-compose">
-      <div class="mention-menu" id="mentionMenu" role="listbox"></div>
-      <input id="chatInput" placeholder="@Manager 현황, @John …" autocomplete="off" />
-      <button type="button" id="chatSend">전송</button>
-    </div>
-  </section>
-  <div class="modal-backdrop" id="modalBackdrop" aria-hidden="true">
-    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-      <div class="modal-head">
-        <div>
-          <h2 id="modalTitle">작업 상세</h2>
-          <p id="modalSub"></p>
-        </div>
-        <button type="button" class="modal-close" id="modalClose" aria-label="닫기">&times;</button>
-      </div>
-      <div class="modal-body" id="modalBody"></div>
-    </div>
-  </div>
-  <div class="sheet-backdrop" id="sheetBackdrop" aria-hidden="true">
-    <div class="sheet" role="dialog" aria-labelledby="sheetTitle">
-      <div class="sheet-head">
-        <h2 id="sheetTitle">히스토리</h2>
-        <button type="button" class="modal-close" id="sheetClose" aria-label="닫기">&times;</button>
-      </div>
-      <div class="sheet-list" id="sheetList"></div>
-    </div>
-  </div>
-  <footer>
-    칸 메시지 <strong style="color:var(--ink)">클릭</strong> → 상세 · 아래에서 <strong style="color:var(--ink)">팀 대화</strong> ·
-    이벤트: <code>python3 scripts/pipeline_emit.py &lt;slug&gt; "John (PM)" "메시지"</code>
-    · 보드: <code>PIPELINE_BOARD_URL=http://127.0.0.1:8765</code>
-  </footer>
-  <script>
-    const ROLES = [
-      { id: "Manager", title: "Manager", sub: "검수 · 오케스트", abbr: "M", color: "#6366f1" },
-      { id: "John (PM)", title: "John", sub: "PM · 01-spec", abbr: "J", color: "#8b5cf6" },
-      { id: "Sam (Design)", title: "Sam", sub: "Design · 02", abbr: "S", color: "#ec4899" },
-      { id: "Alex (Design QA)", title: "Alex", sub: "Design QA · 03", abbr: "A", color: "#f97316" },
-      { id: "Chris (Dev)", title: "Chris", sub: "Dev · 04", abbr: "C", color: "#3b82f6" },
-      { id: "Taylor (QA)", title: "Taylor", sub: "QA · 05", abbr: "T", color: "#14b8a6" },
-      { id: "You", title: "You", sub: "⑥ 최종 확인", abbr: "U", color: "#78716c" },
-    ];
-    const GATES = ["G1", "G2", "G3", "G4", "G5", "G6"];
-    const GATE_PLAIN = {
-      G1: { title: "① 기획", desc: "무엇을 만들지·완료 기준을 문서로 정리", file: "01-spec.md" },
-      G2: { title: "② 디자인", desc: "화면 톤·카피·레이아웃 (디자인 브리프)", file: "02-design-brief.md" },
-      G3: { title: "③ 디자인 검수", desc: "디자인이 기획·브랜드에 맞는지 확인", file: "03-design-review.md" },
-      G4: { title: "④ 시뮬 확인", desc: "시뮬레이터에서 화면·동작 스모크 테스트", file: null },
-      G5: { title: "⑤ 개발·검증", desc: "개발 + 타입·테스트·화면 확인 (치명 버그 없음)", file: "05-qa-report.md" },
-      G6: { title: "⑥ 사용자 OK", desc: "완료 보고 후, 당신이 최종 승인", file: "06-handoff-to-user.md" },
-    };
-    const STATUS_KO = { done: "완료", working: "진행 중", pending: "아직", fail: "다시 필요" };
-    const MENTION_HANDLES = ROLES.filter((r) => r.id !== "You").map((r) => ({
-      handle: r.title.replace(/\s.*/, "") === "Manager" ? "Manager" : r.title.split(" ")[0],
-      role: r.id,
-      title: r.title,
-      sub: r.sub,
-      abbr: r.abbr,
-      color: r.color,
-    }));
-    // Aliases for @ matching
-    MENTION_HANDLES.push(
-      { handle: "매니저", role: "Manager", title: "Manager", sub: "", abbr: "M", color: "#6366f1" },
-      { handle: "pm", role: "John (PM)", title: "John", sub: "", abbr: "J", color: "#8b5cf6" },
-      { handle: "dev", role: "Chris (Dev)", title: "Chris", sub: "", abbr: "C", color: "#3b82f6" },
-    );
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>mollip · pipeline board</title>
+		<style>
+			:root {
+				--bg: #0f0f10;
+				--panel: #1a1a1d;
+				--border: #2a2a2e;
+				--ink: #f5f5f4;
+				--muted: #a8a29e;
+				--accent: #3b82f6;
+				--pass: #22c55e;
+				--fail: #ef4444;
+				--work: #f59e0b;
+			}
+			* {
+				box-sizing: border-box;
+			}
+			body {
+				margin: 0;
+				font-family:
+					'Pretendard',
+					system-ui,
+					-apple-system,
+					sans-serif;
+				background: var(--bg);
+				color: var(--ink);
+				min-height: 100vh;
+				display: flex;
+				flex-direction: column;
+			}
+			.main-wrap {
+				flex: 1;
+				overflow: auto;
+			}
+			header {
+				padding: 16px 20px;
+				border-bottom: 1px solid var(--border);
+				display: flex;
+				flex-wrap: wrap;
+				align-items: center;
+				gap: 12px;
+			}
+			header h1 {
+				margin: 0;
+				font-size: 15px;
+				font-weight: 600;
+				letter-spacing: 0.02em;
+			}
+			header select,
+			header input {
+				background: var(--panel);
+				border: 1px solid var(--border);
+				color: var(--ink);
+				border-radius: 8px;
+				padding: 8px 12px;
+				font-size: 13px;
+			}
+			.gates {
+				display: flex;
+				gap: 6px;
+				margin-left: auto;
+				flex-wrap: wrap;
+			}
+			.gate {
+				font-size: 11px;
+				padding: 4px 10px;
+				border-radius: 999px;
+				border: 1px solid var(--border);
+				color: var(--muted);
+				cursor: help;
+				display: inline-flex;
+				flex-direction: column;
+				align-items: center;
+				line-height: 1.2;
+				min-width: 44px;
+			}
+			.gate strong {
+				color: var(--ink);
+				font-size: 11px;
+			}
+			.gate-sub {
+				font-size: 9px;
+				opacity: 0.85;
+				margin-top: 1px;
+			}
+			.gates-label {
+				font-size: 11px;
+				color: var(--muted);
+				margin-right: 4px;
+			}
+			.gate.done {
+				border-color: var(--pass);
+				color: var(--pass);
+			}
+			.gate.fail {
+				border-color: var(--fail);
+				color: var(--fail);
+			}
+			.gate.working {
+				border-color: var(--work);
+				color: var(--work);
+				animation: gate-work-pulse 1.2s ease-in-out infinite;
+			}
+			@keyframes gate-work-pulse {
+				0%,
+				100% {
+					box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.35);
+				}
+				50% {
+					box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.15);
+				}
+			}
+			.grid {
+				display: grid;
+				grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+				gap: 10px;
+				padding: 16px;
+				align-items: stretch;
+			}
+			@media (min-width: 1200px) {
+				.grid {
+					grid-template-columns: repeat(4, 1fr);
+				}
+			}
+			@media (min-width: 1600px) {
+				.grid {
+					grid-template-columns: repeat(7, 1fr);
+				}
+			}
+			.cell {
+				background: var(--panel);
+				border: 1px solid var(--border);
+				border-radius: 14px;
+				display: flex;
+				flex-direction: column;
+				min-height: 200px;
+				overflow: hidden;
+				position: relative;
+				isolation: isolate;
+				transition:
+					border-color 0.2s,
+					box-shadow 0.2s;
+			}
+			.cell.working {
+				border-color: transparent;
+				box-shadow: 0 0 20px rgba(245, 158, 11, 0.12);
+			}
+			.cell.working::before {
+				content: '';
+				position: absolute;
+				inset: -50%;
+				z-index: 0;
+				background: conic-gradient(
+					from 0deg,
+					transparent 0deg 50deg,
+					#f59e0b 90deg,
+					#fde68a 130deg,
+					#f59e0b 170deg,
+					transparent 210deg 360deg
+				);
+				animation: work-border-spin 1.35s linear infinite;
+				pointer-events: none;
+			}
+			.cell.working::after {
+				content: '';
+				position: absolute;
+				inset: 2px;
+				border-radius: 12px;
+				background: var(--panel);
+				z-index: 0;
+				pointer-events: none;
+			}
+			.cell.working > * {
+				position: relative;
+				z-index: 1;
+			}
+			@keyframes work-border-spin {
+				to {
+					transform: rotate(360deg);
+				}
+			}
+			.cell.done {
+				border-color: rgba(34, 197, 94, 0.4);
+			}
+			.cell-head {
+				padding: 12px 14px;
+				border-bottom: 1px solid var(--border);
+				display: flex;
+				align-items: center;
+				gap: 10px;
+			}
+			.avatar {
+				width: 36px;
+				height: 36px;
+				border-radius: 10px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				font-size: 13px;
+				font-weight: 700;
+				flex-shrink: 0;
+			}
+			.cell-title {
+				font-size: 13px;
+				font-weight: 600;
+				line-height: 1.2;
+			}
+			.cell-sub {
+				font-size: 11px;
+				color: var(--muted);
+				margin-top: 2px;
+			}
+			.badge {
+				margin-left: auto;
+				font-size: 10px;
+				text-transform: uppercase;
+				letter-spacing: 0.06em;
+				padding: 3px 7px;
+				border-radius: 6px;
+				background: #252528;
+				color: var(--muted);
+			}
+			.badge.working {
+				background: rgba(245, 158, 11, 0.15);
+				color: var(--work);
+			}
+			.badge.done {
+				background: rgba(34, 197, 94, 0.12);
+				color: var(--pass);
+			}
+			.badge.fail {
+				background: rgba(239, 68, 68, 0.12);
+				color: var(--fail);
+			}
+			.feed {
+				flex: 1;
+				overflow-y: auto;
+				padding: 10px 12px;
+				display: flex;
+				flex-direction: column;
+				gap: 8px;
+				font-size: 12px;
+				line-height: 1.45;
+			}
+			.msg {
+				padding: 8px 10px;
+				background: #121214;
+				border-radius: 10px;
+				border: 1px solid #222;
+			}
+			.msg.gate {
+				border-color: rgba(59, 130, 246, 0.35);
+			}
+			.msg.chat {
+				border-color: rgba(99, 102, 241, 0.35);
+			}
+			.msg-meta {
+				font-size: 10px;
+				color: var(--muted);
+				margin-bottom: 4px;
+			}
+			.msg-body {
+				color: #e7e5e4;
+				white-space: pre-wrap;
+				word-break: break-word;
+			}
+			.empty-hint {
+				color: var(--muted);
+				font-size: 11px;
+				text-align: center;
+				padding: 24px 8px;
+			}
+			.history-btn {
+				margin-top: 8px;
+				width: 100%;
+				padding: 8px 10px;
+				border-radius: 10px;
+				border: 1px dashed var(--border);
+				background: transparent;
+				color: var(--muted);
+				font-size: 11px;
+				cursor: pointer;
+			}
+			.history-btn:hover {
+				color: var(--ink);
+				border-color: #555;
+			}
+			footer {
+				padding: 10px 20px;
+				border-top: 1px solid var(--border);
+				font-size: 11px;
+				color: var(--muted);
+			}
+			code {
+				color: var(--accent);
+			}
+			.msg {
+				cursor: pointer;
+			}
+			.msg:hover {
+				border-color: #444;
+				background: #18181b;
+			}
+			.msg-hint {
+				font-size: 9px;
+				color: var(--muted);
+				margin-top: 6px;
+				opacity: 0.85;
+			}
+			.modal-backdrop {
+				position: fixed;
+				inset: 0;
+				background: rgba(0, 0, 0, 0.65);
+				display: none;
+				align-items: center;
+				justify-content: center;
+				padding: 24px;
+				z-index: 100;
+			}
+			.modal-backdrop.open {
+				display: flex;
+			}
+			.modal {
+				background: var(--panel);
+				border: 1px solid var(--border);
+				border-radius: 16px;
+				max-width: 640px;
+				width: 100%;
+				max-height: min(85vh, 720px);
+				display: flex;
+				flex-direction: column;
+				overflow: hidden;
+				box-shadow: 0 24px 48px rgba(0, 0, 0, 0.45);
+			}
+			.modal-head {
+				padding: 16px 18px;
+				border-bottom: 1px solid var(--border);
+				display: flex;
+				align-items: flex-start;
+				gap: 12px;
+			}
+			.modal-head h2 {
+				margin: 0;
+				font-size: 15px;
+				font-weight: 600;
+				flex: 1;
+			}
+			.modal-head p {
+				margin: 4px 0 0;
+				font-size: 12px;
+				color: var(--muted);
+			}
+			.modal-close {
+				background: transparent;
+				border: none;
+				color: var(--muted);
+				font-size: 22px;
+				line-height: 1;
+				cursor: pointer;
+				padding: 0 4px;
+			}
+			.modal-body {
+				padding: 16px 18px;
+				overflow-y: auto;
+				font-size: 13px;
+				line-height: 1.55;
+			}
+			.modal-section {
+				margin-bottom: 16px;
+			}
+			.modal-section h3 {
+				margin: 0 0 8px;
+				font-size: 11px;
+				text-transform: uppercase;
+				letter-spacing: 0.08em;
+				color: var(--muted);
+			}
+			.modal-section h3 .artifact-filename {
+				text-transform: none;
+				letter-spacing: 0;
+				font-size: 12px;
+				color: #d6d3d1;
+			}
+			.modal-artifact {
+				background: #0c0c0d;
+				border: 1px solid var(--border);
+				border-radius: 10px;
+				padding: 12px 14px;
+				font-family: ui-monospace, monospace;
+				font-size: 11px;
+				white-space: pre-wrap;
+				word-break: break-word;
+				max-height: 40vh;
+				overflow-y: auto;
+				color: #d6d3d1;
+			}
+			.modal-artifact.loading {
+				color: var(--muted);
+				font-style: italic;
+			}
+			.chat-panel {
+				border-top: 1px solid var(--border);
+				background: #141416;
+				display: flex;
+				flex-direction: column;
+				max-height: 42vh;
+				min-height: 200px;
+			}
+			.chat-head {
+				padding: 10px 16px;
+				display: flex;
+				align-items: center;
+				gap: 8px;
+				flex-wrap: wrap;
+				border-bottom: 1px solid var(--border);
+			}
+			.chat-head span {
+				font-size: 13px;
+				font-weight: 600;
+				margin-right: 8px;
+			}
+			.chat-quick {
+				font-size: 11px;
+				padding: 5px 10px;
+				border-radius: 999px;
+				border: 1px solid var(--border);
+				background: var(--panel);
+				color: var(--muted);
+				cursor: pointer;
+			}
+			.chat-quick:hover {
+				color: var(--ink);
+				border-color: #444;
+			}
+			.chat-quick.chat-clear {
+				margin-left: auto;
+				border-color: rgba(248, 113, 113, 0.35);
+				color: #fca5a5;
+			}
+			.chat-quick.chat-clear:hover {
+				color: #fecaca;
+				border-color: rgba(248, 113, 113, 0.55);
+			}
+			.chat-log {
+				flex: 1;
+				overflow-y: auto;
+				padding: 12px 16px;
+				display: flex;
+				flex-direction: column;
+				gap: 8px;
+			}
+			.chat-line {
+				font-size: 12px;
+				line-height: 1.45;
+				max-width: 92%;
+			}
+			.chat-line.self {
+				align-self: flex-end;
+				text-align: right;
+			}
+			.chat-line .who {
+				font-weight: 600;
+				font-size: 11px;
+				margin-bottom: 2px;
+			}
+			.chat-line .bubble {
+				display: inline-block;
+				padding: 8px 11px;
+				border-radius: 12px;
+				background: var(--panel);
+				border: 1px solid var(--border);
+				text-align: left;
+				white-space: pre-wrap;
+			}
+			.chat-line.relay .bubble {
+				border-color: rgba(99, 102, 241, 0.45);
+				background: rgba(99, 102, 241, 0.08);
+			}
+			.chat-line.reply {
+				margin-left: 16px;
+				opacity: 0.95;
+			}
+			.chat-line.self .bubble {
+				background: #1e3a5f;
+				border-color: #2563eb;
+			}
+			.chat-line.chat-line-new .bubble {
+				animation: chat-pop 0.35s ease-out;
+				box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.35);
+			}
+			@keyframes chat-pop {
+				from {
+					opacity: 0;
+					transform: translateY(6px);
+				}
+				to {
+					opacity: 1;
+					transform: translateY(0);
+				}
+			}
+			.chat-line.chat-typing .bubble.typing-dots {
+				display: inline-flex;
+				gap: 4px;
+				align-items: center;
+				min-width: 48px;
+				padding: 10px 14px;
+			}
+			.chat-line.chat-typing .typing-dots span {
+				width: 6px;
+				height: 6px;
+				border-radius: 50%;
+				background: #a8a29e;
+				animation: typing-bounce 1s ease-in-out infinite;
+			}
+			.chat-line.chat-typing .typing-dots span:nth-child(2) {
+				animation-delay: 0.15s;
+			}
+			.chat-line.chat-typing .typing-dots span:nth-child(3) {
+				animation-delay: 0.3s;
+			}
+			@keyframes typing-bounce {
+				0%,
+				60%,
+				100% {
+					transform: translateY(0);
+					opacity: 0.45;
+				}
+				30% {
+					transform: translateY(-4px);
+					opacity: 1;
+				}
+			}
+			.cell.cell-typing {
+				border-color: rgba(59, 130, 246, 0.45);
+			}
+			.cell.cell-typing [data-badge] {
+				color: #3b82f6 !important;
+			}
+			.chat-compose {
+				display: flex;
+				gap: 8px;
+				padding: 10px 16px 14px;
+				border-top: 1px solid var(--border);
+				position: relative;
+			}
+			.chat-compose input {
+				flex: 1;
+				background: var(--panel);
+				border: 1px solid var(--border);
+				border-radius: 10px;
+				padding: 10px 12px;
+				color: var(--ink);
+				font-size: 13px;
+			}
+			.mention-menu {
+				position: absolute;
+				left: 16px;
+				right: 88px;
+				bottom: 100%;
+				margin-bottom: 6px;
+				background: var(--panel);
+				border: 1px solid var(--border);
+				border-radius: 12px;
+				overflow: hidden;
+				display: none;
+				max-height: 200px;
+				overflow-y: auto;
+				z-index: 20;
+				box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+			}
+			.mention-menu.open {
+				display: block;
+			}
+			.mention-item {
+				display: flex;
+				align-items: center;
+				gap: 10px;
+				padding: 10px 12px;
+				cursor: pointer;
+				border: none;
+				width: 100%;
+				text-align: left;
+				background: transparent;
+				color: var(--ink);
+				font-size: 13px;
+			}
+			.mention-item:hover,
+			.mention-item.active {
+				background: #252528;
+			}
+			.mention-item .m-abbr {
+				width: 28px;
+				height: 28px;
+				border-radius: 8px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				font-size: 11px;
+				font-weight: 700;
+			}
+			.mention-item .m-sub {
+				font-size: 11px;
+				color: var(--muted);
+			}
+			.chat-banner {
+				display: none;
+				padding: 8px 16px;
+				background: rgba(245, 158, 11, 0.12);
+				color: var(--work);
+				font-size: 12px;
+				border-bottom: 1px solid var(--border);
+			}
+			.chat-banner.show {
+				display: block;
+			}
+			.live-dot {
+				width: 8px;
+				height: 8px;
+				border-radius: 50%;
+				background: var(--muted);
+				display: inline-block;
+				margin-left: 8px;
+			}
+			.live-dot.on {
+				background: var(--pass);
+				box-shadow: 0 0 6px var(--pass);
+			}
+			.live-dot.warn {
+				background: var(--work);
+			}
+			.chat-compose button {
+				padding: 10px 16px;
+				border-radius: 10px;
+				border: none;
+				background: var(--accent);
+				color: white;
+				font-weight: 600;
+				font-size: 13px;
+				cursor: pointer;
+			}
+			.sheet-backdrop {
+				position: fixed;
+				inset: 0;
+				background: rgba(0, 0, 0, 0.55);
+				display: none;
+				align-items: flex-end;
+				justify-content: center;
+				z-index: 110;
+			}
+			.sheet-backdrop.open {
+				display: flex;
+			}
+			.sheet {
+				background: var(--panel);
+				border: 1px solid var(--border);
+				border-radius: 16px 16px 0 0;
+				width: 100%;
+				max-width: 520px;
+				max-height: 70vh;
+				display: flex;
+				flex-direction: column;
+			}
+			.sheet-head {
+				padding: 14px 18px;
+				border-bottom: 1px solid var(--border);
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+			}
+			.sheet-head h2 {
+				margin: 0;
+				font-size: 15px;
+			}
+			.sheet-list {
+				overflow-y: auto;
+				padding: 12px 16px 20px;
+				display: flex;
+				flex-direction: column;
+				gap: 8px;
+			}
+		</style>
+	</head>
+	<body>
+		<header>
+			<h1>mollip pipeline <span class="live-dot" id="liveDot" title="실시간 연결"></span></h1>
+			<label>
+				<select id="slugSelect" aria-label="feature slug"></select>
+			</label>
+			<input id="slugManual" placeholder="feature-slug" style="width: 160px" />
+			<button
+				id="connectBtn"
+				type="button"
+				style="
+					padding: 8px 14px;
+					border-radius: 8px;
+					border: 1px solid var(--border);
+					background: var(--panel);
+					color: var(--ink);
+					cursor: pointer;
+				"
+			>
+				연결
+			</button>
+			<span class="gates-label" title="기능 만들 때 거치는 6단계 (①~⑥)">진행 단계</span>
+			<div class="gates" id="gates"></div>
+		</header>
+		<div class="main-wrap">
+			<div class="grid" id="grid"></div>
+		</div>
+		<section class="chat-panel" aria-label="팀 대화">
+			<div class="chat-banner" id="chatBanner"></div>
+			<div class="chat-head">
+				<span>팀 대화</span>
+				<button type="button" class="chat-quick" data-prompt="작업 현황 알려줘">작업 현황</button>
+				<button type="button" class="chat-quick" data-prompt="@Chris 지금 뭐 하고 있어?">
+					@Chris
+				</button>
+				<button type="button" class="chat-quick" data-prompt="팀 스탠드업">팀 스탠드업</button>
+				<button type="button" class="chat-quick chat-clear" id="chatClear" title="대화창만 비우기">
+					대화 초기화
+				</button>
+			</div>
+			<div class="chat-log" id="chatLog"></div>
+			<div class="chat-compose">
+				<div class="mention-menu" id="mentionMenu" role="listbox"></div>
+				<input id="chatInput" placeholder="@Manager 현황, @John …" autocomplete="off" />
+				<button type="button" id="chatSend">전송</button>
+			</div>
+		</section>
+		<div class="modal-backdrop" id="modalBackdrop" aria-hidden="true">
+			<div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+				<div class="modal-head">
+					<div>
+						<h2 id="modalTitle">작업 상세</h2>
+						<p id="modalSub"></p>
+					</div>
+					<button type="button" class="modal-close" id="modalClose" aria-label="닫기">
+						&times;
+					</button>
+				</div>
+				<div class="modal-body" id="modalBody"></div>
+			</div>
+		</div>
+		<div class="sheet-backdrop" id="sheetBackdrop" aria-hidden="true">
+			<div class="sheet" role="dialog" aria-labelledby="sheetTitle">
+				<div class="sheet-head">
+					<h2 id="sheetTitle">히스토리</h2>
+					<button type="button" class="modal-close" id="sheetClose" aria-label="닫기">
+						&times;
+					</button>
+				</div>
+				<div class="sheet-list" id="sheetList"></div>
+			</div>
+		</div>
+		<footer>
+			칸 메시지 <strong style="color: var(--ink)">클릭</strong> → 상세 · 아래에서
+			<strong style="color: var(--ink)">팀 대화</strong> · 이벤트:
+			<code>python3 scripts/pipeline_emit.py &lt;slug&gt; "John (PM)" "메시지"</code> · 보드:
+			<code>PIPELINE_BOARD_URL=http://127.0.0.1:8765</code>
+		</footer>
+		<script>
+			const ROLES = [
+				{ id: 'Manager', title: 'Manager', sub: '검수 · 오케스트', abbr: 'M', color: '#6366f1' },
+				{ id: 'John (PM)', title: 'John', sub: 'PM · 01-spec', abbr: 'J', color: '#8b5cf6' },
+				{ id: 'Sam (Design)', title: 'Sam', sub: 'Design · 02', abbr: 'S', color: '#ec4899' },
+				{
+					id: 'Alex (Design QA)',
+					title: 'Alex',
+					sub: 'Design QA · 03',
+					abbr: 'A',
+					color: '#f97316',
+				},
+				{ id: 'Chris (Dev)', title: 'Chris', sub: 'Dev · 04', abbr: 'C', color: '#3b82f6' },
+				{ id: 'Taylor (QA)', title: 'Taylor', sub: 'QA · 05', abbr: 'T', color: '#14b8a6' },
+				{ id: 'You', title: 'You', sub: '⑥ 최종 확인', abbr: 'U', color: '#78716c' },
+			];
+			const GATES = ['G1', 'G2', 'G3', 'G4', 'G5', 'G6'];
+			const GATE_PLAIN = {
+				G1: { title: '① 기획', desc: '무엇을 만들지·완료 기준을 문서로 정리', file: '01-spec.md' },
+				G2: {
+					title: '② 디자인',
+					desc: '화면 톤·카피·레이아웃 (디자인 브리프)',
+					file: '02-design-brief.md',
+				},
+				G3: {
+					title: '③ 디자인 검수',
+					desc: '디자인이 기획·브랜드에 맞는지 확인',
+					file: '03-design-review.md',
+				},
+				G4: { title: '④ 시뮬 확인', desc: '시뮬레이터에서 화면·동작 스모크 테스트', file: null },
+				G5: {
+					title: '⑤ 개발·검증',
+					desc: '개발 + 타입·테스트·화면 확인 (치명 버그 없음)',
+					file: '05-qa-report.md',
+				},
+				G6: {
+					title: '⑥ 사용자 OK',
+					desc: '완료 보고 후, 당신이 최종 승인',
+					file: '06-handoff-to-user.md',
+				},
+			};
+			const STATUS_KO = { done: '완료', working: '진행 중', pending: '아직', fail: '다시 필요' };
+			const MENTION_HANDLES = ROLES.filter((r) => r.id !== 'You').map((r) => ({
+				handle: r.title.replace(/\s.*/, '') === 'Manager' ? 'Manager' : r.title.split(' ')[0],
+				role: r.id,
+				title: r.title,
+				sub: r.sub,
+				abbr: r.abbr,
+				color: r.color,
+			}));
+			// Aliases for @ matching
+			MENTION_HANDLES.push(
+				{
+					handle: '매니저',
+					role: 'Manager',
+					title: 'Manager',
+					sub: '',
+					abbr: 'M',
+					color: '#6366f1',
+				},
+				{ handle: 'pm', role: 'John (PM)', title: 'John', sub: '', abbr: 'J', color: '#8b5cf6' },
+				{
+					handle: 'dev',
+					role: 'Chris (Dev)',
+					title: 'Chris',
+					sub: '',
+					abbr: 'C',
+					color: '#3b82f6',
+				},
+			);
 
-    const MIN_WORKING_MS = 1000;
-    const state = { slug: "", events: [], roleStatus: {}, gateStatus: {}, roleEvents: {}, chatApi: false, chatDismissed: new Set() };
-    const roleWorkingStarted = {};
-    const roleStatusTimers = {};
-    let mentionState = { open: false, start: 0, query: "", active: 0, items: [] };
-    let stream = null;
-    let pollTimer = null;
-    let streamGeneration = 0;
+			const MIN_WORKING_MS = 1000;
+			const state = {
+				slug: '',
+				events: [],
+				roleStatus: {},
+				gateStatus: {},
+				roleEvents: {},
+				chatApi: false,
+				chatDismissed: new Set(),
+			};
+			const roleWorkingStarted = {};
+			const roleStatusTimers = {};
+			let mentionState = { open: false, start: 0, query: '', active: 0, items: [] };
+			let stream = null;
+			let pollTimer = null;
+			let streamGeneration = 0;
 
-    function eventKey(ev) {
-      return `${ev.ts}|${ev.role}|${ev.body}|${ev.kind || ""}`;
-    }
+			function eventKey(ev) {
+				return `${ev.ts}|${ev.role}|${ev.body}|${ev.kind || ''}`;
+			}
 
-    function dismissedChatStorageKey(slug) {
-      return `pipelineBoardChatDismissed:${slug}`;
-    }
+			function dismissedChatStorageKey(slug) {
+				return `pipelineBoardChatDismissed:${slug}`;
+			}
 
-    function loadDismissedChats(slug) {
-      state.chatDismissed = new Set();
-      if (!slug) return;
-      try {
-        const raw = sessionStorage.getItem(dismissedChatStorageKey(slug));
-        if (raw) state.chatDismissed = new Set(JSON.parse(raw));
-      } catch (_) {}
-    }
+			function loadDismissedChats(slug) {
+				state.chatDismissed = new Set();
+				if (!slug) return;
+				try {
+					const raw = sessionStorage.getItem(dismissedChatStorageKey(slug));
+					if (raw) state.chatDismissed = new Set(JSON.parse(raw));
+				} catch (_) {}
+			}
 
-    function saveDismissedChats() {
-      if (!state.slug) return;
-      try {
-        sessionStorage.setItem(
-          dismissedChatStorageKey(state.slug),
-          JSON.stringify([...state.chatDismissed]),
-        );
-      } catch (_) {}
-    }
+			function saveDismissedChats() {
+				if (!state.slug) return;
+				try {
+					sessionStorage.setItem(
+						dismissedChatStorageKey(state.slug),
+						JSON.stringify([...state.chatDismissed]),
+					);
+				} catch (_) {}
+			}
 
-    function rememberDismissedChat(ev) {
-      if (!ev || ev.kind !== "chat") return;
-      state.chatDismissed.add(eventKey(ev));
-      saveDismissedChats();
-    }
+			function rememberDismissedChat(ev) {
+				if (!ev || ev.kind !== 'chat') return;
+				state.chatDismissed.add(eventKey(ev));
+				saveDismissedChats();
+			}
 
-    function clearDismissedChatsStore() {
-      state.chatDismissed = new Set();
-      if (state.slug) sessionStorage.removeItem(dismissedChatStorageKey(state.slug));
-    }
+			function clearDismissedChatsStore() {
+				state.chatDismissed = new Set();
+				if (state.slug) sessionStorage.removeItem(dismissedChatStorageKey(state.slug));
+			}
 
-    function isChatDismissed(ev) {
-      return ev.kind === "chat" && state.chatDismissed.has(eventKey(ev));
-    }
+			function isChatDismissed(ev) {
+				return ev.kind === 'chat' && state.chatDismissed.has(eventKey(ev));
+			}
 
-    function setLiveStatus(mode) {
-      const dot = document.getElementById("liveDot");
-      dot.classList.remove("on", "warn");
-      if (mode === "sse") {
-        dot.classList.add("on");
-        dot.title = "실시간 연결됨 (SSE)";
-      } else if (mode === "poll") {
-        dot.classList.add("warn");
-        dot.title = "주기 동기화 (2초)";
-      } else {
-        dot.title = "연결 끊김 — 연결 버튼";
-      }
-    }
+			function setLiveStatus(mode) {
+				const dot = document.getElementById('liveDot');
+				dot.classList.remove('on', 'warn');
+				if (mode === 'sse') {
+					dot.classList.add('on');
+					dot.title = '실시간 연결됨 (SSE)';
+				} else if (mode === 'poll') {
+					dot.classList.add('warn');
+					dot.title = '주기 동기화 (2초)';
+				} else {
+					dot.title = '연결 끊김 — 연결 버튼';
+				}
+			}
 
-    function el(tag, cls, html) {
-      const n = document.createElement(tag);
-      if (cls) n.className = cls;
-      if (html != null) n.innerHTML = html;
-      return n;
-    }
+			function el(tag, cls, html) {
+				const n = document.createElement(tag);
+				if (cls) n.className = cls;
+				if (html != null) n.innerHTML = html;
+				return n;
+			}
 
-    function buildGrid() {
-      const grid = document.getElementById("grid");
-      grid.innerHTML = "";
-      for (const r of ROLES) {
-        const cell = el("article", "cell");
-        cell.dataset.role = r.id;
-        cell.innerHTML = `
+			function buildGrid() {
+				const grid = document.getElementById('grid');
+				grid.innerHTML = '';
+				for (const r of ROLES) {
+					const cell = el('article', 'cell');
+					cell.dataset.role = r.id;
+					cell.innerHTML = `
           <div class="cell-head">
             <div class="avatar" style="background:${r.color}22;color:${r.color}">${r.abbr}</div>
             <div>
@@ -678,1021 +930,1061 @@
           </div>
           <div class="feed" data-feed><div class="empty-hint">대기 중…</div></div>
         `;
-        grid.appendChild(cell);
-      }
-    }
-
-    function plainEventBody(ev) {
-      if (ev.kind === "gate" && ev.gate && GATE_PLAIN[ev.gate]) {
-        const p = GATE_PLAIN[ev.gate];
-        const st = STATUS_KO[ev.status] || STATUS_KO[state.gateStatus[ev.gate]] || "업데이트";
-        return `${p.title} — ${st}\n${p.desc}`;
-      }
-      let b = ev.body || "";
-      const jargon = [
-        [/G5 Dev\+QA Pass \(P0=0\)/i, "⑤ 개발·검증 단계 통과 (치명 버그 없음)"],
-        [/G1 Spec Pass/i, "① 기획 단계 통과"],
-        [/G2 Design brief/i, "② 디자인 브리프 확정"],
-        [/G3 Design QA/i, "③ 디자인 검수"],
-        [/P0=0/i, "치명 버그 없음"],
-        [/tsc \+ Jest Pass/i, "타입 검사·테스트 통과"],
-      ];
-      for (const pair of jargon) b = b.replace(pair[0], pair[1]);
-      return b;
-    }
-
-    function renderGates() {
-      const g = document.getElementById("gates");
-      g.innerHTML = "";
-      for (const id of GATES) {
-        const st = state.gateStatus[id] || "pending";
-        const p = GATE_PLAIN[id];
-        const node = el("span", "gate" + (st === "done" ? " done" : st === "fail" ? " fail" : st === "working" ? " working" : ""));
-        node.title = `${p.title}\n${p.desc}\n상태: ${STATUS_KO[st] || st}`;
-        node.innerHTML = `<strong>${p.title}</strong><span class="gate-sub">${STATUS_KO[st] || st}</span>`;
-        node.addEventListener("click", () => {
-          openEventModal({
-            role: "Manager",
-            kind: "gate",
-            gate: id,
-            status: st,
-            body: `${p.title} — ${p.desc}`,
-            ts: new Date().toISOString(),
-          });
-        });
-        g.appendChild(node);
-      }
-    }
-
-    function createMsgElement(ev) {
-      const msg = el("div", "msg" + (ev.kind === "gate" ? " gate" : "") + (ev.kind === "chat" ? " chat" : ""));
-      const meta = [];
-      meta.push(new Date(ev.ts).toLocaleTimeString("ko-KR"));
-      if (ev.gate) meta.push(GATE_PLAIN[ev.gate]?.title || ev.gate);
-      if (ev.artifact) meta.push(ev.artifact);
-      msg.innerHTML = `<div class="msg-meta">${meta.join(" · ")}</div><div class="msg-body"></div><div class="msg-hint">${ev.kind === "chat" ? "대화 · 탭하여 상세" : "탭하여 상세"}</div>`;
-      msg.querySelector(".msg-body").textContent = plainEventBody(ev);
-      msg.addEventListener("click", () => openEventModal(ev));
-      return msg;
-    }
-
-    function refreshRoleFeed(role) {
-      const cell = document.querySelector(`.cell[data-role="${CSS.escape(role)}"]`);
-      if (!cell) return;
-      const feed = cell.querySelector("[data-feed]");
-      const list = state.roleEvents[role] || [];
-      feed.innerHTML = "";
-      if (list.length === 0) {
-        feed.innerHTML = `<div class="empty-hint">대기 중…</div>`;
-        return;
-      }
-      const latest = list[list.length - 1];
-      feed.appendChild(createMsgElement(latest));
-      const older = list.length - 1;
-      if (older > 0) {
-        const btn = document.createElement("button");
-        btn.type = "button";
-        btn.className = "history-btn";
-        btn.textContent = `히스토리 ${older}건 보기`;
-        btn.addEventListener("click", (e) => {
-          e.stopPropagation();
-          openHistorySheet(role, list.slice(0, -1).reverse());
-        });
-        feed.appendChild(btn);
-      }
-    }
-
-    function openHistorySheet(role, eventsNewestFirst) {
-      const title = ROLES.find((r) => r.id === role)?.title || role;
-      document.getElementById("sheetTitle").textContent = `${title} · 히스토리`;
-      const listEl = document.getElementById("sheetList");
-      listEl.innerHTML = "";
-      for (const ev of eventsNewestFirst) {
-        listEl.appendChild(createMsgElement(ev));
-      }
-      const sheet = document.getElementById("sheetBackdrop");
-      sheet.classList.add("open");
-      sheet.setAttribute("aria-hidden", "false");
-    }
-
-    function closeSheet() {
-      const sheet = document.getElementById("sheetBackdrop");
-      sheet.classList.remove("open");
-      sheet.setAttribute("aria-hidden", "true");
-    }
-
-    let chatDeliveryChain = Promise.resolve();
-    let chatReplayBulk = false;
-    let chatEpoch = 0;
-
-    function sleep(ms) {
-      return new Promise((r) => setTimeout(r, ms));
-    }
-
-    function typingDelayMs(ev) {
-      const body = ev.body || "";
-      if (ev.role === "Manager" && body.startsWith("📎")) return 900 + Math.random() * 400;
-      return 550 + Math.min(body.length * 8, 1200) + Math.random() * 450;
-    }
-
-    function showTypingIndicator(role) {
-      hideTypingIndicator();
-      const log = document.getElementById("chatLog");
-      const who = ROLES.find((r) => r.id === role)?.title || role;
-      const row = el("div", "chat-line chat-typing");
-      row.id = "chatTypingRow";
-      row.innerHTML = `<div class="who">${escapeHtml(who)} · 작성 중</div><div class="bubble typing-dots"><span></span><span></span><span></span></div>`;
-      log.appendChild(row);
-      focusChatLine(row);
-    }
-
-    function hideTypingIndicator() {
-      document.getElementById("chatTypingRow")?.remove();
-    }
-
-    function setCellTyping(role, on) {
-      const cell = document.querySelector(`.cell[data-role="${CSS.escape(role)}"]`);
-      if (!cell) return;
-      cell.classList.toggle("cell-typing", on);
-      const badge = cell.querySelector("[data-badge]");
-      if (!badge) return;
-      if (on) {
-        if (!badge.dataset.prevText) badge.dataset.prevText = badge.textContent;
-        badge.textContent = "…";
-      } else if (badge.dataset.prevText) {
-        badge.textContent = badge.dataset.prevText;
-        delete badge.dataset.prevText;
-      }
-    }
-
-    function focusChatLine(lineEl) {
-      const log = document.getElementById("chatLog");
-      requestAnimationFrame(() => {
-        lineEl.scrollIntoView({ behavior: "smooth", block: "end" });
-        log.scrollTop = log.scrollHeight;
-      });
-    }
-
-    function deliverChatStaggered(chatEvents) {
-      if (!chatEvents.length) return Promise.resolve();
-      const epoch = chatEpoch;
-      chatDeliveryChain = chatDeliveryChain.then(async () => {
-        for (const ev of chatEvents) {
-          if (epoch !== chatEpoch) {
-            hideTypingIndicator();
-            for (const r of ROLES) setCellTyping(r.id, false);
-            return;
-          }
-          if (isChatDismissed(ev)) continue;
-          if (state.events.some((x) => eventKey(x) === eventKey(ev))) continue;
-          if (ev.role !== "You") {
-            showTypingIndicator(ev.role);
-            setCellTyping(ev.role, true);
-            await sleep(typingDelayMs(ev));
-            if (epoch !== chatEpoch) {
-              hideTypingIndicator();
-              for (const r of ROLES) setCellTyping(r.id, false);
-              return;
-            }
-            hideTypingIndicator();
-            setCellTyping(ev.role, false);
-          }
-          state.events.push(ev);
-          applyEvent(ev, { highlightChat: true });
-        }
-      });
-      return chatDeliveryChain;
-    }
-
-    function paintRoleCell(role) {
-      const cell = document.querySelector(`.cell[data-role="${CSS.escape(role)}"]`);
-      if (!cell) return;
-      const badge = cell.querySelector("[data-badge]");
-      const st = state.roleStatus[role] || "idle";
-      const label = STATUS_KO[st] || st;
-      badge.textContent = label;
-      badge.className =
-        "badge" +
-        (st === "working" ? " working" : st === "done" ? " done" : st === "fail" ? " fail" : "");
-      cell.classList.remove("working", "done");
-      if (st === "working") cell.classList.add("working");
-      if (st === "done") cell.classList.add("done");
-    }
-
-    function setRoleStatus(role, st, opts = {}) {
-      if (!role) return;
-      const live = opts.live === true;
-      if (roleStatusTimers[role]) {
-        clearTimeout(roleStatusTimers[role]);
-        delete roleStatusTimers[role];
-      }
-
-      if (st === "working") {
-        state.roleStatus[role] = "working";
-        if (live) roleWorkingStarted[role] = Date.now();
-        paintRoleCell(role);
-        return;
-      }
-
-      const prev = state.roleStatus[role];
-      const started = roleWorkingStarted[role];
-      if (live && prev === "working" && started != null) {
-        const wait = Math.max(0, MIN_WORKING_MS - (Date.now() - started));
-        if (wait > 0) {
-          roleStatusTimers[role] = window.setTimeout(() => {
-            delete roleStatusTimers[role];
-            delete roleWorkingStarted[role];
-            state.roleStatus[role] = st;
-            paintRoleCell(role);
-          }, wait);
-          return;
-        }
-      }
-
-      delete roleWorkingStarted[role];
-      state.roleStatus[role] = st;
-      paintRoleCell(role);
-    }
-
-    function applyEvent(ev, opts = {}) {
-      const skipChat = opts.skipChat === true;
-      const live = opts.live === true;
-      if (ev.kind === "chat" && !skipChat) appendChatLine(ev, { highlight: opts.highlightChat });
-      const role = ev.role;
-      if (ev.kind === "gate" && ev.gate) {
-        const gs = ev.status;
-        state.gateStatus[ev.gate] =
-          gs === "fail" ? "fail" : gs === "working" ? "working" : "done";
-      }
-      if (ev.status && role) {
-        setRoleStatus(role, ev.status, { live });
-      }
-      if (!role) return;
-      if (!state.roleEvents[role]) state.roleEvents[role] = [];
-      state.roleEvents[role].push(ev);
-      refreshRoleFeed(role);
-      renderGates();
-    }
-
-    function appendChatLine(ev, opts = {}) {
-      const log = document.getElementById("chatLog");
-      const key = `${ev.ts}|${ev.role}|${ev.body}`;
-      if (log.dataset.seen && log.dataset.seen.split("\n").includes(key)) return null;
-      log.dataset.seen = (log.dataset.seen ? log.dataset.seen + "\n" : "") + key;
-      const line = el("div", "chat-line" + (ev.role === "You" ? " self" : "") + (ev.reply_to ? " reply" : "") + ((ev.body || "").startsWith("📎") ? " relay" : "") + (opts.highlight ? " chat-line-new" : ""));
-      const who = ROLES.find((r) => r.id === ev.role)?.title || ev.role;
-      line.innerHTML = `<div class="who">${escapeHtml(who)}</div><div class="bubble">${escapeHtml(plainEventBody(ev))}</div>`;
-      line.querySelector(".bubble").addEventListener("click", () => openEventModal(ev));
-      log.appendChild(line);
-      focusChatLine(line);
-      if (opts.highlight) {
-        window.setTimeout(() => line.classList.remove("chat-line-new"), 1400);
-      }
-      return line;
-    }
-
-    function clearChatLog() {
-      const log = document.getElementById("chatLog");
-      log.innerHTML = "";
-      delete log.dataset.seen;
-    }
-
-    function applyChatClearLocal() {
-      for (const e of state.events) {
-        if (e.kind === "chat") rememberDismissedChat(e);
-      }
-      state.events = state.events.filter((e) => e.kind !== "chat");
-      state.roleEvents = {};
-      for (const ev of state.events) {
-        const role = ev.role;
-        if (!role) continue;
-        if (!state.roleEvents[role]) state.roleEvents[role] = [];
-        state.roleEvents[role].push(ev);
-      }
-      clearChatLog();
-      for (const r of ROLES) refreshRoleFeed(r.id);
-    }
-
-    async function dismissAllServerChatKeys() {
-      if (!state.slug) return;
-      try {
-        const r = await fetch(`/api/events?slug=${encodeURIComponent(state.slug)}`);
-        const d = await r.json();
-        for (const ev of d.events || []) rememberDismissedChat(ev);
-      } catch (_) {}
-    }
-
-    async function resetChatLog() {
-      if (!confirm("팀 대화를 비우고 새로 시작할까요?\n(작업·게이트 기록은 유지됩니다)")) return;
-      chatEpoch += 1;
-      hideTypingIndicator();
-      for (const r of ROLES) setCellTyping(r.id, false);
-      chatDeliveryChain = Promise.resolve();
-      chatSending = false;
-
-      await dismissAllServerChatKeys();
-
-      if (!state.slug) {
-        applyChatClearLocal();
-        return;
-      }
-
-      let serverCleared = false;
-      try {
-        const res = await fetch("/api/chat/clear", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ slug: state.slug }),
-        });
-        if (res.ok) {
-          serverCleared = true;
-          clearDismissedChatsStore();
-        }
-      } catch (_) {}
-
-      applyChatClearLocal();
-
-      if (!serverCleared) {
-        const banner = document.getElementById("chatBanner");
-        banner.textContent =
-          "대화창은 비웠어요. 새로고침 후에도 비우려면 보드 서버를 재시작하세요 (python3 tools/pipeline-board/serve.py).";
-        banner.classList.add("show");
-        window.setTimeout(() => banner.classList.remove("show"), 12000);
-      }
-    }
-
-    function ingestEvents(events, opts = {}) {
-      const bulk = opts.bulk === true || chatReplayBulk;
-      const fresh = [];
-      for (const ev of events) {
-        if (ev.kind === "chat" && isChatDismissed(ev)) continue;
-        if (state.events.some((x) => eventKey(x) === eventKey(ev))) continue;
-        fresh.push(ev);
-      }
-      if (!fresh.length) return;
-
-      if (bulk) {
-        for (const ev of fresh) {
-          state.events.push(ev);
-          applyEvent(ev);
-        }
-        const log = document.getElementById("chatLog");
-        if (log.lastElementChild) focusChatLine(log.lastElementChild);
-        return;
-      }
-
-      const nonChat = fresh.filter((e) => e.kind !== "chat");
-      const chatYou = fresh.filter((e) => e.kind === "chat" && e.role === "You");
-      const chatOther = fresh.filter((e) => e.kind === "chat" && e.role !== "You");
-
-      for (const ev of nonChat) {
-        state.events.push(ev);
-        applyEvent(ev, { skipChat: true, live: true });
-      }
-      for (const ev of chatYou) {
-        state.events.push(ev);
-        applyEvent(ev, { highlightChat: true });
-      }
-      deliverChatStaggered(chatOther);
-    }
-
-    async function syncFromServer() {
-      if (!state.slug) return;
-      try {
-        const r = await fetch(`/api/events?slug=${encodeURIComponent(state.slug)}`);
-        const d = await r.json();
-        ingestEvents(d.events || []);
-      } catch (_) {}
-    }
-
-    function startPolling() {
-      if (pollTimer) clearInterval(pollTimer);
-      pollTimer = setInterval(syncFromServer, 2000);
-    }
-
-    function stopPolling() {
-      if (pollTimer) {
-        clearInterval(pollTimer);
-        pollTimer = null;
-      }
-    }
-
-    function chatEvent(role, body, replyTo) {
-      return {
-        ts: new Date().toISOString(),
-        slug: state.slug,
-        role,
-        kind: "chat",
-        body,
-        ...(replyTo ? { reply_to: replyTo } : {}),
-      };
-    }
-
-    function lastEventByRole(role) {
-      for (let i = state.events.length - 1; i >= 0; i--) {
-        if (state.events[i].role === role) return state.events[i];
-      }
-      return null;
-    }
-
-    function buildProgressSummaryClient() {
-      const lines = [`📋 「${state.slug}」 지금 어디까지 왔는지`, ""];
-      for (const g of GATES) {
-        const st = state.gateStatus[g] || "pending";
-        const p = GATE_PLAIN[g];
-        const stKo = STATUS_KO[st] || st;
-        const icon = st === "done" ? "✅" : st === "working" ? "🔄" : st === "fail" ? "❌" : "⬜";
-        lines.push(`${icon} ${p.title} — ${stKo}`);
-        lines.push(`   ${p.desc}`);
-      }
-      return lines.join("\n");
-    }
-
-    function buildBriefStatusClient() {
-      let done = 0;
-      for (const g of GATES) {
-        if ((state.gateStatus[g] || "pending") === "done") done += 1;
-      }
-      const nextG = GATES.find((g) => (state.gateStatus[g] || "pending") !== "done") || "G6";
-      const p = GATE_PLAIN[nextG];
-      for (const role of ["Chris (Dev)", "Taylor (QA)", "Sam (Design)"]) {
-        const last = lastEventByRole(role);
-        if (last?.body) {
-          const who = ROLES.find((r) => r.id === role)?.title || role;
-          return `「${state.slug}」 ${done}/6 단계 완료. 지금은 ${p.title} 쪽이에요.\n${p.desc}\n• ${who}: ${last.body.slice(0, 70)}`;
-        }
-      }
-      return `「${state.slug}」 ${done}/6 단계 완료. 지금은 ${p.title} 쪽이에요.\n${p.desc}`;
-    }
-
-    function hasArtifact(name) {
-      return state.events.some((e) => e.artifact === name);
-    }
-
-    function casualStatusClient(role) {
-      const g = state.gateStatus;
-      const last = lastEventByRole(role);
-      if (role === "John (PM)") {
-        if (g.G1 === "done") return "01-spec.md에 AC까지 정리해 뒀어 ✓";
-        if (hasArtifact("01-spec.md")) return "기획서 다듬는 중~ 곧 통과 찍을게";
-        return "다음 스프린트 기획 준비하고 있어";
-      }
-      if (role === "Sam (Design)") {
-        if (g.G2 === "done") return "02-design-brief.md 올려뒀어 — Alex 검수 들어가면 돼";
-        if (g.G1 === "done" || hasArtifact("01-spec.md")) return "John 기획 받았어, 화면·카피 잡는 중";
-        return "기획 오면 바로 브리프 그릴게~";
-      }
-      if (role === "Alex (Design QA)") {
-        if (g.G3 === "done") return "03-design-review.md Pass 찍었어 — Chris 개발 GO";
-        if (hasArtifact("02-design-brief.md")) return "Sam 브리프 보고 검수표 채우는 중";
-        return "검수 대기 중이야";
-      }
-      if (role === "Chris (Dev)") {
-        if (g.G5 === "done") return "코드·04-dev-notes.md 반영 끝 — Taylor QA 중";
-        if (last?.status === "done") return "맡은 AC 구현 끝! QA만 남았어";
-        if (last?.status === "working") {
-          const b = (last.body || "").slice(0, 60);
-          return b ? `코드 올리는 중… ${b}` : "지금 구현 중!";
-        }
-        if (g.G3 === "done") return "디자인 OK 받아서 AC 하나씩 개발 중";
-        return "개발 대기 — 디자인 검수만 기다리는 중";
-      }
-      if (role === "Taylor (QA)") {
-        if (g.G5 === "done") return "05-qa-report.md 올렸어 — 타입·테스트·화면 OK ✓";
-        if (last?.status === "working") return "지금 시뮬 돌려보면서 검증 중~";
-        if (g.G3 === "done") return "Chris 개발 올라오면 바로 검증할게";
-        return "QA 준비돼 있어, 개발만 오면 돼";
-      }
-      return null;
-    }
-
-    function artifactHandoffsClient() {
-      const g = state.gateStatus;
-      const chain = [
-        ["G1", "John", "Sam", "01-spec.md", "기획 스펙"],
-        ["G2", "Sam", "Alex", "02-design-brief.md", "디자인 브리프"],
-        ["G3", "Alex", "Chris", "03-design-review.md", "디자인 검수(Pass)"],
-        ["G5", "Chris", "Taylor", "04-dev-notes.md", "구현 코드 + 개발 노트"],
-        ["G5", "Taylor", "Manager", "05-qa-report.md", "QA 리포트"],
-        ["G6", "Manager", "당신", "06-handoff-to-user.md", "최종 핸드오프"],
-      ];
-      return chain
-        .filter(([gate]) => g[gate] === "done")
-        .map(([, a, b, art, label]) => ({
-          body: `📎 ${a} → ${b}: ${label} · \`${art}\``,
-          artifact: art,
-        }));
-    }
-
-    const WORKER_ROLES = ["John (PM)", "Sam (Design)", "Alex (Design QA)", "Chris (Dev)", "Taylor (QA)"];
-
-    function isTeamIdle() {
-      for (const role of WORKER_ROLES) {
-        const last = lastEventByRole(role);
-        if (last?.status === "working") return false;
-      }
-      return true;
-    }
-
-    function restStatusClient(role) {
-      const g = state.gateStatus;
-      const last = lastEventByRole(role);
-      if (role === "John (PM)") {
-        if (g.G1 === "done") return "기획은 끝 — 지금은 쉬는 중 ☕";
-        return "할당된 작업 없어서 대기 중~";
-      }
-      if (role === "Sam (Design)") {
-        if (g.G2 === "done") return "브리프까지 끝, 손 놨어 ☕";
-        return "디자인 할 일 없어서 쉬는 중";
-      }
-      if (role === "Alex (Design QA)") {
-        if (g.G3 === "done") return "검수 Pass 했어 — 지금은 휴식 ☕";
-        return "검수 대기라 쉬는 중";
-      }
-      if (role === "Chris (Dev)") {
-        if (g.G5 === "done" || last?.status === "done") return "구현·QA까지 끝 — 쉬는 중 ☕";
-        return "개발 손 댈 게 없어서 대기 중";
-      }
-      if (role === "Taylor (QA)") {
-        if (g.G5 === "done") return "QA 리포트까지 끝, 쉬는 중 ☕";
-        return "검증할 게 없어서 대기 중";
-      }
-      return "쉬는 중 ☕";
-    }
-
-    function teamBanterClient(userTs) {
-      if (isTeamIdle()) {
-        const out = [
-          chatEvent("Manager", "지금 돌아가는 작업 없어 — 팀은 잠깐 쉬는 중이야 ☕", userTs),
-        ];
-        const rid = out[0].ts;
-        for (const r of ROLES) {
-          if (r.id === "Manager" || r.id === "You") continue;
-          out.push(chatEvent(r.id, restStatusClient(r.id), rid));
-        }
-        return out;
-      }
-      const out = [chatEvent("Manager", "오케이, 친구들 각자 한마디~", userTs)];
-      const rid = out[0].ts;
-      for (const r of ROLES) {
-        if (r.id === "Manager" || r.id === "You") continue;
-        const line = casualStatusClient(r.id);
-        if (line) out.push(chatEvent(r.id, line, rid));
-      }
-      if (out.length === 1) out.push(chatEvent("Manager", buildBriefStatusClient(), rid));
-      return out;
-    }
-
-    function generateClientReplies(userMessage, userTs) {
-      const msg = userMessage.trim();
-      const m = msg.match(/@([\w가-힣]+)/i);
-      const handle = m ? m[1].toLowerCase() : "";
-      const roleEntry = MENTION_HANDLES.find(
-        (h) => h.handle.toLowerCase() === handle || h.role.toLowerCase().startsWith(handle),
-      );
-      if (roleEntry && roleEntry.role !== "Manager") {
-        const line =
-          casualStatusClient(roleEntry.role) ||
-          `나 ${roleEntry.title}! 곧 로그 올릴게`;
-        return [chatEvent(roleEntry.role, line.slice(0, 200), userTs)];
-      }
-      if (/스탠드업|standup/i.test(msg)) return teamBanterClient(userTs);
-      if (/현황|진도|progress|status|어디|상황|얼마나/.test(msg) || (roleEntry && roleEntry.role === "Manager")) {
-        return [chatEvent("Manager", buildProgressSummaryClient(), userTs)];
-      }
-      if (/뭐해|뭐하|모해|뭐하고|busy|doing/i.test(msg)) return teamBanterClient(userTs);
-      if (/전달|넘겼|핸드오프|handoff|산출물|문서|파일|인계/i.test(msg)) {
-        const handoffs = artifactHandoffsClient();
-        if (!handoffs.length) {
-          return [chatEvent("Manager", "아직 단계 통과 로그가 없어서 인계된 산출물이 없어!", userTs)];
-        }
-        const out = [
-          chatEvent("Manager", "지금까지 넘어간 건 말이 아니라 문서·코드야 👇", userTs),
-        ];
-        for (const h of handoffs.slice(-6)) {
-          const ev = chatEvent("Manager", h.body, userTs);
-          ev.artifact = h.artifact;
-          out.push(ev);
-        }
-        return out;
-      }
-
-      const brief = buildBriefStatusClient();
-      if (/안녕|하이|hello|반가|하세요/i.test(msg)) {
-        return [chatEvent("Manager", `안녕하세요!\n${brief}`, userTs)];
-      }
-      if (/고마|감사|thank/i.test(msg)) {
-        return [chatEvent("Manager", `천천히 확인해 주세요.\n${brief}`, userTs)];
-      }
-      if (/\?|뭐야|무슨|설명|help|도와/i.test(msg)) {
-        return [
-          chatEvent(
-            "Manager",
-            `${brief}\n\n특정 사람한테 물으려면 @Chris 처럼 멘션해 주세요.`,
-            userTs,
-          ),
-        ];
-      }
-      return [chatEvent("Manager", brief, userTs)];
-    }
-
-    let chatSending = false;
-    let lastChatSend = { at: 0, body: "" };
-    let imeComposing = false;
-
-    async function persistViaEmit(ev) {
-      try {
-        await fetch("/api/emit", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ ...ev, slug: state.slug }),
-        });
-      } catch (_) {}
-    }
-
-    async function sendChat(text) {
-      const body = text.trim();
-      if (!body) return;
-      const now = Date.now();
-      if (chatSending || (body === lastChatSend.body && now - lastChatSend.at < 900)) return;
-      chatSending = true;
-      lastChatSend = { at: now, body };
-      try {
-        if (!state.slug) {
-          appendChatLine(
-            chatEvent("Manager", "위에서 feature slug 선택 후 「연결」을 눌러 주세요."),
-          );
-          return;
-        }
-
-        if (state.chatApi) {
-          try {
-            const res = await fetch("/api/chat", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ slug: state.slug, role: "You", body, auto_reply: true }),
-            });
-            if (res.ok) {
-              const data = await res.json();
-              ingestEvents(data.events || []);
-              return;
-            }
-          } catch (_) {}
-        }
-
-        const userEv = chatEvent("You", body);
-        ingestEvents([userEv]);
-        await persistViaEmit(userEv);
-        const replies = generateClientReplies(body, userEv.ts);
-        ingestEvents(replies);
-        for (const r of replies) await persistViaEmit(r);
-      } finally {
-        chatSending = false;
-      }
-    }
-
-    async function runStandup() {
-      if (!state.slug) return;
-      if (state.chatApi) {
-        try {
-          const res = await fetch("/api/standup", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ slug: state.slug }),
-          });
-          if (res.ok) {
-            const data = await res.json();
-            ingestEvents(data.events || []);
-            return;
-          }
-        } catch (_) {}
-      }
-      await sendChat("팀 스탠드업");
-    }
-
-    function closeMentionMenu() {
-      mentionState.open = false;
-      document.getElementById("mentionMenu").classList.remove("open");
-    }
-
-    function insertMention(handle) {
-      const input = document.getElementById("chatInput");
-      const before = input.value.slice(0, mentionState.start);
-      const after = input.value.slice(input.selectionStart);
-      input.value = `${before}@${handle} ${after}`;
-      closeMentionMenu();
-      input.focus();
-    }
-
-    function updateMentionMenu() {
-      const input = document.getElementById("chatInput");
-      const val = input.value;
-      const pos = input.selectionStart;
-      const head = val.slice(0, pos);
-      const at = head.lastIndexOf("@");
-      if (at < 0 || (at > 0 && /\S/.test(head[at - 1]))) {
-        closeMentionMenu();
-        return;
-      }
-      const query = head.slice(at + 1).toLowerCase();
-      if (query.includes(" ")) {
-        closeMentionMenu();
-        return;
-      }
-      const items = MENTION_HANDLES.filter(
-        (h) =>
-          h.handle.toLowerCase().startsWith(query) ||
-          h.title.toLowerCase().includes(query) ||
-          h.role.toLowerCase().includes(query),
-      ).slice(0, 8);
-      if (items.length === 0) {
-        closeMentionMenu();
-        return;
-      }
-      mentionState = { open: true, start: at, query, active: 0, items };
-      const menu = document.getElementById("mentionMenu");
-      menu.innerHTML = "";
-      items.forEach((h, i) => {
-        const btn = document.createElement("button");
-        btn.type = "button";
-        btn.className = "mention-item" + (i === 0 ? " active" : "");
-        btn.innerHTML = `<span class="m-abbr" style="background:${h.color}22;color:${h.color}">${h.abbr}</span><span><div>${escapeHtml(h.title)}</div><div class="m-sub">@${escapeHtml(h.handle)}</div></span>`;
-        btn.addEventListener("mousedown", (e) => {
-          e.preventDefault();
-          insertMention(h.handle);
-        });
-        menu.appendChild(btn);
-      });
-      menu.classList.add("open");
-    }
-
-    async function checkChatApi() {
-      const banner = document.getElementById("chatBanner");
-      try {
-        const res = await fetch("/api/health");
-        const data = res.ok ? await res.json() : null;
-        state.chatApi = !!(data && data.features && data.features.includes("chat"));
-        if (!state.chatApi) {
-          banner.textContent =
-            "구버전 서버 감지 — 대화는 브라우저에서 처리·저장(/api/emit)합니다. 최신 기능: serve.py 재시작";
-          banner.classList.add("show");
-        } else {
-          banner.classList.remove("show");
-        }
-      } catch (_) {
-        state.chatApi = false;
-        banner.textContent = "보드 서버에 연결할 수 없어요. python3 tools/pipeline-board/serve.py";
-        banner.classList.add("show");
-      }
-    }
-
-    function loadEvents(events) {
-      state.events = [];
-      state.roleStatus = {};
-      state.gateStatus = {};
-      state.roleEvents = {};
-      for (const r of Object.keys(roleStatusTimers)) clearTimeout(roleStatusTimers[r]);
-      Object.keys(roleStatusTimers).forEach((k) => delete roleStatusTimers[k]);
-      Object.keys(roleWorkingStarted).forEach((k) => delete roleWorkingStarted[k]);
-      clearChatLog();
-      buildGrid();
-      chatReplayBulk = true;
-      for (const ev of events) {
-        if (ev.kind === "chat" && isChatDismissed(ev)) continue;
-        state.events.push(ev);
-        applyEvent(ev);
-      }
-      chatReplayBulk = false;
-      const log = document.getElementById("chatLog");
-      if (log.lastElementChild) focusChatLine(log.lastElementChild);
-    }
-
-    function openEventModal(ev) {
-      const backdrop = document.getElementById("modalBackdrop");
-      const title = document.getElementById("modalTitle");
-      const sub = document.getElementById("modalSub");
-      const body = document.getElementById("modalBody");
-      title.textContent = ev.role || "이벤트";
-      const parts = [];
-      if (ev.ts) parts.push(new Date(ev.ts).toLocaleString("ko-KR"));
-      if (ev.kind) parts.push(ev.kind);
-      if (ev.status) parts.push(ev.status);
-      sub.textContent = parts.join(" · ");
-
-      let html = `<div class="modal-section"><h3>메시지</h3><p style="margin:0;color:#e7e5e4;white-space:pre-wrap">${escapeHtml(plainEventBody(ev))}</p></div>`;
-      if (ev.gate && GATE_PLAIN[ev.gate]) {
-        const p = GATE_PLAIN[ev.gate];
-        html += `<div class="modal-section"><h3>진행 단계</h3><p style="margin:0;color:#a8a29e">${escapeHtml(p.title)}<br>${escapeHtml(p.desc)}</p></div>`;
-      }
-      if (ev.artifact) {
-        html += `<div class="modal-section"><h3>산출물 · <span class="artifact-filename">${escapeHtml(ev.artifact)}</span></h3><pre class="modal-artifact loading" id="artifactPre">불러오는 중…</pre></div>`;
-      }
-      body.innerHTML = html;
-      backdrop.classList.add("open");
-      backdrop.setAttribute("aria-hidden", "false");
-
-      const slug = state.slug || ev.slug;
-      if (ev.artifact && slug) {
-        fetch(`/api/artifact?slug=${encodeURIComponent(slug)}&file=${encodeURIComponent(ev.artifact)}`)
-          .then(async (r) => {
-            if (!r.ok) {
-              const err = await r.json().catch(() => ({}));
-              throw err;
-            }
-            return r.json();
-          })
-          .then((d) => {
-            const pre = document.getElementById("artifactPre");
-            if (pre) {
-              pre.textContent = d.content || "";
-              pre.classList.remove("loading");
-            }
-          })
-          .catch((err) => {
-            const pre = document.getElementById("artifactPre");
-            if (pre) {
-              const wip = err.wip ? `\n경로: ${err.wip}` : "";
-              pre.textContent =
-                `파일을 불러오지 못했어요.\n` +
-                `• slug: ${slug}\n• file: ${ev.artifact}${wip}\n\n` +
-                `보드는 http://127.0.0.1:8765 로 열었는지, serve.py를 최신으로 재시작했는지 확인해 주세요.`;
-              pre.classList.remove("loading");
-            }
-          });
-      }
-    }
-
-    function escapeHtml(s) {
-      return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
-    }
-
-    function closeModal() {
-      const backdrop = document.getElementById("modalBackdrop");
-      backdrop.classList.remove("open");
-      backdrop.setAttribute("aria-hidden", "true");
-    }
-
-    document.getElementById("modalClose").addEventListener("click", closeModal);
-    document.getElementById("modalBackdrop").addEventListener("click", (e) => {
-      if (e.target.id === "modalBackdrop") closeModal();
-    });
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") {
-        closeModal();
-        closeSheet();
-      }
-    });
-
-    document.getElementById("sheetClose").addEventListener("click", closeSheet);
-    document.getElementById("sheetBackdrop").addEventListener("click", (e) => {
-      if (e.target.id === "sheetBackdrop") closeSheet();
-    });
-
-    async function fetchSlugs() {
-      const res = await fetch("/api/slugs");
-      const data = await res.json();
-      const sel = document.getElementById("slugSelect");
-      sel.innerHTML = "";
-      for (const s of data.slugs || []) {
-        const opt = document.createElement("option");
-        opt.value = s;
-        opt.textContent = s;
-        sel.appendChild(opt);
-      }
-      if (data.slugs?.length && !state.slug) {
-        state.slug = data.slugs[data.slugs.length - 1];
-        sel.value = state.slug;
-        document.getElementById("slugManual").value = state.slug;
-      }
-    }
-
-    async function connectStream(slug) {
-      if (stream) {
-        stream.close();
-        stream = null;
-      }
-      stopPolling();
-      state.slug = slug;
-      loadDismissedChats(slug);
-      const gen = ++streamGeneration;
-      setLiveStatus("off");
-      await checkChatApi();
-
-      try {
-        const r = await fetch(`/api/events?slug=${encodeURIComponent(slug)}`);
-        const d = await r.json();
-        if (gen === streamGeneration) loadEvents(d.events || []);
-      } catch (_) {}
-
-      if (gen !== streamGeneration) return;
-
-      stream = new EventSource(`/api/stream?slug=${encodeURIComponent(slug)}`);
-      stream.onopen = () => {
-        if (gen === streamGeneration) setLiveStatus("sse");
-      };
-      stream.onmessage = (e) => {
-        try {
-          const ev = JSON.parse(e.data);
-          ingestEvents([ev]);
-        } catch (_) {}
-      };
-      stream.onerror = () => {
-        if (gen !== streamGeneration) return;
-        setLiveStatus("poll");
-        if (stream) {
-          stream.close();
-          stream = null;
-        }
-        startPolling();
-        window.setTimeout(() => {
-          if (state.slug === slug && gen === streamGeneration && !stream) connectStream(slug);
-        }, 3000);
-      };
-
-      startPolling();
-    }
-
-    document.getElementById("connectBtn").addEventListener("click", () => {
-      const slug = document.getElementById("slugManual").value.trim() || document.getElementById("slugSelect").value;
-      if (slug) connectStream(slug);
-    });
-    document.getElementById("slugSelect").addEventListener("change", (e) => {
-      document.getElementById("slugManual").value = e.target.value;
-      connectStream(e.target.value);
-    });
-
-    document.getElementById("chatInput").addEventListener("compositionstart", () => {
-      imeComposing = true;
-    });
-    document.getElementById("chatInput").addEventListener("compositionend", () => {
-      imeComposing = false;
-    });
-    document.getElementById("chatInput").addEventListener("input", updateMentionMenu);
-    document.getElementById("chatInput").addEventListener("keydown", (e) => {
-      if (mentionState.open) {
-        if (e.key === "ArrowDown") {
-          e.preventDefault();
-          mentionState.active = Math.min(mentionState.active + 1, mentionState.items.length - 1);
-          updateMentionMenuActive();
-          return;
-        }
-        if (e.key === "ArrowUp") {
-          e.preventDefault();
-          mentionState.active = Math.max(mentionState.active - 1, 0);
-          updateMentionMenuActive();
-          return;
-        }
-        if (e.key === "Enter" || e.key === "Tab") {
-          e.preventDefault();
-          const h = mentionState.items[mentionState.active];
-          if (h) insertMention(h.handle);
-          return;
-        }
-        if (e.key === "Escape") {
-          closeMentionMenu();
-          return;
-        }
-      }
-      if (e.key === "Enter" && !e.shiftKey) {
-        if (e.isComposing || imeComposing || e.keyCode === 229) return;
-        e.preventDefault();
-        document.getElementById("chatSend").click();
-      }
-    });
-
-    function updateMentionMenuActive() {
-      const menu = document.getElementById("mentionMenu");
-      [...menu.querySelectorAll(".mention-item")].forEach((el, i) => {
-        el.classList.toggle("active", i === mentionState.active);
-      });
-    }
-
-    document.getElementById("chatSend").addEventListener("click", () => {
-      const input = document.getElementById("chatInput");
-      const t = input.value;
-      input.value = "";
-      sendChat(t);
-      closeMentionMenu();
-    });
-
-    buildGrid();
-    renderGates();
-    checkChatApi();
-    fetchSlugs().then(() => {
-      if (state.slug) connectStream(state.slug);
-    });
-
-    document.getElementById("chatClear").addEventListener("click", () => {
-      resetChatLog();
-    });
-
-    document.querySelectorAll(".chat-quick[data-prompt]").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const p = btn.getAttribute("data-prompt");
-        if (p === "팀 스탠드업") runStandup();
-        else sendChat(p);
-      });
-    });
-  </script>
-</body>
+					grid.appendChild(cell);
+				}
+			}
+
+			function plainEventBody(ev) {
+				if (ev.kind === 'gate' && ev.gate && GATE_PLAIN[ev.gate]) {
+					const p = GATE_PLAIN[ev.gate];
+					const st = STATUS_KO[ev.status] || STATUS_KO[state.gateStatus[ev.gate]] || '업데이트';
+					return `${p.title} — ${st}\n${p.desc}`;
+				}
+				let b = ev.body || '';
+				const jargon = [
+					[/G5 Dev\+QA Pass \(P0=0\)/i, '⑤ 개발·검증 단계 통과 (치명 버그 없음)'],
+					[/G1 Spec Pass/i, '① 기획 단계 통과'],
+					[/G2 Design brief/i, '② 디자인 브리프 확정'],
+					[/G3 Design QA/i, '③ 디자인 검수'],
+					[/P0=0/i, '치명 버그 없음'],
+					[/tsc \+ Jest Pass/i, '타입 검사·테스트 통과'],
+				];
+				for (const pair of jargon) b = b.replace(pair[0], pair[1]);
+				return b;
+			}
+
+			function renderGates() {
+				const g = document.getElementById('gates');
+				g.innerHTML = '';
+				for (const id of GATES) {
+					const st = state.gateStatus[id] || 'pending';
+					const p = GATE_PLAIN[id];
+					const node = el(
+						'span',
+						'gate' +
+							(st === 'done'
+								? ' done'
+								: st === 'fail'
+									? ' fail'
+									: st === 'working'
+										? ' working'
+										: ''),
+					);
+					node.title = `${p.title}\n${p.desc}\n상태: ${STATUS_KO[st] || st}`;
+					node.innerHTML = `<strong>${p.title}</strong><span class="gate-sub">${STATUS_KO[st] || st}</span>`;
+					node.addEventListener('click', () => {
+						openEventModal({
+							role: 'Manager',
+							kind: 'gate',
+							gate: id,
+							status: st,
+							body: `${p.title} — ${p.desc}`,
+							ts: new Date().toISOString(),
+						});
+					});
+					g.appendChild(node);
+				}
+			}
+
+			function createMsgElement(ev) {
+				const msg = el(
+					'div',
+					'msg' + (ev.kind === 'gate' ? ' gate' : '') + (ev.kind === 'chat' ? ' chat' : ''),
+				);
+				const meta = [];
+				meta.push(new Date(ev.ts).toLocaleTimeString('ko-KR'));
+				if (ev.gate) meta.push(GATE_PLAIN[ev.gate]?.title || ev.gate);
+				if (ev.artifact) meta.push(ev.artifact);
+				msg.innerHTML = `<div class="msg-meta">${meta.join(' · ')}</div><div class="msg-body"></div><div class="msg-hint">${ev.kind === 'chat' ? '대화 · 탭하여 상세' : '탭하여 상세'}</div>`;
+				msg.querySelector('.msg-body').textContent = plainEventBody(ev);
+				msg.addEventListener('click', () => openEventModal(ev));
+				return msg;
+			}
+
+			function refreshRoleFeed(role) {
+				const cell = document.querySelector(`.cell[data-role="${CSS.escape(role)}"]`);
+				if (!cell) return;
+				const feed = cell.querySelector('[data-feed]');
+				const list = state.roleEvents[role] || [];
+				feed.innerHTML = '';
+				if (list.length === 0) {
+					feed.innerHTML = `<div class="empty-hint">대기 중…</div>`;
+					return;
+				}
+				const latest = list[list.length - 1];
+				feed.appendChild(createMsgElement(latest));
+				const older = list.length - 1;
+				if (older > 0) {
+					const btn = document.createElement('button');
+					btn.type = 'button';
+					btn.className = 'history-btn';
+					btn.textContent = `히스토리 ${older}건 보기`;
+					btn.addEventListener('click', (e) => {
+						e.stopPropagation();
+						openHistorySheet(role, list.slice(0, -1).reverse());
+					});
+					feed.appendChild(btn);
+				}
+			}
+
+			function openHistorySheet(role, eventsNewestFirst) {
+				const title = ROLES.find((r) => r.id === role)?.title || role;
+				document.getElementById('sheetTitle').textContent = `${title} · 히스토리`;
+				const listEl = document.getElementById('sheetList');
+				listEl.innerHTML = '';
+				for (const ev of eventsNewestFirst) {
+					listEl.appendChild(createMsgElement(ev));
+				}
+				const sheet = document.getElementById('sheetBackdrop');
+				sheet.classList.add('open');
+				sheet.setAttribute('aria-hidden', 'false');
+			}
+
+			function closeSheet() {
+				const sheet = document.getElementById('sheetBackdrop');
+				sheet.classList.remove('open');
+				sheet.setAttribute('aria-hidden', 'true');
+			}
+
+			let chatDeliveryChain = Promise.resolve();
+			let chatReplayBulk = false;
+			let chatEpoch = 0;
+
+			function sleep(ms) {
+				return new Promise((r) => setTimeout(r, ms));
+			}
+
+			function typingDelayMs(ev) {
+				const body = ev.body || '';
+				if (ev.role === 'Manager' && body.startsWith('📎')) return 900 + Math.random() * 400;
+				return 550 + Math.min(body.length * 8, 1200) + Math.random() * 450;
+			}
+
+			function showTypingIndicator(role) {
+				hideTypingIndicator();
+				const log = document.getElementById('chatLog');
+				const who = ROLES.find((r) => r.id === role)?.title || role;
+				const row = el('div', 'chat-line chat-typing');
+				row.id = 'chatTypingRow';
+				row.innerHTML = `<div class="who">${escapeHtml(who)} · 작성 중</div><div class="bubble typing-dots"><span></span><span></span><span></span></div>`;
+				log.appendChild(row);
+				focusChatLine(row);
+			}
+
+			function hideTypingIndicator() {
+				document.getElementById('chatTypingRow')?.remove();
+			}
+
+			function setCellTyping(role, on) {
+				const cell = document.querySelector(`.cell[data-role="${CSS.escape(role)}"]`);
+				if (!cell) return;
+				cell.classList.toggle('cell-typing', on);
+				const badge = cell.querySelector('[data-badge]');
+				if (!badge) return;
+				if (on) {
+					if (!badge.dataset.prevText) badge.dataset.prevText = badge.textContent;
+					badge.textContent = '…';
+				} else if (badge.dataset.prevText) {
+					badge.textContent = badge.dataset.prevText;
+					delete badge.dataset.prevText;
+				}
+			}
+
+			function focusChatLine(lineEl) {
+				const log = document.getElementById('chatLog');
+				requestAnimationFrame(() => {
+					lineEl.scrollIntoView({ behavior: 'smooth', block: 'end' });
+					log.scrollTop = log.scrollHeight;
+				});
+			}
+
+			function deliverChatStaggered(chatEvents) {
+				if (!chatEvents.length) return Promise.resolve();
+				const epoch = chatEpoch;
+				chatDeliveryChain = chatDeliveryChain.then(async () => {
+					for (const ev of chatEvents) {
+						if (epoch !== chatEpoch) {
+							hideTypingIndicator();
+							for (const r of ROLES) setCellTyping(r.id, false);
+							return;
+						}
+						if (isChatDismissed(ev)) continue;
+						if (state.events.some((x) => eventKey(x) === eventKey(ev))) continue;
+						if (ev.role !== 'You') {
+							showTypingIndicator(ev.role);
+							setCellTyping(ev.role, true);
+							await sleep(typingDelayMs(ev));
+							if (epoch !== chatEpoch) {
+								hideTypingIndicator();
+								for (const r of ROLES) setCellTyping(r.id, false);
+								return;
+							}
+							hideTypingIndicator();
+							setCellTyping(ev.role, false);
+						}
+						state.events.push(ev);
+						applyEvent(ev, { highlightChat: true });
+					}
+				});
+				return chatDeliveryChain;
+			}
+
+			function paintRoleCell(role) {
+				const cell = document.querySelector(`.cell[data-role="${CSS.escape(role)}"]`);
+				if (!cell) return;
+				const badge = cell.querySelector('[data-badge]');
+				const st = state.roleStatus[role] || 'idle';
+				const label = STATUS_KO[st] || st;
+				badge.textContent = label;
+				badge.className =
+					'badge' +
+					(st === 'working' ? ' working' : st === 'done' ? ' done' : st === 'fail' ? ' fail' : '');
+				cell.classList.remove('working', 'done');
+				if (st === 'working') cell.classList.add('working');
+				if (st === 'done') cell.classList.add('done');
+			}
+
+			function setRoleStatus(role, st, opts = {}) {
+				if (!role) return;
+				const live = opts.live === true;
+				if (roleStatusTimers[role]) {
+					clearTimeout(roleStatusTimers[role]);
+					delete roleStatusTimers[role];
+				}
+
+				if (st === 'working') {
+					state.roleStatus[role] = 'working';
+					if (live) roleWorkingStarted[role] = Date.now();
+					paintRoleCell(role);
+					return;
+				}
+
+				const prev = state.roleStatus[role];
+				const started = roleWorkingStarted[role];
+				if (live && prev === 'working' && started != null) {
+					const wait = Math.max(0, MIN_WORKING_MS - (Date.now() - started));
+					if (wait > 0) {
+						roleStatusTimers[role] = window.setTimeout(() => {
+							delete roleStatusTimers[role];
+							delete roleWorkingStarted[role];
+							state.roleStatus[role] = st;
+							paintRoleCell(role);
+						}, wait);
+						return;
+					}
+				}
+
+				delete roleWorkingStarted[role];
+				state.roleStatus[role] = st;
+				paintRoleCell(role);
+			}
+
+			function applyEvent(ev, opts = {}) {
+				const skipChat = opts.skipChat === true;
+				const live = opts.live === true;
+				if (ev.kind === 'chat' && !skipChat) appendChatLine(ev, { highlight: opts.highlightChat });
+				const role = ev.role;
+				if (ev.kind === 'gate' && ev.gate) {
+					const gs = ev.status;
+					state.gateStatus[ev.gate] =
+						gs === 'fail' ? 'fail' : gs === 'working' ? 'working' : 'done';
+				}
+				if (ev.status && role) {
+					setRoleStatus(role, ev.status, { live });
+				}
+				if (!role) return;
+				if (!state.roleEvents[role]) state.roleEvents[role] = [];
+				state.roleEvents[role].push(ev);
+				refreshRoleFeed(role);
+				renderGates();
+			}
+
+			function appendChatLine(ev, opts = {}) {
+				const log = document.getElementById('chatLog');
+				const key = `${ev.ts}|${ev.role}|${ev.body}`;
+				if (log.dataset.seen && log.dataset.seen.split('\n').includes(key)) return null;
+				log.dataset.seen = (log.dataset.seen ? log.dataset.seen + '\n' : '') + key;
+				const line = el(
+					'div',
+					'chat-line' +
+						(ev.role === 'You' ? ' self' : '') +
+						(ev.reply_to ? ' reply' : '') +
+						((ev.body || '').startsWith('📎') ? ' relay' : '') +
+						(opts.highlight ? ' chat-line-new' : ''),
+				);
+				const who = ROLES.find((r) => r.id === ev.role)?.title || ev.role;
+				line.innerHTML = `<div class="who">${escapeHtml(who)}</div><div class="bubble">${escapeHtml(plainEventBody(ev))}</div>`;
+				line.querySelector('.bubble').addEventListener('click', () => openEventModal(ev));
+				log.appendChild(line);
+				focusChatLine(line);
+				if (opts.highlight) {
+					window.setTimeout(() => line.classList.remove('chat-line-new'), 1400);
+				}
+				return line;
+			}
+
+			function clearChatLog() {
+				const log = document.getElementById('chatLog');
+				log.innerHTML = '';
+				delete log.dataset.seen;
+			}
+
+			function applyChatClearLocal() {
+				for (const e of state.events) {
+					if (e.kind === 'chat') rememberDismissedChat(e);
+				}
+				state.events = state.events.filter((e) => e.kind !== 'chat');
+				state.roleEvents = {};
+				for (const ev of state.events) {
+					const role = ev.role;
+					if (!role) continue;
+					if (!state.roleEvents[role]) state.roleEvents[role] = [];
+					state.roleEvents[role].push(ev);
+				}
+				clearChatLog();
+				for (const r of ROLES) refreshRoleFeed(r.id);
+			}
+
+			async function dismissAllServerChatKeys() {
+				if (!state.slug) return;
+				try {
+					const r = await fetch(`/api/events?slug=${encodeURIComponent(state.slug)}`);
+					const d = await r.json();
+					for (const ev of d.events || []) rememberDismissedChat(ev);
+				} catch (_) {}
+			}
+
+			async function resetChatLog() {
+				if (!confirm('팀 대화를 비우고 새로 시작할까요?\n(작업·게이트 기록은 유지됩니다)')) return;
+				chatEpoch += 1;
+				hideTypingIndicator();
+				for (const r of ROLES) setCellTyping(r.id, false);
+				chatDeliveryChain = Promise.resolve();
+				chatSending = false;
+
+				await dismissAllServerChatKeys();
+
+				if (!state.slug) {
+					applyChatClearLocal();
+					return;
+				}
+
+				let serverCleared = false;
+				try {
+					const res = await fetch('/api/chat/clear', {
+						method: 'POST',
+						headers: { 'Content-Type': 'application/json' },
+						body: JSON.stringify({ slug: state.slug }),
+					});
+					if (res.ok) {
+						serverCleared = true;
+						clearDismissedChatsStore();
+					}
+				} catch (_) {}
+
+				applyChatClearLocal();
+
+				if (!serverCleared) {
+					const banner = document.getElementById('chatBanner');
+					banner.textContent =
+						'대화창은 비웠어요. 새로고침 후에도 비우려면 보드 서버를 재시작하세요 (python3 tools/pipeline-board/serve.py).';
+					banner.classList.add('show');
+					window.setTimeout(() => banner.classList.remove('show'), 12000);
+				}
+			}
+
+			function ingestEvents(events, opts = {}) {
+				const bulk = opts.bulk === true || chatReplayBulk;
+				const fresh = [];
+				for (const ev of events) {
+					if (ev.kind === 'chat' && isChatDismissed(ev)) continue;
+					if (state.events.some((x) => eventKey(x) === eventKey(ev))) continue;
+					fresh.push(ev);
+				}
+				if (!fresh.length) return;
+
+				if (bulk) {
+					for (const ev of fresh) {
+						state.events.push(ev);
+						applyEvent(ev);
+					}
+					const log = document.getElementById('chatLog');
+					if (log.lastElementChild) focusChatLine(log.lastElementChild);
+					return;
+				}
+
+				const nonChat = fresh.filter((e) => e.kind !== 'chat');
+				const chatYou = fresh.filter((e) => e.kind === 'chat' && e.role === 'You');
+				const chatOther = fresh.filter((e) => e.kind === 'chat' && e.role !== 'You');
+
+				for (const ev of nonChat) {
+					state.events.push(ev);
+					applyEvent(ev, { skipChat: true, live: true });
+				}
+				for (const ev of chatYou) {
+					state.events.push(ev);
+					applyEvent(ev, { highlightChat: true });
+				}
+				deliverChatStaggered(chatOther);
+			}
+
+			async function syncFromServer() {
+				if (!state.slug) return;
+				try {
+					const r = await fetch(`/api/events?slug=${encodeURIComponent(state.slug)}`);
+					const d = await r.json();
+					ingestEvents(d.events || []);
+				} catch (_) {}
+			}
+
+			function startPolling() {
+				if (pollTimer) clearInterval(pollTimer);
+				pollTimer = setInterval(syncFromServer, 2000);
+			}
+
+			function stopPolling() {
+				if (pollTimer) {
+					clearInterval(pollTimer);
+					pollTimer = null;
+				}
+			}
+
+			function chatEvent(role, body, replyTo) {
+				return {
+					ts: new Date().toISOString(),
+					slug: state.slug,
+					role,
+					kind: 'chat',
+					body,
+					...(replyTo ? { reply_to: replyTo } : {}),
+				};
+			}
+
+			function lastEventByRole(role) {
+				for (let i = state.events.length - 1; i >= 0; i--) {
+					if (state.events[i].role === role) return state.events[i];
+				}
+				return null;
+			}
+
+			function buildProgressSummaryClient() {
+				const lines = [`📋 「${state.slug}」 지금 어디까지 왔는지`, ''];
+				for (const g of GATES) {
+					const st = state.gateStatus[g] || 'pending';
+					const p = GATE_PLAIN[g];
+					const stKo = STATUS_KO[st] || st;
+					const icon = st === 'done' ? '✅' : st === 'working' ? '🔄' : st === 'fail' ? '❌' : '⬜';
+					lines.push(`${icon} ${p.title} — ${stKo}`);
+					lines.push(`   ${p.desc}`);
+				}
+				return lines.join('\n');
+			}
+
+			function buildBriefStatusClient() {
+				let done = 0;
+				for (const g of GATES) {
+					if ((state.gateStatus[g] || 'pending') === 'done') done += 1;
+				}
+				const nextG = GATES.find((g) => (state.gateStatus[g] || 'pending') !== 'done') || 'G6';
+				const p = GATE_PLAIN[nextG];
+				for (const role of ['Chris (Dev)', 'Taylor (QA)', 'Sam (Design)']) {
+					const last = lastEventByRole(role);
+					if (last?.body) {
+						const who = ROLES.find((r) => r.id === role)?.title || role;
+						return `「${state.slug}」 ${done}/6 단계 완료. 지금은 ${p.title} 쪽이에요.\n${p.desc}\n• ${who}: ${last.body.slice(0, 70)}`;
+					}
+				}
+				return `「${state.slug}」 ${done}/6 단계 완료. 지금은 ${p.title} 쪽이에요.\n${p.desc}`;
+			}
+
+			function hasArtifact(name) {
+				return state.events.some((e) => e.artifact === name);
+			}
+
+			function casualStatusClient(role) {
+				const g = state.gateStatus;
+				const last = lastEventByRole(role);
+				if (role === 'John (PM)') {
+					if (g.G1 === 'done') return '01-spec.md에 AC까지 정리해 뒀어 ✓';
+					if (hasArtifact('01-spec.md')) return '기획서 다듬는 중~ 곧 통과 찍을게';
+					return '다음 스프린트 기획 준비하고 있어';
+				}
+				if (role === 'Sam (Design)') {
+					if (g.G2 === 'done') return '02-design-brief.md 올려뒀어 — Alex 검수 들어가면 돼';
+					if (g.G1 === 'done' || hasArtifact('01-spec.md'))
+						return 'John 기획 받았어, 화면·카피 잡는 중';
+					return '기획 오면 바로 브리프 그릴게~';
+				}
+				if (role === 'Alex (Design QA)') {
+					if (g.G3 === 'done') return '03-design-review.md Pass 찍었어 — Chris 개발 GO';
+					if (hasArtifact('02-design-brief.md')) return 'Sam 브리프 보고 검수표 채우는 중';
+					return '검수 대기 중이야';
+				}
+				if (role === 'Chris (Dev)') {
+					if (g.G5 === 'done') return '코드·04-dev-notes.md 반영 끝 — Taylor QA 중';
+					if (last?.status === 'done') return '맡은 AC 구현 끝! QA만 남았어';
+					if (last?.status === 'working') {
+						const b = (last.body || '').slice(0, 60);
+						return b ? `코드 올리는 중… ${b}` : '지금 구현 중!';
+					}
+					if (g.G3 === 'done') return '디자인 OK 받아서 AC 하나씩 개발 중';
+					return '개발 대기 — 디자인 검수만 기다리는 중';
+				}
+				if (role === 'Taylor (QA)') {
+					if (g.G5 === 'done') return '05-qa-report.md 올렸어 — 타입·테스트·화면 OK ✓';
+					if (last?.status === 'working') return '지금 시뮬 돌려보면서 검증 중~';
+					if (g.G3 === 'done') return 'Chris 개발 올라오면 바로 검증할게';
+					return 'QA 준비돼 있어, 개발만 오면 돼';
+				}
+				return null;
+			}
+
+			function artifactHandoffsClient() {
+				const g = state.gateStatus;
+				const chain = [
+					['G1', 'John', 'Sam', '01-spec.md', '기획 스펙'],
+					['G2', 'Sam', 'Alex', '02-design-brief.md', '디자인 브리프'],
+					['G3', 'Alex', 'Chris', '03-design-review.md', '디자인 검수(Pass)'],
+					['G5', 'Chris', 'Taylor', '04-dev-notes.md', '구현 코드 + 개발 노트'],
+					['G5', 'Taylor', 'Manager', '05-qa-report.md', 'QA 리포트'],
+					['G6', 'Manager', '당신', '06-handoff-to-user.md', '최종 핸드오프'],
+				];
+				return chain
+					.filter(([gate]) => g[gate] === 'done')
+					.map(([, a, b, art, label]) => ({
+						body: `📎 ${a} → ${b}: ${label} · \`${art}\``,
+						artifact: art,
+					}));
+			}
+
+			const WORKER_ROLES = [
+				'John (PM)',
+				'Sam (Design)',
+				'Alex (Design QA)',
+				'Chris (Dev)',
+				'Taylor (QA)',
+			];
+
+			function isTeamIdle() {
+				for (const role of WORKER_ROLES) {
+					const last = lastEventByRole(role);
+					if (last?.status === 'working') return false;
+				}
+				return true;
+			}
+
+			function restStatusClient(role) {
+				const g = state.gateStatus;
+				const last = lastEventByRole(role);
+				if (role === 'John (PM)') {
+					if (g.G1 === 'done') return '기획은 끝 — 지금은 쉬는 중 ☕';
+					return '할당된 작업 없어서 대기 중~';
+				}
+				if (role === 'Sam (Design)') {
+					if (g.G2 === 'done') return '브리프까지 끝, 손 놨어 ☕';
+					return '디자인 할 일 없어서 쉬는 중';
+				}
+				if (role === 'Alex (Design QA)') {
+					if (g.G3 === 'done') return '검수 Pass 했어 — 지금은 휴식 ☕';
+					return '검수 대기라 쉬는 중';
+				}
+				if (role === 'Chris (Dev)') {
+					if (g.G5 === 'done' || last?.status === 'done') return '구현·QA까지 끝 — 쉬는 중 ☕';
+					return '개발 손 댈 게 없어서 대기 중';
+				}
+				if (role === 'Taylor (QA)') {
+					if (g.G5 === 'done') return 'QA 리포트까지 끝, 쉬는 중 ☕';
+					return '검증할 게 없어서 대기 중';
+				}
+				return '쉬는 중 ☕';
+			}
+
+			function teamBanterClient(userTs) {
+				if (isTeamIdle()) {
+					const out = [
+						chatEvent('Manager', '지금 돌아가는 작업 없어 — 팀은 잠깐 쉬는 중이야 ☕', userTs),
+					];
+					const rid = out[0].ts;
+					for (const r of ROLES) {
+						if (r.id === 'Manager' || r.id === 'You') continue;
+						out.push(chatEvent(r.id, restStatusClient(r.id), rid));
+					}
+					return out;
+				}
+				const out = [chatEvent('Manager', '오케이, 친구들 각자 한마디~', userTs)];
+				const rid = out[0].ts;
+				for (const r of ROLES) {
+					if (r.id === 'Manager' || r.id === 'You') continue;
+					const line = casualStatusClient(r.id);
+					if (line) out.push(chatEvent(r.id, line, rid));
+				}
+				if (out.length === 1) out.push(chatEvent('Manager', buildBriefStatusClient(), rid));
+				return out;
+			}
+
+			function generateClientReplies(userMessage, userTs) {
+				const msg = userMessage.trim();
+				const m = msg.match(/@([\w가-힣]+)/i);
+				const handle = m ? m[1].toLowerCase() : '';
+				const roleEntry = MENTION_HANDLES.find(
+					(h) => h.handle.toLowerCase() === handle || h.role.toLowerCase().startsWith(handle),
+				);
+				if (roleEntry && roleEntry.role !== 'Manager') {
+					const line =
+						casualStatusClient(roleEntry.role) || `나 ${roleEntry.title}! 곧 로그 올릴게`;
+					return [chatEvent(roleEntry.role, line.slice(0, 200), userTs)];
+				}
+				if (/스탠드업|standup/i.test(msg)) return teamBanterClient(userTs);
+				if (
+					/현황|진도|progress|status|어디|상황|얼마나/.test(msg) ||
+					(roleEntry && roleEntry.role === 'Manager')
+				) {
+					return [chatEvent('Manager', buildProgressSummaryClient(), userTs)];
+				}
+				if (/뭐해|뭐하|모해|뭐하고|busy|doing/i.test(msg)) return teamBanterClient(userTs);
+				if (/전달|넘겼|핸드오프|handoff|산출물|문서|파일|인계/i.test(msg)) {
+					const handoffs = artifactHandoffsClient();
+					if (!handoffs.length) {
+						return [
+							chatEvent('Manager', '아직 단계 통과 로그가 없어서 인계된 산출물이 없어!', userTs),
+						];
+					}
+					const out = [
+						chatEvent('Manager', '지금까지 넘어간 건 말이 아니라 문서·코드야 👇', userTs),
+					];
+					for (const h of handoffs.slice(-6)) {
+						const ev = chatEvent('Manager', h.body, userTs);
+						ev.artifact = h.artifact;
+						out.push(ev);
+					}
+					return out;
+				}
+
+				const brief = buildBriefStatusClient();
+				if (/안녕|하이|hello|반가|하세요/i.test(msg)) {
+					return [chatEvent('Manager', `안녕하세요!\n${brief}`, userTs)];
+				}
+				if (/고마|감사|thank/i.test(msg)) {
+					return [chatEvent('Manager', `천천히 확인해 주세요.\n${brief}`, userTs)];
+				}
+				if (/\?|뭐야|무슨|설명|help|도와/i.test(msg)) {
+					return [
+						chatEvent(
+							'Manager',
+							`${brief}\n\n특정 사람한테 물으려면 @Chris 처럼 멘션해 주세요.`,
+							userTs,
+						),
+					];
+				}
+				return [chatEvent('Manager', brief, userTs)];
+			}
+
+			let chatSending = false;
+			let lastChatSend = { at: 0, body: '' };
+			let imeComposing = false;
+
+			async function persistViaEmit(ev) {
+				try {
+					await fetch('/api/emit', {
+						method: 'POST',
+						headers: { 'Content-Type': 'application/json' },
+						body: JSON.stringify({ ...ev, slug: state.slug }),
+					});
+				} catch (_) {}
+			}
+
+			async function sendChat(text) {
+				const body = text.trim();
+				if (!body) return;
+				const now = Date.now();
+				if (chatSending || (body === lastChatSend.body && now - lastChatSend.at < 900)) return;
+				chatSending = true;
+				lastChatSend = { at: now, body };
+				try {
+					if (!state.slug) {
+						appendChatLine(
+							chatEvent('Manager', '위에서 feature slug 선택 후 「연결」을 눌러 주세요.'),
+						);
+						return;
+					}
+
+					if (state.chatApi) {
+						try {
+							const res = await fetch('/api/chat', {
+								method: 'POST',
+								headers: { 'Content-Type': 'application/json' },
+								body: JSON.stringify({ slug: state.slug, role: 'You', body, auto_reply: true }),
+							});
+							if (res.ok) {
+								const data = await res.json();
+								ingestEvents(data.events || []);
+								return;
+							}
+						} catch (_) {}
+					}
+
+					const userEv = chatEvent('You', body);
+					ingestEvents([userEv]);
+					await persistViaEmit(userEv);
+					const replies = generateClientReplies(body, userEv.ts);
+					ingestEvents(replies);
+					for (const r of replies) await persistViaEmit(r);
+				} finally {
+					chatSending = false;
+				}
+			}
+
+			async function runStandup() {
+				if (!state.slug) return;
+				if (state.chatApi) {
+					try {
+						const res = await fetch('/api/standup', {
+							method: 'POST',
+							headers: { 'Content-Type': 'application/json' },
+							body: JSON.stringify({ slug: state.slug }),
+						});
+						if (res.ok) {
+							const data = await res.json();
+							ingestEvents(data.events || []);
+							return;
+						}
+					} catch (_) {}
+				}
+				await sendChat('팀 스탠드업');
+			}
+
+			function closeMentionMenu() {
+				mentionState.open = false;
+				document.getElementById('mentionMenu').classList.remove('open');
+			}
+
+			function insertMention(handle) {
+				const input = document.getElementById('chatInput');
+				const before = input.value.slice(0, mentionState.start);
+				const after = input.value.slice(input.selectionStart);
+				input.value = `${before}@${handle} ${after}`;
+				closeMentionMenu();
+				input.focus();
+			}
+
+			function updateMentionMenu() {
+				const input = document.getElementById('chatInput');
+				const val = input.value;
+				const pos = input.selectionStart;
+				const head = val.slice(0, pos);
+				const at = head.lastIndexOf('@');
+				if (at < 0 || (at > 0 && /\S/.test(head[at - 1]))) {
+					closeMentionMenu();
+					return;
+				}
+				const query = head.slice(at + 1).toLowerCase();
+				if (query.includes(' ')) {
+					closeMentionMenu();
+					return;
+				}
+				const items = MENTION_HANDLES.filter(
+					(h) =>
+						h.handle.toLowerCase().startsWith(query) ||
+						h.title.toLowerCase().includes(query) ||
+						h.role.toLowerCase().includes(query),
+				).slice(0, 8);
+				if (items.length === 0) {
+					closeMentionMenu();
+					return;
+				}
+				mentionState = { open: true, start: at, query, active: 0, items };
+				const menu = document.getElementById('mentionMenu');
+				menu.innerHTML = '';
+				items.forEach((h, i) => {
+					const btn = document.createElement('button');
+					btn.type = 'button';
+					btn.className = 'mention-item' + (i === 0 ? ' active' : '');
+					btn.innerHTML = `<span class="m-abbr" style="background:${h.color}22;color:${h.color}">${h.abbr}</span><span><div>${escapeHtml(h.title)}</div><div class="m-sub">@${escapeHtml(h.handle)}</div></span>`;
+					btn.addEventListener('mousedown', (e) => {
+						e.preventDefault();
+						insertMention(h.handle);
+					});
+					menu.appendChild(btn);
+				});
+				menu.classList.add('open');
+			}
+
+			async function checkChatApi() {
+				const banner = document.getElementById('chatBanner');
+				try {
+					const res = await fetch('/api/health');
+					const data = res.ok ? await res.json() : null;
+					state.chatApi = !!(data && data.features && data.features.includes('chat'));
+					if (!state.chatApi) {
+						banner.textContent =
+							'구버전 서버 감지 — 대화는 브라우저에서 처리·저장(/api/emit)합니다. 최신 기능: serve.py 재시작';
+						banner.classList.add('show');
+					} else {
+						banner.classList.remove('show');
+					}
+				} catch (_) {
+					state.chatApi = false;
+					banner.textContent =
+						'보드 서버에 연결할 수 없어요. python3 tools/pipeline-board/serve.py';
+					banner.classList.add('show');
+				}
+			}
+
+			function loadEvents(events) {
+				state.events = [];
+				state.roleStatus = {};
+				state.gateStatus = {};
+				state.roleEvents = {};
+				for (const r of Object.keys(roleStatusTimers)) clearTimeout(roleStatusTimers[r]);
+				Object.keys(roleStatusTimers).forEach((k) => delete roleStatusTimers[k]);
+				Object.keys(roleWorkingStarted).forEach((k) => delete roleWorkingStarted[k]);
+				clearChatLog();
+				buildGrid();
+				chatReplayBulk = true;
+				for (const ev of events) {
+					if (ev.kind === 'chat' && isChatDismissed(ev)) continue;
+					state.events.push(ev);
+					applyEvent(ev);
+				}
+				chatReplayBulk = false;
+				const log = document.getElementById('chatLog');
+				if (log.lastElementChild) focusChatLine(log.lastElementChild);
+			}
+
+			function openEventModal(ev) {
+				const backdrop = document.getElementById('modalBackdrop');
+				const title = document.getElementById('modalTitle');
+				const sub = document.getElementById('modalSub');
+				const body = document.getElementById('modalBody');
+				title.textContent = ev.role || '이벤트';
+				const parts = [];
+				if (ev.ts) parts.push(new Date(ev.ts).toLocaleString('ko-KR'));
+				if (ev.kind) parts.push(ev.kind);
+				if (ev.status) parts.push(ev.status);
+				sub.textContent = parts.join(' · ');
+
+				let html = `<div class="modal-section"><h3>메시지</h3><p style="margin:0;color:#e7e5e4;white-space:pre-wrap">${escapeHtml(plainEventBody(ev))}</p></div>`;
+				if (ev.gate && GATE_PLAIN[ev.gate]) {
+					const p = GATE_PLAIN[ev.gate];
+					html += `<div class="modal-section"><h3>진행 단계</h3><p style="margin:0;color:#a8a29e">${escapeHtml(p.title)}<br>${escapeHtml(p.desc)}</p></div>`;
+				}
+				if (ev.artifact) {
+					html += `<div class="modal-section"><h3>산출물 · <span class="artifact-filename">${escapeHtml(ev.artifact)}</span></h3><pre class="modal-artifact loading" id="artifactPre">불러오는 중…</pre></div>`;
+				}
+				body.innerHTML = html;
+				backdrop.classList.add('open');
+				backdrop.setAttribute('aria-hidden', 'false');
+
+				const slug = state.slug || ev.slug;
+				if (ev.artifact && slug) {
+					fetch(
+						`/api/artifact?slug=${encodeURIComponent(slug)}&file=${encodeURIComponent(ev.artifact)}`,
+					)
+						.then(async (r) => {
+							if (!r.ok) {
+								const err = await r.json().catch(() => ({}));
+								throw err;
+							}
+							return r.json();
+						})
+						.then((d) => {
+							const pre = document.getElementById('artifactPre');
+							if (pre) {
+								pre.textContent = d.content || '';
+								pre.classList.remove('loading');
+							}
+						})
+						.catch((err) => {
+							const pre = document.getElementById('artifactPre');
+							if (pre) {
+								const wip = err.wip ? `\n경로: ${err.wip}` : '';
+								pre.textContent =
+									`파일을 불러오지 못했어요.\n` +
+									`• slug: ${slug}\n• file: ${ev.artifact}${wip}\n\n` +
+									`보드는 http://127.0.0.1:8765 로 열었는지, serve.py를 최신으로 재시작했는지 확인해 주세요.`;
+								pre.classList.remove('loading');
+							}
+						});
+				}
+			}
+
+			function escapeHtml(s) {
+				return s
+					.replace(/&/g, '&amp;')
+					.replace(/</g, '&lt;')
+					.replace(/>/g, '&gt;')
+					.replace(/"/g, '&quot;');
+			}
+
+			function closeModal() {
+				const backdrop = document.getElementById('modalBackdrop');
+				backdrop.classList.remove('open');
+				backdrop.setAttribute('aria-hidden', 'true');
+			}
+
+			document.getElementById('modalClose').addEventListener('click', closeModal);
+			document.getElementById('modalBackdrop').addEventListener('click', (e) => {
+				if (e.target.id === 'modalBackdrop') closeModal();
+			});
+			document.addEventListener('keydown', (e) => {
+				if (e.key === 'Escape') {
+					closeModal();
+					closeSheet();
+				}
+			});
+
+			document.getElementById('sheetClose').addEventListener('click', closeSheet);
+			document.getElementById('sheetBackdrop').addEventListener('click', (e) => {
+				if (e.target.id === 'sheetBackdrop') closeSheet();
+			});
+
+			async function fetchSlugs() {
+				const res = await fetch('/api/slugs');
+				const data = await res.json();
+				const sel = document.getElementById('slugSelect');
+				sel.innerHTML = '';
+				for (const s of data.slugs || []) {
+					const opt = document.createElement('option');
+					opt.value = s;
+					opt.textContent = s;
+					sel.appendChild(opt);
+				}
+				if (data.slugs?.length && !state.slug) {
+					state.slug = data.slugs[data.slugs.length - 1];
+					sel.value = state.slug;
+					document.getElementById('slugManual').value = state.slug;
+				}
+			}
+
+			async function connectStream(slug) {
+				if (stream) {
+					stream.close();
+					stream = null;
+				}
+				stopPolling();
+				state.slug = slug;
+				loadDismissedChats(slug);
+				const gen = ++streamGeneration;
+				setLiveStatus('off');
+				await checkChatApi();
+
+				try {
+					const r = await fetch(`/api/events?slug=${encodeURIComponent(slug)}`);
+					const d = await r.json();
+					if (gen === streamGeneration) loadEvents(d.events || []);
+				} catch (_) {}
+
+				if (gen !== streamGeneration) return;
+
+				stream = new EventSource(`/api/stream?slug=${encodeURIComponent(slug)}`);
+				stream.onopen = () => {
+					if (gen === streamGeneration) setLiveStatus('sse');
+				};
+				stream.onmessage = (e) => {
+					try {
+						const ev = JSON.parse(e.data);
+						ingestEvents([ev]);
+					} catch (_) {}
+				};
+				stream.onerror = () => {
+					if (gen !== streamGeneration) return;
+					setLiveStatus('poll');
+					if (stream) {
+						stream.close();
+						stream = null;
+					}
+					startPolling();
+					window.setTimeout(() => {
+						if (state.slug === slug && gen === streamGeneration && !stream) connectStream(slug);
+					}, 3000);
+				};
+
+				startPolling();
+			}
+
+			document.getElementById('connectBtn').addEventListener('click', () => {
+				const slug =
+					document.getElementById('slugManual').value.trim() ||
+					document.getElementById('slugSelect').value;
+				if (slug) connectStream(slug);
+			});
+			document.getElementById('slugSelect').addEventListener('change', (e) => {
+				document.getElementById('slugManual').value = e.target.value;
+				connectStream(e.target.value);
+			});
+
+			document.getElementById('chatInput').addEventListener('compositionstart', () => {
+				imeComposing = true;
+			});
+			document.getElementById('chatInput').addEventListener('compositionend', () => {
+				imeComposing = false;
+			});
+			document.getElementById('chatInput').addEventListener('input', updateMentionMenu);
+			document.getElementById('chatInput').addEventListener('keydown', (e) => {
+				if (mentionState.open) {
+					if (e.key === 'ArrowDown') {
+						e.preventDefault();
+						mentionState.active = Math.min(mentionState.active + 1, mentionState.items.length - 1);
+						updateMentionMenuActive();
+						return;
+					}
+					if (e.key === 'ArrowUp') {
+						e.preventDefault();
+						mentionState.active = Math.max(mentionState.active - 1, 0);
+						updateMentionMenuActive();
+						return;
+					}
+					if (e.key === 'Enter' || e.key === 'Tab') {
+						e.preventDefault();
+						const h = mentionState.items[mentionState.active];
+						if (h) insertMention(h.handle);
+						return;
+					}
+					if (e.key === 'Escape') {
+						closeMentionMenu();
+						return;
+					}
+				}
+				if (e.key === 'Enter' && !e.shiftKey) {
+					if (e.isComposing || imeComposing || e.keyCode === 229) return;
+					e.preventDefault();
+					document.getElementById('chatSend').click();
+				}
+			});
+
+			function updateMentionMenuActive() {
+				const menu = document.getElementById('mentionMenu');
+				[...menu.querySelectorAll('.mention-item')].forEach((el, i) => {
+					el.classList.toggle('active', i === mentionState.active);
+				});
+			}
+
+			document.getElementById('chatSend').addEventListener('click', () => {
+				const input = document.getElementById('chatInput');
+				const t = input.value;
+				input.value = '';
+				sendChat(t);
+				closeMentionMenu();
+			});
+
+			buildGrid();
+			renderGates();
+			checkChatApi();
+			fetchSlugs().then(() => {
+				if (state.slug) connectStream(state.slug);
+			});
+
+			document.getElementById('chatClear').addEventListener('click', () => {
+				resetChatLog();
+			});
+
+			document.querySelectorAll('.chat-quick[data-prompt]').forEach((btn) => {
+				btn.addEventListener('click', () => {
+					const p = btn.getAttribute('data-prompt');
+					if (p === '팀 스탠드업') runStandup();
+					else sendChat(p);
+				});
+			});
+		</script>
+	</body>
 </html>

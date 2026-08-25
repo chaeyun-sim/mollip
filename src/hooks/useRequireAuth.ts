@@ -24,7 +24,9 @@ export function useRequireAuth() {
 	return { session, ensureAuth, isAuthenticated: !!session };
 }
 
-export function authDisplayLabel(user: NonNullable<ReturnType<typeof useAuthStore.getState>['user']>): string {
+export function authDisplayLabel(
+	user: NonNullable<ReturnType<typeof useAuthStore.getState>['user']>,
+): string {
 	const meta = user.user_metadata as Record<string, unknown> | undefined;
 	const name =
 		(typeof meta?.full_name === 'string' && meta.full_name) ||

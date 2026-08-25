@@ -1,5 +1,4 @@
 import { ActivityIndicator, Pressable, Text, View } from 'react-native';
-
 import { cn } from '@/src/lib/cn';
 import { colors } from '@/src/constants/colors';
 
@@ -19,14 +18,7 @@ export interface SocialPillProps {
 	icon?: React.ReactNode;
 }
 
-export function SocialPill({
-	label,
-	onPress,
-	disabled,
-	loading,
-	variant,
-	icon,
-}: SocialPillProps) {
+export function SocialPill({ label, onPress, disabled, loading, variant, icon }: SocialPillProps) {
 	const isKakao = variant === 'kakao';
 	const isApple = variant === 'apple';
 	const isGhost = variant === 'ghost';
@@ -35,24 +27,21 @@ export function SocialPill({
 		<Pressable
 			onPress={onPress}
 			disabled={disabled}
-			accessibilityRole='button'
+			accessibilityRole="button"
 			accessibilityLabel={label}
 			className={cn(
 				'h-14 rounded-full items-center justify-center',
 				isKakao && 'bg-[#FEE500]',
-				isApple && 'bg-white border border-[rgba(28,25,23,0.08)]',
-				isGhost &&
-					'bg-[rgba(255,255,255,0.38)] border border-[rgba(255,255,255,0.65)]',
+				isApple && 'bg-white border border-primary/8',
+				isGhost && 'bg-white/38 border border-white/65',
 				disabled && !loading && 'opacity-[0.55]',
 			)}
 			style={isApple ? APPLE_PILL_SHADOW : undefined}
 		>
 			{({ pressed }) => (
 				<View
-					className='flex-row items-center justify-center gap-2'
-					style={
-						pressed ? { opacity: 0.88, transform: [{ scale: 0.985 }] } : undefined
-					}
+					className="flex-row items-center justify-center gap-2"
+					style={pressed ? { opacity: 0.88, transform: [{ scale: 0.985 }] } : undefined}
 				>
 					{loading ? (
 						<ActivityIndicator color={isKakao ? '#191919' : colors.primary} />
@@ -62,11 +51,7 @@ export function SocialPill({
 							<Text
 								className={cn(
 									'text-[16px] font-pretendard-semibold',
-									isKakao
-										? 'text-[#191919]'
-										: isGhost
-											? 'text-[#44403C]'
-											: 'text-primary',
+									isKakao ? 'text-[#191919]' : isGhost ? 'text-stone-700' : 'text-primary',
 								)}
 							>
 								{label}

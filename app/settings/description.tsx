@@ -5,11 +5,7 @@ import { Pressable, ScrollView, Text, View } from 'react-native';
 import { Screen } from '@/src/components/layout/Screen';
 import { SettingsCard } from '@/src/components/mypage';
 import { cn } from '@/src/lib/cn';
-import {
-	type DescriptionFocus,
-	useSettingsStore,
-} from '@/src/store/settingsStore';
-import { colors } from '@/src/constants/colors';
+import { type DescriptionFocus, useSettingsStore } from '@/src/store/settingsStore';
 
 interface FocusOption {
 	key: DescriptionFocus;
@@ -54,18 +50,14 @@ const FOCUS_OPTIONS: FocusOption[] = [
 export default function DescriptionSettingsScreen() {
 	const router = useRouter();
 	const descriptionFocus = useSettingsStore((s) => s.descriptionFocus);
-	const toggleDescriptionFocus = useSettingsStore(
-		(s) => s.toggleDescriptionFocus,
-	);
+	const toggleDescriptionFocus = useSettingsStore((s) => s.toggleDescriptionFocus);
 
 	return (
-		<Screen variant='warm'>
+		<Screen variant="warm">
 			<Screen.Header>
-				<Screen.Header.Back color={colors.primary} onPress={() => router.back()} />
+				<Screen.Header.Back onPress={() => router.back()} />
 				<Screen.Header.Center>
-					<Text className='font-pretendard-semibold text-[16px] text-primary'>
-						해설 강화 항목
-					</Text>
+					<Text className="font-pretendard-semibold text-[16px] text-primary">해설 강화 항목</Text>
 				</Screen.Header.Center>
 			</Screen.Header>
 
@@ -73,11 +65,11 @@ export default function DescriptionSettingsScreen() {
 				showsVerticalScrollIndicator={false}
 				contentContainerStyle={{ paddingBottom: 60 }}
 			>
-				<Text className='text-[13px] font-pretendard-regular text-tertiary mt-4 mb-3'>
+				<Text className="text-[13px] font-pretendard-regular text-tertiary mt-4 mb-3">
 					{`선택한 항목을 해설에서 더 깊게 다뤄요.\n여러 개 선택할 수 있어요.`}
 				</Text>
 
-				<View className='mt-2'>
+				<View className="mt-2">
 					<SettingsCard>
 						{FOCUS_OPTIONS.map((option, idx) => {
 							const isSelected = descriptionFocus.includes(option.key);
@@ -87,7 +79,7 @@ export default function DescriptionSettingsScreen() {
 								<Pressable
 									key={option.key}
 									onPress={() => toggleDescriptionFocus(option.key)}
-									accessibilityRole='checkbox'
+									accessibilityRole="checkbox"
 									accessibilityLabel={option.label}
 									accessibilityState={{ checked: isSelected }}
 									style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
@@ -104,10 +96,10 @@ export default function DescriptionSettingsScreen() {
 												isSelected ? 'bg-primary' : 'border border-[#D6D3D1] bg-white',
 											)}
 										>
-											{isSelected && <Ionicons name='checkmark' size={13} color='white' />}
+											{isSelected && <Ionicons name="checkmark" size={13} color="white" />}
 										</View>
-										<View className='flex-1'>
-											<Text className='text-[14px] font-pretendard-medium text-primary'>
+										<View className="flex-1">
+											<Text className="text-[14px] font-pretendard-medium text-primary">
 												{option.label}
 											</Text>
 										</View>

@@ -1,11 +1,5 @@
 import { useCallback, useMemo, useState } from 'react';
-import {
-	Pressable,
-	ScrollView,
-	StyleSheet,
-	Text,
-	View,
-} from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
 	Easing,
@@ -129,37 +123,32 @@ export function VisitTicket({
 	} as const;
 
 	return (
-		<View className='h-auto'>
+		<View className="h-auto">
 			<GestureDetector gesture={flipGesture}>
 				<View style={{ height: TICKET_MIN_HEIGHT, minHeight: TICKET_MIN_HEIGHT }}>
 					{/* 앞면 */}
 					<Animated.View
-						className='overflow-hidden rounded-3xl bg-white'
+						className="overflow-hidden rounded-3xl bg-white"
 						pointerEvents={flipped ? 'none' : 'box-none'}
-						style={[
-							cardShadow,
-							frontStyle,
-							ticketShellStyle,
-							{ zIndex: flipped ? 0 : 2 },
-						]}
+						style={[cardShadow, frontStyle, ticketShellStyle, { zIndex: flipped ? 0 : 2 }]}
 					>
-						<View className='flex flex-col' style={{ height: TICKET_BODY_HEIGHT }}>
-							<View className='flex-1 min-h-0 w-full'>
+						<View className="flex flex-col" style={{ height: TICKET_BODY_HEIGHT }}>
+							<View className="flex-1 min-h-0 w-full">
 								<ImageFallback
 									heroImageUri={exhibition.heroImageUri}
 									posterImage={exhibition.posterImage}
-									className='h-full w-full bg-image-placeholder'
+									className="h-full w-full bg-image-placeholder"
 									iconSize={100}
-									resizeMode='cover'
+									resizeMode="cover"
 								/>
 							</View>
 
-							<View className='px-6 pt-5'>
-								<Text className='text-[10px] tracking-[3px] text-muted font-pretendard-semibold'>
+							<View className="px-6 pt-5">
+								<Text className="text-[10px] tracking-[3px] text-muted font-pretendard-semibold">
 									EXHIBITION
 								</Text>
 								<Text
-									className='mt-1.5 text-[24px] leading-[32px] text-primary font-hahmlet-bold'
+									className="mt-1.5 text-[24px] leading-[32px] text-primary font-hahmlet-bold"
 									numberOfLines={2}
 								>
 									{exhibition.title}
@@ -167,18 +156,18 @@ export function VisitTicket({
 							</View>
 
 							{/* 정보 그리드 */}
-							<View className='mb-4 mt-5 flex-row px-6'>
+							<View className="mb-4 mt-5 flex-row px-6">
 								{[
 									{ label: '장소', value: exhibition.venue },
 									{ label: '날짜', value: dateLabel.split(' ')[0] },
 									{ label: '들은 해설', value: `${listenedTitles.length}개` },
 								].map((cell) => (
-									<View key={cell.label} className='flex-1 pr-2'>
-										<Text className='text-[11px] text-muted font-pretendard-medium'>
+									<View key={cell.label} className="flex-1 pr-2">
+										<Text className="text-[11px] text-muted font-pretendard-medium">
 											{cell.label}
 										</Text>
 										<Text
-											className='mt-1 text-[14px] text-primary font-pretendard-semibold'
+											className="mt-1 text-[14px] text-primary font-pretendard-semibold"
 											numberOfLines={2}
 										>
 											{cell.value}
@@ -188,12 +177,12 @@ export function VisitTicket({
 							</View>
 						</View>
 
-						<VisitTicketFooter variant='front' bars={bars} ticketNo={ticketNo} />
+						<VisitTicketFooter variant="front" bars={bars} ticketNo={ticketNo} />
 					</Animated.View>
 
 					{/* 뒷면: 프로그램 + 나의 메모 (플립 시 입력 가능) */}
 					<Animated.View
-						className='overflow-hidden rounded-3xl bg-white'
+						className="overflow-hidden rounded-3xl bg-white"
 						pointerEvents={flipped ? 'box-none' : 'none'}
 						style={[
 							cardShadow,
@@ -203,9 +192,9 @@ export function VisitTicket({
 							{ zIndex: flipped ? 2 : 0 },
 						]}
 					>
-						<View className='flex flex-col' style={{ height: TICKET_BODY_HEIGHT }}>
+						<View className="flex flex-col" style={{ height: TICKET_BODY_HEIGHT }}>
 							<ScrollView
-								className='flex-1 min-h-0'
+								className="flex-1 min-h-0"
 								showsVerticalScrollIndicator={false}
 								nestedScrollEnabled
 								contentContainerStyle={{
@@ -214,18 +203,18 @@ export function VisitTicket({
 									flexGrow: 1,
 								}}
 							>
-								<View className='px-6 pt-2 pb-2'>
-									<View className='flex-row items-baseline justify-between mb-1'>
-										<Text className='text-[15px] font-pretendard-semibold text-primary'>
+								<View className="px-6 pt-2 pb-2">
+									<View className="flex-row items-baseline justify-between mb-1">
+										<Text className="text-[15px] font-pretendard-semibold text-primary">
 											오늘의 프로그램
 										</Text>
 										{listenedItems.length > 0 ? (
-											<Text className='text-[12px] font-pretendard-regular text-muted'>
+											<Text className="text-[12px] font-pretendard-regular text-muted">
 												{listenedItems.length}작품
 											</Text>
 										) : null}
 									</View>
-									<Text className='text-[11px] mb-3 font-pretendard-medium text-muted'>
+									<Text className="text-[11px] mb-3 font-pretendard-medium text-muted">
 										{dateLabel}
 									</Text>
 
@@ -238,8 +227,8 @@ export function VisitTicket({
 											/>
 										))
 									) : (
-										<View className='py-6'>
-											<Text className='text-[14px] text-center font-pretendard-medium text-primary'>
+										<View className="py-6">
+											<Text className="text-[14px] text-center font-pretendard-medium text-primary">
 												이날 들은 작품이 없어요
 											</Text>
 										</View>
@@ -248,13 +237,13 @@ export function VisitTicket({
 							</ScrollView>
 						</View>
 
-						<VisitTicketFooter variant='back' bars={bars} ticketNo={ticketNo} />
+						<VisitTicketFooter variant="back" bars={bars} ticketNo={ticketNo} />
 					</Animated.View>
 				</View>
 			</GestureDetector>
 
 			{/* 페이지 도트: 앞면/뒷면 표시 */}
-			<View className='mt-4 flex-row items-center justify-center gap-1.5'>
+			<View className="mt-4 flex-row items-center justify-center gap-1.5">
 				<View
 					className={cn(
 						'h-1.5 rounded-full',
@@ -271,15 +260,13 @@ export function VisitTicket({
 
 			<Pressable
 				onPress={() => snapTo(!flipped)}
-				accessibilityRole='button'
+				accessibilityRole="button"
 				accessibilityLabel={flipped ? '티켓 앞면 보기' : '티켓 뒷면 프로그램 보기'}
-				className='mt-2'
+				className="mt-2"
 				style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
 			>
-				<Text className='text-center text-[12px] font-pretendard-regular text-white/60'>
-					{flipped
-						? '← 밀거나 탭하면 앞면 보기'
-						: '좌우로 밀거나 탭하면 프로그램 보기'}
+				<Text className="text-center text-[12px] font-pretendard-regular text-white/60">
+					{flipped ? '← 밀거나 탭하면 앞면 보기' : '좌우로 밀거나 탭하면 프로그램 보기'}
 				</Text>
 			</Pressable>
 		</View>

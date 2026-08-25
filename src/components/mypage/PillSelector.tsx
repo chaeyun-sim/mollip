@@ -17,7 +17,7 @@ export function PillSelector<T extends string | number>({
 	labelSize,
 }: PillSelectorProps<T>) {
 	return (
-		<View className='flex-row gap-1.5 items-center'>
+		<View className="flex-row gap-1.5 items-center">
 			{options.map((opt) => {
 				const selected = value === opt.value;
 				return (
@@ -27,7 +27,7 @@ export function PillSelector<T extends string | number>({
 							Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
 							onChange(opt.value);
 						}}
-						accessibilityRole='button'
+						accessibilityRole="button"
 						accessibilityState={{ selected }}
 						accessibilityLabel={String(opt.label)}
 						style={({ pressed }) => ({

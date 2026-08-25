@@ -1,19 +1,15 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Stack, useRouter } from 'expo-router';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import {
-	Keyboard,
-	KeyboardAvoidingView,
-	Platform,
-	Pressable,
-	Text,
-	View,
-} from 'react-native';
+import { Keyboard, KeyboardAvoidingView, Platform, Pressable, Text, View } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { ImmersiveOverlay } from '@/src/components/explore';
 import { Screen } from '../../src/components/layout/Screen';
 import { ScreenHeader } from '../../src/components/layout/ScreenHeader';
-import { ExhibitionTitleField, type ExhibitionSuggestion } from '@/src/components/guide/ExhibitionTitleField';
+import {
+	ExhibitionTitleField,
+	type ExhibitionSuggestion,
+} from '@/src/components/guide/ExhibitionTitleField';
 import { VenueField } from '@/src/components/guide/VenueField';
 import { useImmersiveStore } from '../../src/store/immersiveStore';
 import { useVisitStore, todayKey } from '../../src/store/visitStore';
@@ -120,20 +116,20 @@ export default function ImmersiveStartScreen() {
 		<Screen>
 			<Stack.Screen options={{ gestureEnabled: false }} />
 			<KeyboardAvoidingView
-				className='flex-1'
+				className="flex-1"
 				behavior={Platform.OS === 'ios' ? 'padding' : undefined}
 			>
 				<ScreenHeader>
 					<ScreenHeader.Left>
-						<ScreenHeader.Back color='white-90' />
+						<ScreenHeader.Back color="white-90" />
 					</ScreenHeader.Left>
 				</ScreenHeader>
 
-				<Pressable className='flex-1 pt-4' onPress={Keyboard.dismiss}>
-					<Text className='text-[22px] mb-1.5 font-pretendard-bold text-white'>
+				<Pressable className="flex-1 pt-4" onPress={Keyboard.dismiss}>
+					<Text className="text-[22px] mb-1.5 font-pretendard-bold text-white">
 						몰입 모드로 시작하기
 					</Text>
-					<Text className='text-sm mb-9 font-pretendard-regular text-tertiary'>
+					<Text className="text-sm mb-9 font-pretendard-regular text-tertiary">
 						관람 중인 전시를 검색하거나 직접 입력하세요
 					</Text>
 
@@ -167,28 +163,24 @@ export default function ImmersiveStartScreen() {
 					/>
 
 					{/* 안내 */}
-					<View className='gap-2.5 px-1'>
+					<View className="gap-2.5 px-1">
 						{GUIDE_NOTES.map((note) => (
-							<View key={note.icon} className='flex-row items-center gap-2'>
-								<Ionicons name={note.icon} size={14} className='text-secondary' />
-								<Text className='text-xs font-pretendard-regular text-secondary'>
-									{note.text}
-								</Text>
+							<View key={note.icon} className="flex-row items-center gap-2">
+								<Ionicons name={note.icon} size={14} className="text-secondary" />
+								<Text className="text-xs font-pretendard-regular text-secondary">{note.text}</Text>
 							</View>
 						))}
 					</View>
 
-					<Screen.BottomAbsolute className='bottom-2'>
+					<Screen.BottomAbsolute className="bottom-2">
 						<Pressable
-							className='w-full rounded-lg items-center bg-accent py-3.5'
+							className="w-full rounded-lg items-center bg-accent py-3.5"
 							onPress={handleSubmit}
 							style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
-							accessibilityLabel='몰입 모드 시작하기'
-							accessibilityRole='button'
+							accessibilityLabel="몰입 모드 시작하기"
+							accessibilityRole="button"
 						>
-							<Text className='text-base font-pretendard-semibold text-white'>
-								시작하기
-							</Text>
+							<Text className="text-base font-pretendard-semibold text-white">시작하기</Text>
 						</Pressable>
 					</Screen.BottomAbsolute>
 				</Pressable>

@@ -9,7 +9,9 @@ export function useMapCamera() {
 	const cameraRef = useRef({ ...DEFAULT_CAMERA });
 	const zoomLevelRef = useRef(Math.round(DEFAULT_CAMERA.zoom));
 
-	const [currentCoord, setCurrentCoord] = useState<{ latitude: number; longitude: number } | null>(null);
+	const [currentCoord, setCurrentCoord] = useState<{ latitude: number; longitude: number } | null>(
+		null,
+	);
 	const [displayZoom, setDisplayZoom] = useState(DEFAULT_CAMERA.zoom);
 
 	useEffect(() => {

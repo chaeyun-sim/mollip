@@ -19,7 +19,7 @@ export default function PreferencesScreen() {
 	const [isLoading, setIsLoading] = useState(true);
 	const [currentArtists, setCurrentArtists] = useState<string[]>([]);
 	const [saving, setSaving] = useState(false);
-	
+
 	const { cards, setCards, liked, done, handleSwipeLeft, handleSwipeRight } =
 		useArtPreferenceSwipe();
 
@@ -54,33 +54,31 @@ export default function PreferencesScreen() {
 	}, [router, userId, liked, saving]);
 
 	return (
-		<Screen variant='warm'>
+		<Screen variant="warm">
 			<WarmGradientBackdrop />
 
 			<Screen.Header>
 				<Screen.Header.Back onPress={() => router.back()} />
 				<Screen.Header.Center>
-					<Text className='font-pretendard-semibold text-[16px] text-primary'>
-						내 취향 수정
-					</Text>
+					<Text className="font-pretendard-semibold text-[16px] text-primary">내 취향 수정</Text>
 				</Screen.Header.Center>
 			</Screen.Header>
 
 			{isLoading ? (
-				<View className='flex-1 items-center justify-center'>
+				<View className="flex-1 items-center justify-center">
 					<ActivityIndicator color={colors.primary} />
 				</View>
 			) : done ? (
 				<ArtPreferenceComplete
 					likedCount={liked.length}
-					buttonLabel='저장하기'
+					buttonLabel="저장하기"
 					onPress={handleSave}
 					disabled={saving}
 				/>
 			) : (
 				<>
 					{/* 부제 */}
-					<Text className='text-[13px] font-pretendard-regular text-description mb-1'>
+					<Text className="text-[13px] font-pretendard-regular text-description mb-1">
 						마음에 드는 그림을 저장하면 맞춤 전시를 추천해드릴게요
 					</Text>
 

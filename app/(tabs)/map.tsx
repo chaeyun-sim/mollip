@@ -1,7 +1,4 @@
-import BottomSheet, {
-	BottomSheetBackdrop,
-	BottomSheetModal,
-} from '@gorhom/bottom-sheet';
+import BottomSheet, { BottomSheetBackdrop, BottomSheetModal } from '@gorhom/bottom-sheet';
 import { NaverMapView } from '@mj-studio/react-native-naver-map';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -30,7 +27,7 @@ import { Screen } from '@/src/components/layout/Screen';
 import { colors } from '@/src/constants/colors';
 
 const MARKER_ZOOM = 14;
-const BACKGROUND_COLOR = '#F5F3EF'
+const BACKGROUND_COLOR = '#F5F3EF';
 
 export default function MapScreen() {
 	const router = useRouter();
@@ -47,16 +44,10 @@ export default function MapScreen() {
 	// present() 호출 후 onChange 완료까지 true — double-present 방지용
 	const sheetPresentingRef = useRef(false);
 
-	const { mapRef, cameraRef, currentCoord, displayZoom, handleCameraChanged } =
-		useMapCamera();
+	const { mapRef, cameraRef, currentCoord, displayZoom, handleCameraChanged } = useMapCamera();
 
-	const {
-		selectedVenueName,
-		selectVenue,
-		clearSelection,
-		pendingCamera,
-		clearPendingCamera,
-	} = useMapStore();
+	const { selectedVenueName, selectVenue, clearSelection, pendingCamera, clearPendingCamera } =
+		useMapStore();
 	// 전시 상세에서 지도로 진입했는지 추적 — currentCoord 자동 포커스를 막기 위해 사용
 	const cameFromExhibitionRef = useRef(false);
 	// 현재 위치 첫 포커스 여부 — GPS 갱신마다 카메라가 튀는 걸 막기 위해 사용
@@ -124,9 +115,7 @@ export default function MapScreen() {
 		if (direct) return direct;
 		// 하위 미술관 이름으로 부모 venue 찾기 — exhibition.venue가 sub-venue 이름일 때 대응
 		return (
-			allVenues.find((v) =>
-				v.subVenues?.some((sv) => sv.venueName === selectedVenueName),
-			) ?? null
+			allVenues.find((v) => v.subVenues?.some((sv) => sv.venueName === selectedVenueName)) ?? null
 		);
 	}, [selectedVenueName, dbVenues]);
 
@@ -150,8 +139,7 @@ export default function MapScreen() {
 		// 미술관 API로 추가된 마커는 주소가 없는데, 같은 장소의 API 전시 데이터에는
 		// 주소(institutionInfo 보강분)가 있는 경우가 있어 그걸로 보강한다.
 		const venueAddress =
-			selectedVenue.venueAddress ??
-			apiExhibitions.find((ex) => ex.venueAddress)?.venueAddress;
+			selectedVenue.venueAddress ?? apiExhibitions.find((ex) => ex.venueAddress)?.venueAddress;
 		if (apiExhibitions.length === 0) return { ...selectedVenue, venueAddress };
 		const merged = new Map(selectedVenue.exhibitions.map((ex) => [ex.id, ex]));
 		for (const ex of apiExhibitions) merged.set(ex.id, ex);
@@ -221,8 +209,7 @@ export default function MapScreen() {
 		// 경로가 들어가야 하므로 남쪽 경계를 sheetFrac / (1 - sheetFrac) 비율만큼 더 내린다.
 		const idx = routeSheetIndexRef.current;
 		const sheetFrac = idx >= 0 ? (routeSnapFractions[idx] ?? 0.5) : 0;
-		const bottomBias =
-			sheetFrac > 0 ? (latRange + 2 * latPad) * (sheetFrac / (1 - sheetFrac)) : 0;
+		const bottomBias = sheetFrac > 0 ? (latRange + 2 * latPad) * (sheetFrac / (1 - sheetFrac)) : 0;
 
 		mapRef.current?.animateCameraWithTwoCoords({
 			coord1: {
@@ -314,8 +301,7 @@ export default function MapScreen() {
 	// displayVenue 준비 완료 시 시트 오픈 (빈 sheet present → content 마운트 시 dismiss 버그 방지)
 	useEffect(() => {
 		if (!wantToOpenRef.current) return;
-		if (!selectedVenueName || !displayVenue || directionsStatus !== 'idle')
-			return;
+		if (!selectedVenueName || !displayVenue || directionsStatus !== 'idle') return;
 		openVenueSheet();
 		wantToOpenRef.current = false;
 	}, [displayVenue, selectedVenueName, directionsStatus, openVenueSheet]);
@@ -380,29 +366,22 @@ export default function MapScreen() {
 
 	const renderBackdrop = useCallback(
 		(props: any) => (
-			<BottomSheetBackdrop
-				{...props}
-				disappearsOnIndex={-1}
-				appearsOnIndex={0}
-				opacity={0.5}
-			/>
+			<BottomSheetBackdrop {...props} disappearsOnIndex={-1} appearsOnIndex={0} opacity={0.5} />
 		),
 		[],
 	);
 
 	return (
-		<Screen variant='dark' className="px-0" edges={[]}>
+		<Screen variant="dark" className="px-0" edges={[]}>
 			{/* 지도 */}
 			<NaverMapView
 				ref={mapRef}
 				style={{ flex: 1 }}
-				mapType='Basic'
+				mapType="Basic"
 				initialCamera={DEFAULT_CAMERA}
 				isIndoorEnabled={false}
 				isShowZoomControls={false}
-				locationOverlay={
-					currentCoord ? { isVisible: true, position: currentCoord } : undefined
-				}
+				locationOverlay={currentCoord ? { isVisible: true, position: currentCoord } : undefined}
 				onCameraChanged={handleCameraChanged}
 			>
 				<MapMarkersLayer
@@ -422,11 +401,11 @@ export default function MapScreen() {
 			{/* 줌 임계값(MARKER_ZOOM) 교차 시 마커 전환 인디케이터 */}
 			{isZoomTransitioning && (
 				<View
-					className='absolute inset-0 items-center justify-center'
-					pointerEvents='none'
+					className="absolute inset-0 items-center justify-center"
+					pointerEvents="none"
 					style={{ zIndex: 5 }}
 				>
-					<ActivityIndicator size='small' color='rgba(0,0,0,0.4)' />
+					<ActivityIndicator size="small" color="rgba(0,0,0,0.4)" />
 				</View>
 			)}
 
@@ -460,9 +439,7 @@ export default function MapScreen() {
 						setRouteOrigin({ name: '현재 위치', coord: currentCoord });
 					}
 				}}
-				onFocusLocation={(coord) =>
-					mapRef.current?.animateCameraTo({ ...coord, zoom: 14 })
-				}
+				onFocusLocation={(coord) => mapRef.current?.animateCameraTo({ ...coord, zoom: 14 })}
 				onAddRecent={addRecent}
 				onSwap={swapEndpoints}
 				onConfirm={handleConfirmRoutePlan}
@@ -525,7 +502,7 @@ export default function MapScreen() {
 						onRequestDirections={handleBeginDirections}
 					/>
 				) : isVenueSheetOpen ? (
-					<View className='flex-1 items-center justify-center py-12'>
+					<View className="flex-1 items-center justify-center py-12">
 						<ActivityIndicator color={colors.secondary} />
 					</View>
 				) : null}

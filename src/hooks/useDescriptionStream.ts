@@ -31,9 +31,16 @@ export function useDescriptionStream() {
 
 	// 로딩 단계 자동 진행 (5초, 10초)
 	useEffect(() => {
-		const t1 = setTimeout(() => { if (mountedRef.current) setLoadingStep(1); }, 5000);
-		const t2 = setTimeout(() => { if (mountedRef.current) setLoadingStep(2); }, 10000);
-		return () => { clearTimeout(t1); clearTimeout(t2); };
+		const t1 = setTimeout(() => {
+			if (mountedRef.current) setLoadingStep(1);
+		}, 5000);
+		const t2 = setTimeout(() => {
+			if (mountedRef.current) setLoadingStep(2);
+		}, 10000);
+		return () => {
+			clearTimeout(t1);
+			clearTimeout(t2);
+		};
 	}, []);
 
 	// 문자 단위 표시 타이머
@@ -92,7 +99,9 @@ export function useDescriptionStream() {
 			}
 		};
 		run();
-		return () => { cancelled = true; };
+		return () => {
+			cancelled = true;
+		};
 	}, [retryCount]);
 
 	const isTyping = isStreaming || bufferRef.current.length > 0;

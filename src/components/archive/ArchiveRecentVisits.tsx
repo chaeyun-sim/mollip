@@ -2,9 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Pressable, Text, View } from 'react-native';
 import { ImageFallback } from '@/src/components/common/ImageFallback';
 import { SectionTitle } from '@/src/components/common/SectionTitle';
-import {
-	archiveTintForKey,
-} from '@/src/components/archive/archivePalette';
+import { archiveTintForKey } from '@/src/components/archive/archivePalette';
 import { useVisitStore } from '@/src/store/visitStore';
 
 interface ArchiveRecentVisitsProps {
@@ -24,10 +22,8 @@ function formatDateLine(dateKey: string): {
 	yesterday.setDate(yesterday.getDate() - 1);
 	const yesterdayKey = `${yesterday.getFullYear()}-${String(yesterday.getMonth() + 1).padStart(2, '0')}-${String(yesterday.getDate()).padStart(2, '0')}`;
 
-	if (dateKey === todayKey)
-		return { primary: '오늘', secondary: `${y}년 ${m}월 ${d}일` };
-	if (dateKey === yesterdayKey)
-		return { primary: '어제', secondary: `${y}년 ${m}월 ${d}일` };
+	if (dateKey === todayKey) return { primary: '오늘', secondary: `${y}년 ${m}월 ${d}일` };
+	if (dateKey === yesterdayKey) return { primary: '어제', secondary: `${y}년 ${m}월 ${d}일` };
 	const weekdays = ['일', '월', '화', '수', '목', '금', '토'] as const;
 	return {
 		primary: `${m}월 ${d}일`,
@@ -35,19 +31,16 @@ function formatDateLine(dateKey: string): {
 	};
 }
 
-export function ArchiveRecentVisits({
-	dateKeys,
-	onSelectDate,
-}: ArchiveRecentVisitsProps) {
+export function ArchiveRecentVisits({ dateKeys, onSelectDate }: ArchiveRecentVisitsProps) {
 	const visits = useVisitStore((s) => s.visits);
 
 	if (dateKeys.length === 0) return null;
 
 	return (
-		<View className='mb-5'>
-			<SectionTitle eyebrow='RECENT' title='최근 관람' />
+		<View className="mb-5">
+			<SectionTitle eyebrow="RECENT" title="최근 관람" />
 
-			<View className='rounded-[22px] bg-bg-light overflow-hidden'>
+			<View className="rounded-[22px] bg-bg-light overflow-hidden">
 				{dateKeys.map((dateKey, index) => {
 					const visit = visits[dateKey];
 					const title = visit?.exhibitionTitle?.trim() || '관람 기록';
@@ -61,9 +54,9 @@ export function ArchiveRecentVisits({
 						<Pressable
 							key={dateKey}
 							onPress={() => onSelectDate(dateKey)}
-							accessibilityRole='button'
+							accessibilityRole="button"
 							accessibilityLabel={`${dateKey} ${title} 관람 기록`}
-							className='flex-row items-center px-4 py-3.5'
+							className="flex-row items-center px-4 py-3.5"
 							style={({ pressed }) => ({
 								opacity: pressed ? 0.88 : 1,
 								borderBottomWidth: isLast ? 0 : 1,
@@ -71,47 +64,41 @@ export function ArchiveRecentVisits({
 							})}
 						>
 							<View
-								className='overflow-hidden mr-3.5 w-[52px] h-[52px] rounded-[14px]'
+								className="overflow-hidden mr-3.5 w-[52px] h-[52px] rounded-[14px]"
 								style={{ backgroundColor: tint }}
 							>
 								<ImageFallback
 									heroImageUri={imageUrl}
-									className='items-center justify-center'
+									className="items-center justify-center"
 									style={{ width: 52, height: 52 }}
 									iconSize={22}
-									resizeMode='cover'
+									resizeMode="cover"
 								/>
 							</View>
 
-							<View className='flex-1 min-w-0'>
-								<View className='flex-row items-baseline gap-2 mb-0.5'>
-									<Text
-										className='text-[15px] font-pretendard-semibold text-primary'
-									>
+							<View className="flex-1 min-w-0">
+								<View className="flex-row items-baseline gap-2 mb-0.5">
+									<Text className="text-[15px] font-pretendard-semibold text-primary">
 										{primary}
 									</Text>
-									<Text
-										className='text-[12px] font-pretendard-regular text-tertiary'
-									>
+									<Text className="text-[12px] font-pretendard-regular text-tertiary">
 										{secondary}
 									</Text>
 								</View>
 								<Text
-									className='text-[14px] leading-[19px] font-pretendard-medium text-primary'
+									className="text-[14px] leading-[19px] font-pretendard-medium text-primary"
 									numberOfLines={1}
 								>
 									{title}
 								</Text>
 								{listenedCount > 0 ? (
-									<Text
-										className='text-[12px] mt-1 font-pretendard-regular text-secondary'
-									>
+									<Text className="text-[12px] mt-1 font-pretendard-regular text-secondary">
 										들은 작품 {listenedCount}개
 									</Text>
 								) : null}
 							</View>
 
-							<Ionicons name='chevron-forward' size={18} color='#D6D3D1' />
+							<Ionicons name="chevron-forward" size={18} color="#D6D3D1" />
 						</Pressable>
 					);
 				})}

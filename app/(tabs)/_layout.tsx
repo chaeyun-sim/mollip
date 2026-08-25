@@ -27,59 +27,43 @@ export default function TabsLayout() {
 			}}
 		>
 			<Tabs.Screen
-				name='search'
+				name="search"
 				options={{
 					title: '검색',
 					tabBarIcon: ({ focused, color, size }) => (
-						<Ionicons
-							name={focused ? 'search' : 'search-outline'}
-							size={size}
-							color={color}
-						/>
+						<Ionicons name={focused ? 'search' : 'search-outline'} size={size} color={color} />
 					),
 				}}
 			/>
 			<Tabs.Screen
-				name='exhibitions'
+				name="exhibitions"
 				options={{
 					title: '전시',
 					tabBarIcon: ({ focused, color, size }) => (
-						<Ionicons
-							name={focused ? 'images' : 'images-outline'}
-							size={size}
-							color={color}
-						/>
+						<Ionicons name={focused ? 'images' : 'images-outline'} size={size} color={color} />
 					),
 				}}
 			/>
 			<Tabs.Screen
-				name='index'
+				name="index"
 				options={{
 					title: '둘러보기',
 					tabBarIcon: ({ focused, color, size }) => (
-						<Ionicons
-							name={focused ? 'compass' : 'compass-outline'}
-							size={size}
-							color={color}
-						/>
+						<Ionicons name={focused ? 'compass' : 'compass-outline'} size={size} color={color} />
 					),
 				}}
 			/>
 			<Tabs.Screen
-				name='map'
+				name="map"
 				options={{
 					title: '지도',
 					tabBarIcon: ({ focused, color, size }) => (
-						<Ionicons
-							name={focused ? 'map' : 'map-outline'}
-							size={size}
-							color={color}
-						/>
+						<Ionicons name={focused ? 'map' : 'map-outline'} size={size} color={color} />
 					),
 				}}
 			/>
 			<Tabs.Screen
-				name='diary'
+				name="diary"
 				listeners={{
 					tabPress: (e) => {
 						if (authLoading || session) return;
@@ -93,11 +77,7 @@ export default function TabsLayout() {
 				options={{
 					title: '다이어리',
 					tabBarIcon: ({ focused, color, size }) => (
-						<Ionicons
-							name={focused ? 'calendar' : 'calendar-outline'}
-							size={size}
-							color={color}
-						/>
+						<Ionicons name={focused ? 'calendar' : 'calendar-outline'} size={size} color={color} />
 					),
 				}}
 			/>

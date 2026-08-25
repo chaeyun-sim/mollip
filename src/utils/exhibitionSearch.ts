@@ -28,26 +28,16 @@ export const STATUS_LABELS: Record<ExhibitionStatus, string> = {
 /** Supabase `start_date` / `end_date` (YYYY.MM.DD) */
 export const EXHIBITION_DATE_RE = /^\d{4}\.\d{2}\.\d{2}$/;
 
-export function isValidExhibitionDateString(
-	value: string | null | undefined,
-): boolean {
+export function isValidExhibitionDateString(value: string | null | undefined): boolean {
 	return typeof value === 'string' && EXHIBITION_DATE_RE.test(value.trim());
 }
 
-export function hasValidExhibitionDates(
-	ex: Pick<Exhibition, 'startDate' | 'endDate'>,
-): boolean {
-	return (
-		isValidExhibitionDateString(ex.startDate) &&
-		isValidExhibitionDateString(ex.endDate)
-	);
+export function hasValidExhibitionDates(ex: Pick<Exhibition, 'startDate' | 'endDate'>): boolean {
+	return isValidExhibitionDateString(ex.startDate) && isValidExhibitionDateString(ex.endDate);
 }
 
 /** 기준 날짜 대비 전시 진행 상태 (날짜 없/형식 오류 → 마감 취급) */
-export function getExhibitionStatus(
-	ex: Exhibition,
-	base: Date = new Date(),
-): ExhibitionStatus {
+export function getExhibitionStatus(ex: Exhibition, base: Date = new Date()): ExhibitionStatus {
 	if (!hasValidExhibitionDates(ex)) return 'ended';
 	const d = new Date(base);
 	d.setHours(0, 0, 0, 0);
@@ -64,18 +54,12 @@ export function todayExhibitionDateString(base: Date = new Date()): string {
 	return `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')}`;
 }
 
-export function isExhibitionEnded(
-	ex: Exhibition,
-	base: Date = new Date(),
-): boolean {
+export function isExhibitionEnded(ex: Exhibition, base: Date = new Date()): boolean {
 	return getExhibitionStatus(ex, base) === 'ended';
 }
 
 /** 목록·검색·지도 등 사용자-facing 노출 대상 */
-export function isExhibitionListed(
-	ex: Exhibition,
-	base: Date = new Date(),
-): boolean {
+export function isExhibitionListed(ex: Exhibition, base: Date = new Date()): boolean {
 	return hasValidExhibitionDates(ex) && !isExhibitionEnded(ex, base);
 }
 
@@ -127,11 +111,7 @@ export function daysUntilEnd(ex: Exhibition, base: Date = new Date()): number {
 }
 
 /** 진행 중일 때 D-day 라벨 반환. maxDays 이내일 때만 표시 (기본 7일) */
-export function getDdayLabel(
-	ex: Exhibition,
-	base?: Date,
-	maxDays?: number,
-): string | null;
+export function getDdayLabel(ex: Exhibition, base?: Date, maxDays?: number): string | null;
 /** @deprecated base를 두 번째 인자로 쓰는 구형 시그니처 */
 export function getDdayLabel(ex: Exhibition, base: Date): string | null;
 export function getDdayLabel(
@@ -140,8 +120,7 @@ export function getDdayLabel(
 	maxDays = 7,
 ): string | null {
 	const base = baseOrMaxDays instanceof Date ? baseOrMaxDays : new Date();
-	const effectiveMax =
-		typeof baseOrMaxDays === 'number' ? baseOrMaxDays : maxDays;
+	const effectiveMax = typeof baseOrMaxDays === 'number' ? baseOrMaxDays : maxDays;
 	if (getExhibitionStatus(ex, base) !== 'ongoing') return null;
 	const days = daysUntilEnd(ex, base);
 	if (days > effectiveMax) return null;
@@ -150,10 +129,7 @@ export function getDdayLabel(
 
 /** 전시 태그를 빈도순으로 집계해 상위 N개 반환.
  * 한 전시가 결과를 독점하지 않도록 전시당 최대 2개 태그로 제한. */
-export function getPopularTags(
-	limit: number,
-	exhibitions: Exhibition[] = EXHIBITIONS,
-): string[] {
+export function getPopularTags(limit: number, exhibitions: Exhibition[] = EXHIBITIONS): string[] {
 	// tag → 이 태그를 가진 전시 ID 집합
 	const tagExIds = new Map<string, Set<string>>();
 	for (const ex of exhibitions) {
@@ -164,9 +140,7 @@ export function getPopularTags(
 	}
 
 	// 등장 전시 수 내림차순 정렬
-	const sorted = Array.from(tagExIds.entries()).sort(
-		(a, b) => b[1].size - a[1].size,
-	);
+	const sorted = Array.from(tagExIds.entries()).sort((a, b) => b[1].size - a[1].size);
 
 	// 전시당 최대 2개 쿼터로 결과 구성
 	const MAX_PER_EX = 2;

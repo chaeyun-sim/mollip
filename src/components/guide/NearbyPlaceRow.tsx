@@ -31,25 +31,22 @@ export function NearbyPlaceRow({
 
 	return (
 		<View
-			className='flex-row items-center gap-3 py-3 border-border'
+			className="flex-row items-center gap-3 py-3 border-border"
 			style={{ borderTopWidth: isFirst ? 0 : StyleSheet.hairlineWidth }}
 		>
 			{/* 실제 사진 대신 카테고리 아이콘 — 지역 검색 API가 이미지를 제공하지 않음 */}
 			<View
-				className='w-12 h-12 rounded-full items-center justify-center'
+				className="w-12 h-12 rounded-full items-center justify-center"
 				style={{ backgroundColor: tint }}
 			>
 				<Ionicons name={icon} size={22} color={iconColor} />
 			</View>
-			<View className='flex-1 min-w-0'>
-				<Text
-					className='text-primary font-pretendard-semibold text-[14px]'
-					numberOfLines={1}
-				>
+			<View className="flex-1 min-w-0">
+				<Text className="text-primary font-pretendard-semibold text-[14px]" numberOfLines={1}>
 					{place.name}
 				</Text>
 				<Text
-					className='text-tertiary font-pretendard-regular text-[12px] mt-0.5'
+					className="text-tertiary font-pretendard-regular text-[12px] mt-0.5"
 					numberOfLines={1}
 				>
 					{place.distance}
@@ -63,11 +60,11 @@ export function NearbyPlaceRow({
 					})
 				}
 				hitSlop={8}
-				className='w-8 h-8 items-center justify-center'
-				accessibilityRole='button'
+				className="w-8 h-8 items-center justify-center"
+				accessibilityRole="button"
 				accessibilityLabel={`${place.name} 외부 지도 앱에서 열기`}
 			>
-				<Ionicons name='share-outline' size={18} className='text-muted' />
+				<Ionicons name="share-outline" size={18} className="text-muted" />
 			</Pressable>
 		</View>
 	);

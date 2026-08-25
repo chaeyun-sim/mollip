@@ -25,11 +25,5 @@ export function SkeletonBox({ className, style, ...props }: SkeletonBoxProps) {
 
 	const animStyle = useAnimatedStyle(() => ({ opacity: opacity.value }));
 
-	return (
-		<Animated.View
-			className={className}
-			style={[animStyle, style]}
-			{...props}
-		/>
-	);
+	return <Animated.View className={className} style={[animStyle, style]} {...props} />;
 }

@@ -1,13 +1,11 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Keyboard, Pressable, ScrollView, Text, View } from 'react-native';
-
 import { SearchBar } from '@/src/components/common/SearchBar';
 import { RoutePlanningBar } from '@/src/components/map/RoutePlanningBar';
 import { cn } from '@/src/lib/cn';
 import type { VenueGroup } from '@/src/data/venues';
 import type { DirectionsStatus, RouteEndpoint } from '@/src/hooks/useDirections';
 import type { RecentLocation } from '@/src/hooks/useRecentLocations';
-import { colors } from '@/src/constants/colors';
 
 interface MapTopBarProps {
 	insetsTop: number;
@@ -54,20 +52,17 @@ export function MapTopBar({
 }: MapTopBarProps) {
 	return (
 		<>
-			<View
-				className='absolute left-4 right-4'
-				style={{ top: insetsTop + 12, zIndex: 20 }}
-			>
+			<View className="absolute left-4 right-4" style={{ top: insetsTop + 12, zIndex: 20 }}>
 				{directionsStatus === 'idle' ? (
 					<>
 						<SearchBar
 							value={searchText}
 							onChangeText={onChangeSearchText}
-							placeholder='미술관 또는 전시 검색'
+							placeholder="미술관 또는 전시 검색"
 						/>
 						{searchText.length > 0 && mapVenues.length > 0 && (
 							<ScrollView
-								className='rounded-2xl bg-white overflow-hidden mt-2'
+								className="rounded-2xl bg-white overflow-hidden mt-2"
 								style={{
 									maxHeight: 240,
 									shadowColor: '#000',
@@ -76,7 +71,7 @@ export function MapTopBar({
 									shadowOffset: { width: 0, height: 2 },
 									elevation: 4,
 								}}
-								keyboardShouldPersistTaps='handled'
+								keyboardShouldPersistTaps="handled"
 								showsVerticalScrollIndicator={false}
 							>
 								{mapVenues.slice(0, 8).map((venue, index) => (
@@ -93,23 +88,22 @@ export function MapTopBar({
 										}}
 										className={cn(
 											'flex-row items-center px-4 py-3',
-											index < Math.min(mapVenues.length, 8) - 1 &&
-												'border-b border-black/[0.05]',
+											index < Math.min(mapVenues.length, 8) - 1 && 'border-b border-black/[0.05]',
 										)}
-										accessibilityRole='button'
+										accessibilityRole="button"
 										accessibilityLabel={`${venue.venueName} 선택`}
 									>
-										<Ionicons name='location-outline' size={15} color={colors.tertiary} />
-										<View className='ml-2.5 flex-1'>
+										<Ionicons name="location-outline" size={15} className="text-tertiary" />
+										<View className="ml-2.5 flex-1">
 											<Text
-												className='font-pretendard-medium text-[14px] text-primary'
+												className="font-pretendard-medium text-[14px] text-primary"
 												numberOfLines={1}
 											>
 												{venue.venueName}
 											</Text>
 											{venue.venueAddress && (
 												<Text
-													className='font-pretendard-regular text-[12px] text-tertiary mt-0.5'
+													className="font-pretendard-regular text-[12px] text-tertiary mt-0.5"
 													numberOfLines={1}
 												>
 													{venue.venueAddress}
@@ -140,7 +134,7 @@ export function MapTopBar({
 				) : (
 					<Pressable
 						onPress={onClose}
-						className='self-start w-11 h-11 items-center justify-center rounded-full bg-white'
+						className="self-start w-11 h-11 items-center justify-center rounded-full bg-white"
 						style={{
 							shadowColor: '#000',
 							shadowOpacity: 0.1,
@@ -149,10 +143,10 @@ export function MapTopBar({
 							elevation: 4,
 						}}
 						hitSlop={6}
-						accessibilityLabel='길찾기 닫기'
-						accessibilityRole='button'
+						accessibilityLabel="길찾기 닫기"
+						accessibilityRole="button"
 					>
-						<Ionicons name='close' size={22} color={colors.primary} />
+						<Ionicons name="close" size={22} className="text-primary" />
 					</Pressable>
 				)}
 			</View>
@@ -160,7 +154,7 @@ export function MapTopBar({
 			{/* 검색 결과 없음 */}
 			{directionsStatus === 'idle' && searchText.length > 0 && mapVenues.length === 0 && (
 				<View
-					className='absolute left-4 right-4 items-center bg-white rounded-2xl px-4 py-3'
+					className="absolute left-4 right-4 items-center bg-white rounded-2xl px-4 py-3"
 					style={{
 						top: insetsTop + 56,
 						zIndex: 20,
@@ -171,7 +165,7 @@ export function MapTopBar({
 						elevation: 4,
 					}}
 				>
-					<Text className='text-sm font-pretendard-medium text-black/40'>
+					<Text className="text-sm font-pretendard-medium text-black/40">
 						"{searchText}"에 해당하는 미술관이 없어요
 					</Text>
 				</View>

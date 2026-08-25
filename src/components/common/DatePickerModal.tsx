@@ -32,7 +32,7 @@ interface DatePickerModalProps {
 	 * 확인 버튼 레이블
 	 */
 	confirmLabel?: string;
-};
+}
 
 export function DatePickerModal({
 	visible,
@@ -70,20 +70,20 @@ export function DatePickerModal({
 	}, [visible, slideAnim]);
 
 	return (
-		<Modal visible={visible} transparent animationType='fade'>
-			<Pressable className='flex-1 justify-end bg-black/35' onPress={onDismiss}>
+		<Modal visible={visible} transparent animationType="fade">
+			<Pressable className="flex-1 justify-end bg-black/35" onPress={onDismiss}>
 				<Pressable onPress={(e) => e.stopPropagation()}>
 					<Animated.View
-						className='bg-white rounded-t-3xl'
+						className="bg-white rounded-t-3xl"
 						style={{
 							paddingBottom: insets.bottom + 8,
 							transform: [{ translateY: slideAnim }],
 						}}
 					>
-						<View className='items-center pt-3 pb-1'>
-							<View className='w-9 h-1 rounded-full bg-black/15' />
+						<View className="items-center pt-3 pb-1">
+							<View className="w-9 h-1 rounded-full bg-black/15" />
 						</View>
-						<View className='flex-row justify-between items-center px-5 pt-2 pb-0'>
+						<View className="flex-row justify-between items-center px-5 pt-2 pb-0">
 							{onReset ? (
 								<Pressable
 									onPress={() => {
@@ -91,9 +91,7 @@ export function DatePickerModal({
 										onDismiss();
 									}}
 								>
-									<Text className='text-sm font-pretendard-medium text-black/40'>
-										{resetLabel}
-									</Text>
+									<Text className="text-sm font-pretendard-medium text-black/40">{resetLabel}</Text>
 								</Pressable>
 							) : (
 								<View />
@@ -103,20 +101,18 @@ export function DatePickerModal({
 									onChange(draft);
 									onDismiss();
 								}}
-								className='bg-black rounded-full px-4 py-1.5'
+								className="bg-black rounded-full px-4 py-1.5"
 							>
-								<Text className='text-sm font-pretendard-semibold text-white'>
-									{confirmLabel}
-								</Text>
+								<Text className="text-sm font-pretendard-semibold text-white">{confirmLabel}</Text>
 							</Pressable>
 						</View>
-						<View className='w-full flex-row justify-center items-center h-[200px] mt-2'>
+						<View className="w-full flex-row justify-center items-center h-[200px] mt-2">
 							<DateTimePicker
 								value={draft}
-								mode='date'
-								display='spinner'
+								mode="date"
+								display="spinner"
 								onValueChange={(_event: any, date: Date) => setDraft(date)}
-								className='h-full w-full'
+								className="h-full w-full"
 							/>
 						</View>
 					</Animated.View>

@@ -10,18 +10,18 @@ Deno.serve(async (req) => {
 	try {
 		const apiKey = Deno.env.get('KAKAO_API_KEY');
 		if (!apiKey) {
-			return new Response(
-				JSON.stringify({ error: 'KAKAO_API_KEY not configured' }),
-				{ status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
-			);
+			return new Response(JSON.stringify({ error: 'KAKAO_API_KEY not configured' }), {
+				status: 500,
+				headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+			});
 		}
 
 		const { query, size = 8 } = await req.json();
 		if (!query || typeof query !== 'string') {
-			return new Response(
-				JSON.stringify({ error: 'query is required' }),
-				{ status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
-			);
+			return new Response(JSON.stringify({ error: 'query is required' }), {
+				status: 400,
+				headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+			});
 		}
 
 		const params = new URLSearchParams({ query, size: String(size) });
@@ -33,17 +33,16 @@ Deno.serve(async (req) => {
 
 		if (!res.ok) {
 			const err = await res.text();
-			return new Response(
-				JSON.stringify({ error: `Kakao API ${res.status}: ${err}` }),
-				{ status: res.status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
-			);
+			return new Response(JSON.stringify({ error: `Kakao API ${res.status}: ${err}` }), {
+				status: res.status,
+				headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+			});
 		}
 
 		const data = await res.json();
-		return new Response(
-			JSON.stringify({ documents: data.documents ?? [] }),
-			{ headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
-		);
+		return new Response(JSON.stringify({ documents: data.documents ?? [] }), {
+			headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+		});
 	} catch (err) {
 		return new Response(
 			JSON.stringify({ error: err instanceof Error ? err.message : 'Unknown error' }),

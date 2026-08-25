@@ -6,9 +6,7 @@ import type { DayVisit } from '@/src/store/visitStore';
  * Lightweight hook: fetches only image_url for each visit's exhibitionId.
  * Returns a map of dateKey → poster image URL.
  */
-export function useExhibitionPosterUrls(
-	visits: Record<string, DayVisit>,
-): Record<string, string> {
+export function useExhibitionPosterUrls(visits: Record<string, DayVisit>): Record<string, string> {
 	const [posterMap, setPosterMap] = useState<Record<string, string>>({});
 
 	useEffect(() => {
@@ -42,8 +40,10 @@ export function useExhibitionPosterUrls(
 		return () => {
 			cancelled = true;
 		};
-	// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [JSON.stringify(Object.fromEntries(Object.entries(visits).map(([k, v]) => [k, v.exhibitionId])))]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [
+		JSON.stringify(Object.fromEntries(Object.entries(visits).map(([k, v]) => [k, v.exhibitionId]))),
+	]);
 
 	return posterMap;
 }

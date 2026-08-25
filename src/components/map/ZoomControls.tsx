@@ -17,14 +17,14 @@ const BUTTONS = [
 export function ZoomControls({ mapRef, cameraRef, bottomOffset = 96 }: ZoomControlsProps) {
 	return (
 		<View
-			className='absolute right-5 bg-[rgba(15,14,13,0.92)] border border-white/15 rounded-xl overflow-hidden'
+			className="absolute right-5 bg-[rgba(15,14,13,0.92)] border border-white/15 rounded-xl overflow-hidden"
 			style={{ bottom: bottomOffset }}
 		>
 			{BUTTONS.map(({ icon, label, delta }, i) => (
 				<View key={icon}>
-					{i === 1 && <View className='h-px bg-white/15' />}
+					{i === 1 && <View className="h-px bg-white/15" />}
 					<Pressable
-						className='w-12 h-12 items-center justify-center'
+						className="w-12 h-12 items-center justify-center"
 						style={({ pressed }) => (pressed ? { opacity: 0.6 } : undefined)}
 						onPress={() => {
 							const c = cameraRef.current;
@@ -35,9 +35,9 @@ export function ZoomControls({ mapRef, cameraRef, bottomOffset = 96 }: ZoomContr
 							});
 						}}
 						accessibilityLabel={label}
-						accessibilityRole='button'
+						accessibilityRole="button"
 					>
-						<Ionicons name={icon} size={22} color='white' />
+						<Ionicons name={icon} size={22} color="white" />
 					</Pressable>
 				</View>
 			))}

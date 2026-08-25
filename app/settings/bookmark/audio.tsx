@@ -35,35 +35,33 @@ function AudioHistoryCard({ item, onPress, onDelete }: AudioHistoryCardProps) {
 		<Pressable
 			onPress={() => onPress(item)}
 			accessibilityLabel={item.title}
-			accessibilityRole='button'
-			className='flex-row items-center gap-3'
+			accessibilityRole="button"
+			className="flex-row items-center gap-3"
 			style={({ pressed }) => ({ opacity: pressed ? 0.8 : 1 })}
 		>
 			{item.imageUrl ? (
 				<Image
 					source={{ uri: item.imageUrl }}
-					className='w-[40px] h-[40px] rounded-full'
-					resizeMode='cover'
+					className="w-[40px] h-[40px] rounded-full"
+					resizeMode="cover"
 				/>
 			) : (
-				<View className='w-[40px] h-[40px] rounded-full bg-[#E8E3DB] items-center justify-center'>
-					<Ionicons name='headset-outline' size={18} color={colors.tertiary} />
+				<View className="w-[40px] h-[40px] rounded-full bg-[#E8E3DB] items-center justify-center">
+					<Ionicons name="headset-outline" size={18} className="text-tertiary" />
 				</View>
 			)}
 
-			<View className='flex-1'>
+			<View className="flex-1">
 				<Text
 					numberOfLines={1}
-					className='text-primary text-[14px] font-pretendard-semibold leading-[20px]'
+					className="text-primary text-[14px] font-pretendard-semibold leading-[20px]"
 				>
 					{item.title}
 				</Text>
 				{item.artist && (
-					<Text className='text-muted text-[12px] font-pretendard-regular'>
-						{item.artist}
-					</Text>
+					<Text className="text-muted text-[12px] font-pretendard-regular">{item.artist}</Text>
 				)}
-				<Text className='text-[#C7C3BD] text-[11px] font-pretendard-regular mt-0.5'>
+				<Text className="text-[#C7C3BD] text-[11px] font-pretendard-regular mt-0.5">
 					{formatDate(item.savedAt)}
 				</Text>
 			</View>
@@ -81,11 +79,11 @@ function AudioHistoryCard({ item, onPress, onDelete }: AudioHistoryCardProps) {
 					]);
 				}}
 				hitSlop={8}
-				accessibilityLabel='저장 취소'
-				accessibilityRole='button'
-				className='p-1'
+				accessibilityLabel="저장 취소"
+				accessibilityRole="button"
+				className="p-1"
 			>
-				<Ionicons name='heart' size={18} color='#F87171' />
+				<Ionicons name="heart" size={18} className="text-red-400" />
 			</Pressable>
 		</Pressable>
 	);
@@ -98,11 +96,14 @@ export default function AudioHistoryScreen() {
 	const sheetRef = useRef<BottomSheet>(null);
 	const { isSpeaking, isLoading: isTTSLoading, speak, pause, stop } = useTTS();
 
-	const handleCardPress = useCallback((item: HistoryItem) => {
-		stop();
-		setSelected(item);
-		sheetRef.current?.expand();
-	}, [stop]);
+	const handleCardPress = useCallback(
+		(item: HistoryItem) => {
+			stop();
+			setSelected(item);
+			sheetRef.current?.expand();
+		},
+		[stop],
+	);
 
 	const handleDelete = useCallback(
 		(id: string) => {
@@ -126,24 +127,20 @@ export default function AudioHistoryScreen() {
 	}, [selected, isSpeaking, pause, speak]);
 
 	return (
-		<Screen variant='warm'>
+		<Screen variant="warm">
 			<Screen.Header>
-				<Screen.Header.Back color={colors.tertiary} />
+				<Screen.Header.Back color="muted" />
 				<Screen.Header.Center>
-					<Text className='font-pretendard-semibold text-[16px] text-primary'>
+					<Text className="font-pretendard-semibold text-[16px] text-primary">
 						다시 듣고 싶은 오디오
 					</Text>
 				</Screen.Header.Center>
 			</Screen.Header>
 
 			{items.length === 0 ? (
-				<View className='flex-1 items-center justify-center gap-2'>
-					{/* TODO: 저장한 오디오 빈 상태 일러스트
-						프롬프트: 따뜻한 베이지(#F8F6F2) 배경 위에 놓인 헤드셋과 그 주위를 감도는 작은 음표들,
-						플랫 일러스트 스타일, 얇은 라인 아트, 잉크색(#1C1917) 윤곽선, 포인트 컬러는 은은한 테라코타,
-						고요하고 정적인 느낌, 사진 느낌 없이 손그림 느낌, 정사각형 120x120 */}
-					<Ionicons name='headset-outline' size={36} color='#D6D3D1' />
-					<Text className='text-muted text-[14px] font-pretendard-regular text-center'>
+				<View className="flex-1 items-center justify-center gap-2">
+					<Ionicons name="headset-outline" size={36} className="text-stone-300" />
+					<Text className="text-muted text-[14px] font-pretendard-regular text-center">
 						저장된 오디오가 없어요{'\n'}해설 화면에서 하트를 눌러 저장해보세요
 					</Text>
 				</View>
@@ -152,15 +149,9 @@ export default function AudioHistoryScreen() {
 					data={items}
 					keyExtractor={(item) => item.id}
 					renderItem={({ item }) => (
-						<AudioHistoryCard
-							item={item}
-							onPress={handleCardPress}
-							onDelete={handleDelete}
-						/>
+						<AudioHistoryCard item={item} onPress={handleCardPress} onDelete={handleDelete} />
 					)}
-					ItemSeparatorComponent={() => (
-						<View className='h-[1px] bg-divider my-2.5' />
-					)}
+					ItemSeparatorComponent={() => <View className="h-[1px] bg-divider my-2.5" />}
 					contentContainerStyle={{
 						paddingTop: 16,
 						paddingBottom: 40,
@@ -183,56 +174,56 @@ export default function AudioHistoryScreen() {
 					<BottomSheetScrollView
 						contentContainerStyle={{ paddingHorizontal: 24, paddingBottom: 48 }}
 					>
-						<View className='flex-row items-start justify-between pt-2 pb-5'>
-							<View className='flex-1 pr-4'>
-								<Text className='text-white text-[17px] font-pretendard-semibold leading-[24px]'>
+						<View className="flex-row items-start justify-between pt-2 pb-5">
+							<View className="flex-1 pr-4">
+								<Text className="text-white text-[17px] font-pretendard-semibold leading-[24px]">
 									{selected.title}
 								</Text>
 								{selected.artist && (
-									<Text className='text-muted text-[13px] font-pretendard-regular mt-0.5'>
+									<Text className="text-muted text-[13px] font-pretendard-regular mt-0.5">
 										{selected.artist}
 									</Text>
 								)}
 							</View>
-							<View className='flex-row items-center gap-4'>
+							<View className="flex-row items-center gap-4">
 								<Pressable
 									onPress={handlePlayPause}
 									hitSlop={8}
 									accessibilityLabel={isSpeaking ? '일시정지' : '해설 듣기'}
-									accessibilityRole='button'
+									accessibilityRole="button"
 									style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
 								>
 									{isTTSLoading ? (
-										<ActivityIndicator size='small' color='#60A5FA' />
+										<ActivityIndicator size="small" color="#60A5FA" />
 									) : (
 										<Ionicons
 											name={isSpeaking ? 'pause-circle' : 'play-circle'}
 											size={28}
-											color='#60A5FA'
+											className="text-blue-400"
 										/>
 									)}
 								</Pressable>
 								<Pressable
 									onPress={handleSheetClose}
 									hitSlop={8}
-									accessibilityLabel='닫기'
-									accessibilityRole='button'
+									accessibilityLabel="닫기"
+									accessibilityRole="button"
 									style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
 								>
-									<Ionicons name='close' size={22} color={colors.tertiary} />
+									<Ionicons name="close" size={22} className="text-tertiary" />
 								</Pressable>
 							</View>
 						</View>
 
-						<Text className='text-[#E8E8E8] font-pretendard-medium leading-[28px] text-[15px]'>
+						<Text className="text-on-dark font-pretendard-medium leading-[28px] text-[15px]">
 							{selected.text}
 						</Text>
 						{selected.imageUrl && (
-							<View className='mt-10'>
+							<View className="mt-10">
 								<Image
 									source={{ uri: selected.imageUrl }}
-									className='w-full h-[200px] rounded-lg'
-									resizeMode='cover'
+									className="w-full h-[200px] rounded-lg"
+									resizeMode="cover"
 								/>
 							</View>
 						)}

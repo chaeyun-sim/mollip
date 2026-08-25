@@ -2,11 +2,7 @@ import { cn } from '@/src/lib/cn';
 import * as Haptics from 'expo-haptics';
 import { useEffect, useState } from 'react';
 import { LayoutChangeEvent, Pressable, Text, View } from 'react-native';
-import Animated, {
-	useAnimatedStyle,
-	useSharedValue,
-	withSpring,
-} from 'react-native-reanimated';
+import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 import { colors } from '@/src/constants/colors';
 
 export type ArchiveTab = 'diary' | 'saved';
@@ -15,10 +11,6 @@ const TABS: { value: ArchiveTab; label: string }[] = [
 	{ value: 'diary', label: '관람 다이어리' },
 	{ value: 'saved', label: '저장한 전시' },
 ];
-
-const TRACK = colors.bgLight;
-const INK = colors.primary;
-const MUTED = colors.tertiary;
 
 interface ArchiveTabBarProps {
 	value: ArchiveTab;
@@ -53,11 +45,10 @@ export function ArchiveTabBar({ value, onChange }: ArchiveTabBarProps) {
 	return (
 		<View
 			onLayout={onTrackLayout}
-			className='w-full h-[44px] rounded-[22px] flex-row px-1'
-			style={{ backgroundColor: TRACK }}
+			className="w-full h-[44px] rounded-[22px] flex-row px-1 bg-bg-light"
 		>
 			<Animated.View
-				pointerEvents='none'
+				pointerEvents="none"
 				style={[
 					{
 						position: 'absolute',
@@ -65,7 +56,7 @@ export function ArchiveTabBar({ value, onChange }: ArchiveTabBarProps) {
 						bottom: 4,
 						borderRadius: 18,
 						backgroundColor: '#FFFFFF',
-						shadowColor: INK,
+						shadowColor: colors.primary,
 						shadowOpacity: 0.1,
 						shadowRadius: 8,
 						shadowOffset: { width: 0, height: 2 },
@@ -84,10 +75,10 @@ export function ArchiveTabBar({ value, onChange }: ArchiveTabBarProps) {
 							Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
 							onChange(tab.value);
 						}}
-						accessibilityRole='tab'
+						accessibilityRole="tab"
 						accessibilityState={{ selected }}
 						accessibilityLabel={tab.label}
-						className='flex-1 flex-basis-0 items-center justify-center z-10'
+						className="flex-1 flex-basis-0 items-center justify-center z-10"
 					>
 						<Text
 							numberOfLines={1}
@@ -95,9 +86,10 @@ export function ArchiveTabBar({ value, onChange }: ArchiveTabBarProps) {
 							minimumFontScale={0.82}
 							className={cn(
 								'text-[14px] px-[6px]',
-								selected ? 'font-pretendard-semibold' : 'font-pretendard-regular',
+								selected
+									? 'font-pretendard-semibold text-primary'
+									: 'font-pretendard-regular text-tertiary',
 							)}
-							style={{ color: selected ? INK : MUTED }}
 						>
 							{tab.label}
 						</Text>

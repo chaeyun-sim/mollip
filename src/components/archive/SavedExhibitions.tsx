@@ -1,10 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { ActivityIndicator, Text, View } from 'react-native';
-import Animated, {
-	FadeIn,
-	FadeOut,
-	LinearTransition,
-} from 'react-native-reanimated';
+import Animated, { FadeIn, FadeOut, LinearTransition } from 'react-native-reanimated';
 
 import { ExhibitionResultCard } from '@/src/components/search/ExhibitionResultCard';
 import { useBookmarkStore } from '@/src/store/bookmarkStore';
@@ -14,10 +10,7 @@ import {
 	mapExhibitionRowToExhibition,
 	type ExhibitionRow,
 } from '@/src/utils/exhibitionMapper';
-import {
-	getExhibitionStatus,
-	isExhibitionListed,
-} from '@/src/utils/exhibitionSearch';
+import { getExhibitionStatus, isExhibitionListed } from '@/src/utils/exhibitionSearch';
 import type { SearchResult } from '@/src/hooks/useExhibitionSearch';
 import { colors } from '@/src/constants/colors';
 
@@ -67,8 +60,7 @@ export function SavedExhibitions({ onPressExhibition }: SavedExhibitionsProps) {
 					.filter((r) => isExhibitionListed(r.exhibition));
 				const order = new Map(ids.map((id, i) => [id, i]));
 				mapped.sort(
-					(a, b) =>
-						(order.get(a.exhibition.id) ?? 0) - (order.get(b.exhibition.id) ?? 0),
+					(a, b) => (order.get(a.exhibition.id) ?? 0) - (order.get(b.exhibition.id) ?? 0),
 				);
 				setRows(mapped);
 				setLoading(false);
@@ -90,7 +82,7 @@ export function SavedExhibitions({ onPressExhibition }: SavedExhibitionsProps) {
 
 	if (loading && results.length === 0) {
 		return (
-			<View className='items-center py-16'>
+			<View className="items-center py-16">
 				<ActivityIndicator color={colors.tertiary} />
 			</View>
 		);
@@ -98,15 +90,15 @@ export function SavedExhibitions({ onPressExhibition }: SavedExhibitionsProps) {
 
 	if (results.length === 0) {
 		return (
-			<View className='rounded-[22px] bg-bg-light px-6 py-10 items-center'>
+			<View className="rounded-[22px] bg-bg-light px-6 py-10 items-center">
 				{/* TODO: 저장한 전시 빈 상태 일러스트
 					프롬프트: 따뜻한 베이지(#F8F6F2) 배경 위에 접힌 리본 북마크와 작은 액자 그림,
 					플랫 일러스트 스타일, 얇은 라인 아트, 잉크색(#1C1917) 윤곽선, 포인트 컬러는 은은한 테라코타,
 					위 북마크 빈 상태 일러스트와 톤·구도를 맞춤, 정사각형 120x120 */}
-				<Text className='text-[15px] text-center font-pretendard-semibold text-primary'>
+				<Text className="text-[15px] text-center font-pretendard-semibold text-primary">
 					저장한 전시가 없어요
 				</Text>
-				<Text className='text-[13px] text-center mt-2 leading-[20px] font-pretendard-regular text-secondary'>
+				<Text className="text-[13px] text-center mt-2 leading-[20px] font-pretendard-regular text-secondary">
 					둘러보기에서 마음에 드는 전시를 저장해 보세요
 				</Text>
 			</View>
@@ -114,7 +106,7 @@ export function SavedExhibitions({ onPressExhibition }: SavedExhibitionsProps) {
 	}
 
 	return (
-		<View className='gap-5'>
+		<View className="gap-5">
 			{results.map((r) => (
 				<Animated.View
 					key={r.exhibition.id}

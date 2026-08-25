@@ -3,11 +3,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import * as Haptics from 'expo-haptics';
 import { useRouter } from 'expo-router';
 import { Pressable, ScrollView, Text, View } from 'react-native';
-import Animated, {
-	useAnimatedStyle,
-	useSharedValue,
-	withSpring,
-} from 'react-native-reanimated';
+import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 
 import { ImageFallback } from '@/src/components/common/ImageFallback';
 import type { Exhibition } from '@/src/data/exhibitions';
@@ -25,8 +21,8 @@ export function RelatedExhibitions({ exhibitions }: RelatedExhibitionsProps) {
 	const related = exhibitions.slice(0, 6);
 
 	return (
-		<View className='pt-8 mt-4'>
-			<Text className='font-pretendard-semibold text-[18px] text-gray-900 mb-4 px-6'>
+		<View className="pt-8 mt-4">
+			<Text className="font-pretendard-semibold text-[18px] text-gray-900 mb-4 px-6">
 				관련 전시
 			</Text>
 			<ScrollView
@@ -51,10 +47,7 @@ interface RelatedExhibitionCardProps {
 	onPress: () => void;
 }
 
-function RelatedExhibitionCard({
-	exhibition,
-	onPress,
-}: RelatedExhibitionCardProps) {
+function RelatedExhibitionCard({ exhibition, onPress }: RelatedExhibitionCardProps) {
 	const scale = useSharedValue(1);
 	const animatedStyle = useAnimatedStyle(() => ({
 		transform: [{ scale: scale.value }],
@@ -73,25 +66,25 @@ function RelatedExhibitionCard({
 			onPress={onPress}
 			style={{ width: POSTER_W }}
 			accessibilityLabel={`${exhibition.title}, ${exhibition.venue}`}
-			accessibilityRole='button'
+			accessibilityRole="button"
 		>
 			<Animated.View style={animatedStyle}>
 				<ImageFallback
 					heroImageUri={exhibition.heroImageUri}
 					posterImage={exhibition.posterImage}
 					style={{ width: POSTER_W, height: POSTER_H }}
-					className='rounded-2xl'
+					className="rounded-2xl"
 					iconSize={72}
-					resizeMode='cover'
+					resizeMode="cover"
 				>
 					<LinearGradient
 						colors={['rgba(0,0,0,0.4)', 'transparent']}
-						className='absolute top-0 left-0 right-0 h-14'
-						pointerEvents='none'
+						className="absolute top-0 left-0 right-0 h-14"
+						pointerEvents="none"
 					/>
 					{ddayLabel ? (
 						<View
-							className='absolute top-2.5 left-2.5 rounded-full px-2.5 py-1 bg-white/85'
+							className="absolute top-2.5 left-2.5 rounded-full px-2.5 py-1 bg-white/85"
 							style={{
 								shadowColor: '#000',
 								shadowOpacity: 0.15,
@@ -100,23 +93,18 @@ function RelatedExhibitionCard({
 								elevation: 2,
 							}}
 						>
-							<Text className='text-[10px] font-pretendard-semibold text-primary'>
-								{ddayLabel}
-							</Text>
+							<Text className="text-[10px] font-pretendard-semibold text-primary">{ddayLabel}</Text>
 						</View>
 					) : null}
 				</ImageFallback>
-				<View className='pt-2.5' style={{ width: POSTER_W }}>
-					<Text
-						className='font-pretendard-semibold text-[14px] text-gray-900'
-						numberOfLines={2}
-					>
+				<View className="pt-2.5" style={{ width: POSTER_W }}>
+					<Text className="font-pretendard-semibold text-[14px] text-gray-900" numberOfLines={2}>
 						{exhibition.title.trim()}
 					</Text>
-					<View className='flex-row items-center gap-1 mt-1'>
-						<Ionicons name='location-outline' size={11} color='#9CA3AF' />
+					<View className="flex-row items-center gap-1 mt-1">
+						<Ionicons name="location-outline" size={11} color="#9CA3AF" />
 						<Text
-							className='font-pretendard-regular text-[11px] text-gray-400 flex-1'
+							className="font-pretendard-regular text-[11px] text-gray-400 flex-1"
 							numberOfLines={1}
 						>
 							{exhibition.venue}

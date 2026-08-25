@@ -1,8 +1,16 @@
 import { getCultureByArea } from '@/src/api/culture';
 import { supabase } from '@/src/utils/supabase';
-import { EXHIBITION_COLUMNS, mapExhibitionRowToExhibition, type ExhibitionRow } from '@/src/utils/exhibitionMapper';
+import {
+	EXHIBITION_COLUMNS,
+	mapExhibitionRowToExhibition,
+	type ExhibitionRow,
+} from '@/src/utils/exhibitionMapper';
 import type { Exhibition } from '@/src/data/exhibitions';
-import { isExhibitionListed, todayExhibitionDateString, applyExhibitionDateFilters } from '@/src/utils/exhibitionSearch';
+import {
+	isExhibitionListed,
+	todayExhibitionDateString,
+	applyExhibitionDateFilters,
+} from '@/src/utils/exhibitionSearch';
 
 interface FindRelatedParams {
 	excludeId: string;
@@ -212,10 +220,7 @@ async function findFromCultureArea({
 	}
 }
 
-function mergeScored(
-	target: Map<string, ScoredExhibition>,
-	candidates: ScoredExhibition[],
-): void {
+function mergeScored(target: Map<string, ScoredExhibition>, candidates: ScoredExhibition[]): void {
 	for (const candidate of candidates) {
 		const existing = target.get(candidate.exhibition.id);
 		if (!existing || existing.score < candidate.score) {

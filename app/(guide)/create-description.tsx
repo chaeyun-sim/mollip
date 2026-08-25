@@ -150,8 +150,7 @@ export default function IndexScreen() {
 		}
 		store.imageBase64 = asset.base64;
 		store.imageMediaType =
-			(asset.mimeType as 'image/jpeg' | 'image/png' | 'image/webp') ??
-			'image/jpeg';
+			(asset.mimeType as 'image/jpeg' | 'image/png' | 'image/webp') ?? 'image/jpeg';
 		store.extractedText = '';
 		store.artworkDescription = '';
 		setIsLoading(false);
@@ -190,29 +189,26 @@ export default function IndexScreen() {
 			<Screen.Header>
 				{isImmersive ? (
 					<>
-						<ScreenHeader.Back
-							onPress={() => router.back()}
-							color="white-90"
-						/>
+						<ScreenHeader.Back onPress={() => router.back()} color="white-90" />
 						<ScreenHeader.Right>
-							<View className='flex-row items-center gap-4'>
+							<View className="flex-row items-center gap-4">
 								<Pressable
 									onPress={() => router.push('/manual')}
 									hitSlop={8}
-									accessibilityLabel='작품 없이 바로 질문하기'
-									accessibilityRole='button'
+									accessibilityLabel="작품 없이 바로 질문하기"
+									accessibilityRole="button"
 									style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
 								>
-									<Ionicons name='chatbubble-outline' size={22} className="text-white/90" />
+									<Ionicons name="chatbubble-outline" size={22} className="text-white/90" />
 								</Pressable>
 								<Pressable
 									onPress={() => settingsSheetRef.current?.present()}
 									hitSlop={8}
-									accessibilityLabel='해설 생성 설정'
-									accessibilityRole='button'
+									accessibilityLabel="해설 생성 설정"
+									accessibilityRole="button"
 									style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
 								>
-									<Ionicons name='settings-outline' size={22} className="text-white/90" />
+									<Ionicons name="settings-outline" size={22} className="text-white/90" />
 								</Pressable>
 							</View>
 						</ScreenHeader.Right>
@@ -220,38 +216,29 @@ export default function IndexScreen() {
 				) : (
 					<>
 						<ScreenHeader.Left>
-							<ScreenHeader.Back
-								onPress={() => router.back()}
-								color="white-90"
-							/>
+							<ScreenHeader.Back onPress={() => router.back()} color="white-90" />
 						</ScreenHeader.Left>
 						<ScreenHeader.Right>
-							<View className='flex-row items-center gap-4'>
+							<View className="flex-row items-center gap-4">
 								<Pressable
 									onPress={() => router.push('/manual')}
 									hitSlop={8}
-									accessibilityLabel='작품 없이 바로 질문하기'
-									accessibilityRole='button'
+									accessibilityLabel="작품 없이 바로 질문하기"
+									accessibilityRole="button"
 									style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
 								>
-									<Ionicons name='chatbubble-outline' size={20} className="text-white/70" />
+									<Ionicons name="chatbubble-outline" size={20} className="text-white/70" />
 								</Pressable>
 								<Pressable
-									className='flex-row items-center gap-1.5'
+									className="flex-row items-center gap-1.5"
 									onPress={() => router.push('/(guide)/immersive-start')}
 									hitSlop={8}
-									accessibilityLabel='몰입 모드로 시작'
-									accessibilityRole='button'
+									accessibilityLabel="몰입 모드로 시작"
+									accessibilityRole="button"
 									style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
 								>
-									<Ionicons
-										name='headset-outline'
-										size={18}
-										className="text-white/70"
-									/>
-									<Text className='text-sm font-pretendard-regular text-white/70'>
-										몰입 모드
-									</Text>
+									<Ionicons name="headset-outline" size={18} className="text-white/70" />
+									<Text className="text-sm font-pretendard-regular text-white/70">몰입 모드</Text>
 								</Pressable>
 							</View>
 						</ScreenHeader.Right>
@@ -261,11 +248,9 @@ export default function IndexScreen() {
 
 			{/* 상단 타이틀 */}
 			{!isImmersive && (
-				<View className='mt-3 gap-2'>
-					<Text className='text-3xl text-white mb-2 font-pretendard-bold'>
-						작품 해설 생성기
-					</Text>
-					<Text className='text-md leading-6 text-tertiary'>
+				<View className="mt-3 gap-2">
+					<Text className="text-3xl text-white mb-2 font-pretendard-bold">작품 해설 생성기</Text>
+					<Text className="text-md leading-6 text-tertiary">
 						{`작품 설명을 촬영하거나 사진을 선택하면\nAI가 바로 해설을 만들어드려요`}
 					</Text>
 				</View>
@@ -273,31 +258,31 @@ export default function IndexScreen() {
 
 			{/* 작품 검색 — 몰입 모드 전용 */}
 			{isImmersive && (
-				<View className='mt-5'>
+				<View className="mt-5">
 					<View
-						className='flex-row items-center rounded-2xl px-4 gap-3 bg-primary h-[52px] border-white/10'
+						className="flex-row items-center rounded-2xl px-4 gap-3 bg-primary h-[52px] border-white/10"
 						style={{
 							borderWidth: StyleSheet.hairlineWidth,
 						}}
 					>
-						<Ionicons name='search' size={18} className="text-secondary" />
+						<Ionicons name="search" size={18} className="text-secondary" />
 						<TextInput
-							className='flex-1 text-white font-pretendard-regular text-[16px] pb-0 leading-0'
-							placeholder='작품명으로 검색 (예: 별이 빛나는 밤)'
+							className="flex-1 text-white font-pretendard-regular text-[16px] pb-0 leading-0"
+							placeholder="작품명으로 검색 (예: 별이 빛나는 밤)"
 							placeholderTextColor={colors.secondary}
 							value={searchQuery}
 							onChangeText={setSearchQuery}
-							returnKeyType='search'
-							clearButtonMode='while-editing'
-							keyboardAppearance='dark'
+							returnKeyType="search"
+							clearButtonMode="while-editing"
+							keyboardAppearance="dark"
 							style={{ lineHeight: 0 }}
 						/>
-						{isSearching && <ActivityIndicator size='small' className="text-secondary" />}
+						{isSearching && <ActivityIndicator size="small" className="text-secondary" />}
 					</View>
 
 					{searchResults.length > 0 && (
 						<View
-							className='mt-2 rounded-2xl overflow-hidden bg-primary max-h-[360px] bg-white/8'
+							className="mt-2 rounded-2xl overflow-hidden bg-primary max-h-[360px] bg-white/8"
 							style={{
 								borderWidth: StyleSheet.hairlineWidth,
 							}}
@@ -305,13 +290,13 @@ export default function IndexScreen() {
 							<ScrollView
 								scrollEnabled={searchResults.length > 5}
 								showsVerticalScrollIndicator={searchResults.length > 5}
-								keyboardShouldPersistTaps='handled'
+								keyboardShouldPersistTaps="handled"
 								nestedScrollEnabled
 							>
 								{searchResults.map((artwork, index) => (
 									<Pressable
 										key={artwork.qId}
-										className='flex-row items-center gap-3 px-4 py-3 bg-white/6'
+										className="flex-row items-center gap-3 px-4 py-3 bg-white/6"
 										style={({ pressed }) => ({
 											borderTopWidth: index === 0 ? 0 : StyleSheet.hairlineWidth,
 											opacity: pressed ? 0.7 : 1,
@@ -321,22 +306,22 @@ export default function IndexScreen() {
 										{artwork.imageUrl ? (
 											<Image
 												source={{ uri: artwork.imageUrl }}
-												className='rounded-lg w-12 h-12'
-												resizeMode='cover'
+												className="rounded-lg w-12 h-12"
+												resizeMode="cover"
 											/>
 										) : (
-											<View className='rounded-lg items-center justify-center w-12 h-12 bg-divider-dark'>
-												<Ionicons name='image-outline' size={20} className="text-secondary" />
+											<View className="rounded-lg items-center justify-center w-12 h-12 bg-divider-dark">
+												<Ionicons name="image-outline" size={20} className="text-secondary" />
 											</View>
 										)}
-										<View className='flex-1'>
+										<View className="flex-1">
 											<Text
-												className='text-white text-sm font-pretendard-semibold'
+												className="text-white text-sm font-pretendard-semibold"
 												numberOfLines={1}
 											>
 												{artwork.label}
 												{artwork.year ? (
-													<Text className='font-pretendard-regular text-tertiary'>
+													<Text className="font-pretendard-regular text-tertiary">
 														{'  '}
 														{artwork.year}
 													</Text>
@@ -344,14 +329,14 @@ export default function IndexScreen() {
 											</Text>
 											{artwork.description ? (
 												<Text
-													className='text-xs mt-0.5 font-pretendard-regular text-tertiary'
+													className="text-xs mt-0.5 font-pretendard-regular text-tertiary"
 													numberOfLines={1}
 												>
 													{artwork.description}
 												</Text>
 											) : null}
 										</View>
-										<Ionicons name='chevron-forward' size={16} className="text-secondary" />
+										<Ionicons name="chevron-forward" size={16} className="text-secondary" />
 									</Pressable>
 								))}
 							</ScrollView>
@@ -361,77 +346,69 @@ export default function IndexScreen() {
 			)}
 
 			{/* 버튼 영역 */}
-			<Screen.BottomAbsolute className='gap-3 px-6 bottom-10'>
+			<Screen.BottomAbsolute className="gap-3 px-6 bottom-10">
 				{/* 카메라 — primary */}
 				<Pressable
-					className='rounded-2xl overflow-hidden'
+					className="rounded-2xl overflow-hidden"
 					onPress={() => pickAndGo(true)}
 					style={({ pressed }) => ({ opacity: pressed ? 0.85 : 1 })}
 					disabled={isLoading}
-					accessibilityLabel='카메라로 촬영'
-					accessibilityRole='button'
+					accessibilityLabel="카메라로 촬영"
+					accessibilityRole="button"
 				>
-					<View className='flex-row items-center gap-4 px-6 py-5 bg-accent'>
-						<View className='w-10 h-10 rounded-xl items-center justify-center bg-white/20'>
-							<Ionicons name='camera' size={22} className="text-white" />
+					<View className="flex-row items-center gap-4 px-6 py-5 bg-accent">
+						<View className="w-10 h-10 rounded-xl items-center justify-center bg-white/20">
+							<Ionicons name="camera" size={22} className="text-white" />
 						</View>
-						<View className='flex-1'>
-							<Text className='text-white text-base font-pretendard-semibold'>
-								카메라로 촬영
-							</Text>
-							<Text className='text-xs mt-0.5 text-white/60'>
-								지금 바로 작품을 찍어보세요
-							</Text>
+						<View className="flex-1">
+							<Text className="text-white text-base font-pretendard-semibold">카메라로 촬영</Text>
+							<Text className="text-xs mt-0.5 text-white/60">지금 바로 작품을 찍어보세요</Text>
 						</View>
-						<Ionicons
-							name='chevron-forward'
-							size={18}
-							className="text-white/50"
-						/>
+						<Ionicons name="chevron-forward" size={18} className="text-white/50" />
 					</View>
 				</Pressable>
 
 				{/* 갤러리 — secondary */}
 				<Pressable
-					className='rounded-2xl overflow-hidden'
+					className="rounded-2xl overflow-hidden"
 					onPress={() => pickAndGo(false)}
 					style={({ pressed }) => ({ opacity: pressed ? 0.85 : 1 })}
 					disabled={isLoading}
-					accessibilityLabel='갤러리에서 선택'
-					accessibilityRole='button'
+					accessibilityLabel="갤러리에서 선택"
+					accessibilityRole="button"
 				>
 					<View
-						className='flex-row items-center gap-4 px-6 py-5 bg-primary bg-white/8'
+						className="flex-row items-center gap-4 px-6 py-5 bg-primary bg-white/8"
 						style={{
 							borderWidth: StyleSheet.hairlineWidth,
 						}}
 					>
-						<View className='w-10 h-10 rounded-xl items-center justify-center bg-white/10'>
-							<Ionicons name='images' size={22} className="text-on-dark" />
+						<View className="w-10 h-10 rounded-xl items-center justify-center bg-white/10">
+							<Ionicons name="images" size={22} className="text-on-dark" />
 						</View>
-						<View className='flex-1'>
-							<Text className='text-base font-pretendard-semibold text-on-dark'>
+						<View className="flex-1">
+							<Text className="text-base font-pretendard-semibold text-on-dark">
 								갤러리에서 선택
 							</Text>
-							<Text className='text-xs mt-0.5 font-pretendard-regular text-tertiary'>
+							<Text className="text-xs mt-0.5 font-pretendard-regular text-tertiary">
 								저장된 사진을 불러오세요
 							</Text>
 						</View>
-						<Ionicons name='chevron-forward' size={18} className="text-secondary" />
+						<Ionicons name="chevron-forward" size={18} className="text-secondary" />
 					</View>
 				</Pressable>
 
 				{/* 직접 입력 — ghost */}
 				<Pressable
-					className='flex-row items-center justify-center gap-2 py-4'
+					className="flex-row items-center justify-center gap-2 py-4"
 					onPress={() => router.push('/manual')}
 					style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
 					disabled={isLoading}
-					accessibilityLabel='작품명 직접 입력'
-					accessibilityRole='button'
+					accessibilityLabel="작품명 직접 입력"
+					accessibilityRole="button"
 				>
-					<Ionicons name='pencil-outline' size={15} className="text-tertiary" />
-					<Text className='text-sm text-tertiary'>작품명 직접 입력</Text>
+					<Ionicons name="pencil-outline" size={15} className="text-tertiary" />
+					<Text className="text-sm text-tertiary">작품명 직접 입력</Text>
 				</Pressable>
 			</Screen.BottomAbsolute>
 
@@ -443,11 +420,11 @@ export default function IndexScreen() {
 				backgroundStyle={{ backgroundColor: colors.primary }}
 				handleIndicatorStyle={{ backgroundColor: colors.secondary }}
 			>
-				<BottomSheetView className='px-6 pb-10'>
-					<Text className='text-lg text-white mt-2 mb-1 font-pretendard-bold'>
+				<BottomSheetView className="px-6 pb-10">
+					<Text className="text-lg text-white mt-2 mb-1 font-pretendard-bold">
 						이렇게 찍어보세요
 					</Text>
-					<Text className='text-sm mb-5 font-pretendard-regular text-tertiary'>
+					<Text className="text-sm mb-5 font-pretendard-regular text-tertiary">
 						작품 옆 설명 안내판이나 작품 전체를 찍으면{'\n'}정확한 해설을 생성해요
 					</Text>
 
@@ -456,17 +433,17 @@ export default function IndexScreen() {
 						horizontal
 						showsHorizontalScrollIndicator={false}
 						contentContainerStyle={{ gap: 12, paddingBottom: 4 }}
-						className='mb-6'
+						className="mb-6"
 					>
 						{EXAMPLES.map((ex, i) => (
-							<View key={i} className='gap-2 w-[220px]'>
+							<View key={i} className="gap-2 w-[220px]">
 								<Image
 									source={ex.image}
-									className='rounded-xl w-[220px] h-[160px]'
-									resizeMode='cover'
+									className="rounded-xl w-[220px] h-[160px]"
+									resizeMode="cover"
 									accessibilityLabel={ex.caption}
 								/>
-								<Text className='text-xs text-center font-pretendard-regular text-muted'>
+								<Text className="text-xs text-center font-pretendard-regular text-muted">
 									{ex.caption}
 								</Text>
 							</View>
@@ -474,27 +451,23 @@ export default function IndexScreen() {
 					</ScrollView>
 
 					<Pressable
-						className='w-full py-4 rounded-2xl items-center mb-3 bg-accent'
+						className="w-full py-4 rounded-2xl items-center mb-3 bg-accent"
 						onPress={handleConfirm}
 						style={({ pressed }) => ({ opacity: pressed ? 0.85 : 1 })}
-						accessibilityLabel='확인했어요'
-						accessibilityRole='button'
+						accessibilityLabel="확인했어요"
+						accessibilityRole="button"
 					>
-						<Text className='text-white text-base font-pretendard-semibold'>
-							확인했어요
-						</Text>
+						<Text className="text-white text-base font-pretendard-semibold">확인했어요</Text>
 					</Pressable>
 
 					<Pressable
-						className='items-center py-2'
+						className="items-center py-2"
 						onPress={handleDismissForever}
 						style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
-						accessibilityLabel='다시 보지 않기'
-						accessibilityRole='button'
+						accessibilityLabel="다시 보지 않기"
+						accessibilityRole="button"
 					>
-						<Text className='text-sm font-pretendard-regular text-secondary'>
-							다시 보지 않기
-						</Text>
+						<Text className="text-sm font-pretendard-regular text-secondary">다시 보지 않기</Text>
 					</Pressable>
 				</BottomSheetView>
 			</BottomSheetModal>
@@ -507,56 +480,46 @@ export default function IndexScreen() {
 				backgroundStyle={{ backgroundColor: colors.primary }}
 				handleIndicatorStyle={{ backgroundColor: colors.secondary }}
 			>
-				<BottomSheetView className='px-6 pb-10'>
-					<Text className='text-lg text-white mt-2 mb-6 font-pretendard-bold'>
-						해설 생성 설정
-					</Text>
-					<View className='gap-5'>
-						<View className='flex-row items-center justify-between'>
-							<Text className='text-sm font-pretendard-medium text-on-dark'>재생 속도</Text>
-							<PillSelector
-								options={SPEED_OPTIONS}
-								value={voiceSpeed}
-								onChange={setVoiceSpeed}
-							/>
+				<BottomSheetView className="px-6 pb-10">
+					<Text className="text-lg text-white mt-2 mb-6 font-pretendard-bold">해설 생성 설정</Text>
+					<View className="gap-5">
+						<View className="flex-row items-center justify-between">
+							<Text className="text-sm font-pretendard-medium text-on-dark">재생 속도</Text>
+							<PillSelector options={SPEED_OPTIONS} value={voiceSpeed} onChange={setVoiceSpeed} />
 						</View>
 						<Pressable
-							className='flex-row items-center justify-between'
+							className="flex-row items-center justify-between"
 							onPress={() => router.push('/settings/voice')}
-							accessibilityLabel='목소리 변경'
-							accessibilityRole='button'
+							accessibilityLabel="목소리 변경"
+							accessibilityRole="button"
 							style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
 						>
-							<Text className='text-sm font-pretendard-medium text-on-dark'>목소리 변경</Text>
-							<View className='flex-row items-center gap-1.5'>
-								<Text className='text-sm font-pretendard-regular text-tertiary' numberOfLines={1}>
+							<Text className="text-sm font-pretendard-medium text-on-dark">목소리 변경</Text>
+							<View className="flex-row items-center gap-1.5">
+								<Text className="text-sm font-pretendard-regular text-tertiary" numberOfLines={1}>
 									{currentVoiceName ? currentVoiceName.split(' - ')[0] : ''}
 								</Text>
-								<Ionicons name='chevron-forward' size={16} className="text-secondary" />
+								<Ionicons name="chevron-forward" size={16} className="text-secondary" />
 							</View>
 						</Pressable>
 						<Pressable
-							className='flex-row items-center justify-between'
+							className="flex-row items-center justify-between"
 							onPress={() => router.push('/settings/description')}
-							accessibilityLabel='해설 강화 항목'
-							accessibilityRole='button'
+							accessibilityLabel="해설 강화 항목"
+							accessibilityRole="button"
 							style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
 						>
-							<Text className='text-sm font-pretendard-medium text-on-dark'>강화 항목</Text>
-							<View className='flex-row items-center gap-1.5'>
-								<Text className='text-sm font-pretendard-regular text-tertiary'>
+							<Text className="text-sm font-pretendard-medium text-on-dark">강화 항목</Text>
+							<View className="flex-row items-center gap-1.5">
+								<Text className="text-sm font-pretendard-regular text-tertiary">
 									{descriptionFocus.length > 0 ? `${descriptionFocus.length}개 선택` : '선택 안 함'}
 								</Text>
-								<Ionicons name='chevron-forward' size={16} className="text-secondary" />
+								<Ionicons name="chevron-forward" size={16} className="text-secondary" />
 							</View>
 						</Pressable>
-						<View className='flex-row items-center justify-between'>
-							<Text className='text-sm font-pretendard-medium text-on-dark'>텍스트 크기</Text>
-							<PillSelector
-								options={FONT_SIZE_OPTIONS}
-								value={fontSize}
-								onChange={setFontSize}
-							/>
+						<View className="flex-row items-center justify-between">
+							<Text className="text-sm font-pretendard-medium text-on-dark">텍스트 크기</Text>
+							<PillSelector options={FONT_SIZE_OPTIONS} value={fontSize} onChange={setFontSize} />
 						</View>
 					</View>
 				</BottomSheetView>

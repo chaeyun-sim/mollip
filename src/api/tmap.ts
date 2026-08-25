@@ -187,10 +187,7 @@ export async function getWalkingRoute(
 
 // 대중교통(버스/지하철) 경로 후보 전체 — ODsay가 돌려주는 path[]를 모두 변환해 반환한다.
 // 최단 시간 순으로 정렬해 가장 추천할 만한 경로가 리스트 맨 위에 오게 한다.
-export async function getTransitRoutes(
-	start: RouteCoord,
-	end: RouteCoord,
-): Promise<RouteResult[]> {
+export async function getTransitRoutes(start: RouteCoord, end: RouteCoord): Promise<RouteResult[]> {
 	const paths = await searchMaasPaths(start, end, '2');
 	return paths
 		.slice()

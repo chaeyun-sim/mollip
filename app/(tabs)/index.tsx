@@ -12,10 +12,7 @@ import {
 	RecommendedExhibitions,
 } from '@/src/components/explore/ExploreHomeSections';
 import { Screen } from '@/src/components/layout/Screen';
-import {
-	useExploreScreenData,
-	type ExhibitionSummary,
-} from '@/src/hooks/useExploreScreenData';
+import { useExploreScreenData, type ExhibitionSummary } from '@/src/hooks/useExploreScreenData';
 import { Fab } from '@/src/components/common/Fab';
 import { colors } from '@/src/constants/colors';
 
@@ -47,49 +44,42 @@ export default function ExploreScreen() {
 
 	function renderRecommendedContent() {
 		if (cultureStatus === 'loading' && displayedRecommended.length === 0) {
-			return <CenteredLoader className='py-16' />;
+			return <CenteredLoader className="py-16" />;
 		}
 
 		if (cultureStatus === 'error') {
 			return (
 				<RetryErrorState
-					message='전시 정보를 불러오지 못했어요'
+					message="전시 정보를 불러오지 못했어요"
 					onRetry={refetch}
-					retryAccessibilityLabel='추천 전시 다시 불러오기'
-					className='py-16'
+					retryAccessibilityLabel="추천 전시 다시 불러오기"
+					className="py-16"
 				/>
 			);
 		}
 
 		if (displayedRecommended.length === 0) {
 			return (
-				<Text className='text-muted text-[13px] font-pretendard-regular'>
-					추천할 전시가 없어요
-				</Text>
+				<Text className="text-muted text-[13px] font-pretendard-regular">추천할 전시가 없어요</Text>
 			);
 		}
 
-		return (
-			<RecommendedExhibitions
-				items={displayedRecommended}
-				onPress={openExhibition}
-			/>
-		);
+		return <RecommendedExhibitions items={displayedRecommended} onPress={openExhibition} />;
 	}
 
 	return (
-		<Screen variant='warm'>
+		<Screen variant="warm">
 			<Screen.Header>
 				<Screen.Header.Logo />
 				<Screen.Header.Right>
 					<Pressable
 						onPress={() => router.push('/settings')}
 						hitSlop={8}
-						accessibilityRole='button'
-						accessibilityLabel='마이페이지'
+						accessibilityRole="button"
+						accessibilityLabel="마이페이지"
 						style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
 					>
-						<Ionicons name='person-outline' size={24} className="text-primary" />
+						<Ionicons name="person-outline" size={24} className="text-primary" />
 					</Pressable>
 				</Screen.Header.Right>
 			</Screen.Header>
@@ -122,7 +112,7 @@ export default function ExploreScreen() {
 				<View>
 					{/* 레이블: 선호 데이터 있으면 "당신의 취향" (REQ-UI002-009, REQ-UI002-010) */}
 					<SectionTitle
-						eyebrow='FOR YOU'
+						eyebrow="FOR YOU"
 						title={isPersonalized ? '추천 전시 · 당신의 취향' : '추천 전시'}
 					/>
 					{renderRecommendedContent()}
@@ -131,7 +121,7 @@ export default function ExploreScreen() {
 
 			{/* FAB 영역 */}
 			<View
-				className='absolute right-6 items-end gap-3'
+				className="absolute right-6 items-end gap-3"
 				style={{
 					bottom: Math.max(insets.bottom, 16),
 					shadowColor: colors.primary,
@@ -144,17 +134,17 @@ export default function ExploreScreen() {
 				{/* 몰입 모드 pill */}
 				<Fab
 					onPress={() => router.push('/(guide)/immersive-start')}
-					icon='headset-outline'
-					accessibilityLabel='몰입 모드로 시작하기'
+					icon="headset-outline"
+					accessibilityLabel="몰입 모드로 시작하기"
 					needsLogin
 				/>
 
 				{/* 카메라 FAB */}
 				<Fab
 					onPress={() => router.push('/(guide)/create-description')}
-					icon='camera'
-					accessibilityLabel='작품 해설 만들기'
-					accessibilityHint='카메라로 작품을 촬영하거나 직접 입력하여 AI 해설을 받을 수 있어요'
+					icon="camera"
+					accessibilityLabel="작품 해설 만들기"
+					accessibilityHint="카메라로 작품을 촬영하거나 직접 입력하여 AI 해설을 받을 수 있어요"
 					needsLogin
 				/>
 			</View>

@@ -34,8 +34,14 @@ export const useImmersiveStore = create<ImmersiveStore>()(
 			exhibitionTitle: null,
 			playlist: [],
 			enter: (exhibitionId, exhibitionTitle) =>
-				set({ isImmersiveMode: true, exhibitionId, exhibitionTitle: exhibitionTitle ?? null, playlist: [] }),
-			exit: () => set({ isImmersiveMode: false, exhibitionId: null, exhibitionTitle: null, playlist: [] }),
+				set({
+					isImmersiveMode: true,
+					exhibitionId,
+					exhibitionTitle: exhibitionTitle ?? null,
+					playlist: [],
+				}),
+			exit: () =>
+				set({ isImmersiveMode: false, exhibitionId: null, exhibitionTitle: null, playlist: [] }),
 			addToPlaylist: (item) => {
 				const exists = get().playlist.some((p) => p.title === item.title);
 				if (exists) return;

@@ -35,16 +35,16 @@ export function ExhibitionArtworkCard({ artwork, onPress }: ExhibitionArtworkCar
 				<ImageFallback
 					heroImageUri={artwork.imageUri}
 					posterImage={artwork.imageSource}
-					className='rounded-[16px] bg-image-placeholder'
+					className="rounded-[16px] bg-image-placeholder"
 					style={{ height: cardSize, width: cardSize }}
 					iconSize={cardSize * 0.55}
-					resizeMode='cover'
+					resizeMode="cover"
 				/>
-				<View className='pt-2'>
-					<Text className='font-pretendard-medium text-[13px] text-gray-800' numberOfLines={1}>
+				<View className="pt-2">
+					<Text className="font-pretendard-medium text-[13px] text-gray-800" numberOfLines={1}>
 						{artwork.title}
 					</Text>
-					<Text className='font-pretendard-regular text-[11px] text-gray-400 mt-0.5'>
+					<Text className="font-pretendard-regular text-[11px] text-gray-400 mt-0.5">
 						{artwork.artist}
 						{artwork.year ? ` · ${artwork.year}` : ''}
 					</Text>

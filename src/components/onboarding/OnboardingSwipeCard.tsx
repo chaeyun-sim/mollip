@@ -10,7 +10,6 @@ import Animated, {
 	withSpring,
 	withTiming,
 } from 'react-native-reanimated';
-import { colors } from '@/src/constants/colors';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 export const ONBOARDING_CARD_HEIGHT = 500;
@@ -73,11 +72,7 @@ export function OnboardingSwipeCard({
 		});
 
 	const cardStyle = useAnimatedStyle(() => {
-		const rotate = interpolate(
-			translateX.value,
-			[-SCREEN_WIDTH, 0, SCREEN_WIDTH],
-			[-14, 0, 14],
-		);
+		const rotate = interpolate(translateX.value, [-SCREEN_WIDTH, 0, SCREEN_WIDTH], [-14, 0, 14]);
 		const scale = isTop ? 1 : interpolate(index, [1, 2], [0.94, 0.88]);
 		const yOffset = isTop ? translateY.value : index * -10;
 
@@ -112,7 +107,7 @@ export function OnboardingSwipeCard({
 	return (
 		<GestureDetector gesture={gesture}>
 			<Animated.View
-				className='absolute w-full rounded-3xl overflow-hidden'
+				className="absolute w-full rounded-3xl overflow-hidden"
 				style={[
 					{
 						height: ONBOARDING_CARD_HEIGHT,
@@ -129,18 +124,18 @@ export function OnboardingSwipeCard({
 				{item.imageUrl ? (
 					<Image
 						source={{ uri: item.imageUrl }}
-						resizeMode='cover'
+						resizeMode="cover"
 						style={StyleSheet.absoluteFill}
 					/>
 				) : (
 					<>
 						{/* 상단 장식 (이미지 없는 항목용 플레이스홀더) */}
 						<View
-							className='absolute top-[-60px] right-[-40px] w-48 h-48 rounded-full opacity-20'
+							className="absolute top-[-60px] right-[-40px] w-48 h-48 rounded-full opacity-20"
 							style={{ backgroundColor: item.accent }}
 						/>
 						<View
-							className='absolute top-16 left-[-30px] w-32 h-32 rounded-full opacity-10'
+							className="absolute top-16 left-[-30px] w-32 h-32 rounded-full opacity-10"
 							style={{ backgroundColor: item.accent }}
 						/>
 					</>
@@ -148,77 +143,72 @@ export function OnboardingSwipeCard({
 
 				{/* 좋아요 오버레이 */}
 				<Animated.View
-					className='absolute inset-0 bg-emerald-400 rounded-3xl'
+					className="absolute inset-0 bg-emerald-400 rounded-3xl"
 					style={likeOverlay}
 				/>
 				{/* 패스 오버레이 */}
-				<Animated.View
-					className='absolute inset-0 bg-rose-400 rounded-3xl'
-					style={nopeOverlay}
-				/>
+				<Animated.View className="absolute inset-0 bg-rose-400 rounded-3xl" style={nopeOverlay} />
 
 				{/* SAVE 라벨 */}
 				<Animated.View
-					className='absolute top-10 left-6 border-[3px] border-emerald-500 rounded-xl px-4 py-1.5'
+					className="absolute top-10 left-6 border-[3px] border-emerald-500 rounded-xl px-4 py-1.5"
 					style={likeLabelStyle}
 				>
-					<Text className='text-emerald-500 text-xl font-pretendard-bold tracking-widest'>
+					<Text className="text-emerald-500 text-xl font-pretendard-bold tracking-widest">
 						LOVE
 					</Text>
 				</Animated.View>
 
 				{/* PASS 라벨 */}
 				<Animated.View
-					className='absolute top-10 right-6 border-[3px] border-rose-500 rounded-xl px-4 py-1.5'
+					className="absolute top-10 right-6 border-[3px] border-rose-500 rounded-xl px-4 py-1.5"
 					style={nopeLabelStyle}
 				>
-					<Text className='text-rose-500 text-xl font-pretendard-bold tracking-widest'>
-						PASS
-					</Text>
+					<Text className="text-rose-500 text-xl font-pretendard-bold tracking-widest">PASS</Text>
 				</Animated.View>
 
 				{/* 이전 선택 배지 */}
 				{isPreviouslyLiked && (
 					<View
-						className='absolute top-4 right-4 w-9 h-9 rounded-full items-center justify-center'
+						className="absolute top-4 right-4 w-9 h-9 rounded-full items-center justify-center"
 						style={{ backgroundColor: 'rgba(0,0,0,0.45)' }}
 					>
-						<Ionicons name='heart' size={18} color={colors.success} />
+						<Ionicons name="heart" size={18} className="text-success" />
 					</View>
 				)}
 
 				{/* 카드 콘텐츠 */}
-				<View className='absolute bottom-0 left-0 right-0 px-6 pb-8 pt-24'>
+				<View className="absolute bottom-0 left-0 right-0 px-6 pb-8 pt-24">
 					<LinearGradient
 						colors={['transparent', 'rgba(0,0,0,0.35)', 'rgba(0,0,0,0.88)']}
 						locations={[0, 0.4, 1]}
 						style={StyleSheet.absoluteFill}
 					/>
-					<View className='relative gap-2'>
-						<View className='flex-row items-center gap-1.5'>
-							<View className='bg-white/25 rounded-full px-2 py-0.5'>
+					<View className="relative gap-2">
+						<View className="flex-row items-center gap-1.5">
+							<View className="bg-white/25 rounded-full px-2 py-0.5">
 								<Text
-									className='text-white text-[10px] font-pretendard-semibold'
+									className="text-white text-[10px] font-pretendard-semibold"
 									style={TEXT_SHADOW}
 								>
 									{item.mainGenre}
 								</Text>
 							</View>
 							<Text
-								className='text-white/80 text-xs font-pretendard-medium tracking-[2px] uppercase'
+								className="text-white/80 text-xs font-pretendard-medium tracking-[2px] uppercase"
 								style={TEXT_SHADOW}
 							>
 								{item.subGenre}
 							</Text>
 						</View>
 						<Text
-							className='text-white text-[26px] leading-[32px] font-hahmlet-bold'
+							className="text-white text-[26px] leading-[32px] font-hahmlet-bold"
 							style={TEXT_SHADOW}
 						>
 							{item.title}
 						</Text>
 						<Text
-							className='text-white/70 text-[13px] font-pretendard-regular italic'
+							className="text-white/70 text-[13px] font-pretendard-regular italic"
 							style={TEXT_SHADOW}
 						>
 							{item.artist}

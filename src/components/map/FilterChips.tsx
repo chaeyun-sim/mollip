@@ -19,10 +19,7 @@ export function FilterChips({
 	onDatePress,
 }: FilterChipsProps) {
 	return (
-		<View
-			className='absolute left-0 right-0'
-			style={{ top: topOffset, zIndex: 10 }}
-		>
+		<View className="absolute left-0 right-0" style={{ top: topOffset, zIndex: 10 }}>
 			<ScrollView
 				horizontal
 				showsHorizontalScrollIndicator={false}
@@ -36,9 +33,9 @@ export function FilterChips({
 					}
 					active={false}
 					onPress={onDatePress}
-					icon='calendar-outline'
-					variant='elevated'
-					accessibilityLabel='날짜 선택'
+					icon="calendar-outline"
+					variant="elevated"
+					accessibilityLabel="날짜 선택"
 				/>
 
 				{FILTERS.map((f) => (
@@ -47,7 +44,7 @@ export function FilterChips({
 						label={f.label}
 						active={activeFilters.has(f.key)}
 						onPress={() => toggleFilter(f.key)}
-						variant='elevated'
+						variant="elevated"
 					/>
 				))}
 			</ScrollView>

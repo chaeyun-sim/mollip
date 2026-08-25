@@ -3,10 +3,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { Dimensions, Pressable, ScrollView, Text, View } from 'react-native';
 import Animated from 'react-native-reanimated';
-import {
-	SafeAreaView,
-	useSafeAreaInsets,
-} from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import {
 	AccessibilityBadges,
@@ -23,7 +20,7 @@ import {
 	RouteSheet,
 } from '@/src/components/explore';
 import { FadeInView } from '@/src/components/common/FadeInView';
-import { ExhibitionPoster } from '@/src/components/common/EmptyImagePlaceholder';
+import { ImageFallback } from '@/src/components/common/ImageFallback';
 import { ExhibitionDetailSkeleton } from '@/src/components/layout/Loading';
 import { useExhibitionData } from '@/src/hooks/useExhibitionData';
 import { useHeroAnimation } from '@/src/hooks/useHeroAnimation';
@@ -38,7 +35,6 @@ import {
 	cancelDeadlineNotifications,
 	scheduleDeadlineNotifications,
 } from '@/src/utils/notificationScheduler';
-import { colors } from '@/src/constants/colors';
 import { Screen } from '@/src/components/layout/Screen';
 
 export default function ExhibitionDetailScreen() {
@@ -66,21 +62,19 @@ export default function ExhibitionDetailScreen() {
 
 	if (!exhibition) {
 		return (
-			<SafeAreaView className='flex-1 items-center justify-center bg-bg-light'>
-				<Text className='text-gray-500 text-base font-pretendard-regular mb-4'>
+			<SafeAreaView className="flex-1 items-center justify-center bg-bg-light">
+				<Text className="text-gray-500 text-base font-pretendard-regular mb-4">
 					전시를 찾을 수 없어요
 				</Text>
 				<Pressable onPress={() => router.back()}>
-					<Text className='text-gray-900 text-sm font-pretendard-medium'>
-						돌아가기
-					</Text>
+					<Text className="text-gray-900 text-sm font-pretendard-medium">돌아가기</Text>
 				</Pressable>
 			</SafeAreaView>
 		);
 	}
 
 	return (
-		<Screen variant='warm'>
+		<Screen variant="warm" className="px-0" edges={['bottom']}>
 			<Animated.ScrollView
 				onScroll={scrollHandler}
 				scrollEventThrottle={16}
@@ -88,25 +82,23 @@ export default function ExhibitionDetailScreen() {
 				bounces={false}
 				contentContainerStyle={{ paddingBottom: fabBottom + 40 }}
 			>
-				<View className='overflow-hidden w-full' style={{ height: HERO_HEIGHT }}>
-					<Animated.View
-						style={[{ width: '100%', height: HERO_HEIGHT }, heroImageStyle]}
-					>
-						<ExhibitionPoster
+				<View className="overflow-hidden w-full" style={{ height: HERO_HEIGHT }}>
+					<Animated.View style={[{ width: '100%', height: HERO_HEIGHT }, heroImageStyle]}>
+						<ImageFallback
 							heroImageUri={exhibition.heroImageUri}
 							posterImage={exhibition.posterImage}
 							style={{ height: HERO_HEIGHT }}
 							iconSize={160}
-							resizeMode='cover'
+							resizeMode="cover"
 							dimOverlay
-							className='w-full'
+							className="w-full"
 							accessibilityLabel={`${exhibition.title} 전시 포스터`}
 						/>
 					</Animated.View>
 
 					<LinearGradient
 						colors={['transparent', 'rgba(0,0,0,0.7)']}
-						className='absolute bottom-0 left-0 right-0 h-[292px] justify-end pb-6 px-6'
+						className="absolute bottom-0 left-0 right-0 h-[292px] justify-end pb-6"
 					/>
 				</View>
 
@@ -120,14 +112,12 @@ export default function ExhibitionDetailScreen() {
 							gap: 8,
 						}}
 					>
-						<ExhibitionMetaPill icon='location-outline' text={exhibition.venue} />
+						<ExhibitionMetaPill icon="location-outline" text={exhibition.venue} />
 						{exhibition.exhibitionType && (
 							<ExhibitionMetaPill text={getExhibitionTypeDisplay(exhibition)} />
 						)}
 						{exhibition.genre &&
-							exhibition.genre
-								.split(',')
-								.map((g) => <ExhibitionMetaPill key={g} text={g} />)}
+							exhibition.genre.split(',').map((g) => <ExhibitionMetaPill key={g} text={g} />)}
 					</ScrollView>
 				</FadeInView>
 
@@ -159,7 +149,7 @@ export default function ExhibitionDetailScreen() {
 							}}
 						>
 							{(exhibition.tags ?? [])?.map((tag) => (
-								<ExhibitionMetaPill key={tag} icon='pricetag-outline' text={tag} />
+								<ExhibitionMetaPill key={tag} icon="pricetag-outline" text={tag} />
 							))}
 						</ScrollView>
 					</FadeInView>
@@ -167,14 +157,14 @@ export default function ExhibitionDetailScreen() {
 
 				{exhibition.note && (
 					<FadeInView delay={280}>
-						<View className='mx-6 mt-10 px-4 py-3.5 rounded-2xl bg-[#F0EDE7] flex-row gap-3'>
+						<View className="mx-6 mt-10 px-4 py-3.5 rounded-2xl bg-[#F0EDE7] flex-row gap-3">
 							<Ionicons
-								name='information-circle-outline'
+								name="information-circle-outline"
 								size={17}
-								color={colors.tertiary}
+								className="text-tertiary"
 								style={{ marginTop: 1 }}
 							/>
-							<Text className='flex-1 text-[13px] leading-[20px] text-secondary font-pretendard-regular'>
+							<Text className="flex-1 text-[13px] leading-[20px] text-secondary font-pretendard-regular">
 								{exhibition.note}
 							</Text>
 						</View>
@@ -188,28 +178,24 @@ export default function ExhibitionDetailScreen() {
 						phone={exhibition.phone}
 						openHours={exhibition.openHours}
 						admission={exhibition.admission}
-						hasTopSpacing={
-							!!(exhibition.note || exhibition.tags || exhibition.description)
-						}
+						hasTopSpacing={!!(exhibition.note || exhibition.tags || exhibition.description)}
 					/>
 				</FadeInView>
 
 				{exhibition.accessibility && (
 					<FadeInView delay={350}>
-						<Text className='font-pretendard-semibold text-[18px] text-gray-900 mb-4 px-6 mt-10'>
+						<Text className="font-pretendard-semibold text-[18px] text-gray-900 mb-4 px-6 mt-10">
 							접근성 정보
 						</Text>
-						<View className='px-6'>
-							<AccessibilityBadges
-								accessibility={exhibition.accessibility as string}
-							/>
+						<View className="px-6">
+							<AccessibilityBadges accessibility={exhibition.accessibility as string} />
 						</View>
 					</FadeInView>
 				)}
 
 				{exhibition.coordinates && (
 					<FadeInView delay={350}>
-						<Text className='font-pretendard-semibold text-[18px] text-gray-900 mb-4 px-6 mt-10'>
+						<Text className="font-pretendard-semibold text-[18px] text-gray-900 mb-4 px-6 mt-10">
 							위치 정보
 						</Text>
 						<ExhibitionMapPreview
@@ -219,12 +205,11 @@ export default function ExhibitionDetailScreen() {
 					</FadeInView>
 				)}
 
-				{exhibition.relatedExhibitions &&
-					exhibition.relatedExhibitions.length > 0 && (
-						<FadeInView delay={500}>
-							<RelatedExhibitions exhibitions={exhibition.relatedExhibitions} />
-						</FadeInView>
-					)}
+				{exhibition.relatedExhibitions && exhibition.relatedExhibitions.length > 0 && (
+					<FadeInView delay={500}>
+						<RelatedExhibitions exhibitions={exhibition.relatedExhibitions} />
+					</FadeInView>
+				)}
 			</Animated.ScrollView>
 
 			<ExhibitionDetailFloatingActions
@@ -249,7 +234,7 @@ export default function ExhibitionDetailScreen() {
 			/>
 
 			{exhibition.ticketUrl && (
-				<View className='absolute bottom-0 left-0 right-0 bg-white border-t border-gray-100'>
+				<View className="absolute bottom-0 left-0 right-0 bg-white border-t border-gray-100">
 					<SafeAreaView edges={['bottom']}>
 						<ExhibitionTicketCTA ticketUrl={exhibition.ticketUrl} />
 					</SafeAreaView>
@@ -258,7 +243,7 @@ export default function ExhibitionDetailScreen() {
 
 			{/* 몰입하기 FAB — 스크롤 위치 무관하게 항상 우하단에 고정.
 			    CTA(예매하기)가 있으면 그 높이만큼 위로 올린다. */}
-			<View className='absolute right-5' style={{ bottom: fabBottom }}>
+			<View className="absolute right-5" style={{ bottom: fabBottom }}>
 				<ExhibitionImmersiveFab onPress={() => setImmersiveOpen(true)} />
 			</View>
 

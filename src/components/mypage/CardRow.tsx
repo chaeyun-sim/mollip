@@ -31,22 +31,16 @@ export function CardRow({
 				className,
 			)}
 		>
-			<View className='flex-row items-center gap-3'>
-				<Ionicons name={icon} size={17} color='#9C8F85' />
-				<Text className='font-pretendard-regular text-primary text-[15px]'>
-					{label}
-				</Text>
+			<View className="flex-row items-center gap-3">
+				<Ionicons name={icon} size={17} color="#9C8F85" />
+				<Text className="font-pretendard-regular text-primary text-[15px]">{label}</Text>
 			</View>
 			{children ?? (
-				<View className='flex-row items-center gap-1'>
+				<View className="flex-row items-center gap-1">
 					{value ? (
-						<Text className='font-pretendard-regular text-[#B0A89E] text-[13px]'>
-							{value}
-						</Text>
+						<Text className="font-pretendard-regular text-[#B0A89E] text-[13px]">{value}</Text>
 					) : null}
-					{onPress ? (
-						<Ionicons name='chevron-forward' size={13} color='#BDB6AE' />
-					) : null}
+					{onPress ? <Ionicons name="chevron-forward" size={13} color="#BDB6AE" /> : null}
 				</View>
 			)}
 		</View>
@@ -54,11 +48,7 @@ export function CardRow({
 
 	if (onPress) {
 		return (
-			<Pressable
-				onPress={onPress}
-				accessibilityRole='button'
-				accessibilityLabel={label}
-			>
+			<Pressable onPress={onPress} accessibilityRole="button" accessibilityLabel={label}>
 				{({ pressed }) => inner(pressed)}
 			</Pressable>
 		);

@@ -1,8 +1,4 @@
-import {
-	setAudioModeAsync,
-	useAudioPlayer,
-	useAudioPlayerStatus,
-} from 'expo-audio';
+import { setAudioModeAsync, useAudioPlayer, useAudioPlayerStatus } from 'expo-audio';
 import { useEffect, useRef, useState } from 'react';
 import { useSettingsStore } from '../store/settingsStore';
 import { fetchTTSBlob, fetchVoices } from '../utils/api';
@@ -98,7 +94,10 @@ export function useTTS() {
 
 	const pause = () => player.pause();
 	const resume = () => player.play();
-	const stop = () => { player.pause(); player.seekTo(0); };
+	const stop = () => {
+		player.pause();
+		player.seekTo(0);
+	};
 	const seekTo = (sec: number) => player.seekTo(sec);
 
 	return {

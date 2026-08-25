@@ -2,10 +2,17 @@ import { useEffect, useMemo, useState } from 'react';
 import type { VenueGroup } from '@/src/data/venues';
 import type { Exhibition } from '@/src/data/exhibitions';
 import { useMuseums } from '@/src/hooks/useMuseums';
-import { EXHIBITION_COLUMNS, mapExhibitionRowToExhibition, type ExhibitionRow } from '@/src/utils/exhibitionMapper';
+import {
+	EXHIBITION_COLUMNS,
+	mapExhibitionRowToExhibition,
+	type ExhibitionRow,
+} from '@/src/utils/exhibitionMapper';
 import { supabase } from '@/src/utils/supabase';
 import { parseDate } from '@/src/utils/mapUtils';
-import { applyExhibitionDateFilters, isValidExhibitionDateString } from '@/src/utils/exhibitionSearch';
+import {
+	applyExhibitionDateFilters,
+	isValidExhibitionDateString,
+} from '@/src/utils/exhibitionSearch';
 
 function dateKey(d: Date): string {
 	const y = d.getFullYear();
@@ -92,8 +99,8 @@ export function useMapVenues(filterDate: Date): VenueGroup[] {
 					}));
 					return {
 						...v,
-						exhibitions: updatedSubVenues.flatMap(
-							(sv) => sv.museumId != null ? (maps.active.get(sv.museumId) ?? []) : [],
+						exhibitions: updatedSubVenues.flatMap((sv) =>
+							sv.museumId != null ? (maps.active.get(sv.museumId) ?? []) : [],
 						),
 						subVenues: updatedSubVenues,
 					};

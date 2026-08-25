@@ -9,9 +9,7 @@ interface CenteredLoaderProps {
 	className?: string;
 }
 
-export function CenteredLoader({
-	className,
-}: CenteredLoaderProps) {
+export function CenteredLoader({ className }: CenteredLoaderProps) {
 	return (
 		<View className={cn('items-center justify-center', className)}>
 			<ActivityIndicator color={colors.muted} />

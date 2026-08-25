@@ -33,23 +33,23 @@ export function KcisaSection({
 
 	return (
 		<View>
-			<SectionTitle eyebrow='PUBLIC MUSEUMS' title='국공립 기관 전시' />
+			<SectionTitle eyebrow="PUBLIC MUSEUMS" title="국공립 기관 전시" />
 
 			{kcisaStatus === 'loading' && kcisaItems.length === 0 ? (
-				<CenteredLoader className='py-8' />
+				<CenteredLoader className="py-8" />
 			) : kcisaStatus === 'error' ? (
 				<RetryErrorState
-					message='전시 정보를 불러오지 못했어요'
+					message="전시 정보를 불러오지 못했어요"
 					onRetry={onRefetch}
-					retryAccessibilityLabel='국공립 전시 다시 불러오기'
-					className='py-8'
+					retryAccessibilityLabel="국공립 전시 다시 불러오기"
+					className="py-8"
 				/>
 			) : carousel.length === 0 ? (
-				<Text className='text-muted text-[13px] font-pretendard-regular'>
+				<Text className="text-muted text-[13px] font-pretendard-regular">
 					진행 중인 전시가 없어요
 				</Text>
 			) : (
-				<View className='-mx-6'>
+				<View className="-mx-6">
 					<ScrollView
 						horizontal
 						showsHorizontalScrollIndicator={false}

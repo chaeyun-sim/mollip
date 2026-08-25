@@ -1,7 +1,5 @@
 import { ScrollView, Text, View } from 'react-native';
-
 import { Screen } from '@/src/components/layout/Screen';
-import { colors } from '@/src/constants/colors';
 
 const SECTIONS = [
 	{ title: '제1조 목적', placeholder: '[법적 내용 기재 예정]' },
@@ -13,13 +11,11 @@ const SECTIONS = [
 
 export default function TermsScreen() {
 	return (
-		<Screen variant='warm'>
+		<Screen variant="warm">
 			<Screen.Header>
-				<Screen.Header.Back color={colors.tertiary} />
+				<Screen.Header.Back color="muted" />
 				<Screen.Header.Center>
-					<Text style={{ fontFamily: 'Pretendard-SemiBold', fontSize: 16, color: colors.primary }}>
-						서비스 이용약관
-					</Text>
+					<Text className="font-pretendard-semibold text-base text-primary">서비스 이용약관</Text>
 				</Screen.Header.Center>
 			</Screen.Header>
 
@@ -28,15 +24,15 @@ export default function TermsScreen() {
 				contentContainerStyle={{ paddingTop: 8, paddingBottom: 48 }}
 			>
 				{SECTIONS.map((section) => (
-					<View key={section.title} className='mb-6'>
+					<View key={section.title} className="mb-6">
 						<Text
-							className='text-primary mb-2'
+							className="text-primary mb-2"
 							style={{ fontFamily: 'Pretendard-SemiBold', fontSize: 15 }}
 						>
 							{section.title}
 						</Text>
 						<Text
-							className='text-tertiary leading-6'
+							className="text-tertiary leading-6"
 							style={{ fontFamily: 'Pretendard-Regular', fontSize: 14 }}
 						>
 							{section.placeholder}

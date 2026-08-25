@@ -39,7 +39,8 @@ const FOCUS_LABEL: Record<string, string> = {
 	appreciation: '감상 포인트 (관람객이 직접 느낄 수 있는 감성적 감상 포인트를 중점적으로 다룰 것)',
 	technique: '재료 · 기법 (사용된 재료, 물감 종류, 붓 터치, 제작 기법을 중점적으로 다룰 것)',
 	symbolism: '상징 · 도상학 (작품 속 숨겨진 상징, 도상, 알레고리를 중점적으로 다룰 것)',
-	viewer_gaze: '감상자의 시선 (조명, 액자, 구도가 관람자의 시선을 어떻게 이끄는지 중점적으로 다룰 것)',
+	viewer_gaze:
+		'감상자의 시선 (조명, 액자, 구도가 관람자의 시선을 어떻게 이끄는지 중점적으로 다룰 것)',
 };
 
 export function buildDescriptionPrompt(focusAreas: string[]): string {
@@ -80,10 +81,7 @@ export function buildRoutePrompt(
 	return `전시: ${exhibitionTitle}\n미술관: ${venue}\n\n작품 목록:\n${artworkLines}`;
 }
 
-export const CHAT_SYSTEM_PROMPT = (
-	extractedText: string,
-	description: string,
-) =>
+export const CHAT_SYSTEM_PROMPT = (extractedText: string, description: string) =>
 	`당신은 미술관 도슨트입니다. 관람객의 질문에 차분하고 격식 있는 해설사 문체로 답합니다.
 
 규칙:

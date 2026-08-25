@@ -12,10 +12,7 @@ interface ExhibitionResultCardProps {
 	onPress: (id: string) => void;
 }
 
-export function ExhibitionResultCard({
-	result,
-	onPress,
-}: ExhibitionResultCardProps) {
+export function ExhibitionResultCard({ result, onPress }: ExhibitionResultCardProps) {
 	const { exhibition: ex, status, distanceKm } = result;
 	const ddayLabel = getDdayLabel(ex);
 	const isBookmarked = useBookmarkStore((s) => s.isBookmarked(ex.id));
@@ -25,43 +22,37 @@ export function ExhibitionResultCard({
 		<Pressable
 			onPress={() => onPress(ex.id)}
 			accessibilityLabel={`${ex.title}, ${ex.venue}, ${STATUS_LABELS[status]}`}
-			accessibilityRole='button'
-			className='flex-row gap-3.5'
+			accessibilityRole="button"
+			className="flex-row gap-3.5"
 			style={({ pressed }) => ({ opacity: pressed ? 0.85 : 1 })}
 		>
 			{/* 썸네일 + 상태 배지 오버레이 */}
 			<ImageFallback
 				heroImageUri={ex.heroImageUri}
 				posterImage={ex.posterImage}
-				className='rounded-lg w-[76px] h-[100px]'
+				className="rounded-lg w-[76px] h-[100px]"
 				iconSize={36}
-				resizeMode='cover'
+				resizeMode="cover"
 			/>
 
 			{/* 정보 */}
-			<View className='flex-1 justify-center gap-1'>
+			<View className="flex-1 justify-center gap-1">
 				<StatusBadge status={status} />
-				<Text
-					numberOfLines={1}
-					className='text-primary text-[15px] font-pretendard-semibold'
-				>
+				<Text numberOfLines={1} className="text-primary text-[15px] font-pretendard-semibold">
 					{ex.title}
 				</Text>
 
-				<Text
-					numberOfLines={1}
-					className='text-tertiary text-[13px] font-pretendard-regular'
-				>
+				<Text numberOfLines={1} className="text-tertiary text-[13px] font-pretendard-regular">
 					{ex.venue}
 					{distanceKm !== null && ` · ${formatDistance(distanceKm)}`}
 				</Text>
 
-				<View className='flex-row items-center gap-1.5'>
-					<Text className='text-muted text-[12px] font-pretendard-regular'>
+				<View className="flex-row items-center gap-1.5">
+					<Text className="text-muted text-[12px] font-pretendard-regular">
 						{ex.startDate} – {ex.endDate}
 					</Text>
 					{ddayLabel && (
-						<Text className='text-orange-700 text-[12px] font-pretendard-semibold'>
+						<Text className="text-orange-700 text-[12px] font-pretendard-semibold">
 							{ddayLabel}
 						</Text>
 					)}
@@ -73,8 +64,8 @@ export function ExhibitionResultCard({
 				onPress={() => toggleBookmark(ex.id)}
 				hitSlop={8}
 				accessibilityLabel={isBookmarked ? '북마크 해제' : '북마크 추가'}
-				accessibilityRole='button'
-				className='self-center pl-1'
+				accessibilityRole="button"
+				className="self-center pl-1"
 			>
 				<Ionicons
 					name={isBookmarked ? 'bookmark' : 'bookmark-outline'}

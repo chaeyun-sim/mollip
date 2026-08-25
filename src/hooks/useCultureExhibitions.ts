@@ -2,7 +2,11 @@ import { useCallback, useEffect, useState } from 'react';
 import { getCultureExhibitionList } from '@/src/api/culture';
 import { inferGenreAndTags } from '@/src/utils/exhibitionClassification';
 import { supabase } from '@/src/utils/supabase';
-import { applyExhibitionDateFilters, isValidExhibitionDateString, todayExhibitionDateString } from '@/src/utils/exhibitionSearch';
+import {
+	applyExhibitionDateFilters,
+	isValidExhibitionDateString,
+	todayExhibitionDateString,
+} from '@/src/utils/exhibitionSearch';
 import { formatDate } from '@/src/utils/cultureExhibitionMapper';
 import { isStale, markSynced } from '@/src/utils/syncCache';
 
@@ -46,31 +50,36 @@ async function syncCultureExhibitionsIfStale(): Promise<void> {
 		.map(({ item }) => item)
 		.filter((item) => item.startDate?.length === 8 && item.endDate?.length === 8);
 	if (items.length === 0) return;
-	const rows = items.map((item) => {
-		const start_date = formatDate(item.startDate);
-		const end_date = formatDate(item.endDate);
-		if (!isValidExhibitionDateString(start_date) || !isValidExhibitionDateString(end_date)) {
-			return null;
-		}
-		const { genre, type, tags } = inferGenreAndTags({
-			title: item.title,
-			description: item.place,
-			legacyGenre: item.realmName,
-		});
-		return {
-			source: 'culture' as const,
-			venue_name_fallback: item.place || '장소 정보 없음',
-			title: item.title,
-			start_date,
-			end_date,
-			genre,
-			type,
-			tags: tags.length > 0 ? JSON.stringify(tags) : null,
-			image_url: item.thumbnail || null,
-			synced_at: new Date().toISOString(),
-		};
-	}).filter((row): row is NonNullable<typeof row> => row != null);
-	const { error: deleteError } = await supabase.from('exhibitions').delete().eq('source', 'culture');
+	const rows = items
+		.map((item) => {
+			const start_date = formatDate(item.startDate);
+			const end_date = formatDate(item.endDate);
+			if (!isValidExhibitionDateString(start_date) || !isValidExhibitionDateString(end_date)) {
+				return null;
+			}
+			const { genre, type, tags } = inferGenreAndTags({
+				title: item.title,
+				description: item.place,
+				legacyGenre: item.realmName,
+			});
+			return {
+				source: 'culture' as const,
+				venue_name_fallback: item.place || '장소 정보 없음',
+				title: item.title,
+				start_date,
+				end_date,
+				genre,
+				type,
+				tags: tags.length > 0 ? JSON.stringify(tags) : null,
+				image_url: item.thumbnail || null,
+				synced_at: new Date().toISOString(),
+			};
+		})
+		.filter((row): row is NonNullable<typeof row> => row != null);
+	const { error: deleteError } = await supabase
+		.from('exhibitions')
+		.delete()
+		.eq('source', 'culture');
 	if (deleteError) throw deleteError;
 	const { error: insertError } = await supabase.from('exhibitions').upsert(rows, {
 		onConflict: 'title,start_date,end_date',

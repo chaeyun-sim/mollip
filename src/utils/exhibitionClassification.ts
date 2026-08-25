@@ -10,11 +10,7 @@ import {
 const KIDS_TAG = '키즈';
 
 function normalizeText(...parts: (string | null | undefined)[]): string {
-	return parts
-		.filter(Boolean)
-		.join(' ')
-		.toLowerCase()
-		.replace(/\s+/g, ' ');
+	return parts.filter(Boolean).join(' ').toLowerCase().replace(/\s+/g, ' ');
 }
 
 function matchKeywords(text: string, rules: { label: string; keywords: string[] }[]): string[] {
@@ -31,12 +27,7 @@ function parseCompoundGenreField(raw: string): string[] {
 	return raw
 		.split(/[,，·/、]| 및 | 등|\(/)
 		.map((s) => s.replace(/\d+점.*$/, '').trim())
-		.filter(
-			(s) =>
-				s.length >= 2 &&
-				!NON_ART_GENRE_VALUES.has(s) &&
-				!EXHIBITION_TYPE_VALUES.has(s),
-		);
+		.filter((s) => s.length >= 2 && !NON_ART_GENRE_VALUES.has(s) && !EXHIBITION_TYPE_VALUES.has(s));
 }
 
 function pickExhibitionType(typeMatches: string[]): string | null {

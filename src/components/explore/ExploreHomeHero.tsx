@@ -20,26 +20,26 @@ export function ExploreHomeHero() {
 				}}
 			>
 				<View
-					pointerEvents='none'
-					className='absolute -top-10 -right-10 w-40 h-40 rounded-[80px] bg-[#ffffff45]'
+					pointerEvents="none"
+					className="absolute -top-10 -right-10 w-40 h-40 rounded-[80px] bg-white/27"
 				/>
 
-				<Text className='text-[11px] text-tertiary mb-3 font-pretendard-semibold leading-[2.4px]'>
+				<Text className="text-[11px] text-tertiary mb-3 font-pretendard-semibold leading-[2.4px]">
 					ABSORBED IN ART
 				</Text>
 
-				<View className='flex-row items-end justify-between'>
-					<View className='flex-1 pr-3'>
-						<Text className='text-primary text-[34px] leading-[40px] font-hahmlet-bold'>
+				<View className="flex-row items-end justify-between">
+					<View className="flex-1 pr-3">
+						<Text className="text-primary text-[34px] leading-[40px] font-hahmlet-bold">
 							{'어떤 이야기를\n담고 있을까요?'}
 						</Text>
-						<Text className='text-[14px] text-secondary mt-3 leading-[21px] font-pretendard-regular'>
+						<Text className="text-[14px] text-secondary mt-3 leading-[21px] font-pretendard-regular">
 							전시를 발견하고, 몰입하고, 기록까지.
 						</Text>
 					</View>
 					<Image
 						source={SCULPTURE}
-						resizeMode='contain'
+						resizeMode="contain"
 						style={{ width: 72, height: 100, marginBottom: -4 }}
 						accessibilityIgnoresInvertColors
 					/>

@@ -5,7 +5,11 @@ import {
 	mapExhibitionRowToExhibition,
 	type ExhibitionRow,
 } from '@/src/utils/exhibitionMapper';
-import { applyExhibitionDateFilters, isExhibitionListed, todayExhibitionDateString } from '@/src/utils/exhibitionSearch';
+import {
+	applyExhibitionDateFilters,
+	isExhibitionListed,
+	todayExhibitionDateString,
+} from '@/src/utils/exhibitionSearch';
 import type { Exhibition } from '@/src/data/exhibitions';
 
 type Status = 'idle' | 'loading' | 'success' | 'error';
@@ -81,33 +85,33 @@ export function useVenueExhibitions(venueName: string | null, museumId?: number 
 				})();
 
 		request.then(({ data, error }) => {
-				if (cancelled) return;
-				if (error || !data) {
-					setStatus('error');
-					return;
-				}
+			if (cancelled) return;
+			if (error || !data) {
+				setStatus('error');
+				return;
+			}
 
-				// 1) 느슨하게 넓혀 가져온 후보 중, 실제로 같은 장소인 것만 남긴다
-				//    (예: "경주예술의전당"이 "예술의전당" 조회에 섞여 들어오는 것을 제외).
-				let finalRows = data as ExhibitionRow[];
-				if (!loadByMuseumId && venueName) {
-					const sameVenueRows = finalRows.filter((row) =>
-						isSameVenue(row.venue_name_fallback, venueName),
-					);
-					const branchMatched = sameVenueRows.filter(
-						(row) => row.event_site && venueName.includes(row.event_site),
-					);
-					finalRows = branchMatched.length > 0 ? branchMatched : sameVenueRows;
-				}
-
-				setExhibitions(
-					finalRows
-						.slice(0, 20)
-						.map((row) => mapExhibitionRowToExhibition(row))
-						.filter((ex) => isExhibitionListed(ex)),
+			// 1) 느슨하게 넓혀 가져온 후보 중, 실제로 같은 장소인 것만 남긴다
+			//    (예: "경주예술의전당"이 "예술의전당" 조회에 섞여 들어오는 것을 제외).
+			let finalRows = data as ExhibitionRow[];
+			if (!loadByMuseumId && venueName) {
+				const sameVenueRows = finalRows.filter((row) =>
+					isSameVenue(row.venue_name_fallback, venueName),
 				);
-				setStatus('success');
-			});
+				const branchMatched = sameVenueRows.filter(
+					(row) => row.event_site && venueName.includes(row.event_site),
+				);
+				finalRows = branchMatched.length > 0 ? branchMatched : sameVenueRows;
+			}
+
+			setExhibitions(
+				finalRows
+					.slice(0, 20)
+					.map((row) => mapExhibitionRowToExhibition(row))
+					.filter((ex) => isExhibitionListed(ex)),
+			);
+			setStatus('success');
+		});
 		return () => {
 			cancelled = true;
 		};

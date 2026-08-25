@@ -53,10 +53,7 @@ interface CultureListResponse {
 	sigungu: string;
 }
 
-interface CultureDetailResponse extends Omit<
-	CultureListResponse,
-	'serviceName' | 'thumbNail'
-> {
+interface CultureDetailResponse extends Omit<CultureListResponse, 'serviceName' | 'thumbNail'> {
 	price: string;
 	contents1: string;
 	url: string;
@@ -85,9 +82,7 @@ const endpoint = {
 /** period2 요청당 row 수 — API가 허용하면 한 번에 많이 받음 (totalCount가 더 크면 PageNo로 이어 받음) */
 const CULTURE_PERIOD_PAGE_SIZE = 1000;
 
-async function fetchCulturePeriodPage(
-	pageNo: number,
-): Promise<Response<CultureListResponse>> {
+async function fetchCulturePeriodPage(pageNo: number): Promise<Response<CultureListResponse>> {
 	const response = await fetch(
 		`${endpoint.period}?serviceKey=${process.env.EXPO_PUBLIC_DATA_KEY}&PageNo=${pageNo}&numOfrows=${CULTURE_PERIOD_PAGE_SIZE}&sortStdr=1&from=20200101&to=${CULTURE_EXHIBITION_PERIOD_TO}&serviceTp=A`,
 	);
@@ -134,9 +129,7 @@ export const getCultureExhibitionList = async (
 	};
 };
 
-export const getCultureDetail = async (
-	seq: string,
-): Promise<Response<CultureDetailResponse>> => {
+export const getCultureDetail = async (seq: string): Promise<Response<CultureDetailResponse>> => {
 	const response = await fetch(
 		`${endpoint.detail}?serviceKey=${process.env.EXPO_PUBLIC_DATA_KEY}&seq=${seq}`,
 	);

@@ -1,13 +1,9 @@
-import {
-	NaverMapMarkerOverlay,
-	NaverMapView,
-} from '@mj-studio/react-native-naver-map';
+import { NaverMapMarkerOverlay, NaverMapView } from '@mj-studio/react-native-naver-map';
 import * as Haptics from 'expo-haptics';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { ActivityIndicator, Pressable, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-
 import { useMapStore } from '@/src/store/mapStore';
 import { colors } from '@/src/constants/colors';
 
@@ -16,10 +12,7 @@ interface ExhibitionMapPreviewProps {
 	venueName: string;
 }
 
-export function ExhibitionMapPreview({
-	coordinates,
-	venueName,
-}: ExhibitionMapPreviewProps) {
+export function ExhibitionMapPreview({ coordinates, venueName }: ExhibitionMapPreviewProps) {
 	const router = useRouter();
 	const setPendingCamera = useMapStore((s) => s.setPendingCamera);
 	const [isNavigating, setIsNavigating] = useState(false);
@@ -36,16 +29,16 @@ export function ExhibitionMapPreview({
 		<Pressable
 			onPress={handlePress}
 			accessibilityLabel={`${venueName} 지도에서 보기`}
-			accessibilityRole='button'
+			accessibilityRole="button"
 			style={({ pressed }) => ({ opacity: pressed ? 0.85 : 1 })}
 		>
 			<View
-				className='mx-6 rounded-md overflow-hidden border border-gray-200'
+				className="mx-6 rounded-md overflow-hidden border border-gray-200"
 				style={{ height: 160 }}
 			>
 				<NaverMapView
 					style={{ flex: 1 }}
-					mapType='Basic'
+					mapType="Basic"
 					initialCamera={{
 						latitude: coordinates.latitude,
 						longitude: coordinates.longitude,
@@ -69,17 +62,17 @@ export function ExhibitionMapPreview({
 					>
 						<View
 							collapsable={false}
-							className='w-8 h-8 rounded-full bg-primary items-center justify-center'
+							className="w-8 h-8 rounded-full bg-primary items-center justify-center"
 							style={{ borderWidth: 2, borderColor: 'white' }}
 						>
-							<Ionicons name='location' size={14} color='white' />
+							<Ionicons name="location" size={14} color="white" />
 						</View>
 					</NaverMapMarkerOverlay>
 				</NaverMapView>
 
 				{/* 지도 탭으로 이동 배지 */}
 				<View
-					className='absolute bottom-3 right-3 flex-row items-center gap-1 px-2.5 py-1.5 rounded-full bg-white'
+					className="absolute bottom-3 right-3 flex-row items-center gap-1 px-2.5 py-1.5 rounded-full bg-white"
 					style={{
 						shadowColor: '#000',
 						shadowOpacity: 0.12,
@@ -88,11 +81,15 @@ export function ExhibitionMapPreview({
 					}}
 				>
 					{isNavigating ? (
-						<ActivityIndicator size='small' color={colors.primary} style={{ width: 12, height: 12 }} />
+						<ActivityIndicator
+							size="small"
+							color={colors.primary}
+							style={{ width: 12, height: 12 }}
+						/>
 					) : (
-						<Ionicons name='map-outline' size={12} color={colors.primary} />
+						<Ionicons name="map-outline" size={12} className="text-primary" />
 					)}
-					<Text className='font-pretendard-medium text-[11px] text-primary'>
+					<Text className="font-pretendard-medium text-[11px] text-primary">
 						{isNavigating ? '이동 중...' : '지도에서 보기'}
 					</Text>
 				</View>

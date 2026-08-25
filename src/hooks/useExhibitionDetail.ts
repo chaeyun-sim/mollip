@@ -19,7 +19,7 @@ type ExhibitionDetailRow = ExhibitionRow & {
 
 function normalizeMuseumJoin(raw: ExhibitionDetailRow['museums']): MuseumJoinRow | null {
 	if (!raw) return null;
-	return Array.isArray(raw) ? raw[0] ?? null : raw;
+	return Array.isArray(raw) ? (raw[0] ?? null) : raw;
 }
 
 // exhibitions.id(정수)로 상세 조회 — source(kcisa/culture/manual)와 무관.
@@ -38,7 +38,9 @@ export function useExhibitionDetail(id: string | undefined) {
 		setStatus('loading');
 		supabase
 			.from('exhibitions')
-			.select(`${EXHIBITION_COLUMNS}, museums ( name, address, phone, homepage_url, open_hours, rstdeInfo, gps_x, gps_y, venue_group_name, accessibility )`)
+			.select(
+				`${EXHIBITION_COLUMNS}, museums ( name, address, phone, homepage_url, open_hours, rstdeInfo, gps_x, gps_y, venue_group_name, accessibility )`,
+			)
 			.eq('id', numericId)
 			.maybeSingle()
 			.then(async ({ data, error }) => {

@@ -4,10 +4,7 @@
  * 작품 제목만으로는 동명이인·동명 문서(식물, 영화 등)와 오매칭되기 쉬워,
  * 검색 결과 문서 제목에 작가명이 포함될 때만 이미지를 채택한다.
  */
-export async function fetchWikidataImage(
-	title: string,
-	artist?: string,
-): Promise<string | null> {
+export async function fetchWikidataImage(title: string, artist?: string): Promise<string | null> {
 	if (!artist?.trim()) return null;
 
 	return (

@@ -51,9 +51,12 @@ export function useExhibitionSearch() {
 		debounceTimer.current = setTimeout(() => setSearchText(text), DEBOUNCE_MS);
 	}, []);
 
-	useEffect(() => () => {
-		if (debounceTimer.current) clearTimeout(debounceTimer.current);
-	}, []);
+	useEffect(
+		() => () => {
+			if (debounceTimer.current) clearTimeout(debounceTimer.current);
+		},
+		[],
+	);
 
 	const commitSearchText = useCallback((text: string) => {
 		if (debounceTimer.current) clearTimeout(debounceTimer.current);

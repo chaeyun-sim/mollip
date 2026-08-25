@@ -3,14 +3,14 @@ import { getAccessTokenForApi } from '@/src/store/authStore';
 const SUPABASE_URL = process.env.EXPO_PUBLIC_SUPABASE_URL ?? '';
 
 function edgeFunctionUrl(name: string): string {
-  return `${SUPABASE_URL}/functions/v1/${name}`;
+	return `${SUPABASE_URL}/functions/v1/${name}`;
 }
 
 function authHeaders(): Record<string, string> {
-  return {
-    Authorization: `Bearer ${getAccessTokenForApi()}`,
-    'Content-Type': 'application/json',
-  };
+	return {
+		Authorization: `Bearer ${getAccessTokenForApi()}`,
+		'Content-Type': 'application/json',
+	};
 }
 
 // -- Anthropic ----------------------------------------------------------------
@@ -18,139 +18,136 @@ function authHeaders(): Record<string, string> {
 type AnthropicMessage = { role: 'user' | 'assistant'; content: string };
 
 export async function* streamDescriptionFromImage(
-  imageBase64: string,
-  mediaType: 'image/jpeg' | 'image/png' | 'image/webp',
-  systemPrompt: string,
+	imageBase64: string,
+	mediaType: 'image/jpeg' | 'image/png' | 'image/webp',
+	systemPrompt: string,
 ): AsyncGenerator<string> {
-  const res = await fetch(edgeFunctionUrl('stream-description'), {
-    method: 'POST',
-    headers: authHeaders(),
-    body: JSON.stringify({ mode: 'image', imageBase64, mediaType, systemPrompt }),
-  });
-  if (!res.ok) throw new Error(`stream-description ${res.status}`);
+	const res = await fetch(edgeFunctionUrl('stream-description'), {
+		method: 'POST',
+		headers: authHeaders(),
+		body: JSON.stringify({ mode: 'image', imageBase64, mediaType, systemPrompt }),
+	});
+	if (!res.ok) throw new Error(`stream-description ${res.status}`);
 
-  yield* readSSEStream(res);
+	yield* readSSEStream(res);
 }
 
-export async function* streamDescription(
-  prompt: string,
-): AsyncGenerator<string> {
-  const res = await fetch(edgeFunctionUrl('stream-description'), {
-    method: 'POST',
-    headers: authHeaders(),
-    body: JSON.stringify({ mode: 'manual', prompt }),
-  });
-  if (!res.ok) throw new Error(`stream-description ${res.status}`);
+export async function* streamDescription(prompt: string): AsyncGenerator<string> {
+	const res = await fetch(edgeFunctionUrl('stream-description'), {
+		method: 'POST',
+		headers: authHeaders(),
+		body: JSON.stringify({ mode: 'manual', prompt }),
+	});
+	if (!res.ok) throw new Error(`stream-description ${res.status}`);
 
-  yield* readSSEStream(res);
+	yield* readSSEStream(res);
 }
 
 export async function* streamChat(
-  systemPrompt: string,
-  messages: AnthropicMessage[],
+	systemPrompt: string,
+	messages: AnthropicMessage[],
 ): AsyncGenerator<string> {
-  const res = await fetch(edgeFunctionUrl('stream-chat'), {
-    method: 'POST',
-    headers: authHeaders(),
-    body: JSON.stringify({ systemPrompt, messages }),
-  });
-  if (!res.ok) throw new Error(`stream-chat ${res.status}`);
+	const res = await fetch(edgeFunctionUrl('stream-chat'), {
+		method: 'POST',
+		headers: authHeaders(),
+		body: JSON.stringify({ systemPrompt, messages }),
+	});
+	if (!res.ok) throw new Error(`stream-chat ${res.status}`);
 
-  yield* readSSEStream(res);
+	yield* readSSEStream(res);
 }
 
-export async function* streamRoute(
-  systemPrompt: string,
-  prompt: string,
-): AsyncGenerator<string> {
-  const res = await fetch(edgeFunctionUrl('generate-route'), {
-    method: 'POST',
-    headers: authHeaders(),
-    body: JSON.stringify({ systemPrompt, prompt }),
-  });
-  if (!res.ok) throw new Error(`generate-route ${res.status}`);
+export async function* streamRoute(systemPrompt: string, prompt: string): AsyncGenerator<string> {
+	const res = await fetch(edgeFunctionUrl('generate-route'), {
+		method: 'POST',
+		headers: authHeaders(),
+		body: JSON.stringify({ systemPrompt, prompt }),
+	});
+	if (!res.ok) throw new Error(`generate-route ${res.status}`);
 
-  yield* readSSEStream(res);
+	yield* readSSEStream(res);
 }
 
 // -- ElevenLabs ---------------------------------------------------------------
 
 export async function fetchVoices() {
-  const res = await fetch(edgeFunctionUrl('voices'), {
-    method: 'GET',
-    headers: authHeaders(),
-  });
-  if (!res.ok) throw new Error(`voices ${res.status}`);
-  const data = await res.json();
-  return data.voices as {
-    voice_id: string;
-    name: string;
-    preview_url: string;
-    description?: string;
-    labels?: Record<string, string>;
-  }[];
+	const res = await fetch(edgeFunctionUrl('voices'), {
+		method: 'GET',
+		headers: authHeaders(),
+	});
+	if (!res.ok) throw new Error(`voices ${res.status}`);
+	const data = await res.json();
+	return data.voices as {
+		voice_id: string;
+		name: string;
+		preview_url: string;
+		description?: string;
+		labels?: Record<string, string>;
+	}[];
 }
 
 export async function fetchTTSBlob(voiceId: string, text: string, speed = 1.0): Promise<string> {
-  const res = await fetch(edgeFunctionUrl('tts'), {
-    method: 'POST',
-    headers: authHeaders(),
-    body: JSON.stringify({ voiceId, text, speed }),
-  });
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({}));
-    throw new Error(`tts ${res.status}: ${JSON.stringify(err)}`);
-  }
-  const buffer = await res.arrayBuffer();
-  const base64 = arrayBufferToBase64(buffer);
-  return `data:audio/mpeg;base64,${base64}`;
+	const res = await fetch(edgeFunctionUrl('tts'), {
+		method: 'POST',
+		headers: authHeaders(),
+		body: JSON.stringify({ voiceId, text, speed }),
+	});
+	if (!res.ok) {
+		const err = await res.json().catch(() => ({}));
+		throw new Error(`tts ${res.status}: ${JSON.stringify(err)}`);
+	}
+	const buffer = await res.arrayBuffer();
+	const base64 = arrayBufferToBase64(buffer);
+	return `data:audio/mpeg;base64,${base64}`;
 }
 
 // -- Account -------------------------------------------------------------------
 
 export async function deleteAccount(): Promise<void> {
-  const res = await fetch(edgeFunctionUrl('delete-account'), {
-    method: 'POST',
-    headers: authHeaders(),
-  });
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({}));
-    throw new Error(`delete-account ${res.status}: ${JSON.stringify(err)}`);
-  }
+	const res = await fetch(edgeFunctionUrl('delete-account'), {
+		method: 'POST',
+		headers: authHeaders(),
+	});
+	if (!res.ok) {
+		const err = await res.json().catch(() => ({}));
+		throw new Error(`delete-account ${res.status}: ${JSON.stringify(err)}`);
+	}
 }
 
 // -- Helpers ------------------------------------------------------------------
 
 async function* readSSEStream(res: Response): AsyncGenerator<string> {
-  const reader = res.body!.getReader();
-  const decoder = new TextDecoder();
-  let buf = '';
+	const reader = res.body!.getReader();
+	const decoder = new TextDecoder();
+	let buf = '';
 
-  while (true) {
-    const { done, value } = await reader.read();
-    if (done) break;
-    buf += decoder.decode(value, { stream: true });
-    const lines = buf.split('\n');
-    buf = lines.pop() ?? '';
-    for (const line of lines) {
-      if (!line.startsWith('data: ')) continue;
-      const json = line.slice(6).trim();
-      if (json === '[DONE]') return;
-      try {
-        const evt = JSON.parse(json);
-        if (evt.type === 'content_block_delta' && evt.delta?.type === 'text_delta') {
-          yield evt.delta.text as string;
-        }
-      } catch { /* skip malformed */ }
-    }
-  }
+	while (true) {
+		const { done, value } = await reader.read();
+		if (done) break;
+		buf += decoder.decode(value, { stream: true });
+		const lines = buf.split('\n');
+		buf = lines.pop() ?? '';
+		for (const line of lines) {
+			if (!line.startsWith('data: ')) continue;
+			const json = line.slice(6).trim();
+			if (json === '[DONE]') return;
+			try {
+				const evt = JSON.parse(json);
+				if (evt.type === 'content_block_delta' && evt.delta?.type === 'text_delta') {
+					yield evt.delta.text as string;
+				}
+			} catch {
+				/* skip malformed */
+			}
+		}
+	}
 }
 
 function arrayBufferToBase64(buffer: ArrayBuffer): string {
-  const bytes = new Uint8Array(buffer);
-  let binary = '';
-  for (let i = 0; i < bytes.length; i += 0x8000) {
-    binary += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
-  }
-  return btoa(binary);
+	const bytes = new Uint8Array(buffer);
+	let binary = '';
+	for (let i = 0; i < bytes.length; i += 0x8000) {
+		binary += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
+	}
+	return btoa(binary);
 }

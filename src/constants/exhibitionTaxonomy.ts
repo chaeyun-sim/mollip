@@ -1,6 +1,9 @@
 /** DB genre 컬럼 — 단일 “미술 매체/분야” (우선순위: 앞일수록 먼저 매칭) */
 export const ART_GENRE_RULES: { genre: string; keywords: string[] }[] = [
-	{ genre: '미디어아트', keywords: ['미디어아트', '미디어 아트', '뉴미디어', 'ai 미디어', 'media art', '몰입형'] },
+	{
+		genre: '미디어아트',
+		keywords: ['미디어아트', '미디어 아트', '뉴미디어', 'ai 미디어', 'media art', '몰입형'],
+	},
 	{ genre: '영상', keywords: ['영상', '비디오', 'video', 'vr ', ' ar ', 'film'] },
 	{ genre: '사진', keywords: ['사진', 'photo', 'photography', '포토'] },
 	{ genre: '조각', keywords: ['조각', 'sculpture', '입체'] },

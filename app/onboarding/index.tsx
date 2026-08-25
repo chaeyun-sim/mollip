@@ -16,7 +16,7 @@ export default function OnboardingScreen() {
 	const router = useRouter();
 	const userId = useAuthStore((s) => s.user?.id);
 	const [initialCards] = useState(() => shuffle(ART_ITEMS));
-	
+
 	const { cards, liked, done, handleSwipeLeft, handleSwipeRight } =
 		useArtPreferenceSwipe(initialCards);
 
@@ -37,14 +37,14 @@ export default function OnboardingScreen() {
 	}, [router, userId, liked]);
 
 	return (
-		<Screen variant='warm'>
+		<Screen variant="warm">
 			<WarmGradientBackdrop />
 			{/* 헤더 */}
-			<View className='pt-4 pb-2 gap-1'>
-				<Text className='text-primary text-[26px] font-hahmlet-bold'>
+			<View className="pt-4 pb-2 gap-1">
+				<Text className="text-primary text-[26px] font-hahmlet-bold">
 					당신의 취향을{'\n'}골라보세요
 				</Text>
-				<Text className='text-description text-[13px] font-pretendard-regular'>
+				<Text className="text-description text-[13px] font-pretendard-regular">
 					마음에 드는 그림을 저장하면 맞춤 전시를 추천해드릴게요
 				</Text>
 			</View>
@@ -52,7 +52,7 @@ export default function OnboardingScreen() {
 			{done ? (
 				<ArtPreferenceComplete
 					likedCount={liked.length}
-					buttonLabel='다음으로'
+					buttonLabel="다음으로"
 					onPress={handleNext}
 				/>
 			) : (

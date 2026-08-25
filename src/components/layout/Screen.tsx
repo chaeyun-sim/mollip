@@ -26,8 +26,8 @@ function Screen({
 	if (variant === 'dark' && highContrast) {
 		return (
 			<>
-				<StatusBar style='dark' />
-				<View className='flex-1 bg-white'>
+				<StatusBar style="dark" />
+				<View className="flex-1 bg-white">
 					<SafeAreaView
 						edges={edges || ['top', 'left', 'right']}
 						className={cn('px-6 flex-1', className)}
@@ -42,8 +42,8 @@ function Screen({
 	if (variant === 'warm') {
 		return (
 			<>
-				<StatusBar style='dark' />
-				<View className='flex-1 bg-bg-light'>
+				<StatusBar style="dark" />
+				<View className="flex-1 bg-bg-light">
 					<SafeAreaView
 						edges={edges || ['top', 'left', 'right']}
 						className={cn('px-6 flex-1', className)}
@@ -58,8 +58,8 @@ function Screen({
 	if (variant === 'gradient') {
 		return (
 			<>
-				<StatusBar style='dark' />
-				<View className='flex-1'>
+				<StatusBar style="dark" />
+				<View className="flex-1">
 					<LinearGradient
 						colors={['#FFF3E6', '#F7DFCE', colors.bgLight]}
 						locations={[0, 0.3, 0.75]}
@@ -78,7 +78,7 @@ function Screen({
 
 	return (
 		<>
-			<StatusBar style='light' />
+			<StatusBar style="light" />
 			<LinearGradient colors={['#0C0A09', colors.bgDark]} style={{ flex: 1 }}>
 				<SafeAreaView
 					edges={edges || ['top', 'left', 'right']}
@@ -103,15 +103,8 @@ function Bottom({
 	);
 }
 
-function BottomAbsolute({
-	className,
-	children,
-}: PropsWithChildren<ScreenProps>) {
-	return (
-		<View className={cn('absolute left-0 right-0 bottom-0 pb-6', className)}>
-			{children}
-		</View>
-	);
+function BottomAbsolute({ className, children }: PropsWithChildren<ScreenProps>) {
+	return <View className={cn('absolute left-0 right-0 bottom-0 pb-6', className)}>{children}</View>;
 }
 
 Screen.Header = ScreenHeader;

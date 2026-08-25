@@ -3,7 +3,7 @@ import type { RouteCoord } from '@/src/api/tmap';
 
 export type ExternalMapApp = 'naver' | 'kakao' | 'google';
 
-export const EXTERNAL_MAP_APPS: Array<{ key: ExternalMapApp; label: string }> = [
+export const EXTERNAL_MAP_APPS: { key: ExternalMapApp; label: string }[] = [
 	{ key: 'naver', label: '네이버 지도' },
 	{ key: 'kakao', label: '카카오맵' },
 	{ key: 'google', label: '구글 지도' },
@@ -12,7 +12,11 @@ export const EXTERNAL_MAP_APPS: Array<{ key: ExternalMapApp; label: string }> = 
 const APP_BUNDLE_ID = 'com.simune.aaa';
 
 // 앱 스킴으로 먼저 열어보고(설치돼 있으면 바로 해당 앱으로), 실패하면 웹 주소로 열어 브라우저에서라도 보이게 한다.
-function buildUrls(app: ExternalMapApp, coord: RouteCoord, label: string): { appUrl: string; webUrl: string } {
+function buildUrls(
+	app: ExternalMapApp,
+	coord: RouteCoord,
+	label: string,
+): { appUrl: string; webUrl: string } {
 	const { latitude, longitude } = coord;
 	const name = encodeURIComponent(label);
 
@@ -34,7 +38,11 @@ function buildUrls(app: ExternalMapApp, coord: RouteCoord, label: string): { app
 	};
 }
 
-export async function openExternalMap(app: ExternalMapApp, coord: RouteCoord, label: string): Promise<void> {
+export async function openExternalMap(
+	app: ExternalMapApp,
+	coord: RouteCoord,
+	label: string,
+): Promise<void> {
 	const { appUrl, webUrl } = buildUrls(app, coord, label);
 	try {
 		await Linking.openURL(appUrl);

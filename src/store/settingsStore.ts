@@ -5,14 +5,14 @@ import { createJSONStorage, persist } from 'zustand/middleware';
 export type FontSize = 'small' | 'medium' | 'large';
 export type VoiceSpeed = 0.7 | 1.0 | 1.25 | 1.5;
 export type DescriptionFocus =
-	| 'aesthetics'     // 미학 / 형식 분석
-	| 'art_history'    // 미술사 · 사조
-	| 'artist_life'    // 작가 생애
+	| 'aesthetics' // 미학 / 형식 분석
+	| 'art_history' // 미술사 · 사조
+	| 'artist_life' // 작가 생애
 	| 'social_context' // 사회 · 문화적 맥락
-	| 'appreciation'   // 감상 포인트 (감성적)
-	| 'technique'      // 재료 · 기법
-	| 'symbolism'      // 상징 · 도상학
-	| 'viewer_gaze';   // 감상자의 시선
+	| 'appreciation' // 감상 포인트 (감성적)
+	| 'technique' // 재료 · 기법
+	| 'symbolism' // 상징 · 도상학
+	| 'viewer_gaze'; // 감상자의 시선
 
 export const FONT_SIZE_VALUE: Record<FontSize, number> = {
 	small: 15,
@@ -51,8 +51,7 @@ export const useSettingsStore = create<SettingsStore>()(
 			setVoiceId: (voiceId) => set({ voiceId }),
 			setVoiceSpeed: (voiceSpeed) => set({ voiceSpeed }),
 			setFontSize: (fontSize) => set({ fontSize }),
-			setPushNotificationsEnabled: (pushNotificationsEnabled) =>
-				set({ pushNotificationsEnabled }),
+			setPushNotificationsEnabled: (pushNotificationsEnabled) => set({ pushNotificationsEnabled }),
 			toggleDescriptionFocus: (focus) =>
 				set((s) => ({
 					descriptionFocus: s.descriptionFocus.includes(focus)

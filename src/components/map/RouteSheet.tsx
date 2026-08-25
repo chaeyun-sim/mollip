@@ -1,12 +1,6 @@
 import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { Ionicons } from '@expo/vector-icons';
-import {
-	ActivityIndicator,
-	Pressable,
-	ScrollView,
-	Text,
-	View,
-} from 'react-native';
+import { ActivityIndicator, Pressable, ScrollView, Text, View } from 'react-native';
 import type { LayoutChangeEvent } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import Animated, {
@@ -49,10 +43,7 @@ const SPRING_SETTLE = { damping: 28, stiffness: 220, mass: 0.9 } as const;
 const SPRING_PRESS = { damping: 18, stiffness: 320, mass: 0.7 } as const;
 
 // 정렬 변경으로 카드 순서가 바뀔 때 쓰는 레이아웃 스프링 — 과감쇠로 두어 오버슈트 없이 딱 멈춘다.
-const CARD_LAYOUT = LinearTransition.springify()
-	.damping(32)
-	.stiffness(200)
-	.mass(0.9);
+const CARD_LAYOUT = LinearTransition.springify().damping(32).stiffness(200).mass(0.9);
 
 const LEG_ICON: Record<RouteLeg['mode'], keyof typeof Ionicons.glyphMap> = {
 	walk: 'walk',
@@ -73,9 +64,7 @@ function formatMinutes(seconds: number): string {
 }
 
 function formatDistanceM(meters: number): string {
-	return meters < 1000
-		? `${Math.round(meters)}m`
-		: `${(meters / 1000).toFixed(1)}km`;
+	return meters < 1000 ? `${Math.round(meters)}m` : `${(meters / 1000).toFixed(1)}km`;
 }
 
 // ODsay 공식 버스노선 타입 코드 — 14 = 광역버스.
@@ -86,10 +75,7 @@ const BUS_ROUTE_TYPE_EXPRESS = 14;
 function busNumber(leg: RouteLeg): string {
 	const raw = leg.routeName?.split(':').pop() ?? '';
 	if (!raw) return raw;
-	if (
-		leg.routeType === BUS_ROUTE_TYPE_EXPRESS &&
-		!raw.toUpperCase().startsWith('M')
-	) {
+	if (leg.routeType === BUS_ROUTE_TYPE_EXPRESS && !raw.toUpperCase().startsWith('M')) {
 		return `M${raw}`;
 	}
 	return raw;
@@ -97,7 +83,7 @@ function busNumber(leg: RouteLeg): string {
 
 type SortCriterion = 'time' | 'distance' | 'transfer' | 'fare' | 'walk';
 
-const SORT_OPTIONS: Array<{ key: SortCriterion; label: string }> = [
+const SORT_OPTIONS: { key: SortCriterion; label: string }[] = [
 	{ key: 'time', label: '최단 시간' },
 	{ key: 'distance', label: '최단 거리' },
 	{ key: 'transfer', label: '환승 적은 순' },
@@ -112,16 +98,11 @@ function walkSeconds(route: RouteResult): number {
 		.reduce((sum, leg) => sum + leg.sectionSeconds, 0);
 }
 
-function compareRoutes(
-	a: RouteResult,
-	b: RouteResult,
-	criterion: SortCriterion,
-): number {
+function compareRoutes(a: RouteResult, b: RouteResult, criterion: SortCriterion): number {
 	if (criterion === 'time') return a.durationSeconds - b.durationSeconds;
 	if (criterion === 'distance') return a.distanceMeters - b.distanceMeters;
 	if (criterion === 'transfer') return a.transferCount - b.transferCount;
-	if (criterion === 'fare')
-		return (a.fareWon ?? Infinity) - (b.fareWon ?? Infinity);
+	if (criterion === 'fare') return (a.fareWon ?? Infinity) - (b.fareWon ?? Infinity);
 	return walkSeconds(a) - walkSeconds(b);
 }
 
@@ -131,30 +112,23 @@ interface RouteSummaryData {
 	totalDistance: string;
 	transferText?: string;
 	fareText?: string;
-	legBars: Array<{
+	legBars: {
 		key: string;
 		icon: keyof typeof Ionicons.glyphMap;
 		time: string;
 		color: string;
 		flex: number;
-	}>;
+	}[];
 }
 
-function buildSummary(
-	route: RouteResult,
-	mode: DirectionsMode,
-): RouteSummaryData {
-	const totalSeconds =
-		route.legs.reduce((sum, leg) => sum + leg.sectionSeconds, 0) || 1;
+function buildSummary(route: RouteResult, mode: DirectionsMode): RouteSummaryData {
+	const totalSeconds = route.legs.reduce((sum, leg) => sum + leg.sectionSeconds, 0) || 1;
 	return {
 		totalTime: formatMinutes(route.durationSeconds),
 		totalDistance: formatDistanceM(route.distanceMeters),
 		transferText:
-			mode === 'bus' && route.transferCount > 0
-				? `환승 ${route.transferCount}회`
-				: undefined,
-		fareText:
-			route.fareWon != null ? `${route.fareWon.toLocaleString()}원` : undefined,
+			mode === 'bus' && route.transferCount > 0 ? `환승 ${route.transferCount}회` : undefined,
+		fareText: route.fareWon != null ? `${route.fareWon.toLocaleString()}원` : undefined,
 		legBars: route.legs.map((leg, i) => ({
 			key: `${i}`,
 			icon: LEG_ICON[leg.mode],
@@ -221,8 +195,7 @@ function buildTimeline(
 
 		const color = legColor(leg);
 		const stopSuffix = leg.mode === 'bus' ? '정류장' : '역';
-		const routeLabel =
-			leg.mode === 'bus' ? busNumber(leg) : (leg.routeName ?? '');
+		const routeLabel = leg.mode === 'bus' ? busNumber(leg) : (leg.routeName ?? '');
 		const boardCoord = leg.coords[0] ?? null;
 		const alightCoord = leg.coords[leg.coords.length - 1] ?? null;
 
@@ -262,11 +235,11 @@ interface ModeToggleProps {
 	onChangeMode: (mode: DirectionsMode) => void;
 }
 
-const MODE_ITEMS: Array<{
+const MODE_ITEMS: {
 	key: DirectionsMode;
 	label: string;
 	icon: keyof typeof Ionicons.glyphMap;
-}> = [
+}[] = [
 	{ key: 'walk', label: '도보', icon: 'walk' },
 	{ key: 'bus', label: '대중교통', icon: 'bus' },
 ];
@@ -277,8 +250,7 @@ const TOGGLE_PADDING = 4;
 function ModeToggle({ mode, onChangeMode }: ModeToggleProps) {
 	const [trackWidth, setTrackWidth] = useState(0);
 	const progress = useSharedValue(mode === 'walk' ? 0 : 1);
-	const pillWidth =
-		trackWidth > 0 ? (trackWidth - TOGGLE_PADDING * 2) / MODE_ITEMS.length : 0;
+	const pillWidth = trackWidth > 0 ? (trackWidth - TOGGLE_PADDING * 2) / MODE_ITEMS.length : 0;
 
 	useEffect(() => {
 		progress.value = withSpring(mode === 'walk' ? 0 : 1, SPRING_SETTLE);
@@ -296,13 +268,13 @@ function ModeToggle({ mode, onChangeMode }: ModeToggleProps) {
 	return (
 		<View
 			onLayout={handleLayout}
-			className='w-full flex-row rounded-2xl bg-black/[0.045]'
+			className="w-full flex-row rounded-2xl bg-black/[0.045]"
 			style={{ padding: TOGGLE_PADDING }}
 		>
 			{pillWidth > 0 && (
 				<Animated.View
-					pointerEvents='none'
-					className='absolute rounded-xl bg-primary'
+					pointerEvents="none"
+					className="absolute rounded-xl bg-primary"
 					style={[
 						{
 							top: TOGGLE_PADDING,
@@ -323,9 +295,9 @@ function ModeToggle({ mode, onChangeMode }: ModeToggleProps) {
 							if (!active) Haptics.selectionAsync();
 							onChangeMode(item.key);
 						}}
-						className='flex-1 flex-row items-center justify-center gap-1.5 h-10'
+						className="flex-1 flex-row items-center justify-center gap-1.5 h-10"
 						hitSlop={6}
-						accessibilityRole='button'
+						accessibilityRole="button"
 						accessibilityState={{ selected: active }}
 						accessibilityLabel={item.key === 'walk' ? '도보 경로' : '대중교통 경로'}
 					>
@@ -374,21 +346,17 @@ function SortChips({ criterion, onChangeCriterion }: SortChipsProps) {
 						}}
 						className={cn(
 							'px-3 h-8 rounded-full items-center justify-center border',
-							active
-								? 'bg-primary border-transparent'
-								: 'bg-transparent border-black/10',
+							active ? 'bg-primary border-transparent' : 'bg-transparent border-black/10',
 						)}
 						hitSlop={4}
-						accessibilityRole='button'
+						accessibilityRole="button"
 						accessibilityState={{ selected: active }}
 						accessibilityLabel={`${option.label}으로 정렬`}
 					>
 						<Text
 							className={cn(
 								'text-[12px]',
-								active
-									? 'text-white font-pretendard-bold'
-									: 'text-black/50 font-pretendard-medium',
+								active ? 'text-white font-pretendard-bold' : 'text-black/50 font-pretendard-medium',
 							)}
 						>
 							{option.label}
@@ -407,11 +375,9 @@ interface MetaChipProps {
 
 function MetaChip({ icon, label }: MetaChipProps) {
 	return (
-		<View className='flex-row items-center gap-1 px-2.5 h-[26px] rounded-full bg-black/[0.045]'>
-			<Ionicons name={icon} size={11} color='rgba(28,25,23,0.5)' />
-			<Text className='text-black/55 text-[11px] font-pretendard-semibold'>
-				{label}
-			</Text>
+		<View className="flex-row items-center gap-1 px-2.5 h-[26px] rounded-full bg-black/[0.045]">
+			<Ionicons name={icon} size={11} color="rgba(28,25,23,0.5)" />
+			<Text className="text-black/55 text-[11px] font-pretendard-semibold">{label}</Text>
 		</View>
 	);
 }
@@ -423,24 +389,18 @@ interface RouteSummaryHeaderProps {
 }
 
 // 경로 카드의 상단 요약 — "27분" 디스플레이 타입 + 거리·환승·요금 칩 + 구간 바
-function RouteSummaryHeader({
-	summary,
-	showBar,
-	barDelay = 0,
-}: RouteSummaryHeaderProps) {
+function RouteSummaryHeader({ summary, showBar, barDelay = 0 }: RouteSummaryHeaderProps) {
 	return (
 		<>
-			<View className='flex-row items-baseline gap-2'>
-				<Text className='text-primary text-[30px] leading-[34px] font-pretendard-bold tracking-[-0.8px]'>
+			<View className="flex-row items-baseline gap-2">
+				<Text className="text-primary text-[30px] leading-[34px] font-pretendard-bold tracking-[-0.8px]">
 					{summary.totalTime}
 				</Text>
-				<View className='flex flex-row items-center gap-2'>
-					<Text className='text-black/40 text-[14px] font-pretendard-medium'>
+				<View className="flex flex-row items-center gap-2">
+					<Text className="text-black/40 text-[14px] font-pretendard-medium">
 						{summary.totalDistance}
 					</Text>
-					{summary.fareText && (
-						<MetaChip icon='card-outline' label={summary.fareText} />
-					)}
+					{summary.fareText && <MetaChip icon="card-outline" label={summary.fareText} />}
 				</View>
 			</View>
 
@@ -448,24 +408,21 @@ function RouteSummaryHeader({
 				<ScrollView
 					horizontal
 					showsHorizontalScrollIndicator={false}
-					className='mt-3.5'
+					className="mt-3.5"
 					contentContainerStyle={{ gap: 3 }}
 				>
 					{summary.legBars.map((bar, i) => (
 						<Animated.View
 							key={bar.key}
 							entering={FadeIn.duration(260).delay(barDelay + i * 55)}
-							className='items-center justify-center flex-row gap-1.5 px-2.5 h-[34px] rounded-[11px]'
+							className="items-center justify-center flex-row gap-1.5 px-2.5 h-[34px] rounded-[11px]"
 							style={{
 								width: Math.max(64, bar.flex * BAR_WIDTH_SCALE),
 								backgroundColor: bar.color,
 							}}
 						>
-							<Ionicons name={bar.icon} size={13} color='white' />
-							<Text
-								className='text-white text-[12px] font-pretendard-bold'
-								numberOfLines={1}
-							>
+							<Ionicons name={bar.icon} size={13} color="white" />
+							<Text className="text-white text-[12px] font-pretendard-bold" numberOfLines={1}>
 								{bar.time}
 							</Text>
 						</Animated.View>
@@ -496,8 +453,7 @@ function RouteTimeline({
 	onOpenExternalMap,
 }: RouteTimelineProps) {
 	const items = useMemo(
-		() =>
-			buildTimeline(route, destinationName ?? '도착지', originName ?? '출발지'),
+		() => buildTimeline(route, destinationName ?? '도착지', originName ?? '출발지'),
 		[route, destinationName, originName],
 	);
 
@@ -506,59 +462,53 @@ function RouteTimeline({
 			{items.map((item, i) => {
 				const isLast = mode === 'walk' ? true : i === items.length - 1;
 				// 승차 구간에서 이어지는 선만 노선 색을 쓰고, 나머지는 잉크 톤으로 눌러 둔다.
-				const connectorColor =
-					item.type === 'board' ? item.color : 'rgba(28,25,23,0.12)';
+				const connectorColor = item.type === 'board' ? item.color : 'rgba(28,25,23,0.12)';
 
 				return (
 					<Animated.View
 						key={item.key}
 						entering={FadeInDown.duration(260).delay(i * 45)}
-						className='flex-row'
+						className="flex-row"
 					>
-						<View className='items-center w-[44px]'>
+						<View className="items-center w-[44px]">
 							{mode === 'bus' && item.type === 'endpoint' && (
 								<View
-									className='w-[22px] h-[22px] rounded-full items-center justify-center'
+									className="w-[22px] h-[22px] rounded-full items-center justify-center"
 									style={{ backgroundColor: 'rgba(28,25,23,0.08)' }}
 								>
 									{item.variant === 'start' ? (
-										<View
-											className='w-[8px] h-[8px] rounded-full bg-primary'
-										/>
+										<View className="w-[8px] h-[8px] rounded-full bg-primary" />
 									) : (
-										<Ionicons name='flag' size={11} className='text-primary' />
+										<Ionicons name="flag" size={11} className="text-primary" />
 									)}
 								</View>
 							)}
 							{item.type === 'walk' && (
-								<View className='w-[22px] h-[22px] rounded-full items-center justify-center bg-black/[0.28]'>
-									<Ionicons name='walk' size={12} color='white' />
+								<View className="w-[22px] h-[22px] rounded-full items-center justify-center bg-black/[0.28]">
+									<Ionicons name="walk" size={12} color="white" />
 								</View>
 							)}
 							{item.type === 'board' && (
 								<View
-									className='w-[26px] h-[26px] rounded-full items-center justify-center'
+									className="w-[26px] h-[26px] rounded-full items-center justify-center"
 									style={{ backgroundColor: item.color }}
 								>
-									<Ionicons name={mode} size={15} color='white' />
+									<Ionicons name={mode} size={15} color="white" />
 								</View>
 							)}
 							{item.type === 'alight' && (
 								<View
-									className='w-[26px] h-[26px] rounded-full items-center justify-center bg-white border-[1.5px]'
+									className="w-[26px] h-[26px] rounded-full items-center justify-center bg-white border-[1.5px]"
 									style={{ borderColor: item.color }}
 								>
-									<Text
-										className='text-[10px] font-pretendard-bold'
-										style={{ color: item.color }}
-									>
+									<Text className="text-[10px] font-pretendard-bold" style={{ color: item.color }}>
 										하차
 									</Text>
 								</View>
 							)}
 							{!isLast && (
 								<View
-									className='w-[2px] rounded-full mt-1 mb-1 flex-1 min-h-[26px] opacity-55'
+									className="w-[2px] rounded-full mt-1 mb-1 flex-1 min-h-[26px] opacity-55"
 									style={{ backgroundColor: connectorColor }}
 								/>
 							)}
@@ -568,44 +518,44 @@ function RouteTimeline({
 							const content = (
 								<>
 									{mode === 'bus' && item.type === 'endpoint' && (
-										<Text className='text-primary text-[14px] font-pretendard-bold pt-0.5'>
+										<Text className="text-primary text-[14px] font-pretendard-bold pt-0.5">
 											{item.label}
 										</Text>
 									)}
 									{item.type === 'walk' && (
-										<View className='gap-1'>
-											<Text className='text-primary text-[14px] font-pretendard-medium'>
+										<View className="gap-1">
+											<Text className="text-primary text-[14px] font-pretendard-medium">
 												{item.routeLabel}
 											</Text>
-											<Text className='text-black/45 text-[12px] font-pretendard-regular'>
+											<Text className="text-black/45 text-[12px] font-pretendard-regular">
 												{item.totalTime}, {item.length}
 											</Text>
 										</View>
 									)}
 									{item.type === 'board' && (
-										<View className='gap-1.5'>
-											<View className='flex-row items-center gap-1.5 flex-wrap'>
+										<View className="gap-1.5">
+											<View className="flex-row items-center gap-1.5 flex-wrap">
 												{item.routeLabel && (
 													<View
-														className='px-2 h-[22px] rounded-lg items-center justify-center'
+														className="px-2 h-[22px] rounded-lg items-center justify-center"
 														style={{ backgroundColor: item.color }}
 													>
-														<Text className='text-white text-[12px] font-pretendard-bold'>
+														<Text className="text-white text-[12px] font-pretendard-bold">
 															{item.routeLabel}
 														</Text>
 													</View>
 												)}
-												<Text className='text-primary text-[14px] font-pretendard-medium'>
+												<Text className="text-primary text-[14px] font-pretendard-medium">
 													{item.title}역 승차
 												</Text>
 											</View>
-											<Text className='text-black/45 text-[12px] font-pretendard-regular'>
+											<Text className="text-black/45 text-[12px] font-pretendard-regular">
 												{item.stopCount}개 {item.stopSuffix} · {item.totalTime}
 											</Text>
 										</View>
 									)}
 									{item.type === 'alight' && (
-										<Text className='text-primary text-[14px] font-pretendard-medium pt-1'>
+										<Text className="text-primary text-[14px] font-pretendard-medium pt-1">
 											{item.title}
 											{item.stopSuffix} 하차
 										</Text>
@@ -616,16 +566,14 @@ function RouteTimeline({
 							if ((item.type === 'board' || item.type === 'alight') && item.coord) {
 								const coord = item.coord;
 								const label =
-									item.type === 'board'
-										? `${item.title}역`
-										: `${item.title}${item.stopSuffix}`;
+									item.type === 'board' ? `${item.title}역` : `${item.title}${item.stopSuffix}`;
 								return (
-									<View className='flex-1 flex-row items-start pb-3'>
+									<View className="flex-1 flex-row items-start pb-3">
 										<Pressable
 											onPress={() => onFocusStop(coord)}
-											className='flex-1'
+											className="flex-1"
 											hitSlop={4}
-											accessibilityRole='button'
+											accessibilityRole="button"
 											accessibilityLabel={`${label} 위치를 지도에서 보기`}
 										>
 											{content}
@@ -633,20 +581,16 @@ function RouteTimeline({
 										<Pressable
 											onPress={() => onOpenExternalMap({ coord, label })}
 											hitSlop={8}
-											className='w-7 h-7 items-center justify-center'
-											accessibilityRole='button'
+											className="w-7 h-7 items-center justify-center"
+											accessibilityRole="button"
 											accessibilityLabel={`${label} 외부 지도 앱에서 열기`}
 										>
-											<Ionicons
-												name='share-outline'
-												size={16}
-												color='rgba(28,25,23,0.3)'
-											/>
+											<Ionicons name="share-outline" size={16} color="rgba(28,25,23,0.3)" />
 										</Pressable>
 									</View>
 								);
 							}
-							return <View className='flex-1 pb-3'>{content}</View>;
+							return <View className="flex-1 pb-3">{content}</View>;
 						})()}
 					</Animated.View>
 				);
@@ -733,32 +677,25 @@ function RouteCandidateCard({
 				.stiffness(170)
 				.delay(order * 60)}
 		>
-			<Animated.View
-				className='rounded-[22px] bg-white border overflow-hidden'
-				style={cardStyle}
-			>
+			<Animated.View className="rounded-[22px] bg-white border overflow-hidden" style={cardStyle}>
 				<Pressable
 					onPress={handlePress}
 					onPressIn={handlePressIn}
 					onPressOut={handlePressOut}
 					className={cn('px-4 pt-4', expanded ? 'pb-0' : 'pb-4')}
-					accessibilityRole='button'
+					accessibilityRole="button"
 					accessibilityLabel={`경로 후보 ${order + 1}, ${summary.totalTime}, ${summary.totalDistance}`}
 					accessibilityState={{ selected, expanded }}
 				>
-					<View className='flex-row items-start justify-between'>
-						<View className='flex-1'>
-							<RouteSummaryHeader
-								summary={summary}
-								showBar
-								barDelay={order * 60 + 120}
-							/>
+					<View className="flex-row items-start justify-between">
+						<View className="flex-1">
+							<RouteSummaryHeader summary={summary} showBar barDelay={order * 60 + 120} />
 						</View>
 						<Animated.View
 							style={[{ marginLeft: 8, marginTop: 6 }, chevronStyle]}
-							pointerEvents='none'
+							pointerEvents="none"
 						>
-							<Ionicons name='chevron-down' size={18} color='rgba(28,25,23,0.3)' />
+							<Ionicons name="chevron-down" size={18} color="rgba(28,25,23,0.3)" />
 						</Animated.View>
 					</View>
 				</Pressable>
@@ -766,8 +703,8 @@ function RouteCandidateCard({
 				{/* 접을 때는 exiting 없이 즉시 언마운트하고 카드 높이 스프링(layout)만 남긴다 —
             페이드아웃이 자리를 차지해 높이가 두 단계로 줄어드는 것을 막는다. */}
 				{expanded && (
-					<Animated.View entering={FadeIn.duration(220)} className='px-4 pb-4'>
-						<View className='mt-4 pt-4 border-t border-black/[0.06]'>
+					<Animated.View entering={FadeIn.duration(220)} className="px-4 pb-4">
+						<View className="mt-4 pt-4 border-t border-black/[0.06]">
 							<RouteTimeline
 								route={route}
 								mode={mode}
@@ -801,8 +738,7 @@ export function RouteSheet({
 	const [expandedIndex, setExpandedIndex] = useState<number | null>(0);
 	const [sortCriterion, setSortCriterion] = useState<SortCriterion>('time');
 	// 승차/하차 행의 "외부 지도 앱에서 열기" 액션시트 대상 — null이면 시트가 닫혀 있다.
-	const [externalMapTarget, setExternalMapTarget] =
-		useState<ExternalMapTarget | null>(null);
+	const [externalMapTarget, setExternalMapTarget] = useState<ExternalMapTarget | null>(null);
 
 	const handleCardPress = useCallback(
 		(index: number) => {
@@ -820,24 +756,19 @@ export function RouteSheet({
 	// selectedRouteIndex/onSelectRoute가 지도에 그려진 경로와 계속 일치한다.
 	const sortedRouteIndices = useMemo(
 		() =>
-			routes
-				.map((_, i) => i)
-				.sort((a, b) => compareRoutes(routes[a], routes[b], sortCriterion)),
+			routes.map((_, i) => i).sort((a, b) => compareRoutes(routes[a], routes[b], sortCriterion)),
 		[routes, sortCriterion],
 	);
 
-	const walkSummary = useMemo(
-		() => (route ? buildSummary(route, 'walk') : null),
-		[route],
-	);
+	const walkSummary = useMemo(() => (route ? buildSummary(route, 'walk') : null), [route]);
 
 	return (
 		<BottomSheetScrollView
-			className='px-5 pt-3'
+			className="px-5 pt-3"
 			showsVerticalScrollIndicator={false}
 			contentContainerStyle={{ paddingBottom: bottomInset + 24 }}
 		>
-			<View className='mb-5'>
+			<View className="mb-5">
 				<ModeToggle mode={mode} onChangeMode={onChangeMode} />
 			</View>
 
@@ -845,25 +776,23 @@ export function RouteSheet({
           exiting은 두지 않는다 — 사라지는 뷰가 잠시 자리를 차지해 높이가 튀기 때문. */}
 			<Animated.View key={`${mode}-${status}`} entering={FadeIn.duration(240)}>
 				{status === 'loading' && (
-					<View className='flex-row items-center gap-2 py-6'>
-						<ActivityIndicator size='small' color={colors.primary} />
-						<Text className='text-black/50 text-[13px] font-pretendard-regular'>
-							경로 찾는 중…
-						</Text>
+					<View className="flex-row items-center gap-2 py-6">
+						<ActivityIndicator size="small" color={colors.primary} />
+						<Text className="text-black/50 text-[13px] font-pretendard-regular">경로 찾는 중…</Text>
 					</View>
 				)}
 
 				{status === 'error' && (
-					<Text className='text-black/50 text-[13px] font-pretendard-regular py-6'>
+					<Text className="text-black/50 text-[13px] font-pretendard-regular py-6">
 						경로를 찾을 수 없어요
 					</Text>
 				)}
 
 				{status === 'success' && mode === 'walk' && route && walkSummary && (
-					<View className='pb-8'>
-						<View className='rounded-[22px] bg-white px-4 py-4 border border-black/[0.06]'>
+					<View className="pb-8">
+						<View className="rounded-[22px] bg-white px-4 py-4 border border-black/[0.06]">
 							<RouteSummaryHeader summary={walkSummary} showBar={false} />
-							<View className='mt-4 pt-4 border-t border-black/[0.06]'>
+							<View className="mt-4 pt-4 border-t border-black/[0.06]">
 								<RouteTimeline
 									route={route}
 									mode={mode}
@@ -878,18 +807,15 @@ export function RouteSheet({
 				)}
 
 				{status === 'success' && mode === 'bus' && routes.length > 0 && (
-					<View className='pb-8'>
-						<View className='mb-3 gap-2.5'>
-							<Text className='text-black/40 text-[11px] font-pretendard-bold tracking-[1.2px]'>
+					<View className="pb-8">
+						<View className="mb-3 gap-2.5">
+							<Text className="text-black/40 text-[11px] font-pretendard-bold tracking-[1.2px]">
 								경로 {routes.length}개
 							</Text>
-							<SortChips
-								criterion={sortCriterion}
-								onChangeCriterion={handleChangeCriterion}
-							/>
+							<SortChips criterion={sortCriterion} onChangeCriterion={handleChangeCriterion} />
 						</View>
 
-						<View className='gap-3'>
+						<View className="gap-3">
 							{sortedRouteIndices.map((i, order) => (
 								<RouteCandidateCard
 									key={i}
@@ -912,10 +838,7 @@ export function RouteSheet({
 			</Animated.View>
 
 			{externalMapTarget && (
-				<ExternalMapSheet
-					target={externalMapTarget}
-					onClose={() => setExternalMapTarget(null)}
-				/>
+				<ExternalMapSheet target={externalMapTarget} onClose={() => setExternalMapTarget(null)} />
 			)}
 		</BottomSheetScrollView>
 	);

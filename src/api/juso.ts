@@ -15,9 +15,7 @@ interface JusoApiRow {
 }
 
 /** [행정안전부 도로명주소 검색 API](https://www.data.go.kr/data/15057017/openapi.do) */
-export async function searchJusoAddresses(
-	keyword: string,
-): Promise<JusoAddressResult[]> {
+export async function searchJusoAddresses(keyword: string): Promise<JusoAddressResult[]> {
 	const q = keyword.trim();
 	if (q.length < 2) return [];
 

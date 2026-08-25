@@ -26,10 +26,7 @@ export function VisitTicketGrid({ onPress }: VisitTicketGridProps) {
 
 	// 캐시에 없는 전시 ID만 추려서 날짜 필터 없이 조회 (만료된 전시 대응)
 	const missingIds = useMemo(() => {
-		const cachedIds = new Set([
-			...kcisaItems.map((i) => i.id),
-			...items.map((i) => i.id),
-		]);
+		const cachedIds = new Set([...kcisaItems.map((i) => i.id), ...items.map((i) => i.id)]);
 		return [
 			...new Set(
 				sortedDateKeys
@@ -47,7 +44,7 @@ export function VisitTicketGrid({ onPress }: VisitTicketGridProps) {
 		fetchedItems.find((item) => item.id === visit.exhibitionId);
 
 	return (
-		<View className='flex-col gap-4'>
+		<View className="flex-col gap-4">
 			{sortedDateKeys.map((dateKey) => {
 				const visit = visits[dateKey];
 				const data = getData(visit);
@@ -59,7 +56,7 @@ export function VisitTicketGrid({ onPress }: VisitTicketGridProps) {
 					return (
 						<View
 							key={dateKey}
-							className='w-full rounded-2xl bg-[#F0EDE8]'
+							className="w-full rounded-2xl bg-[#F0EDE8]"
 							style={{ height: 116 }}
 						/>
 					);

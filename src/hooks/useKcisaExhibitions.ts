@@ -1,6 +1,9 @@
 import { useCallback, useEffect, useState } from 'react';
 import { supabase } from '@/src/utils/supabase';
-import { applyExhibitionDateFilters, todayExhibitionDateString } from '@/src/utils/exhibitionSearch';
+import {
+	applyExhibitionDateFilters,
+	todayExhibitionDateString,
+} from '@/src/utils/exhibitionSearch';
 
 export interface KcisaExhibitionItem {
 	id: string;

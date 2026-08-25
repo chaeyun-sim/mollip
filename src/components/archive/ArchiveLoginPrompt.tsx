@@ -1,10 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Pressable, Text, View } from 'react-native';
-
-import {
-	ARCHIVE_INK,
-	ARCHIVE_MUTED,
-} from '@/src/components/archive/archivePalette';
+import { ARCHIVE_STAT_ACCENTS } from '@/src/components/archive/archivePalette';
 
 interface ArchiveLoginPromptProps {
 	onLogin: () => void;
@@ -12,35 +8,26 @@ interface ArchiveLoginPromptProps {
 
 export function ArchiveLoginPrompt({ onLogin }: ArchiveLoginPromptProps) {
 	return (
-		<View className='flex-1 items-center justify-center px-8 py-16'>
-			<View className='rounded-full bg-bg-light p-5 mb-5'>
-				<Ionicons name='lock-closed-outline' size={28} color='#9B8AB8' />
+		<View className="flex-1 items-center justify-center px-8 py-16">
+			<View className="rounded-full bg-bg-light p-5 mb-5">
+				<Ionicons name="lock-closed-outline" size={28} color={ARCHIVE_STAT_ACCENTS.visitDays} />
 			</View>
-			<Text
-				className='text-[20px] text-center mb-2 font-hahmlet-bold'
-				style={{ color: ARCHIVE_INK }}
-			>
+			<Text className="text-[20px] text-center mb-2 font-hahmlet-bold text-primary">
 				로그인하고 관람을 기록해요
 			</Text>
-			<Text
-				className='text-[14px] text-center leading-[21px] mb-8 font-pretendard-regular'
-				style={{ color: ARCHIVE_MUTED }}
-			>
+			<Text className="text-[14px] text-center leading-[21px] mb-8 font-pretendard-regular text-secondary">
 				북마크와 관람 다이어리는 계정에 저장돼요
 			</Text>
 			<Pressable
 				onPress={onLogin}
-				className='w-full rounded-full py-4 items-center'
-				accessibilityRole='button'
-				accessibilityLabel='로그인하기'
+				className="w-full rounded-full py-4 items-center bg-primary"
+				accessibilityRole="button"
+				accessibilityLabel="로그인하기"
 				style={({ pressed }) => ({
 					opacity: pressed ? 0.9 : 1,
-					backgroundColor: ARCHIVE_INK,
 				})}
 			>
-				<Text className='text-white text-[15px] font-pretendard-semibold'>
-					로그인하기
-				</Text>
+				<Text className="text-white text-[15px] font-pretendard-semibold">로그인하기</Text>
 			</Pressable>
 		</View>
 	);

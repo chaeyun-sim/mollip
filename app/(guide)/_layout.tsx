@@ -4,7 +4,7 @@ export default function GuideLayout() {
 	return (
 		<Stack screenOptions={{ headerShown: false }}>
 			<Stack.Screen
-				name='create-description'
+				name="create-description"
 				options={{ headerShown: false, gestureEnabled: false }}
 			/>
 		</Stack>

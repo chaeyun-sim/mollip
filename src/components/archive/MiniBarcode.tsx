@@ -14,7 +14,7 @@ interface MiniBarcodeProps {
 export function MiniBarcode({ dateKey, color, length = 48 }: MiniBarcodeProps) {
 	const widths = miniBarWidths(dateKey, length);
 	return (
-		<View className='flex-row items-end gap-[1px]'>
+		<View className="flex-row items-end gap-[1px]">
 			{widths.map((w, i) => (
 				<View key={i} style={{ width: w, height: 22, backgroundColor: color }} />
 			))}

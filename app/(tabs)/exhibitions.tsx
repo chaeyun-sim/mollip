@@ -6,8 +6,8 @@ import * as Haptics from 'expo-haptics';
 import { CenteredLoader } from '@/src/components/common/CenteredLoader';
 import { RetryErrorState } from '@/src/components/common/RetryErrorState';
 import {
-  GridExhibitionCell,
-  type RecommendableItem,
+	GridExhibitionCell,
+	type RecommendableItem,
 } from '@/src/components/explore/ExploreHomeSections';
 import { useAllExhibitions } from '@/src/hooks/useAllExhibitions';
 import { Screen } from '@/src/components/layout/Screen';
@@ -19,116 +19,113 @@ const GRID_GAP = 12;
 const ROW_GAP = GRID_GAP + 8;
 
 export default function ExhibitionsScreen() {
-  const router = useRouter();
-  const insets = useSafeAreaInsets();
-  const { width: windowWidth } = useWindowDimensions();
-  const endReachedCalledRef = useRef(false);
+	const router = useRouter();
+	const insets = useSafeAreaInsets();
+	const { width: windowWidth } = useWindowDimensions();
+	const endReachedCalledRef = useRef(false);
 
-  const { items, status, isLoadingMore, hasMore, loadMore, refetch } = useAllExhibitions();
+	const { items, status, isLoadingMore, hasMore, loadMore, refetch } = useAllExhibitions();
 
-  const colWidth = (windowWidth - HORIZONTAL_PADDING * 2 - GRID_GAP) / 2;
-  const gridHeight = Math.round((colWidth * 4) / 3);
+	const colWidth = (windowWidth - HORIZONTAL_PADDING * 2 - GRID_GAP) / 2;
+	const gridHeight = Math.round((colWidth * 4) / 3);
 
-  const openExhibition = (id: string) => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    router.push(`/(explore)/${id}`);
-  };
+	const openExhibition = (id: string) => {
+		Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+		router.push(`/(explore)/${id}`);
+	};
 
-  const handleEndReached = useCallback(() => {
-    if (endReachedCalledRef.current) return;
-    endReachedCalledRef.current = true;
-    loadMore();
-  }, [loadMore]);
+	const handleEndReached = useCallback(() => {
+		if (endReachedCalledRef.current) return;
+		endReachedCalledRef.current = true;
+		loadMore();
+	}, [loadMore]);
 
-  const handleScrollBeginDrag = useCallback(() => {
-    endReachedCalledRef.current = false;
-  }, []);
+	const handleScrollBeginDrag = useCallback(() => {
+		endReachedCalledRef.current = false;
+	}, []);
 
-  function renderItem({ item, index }: { item: RecommendableItem; index: number }) {
-    const rowIndex = Math.floor(index / 2);
-    return (
-      <View style={{ marginTop: rowIndex === 0 ? 0 : ROW_GAP }}>
-        <GridExhibitionCell
-          item={item}
-          colWidth={colWidth}
-          gridHeight={gridHeight}
-          onPress={openExhibition}
-        />
-      </View>
-    );
-  }
+	function renderItem({ item, index }: { item: RecommendableItem; index: number }) {
+		const rowIndex = Math.floor(index / 2);
+		return (
+			<View style={{ marginTop: rowIndex === 0 ? 0 : ROW_GAP }}>
+				<GridExhibitionCell
+					item={item}
+					colWidth={colWidth}
+					gridHeight={gridHeight}
+					onPress={openExhibition}
+				/>
+			</View>
+		);
+	}
 
-  function renderFooter() {
-    if (items.length === 0) return null;
+	function renderFooter() {
+		if (items.length === 0) return null;
 
-    return (
-      <View
-        className='items-center justify-center'
-        style={{ height: 56 }}
-      >
-        {isLoadingMore ? (
-          <ActivityIndicator color={colors.secondary} />
-        ) : !hasMore ? (
-          <Text className='text-muted text-[12px] font-pretendard-regular'>
-            모든 전시를 불러왔어요
-          </Text>
-        ) : null}
-      </View>
-    );
-  }
+		return (
+			<View className="items-center justify-center" style={{ height: 56 }}>
+				{isLoadingMore ? (
+					<ActivityIndicator color={colors.secondary} />
+				) : !hasMore ? (
+					<Text className="text-muted text-[12px] font-pretendard-regular">
+						모든 전시를 불러왔어요
+					</Text>
+				) : null}
+			</View>
+		);
+	}
 
-  function renderEmpty() {
-    if (status === 'loading') {
-      return <CenteredLoader className='flex-1 py-24' />;
-    }
+	function renderEmpty() {
+		if (status === 'loading') {
+			return <CenteredLoader className="flex-1 py-24" />;
+		}
 
-    if (status === 'error') {
-      return (
-        <RetryErrorState
-          message='전시 정보를 불러오지 못했어요'
-          onRetry={refetch}
-          retryAccessibilityLabel='다시 불러오기'
-          className='flex-1 py-24'
-        />
-      );
-    }
+		if (status === 'error') {
+			return (
+				<RetryErrorState
+					message="전시 정보를 불러오지 못했어요"
+					onRetry={refetch}
+					retryAccessibilityLabel="다시 불러오기"
+					className="flex-1 py-24"
+				/>
+			);
+		}
 
-    return null;
-  }
+		return null;
+	}
 
-  return (
-    <Screen variant='warm'>
-      {/* 헤더 */}
-      <Screen.Header>
-        <Screen.Header.Logo />
-      </Screen.Header>
+	return (
+		<Screen variant="warm">
+			{/* 헤더 */}
+			<Screen.Header>
+				<Screen.Header.Logo />
+			</Screen.Header>
 
-      <Text className='text-[22px] font-pretendard-bold text-primary pt-2 pb-4'>전체 전시</Text>
+			<Text className="text-[22px] font-pretendard-bold text-primary pt-2 pb-4">전체 전시</Text>
 
-      <FlatList
-        data={items}
-        keyExtractor={item => item.id}
-        numColumns={2}
-        renderItem={renderItem}
-        columnWrapperStyle={{ gap: GRID_GAP }}
-        contentContainerStyle={{
-          paddingBottom: insets.bottom + 24,
-          paddingTop: 4,
-          flexGrow: 1,
-        }}
-        ListEmptyComponent={renderEmpty}
-        ListFooterComponent={renderFooter}
-        onEndReached={handleEndReached}
-        onEndReachedThreshold={0.8}
-        onScrollBeginDrag={handleScrollBeginDrag}
-        onRefresh={refetch}
-        refreshing={status === 'loading' && items.length === 0}
-        showsVerticalScrollIndicator={false}
-        removeClippedSubviews={false}
-        windowSize={10}
-        maxToRenderPerBatch={10}
-        initialNumToRender={10}
-      />
-    </Screen>
-  );
+			<FlatList
+				data={items}
+				keyExtractor={(item) => item.id}
+				numColumns={2}
+				renderItem={renderItem}
+				columnWrapperStyle={{ gap: GRID_GAP }}
+				contentContainerStyle={{
+					paddingBottom: insets.bottom + 24,
+					paddingTop: 4,
+					flexGrow: 1,
+				}}
+				ListEmptyComponent={renderEmpty}
+				ListFooterComponent={renderFooter}
+				onEndReached={handleEndReached}
+				onEndReachedThreshold={0.8}
+				onScrollBeginDrag={handleScrollBeginDrag}
+				onRefresh={refetch}
+				refreshing={status === 'loading' && items.length === 0}
+				showsVerticalScrollIndicator={false}
+				removeClippedSubviews={false}
+				windowSize={10}
+				maxToRenderPerBatch={10}
+				initialNumToRender={10}
+			/>
+		</Screen>
+	);
 }

@@ -27,35 +27,33 @@ export function ExternalMapSheet({ target, onClose }: ExternalMapSheetProps) {
 	);
 
 	return (
-		<Modal transparent animationType='fade' onRequestClose={onClose}>
+		<Modal transparent animationType="fade" onRequestClose={onClose}>
 			<Pressable
-				className='flex-1 justify-end bg-black/35'
+				className="flex-1 justify-end bg-black/35"
 				onPress={onClose}
-				accessibilityLabel='닫기'
-				accessibilityRole='button'
+				accessibilityLabel="닫기"
+				accessibilityRole="button"
 			>
 				<Pressable
-					className='bg-white rounded-t-[28px] px-5 pt-2 pb-8'
+					className="bg-white rounded-t-[28px] px-5 pt-2 pb-8"
 					onPress={(e) => e.stopPropagation()}
 				>
-					<View className='self-center w-9 h-1 rounded-full bg-black/15 mt-2 mb-4' />
-					<Text className='text-black/40 text-[12px] font-pretendard-semibold px-1 mb-2'>
+					<View className="self-center w-9 h-1 rounded-full bg-black/15 mt-2 mb-4" />
+					<Text className="text-black/40 text-[12px] font-pretendard-semibold px-1 mb-2">
 						{target.label} · 지도 앱에서 보기
 					</Text>
 					{EXTERNAL_MAP_APPS.map((app) => (
 						<Pressable
 							key={app.key}
 							onPress={() => handlePick(app.key)}
-							className='flex-row items-center gap-3 h-14 px-1'
-							accessibilityRole='button'
+							className="flex-row items-center gap-3 h-14 px-1"
+							accessibilityRole="button"
 							accessibilityLabel={app.label}
 						>
-							<View className='w-9 h-9 rounded-full items-center justify-center bg-black/[0.045]'>
-								<Ionicons name='map-outline' size={17} color={colors.primary} />
+							<View className="w-9 h-9 rounded-full items-center justify-center bg-black/[0.045]">
+								<Ionicons name="map-outline" size={17} color={colors.primary} />
 							</View>
-							<Text className='text-[15px] font-pretendard-medium text-primary'>
-								{app.label}
-							</Text>
+							<Text className="text-[15px] font-pretendard-medium text-primary">{app.label}</Text>
 						</Pressable>
 					))}
 				</Pressable>

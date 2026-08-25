@@ -1,13 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useEffect, useRef, useState } from 'react';
-import {
-	ActivityIndicator,
-	Modal,
-	Pressable,
-	ScrollView,
-	Text,
-	View,
-} from 'react-native';
+import { ActivityIndicator, Modal, Pressable, ScrollView, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { buildRoutePrompt, ROUTE_SYSTEM_PROMPT } from '@/src/constants/prompts';
@@ -70,54 +63,47 @@ export function RouteSheet({
 	}, [visible, exhibitionTitle, venue, artworks]);
 
 	return (
-		<Modal
-			visible={visible}
-			transparent
-			animationType='slide'
-			onRequestClose={onClose}
-		>
-			<View className='flex-1 justify-end'>
+		<Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
+			<View className="flex-1 justify-end">
 				<Pressable
-					className='flex-1'
+					className="flex-1"
 					onPress={onClose}
-					accessibilityLabel='닫기'
-					accessibilityRole='button'
+					accessibilityLabel="닫기"
+					accessibilityRole="button"
 				/>
 				<View
-					className='bg-primary rounded-t-3xl px-6 pt-5'
+					className="bg-primary rounded-t-3xl px-6 pt-5"
 					style={{ paddingBottom: insets.bottom + 24, maxHeight: '80%' }}
 				>
-					<View className='flex-row items-center justify-between mb-5'>
-						<Text className='text-white font-pretendard-semibold text-[17px]'>
-							추천 관람 루트
-						</Text>
+					<View className="flex-row items-center justify-between mb-5">
+						<Text className="text-white font-pretendard-semibold text-[17px]">추천 관람 루트</Text>
 						<Pressable
 							onPress={onClose}
 							hitSlop={8}
-							accessibilityLabel='닫기'
-							accessibilityRole='button'
+							accessibilityLabel="닫기"
+							accessibilityRole="button"
 							style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
 						>
-							<Ionicons name='close' size={22} color='white' />
+							<Ionicons name="close" size={22} color="white" />
 						</Pressable>
 					</View>
 
 					{streaming && text.length === 0 ? (
-						<View className='items-center py-12'>
-							<ActivityIndicator color='white' />
-							<Text className='text-white/50 font-pretendard-regular text-[13px] mt-3'>
+						<View className="items-center py-12">
+							<ActivityIndicator color="white" />
+							<Text className="text-white/50 font-pretendard-regular text-[13px] mt-3">
 								루트를 생성하고 있어요...
 							</Text>
 						</View>
 					) : (
 						<ScrollView showsVerticalScrollIndicator={false}>
-							<Text className='text-white/90 font-pretendard-regular text-[15px] leading-[26px] pb-2'>
+							<Text className="text-white/90 font-pretendard-regular text-[15px] leading-[26px] pb-2">
 								{text}
 							</Text>
 							{streaming && (
 								<ActivityIndicator
-									color='rgba(255,255,255,0.4)'
-									size='small'
+									color="rgba(255,255,255,0.4)"
+									size="small"
 									style={{ marginTop: 4, marginBottom: 8 }}
 								/>
 							)}

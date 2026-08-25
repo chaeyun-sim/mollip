@@ -6,8 +6,7 @@ export function useShareExhibition(exhibition: Exhibition | null) {
 	const handleShare = async () => {
 		if (!exhibition) return;
 
-		const linkUrl =
-			exhibition.web_site ?? exhibition.homepage_url ?? 'https://mollip.app';
+		const linkUrl = exhibition.web_site ?? exhibition.homepage_url ?? 'https://mollip.app';
 
 		const link = {
 			mobileWebUrl: linkUrl,
@@ -15,8 +14,7 @@ export function useShareExhibition(exhibition: Exhibition | null) {
 		};
 
 		const imageUrl =
-			typeof exhibition.heroImageUri === 'string' &&
-			exhibition.heroImageUri.startsWith('http')
+			typeof exhibition.heroImageUri === 'string' && exhibition.heroImageUri.startsWith('http')
 				? exhibition.heroImageUri
 				: undefined;
 

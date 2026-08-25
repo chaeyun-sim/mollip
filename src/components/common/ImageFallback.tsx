@@ -1,11 +1,6 @@
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, Image, StyleSheet, View } from 'react-native';
-import type {
-	ImageResizeMode,
-	ImageSourcePropType,
-	StyleProp,
-	ViewStyle,
-} from 'react-native';
+import type { ImageResizeMode, ImageSourcePropType, StyleProp, ViewStyle } from 'react-native';
 import { proxiedImageUrl } from '@/src/utils/imageProxy';
 import { cn } from '@/src/lib/cn';
 
@@ -101,22 +96,22 @@ export function ImageFallback({
 				/>
 			) : null}
 			{showImage && loadingIndicatorColor && loading ? (
-				<View style={StyleSheet.absoluteFill} className='items-center justify-center'>
+				<View style={StyleSheet.absoluteFill} className="items-center justify-center">
 					<ActivityIndicator color={loadingIndicatorColor} />
 				</View>
 			) : null}
 			{showImage && dimOverlay ? (
 				<View
-					pointerEvents='none'
+					pointerEvents="none"
 					style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(0,0,0,0.15)' }]}
 				/>
 			) : null}
 			{showPlaceholder ? (
-				<View style={StyleSheet.absoluteFill} className='items-center justify-center'>
+				<View style={StyleSheet.absoluteFill} className="items-center justify-center">
 					<Image
 						source={QUESTION_MARK}
 						style={{ width: iconSize, height: iconSize }}
-						resizeMode='contain'
+						resizeMode="contain"
 					/>
 				</View>
 			) : null}

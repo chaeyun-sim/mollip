@@ -55,7 +55,7 @@ export function MapMarkersLayer({
 				<VenueMarker
 					key={venue.venueName}
 					venue={venue}
-					variant='dot'
+					variant="dot"
 					isSelected={false}
 					activeFilters={activeFilters}
 					matchesFilters={matchesFilters}
@@ -77,7 +77,7 @@ export function MapMarkersLayer({
 				<VenueMarker
 					key={venue.venueName}
 					venue={venue}
-					variant='full'
+					variant="full"
 					isSelected={venue.venueName === selectedVenueName}
 					activeFilters={activeFilters}
 					matchesFilters={matchesFilters}
@@ -95,7 +95,7 @@ export function MapMarkersLayer({
 						width={isWalk ? 4 : 5}
 						color={pathColor(leg)}
 						outlineWidth={1}
-						outlineColor='white'
+						outlineColor="white"
 					/>
 				);
 			})}
@@ -127,7 +127,7 @@ export function MapMarkersLayer({
 					>
 						<View
 							collapsable={false}
-							className='border border-white'
+							className="border border-white"
 							style={{
 								width: size,
 								height: size,

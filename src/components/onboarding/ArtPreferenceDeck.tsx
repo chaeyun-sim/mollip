@@ -29,7 +29,7 @@ export function ArtPreferenceDeck({
 	return (
 		<>
 			{/* 진행 상태 */}
-			<View className='flex-row gap-1.5 px-6 py-3'>
+			<View className="flex-row gap-1.5 px-6 py-3">
 				{Array.from({ length: totalCount }).map((_, i) => (
 					<View
 						key={i}
@@ -39,8 +39,8 @@ export function ArtPreferenceDeck({
 			</View>
 
 			{/* 카드 스택 */}
-			<View className='flex-1 items-center pt-6 px-6'>
-				<View className='w-full' style={{ height: ONBOARDING_CARD_HEIGHT }}>
+			<View className="flex-1 items-center pt-6 px-6">
+				<View className="w-full" style={{ height: ONBOARDING_CARD_HEIGHT }}>
 					{cards
 						.slice(0, 3)
 						.reverse()
@@ -62,15 +62,15 @@ export function ArtPreferenceDeck({
 			</View>
 
 			{/* 하단 버튼 */}
-			<View className='flex-row justify-center items-center gap-6 pb-10 pt-2'>
+			<View className="flex-row justify-center items-center gap-6 pb-10 pt-2">
 				<Pressable
 					onPress={onSwipeLeft}
-					accessibilityRole='button'
-					accessibilityLabel='패스'
-					className='items-center gap-1.5'
+					accessibilityRole="button"
+					accessibilityLabel="패스"
+					className="items-center gap-1.5"
 				>
 					<View
-						className='w-16 h-16 rounded-full bg-white items-center justify-center'
+						className="w-16 h-16 rounded-full bg-white items-center justify-center"
 						style={{
 							shadowColor: colors.errorAlt,
 							shadowOffset: { width: 0, height: 4 },
@@ -79,19 +79,19 @@ export function ArtPreferenceDeck({
 							elevation: 6,
 						}}
 					>
-						<Ionicons name='close' size={28} className='text-error-alt' />
+						<Ionicons name="close" size={28} className="text-error-alt" />
 					</View>
-					<Text className='text-description text-xs font-pretendard-regular'>패스</Text>
+					<Text className="text-description text-xs font-pretendard-regular">패스</Text>
 				</Pressable>
 
 				<Pressable
 					onPress={onSwipeRight}
-					accessibilityRole='button'
-					accessibilityLabel='선택'
-					className='items-center gap-1.5'
+					accessibilityRole="button"
+					accessibilityLabel="선택"
+					className="items-center gap-1.5"
 				>
 					<View
-						className='w-16 h-16 rounded-full bg-white items-center justify-center'
+						className="w-16 h-16 rounded-full bg-white items-center justify-center"
 						style={{
 							shadowColor: colors.success,
 							shadowOffset: { width: 0, height: 4 },
@@ -100,9 +100,9 @@ export function ArtPreferenceDeck({
 							elevation: 4,
 						}}
 					>
-						<Ionicons name='heart' size={30} className='text-success' />
+						<Ionicons name="heart" size={30} className="text-success" />
 					</View>
-					<Text className='text-description text-xs font-pretendard-regular'>선택!</Text>
+					<Text className="text-description text-xs font-pretendard-regular">선택!</Text>
 				</Pressable>
 			</View>
 		</>

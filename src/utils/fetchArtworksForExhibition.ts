@@ -43,7 +43,11 @@ async function readCache(artist: string): Promise<CachedArtwork[] | null> {
 function writeCache(artist: string, artworks: CachedArtwork[]) {
 	supabase
 		.from('artist_artworks')
-		.upsert({ artist, artworks: artworks as unknown as import('@/src/types/database.types').Json, updated_at: new Date().toISOString() })
+		.upsert({
+			artist,
+			artworks: artworks as unknown as import('@/src/types/database.types').Json,
+			updated_at: new Date().toISOString(),
+		})
 		.then(() => {});
 }
 

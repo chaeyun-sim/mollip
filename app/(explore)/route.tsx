@@ -7,15 +7,7 @@ import {
 } from '@mj-studio/react-native-naver-map';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import {
-	ActivityIndicator,
-	Alert,
-	Modal,
-	Pressable,
-	ScrollView,
-	Text,
-	View,
-} from 'react-native';
+import { ActivityIndicator, Alert, Modal, Pressable, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { FloatingBackButton } from '@/src/components/common/FloatingBackButton';
 import { getWalkingRoute, type RouteCoord, type RouteResult } from '@/src/api/tmap';
@@ -69,7 +61,12 @@ export default function RouteScreen() {
 		initializedRef.current = true;
 		setWaypoints([
 			{ id: 'start', coord: currentCoord, label: '내 위치' },
-			{ id: `dest-${id}`, coord: exhibition.coordinates, label: exhibition.title, exhibitionId: id },
+			{
+				id: `dest-${id}`,
+				coord: exhibition.coordinates,
+				label: exhibition.title,
+				exhibitionId: id,
+			},
 		]);
 
 		setTimeout(() => {
@@ -123,26 +120,23 @@ export default function RouteScreen() {
 	);
 
 	// 근처 전시를 경유지로 추가
-	const addNearbyAsWaypoint = useCallback(
-		(ex: NearbyExhibition) => {
-			const newWp: Waypoint = {
-				id: `nearby-${ex.id}`,
-				coord: ex.coord,
-				label: ex.venue || ex.title,
-				exhibitionId: ex.id,
-			};
-			setWaypoints((prev) => {
-				if (prev.length >= 2) {
-					return [...prev.slice(0, -1), newWp, prev[prev.length - 1]];
-				}
-				return [...prev, newWp];
-			});
-			setRouteReady(false);
-			setRouteSegments([]);
-			setSheetVisible(false);
-		},
-		[],
-	);
+	const addNearbyAsWaypoint = useCallback((ex: NearbyExhibition) => {
+		const newWp: Waypoint = {
+			id: `nearby-${ex.id}`,
+			coord: ex.coord,
+			label: ex.venue || ex.title,
+			exhibitionId: ex.id,
+		};
+		setWaypoints((prev) => {
+			if (prev.length >= 2) {
+				return [...prev.slice(0, -1), newWp, prev[prev.length - 1]];
+			}
+			return [...prev, newWp];
+		});
+		setRouteReady(false);
+		setRouteSegments([]);
+		setSheetVisible(false);
+	}, []);
 
 	// 경로 생성
 	const handleBuildRoute = useCallback(async () => {
@@ -158,17 +152,21 @@ export default function RouteScreen() {
 				const from = waypoints[i];
 				const to = waypoints[i + 1];
 				const seg = await getWalkingRoute(from.coord, to.coord, from.label, to.label);
-				console.log(`[route] segment ${i}: legs=${seg.legs.length}, coords=${seg.legs.flatMap(l => l.coords).length}`);
+				console.log(
+					`[route] segment ${i}: legs=${seg.legs.length}, coords=${seg.legs.flatMap((l) => l.coords).length}`,
+				);
 				// ODsay가 경로를 못 찾으면 (거리 초과 등) 직선 fallback 사용
 				if (seg.legs.length === 0) {
-					seg.legs = [{
-						mode: 'walk',
-						coords: [from.coord, to.coord],
-						sectionSeconds: 0,
-						distanceMeters: 0,
-						startName: from.label,
-						endName: to.label,
-					}];
+					seg.legs = [
+						{
+							mode: 'walk',
+							coords: [from.coord, to.coord],
+							sectionSeconds: 0,
+							distanceMeters: 0,
+							startName: from.label,
+							endName: to.label,
+						},
+					];
 				}
 				segments.push(seg);
 			}
@@ -298,16 +296,14 @@ export default function RouteScreen() {
 	}
 
 	return (
-		<View className='flex-1'>
+		<View className="flex-1">
 			<NaverMapView
 				ref={mapRef}
 				style={{ flex: 1 }}
-				mapType='Basic'
+				mapType="Basic"
 				isShowZoomControls={false}
 				isIndoorEnabled={false}
-				locationOverlay={
-					currentCoord ? { isVisible: true, position: currentCoord } : undefined
-				}
+				locationOverlay={currentCoord ? { isVisible: true, position: currentCoord } : undefined}
 				onTapMap={handleTapMap}
 			>
 				{/* 전시장 전체 dot */}
@@ -321,10 +317,7 @@ export default function RouteScreen() {
 						anchor={{ x: 0.5, y: 0.5 }}
 						zIndex={1}
 					>
-						<View
-							collapsable={false}
-							className='w-2 h-2 rounded-full bg-primary/25'
-						/>
+						<View collapsable={false} className="w-2 h-2 rounded-full bg-primary/25" />
 					</NaverMapMarkerOverlay>
 				))}
 
@@ -336,7 +329,7 @@ export default function RouteScreen() {
 							key={`glow-${i}`}
 							coords={leg.coords}
 							width={10}
-							color='rgba(255,45,120,0.25)'
+							color="rgba(255,45,120,0.25)"
 							outlineWidth={0}
 						/>,
 						<NaverMapPathOverlay
@@ -345,7 +338,7 @@ export default function RouteScreen() {
 							width={4}
 							color={ROUTE_COLOR}
 							outlineWidth={1}
-							outlineColor='white'
+							outlineColor="white"
 						/>,
 					];
 				})}
@@ -363,11 +356,16 @@ export default function RouteScreen() {
 					>
 						<View
 							collapsable={false}
-							className={cn('w-[34px] h-[34px] rounded-full items-center justify-center', i === 0 ? 'bg-primary' : i === waypoints.length - 1 ? 'bg-[#FF2D78]' : 'bg-orange-600')}
+							className={cn(
+								'w-[34px] h-[34px] rounded-full items-center justify-center',
+								i === 0
+									? 'bg-primary'
+									: i === waypoints.length - 1
+										? 'bg-[#FF2D78]'
+										: 'bg-orange-600',
+							)}
 						>
-							<Text className='text-white font-pretendard-bold text-[14px]'>
-								{i + 1}
-							</Text>
+							<Text className="text-white font-pretendard-bold text-[14px]">{i + 1}</Text>
 						</View>
 					</NaverMapMarkerOverlay>
 				))}
@@ -384,21 +382,19 @@ export default function RouteScreen() {
 						zIndex={8}
 						onTap={() => setSheetVisible(true)}
 					>
-						<View collapsable={false} className='items-center'>
+						<View collapsable={false} className="items-center">
 							{/* 라벨 말풍선 */}
-							<View className='bg-amber-400 rounded-xl px-3 py-2 mb-1 flex-row items-center gap-1.5'>
-								<Ionicons name='star' size={13} color='white' />
+							<View className="bg-amber-400 rounded-xl px-3 py-2 mb-1 flex-row items-center gap-1.5">
+								<Ionicons name="star" size={13} color="white" />
 								<Text
-									className='text-white font-pretendard-semibold text-[13px] max-w-[140px]'
+									className="text-white font-pretendard-semibold text-[13px] max-w-[140px]"
 									numberOfLines={1}
 								>
 									{ex.venue || ex.title}
 								</Text>
 							</View>
 							{/* 핀 꼭지 */}
-							<View
-							className="w-0 h-0 border-l-[6px] border-r-[6px] border-t-[7px] border-l-transparent border-r-transparent border-t-amber-500"
-							/>
+							<View className="w-0 h-0 border-l-[6px] border-r-[6px] border-t-[7px] border-l-transparent border-r-transparent border-t-amber-500" />
 						</View>
 					</NaverMapMarkerOverlay>
 				))}
@@ -406,59 +402,62 @@ export default function RouteScreen() {
 
 			{/* 상단 헤더 */}
 			<SafeAreaView
-				className='absolute top-0 left-0 right-0'
+				className="absolute top-0 left-0 right-0"
 				edges={['top']}
-				pointerEvents='box-none'
+				pointerEvents="box-none"
 			>
-				<View className='flex-row items-center px-5 pt-2 gap-3'>
-					<FloatingBackButton onPress={() => router.back()} variant='onLight' />
-					<View className='flex-1 bg-white/90 rounded-2xl px-4 py-2.5'>
-						<Text className='font-pretendard-semibold text-[15px] text-primary'>
-							관람 루트
-						</Text>
-						<Text className='font-pretendard-regular text-[11px] text-gray-400 mt-0.5'>
-							{routeReady ? '지도를 탭해 경유지를 더 추가할 수 있어요' : '지도를 탭해 경유지를 추가하세요'}
+				<View className="flex-row items-center px-5 pt-2 gap-3">
+					<FloatingBackButton onPress={() => router.back()} variant="onLight" />
+					<View className="flex-1 bg-white/90 rounded-2xl px-4 py-2.5">
+						<Text className="font-pretendard-semibold text-[15px] text-primary">관람 루트</Text>
+						<Text className="font-pretendard-regular text-[11px] text-gray-400 mt-0.5">
+							{routeReady
+								? '지도를 탭해 경유지를 더 추가할 수 있어요'
+								: '지도를 탭해 경유지를 추가하세요'}
 						</Text>
 					</View>
 					{routeReady && (
 						<Pressable
 							onPress={handleReset}
-							className='bg-white/90 rounded-2xl px-3 py-2.5'
+							className="bg-white/90 rounded-2xl px-3 py-2.5"
 							hitSlop={8}
-							accessibilityLabel='초기화'
-							accessibilityRole='button'
+							accessibilityLabel="초기화"
+							accessibilityRole="button"
 						>
-							<Text className='font-pretendard-medium text-[13px] text-primary'>
-								초기화
-							</Text>
+							<Text className="font-pretendard-medium text-[13px] text-primary">초기화</Text>
 						</Pressable>
 					)}
 				</View>
 			</SafeAreaView>
 
 			{/* 하단 패널 */}
-			<SafeAreaView edges={['bottom']} className='bg-white border-t border-gray-100'>
+			<SafeAreaView edges={['bottom']} className="bg-white border-t border-gray-100">
 				{waypoints.length > 0 && (
 					<ScrollView
 						horizontal
 						showsHorizontalScrollIndicator={false}
-						className='border-b border-gray-100'
+						className="border-b border-gray-100"
 						contentContainerStyle={{ paddingHorizontal: 16, paddingVertical: 10, gap: 8 }}
 					>
 						{waypoints.map((wp, i) => (
 							<View
 								key={wp.id}
-								className='flex-row items-center gap-1.5 bg-bg-light rounded-full px-3 py-1.5'
+								className="flex-row items-center gap-1.5 bg-bg-light rounded-full px-3 py-1.5"
 							>
 								<View
-									className={cn('w-5 h-5 rounded-full items-center justify-center', i === 0 ? 'bg-primary' : i === waypoints.length - 1 ? 'bg-[#FF2D78]' : 'bg-amber-600')}
+									className={cn(
+										'w-5 h-5 rounded-full items-center justify-center',
+										i === 0
+											? 'bg-primary'
+											: i === waypoints.length - 1
+												? 'bg-[#FF2D78]'
+												: 'bg-amber-600',
+									)}
 								>
-									<Text className='text-white font-pretendard-bold text-[10px]'>
-										{i + 1}
-									</Text>
+									<Text className="text-white font-pretendard-bold text-[10px]">{i + 1}</Text>
 								</View>
 								<Text
-									className='font-pretendard-regular text-[13px] text-primary max-w-[120px]'
+									className="font-pretendard-regular text-[13px] text-primary max-w-[120px]"
 									numberOfLines={1}
 								>
 									{renderWaypointLabel(i, waypoints.length)}
@@ -467,10 +466,10 @@ export default function RouteScreen() {
 									<Pressable
 										onPress={() => removeWaypoint(wp.id)}
 										hitSlop={6}
-										accessibilityLabel='경유지 제거'
-										accessibilityRole='button'
+										accessibilityLabel="경유지 제거"
+										accessibilityRole="button"
 									>
-										<Ionicons name='close-circle' size={14} color='#9CA3AF' />
+										<Ionicons name="close-circle" size={14} color="#9CA3AF" />
 									</Pressable>
 								)}
 							</View>
@@ -478,15 +477,15 @@ export default function RouteScreen() {
 					</ScrollView>
 				)}
 
-				<View className='px-5 py-3 flex-row gap-2'>
+				<View className="px-5 py-3 flex-row gap-2">
 					{routeReady && nearbyExhibitions.length > 0 && (
 						<Pressable
 							onPress={() => setSheetVisible(true)}
-							className='rounded-2xl py-4 items-center bg-amber-400 flex-1'
-							accessibilityLabel='근처 전시 보기'
-							accessibilityRole='button'
+							className="rounded-2xl py-4 items-center bg-amber-400 flex-1"
+							accessibilityLabel="근처 전시 보기"
+							accessibilityRole="button"
 						>
-							<Text className='font-pretendard-semibold text-[15px] text-white'>
+							<Text className="font-pretendard-semibold text-[15px] text-white">
 								근처 전시 {nearbyExhibitions.length}개
 							</Text>
 						</Pressable>
@@ -494,14 +493,18 @@ export default function RouteScreen() {
 					<Pressable
 						onPress={handleBuildRoute}
 						disabled={waypoints.length < 2 || building}
-						className={cn('rounded-2xl py-4 items-center', waypoints.length < 2 ? 'bg-border' : 'bg-primary', routeReady && nearbyExhibitions.length > 0 ? 'flex-1' : 'min-w-[120px]')}
+						className={cn(
+							'rounded-2xl py-4 items-center',
+							waypoints.length < 2 ? 'bg-border' : 'bg-primary',
+							routeReady && nearbyExhibitions.length > 0 ? 'flex-1' : 'min-w-[120px]',
+						)}
 						accessibilityLabel={routeReady ? '경로 재생성' : '경로 생성'}
-						accessibilityRole='button'
+						accessibilityRole="button"
 					>
 						{building ? (
-							<ActivityIndicator color='white' />
+							<ActivityIndicator color="white" />
 						) : (
-							<Text className='font-pretendard-semibold text-[15px] text-white'>
+							<Text className="font-pretendard-semibold text-[15px] text-white">
 								{routeReady ? '재생성' : '경로 생성'}
 							</Text>
 						)}
@@ -513,58 +516,55 @@ export default function RouteScreen() {
 			<Modal
 				visible={sheetVisible}
 				transparent
-				animationType='slide'
+				animationType="slide"
 				onRequestClose={() => setSheetVisible(false)}
 			>
-				<View className='flex-1 justify-end'>
+				<View className="flex-1 justify-end">
 					<Pressable
-						className='flex-1'
+						className="flex-1"
 						onPress={() => setSheetVisible(false)}
-						accessibilityLabel='닫기'
-						accessibilityRole='button'
+						accessibilityLabel="닫기"
+						accessibilityRole="button"
 					/>
 					<View
-						className='bg-white rounded-t-3xl px-6 pt-5 max-h-[65%]'
+						className="bg-white rounded-t-3xl px-6 pt-5 max-h-[65%]"
 						style={{ paddingBottom: insets.bottom + 24 }}
 					>
-						<View className='flex-row items-center justify-between mb-1'>
-							<Text className='font-pretendard-semibold text-[17px] text-primary'>
+						<View className="flex-row items-center justify-between mb-1">
+							<Text className="font-pretendard-semibold text-[17px] text-primary">
 								가는 길에서 볼 수 있는 전시
 							</Text>
 							<Pressable
 								onPress={() => setSheetVisible(false)}
 								hitSlop={8}
-								accessibilityLabel='닫기'
-								accessibilityRole='button'
+								accessibilityLabel="닫기"
+								accessibilityRole="button"
 							>
-								<Ionicons name='close' size={22} className="text-primary" />
+								<Ionicons name="close" size={22} className="text-primary" />
 							</Pressable>
 						</View>
-						<Text className='font-pretendard-regular text-[13px] text-gray-400 mb-4'>
+						<Text className="font-pretendard-regular text-[13px] text-gray-400 mb-4">
 							경로 500m 이내 진행 중인 전시예요
 						</Text>
 						<ScrollView showsVerticalScrollIndicator={false}>
 							{nearbyExhibitions.map((ex) => (
-								<View
-									key={ex.id}
-									className='py-3 border-b border-gray-100'
-								>
-									<View className='flex-row items-start justify-between mb-2'>
+								<View key={ex.id} className="py-3 border-b border-gray-100">
+									<View className="flex-row items-start justify-between mb-2">
 										<Pressable
-											className='flex-1 mr-3'
+											className="flex-1 mr-3"
 											onPress={() => {
 												setSheetVisible(false);
 												router.push(`/(explore)/${ex.id}`);
 											}}
-											accessibilityRole='button'
+											accessibilityRole="button"
 										>
 											<Text
-												className='font-pretendard-medium text-[15px] text-primary'
+												className="font-pretendard-medium text-[15px] text-primary"
 												numberOfLines={1}
 											>
 												{ex.title}
 											</Text>
-											<Text className='font-pretendard-regular text-[12px] text-gray-500 mt-0.5'>
+											<Text className="font-pretendard-regular text-[12px] text-gray-500 mt-0.5">
 												{ex.venue} ·{' '}
 												{ex.distanceM < 1000
 													? `${ex.distanceM}m`
@@ -574,12 +574,12 @@ export default function RouteScreen() {
 									</View>
 									<Pressable
 										onPress={() => addNearbyAsWaypoint(ex)}
-										className='self-start flex-row items-center gap-1.5 bg-bg-light rounded-full px-3 py-1.5'
-										accessibilityLabel='경로에 추가'
-										accessibilityRole='button'
+										className="self-start flex-row items-center gap-1.5 bg-bg-light rounded-full px-3 py-1.5"
+										accessibilityLabel="경로에 추가"
+										accessibilityRole="button"
 									>
-										<Ionicons name='add-circle-outline' size={15} className="text-primary" />
-										<Text className='font-pretendard-medium text-[13px] text-primary'>
+										<Ionicons name="add-circle-outline" size={15} className="text-primary" />
+										<Text className="font-pretendard-medium text-[13px] text-primary">
 											경로에 추가
 										</Text>
 									</Pressable>

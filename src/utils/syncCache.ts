@@ -15,7 +15,5 @@ export async function isStale(source: string): Promise<boolean> {
 }
 
 export async function markSynced(source: string): Promise<void> {
-	await supabase
-		.from('data_sync_meta')
-		.upsert({ source, synced_at: new Date().toISOString() });
+	await supabase.from('data_sync_meta').upsert({ source, synced_at: new Date().toISOString() });
 }

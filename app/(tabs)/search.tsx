@@ -3,11 +3,7 @@ import { StatusBar } from 'expo-status-bar';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { FlatList, Keyboard, Pressable, ScrollView, Text, View } from 'react-native';
-import Animated, {
-	FadeIn,
-	FadeOut,
-	LinearTransition,
-} from 'react-native-reanimated';
+import Animated, { FadeIn, FadeOut, LinearTransition } from 'react-native-reanimated';
 import { Screen } from '@/src/components/layout/Screen';
 import { SearchBar } from '@/src/components/common/SearchBar';
 import { DatePickerModal } from '@/src/components/common/DatePickerModal';
@@ -18,18 +14,8 @@ import { useExhibitionSearch, type SearchResult } from '@/src/hooks/useExhibitio
 import { usePreferences } from '@/src/hooks/usePreferences';
 import { useRecentSearchStore } from '@/src/store/recentSearchStore';
 import { useAuthStore } from '@/src/store/authStore';
-import { colors } from '@/src/constants/colors';
 
-const FIXED_TAGS = [
-	'문화유산',
-	'소장품전',
-	'사유',
-	'과학',
-	'현대미술',
-	'사진',
-	'조각',
-	'드로잉',
-];
+const FIXED_TAGS = ['문화유산', '소장품전', '사유', '과학', '현대미술', '사진', '조각', '드로잉'];
 
 const PAGE_SIZE = 20;
 
@@ -38,9 +24,7 @@ const ITEM_EXITING = FadeOut.duration(160);
 // 스프링 대신 시간 기반 — 오버슈트(바운스) 없음
 const ITEM_LAYOUT = LinearTransition.duration(200);
 
-type ResultListItem =
-	| { kind: 'section'; label: string }
-	| { kind: 'result'; result: SearchResult };
+type ResultListItem = { kind: 'section'; label: string } | { kind: 'result'; result: SearchResult };
 
 export default function SearchScreen() {
 	const router = useRouter();
@@ -149,9 +133,7 @@ export default function SearchScreen() {
 
 	const listData = useMemo<ResultListItem[]>(() => {
 		if (!showSections) {
-			return results
-				.slice(0, visibleCount)
-				.map((r) => ({ kind: 'result' as const, result: r }));
+			return results.slice(0, visibleCount).map((r) => ({ kind: 'result' as const, result: r }));
 		}
 		return [
 			{
@@ -160,15 +142,11 @@ export default function SearchScreen() {
 			},
 			...preferredResults.map((r) => ({ kind: 'result' as const, result: r })),
 			{ kind: 'section', label: '전체' },
-			...otherResults
-				.slice(0, visibleCount)
-				.map((r) => ({ kind: 'result' as const, result: r })),
+			...otherResults.slice(0, visibleCount).map((r) => ({ kind: 'result' as const, result: r })),
 		];
 	}, [showSections, results, visibleCount, preferredResults, otherResults, displayName]);
 
-	const hasMore = showSections
-		? visibleCount < otherResults.length
-		: visibleCount < results.length;
+	const hasMore = showSections ? visibleCount < otherResults.length : visibleCount < results.length;
 
 	const keyExtractor = useCallback(
 		(item: ResultListItem, index: number) =>
@@ -179,24 +157,20 @@ export default function SearchScreen() {
 	function renderItem({ item }: { item: ResultListItem }) {
 		if (item.kind === 'section') {
 			return (
-				<Text className='text-primary text-[16px] font-pretendard-bold mt-6 mb-3'>
+				<Text className="text-primary text-[16px] font-pretendard-bold mt-6 mb-3">
 					{item.label}
 				</Text>
 			);
 		}
 		return (
-			<Animated.View
-				entering={ITEM_ENTERING}
-				exiting={ITEM_EXITING}
-				layout={ITEM_LAYOUT}
-			>
+			<Animated.View entering={ITEM_ENTERING} exiting={ITEM_EXITING} layout={ITEM_LAYOUT}>
 				<ExhibitionResultCard result={item.result} onPress={handlePressExhibition} />
 			</Animated.View>
 		);
 	}
 
 	return (
-		<Screen variant='warm'>
+		<Screen variant="warm">
 			<Screen.Header>
 				<Screen.Header.Logo />
 			</Screen.Header>
@@ -206,13 +180,13 @@ export default function SearchScreen() {
 				value={searchText}
 				onChangeText={setSearchText}
 				onSubmitEditing={handleSubmitSearch}
-				placeholder='전시·미술관·작가 검색'
-				variant='tonal'
+				placeholder="전시·미술관·작가 검색"
+				variant="tonal"
 			/>
 
 			{/* 필터 칩 */}
 			{debouncedSearchText && (
-				<View className='mt-3 mb-6'>
+				<View className="mt-3 mb-6">
 					<SearchFilterBar
 						statusFilters={statusFilters}
 						onToggleStatus={toggleStatusFilter}
@@ -231,58 +205,50 @@ export default function SearchScreen() {
 				<ScrollView
 					showsVerticalScrollIndicator={false}
 					contentContainerStyle={{ paddingBottom: 48 }}
-					keyboardShouldPersistTaps='handled'
-					keyboardDismissMode='on-drag'
+					keyboardShouldPersistTaps="handled"
+					keyboardDismissMode="on-drag"
 				>
-					<View className='mt-7'>
-						<Text className='text-primary text-[16px] mb-3 font-pretendard-bold'>
-							추천 태그
-						</Text>
-						<View className='flex-row flex-wrap gap-2'>
+					<View className="mt-7">
+						<Text className="text-primary text-[16px] mb-3 font-pretendard-bold">추천 태그</Text>
+						<View className="flex-row flex-wrap gap-2">
 							{FIXED_TAGS.map((tag) => (
 								<Pressable
 									key={tag}
 									onPress={() => handlePressTag(tag)}
 									accessibilityLabel={`${tag} 태그로 검색`}
-									accessibilityRole='button'
-									className='rounded-full bg-bg-tonal px-3.5 py-2'
+									accessibilityRole="button"
+									className="rounded-full bg-bg-tonal px-3.5 py-2"
 									style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
 								>
-									<Text className='text-secondary text-[13px] font-pretendard-medium'>
-										{tag}
-									</Text>
+									<Text className="text-secondary text-[13px] font-pretendard-medium">{tag}</Text>
 								</Pressable>
 							))}
 						</View>
 					</View>
 
 					{recentWords.length > 0 && (
-						<View className='mt-7'>
-							<View className='flex-row items-center justify-between mb-2'>
-								<Text className='text-primary text-[16px] font-pretendard-bold'>
-									최근 검색
-								</Text>
+						<View className="mt-7">
+							<View className="flex-row items-center justify-between mb-2">
+								<Text className="text-primary text-[16px] font-pretendard-bold">최근 검색</Text>
 								<Pressable
 									onPress={clearRecent}
 									hitSlop={8}
-									accessibilityLabel='최근 검색어 전체 삭제'
-									accessibilityRole='button'
+									accessibilityLabel="최근 검색어 전체 삭제"
+									accessibilityRole="button"
 								>
-									<Text className='text-muted text-[13px] font-pretendard-regular'>
-										전체 삭제
-									</Text>
+									<Text className="text-muted text-[13px] font-pretendard-regular">전체 삭제</Text>
 								</Pressable>
 							</View>
 							{recentWords.map((word) => (
-								<View key={word} className='flex-row items-center gap-2.5 py-3'>
-									<Ionicons name='time-outline' size={15} color={colors.muted} />
+								<View key={word} className="flex-row items-center gap-2.5 py-3">
+									<Ionicons name="time-outline" size={15} className="text-muted" />
 									<Pressable
 										onPress={() => handlePressRecent(word)}
 										accessibilityLabel={`${word} 검색`}
-										accessibilityRole='button'
-										className='flex-1'
+										accessibilityRole="button"
+										className="flex-1"
 									>
-										<Text className='text-[#44403C] text-[15px] font-pretendard-regular'>
+										<Text className="text-[#44403C] text-[15px] font-pretendard-regular">
 											{word}
 										</Text>
 									</Pressable>
@@ -290,9 +256,9 @@ export default function SearchScreen() {
 										onPress={() => removeRecent(word)}
 										hitSlop={8}
 										accessibilityLabel={`최근 검색어 ${word} 삭제`}
-										accessibilityRole='button'
+										accessibilityRole="button"
 									>
-										<Ionicons name='close' size={15} color='#D6D3D1' />
+										<Ionicons name="close" size={15} color="#D6D3D1" />
 									</Pressable>
 								</View>
 							))}
@@ -309,29 +275,27 @@ export default function SearchScreen() {
 					onEndReachedThreshold={0.3}
 					showsVerticalScrollIndicator={false}
 					contentContainerStyle={{ paddingBottom: 48 }}
-					keyboardShouldPersistTaps='handled'
-					keyboardDismissMode='on-drag'
-					ItemSeparatorComponent={() => <View className='h-5' />}
+					keyboardShouldPersistTaps="handled"
+					keyboardDismissMode="on-drag"
+					ItemSeparatorComponent={() => <View className="h-5" />}
 					ListHeaderComponent={
-						<View className='flex-row items-end justify-between mb-3'>
-							<Text className='text-primary text-[18px] font-pretendard-bold'>
-								검색 결과
-							</Text>
-							<Text className='text-muted text-[13px] font-pretendard-regular'>
+						<View className="flex-row items-end justify-between mb-3">
+							<Text className="text-primary text-[18px] font-pretendard-bold">검색 결과</Text>
+							<Text className="text-muted text-[13px] font-pretendard-regular">
 								{results.length}건{hasLocation ? ' · 가까운 순' : ''}
 							</Text>
 						</View>
 					}
 					ListEmptyComponent={
-						<View className='items-center py-16 gap-2'>
+						<View className="items-center py-16 gap-2">
 							{/* TODO: 검색 결과 없음 일러스트
 								프롬프트: 따뜻한 베이지(#F8F6F2) 배경 위에 놓인 돋보기와 물음표,
 								플랫 일러스트 스타일, 얇은 라인 아트, 잉크색(#1C1917) 윤곽선, 포인트 컬러는 은은한 테라코타,
 								가볍고 장난스러운 느낌, 사진 느낌 없이 손그림 느낌, 정사각형 100x100 */}
-							<Text className='text-secondary text-[15px] font-pretendard-semibold'>
+							<Text className="text-secondary text-[15px] font-pretendard-semibold">
 								조건에 맞는 전시가 없어요
 							</Text>
-							<Text className='text-muted text-[13px] font-pretendard-regular'>
+							<Text className="text-muted text-[13px] font-pretendard-regular">
 								검색어나 필터를 조정해 보세요
 							</Text>
 						</View>
@@ -345,7 +309,7 @@ export default function SearchScreen() {
 				onChange={setFilterDate}
 				onDismiss={() => setShowDatePicker(false)}
 				onReset={() => setFilterDate(null)}
-				resetLabel='날짜 필터 해제'
+				resetLabel="날짜 필터 해제"
 			/>
 
 			<ExcludeWordsModal

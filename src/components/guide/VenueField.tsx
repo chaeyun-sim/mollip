@@ -23,10 +23,8 @@ export function VenueField({
 	onSubmitEditing,
 }: VenueFieldProps) {
 	return (
-		<View className='mb-8'>
-			<Text className='text-xs mb-2 font-pretendard-semibold text-muted tracking-wider'>
-				위치
-			</Text>
+		<View className="mb-8">
+			<Text className="text-xs mb-2 font-pretendard-semibold text-muted tracking-wider">위치</Text>
 			<View
 				className={cn(
 					'rounded-lg border bg-primary',
@@ -37,12 +35,12 @@ export function VenueField({
 				{focused ? (
 					<TextInput
 						autoFocus
-						className='flex-1 px-4 text-base font-pretendard-regular text-on-dark'
-						placeholder='예) 국립현대미술관 과천관'
-						placeholderTextColor='#57534E'
+						className="flex-1 px-4 text-base font-pretendard-regular text-on-dark"
+						placeholder="예) 국립현대미술관 과천관"
+						placeholderTextColor="#57534E"
 						value={value}
 						onChangeText={onChangeText}
-						returnKeyType='done'
+						returnKeyType="done"
 						onSubmitEditing={onSubmitEditing}
 						numberOfLines={1}
 						style={{ lineHeight: 0 }}
@@ -52,8 +50,8 @@ export function VenueField({
 					<Pressable
 						style={{ flex: 1, paddingHorizontal: 16, justifyContent: 'center' }}
 						onPress={onFocus}
-						accessibilityRole='button'
-						accessibilityLabel='위치 입력'
+						accessibilityRole="button"
+						accessibilityLabel="위치 입력"
 					>
 						<Text
 							numberOfLines={1}
@@ -68,7 +66,7 @@ export function VenueField({
 				)}
 			</View>
 			{error && (
-				<Text className='text-xs mt-1.5 font-pretendard-regular text-error'>
+				<Text className="text-xs mt-1.5 font-pretendard-regular text-error">
 					위치를 입력해 주세요
 				</Text>
 			)}

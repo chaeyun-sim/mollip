@@ -51,7 +51,7 @@ export function FloatingIconButton({
 			<Pressable
 				onPress={handlePress}
 				style={({ pressed }) => [style, { opacity: pressed ? 0.7 : 1 }]}
-				accessibilityRole='button'
+				accessibilityRole="button"
 				hitSlop={8}
 				{...props}
 			>
@@ -70,7 +70,7 @@ export function FloatingIconButton({
 			}}
 			onPress={handlePress}
 			style={style}
-			accessibilityRole='button'
+			accessibilityRole="button"
 			hitSlop={8}
 			{...props}
 		>

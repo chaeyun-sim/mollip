@@ -37,7 +37,10 @@ function rowToVenueGroup(row: MuseumRow): VenueGroup | null {
 		homepageUrl: row.homepage_url || undefined,
 		description: row.description || undefined,
 		amenities: row.amenities
-			? row.amenities.split('+').map((a) => a.trim()).filter(Boolean)
+			? row.amenities
+					.split('+')
+					.map((a) => a.trim())
+					.filter(Boolean)
 			: undefined,
 		parking: row.parking || undefined,
 	};
@@ -86,7 +89,8 @@ function groupByVenueGroupName(
 	return [...ungrouped, ...parents];
 }
 
-const BASE_COLUMNS = 'id, name, address, phone, homepage_url, gps_x, gps_y, open_hours, rstdeInfo, description, amenities, parking';
+const BASE_COLUMNS =
+	'id, name, address, phone, homepage_url, gps_x, gps_y, open_hours, rstdeInfo, description, amenities, parking';
 
 // Supabase museums(전국박물관미술관정보표준데이터 + 수동 보강) → 지도 마커 VenueGroup
 export function useMuseums(): VenueGroup[] {

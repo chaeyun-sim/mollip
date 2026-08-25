@@ -97,7 +97,7 @@ export function TicketFocusOverlay({ dateKey, onClose }: TicketFocusOverlayProps
 		<Modal
 			visible={visible}
 			transparent
-			animationType='fade'
+			animationType="fade"
 			statusBarTranslucent
 			onRequestClose={onClose}
 		>
@@ -105,25 +105,25 @@ export function TicketFocusOverlay({ dateKey, onClose }: TicketFocusOverlayProps
 			<Pressable
 				style={{ flex: 1, backgroundColor: 'rgba(8,6,5,0.88)' }}
 				onPress={onClose}
-				accessibilityLabel='오버레이 닫기'
-				accessibilityRole='button'
+				accessibilityLabel="오버레이 닫기"
+				accessibilityRole="button"
 			>
 				{/* 닫기 버튼 */}
 				<View
-					className='flex-row items-center justify-between px-5'
+					className="flex-row items-center justify-between px-5"
 					style={{ paddingTop: 56, paddingBottom: 12 }}
 				>
-					<Text className='font-pretendard-semibold text-[15px] text-[rgba(255,255,255,0.85)]'>
+					<Text className="font-pretendard-semibold text-[15px] text-[rgba(255,255,255,0.85)]">
 						{dateLabel}
 					</Text>
 					<Pressable
 						onPress={onClose}
 						hitSlop={12}
-						accessibilityLabel='닫기'
-						accessibilityRole='button'
+						accessibilityLabel="닫기"
+						accessibilityRole="button"
 						style={({ pressed }) => ({ opacity: pressed ? 0.5 : 1 })}
 					>
-						<Text className='font-pretendard-regular text-[14px] text-[rgba(255,255,255,0.6)]'>
+						<Text className="font-pretendard-regular text-[14px] text-[rgba(255,255,255,0.6)]">
 							닫기 ✕
 						</Text>
 					</Pressable>

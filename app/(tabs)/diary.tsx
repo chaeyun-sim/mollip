@@ -1,7 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { useRouter } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
 import { useCallback, useMemo, useState } from 'react';
 import { Pressable, ScrollView, Text, View } from 'react-native';
 import { ArchiveDiaryEmpty } from '@/src/components/archive/ArchiveDiaryEmpty';
@@ -12,7 +11,6 @@ import { Screen } from '@/src/components/layout/Screen';
 import { useDayImages } from '@/src/hooks/useDayImages';
 import { useAuthStore } from '@/src/store/authStore';
 import { useVisitStore } from '@/src/store/visitStore';
-import { colors } from '@/src/constants/colors';
 
 type DiaryViewMode = 'grid' | 'calendar';
 
@@ -28,10 +26,7 @@ export default function DiaryScreen() {
 
 	const visits = useVisitStore((s) => s.visits);
 	const visitDateKeys = useMemo(
-		() =>
-			Object.keys(visits).filter(
-				(k) => typeof visits[k].exhibitionId === 'string',
-			),
+		() => Object.keys(visits).filter((k) => typeof visits[k].exhibitionId === 'string'),
 		[visits],
 	);
 
@@ -87,7 +82,7 @@ export default function DiaryScreen() {
 
 	if (!session) {
 		return (
-			<Screen variant='warm'>
+			<Screen variant="warm">
 				<Screen.Header>
 					<Screen.Header.Logo />
 				</Screen.Header>
@@ -97,18 +92,18 @@ export default function DiaryScreen() {
 	}
 
 	return (
-		<Screen variant='warm'>
+		<Screen variant="warm">
 			<Screen.Header>
 				<Screen.Header.Logo />
 				<Screen.Header.Right>
 					<Pressable
 						onPress={() => router.push('/settings')}
 						hitSlop={8}
-						accessibilityRole='button'
-						accessibilityLabel='마이페이지'
+						accessibilityRole="button"
+						accessibilityLabel="마이페이지"
 						style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
 					>
-						<Ionicons name='person-outline' size={24} color={colors.primary} />
+						<Ionicons name="person-outline" size={24} className="text-primary" />
 					</Pressable>
 				</Screen.Header.Right>
 			</Screen.Header>
@@ -118,19 +113,16 @@ export default function DiaryScreen() {
 				bounces={false}
 				contentContainerStyle={{ paddingBottom: 48, alignItems: 'stretch' }}
 			>
-				<View
-					className='flex-row items-end justify-between'
-					style={{ marginBottom: 20 }}
-				>
-					<View className='flex-row items-end gap-[6px]'>
+				<View className="flex-row items-end justify-between" style={{ marginBottom: 20 }}>
+					<View className="flex-row items-end gap-[6px]">
 						<Text
-							className='font-hahmlet-bold text-[60px] text-primary tracking-[-1.5px]'
+							className="font-hahmlet-bold text-[60px] text-primary tracking-[-1.5px]"
 							style={{ lineHeight: 68 }}
 						>
 							{visitDateKeys.length}
 						</Text>
 						<Text
-							className='font-hahmlet-bold text-[19px] text-primary tracking-[-0.3px] pb-[10px]'
+							className="font-hahmlet-bold text-[19px] text-primary tracking-[-0.3px] pb-[10px]"
 							style={{ lineHeight: 22 }}
 						>
 							Tickets
@@ -140,21 +132,21 @@ export default function DiaryScreen() {
 					{visitDateKeys.length > 0 && (
 						<Pressable
 							onPress={handleToggleViewMode}
-							accessibilityRole='button'
+							accessibilityRole="button"
 							accessibilityLabel={
 								diaryViewMode === 'grid' ? '캘린더 보기로 전환' : '그리드 보기로 전환'
 							}
 							hitSlop={8}
 							style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
-							className='flex-row items-center gap-1 pb-[9px]'
+							className="flex-row items-center gap-1 pb-[9px]"
 						>
 							<Ionicons
 								name={diaryViewMode === 'grid' ? 'calendar-outline' : 'grid-outline'}
 								size={16}
-								color={colors.primary}
+								className="text-primary"
 							/>
 							<Text
-								className='text-[13px] text-primary'
+								className="text-[13px] text-primary"
 								style={{ fontFamily: 'Pretendard-Medium' }}
 							>
 								{diaryViewMode === 'grid' ? '캘린더' : '그리드'}
@@ -169,14 +161,14 @@ export default function DiaryScreen() {
 						onMap={() => router.push('/(tabs)/map')}
 					/>
 				) : diaryViewMode === 'grid' ? (
-					<View className='px-1'>
+					<View className="px-1">
 						<VisitTicketGrid onPress={handleGridTicketPress} />
-						<Text className='font-pretendard-regular text-[11px] text-[rgba(61,43,26,0.28)] tracking-[0.3px] text-center mt-10'>
+						<Text className="font-pretendard-regular text-[11px] text-[rgba(61,43,26,0.28)] tracking-[0.3px] text-center mt-10">
 							방문한 전시를 기록하면 티켓이 쌓여요
 						</Text>
 					</View>
 				) : (
-					<View className='px-2'>
+					<View className="px-2">
 						<DiaryCalendar
 							year={calYear}
 							month={calMonth}

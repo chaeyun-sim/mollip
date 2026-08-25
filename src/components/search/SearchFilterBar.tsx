@@ -43,20 +43,20 @@ export function SearchFilterBar({
 					onPress={() => onToggleStatus(key)}
 				/>
 			))}
-			<Chip label='무료' active={freeOnly} onPress={onToggleFree} />
+			<Chip label="무료" active={freeOnly} onPress={onToggleFree} />
 			<Chip
 				label={filterDate ? formatChipDate(filterDate) : '날짜'}
 				active={filterDate !== null}
 				onPress={onPressDate}
-				icon='calendar-outline'
-				accessibilityLabel='날짜 필터'
+				icon="calendar-outline"
+				accessibilityLabel="날짜 필터"
 			/>
 			<Chip
 				label={excludedCount > 0 ? `제외어 ${excludedCount}` : '제외어'}
 				active={excludedCount > 0}
 				onPress={onPressExclude}
-				icon='remove-circle-outline'
-				accessibilityLabel='제외할 검색어 설정'
+				icon="remove-circle-outline"
+				accessibilityLabel="제외할 검색어 설정"
 			/>
 		</ScrollView>
 	);

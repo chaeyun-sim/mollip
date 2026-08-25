@@ -1,5 +1,5 @@
 import { Text, View } from 'react-native';
-import { colors } from '@/src/constants/colors';
+import { cn } from '@/src/lib/cn';
 
 /** "YYYY.MM.DD" 문자열을 파싱해 오늘로부터 남은 일수를 반환. 이미 지났으면 음수. */
 function getDaysRemaining(dateStr: string): number {
@@ -19,13 +19,15 @@ export function DeadlineLabel({ endDate }: DeadlineLabelProps) {
 	if (days > 14 || days < 0) return null;
 
 	const label = days === 0 ? '오늘 마감' : `D-${days}`;
-	const bg = days <= 3 ? colors.error : days <= 7 ? '#F97316' : '#EAB308';
 
 	return (
-		<View className='px-2 py-0.5 rounded-full' style={{ backgroundColor: bg }}>
-			<Text className='font-pretendard-semibold text-[11px] text-white'>
-				{label}
-			</Text>
+		<View
+			className={cn(
+				'px-2 py-0.5 rounded-full',
+				days <= 3 ? 'bg-error' : days <= 7 ? 'bg-orange-500' : 'bg-yellow-500',
+			)}
+		>
+			<Text className="font-pretendard-semibold text-[11px] text-white">{label}</Text>
 		</View>
 	);
 }

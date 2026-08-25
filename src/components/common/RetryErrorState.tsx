@@ -30,18 +30,14 @@ export function RetryErrorState({
 }: RetryErrorStateProps) {
 	return (
 		<View className={cn('items-center justify-center gap-2', className)}>
-			<Text className='text-muted text-[13px] font-pretendard-regular'>
-				{message}
-			</Text>
+			<Text className="text-muted text-[13px] font-pretendard-regular">{message}</Text>
 			<Pressable
 				onPress={onRetry}
 				accessibilityLabel={retryAccessibilityLabel}
-				accessibilityRole='button'
+				accessibilityRole="button"
 				hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
 			>
-				<Text className='text-primary text-[13px] font-pretendard-semibold'>
-					다시 시도
-				</Text>
+				<Text className="text-primary text-[13px] font-pretendard-semibold">다시 시도</Text>
 			</Pressable>
 		</View>
 	);

@@ -11,19 +11,16 @@ interface KcisaExhibitionCardProps {
 	onPress: (id: string) => void;
 }
 
-export function KcisaExhibitionCard({
-	item,
-	onPress,
-}: KcisaExhibitionCardProps) {
+export function KcisaExhibitionCard({ item, onPress }: KcisaExhibitionCardProps) {
 	return (
 		<Pressable
 			onPress={() => onPress(item.id)}
 			accessibilityLabel={`${item.title}, ${item.venue}`}
-			accessibilityRole='button'
+			accessibilityRole="button"
 			style={({ pressed }) => ({ opacity: pressed ? 0.88 : 1, width: CARD_WIDTH })}
 		>
 			<View
-				className='rounded-[18px] overflow-hidden'
+				className="rounded-[18px] overflow-hidden"
 				style={{
 					width: CARD_WIDTH,
 					height: CARD_HEIGHT,
@@ -35,23 +32,23 @@ export function KcisaExhibitionCard({
 			>
 				<ImageFallback
 					heroImageUri={item.thumbnail}
-					className='bg-image-placeholder'
+					className="bg-image-placeholder"
 					style={{ width: CARD_WIDTH, height: CARD_HEIGHT }}
 					iconSize={64}
-					resizeMode='cover'
+					resizeMode="cover"
 				/>
 			</View>
 			<Text
 				numberOfLines={2}
 				style={{ width: CARD_WIDTH }}
-				className='mt-2.5 text-primary text-[13px] leading-[18px] font-pretendard-semibold'
+				className="mt-2.5 text-primary text-[13px] leading-[18px] font-pretendard-semibold"
 			>
 				{item.title}
 			</Text>
 			<Text
 				numberOfLines={1}
 				style={{ width: CARD_WIDTH }}
-				className='text-muted text-[11px] mt-0.5 font-pretendard-regular'
+				className="text-muted text-[11px] mt-0.5 font-pretendard-regular"
 			>
 				{item.venue}
 			</Text>

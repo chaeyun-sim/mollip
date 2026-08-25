@@ -33,27 +33,29 @@ interface ChatHistorySectionProps {
 
 function ChatHistorySection({ title, messages }: ChatHistorySectionProps) {
 	return (
-		<View className='mt-5 px-4'>
-			<Text className='text-xs font-pretendard-semibold text-muted tracking-wider mb-3'>
+		<View className="mt-5 px-4">
+			<Text className="text-xs font-pretendard-semibold text-muted tracking-wider mb-3">
 				채팅 기록
 			</Text>
-			<Text className='text-sm font-pretendard-medium text-tertiary mb-3'>
-				{title}
-			</Text>
-			<View className='gap-y-2'>
+			<Text className="text-sm font-pretendard-medium text-tertiary mb-3">{title}</Text>
+			<View className="gap-y-2">
 				{messages.map((msg) => (
 					<View
 						key={msg.id}
 						className={msg.role === 'user' ? 'items-end' : 'items-start'}
-						accessibilityRole='text'
-						accessibilityLabel={msg.role === 'user' ? `내 질문: ${msg.text}` : `AI 답변: ${msg.text}`}
+						accessibilityRole="text"
+						accessibilityLabel={
+							msg.role === 'user' ? `내 질문: ${msg.text}` : `AI 답변: ${msg.text}`
+						}
 					>
 						<View
-							className={msg.role === 'user'
-								? 'bg-accent rounded-2xl rounded-tr-sm px-4 py-2.5 max-w-[80%]'
-								: 'bg-divider-dark rounded-2xl rounded-tl-sm px-4 py-2.5 max-w-[80%]'}
+							className={
+								msg.role === 'user'
+									? 'bg-accent rounded-2xl rounded-tr-sm px-4 py-2.5 max-w-[80%]'
+									: 'bg-divider-dark rounded-2xl rounded-tl-sm px-4 py-2.5 max-w-[80%]'
+							}
 						>
-							<Text className='font-pretendard-regular text-[14px] leading-[20px] text-white'>
+							<Text className="font-pretendard-regular text-[14px] leading-[20px] text-white">
 								{msg.text}
 							</Text>
 						</View>
@@ -70,9 +72,7 @@ export default function DiaryScreen() {
 
 	const dateKey = useMemo(() => {
 		const raw = typeof params.date === 'string' ? params.date : '';
-		return /^\d{4}-\d{2}-\d{2}$/.test(raw)
-			? raw
-			: new Date().toISOString().slice(0, 10);
+		return /^\d{4}-\d{2}-\d{2}$/.test(raw) ? raw : new Date().toISOString().slice(0, 10);
 	}, [params.date]);
 
 	const dateLabel = useMemo(() => {
@@ -90,9 +90,7 @@ export default function DiaryScreen() {
 	const memoInputRef = useRef<TextInput>(null);
 
 	const visitExhibitionId = visit?.exhibitionId;
-	const { exhibition: visitExhibition } = useExhibitionDetail(
-		visitExhibitionId ?? undefined,
-	);
+	const { exhibition: visitExhibition } = useExhibitionDetail(visitExhibitionId ?? undefined);
 
 	const exhibition = useMemo(
 		() =>
@@ -114,8 +112,7 @@ export default function DiaryScreen() {
 	);
 
 	const listenedTitles = useMemo(() => {
-		if (visit && visit.listened.length > 0)
-			return visit.listened.map((l) => l.title);
+		if (visit && visit.listened.length > 0) return visit.listened.map((l) => l.title);
 		if (playlist.length > 0) return playlist.map((p) => p.title);
 		return exhibition.artworks.slice(0, 3).map((a) => a.title);
 	}, [visit, playlist, exhibition]);
@@ -128,7 +125,8 @@ export default function DiaryScreen() {
 	const dayChatItems = useMemo(
 		() =>
 			historyItems.filter(
-				(item) => item.savedAt.startsWith(dateKey) && item.chatMessages && item.chatMessages.length > 0,
+				(item) =>
+					item.savedAt.startsWith(dateKey) && item.chatMessages && item.chatMessages.length > 0,
 			),
 		[historyItems, dateKey],
 	);
@@ -159,38 +157,39 @@ export default function DiaryScreen() {
 	return (
 		<Screen>
 			<ScreenHeader>
-				<ScreenHeader.Back color='white' onPress={() => router.back()} />
+				<ScreenHeader.Back color="white" onPress={() => router.back()} />
 				<ScreenHeader.Center>
-					<Text className='text-[16px] text-white font-pretendard-semibold'>
-						{dateLabel}
-					</Text>
+					<Text className="text-[16px] text-white font-pretendard-semibold">{dateLabel}</Text>
 				</ScreenHeader.Center>
 				<ScreenHeader.Right>
-					<View className='flex-row items-center gap-4'>
+					<View className="flex-row items-center gap-4">
 						<Pressable
 							onPress={() => setMemoVisible(true)}
 							hitSlop={8}
-							accessibilityLabel='관람 메모 편집'
-							accessibilityRole='button'
+							accessibilityLabel="관람 메모 편집"
+							accessibilityRole="button"
 							style={({ pressed }) => ({ opacity: pressed ? 0.5 : 1 })}
 						>
-							<Ionicons name='pencil-outline' size={20} color='white' />
+							<Ionicons name="pencil-outline" size={20} color="white" />
 						</Pressable>
 						<Pressable
 							onPress={handleDeletePress}
 							hitSlop={8}
-							accessibilityLabel='티켓 삭제'
-							accessibilityRole='button'
+							accessibilityLabel="티켓 삭제"
+							accessibilityRole="button"
 							style={({ pressed }) => ({ opacity: pressed ? 0.5 : 1 })}
 						>
-							<Ionicons name='trash-outline' size={20} color='rgba(255,255,255,0.4)' />
+							<Ionicons name="trash-outline" size={20} color="rgba(255,255,255,0.4)" />
 						</Pressable>
 					</View>
 				</ScreenHeader.Right>
 			</ScreenHeader>
 
-			<ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 40 }}>
-				<View className='pt-4'>
+			<ScrollView
+				showsVerticalScrollIndicator={false}
+				contentContainerStyle={{ paddingBottom: 40 }}
+			>
+				<View className="pt-4">
 					<VisitTicket
 						exhibition={exhibition}
 						listenedTitles={listenedTitles}
@@ -200,11 +199,7 @@ export default function DiaryScreen() {
 					/>
 				</View>
 				{dayChatItems.map((item) => (
-					<ChatHistorySection
-						key={item.id}
-						title={item.title}
-						messages={item.chatMessages!}
-					/>
+					<ChatHistorySection key={item.id} title={item.title} messages={item.chatMessages!} />
 				))}
 			</ScrollView>
 
@@ -212,43 +207,43 @@ export default function DiaryScreen() {
 			<Modal
 				visible={memoVisible}
 				transparent
-				animationType='slide'
+				animationType="slide"
 				onRequestClose={() => setMemoVisible(false)}
 				onShow={() => setTimeout(() => memoInputRef.current?.focus(), 100)}
 			>
 				<KeyboardAvoidingView
 					behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-					className='flex-1'
+					className="flex-1"
 				>
 					<TouchableWithoutFeedback onPress={() => setMemoVisible(false)}>
-						<View className='flex-1' />
+						<View className="flex-1" />
 					</TouchableWithoutFeedback>
-					<View className='bg-primary rounded-t-3xl px-6 pt-5 pb-10'>
-						<View className='flex-row items-center justify-between mb-4'>
-							<Text className='text-white font-pretendard-semibold text-[17px]'>
+					<View className="bg-primary rounded-t-3xl px-6 pt-5 pb-10">
+						<View className="flex-row items-center justify-between mb-4">
+							<Text className="text-white font-pretendard-semibold text-[17px]">
 								나의 관람 메모
 							</Text>
 							<Pressable
 								onPress={() => setMemoVisible(false)}
 								hitSlop={8}
-								accessibilityLabel='닫기'
-								accessibilityRole='button'
+								accessibilityLabel="닫기"
+								accessibilityRole="button"
 								style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
 							>
-								<Ionicons name='checkmark' size={22} color='white' />
+								<Ionicons name="checkmark" size={22} color="white" />
 							</Pressable>
 						</View>
 						<TextInput
 							ref={memoInputRef}
 							value={memo}
 							onChangeText={handleMemoChange}
-							placeholder='오늘 기억하고 싶은 것을 적어보세요'
-							placeholderTextColor='rgba(255,255,255,0.3)'
+							placeholder="오늘 기억하고 싶은 것을 적어보세요"
+							placeholderTextColor="rgba(255,255,255,0.3)"
 							multiline
 							maxLength={400}
-							accessibilityLabel='관람 메모 입력'
-							className='text-white font-pretendard-regular text-[15px] leading-[24px] min-h-[120px]'
-							textAlignVertical='top'
+							accessibilityLabel="관람 메모 입력"
+							className="text-white font-pretendard-regular text-[15px] leading-[24px] min-h-[120px]"
+							textAlignVertical="top"
 						/>
 					</View>
 				</KeyboardAvoidingView>

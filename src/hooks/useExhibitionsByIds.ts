@@ -30,8 +30,8 @@ export function useExhibitionsByIds(ids: string[]) {
 					})),
 				);
 			});
-	// ids 배열 내용이 바뀔 때만 재조회
-	// eslint-disable-next-line react-hooks/exhaustive-deps
+		// ids 배열 내용이 바뀔 때만 재조회
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [ids.join(',')]);
 
 	return items;

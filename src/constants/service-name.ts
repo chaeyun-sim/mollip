@@ -1,1 +1,1 @@
-export const SERVICE_NAME = 'mollip'
+export const SERVICE_NAME = 'mollip';

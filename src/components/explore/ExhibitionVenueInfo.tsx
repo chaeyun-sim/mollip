@@ -34,30 +34,28 @@ export function ExhibitionVenueInfo({
 
 	return (
 		<View className={cn('px-6', hasTopSpacing ? 'pt-8' : 'pt-0')}>
-			<Text className='font-pretendard-semibold text-[18px] text-gray-900 mb-4'>
-				관람 정보
-			</Text>
-			<View className='h-0.5 w-full bg-primary' />
+			<Text className="font-pretendard-semibold text-[18px] text-gray-900 mb-4">관람 정보</Text>
+			<View className="h-0.5 w-full bg-primary" />
 			{venueAddress && (
 				<View
-					className='flex-row items-start justify-between gap-28 py-3'
+					className="flex-row items-start justify-between gap-28 py-3"
 					style={{
 						borderBottomWidth: StyleSheet.hairlineWidth,
 						borderBottomColor: 'rgba(28,25,23,0.15)',
 					}}
 				>
-					<Text className='text-gray-500 text-[12px] font-pretendard-semibold tracking-wider uppercase pt-1'>
+					<Text className="text-gray-500 text-[12px] font-pretendard-semibold tracking-wider uppercase pt-1">
 						위치
 					</Text>
-					<View className='flex-1 flex-row items-center justify-end gap-2'>
-						<Text className='text-primary text-[14px] font-pretendard-regular text-right leading-5 flex-1'>
+					<View className="flex-1 flex-row items-center justify-end gap-2">
+						<Text className="text-primary text-[14px] font-pretendard-regular text-right leading-5 flex-1">
 							{venueAddress}
 						</Text>
 						<Pressable
 							onPress={handleCopyAddress}
 							hitSlop={8}
-							accessibilityLabel='주소 복사'
-							accessibilityRole='button'
+							accessibilityLabel="주소 복사"
+							accessibilityRole="button"
 							style={({ pressed }) => ({ opacity: pressed ? 0.5 : 1 })}
 						>
 							<Ionicons
@@ -69,17 +67,13 @@ export function ExhibitionVenueInfo({
 					</View>
 				</View>
 			)}
-			{eventSite && (
-				<ExhibitionInfoRow label='전시 공간'>{eventSite}</ExhibitionInfoRow>
-			)}
-			<ExhibitionInfoRow label='전화번호'>
-				{phone ?? '정보 없음'}
-			</ExhibitionInfoRow>
-			<ExhibitionInfoRow label='운영시간'>{openHours}</ExhibitionInfoRow>
-			<ExhibitionInfoRow label='관람료' isLast>
+			{eventSite && <ExhibitionInfoRow label="전시 공간">{eventSite}</ExhibitionInfoRow>}
+			<ExhibitionInfoRow label="전화번호">{phone ?? '정보 없음'}</ExhibitionInfoRow>
+			<ExhibitionInfoRow label="운영시간">{openHours}</ExhibitionInfoRow>
+			<ExhibitionInfoRow label="관람료" isLast>
 				{admission.replaceAll(' / ', '\n')}
 			</ExhibitionInfoRow>
-			<View className='h-0.5 w-full bg-primary' />
+			<View className="h-0.5 w-full bg-primary" />
 		</View>
 	);
 }

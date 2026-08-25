@@ -5,7 +5,10 @@ export function formatMuseumOpenHours(openHours: string | null, _rstdeInfo: stri
 	return hours;
 }
 
-export function formatMuseumClosedDays(rstdeInfo: string | null, holiday: string | null): string | undefined {
+export function formatMuseumClosedDays(
+	rstdeInfo: string | null,
+	holiday: string | null,
+): string | undefined {
 	const rest = rstdeInfo?.trim() || holiday?.trim();
 	if (!rest || rest === '없음' || rest === '-') return undefined;
 	return rest;

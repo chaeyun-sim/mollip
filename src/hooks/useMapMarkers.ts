@@ -39,9 +39,7 @@ export function useMapMarkers({
 			const routePinNames = new Set<string>();
 			if (routeOriginName) routePinNames.add(routeOriginName);
 			if (destinationName) routePinNames.add(destinationName);
-			const routeVenues = [...mapVenues, ...dbVenues].filter((v) =>
-				routePinNames.has(v.venueName),
-			);
+			const routeVenues = [...mapVenues, ...dbVenues].filter((v) => routePinNames.has(v.venueName));
 			// 중복 제거
 			const seen = new Set<string>();
 			return routeVenues.filter((v) => {
@@ -53,9 +51,7 @@ export function useMapMarkers({
 
 		if (pinNames.size === 0) return mapVenues;
 		const missing = dbVenues.filter(
-			(v) =>
-				pinNames.has(v.venueName) &&
-				!mapVenues.some((m) => m.venueName === v.venueName),
+			(v) => pinNames.has(v.venueName) && !mapVenues.some((m) => m.venueName === v.venueName),
 		);
 		return missing.length > 0 ? [...mapVenues, ...missing] : mapVenues;
 	}, [
@@ -70,13 +66,7 @@ export function useMapMarkers({
 
 	const { full: fullMarkerVenues, dots: dotVenues } = useMemo(
 		() =>
-			declutterMarkers(
-				markerVenues,
-				displayZoom,
-				selectedVenueName,
-				filterDate,
-				pinnedVenueName,
-			),
+			declutterMarkers(markerVenues, displayZoom, selectedVenueName, filterDate, pinnedVenueName),
 		[markerVenues, displayZoom, selectedVenueName, filterDate, pinnedVenueName],
 	);
 

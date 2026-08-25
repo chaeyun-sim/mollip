@@ -69,7 +69,11 @@
 		"@react-native-community/cli": "^20.2.0",
 		"@types/react": "~19.2.2",
 		"@types/tinycolor2": "^1.4.6",
+		"eslint": "^9.0.0",
+		"eslint-config-expo": "~56.0.4",
+		"eslint-config-prettier": "^10.1.8",
 		"husky": "^9.1.7",
+		"prettier": "^3.9.6",
 		"typescript": "~6.0.3"
 	},
 	"scripts": {
@@ -81,7 +85,11 @@
 		"e2e": "maestro test e2e/",
 		"e2e:single": "maestro test",
 		"gen:types": "supabase gen types typescript --project-id khlvoawqxhloepbcfvio --schema public > src/types/database.types.ts",
-		"prepare": "husky"
+		"prepare": "husky",
+		"lint": "expo lint",
+		"lint:fix": "expo lint --fix",
+		"format": "prettier --write .",
+		"format:check": "prettier --check ."
 	},
 	"jest": {
 		"preset": "jest-expo",

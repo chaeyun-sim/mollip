@@ -33,28 +33,27 @@ export function ExhibitionCard({ ex, status, onPress }: ExhibitionCardProps) {
 				scale.value = withSpring(1, { damping: 15 });
 			}}
 			onPress={() => onPress(ex.id)}
-			accessibilityRole='button'
+			accessibilityRole="button"
 			accessibilityLabel={`${ex.title}, ${statusLabel}, ${ex.startDate}부터 ${ex.endDate}까지`}
 		>
 			<Animated.View
 				style={animatedStyle}
-				className='flex-row gap-3 rounded-2xl overflow-hidden bg-black/[0.03] p-2.5'
+				className="flex-row gap-3 rounded-2xl overflow-hidden bg-black/[0.03] p-2.5"
 			>
 				{/* 갤러리 엽서처럼 — 원본 비율을 자르지 않고 정사각 마운트 안에 담는다 */}
 				<ImageFallback
 					heroImageUri={ex.heroImageUri}
 					posterImage={ex.posterImage}
-					className='rounded-xl w-[88px] h-[88px]'
+					className="rounded-xl w-[88px] h-[88px]"
 					iconSize={44}
-					resizeMode='cover'
+					resizeMode="cover"
 				/>
-				<View className='flex-1 justify-center gap-1.5'>
-					<View className='flex-row items-center gap-1.5'>
+				<View className="flex-1 justify-center gap-1.5">
+					<View className="flex-row items-center gap-1.5">
 						<View
-							className='w-[5px] h-[5px] rounded-full'
+							className="w-[5px] h-[5px] rounded-full"
 							style={{
-								backgroundColor:
-									status === 'active' ? ex.posterColor : 'rgba(0,0,0,0.35)',
+								backgroundColor: status === 'active' ? ex.posterColor : 'rgba(0,0,0,0.35)',
 							}}
 						/>
 						<Text
@@ -67,12 +66,12 @@ export function ExhibitionCard({ ex, status, onPress }: ExhibitionCardProps) {
 						</Text>
 					</View>
 					<Text
-						className='text-black text-[14px] font-pretendard-semibold leading-snug'
+						className="text-black text-[14px] font-pretendard-semibold leading-snug"
 						numberOfLines={2}
 					>
 						{ex.title}
 					</Text>
-					<Text className='text-black/55 text-[11px] font-pretendard-regular'>
+					<Text className="text-black/55 text-[11px] font-pretendard-regular">
 						{ex.startDate} – {ex.endDate}
 					</Text>
 				</View>

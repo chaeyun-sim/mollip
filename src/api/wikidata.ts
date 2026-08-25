@@ -11,9 +11,16 @@ interface RawArtwork extends WikiArtwork {
 	creatorId?: string;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+ 
 type EntityClaims = Record<string, any[]>;
-type EntityMap = Record<string, { labels?: Record<string, { value: string }>; descriptions?: Record<string, { value: string }>; claims?: EntityClaims }>;
+type EntityMap = Record<
+	string,
+	{
+		labels?: Record<string, { value: string }>;
+		descriptions?: Record<string, { value: string }>;
+		claims?: EntityClaims;
+	}
+>;
 
 const SEARCH_URL = 'https://www.wikidata.org/w/api.php';
 
@@ -62,30 +69,30 @@ async function fetchEntities(ids: string[]): Promise<EntityMap> {
 
 // P31 (instance of) Q값 중 시각 미술 작품에 해당하는 것들
 const ARTWORK_TYPES = new Set([
-	'Q3305213',  // painting (회화)
-	'Q93184',    // drawing (드로잉)
-	'Q4502142',  // visual artwork (시각 예술 작품)
-	'Q179700',   // statue (조각상)
-	'Q860861',   // sculpture (조각)
-	'Q4604490',  // visual art work
-	'Q838948',   // work of art (예술 작품)
+	'Q3305213', // painting (회화)
+	'Q93184', // drawing (드로잉)
+	'Q4502142', // visual artwork (시각 예술 작품)
+	'Q179700', // statue (조각상)
+	'Q860861', // sculpture (조각)
+	'Q4604490', // visual art work
+	'Q838948', // work of art (예술 작품)
 	'Q15709879', // artwork
 	'Q18593264', // installation art (설치 미술)
-	'Q1980247',  // etching (에칭)
+	'Q1980247', // etching (에칭)
 	'Q11835431', // watercolor painting (수채화)
-	'Q7184903',  // pastel (파스텔화)
+	'Q7184903', // pastel (파스텔화)
 ]);
 
 // P106 (occupation) Q값 중 시각 예술가에 해당하는 것들
 const ARTIST_OCCUPATIONS = new Set([
-	'Q1028181',  // painter (화가)
-	'Q1281618',  // sculptor (조각가)
+	'Q1028181', // painter (화가)
+	'Q1281618', // sculptor (조각가)
 	'Q15296811', // draughtsman (소묘가)
-	'Q483501',   // artist (예술가)
-	'Q3391743',  // visual artist (시각 예술가)
-	'Q1925963',  // graphic artist (그래픽 아티스트)
-	'Q1408969',  // printmaker (판화가)
-	'Q5322166',  // illustrator (일러스트레이터)
+	'Q483501', // artist (예술가)
+	'Q3391743', // visual artist (시각 예술가)
+	'Q1925963', // graphic artist (그래픽 아티스트)
+	'Q1408969', // printmaker (판화가)
+	'Q5322166', // illustrator (일러스트레이터)
 ]);
 
 function isArtwork(claims: EntityClaims): boolean {
@@ -117,9 +124,7 @@ function parseArtwork(id: string, e: EntityMap[string]): RawArtwork | null {
 	const imageClaim = e.claims?.P18?.[0]?.mainsnak?.datavalue?.value;
 	const imageUrl = imageClaim ? commonsImageUrl(imageClaim) : undefined;
 	const yearClaim = e.claims?.P571?.[0]?.mainsnak?.datavalue?.value?.time;
-	const year = yearClaim
-		? String(Math.abs(parseInt(yearClaim.slice(1, 5), 10)))
-		: undefined;
+	const year = yearClaim ? String(Math.abs(parseInt(yearClaim.slice(1, 5), 10))) : undefined;
 	// P170 (creator) — 별도 배치로 조회해 이름을 붙인다 (searchWikiArtworks 참고)
 	const creatorId: string | undefined = e.claims?.P170?.[0]?.mainsnak?.datavalue?.value?.id;
 	return { qId: id, label, description, imageUrl, year, creatorId };
@@ -148,7 +153,10 @@ export async function searchWikiArtworks(query: string): Promise<WikiArtwork[]> 
 		} else if (isArtist(claims)) {
 			// P800 = notable work
 			const p800 = (claims.P800 ?? [])
-				.map((c: { mainsnak?: { datavalue?: { value?: { id?: string } } } }) => c?.mainsnak?.datavalue?.value?.id)
+				.map(
+					(c: { mainsnak?: { datavalue?: { value?: { id?: string } } } }) =>
+						c?.mainsnak?.datavalue?.value?.id,
+				)
 				.filter(Boolean)
 				.slice(0, 15) as string[];
 			for (const workId of p800) notableWorkArtistId.set(workId, id);

@@ -28,7 +28,7 @@ export async function scheduleDeadlineNotifications(
 	const now = new Date();
 	const ids: string[] = [];
 
-	const triggers: Array<{ daysLeft: number; body: string }> = [
+	const triggers: { daysLeft: number; body: string }[] = [
 		{ daysLeft: 7, body: '북마크한 전시가 7일 후 마감이에요' },
 		{ daysLeft: 2, body: '북마크한 전시가 이틀 후 마감이에요' },
 	];

@@ -66,15 +66,10 @@ export default function RootLayout() {
 
 	// 알림 탭 딥링크 처리
 	useEffect(() => {
-		let sub: ReturnType<
-			typeof Notifications.addNotificationResponseReceivedListener
-		>;
+		let sub: ReturnType<typeof Notifications.addNotificationResponseReceivedListener>;
 		try {
 			sub = Notifications.addNotificationResponseReceivedListener((response) => {
-				const data = response.notification.request.content.data as Record<
-					string,
-					unknown
-				>;
+				const data = response.notification.request.content.data as Record<string, unknown>;
 				const id = data?.exhibitionId;
 				if (typeof id === 'string' && id) {
 					router.push(`/(explore)/${id}`);
@@ -120,20 +115,20 @@ export default function RootLayout() {
 				<QueryClientProvider client={queryClient}>
 					<BottomSheetModalProvider>
 						<Stack screenOptions={{ headerShown: false }}>
-							<Stack.Screen name='(tabs)' options={{ headerShown: false }} />
+							<Stack.Screen name="(tabs)" options={{ headerShown: false }} />
 							<Stack.Screen
-								name='(guide)'
+								name="(guide)"
 								options={{ headerShown: false, gestureEnabled: !isImmersive }}
 							/>
-							<Stack.Screen name='(explore)' options={{ headerShown: false }} />
-							<Stack.Screen name='auth' options={{ headerShown: false }} />
-							<Stack.Screen name='diary/[date]' options={{ headerShown: false }} />
+							<Stack.Screen name="(explore)" options={{ headerShown: false }} />
+							<Stack.Screen name="auth" options={{ headerShown: false }} />
+							<Stack.Screen name="diary/[date]" options={{ headerShown: false }} />
 							<Stack.Screen
-								name='onboarding'
+								name="onboarding"
 								options={{ headerShown: false, gestureEnabled: false }}
 							/>
 							<Stack.Screen
-								name='onboarding/location'
+								name="onboarding/location"
 								options={{ headerShown: false, gestureEnabled: false }}
 							/>
 						</Stack>

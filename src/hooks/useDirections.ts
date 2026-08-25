@@ -1,5 +1,10 @@
 import { useCallback, useRef, useState } from 'react';
-import { getTransitRoutes, getWalkingRoute, type RouteCoord, type RouteResult } from '@/src/api/tmap';
+import {
+	getTransitRoutes,
+	getWalkingRoute,
+	type RouteCoord,
+	type RouteResult,
+} from '@/src/api/tmap';
 
 export type DirectionsMode = 'walk' | 'bus';
 export type DirectionsStatus = 'idle' | 'planning' | 'loading' | 'success' | 'error';
@@ -47,12 +52,7 @@ export function useDirections() {
 				}
 				setStatus('loading');
 				try {
-					const result = await getWalkingRoute(
-						start.coord,
-						end.coord,
-						start.name,
-						end.name,
-					);
+					const result = await getWalkingRoute(start.coord, end.coord, start.name, end.name);
 					if (!result || result.legs.length === 0) {
 						setWalkRoute(null);
 						setStatus('error');
@@ -93,17 +93,14 @@ export function useDirections() {
 		[],
 	);
 
-	const beginPlanning = useCallback(
-		(end: RouteEndpoint, defaultStart: RouteEndpoint | null) => {
-			setDestination(end);
-			setOrigin(defaultStart);
-			setWalkRoute(null);
-			setRoutes([]);
-			setSelectedRouteIndex(0);
-			setStatus('planning');
-		},
-		[],
-	);
+	const beginPlanning = useCallback((end: RouteEndpoint, defaultStart: RouteEndpoint | null) => {
+		setDestination(end);
+		setOrigin(defaultStart);
+		setWalkRoute(null);
+		setRoutes([]);
+		setSelectedRouteIndex(0);
+		setStatus('planning');
+	}, []);
 
 	const confirmRoute = useCallback(
 		(requestedMode: DirectionsMode = 'walk') => {
@@ -151,4 +148,4 @@ export function useDirections() {
 		selectRoute,
 		clearRoute,
 	};
-};
+}

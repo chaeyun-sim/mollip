@@ -26,12 +26,7 @@ const EDGE_SIZE = 150;
 /** explore 상세 화면 위에 라이트하게 덧입는 모달 — 다른 라우트로 이동하지 않고, 화면
  * 테두리만 서서히 어두워지는 비네트 + 옅은 black/5 스크림을 깐 다음 중앙에 전시 제목이
  * 천천히 fade-in 된다. 닫을 때는 역순(제목 fade-out → 비네트/스크림 fade-out). */
-export function ImmersiveOverlay({
-	visible,
-	title,
-	onStart,
-	onClose,
-}: ImmersiveOverlayProps) {
+export function ImmersiveOverlay({ visible, title, onStart, onClose }: ImmersiveOverlayProps) {
 	const insets = useSafeAreaInsets();
 	const [mounted, setMounted] = useState(visible);
 	const scrimOpacity = useSharedValue(0);
@@ -93,33 +88,20 @@ export function ImmersiveOverlay({
 	if (!mounted) return null;
 
 	return (
-		<View
-			style={StyleSheet.absoluteFill}
-			pointerEvents={visible ? 'auto' : 'none'}
-		>
+		<View style={StyleSheet.absoluteFill} pointerEvents={visible ? 'auto' : 'none'}>
 			{/* 배경 전체 — black/60 스크림, explore 화면이 어둡게 비쳐 보인다 */}
 			<Animated.View
-				style={[
-					StyleSheet.absoluteFill,
-					{ backgroundColor: 'rgba(0,0,0,0.6)' },
-					scrimStyle,
-				]}
+				style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(0,0,0,0.6)' }, scrimStyle]}
 			/>
 
 			{/* 테두리 비네트 — 네 변만 살짝 더 어둡게 */}
-			<Animated.View style={[styles.edgeTop, scrimStyle]} pointerEvents='none'>
-				<LinearGradient
-					colors={['rgba(0,0,0,0.8)', 'transparent']}
-					style={{ flex: 1 }}
-				/>
+			<Animated.View style={[styles.edgeTop, scrimStyle]} pointerEvents="none">
+				<LinearGradient colors={['rgba(0,0,0,0.8)', 'transparent']} style={{ flex: 1 }} />
 			</Animated.View>
-			<Animated.View style={[styles.edgeBottom, scrimStyle]} pointerEvents='none'>
-				<LinearGradient
-					colors={['transparent', 'rgba(0,0,0,0.8)']}
-					style={{ flex: 1 }}
-				/>
+			<Animated.View style={[styles.edgeBottom, scrimStyle]} pointerEvents="none">
+				<LinearGradient colors={['transparent', 'rgba(0,0,0,0.8)']} style={{ flex: 1 }} />
 			</Animated.View>
-			<Animated.View style={[styles.edgeLeft, scrimStyle]} pointerEvents='none'>
+			<Animated.View style={[styles.edgeLeft, scrimStyle]} pointerEvents="none">
 				<LinearGradient
 					colors={['rgba(0,0,0,0.8)', 'transparent']}
 					start={{ x: 0, y: 0 }}
@@ -127,7 +109,7 @@ export function ImmersiveOverlay({
 					style={{ flex: 1 }}
 				/>
 			</Animated.View>
-			<Animated.View style={[styles.edgeRight, scrimStyle]} pointerEvents='none'>
+			<Animated.View style={[styles.edgeRight, scrimStyle]} pointerEvents="none">
 				<LinearGradient
 					colors={['transparent', 'rgba(0,0,0,0.8)']}
 					start={{ x: 0, y: 0 }}
@@ -137,13 +119,10 @@ export function ImmersiveOverlay({
 			</Animated.View>
 
 			{/* 중앙 전시 제목 + 시작하기 */}
-			<View
-				className='flex-1 items-center justify-center px-10'
-				pointerEvents='box-none'
-			>
-				<Animated.View style={titleStyle} className='items-center'>
+			<View className="flex-1 items-center justify-center px-10" pointerEvents="box-none">
+				<Animated.View style={titleStyle} className="items-center">
 					<Text
-						className='text-white font-hahmlet-bold text-center text-[30px] leading-snug'
+						className="text-white font-hahmlet-bold text-center text-[30px] leading-snug"
 						numberOfLines={3}
 						style={{
 							textShadowColor: 'rgba(0,0,0,0.55)',
@@ -155,11 +134,11 @@ export function ImmersiveOverlay({
 					</Text>
 					<Pressable
 						onPress={handleStartPress}
-						className='mt-8 rounded-full px-6 py-3 bg-white/15 border-[1.5px] border-white/35'
-						accessibilityRole='button'
-						accessibilityLabel='시작하기'
+						className="mt-8 rounded-full px-6 py-3 bg-white/15 border-[1.5px] border-white/35"
+						accessibilityRole="button"
+						accessibilityLabel="시작하기"
 					>
-						<Text className='text-white font-pretendard-semibold text-[15px]'>
+						<Text className="text-white font-pretendard-semibold text-[15px]">
 							셀프 가이드 시작하기
 						</Text>
 					</Pressable>
@@ -167,31 +146,22 @@ export function ImmersiveOverlay({
 			</View>
 
 			{/* 닫기 버튼 */}
-			<Animated.View
-				style={[
-					{ position: 'absolute', left: 20, top: insets.top + 16 },
-					titleStyle,
-				]}
-			>
+			<Animated.View style={[{ position: 'absolute', left: 20, top: insets.top + 16 }, titleStyle]}>
 				<Pressable
 					onPress={onClose}
 					hitSlop={8}
-					className='w-9 h-9 rounded-full items-center justify-center bg-white/10'
-					accessibilityRole='button'
-					accessibilityLabel='닫기'
+					className="w-9 h-9 rounded-full items-center justify-center bg-white/10"
+					accessibilityRole="button"
+					accessibilityLabel="닫기"
 				>
-					<Ionicons name='close' size={18} color='rgba(255,255,255,0.85)' />
+					<Ionicons name="close" size={18} color="rgba(255,255,255,0.85)" />
 				</Pressable>
 			</Animated.View>
 
 			{/* 시작하기 전환 — 배경 전체를 검은색으로 fade */}
 			<Animated.View
-				style={[
-					StyleSheet.absoluteFill,
-					{ backgroundColor: '#000' },
-					blackoutStyle,
-				]}
-				pointerEvents='none'
+				style={[StyleSheet.absoluteFill, { backgroundColor: '#000' }, blackoutStyle]}
+				pointerEvents="none"
 			/>
 		</View>
 	);

@@ -28,14 +28,14 @@ export function useMapFilter(
 		debounceTimer.current = setTimeout(() => setSearchText(text), DEBOUNCE_MS);
 	}, []);
 
-	useEffect(() => () => {
-		if (debounceTimer.current) clearTimeout(debounceTimer.current);
-	}, []);
-
-	const allVenues = useMemo(
-		() => [...venueGroups, ...extraVenues],
-		[extraVenues],
+	useEffect(
+		() => () => {
+			if (debounceTimer.current) clearTimeout(debounceTimer.current);
+		},
+		[],
 	);
+
+	const allVenues = useMemo(() => [...venueGroups, ...extraVenues], [extraVenues]);
 
 	const mapVenues = useMemo(() => {
 		if (!searchText) return allVenues;
@@ -62,7 +62,7 @@ export function useMapFilter(
 	}, []);
 
 	return {
-		searchText: inputText,      // 입력창에 즉시 반영
+		searchText: inputText, // 입력창에 즉시 반영
 		setSearchText: handleInputChange,
 		activeFilters,
 		filterDate,

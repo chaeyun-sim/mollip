@@ -2,7 +2,9 @@ import * as Location from 'expo-location';
 import { useEffect, useState } from 'react';
 
 export function useUserLocation() {
-	const [currentCoord, setCurrentCoord] = useState<{ latitude: number; longitude: number } | null>(null);
+	const [currentCoord, setCurrentCoord] = useState<{ latitude: number; longitude: number } | null>(
+		null,
+	);
 
 	useEffect(() => {
 		(async () => {

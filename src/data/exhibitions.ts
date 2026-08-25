@@ -92,7 +92,9 @@ export interface Exhibition {
 // 전시 본문은 Supabase exhibitions(kcisa/culture/manual)에서 조회한다.
 export const EXHIBITIONS: Exhibition[] = [];
 
-export function getArtwork(artworkId: string): { artwork: Artwork; exhibition: Exhibition } | undefined {
+export function getArtwork(
+	artworkId: string,
+): { artwork: Artwork; exhibition: Exhibition } | undefined {
 	for (const exhibition of EXHIBITIONS) {
 		const artwork = exhibition.artworks.find((a) => a.id === artworkId);
 		if (artwork) return { artwork, exhibition };

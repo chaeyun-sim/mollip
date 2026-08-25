@@ -32,7 +32,7 @@ export function Chip({
 		<Pressable
 			onPress={onPress}
 			accessibilityLabel={accessibilityLabel ?? `${label} 필터`}
-			accessibilityRole='button'
+			accessibilityRole="button"
 			accessibilityState={{ selected: active }}
 			className={cn(
 				'flex-row items-center gap-1 rounded-full px-3.5 py-2',
@@ -51,16 +51,14 @@ export function Chip({
 				{ opacity: pressed ? 0.7 : 1 },
 			]}
 		>
-			{active && !icon && <Ionicons name='checkmark' size={13} color='#FFFFFF' />}
+			{active && !icon && <Ionicons name="checkmark" size={13} color="#FFFFFF" />}
 			{icon && (
 				<Ionicons name={icon} size={13} className={cn(active ? 'text-white' : 'text-secondary')} />
 			)}
 			<Text
 				className={cn(
 					'text-[13px]',
-					active
-						? 'text-white font-pretendard-semibold'
-						: 'text-secondary font-pretendard-medium',
+					active ? 'text-white font-pretendard-semibold' : 'text-secondary font-pretendard-medium',
 				)}
 			>
 				{label}

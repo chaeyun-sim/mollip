@@ -60,9 +60,7 @@ export const useChatStore = create<ChatStore>((set, get) => ({
 			})),
 		),
 	pushHistory: (sessionId, entry) =>
-		set((s) =>
-			patch(s.sessions, sessionId, (c) => ({ history: [...c.history, entry] })),
-		),
+		set((s) => patch(s.sessions, sessionId, (c) => ({ history: [...c.history, entry] }))),
 	removeMessage: (sessionId, id) =>
 		set((s) =>
 			patch(s.sessions, sessionId, (c) => ({
@@ -70,9 +68,7 @@ export const useChatStore = create<ChatStore>((set, get) => ({
 			})),
 		),
 	popHistory: (sessionId) =>
-		set((s) =>
-			patch(s.sessions, sessionId, (c) => ({ history: c.history.slice(0, -1) })),
-		),
+		set((s) => patch(s.sessions, sessionId, (c) => ({ history: c.history.slice(0, -1) }))),
 	flushSession: (sessionId) =>
 		set((s) => {
 			const sessions = { ...s.sessions };
