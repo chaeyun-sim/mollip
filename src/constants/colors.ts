@@ -25,7 +25,3 @@ export const colors = {
 	errorAlt: '#F43F5E',
 	success: '#00BC7D',
 } as const;
-
-// F0EDE7 1
-// FF2D78 1
-// E8E4DC 1
