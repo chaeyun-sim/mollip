@@ -1,16 +1,19 @@
-import { Redirect, useRouter } from 'expo-router';
-import { useEffect, useState } from 'react';
-import { ActivityIndicator, ScrollView, Switch, View } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import * as Haptics from 'expo-haptics';
+import { useRouter } from 'expo-router';
+import { ActivityIndicator, Pressable, ScrollView, Switch, Text, View } from 'react-native';
 import { useAuthStore } from '@/src/store/authStore';
 import { Screen } from '@/src/components/layout/Screen';
-import { CardRow, PillSelector, SectionLabel, SettingsCard } from '@/src/components/mypage';
-import type { Voice } from '@/src/hooks/useTTS';
-import { useSettingsStore } from '@/src/store/settingsStore';
-import { fetchVoices } from '@/src/utils/api';
+import { CardRow, PillSelector, SettingsCard } from '@/src/components/mypage';
 import { APP_VERSION, FONT_SIZE_OPTIONS, SCRAP_TILES, SPEED_OPTIONS } from '@/src/data/mypage';
 import { colors } from '@/src/constants/colors';
+import { useSettingsStore } from '@/src/store/settingsStore';
+import { LoginRequiredPressable } from '@/src/components/auth/LoginRequiredPressable';
+import { useEffect, useState } from 'react';
+import { fetchVoices } from '@/src/utils/api';
+import type { Voice } from '@/src/hooks/useTTS';
 
-export default function SettingsScreen() {
+export default function MyPageScreen() {
 	const router = useRouter();
 	const session = useAuthStore((s) => s.session);
 	const authLoading = useAuthStore((s) => s.isLoading);
@@ -22,9 +25,8 @@ export default function SettingsScreen() {
 		setFontSize,
 		pushNotificationsEnabled,
 		setPushNotificationsEnabled,
-		highContrast,
-		setHighContrast,
 	} = useSettingsStore();
+
 	const [currentVoiceName, setCurrentVoiceName] = useState<string>('');
 
 	useEffect(() => {
@@ -37,129 +39,127 @@ export default function SettingsScreen() {
 	}, [voiceId]);
 
 	if (authLoading) return <ActivityIndicator style={{ flex: 1 }} />;
-	if (!session) return <Redirect href="/auth/login" />;
 
 	return (
 		<Screen variant="warm">
 			<Screen.Header>
 				<Screen.Header.Back />
+				<Screen.Header.Center>마이페이지</Screen.Header.Center>
+				<Screen.Header.Right>
+					<LoginRequiredPressable
+						onPress={() => router.push('/settings/general')}
+						hitSlop={8}
+						accessibilityRole="button"
+						accessibilityLabel="설정"
+						style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
+					>
+						<Ionicons name="settings-outline" size={22} className="text-primary" />
+					</LoginRequiredPressable>
+				</Screen.Header.Right>
 			</Screen.Header>
 
 			<ScrollView
 				showsVerticalScrollIndicator={false}
 				contentContainerStyle={{ paddingBottom: 60 }}
 			>
-				<View className="w-full gap-6">
-					{/* 계정 */}
-					<View className="mt-4 gap-2">
-						<SectionLabel>계정</SectionLabel>
-						<SettingsCard>
-							<CardRow
-								icon="person-outline"
-								label="계정 정보"
-								onPress={() => router.push('/settings/account')}
-							/>
-							<CardRow
-								icon="heart-outline"
-								label="내 취향 수정"
-								onPress={() => router.push('/settings/preferences')}
-								last
-							/>
-						</SettingsCard>
-					</View>
+				<View className="w-full">
+					{/* 로그인 유도 */}
+					{!session && (
+						<View>
+							<Pressable
+								onPress={() => {
+									Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+									router.push({ pathname: '/auth/login', params: { returnTo: '/settings' } });
+								}}
+								accessibilityRole="button"
+								accessibilityLabel="로그인하기"
+								className="mt-4"
+								style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
+							>
+								<Text className="font-pretendard-bold text-primary text-[18px] mb-1.5">
+									로그인하고 더 많은 기능을 만나보세요
+								</Text>
+								<Text className="font-pretendard-regular text-tertiary text-[13px] leading-[19px] mb-4">
+									{`몰입모드, 나만의 해설 생성, 취향 기반 추천까지\n로그인하면 모두 이용할 수 있어요`}
+								</Text>
+								<View className="self-start rounded-full bg-primary px-5 py-2.5">
+									<Text className="font-pretendard-semibold text-white text-[13px]">
+										로그인하기
+									</Text>
+								</View>
+							</Pressable>
+							<View className="h-2.5 bg-bg-tonal mt-8" style={{ marginHorizontal: -24 }} />
+						</View>
+					)}
 
-					{/* 스크랩 */}
-					<View className="gap-2">
-						<SectionLabel>스크랩</SectionLabel>
+					<View className={session ? 'mt-4' : 'mt-6'}>
 						<SettingsCard>
-							{SCRAP_TILES.map((tile, idx) => (
+							{(session ? SCRAP_TILES : SCRAP_TILES.slice(0, 1)).map((tile) => (
 								<CardRow
 									key={tile.key}
-									icon={tile.icon}
 									label={tile.label}
 									onPress={() => router.push(tile.route)}
-									last={idx === SCRAP_TILES.length - 1}
 								/>
 							))}
 						</SettingsCard>
 					</View>
 
-					{/* 해설 생성 설정 */}
-					<View className="gap-2">
-						<SectionLabel>해설 생성 설정</SectionLabel>
-						<SettingsCard>
-							<CardRow icon="speedometer-outline" label="재생 속도" className="py-3.5">
-								<PillSelector options={SPEED_OPTIONS} value={voiceSpeed} onChange={setVoiceSpeed} />
-							</CardRow>
-							<CardRow
-								icon="mic-outline"
-								label="음성 선택"
-								value={currentVoiceName ? currentVoiceName.split(' - ')[0] : undefined}
-								onPress={() => router.push('/settings/voice')}
-							/>
-							<CardRow
-								icon="sparkles-outline"
-								label="해설 강화 항목"
-								onPress={() => router.push('/settings/description')}
-							/>
-							<CardRow icon="text-outline" label="텍스트 크기" last className="py-3.5">
-								<PillSelector options={FONT_SIZE_OPTIONS} value={fontSize} onChange={setFontSize} />
-							</CardRow>
-						</SettingsCard>
-					</View>
+					<View className="h-[1px] w-full bg-muted/30 my-3" />
 
-					{/* 알림 */}
-					<View className="gap-2">
-						<SectionLabel>알림</SectionLabel>
+					{session && (
+						<View>
+							<SettingsCard>
+								<CardRow label="재생 속도" className="py-3.5">
+									<PillSelector
+										options={SPEED_OPTIONS}
+										value={voiceSpeed}
+										onChange={setVoiceSpeed}
+									/>
+								</CardRow>
+								<CardRow
+									label="음성 선택"
+									value={currentVoiceName ? currentVoiceName.split(' - ')[0] : undefined}
+									onPress={() => router.push('/settings/voice')}
+								/>
+								<CardRow
+									label="해설 강화 항목"
+									onPress={() => router.push('/settings/description')}
+								/>
+								<CardRow label="텍스트 크기" className="py-3.5">
+									<PillSelector
+										options={FONT_SIZE_OPTIONS}
+										value={fontSize}
+										onChange={setFontSize}
+									/>
+								</CardRow>
+							</SettingsCard>
+						</View>
+					)}
+
+					<View className="h-[1px] w-full bg-muted/30 my-3" />
+
+					<View className="relative">
 						<SettingsCard>
-							<CardRow icon="notifications-outline" label="푸시 알림" last className="py-3.5">
+							<CardRow label="푸시 알림" className="py-3">
 								<Switch
 									value={pushNotificationsEnabled}
 									onValueChange={setPushNotificationsEnabled}
 									trackColor={{ false: colors.border, true: colors.primary }}
 									thumbColor="#FFFFFF"
 									ios_backgroundColor={colors.border}
-									style={{ transform: [{ scaleX: 0.8 }, { scaleY: 0.8 }] }}
+									style={{ transform: [{ scaleX: 0.75 }, { scaleY: 0.75 }] }}
+									className="absolute -right-1 top-2"
 								/>
 							</CardRow>
 						</SettingsCard>
 					</View>
 
-					{/* 접근성 */}
-					<View className="gap-2">
-						<SectionLabel>고대비 모드</SectionLabel>
-						<SettingsCard>
-							<CardRow icon="accessibility-outline" label="몰입모드" last className="py-3.5">
-								<Switch
-									value={highContrast}
-									onValueChange={setHighContrast}
-									trackColor={{ false: colors.border, true: colors.primary }}
-									thumbColor="#FFFFFF"
-									ios_backgroundColor={colors.border}
-									style={{ transform: [{ scaleX: 0.8 }, { scaleY: 0.8 }] }}
-								/>
-							</CardRow>
-						</SettingsCard>
-					</View>
+					<View className="h-[1px] w-full bg-muted/30 my-3" />
 
-					{/* 지원 */}
-					<View className="gap-2">
-						<SectionLabel>지원</SectionLabel>
+					<View>
 						<SettingsCard>
-							<CardRow
-								icon="chatbubble-ellipses-outline"
-								label="문의하기"
-								onPress={() => router.push('/settings/inquiry')}
-								last
-							/>
-						</SettingsCard>
-					</View>
-
-					{/* 앱 정보 */}
-					<View className="gap-2">
-						<SectionLabel>앱 정보</SectionLabel>
-						<SettingsCard>
-							<CardRow icon="information-circle-outline" label="버전" value={APP_VERSION} last />
+							<CardRow label="의견 보내기" onPress={() => router.push('/settings/inquiry')} />
+							<CardRow label="버전" value={APP_VERSION} />
 						</SettingsCard>
 					</View>
 				</View>

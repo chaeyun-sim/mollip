@@ -8,7 +8,7 @@ interface SettingsCardProps {
 export function SettingsCard({ children }: SettingsCardProps) {
 	return (
 		<View
-			className="bg-white rounded-2xl overflow-hidden"
+			className="overflow-hidden"
 			style={{
 				shadowColor: colors.primary,
 				shadowOpacity: 0.06,

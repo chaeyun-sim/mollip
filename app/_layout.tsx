@@ -131,6 +131,7 @@ export default function RootLayout() {
 								name="onboarding/location"
 								options={{ headerShown: false, gestureEnabled: false }}
 							/>
+							<Stack.Screen name="settings" options={{ headerShown: false }} />
 						</Stack>
 					</BottomSheetModalProvider>
 				</QueryClientProvider>

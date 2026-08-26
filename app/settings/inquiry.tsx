@@ -1,6 +1,6 @@
 import * as Haptics from 'expo-haptics';
 import { useRouter } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import {
 	ActivityIndicator,
 	KeyboardAvoidingView,
@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 
 import { Screen } from '@/src/components/layout/Screen';
+import { colors } from '@/src/constants/colors';
 import { cn } from '@/src/lib/cn';
 import { useAuthStore } from '@/src/store/authStore';
 import { supabase } from '@/src/utils/supabase';
@@ -30,12 +31,9 @@ export default function InquiryScreen() {
 	const userEmail = useAuthStore((s) => s.user?.email);
 	const [category, setCategory] = useState<Category>('bug');
 	const [content, setContent] = useState('');
-	const [contact, setContact] = useState('');
+	const [contact, setContact] = useState<string | null>(null);
 	const [status, setStatus] = useState<SubmitStatus>('idle');
-
-	useEffect(() => {
-		if (userEmail && !contact) setContact(userEmail);
-	}, [userEmail]);
+	const contactValue = contact ?? userEmail ?? '';
 
 	const canSubmit = content.trim().length > 0 && status !== 'submitting';
 
@@ -46,7 +44,7 @@ export default function InquiryScreen() {
 		const { error } = await supabase.from('inquiries').insert({
 			category,
 			content: content.trim(),
-			contact: contact.trim() || null,
+			contact: contactValue.trim() || null,
 		});
 
 		if (error) {
@@ -62,9 +60,7 @@ export default function InquiryScreen() {
 			<Screen variant="warm">
 				<Screen.Header>
 					<Screen.Header.Back onPress={() => router.back()} />
-					<Screen.Header.Center>
-						<Text className="text-[18px] text-primary font-hahmlet-semibold">문의하기</Text>
-					</Screen.Header.Center>
+					<Screen.Header.Center>문의하기</Screen.Header.Center>
 				</Screen.Header>
 
 				<View className="flex-1 items-center justify-center gap-4 px-6">
@@ -95,9 +91,7 @@ export default function InquiryScreen() {
 		<Screen variant="warm">
 			<Screen.Header>
 				<Screen.Header.Back onPress={() => router.back()} />
-				<Screen.Header.Center>
-					<Text className="text-[18px] text-primary font-hahmlet-semibold">문의하기</Text>
-				</Screen.Header.Center>
+				<Screen.Header.Center>문의하기</Screen.Header.Center>
 				<Screen.Header.Right>
 					<Pressable
 						onPress={handleSubmit}
@@ -177,10 +171,10 @@ export default function InquiryScreen() {
 						내용
 					</Text>
 					<TextInput
-						className="rounded-2xl bg-bg-tonal px-4 py-4 text-primary text-[15px] font-pretendard-regular"
+						className="rounded-2xl bg-bg-tonal border border-[rgba(28,25,23,0.1)] px-4 py-4 text-primary text-[15px] font-pretendard-regular"
 						style={{ minHeight: 160, textAlignVertical: 'top' }}
 						placeholder="내용을 입력해주세요"
-						placeholderTextColor="#C7C3BD"
+						placeholderTextColor={colors.muted}
 						value={content}
 						onChangeText={setContent}
 						multiline
@@ -195,10 +189,10 @@ export default function InquiryScreen() {
 						연락처 (선택)
 					</Text>
 					<TextInput
-						className="rounded-2xl bg-bg-tonal px-4 text-primary text-[15px] h-[52px] font-pretendard-regular"
+						className="rounded-2xl bg-bg-tonal border border-[rgba(28,25,23,0.1)] px-4 text-primary text-[15px] h-[52px] font-pretendard-regular"
 						placeholder="답변받을 이메일"
-						placeholderTextColor="#C7C3BD"
-						value={contact}
+						placeholderTextColor={colors.muted}
+						value={contactValue}
 						onChangeText={setContact}
 						keyboardType="email-address"
 						autoCapitalize="none"

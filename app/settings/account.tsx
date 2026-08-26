@@ -1,29 +1,14 @@
-import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { ActivityIndicator, Modal, Pressable, Text, View } from 'react-native';
+import { Modal, Pressable, Text, View } from 'react-native';
 import { Screen } from '@/src/components/layout/Screen';
 import { useAuthStore } from '@/src/store/authStore';
-import { colors } from '@/src/constants/colors';
 
 export default function AccountScreen() {
 	const router = useRouter();
 	const user = useAuthStore((s) => s.user);
-	const signOut = useAuthStore((s) => s.signOut);
-	const [signingOut, setSigningOut] = useState(false);
 	const [showWithdrawWarning, setShowWithdrawWarning] = useState(false);
-
-	const handleSignOut = async () => {
-		Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-		setSigningOut(true);
-		try {
-			await signOut();
-			router.replace('/(tabs)');
-		} catch {
-			setSigningOut(false);
-		}
-	};
 
 	if (!user) return null;
 
@@ -31,9 +16,7 @@ export default function AccountScreen() {
 		<Screen variant="warm">
 			<Screen.Header>
 				<Screen.Header.Back onPress={() => router.back()} />
-				<Screen.Header.Center>
-					<Text className="text-[18px] text-primary font-hahmlet-semibold">계정 정보</Text>
-				</Screen.Header.Center>
+				<Screen.Header.Center>계정 정보</Screen.Header.Center>
 			</Screen.Header>
 
 			<View className="flex-1 mt-5">
@@ -62,25 +45,6 @@ export default function AccountScreen() {
 						</Text>
 					</View>
 				)}
-
-				{/* 로그아웃 */}
-				<Pressable
-					onPress={handleSignOut}
-					disabled={signingOut}
-					className="rounded-2xl bg-bg-tonal flex-row items-center justify-center gap-2 py-[15px]"
-					style={({ pressed }) => ({ opacity: pressed || signingOut ? 0.6 : 1 })}
-					accessibilityRole="button"
-					accessibilityLabel="로그아웃"
-				>
-					{signingOut ? (
-						<ActivityIndicator color={colors.primary} />
-					) : (
-						<>
-							<Ionicons name="log-out-outline" size={18} className="text-primary" />
-							<Text className="font-pretendard-semibold text-[15px] text-primary">로그아웃</Text>
-						</>
-					)}
-				</Pressable>
 
 				{/* 탈퇴하기 */}
 				<View className="flex-1 items-center justify-end pb-10">
