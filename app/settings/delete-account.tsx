@@ -104,9 +104,7 @@ export default function DeleteAccountScreen() {
 				<Screen.Header.Left>
 					<Screen.Header.Back onPress={() => router.back()} />
 				</Screen.Header.Left>
-				<Screen.Header.Center>
-					<Text className="text-[18px] text-gray-900 font-hahmlet-semibold">탈퇴하기</Text>
-				</Screen.Header.Center>
+				<Screen.Header.Center>탈퇴하기</Screen.Header.Center>
 				<Screen.Header.Right>
 					<Pressable
 						onPress={handleSubmit}

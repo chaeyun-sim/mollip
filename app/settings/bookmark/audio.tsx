@@ -130,11 +130,7 @@ export default function AudioHistoryScreen() {
 		<Screen variant="warm">
 			<Screen.Header>
 				<Screen.Header.Back color="muted" />
-				<Screen.Header.Center>
-					<Text className="font-pretendard-semibold text-[16px] text-primary">
-						다시 듣고 싶은 오디오
-					</Text>
-				</Screen.Header.Center>
+				<Screen.Header.Center>다시 듣고 싶은 오디오</Screen.Header.Center>
 			</Screen.Header>
 
 			{items.length === 0 ? (

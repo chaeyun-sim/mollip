@@ -92,9 +92,7 @@ export default function VoiceScreen() {
 				<Screen.Header.Left>
 					<Screen.Header.Back onPress={() => router.back()} />
 				</Screen.Header.Left>
-				<Screen.Header.Center>
-					<Text className="font-pretendard-semibold text-[16px] text-primary">음성 선택</Text>
-				</Screen.Header.Center>
+				<Screen.Header.Center>음성 선택</Screen.Header.Center>
 				<Screen.Header.Right />
 			</Screen.Header>
 

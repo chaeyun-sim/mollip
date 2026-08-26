@@ -14,9 +14,7 @@ export default function TermsScreen() {
 		<Screen variant="warm">
 			<Screen.Header>
 				<Screen.Header.Back color="muted" />
-				<Screen.Header.Center>
-					<Text className="font-pretendard-semibold text-base text-primary">서비스 이용약관</Text>
-				</Screen.Header.Center>
+				<Screen.Header.Center>서비스 이용약관</Screen.Header.Center>
 			</Screen.Header>
 
 			<ScrollView

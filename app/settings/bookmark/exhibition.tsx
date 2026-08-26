@@ -133,9 +133,7 @@ export default function ExhibitionBookmarkScreen() {
 		<Screen variant="warm">
 			<Screen.Header>
 				<Screen.Header.Back color="muted" />
-				<Screen.Header.Center>
-					<Text className="font-pretendard-semibold text-[16px] text-primary">관심 있는 전시</Text>
-				</Screen.Header.Center>
+				<Screen.Header.Center>관심 있는 전시</Screen.Header.Center>
 			</Screen.Header>
 
 			{isLoading ? (

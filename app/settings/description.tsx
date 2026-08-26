@@ -56,9 +56,7 @@ export default function DescriptionSettingsScreen() {
 		<Screen variant="warm">
 			<Screen.Header>
 				<Screen.Header.Back onPress={() => router.back()} />
-				<Screen.Header.Center>
-					<Text className="font-pretendard-semibold text-[16px] text-primary">해설 강화 항목</Text>
-				</Screen.Header.Center>
+				<Screen.Header.Center>해설 강화 항목</Screen.Header.Center>
 			</Screen.Header>
 
 			<ScrollView

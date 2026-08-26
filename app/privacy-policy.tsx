@@ -14,9 +14,7 @@ export default function PrivacyPolicyScreen() {
 		<Screen variant="warm">
 			<Screen.Header>
 				<Screen.Header.Back color="muted" />
-				<Screen.Header.Center>
-					<Text className="font-pretendard-semibold text-base text-primary">개인정보처리방침</Text>
-				</Screen.Header.Center>
+				<Screen.Header.Center>개인정보처리방침</Screen.Header.Center>
 			</Screen.Header>
 
 			<ScrollView

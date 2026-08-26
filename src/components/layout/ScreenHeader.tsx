@@ -1,15 +1,20 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { ReactNode } from 'react';
-import { Pressable, Text, View, ViewStyle } from 'react-native';
+import { Pressable, Text, TextStyle, View, ViewStyle } from 'react-native';
 import { cn } from '../../lib/cn';
-import { SERVICE_NAME } from '@/src/constants/service-name';
 import { LinearGradient } from 'expo-linear-gradient';
 
 interface SlotProps {
 	children?: ReactNode;
 	className?: string;
 	style?: ViewStyle;
+}
+
+interface LogoProps {
+	className?: string;
+	fontSize?: number;
+	textStyle?: TextStyle;
 }
 
 function ScreenHeader({ children, className, style }: SlotProps) {
@@ -20,18 +25,25 @@ function ScreenHeader({ children, className, style }: SlotProps) {
 	);
 }
 
-function Logo({ className, style }: SlotProps) {
+function Logo({ className, fontSize = 24, textStyle }: LogoProps) {
 	return (
-		<View className={cn('flex-1 flex-row items-start', className)} style={style}>
-			<Text className="text-primary text-[24px] font-hahmlet-bold">moll</Text>
+		<View className={cn('flex-row items-start', className)}>
+			<Text className="text-primary font-hahmlet-semibold" style={{ fontSize, ...textStyle }}>
+				moll
+			</Text>
 
 			<View className="relative">
-				<Text className="text-primary text-[24px] font-hahmlet-bold">ı</Text>
+				<Text className="text-primary font-hahmlet-semibold" style={{ fontSize, ...textStyle }}>
+					ı
+				</Text>
 
 				<View
-					className="absolute left-1/2 top-2 h-[6px] w-[6px]"
+					className="absolute left-1/2"
 					style={{
-						transform: [{ translateX: -3 }],
+						transform: [{ translateX: -(fontSize / 8) }],
+						height: fontSize / 4,
+						width: fontSize / 4,
+						top: fontSize / 4.5,
 					}}
 				>
 					<LinearGradient
@@ -48,7 +60,9 @@ function Logo({ className, style }: SlotProps) {
 				</View>
 			</View>
 
-			<Text className="text-primary text-[24px] font-hahmlet-bold">p</Text>
+			<Text className="text-primary font-hahmlet-semibold" style={{ fontSize, ...textStyle }}>
+				p
+			</Text>
 		</View>
 	);
 }
@@ -67,7 +81,11 @@ function Center({ children, className, style }: SlotProps) {
 			className={cn('absolute left-1/2 -translate-x-1/2 flex-1 items-center mt-1', className)}
 			style={style}
 		>
-			{children}
+			{typeof children === 'string' ? (
+				<Text className="text-[17px] text-primary font-pretendard-semibold">{children}</Text>
+			) : (
+				children
+			)}
 		</View>
 	);
 }
