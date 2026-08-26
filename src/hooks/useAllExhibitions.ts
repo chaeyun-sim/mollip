@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import type { RecommendableItem } from '@/src/components/explore/ExploreHomeSections';
+import type { RecommendableItem } from '@/src/components/explore/RecommendedExhibitions';
 import { getExhibitionStatus, todayExhibitionDateString } from '@/src/utils/exhibitionSearch';
 import { supabase } from '@/src/utils/supabase';
 
@@ -59,6 +59,8 @@ export function useAllExhibitions(): UseAllExhibitionsResult {
 				startDate: row.start_date ?? '',
 				endDate: row.end_date ?? '',
 			}),
+			startDate: row.start_date ?? null,
+			endDate: row.end_date ?? null,
 		}));
 
 		setItems((prev) => (reset ? newItems : [...prev, ...newItems]));

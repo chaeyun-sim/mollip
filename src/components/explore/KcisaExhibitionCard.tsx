@@ -22,7 +22,7 @@ export function KcisaExhibitionCard({ item, onPress, index }: KcisaExhibitionCar
 			style={({ pressed }) => ({ opacity: pressed ? 0.88 : 1, width: CARD_WIDTH })}
 		>
 			<View
-				className="rounded-[18px] overflow-hidden"
+				className="rounded-[8px] overflow-hidden"
 				style={{
 					width: CARD_WIDTH,
 					height: CARD_HEIGHT,

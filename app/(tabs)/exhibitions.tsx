@@ -2,21 +2,16 @@ import { useCallback, useRef } from 'react';
 import { useRouter } from 'expo-router';
 import { ActivityIndicator, FlatList, Text, View, useWindowDimensions } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import * as Haptics from 'expo-haptics';
 import { CenteredLoader } from '@/src/components/common/CenteredLoader';
 import { RetryErrorState } from '@/src/components/common/RetryErrorState';
-import {
-	GridExhibitionCell,
-	type RecommendableItem,
-} from '@/src/components/explore/ExploreHomeSections';
+import { ExhibitionListRow } from '@/src/components/explore/ExhibitionListRow';
+import type { RecommendableItem } from '@/src/components/explore/RecommendedExhibitions';
 import { useAllExhibitions } from '@/src/hooks/useAllExhibitions';
 import { Screen } from '@/src/components/layout/Screen';
 import { colors } from '@/src/constants/colors';
 
-// Screen 컴포넌트의 기본 px-6(24px) 패딩과 맞춰야 colWidth가 정확히 계산됨
 const HORIZONTAL_PADDING = 24;
-const GRID_GAP = 12;
-const ROW_GAP = GRID_GAP + 8;
+const ROW_GAP = 16;
 
 export default function ExhibitionsScreen() {
 	const router = useRouter();
@@ -26,12 +21,11 @@ export default function ExhibitionsScreen() {
 
 	const { items, status, isLoadingMore, hasMore, loadMore, refetch } = useAllExhibitions();
 
-	const colWidth = (windowWidth - HORIZONTAL_PADDING * 2 - GRID_GAP) / 2;
-	const gridHeight = Math.round((colWidth * 4) / 3);
+	const usableWidth = windowWidth - HORIZONTAL_PADDING * 2 - ROW_GAP;
+	const columnWidth = usableWidth * 0.45;
 
 	const openExhibition = useCallback(
 		(id: string) => {
-			Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
 			router.push(`/(explore)/${id}`);
 		},
 		[router],
@@ -48,29 +42,15 @@ export default function ExhibitionsScreen() {
 	}, []);
 
 	const renderItem = useCallback(
-		({ item, index }: { item: RecommendableItem; index: number }) => {
-			const rowIndex = Math.floor(index / 2);
-			return (
-				<View style={{ marginTop: rowIndex === 0 ? 0 : ROW_GAP }}>
-					<GridExhibitionCell
-						item={item}
-						colWidth={colWidth}
-						gridHeight={gridHeight}
-						onPress={openExhibition}
-					/>
-				</View>
-			);
-		},
-		[colWidth, gridHeight, openExhibition],
-	);
-
-	const getItemLayout = useCallback(
-		(_: unknown, index: number) => {
-			const rowIndex = Math.floor(index / 2);
-			const rowHeight = gridHeight + ROW_GAP;
-			return { length: rowHeight, offset: rowIndex === 0 ? 0 : rowHeight * rowIndex, index };
-		},
-		[gridHeight],
+		({ item, index }: { item: RecommendableItem; index: number }) => (
+			<ExhibitionListRow
+				item={item}
+				onPress={openExhibition}
+				showDivider={index < items.length - 1}
+				columnWidth={columnWidth}
+			/>
+		),
+		[openExhibition, items.length, columnWidth],
 	);
 
 	function renderFooterContent() {
@@ -125,18 +105,12 @@ export default function ExhibitionsScreen() {
 				<Screen.Header.Logo />
 			</Screen.Header>
 
-			<Text className="text-[22px] font-pretendard-bold text-primary pt-2 pb-4">전체 전시</Text>
-
 			<FlatList
 				data={items}
 				keyExtractor={(item) => item.id}
-				numColumns={2}
 				renderItem={renderItem}
-				getItemLayout={getItemLayout}
-				columnWrapperStyle={{ gap: GRID_GAP }}
 				contentContainerStyle={{
 					paddingBottom: insets.bottom + 24,
-					paddingTop: 4,
 					flexGrow: 1,
 				}}
 				ListEmptyComponent={renderEmpty}

@@ -35,7 +35,7 @@ export function KcisaSection({
 	if (!showSection && featured?.source === 'kcisa') return null;
 
 	return (
-		<View className="pb-2 pt-3">
+		<View className="pb-2">
 			<SectionTitle
 				eyebrow="PUBLIC MUSEUMS"
 				title="국공립 기관 전시"

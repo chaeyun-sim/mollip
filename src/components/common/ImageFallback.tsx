@@ -35,6 +35,8 @@ interface ImageFallbackProps {
 	useImageProxy?: boolean;
 	/** 지정하면 원격 이미지 로딩 중 해당 색상으로 스피너를 겹쳐 보여준다 */
 	loadingIndicatorColor?: string;
+	/** 이미지가 없거나 로드에 실패해 placeholder(question mark)로 대체될 때 호출됨 */
+	onFallback?: () => void;
 }
 
 /** 원격 URI·로컬 소스가 없거나 로드 실패 시 question.png 빈 상태로 대체하는 이미지. */
@@ -50,6 +52,7 @@ export function ImageFallback({
 	accessibilityLabel,
 	useImageProxy = false,
 	loadingIndicatorColor,
+	onFallback,
 }: ImageFallbackProps) {
 	const [loadFailed, setLoadFailed] = useState(false);
 	const [proxyFailed, setProxyFailed] = useState(false);
@@ -69,6 +72,11 @@ export function ImageFallback({
 	const showLocal = !hasRemote && hasLocal && !loadFailed;
 	const showPlaceholder = !showRemote && !showLocal;
 	const showImage = showRemote || showLocal;
+
+	useEffect(() => {
+		if (showPlaceholder) onFallback?.();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [showPlaceholder]);
 
 	const remoteSource =
 		useImageProxy && !proxyFailed && remoteUri ? proxiedImageUrl(remoteUri) : remoteUri;

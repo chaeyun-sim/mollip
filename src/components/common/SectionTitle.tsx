@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import { Text, View } from 'react-native';
 
 interface SectionTitleProps {
-	title: string;
+	title: ReactNode;
 	/** 제목 위 영문 레이블 */
 	eyebrow?: string;
 	/** 제목 아래 보조 설명 */
@@ -22,7 +22,7 @@ export function SectionTitle({ title, eyebrow, subtitle, right }: SectionTitlePr
 							{eyebrow}
 						</Text>
 					)}
-					<Text className="text-primary text-[20px] font-pretendard-semibold">{title}</Text>
+					{typeof title === 'string' ? <Text className="text-primary text-[18px] font-pretendard-semibold">{title}</Text> : title}
 				</View>
 				{right}
 			</View>

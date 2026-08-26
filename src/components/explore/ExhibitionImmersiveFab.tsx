@@ -1,7 +1,8 @@
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
-import { Pressable, Text, View } from 'react-native';
+import { View } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
+import { LoginRequiredPressable } from '../auth/LoginRequiredPressable';
 
 const FAB_SHADOW = {
 	shadowColor: '#000',
@@ -22,12 +23,12 @@ export function ExhibitionImmersiveFab({ onPress }: ExhibitionImmersiveFabProps)
 	}));
 
 	return (
-		<Pressable
+		<LoginRequiredPressable
 			onPressIn={() => {
-				pressScale.value = withSpring(0.88, { damping: 12 });
+				pressScale.set(withSpring(0.88, { damping: 12 }));
 			}}
 			onPressOut={() => {
-				pressScale.value = withSpring(1, { damping: 12 });
+				pressScale.set(withSpring(1, { damping: 12 }));
 			}}
 			onPress={() => {
 				Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
@@ -42,6 +43,6 @@ export function ExhibitionImmersiveFab({ onPress }: ExhibitionImmersiveFabProps)
 					<Ionicons name="headset" size={28} color="white" />
 				</View>
 			</Animated.View>
-		</Pressable>
+		</LoginRequiredPressable>
 	);
 }

@@ -5,14 +5,13 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { CenteredLoader } from '@/src/components/common/CenteredLoader';
 import { RetryErrorState } from '@/src/components/common/RetryErrorState';
 import { SectionTitle } from '@/src/components/common/SectionTitle';
-import { ExploreHomeHero } from '@/src/components/explore/ExploreHomeHero';
 import { KcisaSection } from '@/src/components/explore/KcisaSection';
-import {
-	FeaturedExhibitionHero,
-	RecommendedExhibitions,
-} from '@/src/components/explore/ExploreHomeSections';
+import { KcisaExhibitionCard } from '@/src/components/explore/KcisaExhibitionCard';
+import { FeaturedCarousel } from '@/src/components/explore/FeaturedCarousel';
+import { PopularSection } from '@/src/components/explore/PopularSection';
 import { Screen } from '@/src/components/layout/Screen';
 import { useExploreScreenData, type ExhibitionSummary } from '@/src/hooks/useExploreScreenData';
+import { usePopularExhibitions } from '@/src/hooks/usePopularExhibitions';
 import { Fab } from '@/src/components/common/Fab';
 import { colors } from '@/src/constants/colors';
 import { SERVICE_NAME } from '@/src/constants/service-name';
@@ -29,10 +28,17 @@ export default function ExploreScreen() {
 		kcisaStatus,
 		kcisaRefetch,
 		featured,
+		featuredCarousel,
 		kcisaCarousel,
 		displayedRecommended,
 		isPersonalized,
 	} = useExploreScreenData();
+	// FeaturedCarousel에 이미 노출 중인 전시는 인기 섹션에서 제외해 중복 노출을 막는다
+	const {
+		items: popularItems,
+		status: popularStatus,
+		refetch: popularRefetch,
+	} = usePopularExhibitions(featuredCarousel.map((item) => item.id));
 
 	const carousel = resolveKcisaCarousel();
 	const name = useAuthStore((s) => s.user?.user_metadata?.full_name);
@@ -67,7 +73,23 @@ export default function ExploreScreen() {
 			);
 		}
 
-		return <RecommendedExhibitions items={displayedRecommended} onPress={openExhibition} />;
+		return (
+			<View className="-mx-6">
+				<ScrollView
+					horizontal
+					showsHorizontalScrollIndicator={false}
+					contentContainerStyle={{
+						flexDirection: 'row',
+						gap: 14,
+						paddingHorizontal: 24,
+					}}
+				>
+					{displayedRecommended.map((item) => (
+						<KcisaExhibitionCard key={item.id} item={item} onPress={openExhibition} />
+					))}
+				</ScrollView>
+			</View>
+		);
 	}
 
 	return (
@@ -90,18 +112,14 @@ export default function ExploreScreen() {
 				showsVerticalScrollIndicator={false}
 				contentContainerStyle={{ paddingBottom: 96, gap: 28, paddingTop: 16 }}
 			>
-				<ExploreHomeHero />
+				<FeaturedCarousel items={featuredCarousel} onPress={openExhibition} />
 
-				{featured && (
-					<FeaturedExhibitionHero
-						id={featured.id}
-						title={featured.title}
-						venue={featured.venue}
-						thumbnail={featured.thumbnail}
-						status={featured.status}
-						onPress={openExhibition}
-					/>
-				)}
+				<PopularSection
+					items={popularItems}
+					status={popularStatus}
+					onPress={openExhibition}
+					onRefetch={popularRefetch}
+				/>
 
 				<KcisaSection
 					kcisaStatus={kcisaStatus}
@@ -116,7 +134,17 @@ export default function ExploreScreen() {
 					{/* 레이블: 선호 데이터 있으면 "당신의 취향" (REQ-UI002-009, REQ-UI002-010) */}
 					<SectionTitle
 						eyebrow="FOR YOU"
-						title={isPersonalized && name ? `${name}님 취향 저격!` : '추천 전시'}
+						title={
+							isPersonalized && name ? (
+								<Text className="text-primary text-[18px] leading-normal font-pretendard-semibold tracking-[-0.5px]">
+									{`몰립이 엄선한\n${name}님에게 `}
+									<Text className="text-[#B8623D] font-pretendard-bold">딱 맞는 전시를 추천</Text>
+									해드릴게요!
+								</Text>
+							) : (
+								'추천 전시'
+							)
+						}
 					/>
 					{renderRecommendedContent()}
 				</View>

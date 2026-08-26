@@ -21,6 +21,8 @@ export type FeaturedExhibition = ExhibitionSummary & {
 	source: 'kcisa' | 'culture';
 };
 
+const FEATURED_CAROUSEL_SIZE = 5;
+
 /**
  * 탐색 홈 화면에 필요한 데이터를 조율·파생하는 훅.
  * - 3개 데이터 소스(KCISA·Culture·추천)를 구독하고
@@ -44,41 +46,41 @@ export function useExploreScreenData() {
 	);
 	const bookmarkedIds = useBookmarkStore((s) => s.ids);
 
-	const featured = useMemo<FeaturedExhibition | null>(() => {
+	const featuredCarousel = useMemo<FeaturedExhibition[]>(() => {
 		if (kcisaItems.length > 0) {
-			const f = kcisaItems[0];
-			return {
-				source: 'kcisa',
+			return kcisaItems.slice(0, FEATURED_CAROUSEL_SIZE).map((f) => ({
+				source: 'kcisa' as const,
 				id: f.id,
 				title: f.title,
 				venue: f.venue,
 				thumbnail: f.thumbnail,
 				status: f.status,
-			};
+			}));
 		}
 		if (items.length > 0) {
-			const f = items[0];
-			return {
-				source: 'culture',
+			return items.slice(0, FEATURED_CAROUSEL_SIZE).map((f) => ({
+				source: 'culture' as const,
 				id: f.id,
 				title: f.title,
 				venue: f.venue,
 				thumbnail: f.thumbnail,
 				status: f.status,
-			};
+			}));
 		}
-		return null;
+		return [];
 	}, [kcisaItems, items]);
 
+	const featured = featuredCarousel[0] ?? null;
+
 	const kcisaCarousel = useMemo<ExhibitionSummary[]>(() => {
-		if (!featured || featured.source !== 'kcisa') return kcisaItems;
-		return kcisaItems.slice(1);
-	}, [kcisaItems, featured]);
+		if (featured?.source !== 'kcisa') return kcisaItems;
+		return kcisaItems.slice(featuredCarousel.length);
+	}, [kcisaItems, featured, featuredCarousel.length]);
 
 	const cultureList = useMemo<ExhibitionSummary[]>(() => {
-		if (!featured || featured.source !== 'culture') return items;
-		return items.slice(1);
-	}, [items, featured]);
+		if (featured?.source !== 'culture') return items;
+		return items.slice(featuredCarousel.length);
+	}, [items, featured, featuredCarousel.length]);
 
 	const { items: recommendedItems, isPersonalized } = useRecommendedExhibitions(
 		preferredGenres,
@@ -101,6 +103,7 @@ export function useExploreScreenData() {
 		kcisaStatus,
 		kcisaRefetch,
 		featured,
+		featuredCarousel,
 		kcisaCarousel,
 		displayedRecommended,
 		isPersonalized,
