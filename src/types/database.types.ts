@@ -186,6 +186,35 @@ export type Database = {
 					},
 				];
 			};
+			exhibition_views: {
+				Row: {
+					created_at: string;
+					exhibition_id: string;
+					user_id: string;
+					viewed_date: string;
+				};
+				Insert: {
+					created_at?: string;
+					exhibition_id: string;
+					user_id: string;
+					viewed_date?: string;
+				};
+				Update: {
+					created_at?: string;
+					exhibition_id?: string;
+					user_id?: string;
+					viewed_date?: string;
+				};
+				Relationships: [
+					{
+						foreignKeyName: 'exhibition_views_user_id_fkey';
+						columns: ['user_id'];
+						isOneToOne: false;
+						referencedRelation: 'users';
+						referencedColumns: ['id'];
+					},
+				];
+			};
 			inquiries: {
 				Row: {
 					category: string;
@@ -419,6 +448,15 @@ export type Database = {
 		};
 		Functions: {
 			is_allowed_web_url: { Args: { raw: string }; Returns: boolean };
+			get_popular_exhibitions: {
+				Args: { p_limit?: number };
+				Returns: {
+					exhibition_id: string;
+					bookmark_count: number;
+					view_count: number;
+					score: number;
+				}[];
+			};
 		};
 		Enums: {
 			[_ in never]: never;

@@ -24,6 +24,7 @@ import { ImageFallback } from '@/src/components/common/ImageFallback';
 import { ExhibitionDetailSkeleton } from '@/src/components/layout/Loading';
 import { useExhibitionData } from '@/src/hooks/useExhibitionData';
 import { useHeroAnimation } from '@/src/hooks/useHeroAnimation';
+import { useRecordExhibitionView } from '@/src/hooks/useRecordExhibitionView';
 import { useRequireAuth } from '@/src/hooks/useRequireAuth';
 import { useShareExhibition } from '@/src/hooks/useShareExhibition';
 import { useBookmarkStore } from '@/src/store/bookmarkStore';
@@ -52,6 +53,8 @@ export default function ExhibitionDetailScreen() {
 	const pushNotificationsEnabled = useSettingsStore((s) => s.pushNotificationsEnabled);
 	const { ensureAuth } = useRequireAuth();
 
+	// 인기 랭킹용 조회 기록 — 로그인 사용자 · 데이터 로딩 완료 후 하루 1회 (UI 영향 없음)
+	useRecordExhibitionView(id, !!exhibition);
 	const { scrollHandler, heroImageStyle } = useHeroAnimation(exhibition?.id);
 	const { handleShare } = useShareExhibition(exhibition ?? null);
 
