@@ -100,9 +100,9 @@ export default function RootLayout() {
 			return;
 		}
 
-		// 몰입 모드 복원 — 이미 isImmersiveMode가 true이므로 create-description으로 바로 진입
+		// 몰입 모드 복원 — 이미 isImmersiveMode가 true이므로 몰입 모드 홈(playlist)으로 바로 진입
 		if (isImmersive) {
-			router.push('/(guide)/create-description');
+			router.push('/(guide)/playlist');
 		}
 		SplashScreen.hideAsync();
 	}, [fontsLoaded, hasHydrated, authLoading, user, onboardingCompleted]);
