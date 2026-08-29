@@ -24,11 +24,6 @@ type EntityMap = Record<
 
 const SEARCH_URL = 'https://www.wikidata.org/w/api.php';
 
-function getHeaders(): HeadersInit {
-	const token = process.env.EXPO_PUBLIC_WIKIDATA_TOKEN;
-	return token ? { Authorization: `Bearer ${token}` } : {};
-}
-
 function commonsImageUrl(filename: string): string {
 	const encoded = encodeURIComponent(filename.replace(/ /g, '_'));
 	return `https://commons.wikimedia.org/wiki/Special:FilePath/${encoded}?width=400`;
@@ -45,7 +40,7 @@ async function searchEntities(query: string): Promise<string[]> {
 		format: 'json',
 		origin: '*',
 	});
-	const res = await fetch(`${SEARCH_URL}?${params}`, { headers: getHeaders() });
+	const res = await fetch(`${SEARCH_URL}?${params}`);
 	if (!res.ok) throw new Error(`wbsearchentities ${res.status}`);
 	const json = await res.json();
 	return (json.search ?? []).map((r: { id: string }) => r.id);
@@ -61,7 +56,7 @@ async function fetchEntities(ids: string[]): Promise<EntityMap> {
 		format: 'json',
 		origin: '*',
 	});
-	const res = await fetch(`${SEARCH_URL}?${params}`, { headers: getHeaders() });
+	const res = await fetch(`${SEARCH_URL}?${params}`);
 	if (!res.ok) throw new Error(`wbgetentities ${res.status}`);
 	const json = await res.json();
 	return json.entities ?? {};
