@@ -32,6 +32,7 @@ export function PopularExhibitionAvatar({ item, onPress }: PopularExhibitionAvat
 					height: AVATAR_SIZE + RING_WIDTH * 2 + RING_GAP * 2,
 					borderWidth: RING_WIDTH,
 					borderColor: colors.gray900,
+					overflow: 'hidden'
 				}}
 			>
 				<ImageFallback
