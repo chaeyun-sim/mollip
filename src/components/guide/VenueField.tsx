@@ -24,10 +24,10 @@ export function VenueField({
 }: VenueFieldProps) {
 	return (
 		<View className="mb-8">
-			<Text className="text-xs mb-2 font-pretendard-semibold text-muted tracking-wider">위치</Text>
+			<Text className="text-xs mb-2 font-pretendard-semibold text-gray500 tracking-wider">위치</Text>
 			<View
 				className={cn(
-					'rounded-lg border bg-primary',
+					'rounded-lg border bg-gray900',
 					error ? 'border-error' : 'border-divider-dark',
 				)}
 				style={{ height: 52, overflow: 'hidden' }}
@@ -57,7 +57,7 @@ export function VenueField({
 							numberOfLines={1}
 							className={cn(
 								'text-base font-pretendard-regular',
-								value ? 'text-on-dark' : 'text-secondary',
+								value ? 'text-on-dark' : 'text-gray700',
 							)}
 						>
 							{value || '예) 국립현대미술관 과천관'}

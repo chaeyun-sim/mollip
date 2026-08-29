@@ -31,7 +31,7 @@ export function PopularExhibitionAvatar({ item, onPress }: PopularExhibitionAvat
 					width: AVATAR_SIZE + RING_WIDTH * 2 + RING_GAP * 2,
 					height: AVATAR_SIZE + RING_WIDTH * 2 + RING_GAP * 2,
 					borderWidth: RING_WIDTH,
-					borderColor: colors.primary,
+					borderColor: colors.gray900,
 				}}
 			>
 				<ImageFallback
@@ -41,7 +41,7 @@ export function PopularExhibitionAvatar({ item, onPress }: PopularExhibitionAvat
 					iconSize={22}
 					resizeMode="cover"
 					useImageProxy
-					loadingIndicatorColor={colors.muted}
+					loadingIndicatorColor={colors.gray500}
 				/>
 			</View>
 		</Pressable>

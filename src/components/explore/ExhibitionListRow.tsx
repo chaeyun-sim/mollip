@@ -46,7 +46,7 @@ export function ExhibitionListRow({
 						className="bg-image-placeholder items-start"
 						style={{ width: columnWidth, height: ROW_HEIGHT }}
 					>
-						<Text className="text-primary text-[19px] font-hahmlet-bold text-center pt-2 px-3">
+						<Text className="text-gray900 text-[19px] font-hahmlet-bold text-center pt-2 px-3">
 							{formatStartDate(item.startDate)}
 						</Text>
 					</View>
@@ -58,22 +58,22 @@ export function ExhibitionListRow({
 						iconSize={28}
 						resizeMode="cover"
 						useImageProxy
-						loadingIndicatorColor={colors.muted}
+						loadingIndicatorColor={colors.gray500}
 					/>
 				)}
 				<View className="flex-1" style={{ height: ROW_HEIGHT }}>
 					<View className="items-start gap-0.5">
-						<Text numberOfLines={1} className="text-muted text-[9px] font-pretendard-regular">
+						<Text numberOfLines={1} className="text-gray500 text-[9px] font-pretendard-regular">
 							{item.startDate} ~ {item.endDate}
 						</Text>
-						<Text numberOfLines={1} className="text-muted text-[9px] font-pretendard-regular">
+						<Text numberOfLines={1} className="text-gray500 text-[9px] font-pretendard-regular">
 							{item.venue.trim()}
 						</Text>
 					</View>
 					<View className="justify-center items-center absolute w-full top-8 px-4 flex-1 h-[52px]">
 						<Text
 							numberOfLines={2}
-							className="text-primary text-[15px] leading-[21px] font-hahmlet-semibold text-center"
+							className="text-gray900 text-[15px] leading-[21px] font-hahmlet-semibold text-center"
 						>
 							{item.title.trim()}
 						</Text>

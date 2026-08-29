@@ -21,8 +21,8 @@ export function ExhibitionOfficialLink({ url }: ExhibitionOfficialLinkProps) {
 			accessibilityRole="link"
 			accessibilityLabel={`공식 웹사이트 외부 브라우저에서 열기`}
 		>
-			<Text className="text-primary text-[13px] font-pretendard-medium">공식 웹사이트</Text>
-			<Ionicons name="open-outline" size={12} className="text-primary" />
+			<Text className="text-gray900 text-[13px] font-pretendard-medium">공식 웹사이트</Text>
+			<Ionicons name="open-outline" size={12} className="text-gray900" />
 		</Pressable>
 	);
 }

@@ -26,7 +26,7 @@ export function KcisaExhibitionCard({ item, onPress, index }: KcisaExhibitionCar
 				style={{
 					width: CARD_WIDTH,
 					height: CARD_HEIGHT,
-					shadowColor: colors.primary,
+					shadowColor: colors.gray900,
 					shadowOpacity: 0.1,
 					shadowRadius: 10,
 					shadowOffset: { width: 0, height: 4 },
@@ -54,14 +54,14 @@ export function KcisaExhibitionCard({ item, onPress, index }: KcisaExhibitionCar
 			<Text
 				numberOfLines={2}
 				style={{ width: CARD_WIDTH }}
-				className="mt-1 text-primary text-[13px] leading-[18px] font-pretendard-semibold"
+				className="mt-1 text-gray900 text-[13px] leading-[18px] font-pretendard-semibold"
 			>
 				{item.title}
 			</Text>
 			<Text
 				numberOfLines={1}
 				style={{ width: CARD_WIDTH }}
-				className="text-muted text-[11px] mt-0.5 font-pretendard-regular"
+				className="text-gray500 text-[11px] mt-0.5 font-pretendard-regular"
 			>
 				{item.venue}
 			</Text>

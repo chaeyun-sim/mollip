@@ -22,18 +22,79 @@
 | 토큰                                                                                                                                                                        | `tailwind.config.js` | `src/constants/colors.ts` | 상태                                                                                                                           |
 | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------- | ------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
 | description                                                                                                                                                                 | 없음                 | `#6B6360`                 | tailwind.config.js에 대응 className 없음 — className으로 이 색을 쓰려면 `text-[#6B6360]` 임의값을 써야 함(정식 토큰화 안 됨)         |
-| 그 외 (primary, secondary, tertiary, muted, bgLight/bg-light, bgDark, bgTonal, onDark, imagePlaceholder, border/divider, borderDark/divider-dark, accent, error, errorAlt/error-alt, success) | 동일                 | 동일                      | 일치                                                                                                                            |
+| 그 외 (primary, primaryDark/primary-dark, secondary, gray100~gray900, white, bgLight/bg-light, bgDark, bgTonal, onDark, imagePlaceholder, border/divider, borderDark/divider-dark, accent, error, errorAlt/error-alt, success) | 동일                 | 동일                      | 일치 (2026-08-26 전수 대조)                                                                                                     |
 
 2026-08-25: bgLight/bg-light 드리프트 해소 — `tailwind.config.js`의 `bg-light`를 `#f4f4f1` → `#F8F6F2`로 통일(`Screen.tsx`가 그라디언트에 실제 사용 중인 값 기준).
 
+2026-08-26: **컬러 시스템 전면 개편(`color-system-overhaul`)으로 두 파일의 전 토큰 값을 대조 완료 — 잔여 드리프트 0건.** 신규 `gray100`~`gray900`, `primary`/`primaryDark`(`primary-dark`)/`secondary`/`accent`/`white`는 추가·교체 시점에 두 파일을 같은 커밋에서 함께 수정했고 hex를 1:1 대조했다. `description`의 tailwind 미등록 상태는 의도적으로 유지(위 표 1행 그대로).
+
+### 1.2.1 마이그레이션 매핑표 (2026-08-26, `tertiary` / `muted` 제거)
+
+`primary` / `secondary` / `tertiary` / `muted`는 원래 브랜드 컬러 이름인데 무채색 텍스트 명도 사다리로 쓰이고 있었다. 명도는 `gray100~900`이 담당하도록 전량 이관했고, `tertiary`와 `muted`는 **정의에서 제거**했다.
+
+| 구 토큰 (className)                | 신 토큰                | 값 변화             |
+| ---------------------------------- | ---------------------- | ------------------- |
+| `text-primary` (#1C1917)           | `text-gray900`         | 동일 (#1C1917)      |
+| `text-secondary` (#57534E)         | `text-gray700`         | 동일 (#57534E)      |
+| `text-tertiary` (#78716C)          | `text-gray600`         | 동일 (#78716C)      |
+| `text-muted` / `bg-muted` (#A8A29E)| `text-gray500` / `bg-gray500` | 동일 (#A8A29E) |
+| `colors.primary`                   | `colors.gray900`       | 동일                |
+| `colors.secondary`                 | `colors.gray700`       | 동일                |
+| `colors.tertiary`                  | `colors.gray600`       | 동일                |
+| `colors.muted`                     | `colors.gray500`       | 동일                |
+| `bg-primary` (무채색 표면: 시트·마커·바코드·구분선·다크 입력 필드) | `bg-gray900` | 동일 (#1C1917) |
+| `bg-primary` (브랜드 표면, 흰 텍스트 O) | `bg-primary-dark`  | #1C1917 → **#625876** |
+| `bg-primary` (브랜드 표면, 텍스트 X)    | `bg-primary`       | #1C1917 → **#81759B** |
+| `accent` / `text-accent` / `bg-accent` (#3B82F6) | 라이트 배경 → `primary-dark` / 다크 배경 → `primary` | 블루 제거 |
+
+**`tertiary` / `muted`는 더 이상 유효 토큰이 아니다.** NativeWind는 미정의 className을 런타임 에러 없이 무시하므로 `tsc`로 잡히지 않는다 — 새로 쓰지 말 것.
+
 ### 1.3 전역 컬러 팔레트 (정본: `tailwind.config.js`)
+
+#### 무채색 명도 스케일
+
+| 시맨틱 이름 | Hex       | className                        | 용도                                                      |
+| ----------- | --------- | -------------------------------- | --------------------------------------------------------- |
+| gray100     | `#F8F6F2` | `bg-gray100`                     | 최상위 밝기 배경. **`background` 토큰은 도입하지 않으며 이 토큰이 그 역할을 대신한다** (`bg-light`와 동일 값) |
+| gray200     | `#F2EFE9` | `bg-gray200`                     | 톤온톤 카드 배경 (`bg-tonal`과 동일 값)                    |
+| gray300     | `#E7E5E4` | `border-gray300`                 | 라이트 구분선 (`divider`와 동일 값)                        |
+| gray400     | `#C7C3BD` | `bg-gray400` / `text-gray400`    | **disabled 전용** — 비활성 fill 배경·비활성 아이콘/텍스트  |
+| gray500     | `#A8A29E` | `text-gray500`                   | placeholder·비활성 텍스트                                  |
+| gray600     | `#78716C` | `text-gray600`                   | 3차 텍스트·로딩 인디케이터                                 |
+| gray700     | `#57534E` | `text-gray700`                   | 보조 텍스트                                                |
+| gray800     | `#292524` | `border-gray800`                 | 다크 구분선 (`divider-dark`와 동일 값)                     |
+| gray900     | `#1C1917` | `text-gray900` / `bg-gray900`    | 본문 텍스트 + 무채색 표면(시트·지도 마커·바코드·구분선)    |
+
+#### 브랜드 컬러
+
+| 시맨틱 이름  | Hex       | className                          | 용도                                                                                |
+| ------------ | --------- | ---------------------------------- | ----------------------------------------------------------------------------------- |
+| primary      | `#81759B` | `bg-primary` / `text-primary`      | 브랜드 메인(더스티 라벤더). **텍스트를 얹지 않는 브랜드 표면** + **다크 배경 위 브랜드 표면** 전용 |
+| primary-dark | `#625876` | `bg-primary-dark` / `text-primary-dark` | **흰 텍스트를 얹는 모든 라이트 배경 브랜드 표면** + 탭바 활성 tint + 라이트 배경 위 브랜드 텍스트 |
+| secondary    | `#302D33` | `border-secondary` / `text-secondary` | 보조/아웃라인 버튼(취소·닫기·스킵 계열)                                            |
+| accent       | `#D9A0A0` | `bg-accent`                        | 포인트 강조(더스티 코럴). **현재 적용처 없음 — 정의만.** 이 색 위에는 반드시 `text-gray900`(7.90:1), 흰 글씨 금지(2.21:1) |
+| white        | `#FFFFFF` | `bg-white` / `text-white`          | 순백 (정식 토큰화)                                                                  |
+
+**브랜드 컬러 사용 판정 (폰트 크기는 판정에 개입하지 않는다)**
+
+```
+표면 위에 흰색 텍스트가 올라가는가?
+  ├─ YES → 배경이 라이트인가?
+  │         ├─ YES → bg-primary-dark  (white 6.61:1 ✅)
+  │         └─ NO(다크 화면) → bg-primary  (표면 3:1 기준 4.32:1 ✅ / 본문 4.5:1 기준은 미달 — 이 표면에 본문 텍스트를 얹지 않는다)
+  └─ NO(아이콘·인디케이터·점·바) → bg-primary  (비텍스트 3:1 기준 3.93:1 ✅)
+```
+
+- **다크 배경(`bg-dark` #171412) 위에 `primary-dark`를 쓰지 않는다** — 2.89:1로 배경에 묻힌다.
+- **`primary`를 라이트 배경 위 본문 텍스트/링크 색으로 쓰지 않는다** — 3.93:1(본문 4.5:1 미달). 필요하면 `primary-dark`(6.61:1).
+- disabled는 `bg-gray400` + `text-white`(fill) 또는 `text-gray400`(배경 없는 버튼)으로 통일하고 `accessibilityState={{ disabled }}`를 함께 둔다. 외부 브랜드 고정색(카카오/Apple)은 예외로 배경을 바꾸지 않는다.
+- focus 시각 상태는 현재 코드베이스에 0건이다. 새로 만들 때는 라이트/다크 모두 `border-primary`(#81759B)를 쓰고, 캐럿(`selectionColor`) 또는 보더 두께 변화 같은 비색상 신호를 함께 둔다.
+
+#### 기타 (이번 개편에서 변경 없음)
 
 | 시맨틱 이름       | Hex                    | className                     | 용도                                       |
 | ----------------- | ---------------------- | ----------------------------- | ------------------------------------------ |
-| primary           | `#1C1917`              | `bg-primary` / `text-primary` | 기본 텍스트·강조 배경 (거의 블랙)          |
-| secondary         | `#57534E`              | `text-secondary`              | 보조 텍스트                                |
-| tertiary          | `#78716C`              | `text-tertiary`               | 3차 텍스트, 로딩 인디케이터 등             |
-| muted             | `#A8A29E`              | `text-muted`                  | placeholder, 비활성 텍스트                 |
+| description       | `#6B6360`              | (tailwind 미등록)             | 설명 텍스트 — JS 값(`colors.description`)으로만 사용 |
 | bg-light          | `#F8F6F2`              | `bg-bg-light`                 | 라이트 모드 배경                           |
 | bg-dark           | `#171412`              | `bg-bg-dark`                  | 다크 모드 배경                             |
 | bg-tonal          | `#F2EFE9`              | `bg-bg-tonal`                 | 카드 등 톤온톤 배경                        |
@@ -41,7 +102,6 @@
 | image-placeholder | `#E5E1D8`              | `bg-image-placeholder`        | 이미지 로딩 전 배경                        |
 | divider           | `#E7E5E4`              | `border-divider`              | 라이트 모드 구분선                         |
 | divider-dark      | `#292524`              | `border-divider-dark`         | 다크 모드 구분선                           |
-| accent            | `#3B82F6`              | `bg-accent` / `text-accent`   | 링크·강조 액션 (블루)                      |
 | error             | `#EF4444`              | `text-error` / `bg-error`     | 에러/경고                                  |
 | error-alt         | `#F43F5E`              | `text-error-alt`              | 에러와 톤이 다른 빨강 (스와이프 "패스" 등) |
 | success           | `#00BC7D`              | `text-success` / `bg-success` | 성공 상태                                  |

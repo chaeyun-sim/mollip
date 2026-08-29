@@ -14,7 +14,6 @@ import { useExploreScreenData, type ExhibitionSummary } from '@/src/hooks/useExp
 import { usePopularExhibitions } from '@/src/hooks/usePopularExhibitions';
 import { Fab } from '@/src/components/common/Fab';
 import { colors } from '@/src/constants/colors';
-import { SERVICE_NAME } from '@/src/constants/service-name';
 import { useAuthStore } from '@/src/store/authStore';
 
 export default function ExploreScreen() {
@@ -69,7 +68,7 @@ export default function ExploreScreen() {
 
 		if (displayedRecommended.length === 0) {
 			return (
-				<Text className="text-muted text-[13px] font-pretendard-regular">추천할 전시가 없어요</Text>
+				<Text className="text-gray500 text-[13px] font-pretendard-regular">추천할 전시가 없어요</Text>
 			);
 		}
 
@@ -104,7 +103,7 @@ export default function ExploreScreen() {
 						accessibilityLabel="마이페이지"
 						style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
 					>
-						<Ionicons name="person-outline" size={24} className="text-primary" />
+						<Ionicons name="person-outline" size={24} className="text-gray900" />
 					</Pressable>
 				</Screen.Header.Right>
 			</Screen.Header>
@@ -136,7 +135,7 @@ export default function ExploreScreen() {
 						eyebrow="FOR YOU"
 						title={
 							isPersonalized && name ? (
-								<Text className="text-primary text-[18px] leading-normal font-pretendard-semibold tracking-[-0.5px]">
+								<Text className="text-gray900 text-[18px] leading-normal font-pretendard-semibold tracking-[-0.5px]">
 									{`몰립이 엄선한\n${name}님에게 `}
 									<Text className="text-[#B8623D] font-pretendard-bold">딱 맞는 전시를 추천</Text>
 									해드릴게요!
@@ -155,7 +154,7 @@ export default function ExploreScreen() {
 				className="absolute right-6 items-end gap-3"
 				style={{
 					bottom: Math.max(insets.bottom, 16),
-					shadowColor: colors.primary,
+					shadowColor: colors.gray900,
 					shadowOpacity: 0.28,
 					shadowRadius: 14,
 					shadowOffset: { width: 0, height: 6 },

@@ -75,7 +75,7 @@ export default function ExitSummaryScreen() {
 	function renderNearbySection(label: string, places: NearbyPlace[], variant: PlaceVariant) {
 		return (
 			<View className="mb-5">
-				<Text className="text-tertiary font-pretendard-semibold text-[13px] mb-2.5">{label}</Text>
+				<Text className="text-gray600 font-pretendard-semibold text-[13px] mb-2.5">{label}</Text>
 				<View>
 					{placesLoading ? (
 						[0, 1, 2].map((i) => <NearbyPlaceRowSkeleton key={i} isFirst={i === 0} />)
@@ -90,7 +90,7 @@ export default function ExitSummaryScreen() {
 							/>
 						))
 					) : (
-						<Text className="text-muted font-pretendard-regular text-[13px] py-2">
+						<Text className="text-gray500 font-pretendard-regular text-[13px] py-2">
 							주변 장소를 찾지 못했어요
 						</Text>
 					)}
@@ -108,17 +108,17 @@ export default function ExitSummaryScreen() {
 			>
 				<View className="items-center mb-10">
 					<View className="w-16 h-16 rounded-full items-center justify-center mb-5 bg-bg-tonal">
-						<Ionicons name="checkmark" size={28} className="text-accent" />
+						<Ionicons name="checkmark" size={28} className="text-primary" />
 					</View>
-					<Text className="text-primary font-pretendard-bold text-[22px] text-center mb-2">
+					<Text className="text-gray900 font-pretendard-bold text-[22px] text-center mb-2">
 						오디오 가이드가 종료되었습니다.
 					</Text>
-					<Text className="text-tertiary font-pretendard-regular text-[14px] text-center leading-6">
+					<Text className="text-gray600 font-pretendard-regular text-[14px] text-center leading-6">
 						오늘 전시, 즐거우셨나요?{'\n'}관람 기록은 아카이브에서 다시 볼 수 있어요
 					</Text>
 				</View>
 
-				<Text className="text-primary font-pretendard-semibold text-[16px] mb-4">
+				<Text className="text-gray900 font-pretendard-semibold text-[16px] mb-4">
 					주변 즐길거리
 				</Text>
 
@@ -128,7 +128,7 @@ export default function ExitSummaryScreen() {
 
 			<View className="absolute left-0 right-0 bottom-0 px-6 pb-10">
 				<Pressable
-					className="rounded-2xl items-center py-4 bg-accent"
+					className="rounded-2xl items-center py-4 bg-secondary"
 					onPress={() => {
 						// 방어적으로 한 번 더 리셋 — 진입 경로가 늘어나도 몰입 모드가 남지 않도록
 						exitImmersive();

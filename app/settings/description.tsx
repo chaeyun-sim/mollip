@@ -63,7 +63,7 @@ export default function DescriptionSettingsScreen() {
 				showsVerticalScrollIndicator={false}
 				contentContainerStyle={{ paddingBottom: 60 }}
 			>
-				<Text className="text-[13px] font-pretendard-regular text-tertiary mt-4 mb-3">
+				<Text className="text-[13px] font-pretendard-regular text-gray600 mt-4 mb-3">
 					{`선택한 항목을 해설에서 더 깊게 다뤄요.\n여러 개 선택할 수 있어요.`}
 				</Text>
 
@@ -97,7 +97,7 @@ export default function DescriptionSettingsScreen() {
 											{isSelected && <Ionicons name="checkmark" size={13} color="white" />}
 										</View>
 										<View className="flex-1">
-											<Text className="text-[14px] font-pretendard-medium text-primary">
+											<Text className="text-[14px] font-pretendard-medium text-gray900">
 												{option.label}
 											</Text>
 										</View>

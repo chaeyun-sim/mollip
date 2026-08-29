@@ -359,7 +359,7 @@ export default function RouteScreen() {
 							className={cn(
 								'w-[34px] h-[34px] rounded-full items-center justify-center',
 								i === 0
-									? 'bg-primary'
+									? 'bg-primary-dark'
 									: i === waypoints.length - 1
 										? 'bg-[#FF2D78]'
 										: 'bg-orange-600',
@@ -409,7 +409,7 @@ export default function RouteScreen() {
 				<View className="flex-row items-center px-5 pt-2 gap-3">
 					<FloatingBackButton onPress={() => router.back()} variant="onLight" />
 					<View className="flex-1 bg-white/90 rounded-2xl px-4 py-2.5">
-						<Text className="font-pretendard-semibold text-[15px] text-primary">관람 루트</Text>
+						<Text className="font-pretendard-semibold text-[15px] text-gray900">관람 루트</Text>
 						<Text className="font-pretendard-regular text-[11px] text-gray-400 mt-0.5">
 							{routeReady
 								? '지도를 탭해 경유지를 더 추가할 수 있어요'
@@ -424,7 +424,7 @@ export default function RouteScreen() {
 							accessibilityLabel="초기화"
 							accessibilityRole="button"
 						>
-							<Text className="font-pretendard-medium text-[13px] text-primary">초기화</Text>
+							<Text className="font-pretendard-medium text-[13px] text-gray900">초기화</Text>
 						</Pressable>
 					)}
 				</View>
@@ -448,7 +448,7 @@ export default function RouteScreen() {
 									className={cn(
 										'w-5 h-5 rounded-full items-center justify-center',
 										i === 0
-											? 'bg-primary'
+											? 'bg-primary-dark'
 											: i === waypoints.length - 1
 												? 'bg-[#FF2D78]'
 												: 'bg-amber-600',
@@ -457,7 +457,7 @@ export default function RouteScreen() {
 									<Text className="text-white font-pretendard-bold text-[10px]">{i + 1}</Text>
 								</View>
 								<Text
-									className="font-pretendard-regular text-[13px] text-primary max-w-[120px]"
+									className="font-pretendard-regular text-[13px] text-gray900 max-w-[120px]"
 									numberOfLines={1}
 								>
 									{renderWaypointLabel(i, waypoints.length)}
@@ -495,7 +495,7 @@ export default function RouteScreen() {
 						disabled={waypoints.length < 2 || building}
 						className={cn(
 							'rounded-2xl py-4 items-center',
-							waypoints.length < 2 ? 'bg-border' : 'bg-primary',
+							waypoints.length < 2 ? 'bg-gray400' : 'bg-secondary',
 							routeReady && nearbyExhibitions.length > 0 ? 'flex-1' : 'min-w-[120px]',
 						)}
 						accessibilityLabel={routeReady ? '경로 재생성' : '경로 생성'}
@@ -531,7 +531,7 @@ export default function RouteScreen() {
 						style={{ paddingBottom: insets.bottom + 24 }}
 					>
 						<View className="flex-row items-center justify-between mb-1">
-							<Text className="font-pretendard-semibold text-[17px] text-primary">
+							<Text className="font-pretendard-semibold text-[17px] text-gray900">
 								가는 길에서 볼 수 있는 전시
 							</Text>
 							<Pressable
@@ -540,7 +540,7 @@ export default function RouteScreen() {
 								accessibilityLabel="닫기"
 								accessibilityRole="button"
 							>
-								<Ionicons name="close" size={22} className="text-primary" />
+								<Ionicons name="close" size={22} className="text-gray900" />
 							</Pressable>
 						</View>
 						<Text className="font-pretendard-regular text-[13px] text-gray-400 mb-4">
@@ -559,7 +559,7 @@ export default function RouteScreen() {
 											accessibilityRole="button"
 										>
 											<Text
-												className="font-pretendard-medium text-[15px] text-primary"
+												className="font-pretendard-medium text-[15px] text-gray900"
 												numberOfLines={1}
 											>
 												{ex.title}
@@ -578,8 +578,8 @@ export default function RouteScreen() {
 										accessibilityLabel="경로에 추가"
 										accessibilityRole="button"
 									>
-										<Ionicons name="add-circle-outline" size={15} className="text-primary" />
-										<Text className="font-pretendard-medium text-[13px] text-primary">
+										<Ionicons name="add-circle-outline" size={15} className="text-gray900" />
+										<Text className="font-pretendard-medium text-[13px] text-gray900">
 											경로에 추가
 										</Text>
 									</Pressable>

@@ -67,15 +67,15 @@ export default function InquiryScreen() {
 					<View className="w-[72px] h-[72px] rounded-full bg-[#E8E3DB] items-center justify-center mb-1">
 						<Text style={{ fontSize: 32 }}>✓</Text>
 					</View>
-					<Text className="text-primary text-[17px] font-pretendard-semibold text-center">
+					<Text className="text-gray900 text-[17px] font-pretendard-semibold text-center">
 						문의가 접수됐어요
 					</Text>
-					<Text className="text-tertiary text-[13px] font-pretendard-regular text-center leading-[20px]">
+					<Text className="text-gray600 text-[13px] font-pretendard-regular text-center leading-[20px]">
 						확인 후 남겨주신 연락처로{'\n'}답변드릴게요
 					</Text>
 					<Pressable
 						onPress={() => router.back()}
-						className="mt-4 px-8 py-[14px] rounded-2xl bg-primary"
+						className="mt-4 px-8 py-[14px] rounded-2xl bg-secondary"
 						accessibilityRole="button"
 						accessibilityLabel="설정으로 돌아가기"
 						style={({ pressed }) => ({ opacity: pressed ? 0.8 : 1 })}
@@ -100,20 +100,13 @@ export default function InquiryScreen() {
 						accessibilityRole="button"
 						accessibilityLabel="문의 보내기"
 						accessibilityState={{ disabled: !canSubmit }}
-						className={cn('rounded-full px-3.5 py-1.5', canSubmit ? 'bg-primary' : 'bg-divider')}
+						className={cn('rounded-full px-3.5 py-1.5', canSubmit ? 'bg-secondary' : 'bg-gray400')}
 						style={({ pressed }) => ({ opacity: pressed && canSubmit ? 0.8 : 1 })}
 					>
 						{status === 'submitting' ? (
 							<ActivityIndicator size="small" color="#fff" />
 						) : (
-							<Text
-								className={cn(
-									'text-[14px] font-pretendard-semibold',
-									canSubmit ? 'text-white' : 'text-muted',
-								)}
-							>
-								보내기
-							</Text>
+							<Text className="text-[14px] font-pretendard-semibold text-white">보내기</Text>
 						)}
 					</Pressable>
 				</Screen.Header.Right>
@@ -130,7 +123,7 @@ export default function InquiryScreen() {
 					keyboardShouldPersistTaps="handled"
 				>
 					{/* 카테고리 */}
-					<Text className="text-[12px] mb-3 font-pretendard-medium text-muted tracking-[0.6px] uppercase">
+					<Text className="text-[12px] mb-3 font-pretendard-medium text-gray500 tracking-[0.6px] uppercase">
 						유형
 					</Text>
 					<View className="flex-row gap-2 mb-8">
@@ -145,7 +138,7 @@ export default function InquiryScreen() {
 									}}
 									className={cn(
 										'flex-1 py-[13px] rounded-2xl items-center justify-center gap-1',
-										selected ? 'bg-primary' : 'bg-bg-tonal',
+										selected ? 'bg-primary-dark' : 'bg-bg-tonal',
 									)}
 									accessibilityRole="radio"
 									accessibilityState={{ checked: selected }}
@@ -156,7 +149,7 @@ export default function InquiryScreen() {
 									<Text
 										className={cn(
 											'text-[12px] font-pretendard-semibold',
-											selected ? 'text-white' : 'text-tertiary',
+											selected ? 'text-white' : 'text-gray600',
 										)}
 									>
 										{opt.label}
@@ -167,14 +160,14 @@ export default function InquiryScreen() {
 					</View>
 
 					{/* 내용 */}
-					<Text className="text-[12px] mb-3 font-pretendard-medium text-muted tracking-[0.6px] uppercase">
+					<Text className="text-[12px] mb-3 font-pretendard-medium text-gray500 tracking-[0.6px] uppercase">
 						내용
 					</Text>
 					<TextInput
-						className="rounded-2xl bg-bg-tonal border border-[rgba(28,25,23,0.1)] px-4 py-4 text-primary text-[15px] font-pretendard-regular"
+						className="rounded-2xl bg-bg-tonal border border-[rgba(28,25,23,0.1)] px-4 py-4 text-gray900 text-[15px] font-pretendard-regular"
 						style={{ minHeight: 160, textAlignVertical: 'top' }}
 						placeholder="내용을 입력해주세요"
-						placeholderTextColor={colors.muted}
+						placeholderTextColor={colors.gray500}
 						value={content}
 						onChangeText={setContent}
 						multiline
@@ -185,13 +178,13 @@ export default function InquiryScreen() {
 					</Text>
 
 					{/* 연락처 */}
-					<Text className="text-[12px] mt-6 mb-3 font-pretendard-medium text-muted tracking-[0.6px] uppercase">
+					<Text className="text-[12px] mt-6 mb-3 font-pretendard-medium text-gray500 tracking-[0.6px] uppercase">
 						연락처 (선택)
 					</Text>
 					<TextInput
-						className="rounded-2xl bg-bg-tonal border border-[rgba(28,25,23,0.1)] px-4 text-primary text-[15px] h-[52px] font-pretendard-regular"
+						className="rounded-2xl bg-bg-tonal border border-[rgba(28,25,23,0.1)] px-4 text-gray900 text-[15px] h-[52px] font-pretendard-regular"
 						placeholder="답변받을 이메일"
-						placeholderTextColor={colors.muted}
+						placeholderTextColor={colors.gray500}
 						value={contactValue}
 						onChangeText={setContact}
 						keyboardType="email-address"

@@ -19,7 +19,7 @@ const MARKER_ZOOM = 14;
 
 // 도보만 지도에서 진한 잉크색으로 강조 — 버스/지하철은 legColor(지하철은 호선별)를 그대로 쓴다.
 function pathColor(leg: RouteLeg): string {
-	return leg.mode === 'walk' ? colors.primary : legColor(leg);
+	return leg.mode === 'walk' ? colors.gray900 : legColor(leg);
 }
 
 interface MapMarkersLayerProps {

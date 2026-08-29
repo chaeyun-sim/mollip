@@ -26,6 +26,7 @@ export function PopularSection({ items, status, onPress, onRefetch }: PopularSec
 					contentContainerStyle={{
 						flexDirection: 'row',
 						gap: 12,
+						marginLeft: 2
 					}}
 				>
 					{items.map((item) => (

@@ -235,7 +235,7 @@ export default function DescriptionScreen() {
 								name={savedId && isAudioBookmarked(savedId) ? 'heart' : 'heart-outline'}
 								size={22}
 								className={cn(
-									savedId && isAudioBookmarked(savedId) ? 'text-red-400' : 'text-tertiary',
+									savedId && isAudioBookmarked(savedId) ? 'text-red-400' : 'text-gray600',
 								)}
 							/>
 						</Pressable>
@@ -250,8 +250,8 @@ export default function DescriptionScreen() {
 			>
 				{hasError ? (
 					<View className="items-center mt-16 gap-3">
-						<Ionicons name="alert-circle-outline" size={40} className="text-tertiary" />
-						<Text className="text-tertiary text-[15px]">
+						<Ionicons name="alert-circle-outline" size={40} className="text-gray600" />
+						<Text className="text-gray600 text-[15px]">
 							{retryCount >= MAX_DESCRIPTION_RETRIES
 								? '잠시 후 다시 시도해 주세요'
 								: '해설 생성에 실패했어요'}
@@ -260,7 +260,7 @@ export default function DescriptionScreen() {
 				) : isStreaming && displayed === '' ? (
 					<View className="flex-row items-center mt-5 gap-2.5">
 						<ActivityIndicator color="#60A5FA" />
-						<Text className="text-[15px] text-muted">
+						<Text className="text-[15px] text-gray500">
 							{loadingStep === 0 && '그림 찾는 중...'}
 							{loadingStep === 1 && '그림 분석 중...'}
 							{loadingStep === 2 && '해설 생성 중...'}
@@ -313,8 +313,8 @@ export default function DescriptionScreen() {
 				</Pressable>
 
 				<View className="flex-row justify-between mt-1 mb-2">
-					<Text className="text-[11px] text-tertiary">{formatTime(elapsed)}</Text>
-					<Text className="text-[11px] text-tertiary">
+					<Text className="text-[11px] text-gray600">{formatTime(elapsed)}</Text>
+					<Text className="text-[11px] text-gray600">
 						{duration > 0 ? formatTime(duration) : '--:--'}
 					</Text>
 				</View>
@@ -330,7 +330,7 @@ export default function DescriptionScreen() {
 								accessibilityRole="button"
 								style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
 							>
-								<Ionicons name="chatbubble" size={26} className="text-tertiary" />
+								<Ionicons name="chatbubble" size={26} className="text-gray600" />
 							</Pressable>
 						)}
 					</View>
@@ -339,7 +339,7 @@ export default function DescriptionScreen() {
 					<Pressable
 						className={cn(
 							'w-16 h-16 rounded-[32px] items-center justify-center',
-							isTTSLoading || isTyping || !displayed ? 'bg-divider-dark' : 'bg-accent',
+							isTTSLoading || isTyping || !displayed ? 'bg-divider-dark' : 'bg-primary',
 						)}
 						style={({ pressed }) => ({
 							transform: [
@@ -374,7 +374,7 @@ export default function DescriptionScreen() {
 								accessibilityRole="button"
 								style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
 							>
-								<Ionicons name="share-outline" size={26} className="text-tertiary" />
+								<Ionicons name="share-outline" size={26} className="text-gray600" />
 							</Pressable>
 						)}
 					</View>
@@ -398,7 +398,7 @@ export default function DescriptionScreen() {
 						<View className="w-12 h-12 rounded-full bg-primary border border-white/10 items-center justify-center">
 							<Ionicons name="refresh" size={20} color="#60A5FA" />
 						</View>
-						<Text className="text-[11px] text-tertiary font-pretendard-regular">
+						<Text className="text-[11px] text-gray600 font-pretendard-regular">
 							{retryCount + 1}/{MAX_DESCRIPTION_RETRIES}
 						</Text>
 					</Pressable>

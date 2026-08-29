@@ -64,7 +64,7 @@ export default function PreferencesScreen() {
 
 			{isLoading ? (
 				<View className="flex-1 items-center justify-center">
-					<ActivityIndicator color={colors.primary} />
+					<ActivityIndicator color={colors.gray900} />
 				</View>
 			) : done ? (
 				<ArtPreferenceComplete

@@ -43,7 +43,7 @@ export default function GeneralSettingsScreen() {
 							<Switch
 								value={highContrast}
 								onValueChange={setHighContrast}
-								trackColor={{ false: colors.border, true: colors.primary }}
+								trackColor={{ false: colors.border, true: colors.gray900 }}
 								thumbColor="#FFFFFF"
 								ios_backgroundColor={colors.border}
 								style={{ transform: [{ scaleX: 0.75 }, { scaleY: 0.75 }] }}
@@ -53,7 +53,7 @@ export default function GeneralSettingsScreen() {
 					</SettingsCard>
 				</View>
 
-				<View className="h-[1px] w-full bg-muted/30 my-3" />
+				<View className="h-[1px] w-full bg-gray500/30 my-3" />
 
 				{/* 앱 정보 */}
 				<View className="gap-2 mt-1">
@@ -63,13 +63,13 @@ export default function GeneralSettingsScreen() {
 					</SettingsCard>
 				</View>
 
-				<View className="h-[1px] w-full bg-muted/30 my-3" />
+				<View className="h-[1px] w-full bg-gray500/30 my-3" />
 
 				{/* 계정 관리 */}
 				<View className="gap-2">
 					<SettingsCard>
 						{signingOut ? (
-							<ActivityIndicator size="small" color={colors.tertiary} />
+							<ActivityIndicator size="small" color={colors.gray600} />
 						) : (
 							<Pressable
 								onPress={signingOut ? undefined : handleSignOut}

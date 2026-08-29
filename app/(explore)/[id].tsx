@@ -164,10 +164,10 @@ export default function ExhibitionDetailScreen() {
 							<Ionicons
 								name="information-circle-outline"
 								size={17}
-								className="text-tertiary"
+								className="text-gray600"
 								style={{ marginTop: 1 }}
 							/>
-							<Text className="flex-1 text-[13px] leading-[20px] text-secondary font-pretendard-regular">
+							<Text className="flex-1 text-[13px] leading-[20px] text-gray700 font-pretendard-regular">
 								{exhibition.note}
 							</Text>
 						</View>

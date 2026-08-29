@@ -33,29 +33,29 @@ export function AccessibilityBadges({ accessibility }: AccessibilityBadgesProps)
 						className="flex-row items-center rounded-full px-2.5 py-1 gap-1.5 bg-[rgba(28,25,23,0.06)]"
 					>
 						{iconName && (
-							<MaterialCommunityIcons name={iconName} size={13} className="text-secondary" />
+							<MaterialCommunityIcons name={iconName} size={13} className="text-gray700" />
 						)}
 						{itemText.includes('경사로') && (
 							<MaterialCommunityIcons
 								name="wheelchair-accessibility"
 								size={13}
-								className="text-secondary"
+								className="text-gray700"
 							/>
 						)}
 						{itemText.includes('주출입구단차없음') && (
 							<MaterialCommunityIcons
 								name={accessibility.includes('자동문') ? 'door-sliding-open' : 'door-open'}
 								size={13}
-								className="text-secondary"
+								className="text-gray700"
 							/>
 						)}
 						{itemText.startsWith('점자') &&
 							(itemText === '점자블록' ? (
-								<MaterialCommunityIcons name="dots-grid" size={13} className="text-secondary" />
+								<MaterialCommunityIcons name="dots-grid" size={13} className="text-gray700" />
 							) : (
-								<MaterialCommunityIcons name="braille" size={13} className="text-secondary" />
+								<MaterialCommunityIcons name="braille" size={13} className="text-gray700" />
 							))}
-						<Text className="text-[12px] font-pretendard-medium text-secondary">{item.trim()}</Text>
+						<Text className="text-[12px] font-pretendard-medium text-gray700">{item.trim()}</Text>
 					</View>
 				);
 			})}

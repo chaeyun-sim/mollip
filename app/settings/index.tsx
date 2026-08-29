@@ -53,7 +53,7 @@ export default function MyPageScreen() {
 						accessibilityLabel="설정"
 						style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
 					>
-						<Ionicons name="settings-outline" size={22} className="text-primary" />
+						<Ionicons name="settings-outline" size={22} className="text-gray900" />
 					</LoginRequiredPressable>
 				</Screen.Header.Right>
 			</Screen.Header>
@@ -76,13 +76,13 @@ export default function MyPageScreen() {
 								className="mt-4"
 								style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
 							>
-								<Text className="font-pretendard-bold text-primary text-[18px] mb-1.5">
+								<Text className="font-pretendard-bold text-gray900 text-[18px] mb-1.5">
 									로그인하고 더 많은 기능을 만나보세요
 								</Text>
-								<Text className="font-pretendard-regular text-tertiary text-[13px] leading-[19px] mb-4">
+								<Text className="font-pretendard-regular text-gray600 text-[13px] leading-[19px] mb-4">
 									{`몰입모드, 나만의 해설 생성, 취향 기반 추천까지\n로그인하면 모두 이용할 수 있어요`}
 								</Text>
-								<View className="self-start rounded-full bg-primary px-5 py-2.5">
+								<View className="self-start rounded-full bg-secondary px-5 py-2.5">
 									<Text className="font-pretendard-semibold text-white text-[13px]">
 										로그인하기
 									</Text>
@@ -104,7 +104,7 @@ export default function MyPageScreen() {
 						</SettingsCard>
 					</View>
 
-					<View className="h-[1px] w-full bg-muted/30 my-3" />
+					<View className="h-[1px] w-full bg-gray500/30 my-3" />
 
 					{session && (
 						<View>
@@ -136,7 +136,7 @@ export default function MyPageScreen() {
 						</View>
 					)}
 
-					<View className="h-[1px] w-full bg-muted/30 my-3" />
+					<View className="h-[1px] w-full bg-gray500/30 my-3" />
 
 					<View className="relative">
 						<SettingsCard>
@@ -144,7 +144,7 @@ export default function MyPageScreen() {
 								<Switch
 									value={pushNotificationsEnabled}
 									onValueChange={setPushNotificationsEnabled}
-									trackColor={{ false: colors.border, true: colors.primary }}
+									trackColor={{ false: colors.border, true: colors.gray900 }}
 									thumbColor="#FFFFFF"
 									ios_backgroundColor={colors.border}
 									style={{ transform: [{ scaleX: 0.75 }, { scaleY: 0.75 }] }}
@@ -154,7 +154,7 @@ export default function MyPageScreen() {
 						</SettingsCard>
 					</View>
 
-					<View className="h-[1px] w-full bg-muted/30 my-3" />
+					<View className="h-[1px] w-full bg-gray500/30 my-3" />
 
 					<View>
 						<SettingsCard>

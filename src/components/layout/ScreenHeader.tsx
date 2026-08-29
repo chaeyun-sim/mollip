@@ -28,12 +28,12 @@ function ScreenHeader({ children, className, style }: SlotProps) {
 function Logo({ className, fontSize = 24, textStyle }: LogoProps) {
 	return (
 		<View className={cn('flex-row items-start', className)}>
-			<Text className="text-primary font-hahmlet-semibold" style={{ fontSize, ...textStyle }}>
+			<Text className="text-gray900 font-hahmlet-semibold" style={{ fontSize, ...textStyle }}>
 				moll
 			</Text>
 
 			<View className="relative">
-				<Text className="text-primary font-hahmlet-semibold" style={{ fontSize, ...textStyle }}>
+				<Text className="text-gray900 font-hahmlet-semibold" style={{ fontSize, ...textStyle }}>
 					ı
 				</Text>
 
@@ -60,7 +60,7 @@ function Logo({ className, fontSize = 24, textStyle }: LogoProps) {
 				</View>
 			</View>
 
-			<Text className="text-primary font-hahmlet-semibold" style={{ fontSize, ...textStyle }}>
+			<Text className="text-gray900 font-hahmlet-semibold" style={{ fontSize, ...textStyle }}>
 				p
 			</Text>
 		</View>
@@ -82,7 +82,7 @@ function Center({ children, className, style }: SlotProps) {
 			style={style}
 		>
 			{typeof children === 'string' ? (
-				<Text className="text-[17px] text-primary font-pretendard-semibold">{children}</Text>
+				<Text className="text-[17px] text-gray900 font-pretendard-semibold">{children}</Text>
 			) : (
 				children
 			)}
@@ -110,12 +110,12 @@ function Back({
 	const router = useRouter();
 	const colorClass =
 		color === 'muted'
-			? 'text-tertiary'
+			? 'text-gray600'
 			: color === 'white-90'
 				? 'text-white/90'
 				: color === 'white'
 					? 'text-white'
-					: 'text-primary';
+					: 'text-gray900';
 
 	return (
 		<Pressable

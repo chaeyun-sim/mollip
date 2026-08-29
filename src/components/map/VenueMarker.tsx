@@ -41,7 +41,7 @@ export function VenueMarker({
 			>
 				<View
 					collapsable={false}
-					className="bg-primary border border-white"
+					className="bg-gray900 border border-white"
 					style={{ width: size, height: size, borderRadius: size / 2 }}
 				/>
 			</NaverMapMarkerOverlay>

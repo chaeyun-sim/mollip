@@ -20,7 +20,7 @@ export function ArtPreferenceComplete({
 		<>
 			<View className="flex-1 items-center justify-center gap-4">
 				<Text className="text-5xl">🎨</Text>
-				<Text className="text-primary text-xl font-pretendard-bold">완료!</Text>
+				<Text className="text-gray900 text-xl font-pretendard-bold">완료!</Text>
 				<Text className="text-description text-[13px] font-pretendard-regular text-center leading-5">
 					{likedCount > 0
 						? `${likedCount}개의 취향을 저장했어요\n맞춤 전시를 추천해드릴게요`
@@ -29,7 +29,7 @@ export function ArtPreferenceComplete({
 			</View>
 			<Screen.Bottom className="pb-12">
 				<Pressable
-					className="w-full bg-primary flex-row items-center justify-center rounded-[18px] py-[18px] gap-2.5 border-[0.5px] border-white/25"
+					className="w-full bg-secondary flex-row items-center justify-center rounded-[18px] py-[18px] gap-2.5 border-[0.5px] border-white/25"
 					style={({ pressed }) => ({ opacity: pressed || disabled ? 0.6 : 1 })}
 					onPress={onPress}
 					disabled={disabled}

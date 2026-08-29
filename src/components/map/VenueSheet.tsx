@@ -210,7 +210,7 @@ export function VenueSheet({
 
 	const heroExhibition = activeExhibitions[0] ?? upcomingExhibitions[0];
 	const listExhibitions = tab === 'active' ? activeExhibitions : upcomingExhibitions;
-	const accentColor = heroExhibition?.posterColor ?? colors.primary;
+	const accentColor = heroExhibition?.posterColor ?? colors.gray900;
 
 	// 하위 미술관 변경 시 전시 탭을 '진행 중'으로 초기화
 	const handleSubVenueChange = (idx: number) => {
@@ -333,7 +333,7 @@ export function VenueSheet({
 							<Ionicons
 								name="arrow-up-outline"
 								size={11}
-								className="text-primary"
+								className="text-gray900"
 								style={{ transform: [{ rotate: '45deg' }] }}
 							/>
 						</Pressable>
@@ -380,7 +380,7 @@ export function VenueSheet({
 								className={cn(
 									'px-3.5 py-2 rounded-full border',
 									subVenueIdx === idx
-										? 'bg-primary border-primary'
+										? 'bg-primary-dark border-primary-dark'
 										: 'bg-transparent border-black/15',
 								)}
 								accessibilityRole="tab"

@@ -39,7 +39,7 @@ export function ExhibitionImmersiveFab({ onPress }: ExhibitionImmersiveFabProps)
 			hitSlop={8}
 		>
 			<Animated.View style={[pressStyle, FAB_SHADOW]} className="items-center">
-				<View className="w-16 h-16 rounded-full items-center justify-center bg-primary">
+				<View className="w-16 h-16 rounded-full items-center justify-center bg-secondary">
 					<Ionicons name="headset" size={28} color="white" />
 				</View>
 			</Animated.View>

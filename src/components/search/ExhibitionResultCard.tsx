@@ -38,17 +38,17 @@ export function ExhibitionResultCard({ result, onPress }: ExhibitionResultCardPr
 			{/* 정보 */}
 			<View className="flex-1 justify-center gap-1">
 				<StatusBadge status={status} />
-				<Text numberOfLines={1} className="text-primary text-[15px] font-pretendard-semibold">
+				<Text numberOfLines={1} className="text-gray900 text-[15px] font-pretendard-semibold">
 					{ex.title}
 				</Text>
 
-				<Text numberOfLines={1} className="text-tertiary text-[13px] font-pretendard-regular">
+				<Text numberOfLines={1} className="text-gray600 text-[13px] font-pretendard-regular">
 					{ex.venue}
 					{distanceKm !== null && ` · ${formatDistance(distanceKm)}`}
 				</Text>
 
 				<View className="flex-row items-center gap-1.5">
-					<Text className="text-muted text-[12px] font-pretendard-regular">
+					<Text className="text-gray500 text-[12px] font-pretendard-regular">
 						{ex.startDate} – {ex.endDate}
 					</Text>
 					{ddayLabel && (
@@ -70,7 +70,7 @@ export function ExhibitionResultCard({ result, onPress }: ExhibitionResultCardPr
 				<Ionicons
 					name={isBookmarked ? 'bookmark' : 'bookmark-outline'}
 					size={20}
-					className={isBookmarked ? 'text-primary' : 'text-stone-300'}
+					className={isBookmarked ? 'text-gray900' : 'text-stone-300'}
 				/>
 			</Pressable>
 		</Pressable>

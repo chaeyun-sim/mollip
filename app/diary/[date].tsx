@@ -34,10 +34,10 @@ interface ChatHistorySectionProps {
 function ChatHistorySection({ title, messages }: ChatHistorySectionProps) {
 	return (
 		<View className="mt-5 px-4">
-			<Text className="text-xs font-pretendard-semibold text-muted tracking-wider mb-3">
+			<Text className="text-xs font-pretendard-semibold text-gray500 tracking-wider mb-3">
 				채팅 기록
 			</Text>
-			<Text className="text-sm font-pretendard-medium text-tertiary mb-3">{title}</Text>
+			<Text className="text-sm font-pretendard-medium text-gray600 mb-3">{title}</Text>
 			<View className="gap-y-2">
 				{messages.map((msg) => (
 					<View
@@ -51,7 +51,7 @@ function ChatHistorySection({ title, messages }: ChatHistorySectionProps) {
 						<View
 							className={
 								msg.role === 'user'
-									? 'bg-accent rounded-2xl rounded-tr-sm px-4 py-2.5 max-w-[80%]'
+									? 'bg-primary rounded-2xl rounded-tr-sm px-4 py-2.5 max-w-[80%]'
 									: 'bg-divider-dark rounded-2xl rounded-tl-sm px-4 py-2.5 max-w-[80%]'
 							}
 						>
@@ -218,7 +218,7 @@ export default function DiaryScreen() {
 					<TouchableWithoutFeedback onPress={() => setMemoVisible(false)}>
 						<View className="flex-1" />
 					</TouchableWithoutFeedback>
-					<View className="bg-primary rounded-t-3xl px-6 pt-5 pb-10">
+					<View className="bg-gray900 rounded-t-3xl px-6 pt-5 pb-10">
 						<View className="flex-row items-center justify-between mb-4">
 							<Text className="text-white font-pretendard-semibold text-[17px]">
 								나의 관람 메모

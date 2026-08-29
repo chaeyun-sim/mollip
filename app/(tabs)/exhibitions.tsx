@@ -55,12 +55,12 @@ export default function ExhibitionsScreen() {
 
 	function renderFooterContent() {
 		if (isLoadingMore) {
-			return <ActivityIndicator color={colors.secondary} />;
+			return <ActivityIndicator color={colors.gray700} />;
 		}
 
 		if (!hasMore) {
 			return (
-				<Text className="text-muted text-[12px] font-pretendard-regular">
+				<Text className="text-gray500 text-[12px] font-pretendard-regular">
 					모든 전시를 불러왔어요
 				</Text>
 			);
@@ -77,6 +77,7 @@ export default function ExhibitionsScreen() {
 				{renderFooterContent()}
 			</View>
 		);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [items.length, isLoadingMore, hasMore]);
 
 	const renderEmpty = useCallback(() => {

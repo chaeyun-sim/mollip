@@ -31,12 +31,12 @@ function TicketStubFront({ bars, ticketNo }: TicketStubFrontProps) {
 					{bars.map((w, i) => (
 						<View
 							key={i}
-							className={cn('mr-0.5 bg-primary', i % 4 === 0 ? 'h-[30px]' : 'h-[24px]')}
+							className={cn('mr-0.5 bg-gray900', i % 4 === 0 ? 'h-[30px]' : 'h-[24px]')}
 							style={{ width: w }}
 						/>
 					))}
 				</View>
-				<Text className="mt-1.5 text-[10px] tracking-[4px] text-tertiary font-pretendard-medium">
+				<Text className="mt-1.5 text-[10px] tracking-[4px] text-gray600 font-pretendard-medium">
 					{ticketNo}
 				</Text>
 			</View>
@@ -53,14 +53,14 @@ function TicketStubBack({ ticketNo }: TicketStubBackProps) {
 	return (
 		<View className="flex-row items-center justify-between px-6" style={{ height: STUB_HEIGHT }}>
 			<View>
-				<Text className="text-[10px] tracking-[3px] text-muted font-pretendard-semibold">
+				<Text className="text-[10px] tracking-[3px] text-gray500 font-pretendard-semibold">
 					MUSEUM TICKET
 				</Text>
 				<Text className="mt-1 text-[10px] tracking-[3px] text-stone-300 font-pretendard-semibold">
 					ADMIT ONE
 				</Text>
 			</View>
-			<Text className="text-[10px] tracking-[4px] text-tertiary font-pretendard-medium">
+			<Text className="text-[10px] tracking-[4px] text-gray600 font-pretendard-medium">
 				{ticketNo}
 			</Text>
 		</View>

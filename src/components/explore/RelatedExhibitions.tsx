@@ -93,7 +93,7 @@ function RelatedExhibitionCard({ exhibition, onPress }: RelatedExhibitionCardPro
 								elevation: 2,
 							}}
 						>
-							<Text className="text-[10px] font-pretendard-semibold text-primary">{ddayLabel}</Text>
+							<Text className="text-[10px] font-pretendard-semibold text-gray900">{ddayLabel}</Text>
 						</View>
 					) : null}
 				</ImageFallback>

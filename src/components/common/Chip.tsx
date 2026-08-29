@@ -36,7 +36,7 @@ export function Chip({
 			accessibilityState={{ selected: active }}
 			className={cn(
 				'flex-row items-center gap-1 rounded-full px-3.5 py-2',
-				active ? 'bg-primary' : INACTIVE_BACKGROUND[variant],
+				active ? 'bg-primary-dark' : INACTIVE_BACKGROUND[variant],
 			)}
 			style={({ pressed }) => [
 				variant === 'elevated' && !active
@@ -53,12 +53,12 @@ export function Chip({
 		>
 			{active && !icon && <Ionicons name="checkmark" size={13} color="#FFFFFF" />}
 			{icon && (
-				<Ionicons name={icon} size={13} className={cn(active ? 'text-white' : 'text-secondary')} />
+				<Ionicons name={icon} size={13} className={cn(active ? 'text-white' : 'text-gray700')} />
 			)}
 			<Text
 				className={cn(
 					'text-[13px]',
-					active ? 'text-white font-pretendard-semibold' : 'text-secondary font-pretendard-medium',
+					active ? 'text-white font-pretendard-semibold' : 'text-gray700 font-pretendard-medium',
 				)}
 			>
 				{label}

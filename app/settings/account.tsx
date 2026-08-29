@@ -23,9 +23,9 @@ export default function AccountScreen() {
 				{/* 이메일 행 */}
 				{user.email && (
 					<View className="flex-row items-center justify-between px-1 py-3 mb-6">
-						<Text className="font-pretendard-medium text-[14px] text-primary">이메일</Text>
+						<Text className="font-pretendard-medium text-[14px] text-gray900">이메일</Text>
 						<Text
-							className="font-pretendard-regular text-[13px] text-muted max-w-[60%]"
+							className="font-pretendard-regular text-[13px] text-gray500 max-w-[60%]"
 							numberOfLines={1}
 						>
 							{user.email}
@@ -33,10 +33,10 @@ export default function AccountScreen() {
 					</View>
 				)}
 				{user.email && (
-					<View className="flex-row items-center justify-between px-1 py-3 mb-6">
-						<Text className="font-pretendard-medium text-[14px] text-primary">로그인 방법</Text>
+					<View className="flex-row items-center justify-between px-1 pb-3 mb-6">
+						<Text className="font-pretendard-medium text-[14px] text-gray900">로그인 방법</Text>
 						<Text
-							className="font-pretendard-regular text-[13px] text-muted max-w-[60%]"
+							className="font-pretendard-regular text-[13px] text-gray500 max-w-[60%]"
 							numberOfLines={1}
 						>
 							{user.app_metadata.provider?.toUpperCase() === 'KAKAO'
@@ -58,7 +58,7 @@ export default function AccountScreen() {
 						accessibilityLabel="탈퇴하기"
 						style={({ pressed }) => ({ opacity: pressed ? 0.5 : 1 })}
 					>
-						<Text className="font-pretendard-regular text-[13px] text-muted">탈퇴하기</Text>
+						<Text className="font-pretendard-regular text-[13px] text-gray500">탈퇴하기</Text>
 					</Pressable>
 				</View>
 			</View>
@@ -77,10 +77,10 @@ export default function AccountScreen() {
 						className="w-full rounded-t-3xl bg-white p-6 pb-9"
 						onPress={(e) => e.stopPropagation()}
 					>
-						<Text className="text-[17px] font-pretendard-semibold text-primary mb-2">
+						<Text className="text-[17px] font-pretendard-semibold text-gray900 mb-2">
 							정말 탈퇴할까요?
 						</Text>
-						<Text className="text-[13px] leading-[20px] font-pretendard-regular text-tertiary mb-6">
+						<Text className="text-[13px] leading-[20px] font-pretendard-regular text-gray600 mb-6">
 							계정 정보, 관람 기록, 저장한 전시가 모두 삭제되며{'\n'}이 작업은 되돌릴 수 없어요.
 						</Text>
 						<View className="flex-row gap-2">
@@ -89,12 +89,12 @@ export default function AccountScreen() {
 									Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
 									setShowWithdrawWarning(false);
 								}}
-								className="flex-1 rounded-2xl bg-bg-tonal items-center justify-center py-[14px]"
+								className="flex-1 rounded-2xl border border-secondary bg-transparent items-center justify-center py-[14px]"
 								style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
 								accessibilityRole="button"
 								accessibilityLabel="닫기"
 							>
-								<Text className="font-pretendard-semibold text-[15px] text-primary">닫기</Text>
+								<Text className="font-pretendard-semibold text-[15px] text-secondary">닫기</Text>
 							</Pressable>
 							<Pressable
 								onPress={() => {

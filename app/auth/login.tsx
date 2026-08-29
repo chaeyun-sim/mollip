@@ -119,7 +119,7 @@ export default function LoginScreen() {
 							disabled={busyAny}
 							loading={busy === 'apple'}
 							onPress={() => run('apple')}
-							icon={<Ionicons name="logo-apple" size={22} className="text-primary" />}
+							icon={<Ionicons name="logo-apple" size={22} className="text-gray900" />}
 						/>
 					) : null}
 
@@ -133,7 +133,7 @@ export default function LoginScreen() {
 						className="mt-7 px-2 flex-col justify-center gap-1"
 						style={{ marginBottom: insets.bottom + 12 }}
 					>
-						<Text className="text-[11px] leading-[16px] text-muted text-center font-pretendard-regular">
+						<Text className="text-[11px] leading-[16px] text-gray500 text-center font-pretendard-regular">
 							회원가입 시 서비스의 필수 동의 항목인
 						</Text>
 						<View className="flex-row gap-1 justify-center">
@@ -143,7 +143,7 @@ export default function LoginScreen() {
 										개인정보처리방침
 									</Text>
 								</Pressable>
-								<Text className="text-[11px] leading-[16px] text-muted text-center font-pretendard-regular">
+								<Text className="text-[11px] leading-[16px] text-gray500 text-center font-pretendard-regular">
 									과
 								</Text>
 							</View>
@@ -153,7 +153,7 @@ export default function LoginScreen() {
 										서비스 이용약관
 									</Text>
 								</Pressable>
-								<Text className="text-[11px] leading-[16px] text-muted text-center font-pretendard-regular">
+								<Text className="text-[11px] leading-[16px] text-gray500 text-center font-pretendard-regular">
 									에 동의한 것으로 간주됩니다.
 								</Text>
 							</View>

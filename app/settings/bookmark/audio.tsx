@@ -47,19 +47,19 @@ function AudioHistoryCard({ item, onPress, onDelete }: AudioHistoryCardProps) {
 				/>
 			) : (
 				<View className="w-[40px] h-[40px] rounded-full bg-[#E8E3DB] items-center justify-center">
-					<Ionicons name="headset-outline" size={18} className="text-tertiary" />
+					<Ionicons name="headset-outline" size={18} className="text-gray600" />
 				</View>
 			)}
 
 			<View className="flex-1">
 				<Text
 					numberOfLines={1}
-					className="text-primary text-[14px] font-pretendard-semibold leading-[20px]"
+					className="text-gray900 text-[14px] font-pretendard-semibold leading-[20px]"
 				>
 					{item.title}
 				</Text>
 				{item.artist && (
-					<Text className="text-muted text-[12px] font-pretendard-regular">{item.artist}</Text>
+					<Text className="text-gray500 text-[12px] font-pretendard-regular">{item.artist}</Text>
 				)}
 				<Text className="text-[#C7C3BD] text-[11px] font-pretendard-regular mt-0.5">
 					{formatDate(item.savedAt)}
@@ -136,7 +136,7 @@ export default function AudioHistoryScreen() {
 			{items.length === 0 ? (
 				<View className="flex-1 items-center justify-center gap-2">
 					<Ionicons name="headset-outline" size={36} className="text-stone-300" />
-					<Text className="text-muted text-[14px] font-pretendard-regular text-center">
+					<Text className="text-gray500 text-[14px] font-pretendard-regular text-center">
 						저장된 오디오가 없어요{'\n'}해설 화면에서 하트를 눌러 저장해보세요
 					</Text>
 				</View>
@@ -163,8 +163,8 @@ export default function AudioHistoryScreen() {
 				snapPoints={['70%']}
 				enablePanDownToClose
 				onClose={() => setSelected(null)}
-				backgroundStyle={{ backgroundColor: colors.primary }}
-				handleIndicatorStyle={{ backgroundColor: colors.secondary }}
+				backgroundStyle={{ backgroundColor: colors.gray900 }}
+				handleIndicatorStyle={{ backgroundColor: colors.gray700 }}
 			>
 				{selected && (
 					<BottomSheetScrollView
@@ -176,7 +176,7 @@ export default function AudioHistoryScreen() {
 									{selected.title}
 								</Text>
 								{selected.artist && (
-									<Text className="text-muted text-[13px] font-pretendard-regular mt-0.5">
+									<Text className="text-gray500 text-[13px] font-pretendard-regular mt-0.5">
 										{selected.artist}
 									</Text>
 								)}
@@ -206,7 +206,7 @@ export default function AudioHistoryScreen() {
 									accessibilityRole="button"
 									style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
 								>
-									<Ionicons name="close" size={22} className="text-tertiary" />
+									<Ionicons name="close" size={22} className="text-gray600" />
 								</Pressable>
 							</View>
 						</View>

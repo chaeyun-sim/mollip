@@ -72,7 +72,7 @@ export function RouteSheet({
 					accessibilityRole="button"
 				/>
 				<View
-					className="bg-primary rounded-t-3xl px-6 pt-5"
+					className="bg-gray900 rounded-t-3xl px-6 pt-5"
 					style={{ paddingBottom: insets.bottom + 24, maxHeight: '80%' }}
 				>
 					<View className="flex-row items-center justify-between mb-5">

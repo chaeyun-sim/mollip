@@ -48,10 +48,10 @@ export function KcisaSection({
 					>
 						{({ pressed }) => (
 							<View className="flex-row items-center" style={{ opacity: pressed ? 0.6 : 1 }}>
-								<Text className="text-muted text-[12px] font-pretendard-medium mr-0.5">
+								<Text className="text-gray500 text-[12px] font-pretendard-medium mr-0.5">
 									더보기
 								</Text>
-								<Ionicons name="chevron-forward" size={14} className="text-muted" />
+								<Ionicons name="chevron-forward" size={14} className="text-gray500" />
 							</View>
 						)}
 					</Pressable>
@@ -68,7 +68,7 @@ export function KcisaSection({
 					className="py-8"
 				/>
 			) : carousel.length === 0 ? (
-				<Text className="text-muted text-[13px] font-pretendard-regular">
+				<Text className="text-gray500 text-[13px] font-pretendard-regular">
 					진행 중인 전시가 없어요
 				</Text>
 			) : (

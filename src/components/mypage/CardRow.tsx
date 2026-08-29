@@ -27,14 +27,14 @@ export function CardRow({
 				className,
 			)}
 		>
-			<Text className="font-pretendard-semibold text-primary text-[14px]">{label}</Text>
+			<Text className="font-pretendard-semibold text-gray900 text-[14px]">{label}</Text>
 			{children ?? (
 				<View className="flex-row items-center gap-1">
 					{value ? (
 						<Text className="font-pretendard-regular text-[#B0A89E] text-[13px]">{value}</Text>
 					) : null}
-					{onPress ? <Ionicons name="chevron-forward" size={18} className="text-muted" /> : null}
-					{url ? <Ionicons name="open-outline" size={18} className="text-primary" /> : null}
+					{onPress ? <Ionicons name="chevron-forward" size={18} className="text-gray500" /> : null}
+					{url ? <Ionicons name="open-outline" size={18} className="text-gray900" /> : null}
 				</View>
 			)}
 		</View>

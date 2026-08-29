@@ -31,10 +31,10 @@ export function GridExhibitionCell({ item, colWidth, gridHeight, onPress }: Grid
 			/>
 			<View style={{ width: colWidth }}>
 				<StatusBadge status={item.status} className="mt-3" />
-				<Text className="mt-1 text-primary text-[13px] leading-[18px] font-pretendard-semibold">
+				<Text className="mt-1 text-gray900 text-[13px] leading-[18px] font-pretendard-semibold">
 					{item.title.trim()}
 				</Text>
-				<Text numberOfLines={1} className="text-muted text-[11px] mt-0.5 font-pretendard-regular">
+				<Text numberOfLines={1} className="text-gray500 text-[11px] mt-0.5 font-pretendard-regular">
 					{item.venue.trim()}
 				</Text>
 			</View>

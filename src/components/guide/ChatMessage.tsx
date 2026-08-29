@@ -133,17 +133,17 @@ export function ChatMessage({ item, onRetry }: ChatMessageProps) {
 					accessibilityRole="button"
 					style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
 				>
-					<Text className="font-pretendard-regular text-tertiary text-[13px]">
+					<Text className="font-pretendard-regular text-gray600 text-[13px]">
 						일시적인 오류가 발생했습니다
 					</Text>
-					<Ionicons name="refresh-outline" size={14} className="text-tertiary" />
+					<Ionicons name="refresh-outline" size={14} className="text-gray600" />
 				</Pressable>
 			) : (
 				<Pressable
 					className={cn(
 						'rounded-2xl px-4 py-3 max-w-[80%]',
 						isUser
-							? 'rounded-tr-sm bg-accent'
+							? 'rounded-tr-sm bg-primary'
 							: cn(
 									'rounded-tl-sm',
 									highContrast ? 'bg-[#F0EFED]' : 'bg-primary border-white/[0.08]',
@@ -190,7 +190,7 @@ export function ChatMessage({ item, onRetry }: ChatMessageProps) {
 									className="px-6 py-5"
 									style={({ pressed }) => ({ opacity: pressed ? 0.4 : 1 })}
 								>
-									<Text className="text-[18px] font-pretendard-regular text-primary">
+									<Text className="text-[18px] font-pretendard-regular text-gray900">
 										{action.label}
 									</Text>
 								</Pressable>
@@ -211,7 +211,7 @@ export function ChatMessage({ item, onRetry }: ChatMessageProps) {
 					style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.6)' }}
 					onPress={() => setSelectCopyVisible(false)}
 				>
-					<View className="absolute bottom-0 left-0 right-0 bg-primary rounded-t-[24px] px-6 pt-5 pb-12">
+					<View className="absolute bottom-0 left-0 right-0 bg-gray900 rounded-t-[24px] px-6 pt-5 pb-12">
 						<View className="flex-row items-center justify-between mb-4">
 							<Text className="text-white/50 font-pretendard-regular text-[13px]">
 								텍스트를 꾹 눌러 원하는 부분 선택

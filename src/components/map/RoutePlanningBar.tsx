@@ -207,7 +207,7 @@ export function RoutePlanningBar({
 					>
 						<View className="w-2.5 h-2.5 rounded-full bg-green-500" />
 						<Text
-							className="flex-1 text-[14px] font-pretendard-medium text-primary"
+							className="flex-1 text-[14px] font-pretendard-medium text-gray900"
 							numberOfLines={1}
 						>
 							{origin?.name ?? '출발지를 선택하세요'}
@@ -224,7 +224,7 @@ export function RoutePlanningBar({
 					>
 						<View className="w-2.5 h-2.5 rounded-full bg-error" />
 						<Text
-							className="flex-1 text-[14px] font-pretendard-medium text-primary"
+							className="flex-1 text-[14px] font-pretendard-medium text-gray900"
 							numberOfLines={1}
 						>
 							{destination?.name ?? '도착지를 선택하세요'}
@@ -241,7 +241,7 @@ export function RoutePlanningBar({
 						accessibilityRole="button"
 						accessibilityLabel="출발지와 도착지 바꾸기"
 					>
-						<Ionicons name="swap-vertical" size={18} className="text-primary" />
+						<Ionicons name="swap-vertical" size={18} className="text-gray900" />
 					</Pressable>
 					<Pressable
 						onPress={() => {
@@ -253,7 +253,7 @@ export function RoutePlanningBar({
 						accessibilityRole="button"
 						accessibilityLabel="길찾기 취소"
 					>
-						<Ionicons name="close" size={20} className="text-primary" />
+						<Ionicons name="close" size={20} className="text-gray900" />
 					</Pressable>
 				</View>
 			</View>
@@ -296,14 +296,14 @@ export function RoutePlanningBar({
 							className="flex-row items-center gap-2 px-4 py-3 border-b border-black/[0.04]"
 							accessibilityRole="button"
 						>
-							<Ionicons name="locate" size={18} className="text-primary" />
-							<Text className="text-[14px] font-pretendard-semibold text-primary">현재 위치</Text>
+							<Ionicons name="locate" size={18} className="text-gray900" />
+							<Text className="text-[14px] font-pretendard-semibold text-gray900">현재 위치</Text>
 						</Pressable>
 					)}
 
 					{kakaoLoading && (
 						<View className="flex-row items-center gap-2 px-4 py-3">
-							<ActivityIndicator size="small" className="text-primary" />
+							<ActivityIndicator size="small" className="text-gray900" />
 							<Text className="text-[12px] text-black/45 font-pretendard-regular">검색 중…</Text>
 						</View>
 					)}
@@ -329,7 +329,7 @@ export function RoutePlanningBar({
 									)}
 									<View className="flex-1">
 										<Text
-											className="text-[14px] font-pretendard-medium text-primary"
+											className="text-[14px] font-pretendard-medium text-gray900"
 											numberOfLines={1}
 										>
 											{item.label}
@@ -374,7 +374,7 @@ export function RoutePlanningBar({
 						}
 						onConfirm();
 					}}
-					className="h-12 rounded-2xl bg-primary items-center justify-center mt-2"
+					className="h-12 rounded-2xl bg-secondary items-center justify-center mt-2"
 					style={!canConfirm ? { opacity: 0.45 } : undefined}
 					accessibilityRole="button"
 					accessibilityLabel="경로 찾기"

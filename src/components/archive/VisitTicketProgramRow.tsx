@@ -13,9 +13,9 @@ export function VisitTicketProgramRow({ index, item }: VisitTicketProgramRowProp
 			className="flex-row items-center py-3 border-b border-[#F5F5F4]"
 			accessibilityLabel={`${index + 1}번, ${item.title}`}
 		>
-			<Text className="w-6 text-[13px] font-pretendard-medium text-muted">{index + 1}</Text>
+			<Text className="w-6 text-[13px] font-pretendard-medium text-gray500">{index + 1}</Text>
 			<Text
-				className="flex-1 text-[14px] leading-[19px] font-pretendard-semibold text-primary"
+				className="flex-1 text-[14px] leading-[19px] font-pretendard-semibold text-gray900"
 				numberOfLines={2}
 			>
 				{item.title}

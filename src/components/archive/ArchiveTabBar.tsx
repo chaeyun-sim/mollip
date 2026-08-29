@@ -56,7 +56,7 @@ export function ArchiveTabBar({ value, onChange }: ArchiveTabBarProps) {
 						bottom: 4,
 						borderRadius: 18,
 						backgroundColor: '#FFFFFF',
-						shadowColor: colors.primary,
+						shadowColor: colors.gray900,
 						shadowOpacity: 0.1,
 						shadowRadius: 8,
 						shadowOffset: { width: 0, height: 2 },
@@ -87,8 +87,8 @@ export function ArchiveTabBar({ value, onChange }: ArchiveTabBarProps) {
 							className={cn(
 								'text-[14px] px-[6px]',
 								selected
-									? 'font-pretendard-semibold text-primary'
-									: 'font-pretendard-regular text-tertiary',
+									? 'font-pretendard-semibold text-gray900'
+									: 'font-pretendard-regular text-gray600',
 							)}
 						>
 							{tab.label}

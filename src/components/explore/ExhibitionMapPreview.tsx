@@ -83,13 +83,13 @@ export function ExhibitionMapPreview({ coordinates, venueName }: ExhibitionMapPr
 					{isNavigating ? (
 						<ActivityIndicator
 							size="small"
-							color={colors.primary}
+							color={colors.gray900}
 							style={{ width: 12, height: 12 }}
 						/>
 					) : (
-						<Ionicons name="map-outline" size={12} className="text-primary" />
+						<Ionicons name="map-outline" size={12} className="text-gray900" />
 					)}
-					<Text className="font-pretendard-medium text-[11px] text-primary">
+					<Text className="font-pretendard-medium text-[11px] text-gray900">
 						{isNavigating ? '이동 중...' : '지도에서 보기'}
 					</Text>
 				</View>

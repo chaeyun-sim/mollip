@@ -23,7 +23,7 @@ export function PosterFrame({
 				width,
 				height,
 				borderRadius,
-				shadowColor: colors.primary,
+				shadowColor: colors.gray900,
 				shadowOpacity: 0.08,
 				shadowRadius: 10,
 				shadowOffset: { width: 0, height: 3 },
@@ -36,7 +36,7 @@ export function PosterFrame({
 				iconSize={iconSize}
 				resizeMode="cover"
 				useImageProxy
-				loadingIndicatorColor={colors.muted}
+				loadingIndicatorColor={colors.gray500}
 			/>
 		</View>
 	);

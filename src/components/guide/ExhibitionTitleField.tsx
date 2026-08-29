@@ -37,12 +37,12 @@ export function ExhibitionTitleField({
 }: ExhibitionTitleFieldProps) {
 	return (
 		<View className="mb-5 z-10">
-			<Text className="text-xs mb-2 font-pretendard-semibold text-muted tracking-wider">
+			<Text className="text-xs mb-2 font-pretendard-semibold text-gray500 tracking-wider">
 				전시명
 			</Text>
 			<View
 				className={cn(
-					'rounded-lg border bg-primary',
+					'rounded-lg border bg-gray900',
 					error ? 'border-error' : 'border-divider-dark',
 				)}
 				style={{ height: 52, overflow: 'hidden' }}
@@ -75,7 +75,7 @@ export function ExhibitionTitleField({
 							numberOfLines={1}
 							className={cn(
 								'text-base font-pretendard-regular',
-								value ? 'text-on-dark' : 'text-secondary',
+								value ? 'text-on-dark' : 'text-gray700',
 							)}
 						>
 							{value || '예) 이우환: 시간의 여백'}
@@ -98,7 +98,7 @@ export function ExhibitionTitleField({
 
 			{suggestions.length > 0 && (
 				<View
-					className="mt-1 rounded-xl overflow-hidden bg-primary"
+					className="mt-1 rounded-xl overflow-hidden bg-gray900"
 					style={{ borderWidth: StyleSheet.hairlineWidth, borderColor: '#3C3A38' }}
 				>
 					{suggestions.map((s, index) => (
@@ -112,21 +112,21 @@ export function ExhibitionTitleField({
 							})}
 							onPress={() => onSelectSuggestion(s)}
 						>
-							<Ionicons name="search" size={14} className="text-secondary" />
+							<Ionicons name="search" size={14} className="text-gray700" />
 							<View className="flex-1">
 								<Text className="text-on-dark text-sm font-pretendard-semibold" numberOfLines={1}>
 									{s.title}
 								</Text>
 								{s.venue ? (
 									<Text
-										className="text-xs mt-0.5 font-pretendard-regular text-tertiary"
+										className="text-xs mt-0.5 font-pretendard-regular text-gray600"
 										numberOfLines={1}
 									>
 										{s.venue}
 									</Text>
 								) : null}
 							</View>
-							<Ionicons name="return-down-back" size={14} className="text-secondary" />
+							<Ionicons name="return-down-back" size={14} className="text-gray700" />
 						</Pressable>
 					))}
 				</View>

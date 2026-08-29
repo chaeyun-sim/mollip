@@ -127,8 +127,8 @@ export default function VoiceScreen() {
 									className={cn(
 										'rounded-[22px] py-3.5',
 										selected
-											? 'bg-[#F7F3EE] border-[1.5px] border-primary'
-											: 'bg-bg-tonal border-0 border-transparent',
+											? 'bg-[#F7F3EE]'
+											: 'bg-bg-tonal',
 									)}
 									style={({ pressed }) => ({
 										transform: [{ scale: pressed ? 0.98 : 1 }],
@@ -147,7 +147,7 @@ export default function VoiceScreen() {
 												className="w-11 h-11 rounded-full items-center justify-center"
 												style={{ backgroundColor: avatarColor(displayName) }}
 											>
-												<Text className="font-pretendard-bold text-[15px] text-primary">
+												<Text className="font-pretendard-bold text-[15px] text-gray900">
 													{displayName.charAt(0)}
 												</Text>
 											</View>
@@ -191,9 +191,9 @@ export default function VoiceScreen() {
 											disabled={!!previewingId}
 										>
 											{previewingId === voice.voice_id ? (
-												<ActivityIndicator size="small" color={colors.accent} />
+												<ActivityIndicator size="small" color={colors.primaryDark} />
 											) : (
-												<Ionicons name="play" size={15} className="text-accent" />
+												<Ionicons name="play" size={15} className="text-primary-dark" />
 											)}
 										</Pressable>
 									</View>

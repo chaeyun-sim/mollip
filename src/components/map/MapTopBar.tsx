@@ -93,17 +93,17 @@ export function MapTopBar({
 										accessibilityRole="button"
 										accessibilityLabel={`${venue.venueName} 선택`}
 									>
-										<Ionicons name="location-outline" size={15} className="text-tertiary" />
+										<Ionicons name="location-outline" size={15} className="text-gray600" />
 										<View className="ml-2.5 flex-1">
 											<Text
-												className="font-pretendard-medium text-[14px] text-primary"
+												className="font-pretendard-medium text-[14px] text-gray900"
 												numberOfLines={1}
 											>
 												{venue.venueName}
 											</Text>
 											{venue.venueAddress && (
 												<Text
-													className="font-pretendard-regular text-[12px] text-tertiary mt-0.5"
+													className="font-pretendard-regular text-[12px] text-gray600 mt-0.5"
 													numberOfLines={1}
 												>
 													{venue.venueAddress}
@@ -146,7 +146,7 @@ export function MapTopBar({
 						accessibilityLabel="길찾기 닫기"
 						accessibilityRole="button"
 					>
-						<Ionicons name="close" size={22} className="text-primary" />
+						<Ionicons name="close" size={22} className="text-gray900" />
 					</Pressable>
 				)}
 			</View>

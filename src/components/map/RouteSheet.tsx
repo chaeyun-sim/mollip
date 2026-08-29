@@ -274,7 +274,7 @@ function ModeToggle({ mode, onChangeMode }: ModeToggleProps) {
 			{pillWidth > 0 && (
 				<Animated.View
 					pointerEvents="none"
-					className="absolute rounded-xl bg-primary"
+					className="absolute rounded-xl bg-gray900"
 					style={[
 						{
 							top: TOGGLE_PADDING,
@@ -346,7 +346,7 @@ function SortChips({ criterion, onChangeCriterion }: SortChipsProps) {
 						}}
 						className={cn(
 							'px-3 h-8 rounded-full items-center justify-center border',
-							active ? 'bg-primary border-transparent' : 'bg-transparent border-black/10',
+							active ? 'bg-primary-dark border-transparent' : 'bg-transparent border-black/10',
 						)}
 						hitSlop={4}
 						accessibilityRole="button"
@@ -393,7 +393,7 @@ function RouteSummaryHeader({ summary, showBar, barDelay = 0 }: RouteSummaryHead
 	return (
 		<>
 			<View className="flex-row items-baseline gap-2">
-				<Text className="text-primary text-[30px] leading-[34px] font-pretendard-bold tracking-[-0.8px]">
+				<Text className="text-gray900 text-[30px] leading-[34px] font-pretendard-bold tracking-[-0.8px]">
 					{summary.totalTime}
 				</Text>
 				<View className="flex flex-row items-center gap-2">
@@ -479,7 +479,7 @@ function RouteTimeline({
 									{item.variant === 'start' ? (
 										<View className="w-[8px] h-[8px] rounded-full bg-primary" />
 									) : (
-										<Ionicons name="flag" size={11} className="text-primary" />
+										<Ionicons name="flag" size={11} className="text-gray900" />
 									)}
 								</View>
 							)}
@@ -518,13 +518,13 @@ function RouteTimeline({
 							const content = (
 								<>
 									{mode === 'bus' && item.type === 'endpoint' && (
-										<Text className="text-primary text-[14px] font-pretendard-bold pt-0.5">
+										<Text className="text-gray900 text-[14px] font-pretendard-bold pt-0.5">
 											{item.label}
 										</Text>
 									)}
 									{item.type === 'walk' && (
 										<View className="gap-1">
-											<Text className="text-primary text-[14px] font-pretendard-medium">
+											<Text className="text-gray900 text-[14px] font-pretendard-medium">
 												{item.routeLabel}
 											</Text>
 											<Text className="text-black/45 text-[12px] font-pretendard-regular">
@@ -545,7 +545,7 @@ function RouteTimeline({
 														</Text>
 													</View>
 												)}
-												<Text className="text-primary text-[14px] font-pretendard-medium">
+												<Text className="text-gray900 text-[14px] font-pretendard-medium">
 													{item.title}역 승차
 												</Text>
 											</View>
@@ -555,7 +555,7 @@ function RouteTimeline({
 										</View>
 									)}
 									{item.type === 'alight' && (
-										<Text className="text-primary text-[14px] font-pretendard-medium pt-1">
+										<Text className="text-gray900 text-[14px] font-pretendard-medium pt-1">
 											{item.title}
 											{item.stopSuffix} 하차
 										</Text>
@@ -777,7 +777,7 @@ export function RouteSheet({
 			<Animated.View key={`${mode}-${status}`} entering={FadeIn.duration(240)}>
 				{status === 'loading' && (
 					<View className="flex-row items-center gap-2 py-6">
-						<ActivityIndicator size="small" color={colors.primary} />
+						<ActivityIndicator size="small" color={colors.gray900} />
 						<Text className="text-black/50 text-[13px] font-pretendard-regular">경로 찾는 중…</Text>
 					</View>
 				)}

@@ -41,7 +41,7 @@ export default function OnboardingScreen() {
 			<WarmGradientBackdrop />
 			{/* 헤더 */}
 			<View className="pt-4 pb-2 gap-1">
-				<Text className="text-primary text-[26px] font-hahmlet-bold">
+				<Text className="text-gray900 text-[26px] font-hahmlet-bold">
 					당신의 취향을{'\n'}골라보세요
 				</Text>
 				<Text className="text-description text-[13px] font-pretendard-regular">

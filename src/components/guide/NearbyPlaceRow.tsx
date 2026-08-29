@@ -42,11 +42,11 @@ export function NearbyPlaceRow({
 				<Ionicons name={icon} size={22} color={iconColor} />
 			</View>
 			<View className="flex-1 min-w-0">
-				<Text className="text-primary font-pretendard-semibold text-[14px]" numberOfLines={1}>
+				<Text className="text-gray900 font-pretendard-semibold text-[14px]" numberOfLines={1}>
 					{place.name}
 				</Text>
 				<Text
-					className="text-tertiary font-pretendard-regular text-[12px] mt-0.5"
+					className="text-gray600 font-pretendard-regular text-[12px] mt-0.5"
 					numberOfLines={1}
 				>
 					{place.distance}
@@ -64,7 +64,7 @@ export function NearbyPlaceRow({
 				accessibilityRole="button"
 				accessibilityLabel={`${place.name} 외부 지도 앱에서 열기`}
 			>
-				<Ionicons name="share-outline" size={18} className="text-muted" />
+				<Ionicons name="share-outline" size={18} className="text-gray500" />
 			</Pressable>
 		</View>
 	);

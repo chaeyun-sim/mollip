@@ -87,7 +87,7 @@ export default function DeleteAccountScreen() {
 					</Text>
 					<Pressable
 						onPress={() => router.replace('/(tabs)')}
-						className="mt-4 px-6 py-3 rounded-full bg-primary"
+						className="mt-4 px-6 py-3 rounded-full bg-secondary"
 						accessibilityRole="button"
 						accessibilityLabel="메인으로 가기"
 					>
@@ -122,7 +122,7 @@ export default function DeleteAccountScreen() {
 							<Text
 								className={cn(
 									'text-[14px] font-pretendard-semibold',
-									canSubmit ? 'text-white' : 'text-gray-400',
+									canSubmit ? 'text-white' : 'text-gray400',
 								)}
 							>
 								탈퇴하기
@@ -148,7 +148,7 @@ export default function DeleteAccountScreen() {
 					<View
 						className="rounded-3xl overflow-hidden bg-bg-tonal mb-3"
 						style={{
-							shadowColor: colors.primary,
+							shadowColor: colors.gray900,
 							shadowOpacity: 0.05,
 							shadowRadius: 12,
 							shadowOffset: { width: 0, height: 4 },
@@ -178,7 +178,7 @@ export default function DeleteAccountScreen() {
 									<Ionicons
 										name={selected ? 'radio-button-on' : 'radio-button-off'}
 										size={20}
-										className={cn(selected ? 'text-primary' : 'text-muted')}
+										className={cn(selected ? 'text-gray900' : 'text-gray500')}
 									/>
 								</Pressable>
 							);
@@ -190,7 +190,7 @@ export default function DeleteAccountScreen() {
 							<Ionicons
 								name="bulb-outline"
 								size={16}
-								className="text-accent"
+								className="text-primary-dark"
 								style={{ marginTop: 1 }}
 							/>
 							<Text className="flex-1 text-[13px] leading-[19px] font-pretendard-regular text-blue-700">
@@ -208,7 +208,7 @@ export default function DeleteAccountScreen() {
 								textAlignVertical: 'top',
 							}}
 							placeholder="어떤 점이 아쉬웠는지 알려주세요 (선택)"
-							placeholderTextColor={colors.secondary}
+							placeholderTextColor={colors.gray700}
 							value={detail}
 							onChangeText={setDetail}
 							multiline

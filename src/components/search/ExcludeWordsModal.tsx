@@ -53,17 +53,17 @@ export function ExcludeWordsModal({
 								<View className="w-9 h-1 rounded-full bg-black/15" />
 							</View>
 
-							<Text className="text-primary text-lg mb-1 font-pretendard-bold">제외할 검색어</Text>
-							<Text className="text-tertiary text-[13px] mb-4 font-pretendard-regular">
+							<Text className="text-gray900 text-lg mb-1 font-pretendard-bold">제외할 검색어</Text>
+							<Text className="text-gray600 text-[13px] mb-4 font-pretendard-regular">
 								입력한 단어가 포함된 전시는 결과에서 빠집니다
 							</Text>
 
 							<View className="flex-row items-center gap-2 bg-bg-tonal rounded-2xl px-4 py-3 mb-4">
-								<Ionicons name="remove-circle-outline" size={16} className="text-tertiary" />
+								<Ionicons name="remove-circle-outline" size={16} className="text-gray600" />
 								<TextInput
-									className="flex-1 text-primary text-sm font-pretendard-regular leading-none"
+									className="flex-1 text-gray900 text-sm font-pretendard-regular leading-none"
 									placeholder="예: 미디어아트"
-									placeholderTextColor={colors.muted}
+									placeholderTextColor={colors.gray500}
 									value={input}
 									onChangeText={setInput}
 									onSubmitEditing={handleSubmit}
@@ -82,7 +82,7 @@ export function ExcludeWordsModal({
 									<Ionicons
 										name="close-circle"
 										size={22}
-										className={words.length > 0 ? 'text-primary' : 'text-stone-300'}
+										className={words.length > 0 ? 'text-gray900' : 'text-gray400'}
 									/>
 								</Pressable>
 							</View>
@@ -95,7 +95,7 @@ export function ExcludeWordsModal({
 											onPress={() => onRemove(word)}
 											accessibilityLabel={`제외어 ${word} 삭제`}
 											accessibilityRole="button"
-											className="flex-row items-center gap-1 rounded-full bg-primary px-3 py-1.5"
+											className="flex-row items-center gap-1 rounded-full bg-primary-dark px-3 py-1.5"
 											style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
 										>
 											<Text className="text-white text-[13px] font-pretendard-medium">{word}</Text>
@@ -109,7 +109,7 @@ export function ExcludeWordsModal({
 								onPress={onDismiss}
 								accessibilityLabel="완료"
 								accessibilityRole="button"
-								className="items-center rounded-2xl bg-primary py-3.5 mt-2"
+								className="items-center rounded-2xl bg-secondary py-3.5 mt-2"
 								style={({ pressed }) => ({ opacity: pressed ? 0.85 : 1 })}
 							>
 								<Text className="text-white text-[15px] font-pretendard-semibold">완료</Text>

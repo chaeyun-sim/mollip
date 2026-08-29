@@ -12,7 +12,7 @@ interface CenteredLoaderProps {
 export function CenteredLoader({ className }: CenteredLoaderProps) {
 	return (
 		<View className={cn('items-center justify-center', className)}>
-			<ActivityIndicator color={colors.muted} />
+			<ActivityIndicator color={colors.gray500} />
 		</View>
 	);
 }

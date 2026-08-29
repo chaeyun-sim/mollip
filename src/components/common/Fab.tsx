@@ -16,7 +16,7 @@ export function Fab({ icon, needsLogin = false, returnTo, ...props }: FabProps) 
 	return needsLogin ? (
 		<LoginRequiredPressable
 			accessibilityRole="button"
-			className="h-[58px] w-[58px] items-center justify-center rounded-full bg-primary"
+			className="h-[58px] w-[58px] items-center justify-center rounded-full bg-secondary"
 			style={({ pressed }) => ({ opacity: pressed ? 0.88 : 1 })}
 			returnTo={returnTo}
 			{...props}
@@ -26,7 +26,7 @@ export function Fab({ icon, needsLogin = false, returnTo, ...props }: FabProps) 
 	) : (
 		<Pressable
 			accessibilityRole="button"
-			className="h-[58px] w-[58px] items-center justify-center rounded-full bg-primary"
+			className="h-[58px] w-[58px] items-center justify-center rounded-full bg-secondary"
 			style={({ pressed }) => ({ opacity: pressed ? 0.88 : 1 })}
 			{...props}
 		>

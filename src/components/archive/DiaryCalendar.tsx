@@ -72,7 +72,7 @@ export function DiaryCalendar({
 					})}
 					className="bg-[#3D3733] h-8 w-8 rounded-2xl items-center justify-center"
 				>
-					<Ionicons name="chevron-back" size={15} className="text-muted" />
+					<Ionicons name="chevron-back" size={15} className="text-gray500" />
 				</Pressable>
 				<Text className="font-pretendard-semibold text-[17px] text-white">
 					{year}년 {month}월
@@ -87,7 +87,7 @@ export function DiaryCalendar({
 					})}
 					className="bg-[#3D3733] h-8 w-8 rounded-2xl items-center justify-center"
 				>
-					<Ionicons name="chevron-forward" size={15} className="text-muted" />
+					<Ionicons name="chevron-forward" size={15} className="text-gray500" />
 				</Pressable>
 			</View>
 

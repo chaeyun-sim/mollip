@@ -15,7 +15,7 @@ export function ArchiveDiaryEmpty({ onExplore, onMap }: ArchiveDiaryEmptyProps) 
 			/>
 			<Pressable
 				onPress={onExplore}
-				className="rounded-full py-3.5 items-center mb-3 mt-2 bg-primary"
+				className="rounded-full py-3.5 items-center mb-3 mt-2 bg-secondary"
 				accessibilityRole="button"
 				accessibilityLabel="전시 둘러보기"
 				style={({ pressed }) => ({
@@ -31,7 +31,7 @@ export function ArchiveDiaryEmpty({ onExplore, onMap }: ArchiveDiaryEmptyProps) 
 				accessibilityLabel="지도에서 찾기"
 				style={({ pressed }) => ({ opacity: pressed ? 0.9 : 1 })}
 			>
-				<Text className="text-[14px] font-pretendard-semibold text-primary">지도에서 찾기</Text>
+				<Text className="text-[14px] font-pretendard-semibold text-gray900">지도에서 찾기</Text>
 			</Pressable>
 		</View>
 	);

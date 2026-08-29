@@ -137,7 +137,7 @@ export default function ChatScreen() {
 					<Text
 						className={cn(
 							'text-base font-pretendard-semibold',
-							highContrast ? 'text-primary' : 'text-white',
+							highContrast ? 'text-gray900' : 'text-white',
 						)}
 					>
 						작품에 대해 물어보기
@@ -154,7 +154,7 @@ export default function ChatScreen() {
 						<Ionicons
 							name="globe-outline"
 							size={22}
-							className={cn(highContrast ? 'text-primary' : 'text-white/90')}
+							className={cn(highContrast ? 'text-gray900' : 'text-white/90')}
 						/>
 					</Pressable>
 				</ScreenHeader.Right>
@@ -176,17 +176,17 @@ export default function ChatScreen() {
 						<View className="flex-1 items-center justify-center gap-3">
 							<View
 								className="w-16 h-16 rounded-full items-center justify-center"
-								style={{ backgroundColor: highContrast ? HIGH_CONTRAST_COLOR : 'bg-primary' }}
+								style={{ backgroundColor: highContrast ? HIGH_CONTRAST_COLOR : colors.gray900 }}
 							>
-								<Ionicons name="chatbubble-ellipses-outline" size={28} className="text-secondary" />
+								<Ionicons name="chatbubble-ellipses-outline" size={28} className="text-gray700" />
 							</View>
 							<Text
 								className="text-base text-center font-pretendard-bold"
-								style={{ color: highContrast ? colors.primary : colors.onDark }}
+								style={{ color: highContrast ? colors.gray900 : colors.onDark }}
 							>
 								작품이 궁금하신가요?
 							</Text>
-							<Text className="text-sm text-center text-tertiary leading-5">
+							<Text className="text-sm text-center text-gray600 leading-5">
 								{'작가, 시대적 배경, 기법 등\n무엇이든 물어보세요'}
 							</Text>
 						</View>
@@ -198,10 +198,10 @@ export default function ChatScreen() {
 					<View
 						className={cn(
 							'mb-10 py-4 border-t-[1px] items-center',
-							highContrast ? 'border-t-divider' : 'border-t-primary',
+							highContrast ? 'border-t-divider' : 'border-t-gray900',
 						)}
 					>
-						<Text className="text-secondary text-[13px] font-pretendard-regular">
+						<Text className="text-gray700 text-[13px] font-pretendard-regular">
 							대화는 최대 {MAX_EXCHANGES}번까지 가능해요
 						</Text>
 					</View>
@@ -209,15 +209,15 @@ export default function ChatScreen() {
 					<View
 						className={cn(
 							'mb-10 flex-row items-end gap-2 py-3 border-t-[1px]',
-							highContrast ? 'border-t-divider' : 'border-t-primary',
+							highContrast ? 'border-t-divider' : 'border-t-gray900',
 						)}
 					>
 						<TextInput
 							className={cn(
 								'flex-1 rounded-2xl px-4 pt-3 pb-3 text-[14px] font-pretendard-regular min-h-[48px] max-h-[120px]',
-								highContrast ? 'text-primary' : 'text-on-dark',
+								highContrast ? 'text-gray900' : 'text-on-dark',
 							)}
-							style={{ backgroundColor: highContrast ? HIGH_CONTRAST_COLOR : 'bg-primary' }}
+							style={{ backgroundColor: highContrast ? HIGH_CONTRAST_COLOR : colors.gray900 }}
 							returnKeyType="send"
 							value={input}
 							onChangeText={(t) => {
@@ -228,7 +228,7 @@ export default function ChatScreen() {
 								}
 							}}
 							placeholder="질문을 입력하세요..."
-							placeholderTextColor={colors.secondary}
+							placeholderTextColor={colors.gray700}
 							keyboardAppearance={highContrast ? 'light' : 'dark'}
 							multiline
 						/>
@@ -242,16 +242,16 @@ export default function ChatScreen() {
 								opacity: pressed ? 0.7 : 1,
 								backgroundColor:
 									input.trim() && !isLoading
-										? colors.accent
+										? colors.primary
 										: highContrast
 											? HIGH_CONTRAST_COLOR
-											: colors.primary,
+											: colors.gray900,
 							})}
 						>
 							<Ionicons
 								name="arrow-up"
 								size={20}
-								className={input.trim() && !isLoading ? 'text-white' : 'text-secondary'}
+								className={input.trim() && !isLoading ? 'text-white' : 'text-gray400'}
 							/>
 						</Pressable>
 					</View>

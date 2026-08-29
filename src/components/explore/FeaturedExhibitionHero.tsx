@@ -35,7 +35,7 @@ export function FeaturedExhibitionHero({
 			<View
 				className="rounded-2xl overflow-hidden w-full"
 				style={{
-					shadowColor: colors.primary,
+					shadowColor: colors.gray900,
 					shadowOpacity: 0.16,
 					shadowRadius: 18,
 					shadowOffset: { width: 0, height: 8 },
@@ -81,12 +81,12 @@ export function FeaturedExhibitionHero({
 							className="mb-4"
 						/>
 						<Text
-							className="text-primary text-[22px] text-center font-hahmlet-bold"
+							className="text-gray900 text-[22px] text-center font-hahmlet-bold"
 							numberOfLines={2}
 						>
 							{title}
 						</Text>
-						<Text className="text-tertiary text-[13px] mt-2 text-center font-pretendard-regular">
+						<Text className="text-gray600 text-[13px] mt-2 text-center font-pretendard-regular">
 							{venue} · {STATUS_LABELS[status]}
 						</Text>
 					</View>

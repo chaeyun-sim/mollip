@@ -51,9 +51,9 @@ export function ExternalMapSheet({ target, onClose }: ExternalMapSheetProps) {
 							accessibilityLabel={app.label}
 						>
 							<View className="w-9 h-9 rounded-full items-center justify-center bg-black/[0.045]">
-								<Ionicons name="map-outline" size={17} color={colors.primary} />
+								<Ionicons name="map-outline" size={17} color={colors.gray900} />
 							</View>
-							<Text className="text-[15px] font-pretendard-medium text-primary">{app.label}</Text>
+							<Text className="text-[15px] font-pretendard-medium text-gray900">{app.label}</Text>
 						</Pressable>
 					))}
 				</Pressable>

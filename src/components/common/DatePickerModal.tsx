@@ -90,8 +90,11 @@ export function DatePickerModal({
 										onReset();
 										onDismiss();
 									}}
+									hitSlop={8}
+									accessibilityRole="button"
+									accessibilityLabel={resetLabel}
 								>
-									<Text className="text-sm font-pretendard-medium text-black/40">{resetLabel}</Text>
+									<Text className="text-sm font-pretendard-medium text-secondary">{resetLabel}</Text>
 								</Pressable>
 							) : (
 								<View />
@@ -101,6 +104,9 @@ export function DatePickerModal({
 									onChange(draft);
 									onDismiss();
 								}}
+								hitSlop={8}
+								accessibilityRole="button"
+								accessibilityLabel={confirmLabel}
 								className="bg-black rounded-full px-4 py-1.5"
 							>
 								<Text className="text-sm font-pretendard-semibold text-white">{confirmLabel}</Text>

@@ -10,7 +10,7 @@ export function SettingsCard({ children }: SettingsCardProps) {
 		<View
 			className="overflow-hidden"
 			style={{
-				shadowColor: colors.primary,
+				shadowColor: colors.gray900,
 				shadowOpacity: 0.06,
 				shadowRadius: 10,
 				shadowOffset: { width: 0, height: 2 },

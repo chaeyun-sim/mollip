@@ -24,13 +24,13 @@ export default function PrivacyPolicyScreen() {
 				{SECTIONS.map((section) => (
 					<View key={section.title} className="mb-6">
 						<Text
-							className="text-primary mb-2"
+							className="text-gray900 mb-2"
 							style={{ fontFamily: 'Pretendard-SemiBold', fontSize: 15 }}
 						>
 							{section.title}
 						</Text>
 						<Text
-							className="text-tertiary leading-6"
+							className="text-gray600 leading-6"
 							style={{ fontFamily: 'Pretendard-Regular', fontSize: 14 }}
 						>
 							{section.placeholder}

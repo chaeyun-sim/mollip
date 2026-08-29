@@ -18,16 +18,16 @@ export function SectionTitle({ title, eyebrow, subtitle, right }: SectionTitlePr
 			<View className="flex-row items-end justify-between">
 				<View className="flex-1 pr-2">
 					{eyebrow && (
-						<Text className="text-[11px] text-muted mb-1 font-pretendard-semibold leading-[1.6px]">
+						<Text className="text-[11px] text-gray500 mb-1 font-pretendard-semibold leading-[1.6px]">
 							{eyebrow}
 						</Text>
 					)}
-					{typeof title === 'string' ? <Text className="text-primary text-[18px] font-pretendard-semibold">{title}</Text> : title}
+					{typeof title === 'string' ? <Text className="text-gray900 text-[18px] font-pretendard-semibold">{title}</Text> : title}
 				</View>
 				{right}
 			</View>
 			{subtitle && (
-				<Text className="text-[13px] leading-[19px] font-pretendard-regular text-secondary">
+				<Text className="text-[13px] leading-[19px] font-pretendard-regular text-gray700">
 					{subtitle}
 				</Text>
 			)}

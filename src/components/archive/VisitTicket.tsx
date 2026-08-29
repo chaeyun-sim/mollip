@@ -144,11 +144,11 @@ export function VisitTicket({
 							</View>
 
 							<View className="px-6 pt-5">
-								<Text className="text-[10px] tracking-[3px] text-muted font-pretendard-semibold">
+								<Text className="text-[10px] tracking-[3px] text-gray500 font-pretendard-semibold">
 									EXHIBITION
 								</Text>
 								<Text
-									className="mt-1.5 text-[24px] leading-[32px] text-primary font-hahmlet-bold"
+									className="mt-1.5 text-[24px] leading-[32px] text-gray900 font-hahmlet-bold"
 									numberOfLines={2}
 								>
 									{exhibition.title}
@@ -163,11 +163,11 @@ export function VisitTicket({
 									{ label: '들은 해설', value: `${listenedTitles.length}개` },
 								].map((cell) => (
 									<View key={cell.label} className="flex-1 pr-2">
-										<Text className="text-[11px] text-muted font-pretendard-medium">
+										<Text className="text-[11px] text-gray500 font-pretendard-medium">
 											{cell.label}
 										</Text>
 										<Text
-											className="mt-1 text-[14px] text-primary font-pretendard-semibold"
+											className="mt-1 text-[14px] text-gray900 font-pretendard-semibold"
 											numberOfLines={2}
 										>
 											{cell.value}
@@ -205,16 +205,16 @@ export function VisitTicket({
 							>
 								<View className="px-6 pt-2 pb-2">
 									<View className="flex-row items-baseline justify-between mb-1">
-										<Text className="text-[15px] font-pretendard-semibold text-primary">
+										<Text className="text-[15px] font-pretendard-semibold text-gray900">
 											오늘의 프로그램
 										</Text>
 										{listenedItems.length > 0 ? (
-											<Text className="text-[12px] font-pretendard-regular text-muted">
+											<Text className="text-[12px] font-pretendard-regular text-gray500">
 												{listenedItems.length}작품
 											</Text>
 										) : null}
 									</View>
-									<Text className="text-[11px] mb-3 font-pretendard-medium text-muted">
+									<Text className="text-[11px] mb-3 font-pretendard-medium text-gray500">
 										{dateLabel}
 									</Text>
 
@@ -228,7 +228,7 @@ export function VisitTicket({
 										))
 									) : (
 										<View className="py-6">
-											<Text className="text-[14px] text-center font-pretendard-medium text-primary">
+											<Text className="text-[14px] text-center font-pretendard-medium text-gray900">
 												이날 들은 작품이 없어요
 											</Text>
 										</View>

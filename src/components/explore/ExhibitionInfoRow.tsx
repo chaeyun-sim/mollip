@@ -24,7 +24,7 @@ export function ExhibitionInfoRow({ label, isLast, children }: ExhibitionInfoRow
 				{label}
 			</Text>
 			<View className="flex-1 items-end">
-				<Text className="text-primary text-[14px] font-pretendard-regular text-right leading-5">
+				<Text className="text-gray900 text-[14px] font-pretendard-regular text-right leading-5">
 					{children}
 				</Text>
 			</View>

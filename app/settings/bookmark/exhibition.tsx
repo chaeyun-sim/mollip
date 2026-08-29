@@ -54,12 +54,12 @@ function ExhibitionCard({ ex, onPress }: ExhibitionCardProps) {
 				<StatusBadge status={status} />
 				<Text
 					numberOfLines={2}
-					className="text-primary text-[15px] font-pretendard-semibold leading-[21px]"
+					className="text-gray900 text-[15px] font-pretendard-semibold leading-[21px]"
 				>
 					{ex.title}
 				</Text>
 				<View className="flex-row items-center gap-1.5">
-					<Text className="text-muted text-[12px] font-pretendard-regular">
+					<Text className="text-gray500 text-[12px] font-pretendard-regular">
 						{ex.startDate} – {ex.endDate}
 					</Text>
 					{ddayLabel && (
@@ -80,7 +80,7 @@ function ExhibitionCard({ ex, onPress }: ExhibitionCardProps) {
 				<Ionicons
 					name={isBookmarked ? 'bookmark' : 'bookmark-outline'}
 					size={20}
-					className={cn(isBookmarked ? 'text-primary' : 'text-stone-300')}
+					className={cn(isBookmarked ? 'text-gray900' : 'text-stone-300')}
 				/>
 			</Pressable>
 		</Pressable>
@@ -106,7 +106,7 @@ export default function ExhibitionBookmarkScreen() {
 			return (
 				<View className="flex-1 items-center justify-center gap-2">
 					<Ionicons name="bookmark-outline" size={36} className="text-stone-300" />
-					<Text className="text-muted text-[14px] font-pretendard-regular text-center">
+					<Text className="text-gray500 text-[14px] font-pretendard-regular text-center">
 						해당하는 전시가 없어요
 					</Text>
 				</View>
@@ -138,11 +138,11 @@ export default function ExhibitionBookmarkScreen() {
 
 			{isLoading ? (
 				<View className="flex-1 items-center justify-center">
-					<ActivityIndicator color={colors.tertiary} />
+					<ActivityIndicator color={colors.gray600} />
 				</View>
 			) : error ? (
 				<View className="flex-1 items-center justify-center">
-					<Text className="text-tertiary text-[14px] font-pretendard-regular text-center">
+					<Text className="text-gray600 text-[14px] font-pretendard-regular text-center">
 						전시 정보를 불러오지 못했어요
 					</Text>
 				</View>
@@ -153,14 +153,14 @@ export default function ExhibitionBookmarkScreen() {
 						플랫 일러스트 스타일, 얇은 라인 아트, 잉크색(#1C1917) 윤곽선, 포인트 컬러는 은은한 테라코타,
 						미니멀하고 여백이 많은 구도, 사진 느낌 없이 손그림 느낌, 정사각형 120x120 */}
 					<Ionicons name="bookmark-outline" size={36} className="text-stone-300" />
-					<Text className="text-muted text-[14px] font-pretendard-regular text-center">
+					<Text className="text-gray500 text-[14px] font-pretendard-regular text-center">
 						관심 있는 전시가 없어요{'\n'}전시를 탐색하고 북마크해보세요
 					</Text>
 				</View>
 			) : (
 				<View className="flex-1 ">
 					<View className="flex-row items-center justify-between py-3">
-						<Text className="text-muted text-[13px] font-pretendard-regular">
+						<Text className="text-gray500 text-[13px] font-pretendard-regular">
 							{filteredData.length}개의 전시
 						</Text>
 					</View>

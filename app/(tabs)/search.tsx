@@ -160,7 +160,7 @@ export default function SearchScreen() {
 	function renderItem({ item }: { item: ResultListItem }) {
 		if (item.kind === 'section') {
 			return (
-				<Text className="text-primary text-[16px] font-pretendard-bold">
+				<Text className="text-gray900 text-[16px] font-pretendard-bold">
 					{item.label}
 				</Text>
 			);
@@ -212,7 +212,7 @@ export default function SearchScreen() {
 					keyboardDismissMode="on-drag"
 				>
 					<View className="mt-7">
-						<Text className="text-primary text-[16px] mb-3 font-pretendard-bold">추천 태그</Text>
+						<Text className="text-gray900 text-[16px] mb-3 font-pretendard-bold">추천 태그</Text>
 						<View className="flex-row flex-wrap gap-2">
 							{FIXED_TAGS.map((tag) => (
 								<Pressable
@@ -220,7 +220,7 @@ export default function SearchScreen() {
 									onPress={() => handlePressTag(tag)}
 									accessibilityLabel={`${tag} 태그로 검색`}
 									accessibilityRole="button"
-									className="rounded-full bg-bg-tonal px-3.5 py-2"
+									className="rounded-full border border-secondary/25 bg-transparent px-3.5 py-2"
 									style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
 								>
 									<Text className="text-secondary text-[13px] font-pretendard-medium">{tag}</Text>
@@ -232,19 +232,19 @@ export default function SearchScreen() {
 					{recentWords.length > 0 && (
 						<View className="mt-7">
 							<View className="flex-row items-center justify-between mb-2">
-								<Text className="text-primary text-[16px] font-pretendard-bold">최근 검색</Text>
+								<Text className="text-gray900 text-[16px] font-pretendard-bold">최근 검색</Text>
 								<Pressable
 									onPress={clearRecent}
 									hitSlop={8}
 									accessibilityLabel="최근 검색어 전체 삭제"
 									accessibilityRole="button"
 								>
-									<Text className="text-muted text-[13px] font-pretendard-regular">전체 삭제</Text>
+									<Text className="text-gray500 text-[13px] font-pretendard-regular">전체 삭제</Text>
 								</Pressable>
 							</View>
 							{recentWords.map((word) => (
 								<View key={word} className="flex-row items-center gap-2.5 py-3">
-									<Ionicons name="time-outline" size={15} className="text-muted" />
+									<Ionicons name="time-outline" size={15} className="text-gray500" />
 									<Pressable
 										onPress={() => handlePressRecent(word)}
 										accessibilityLabel={`${word} 검색`}
@@ -283,17 +283,17 @@ export default function SearchScreen() {
 					ItemSeparatorComponent={() => <View className="h-5" />}
 					ListHeaderComponent={
 						<View className="flex-row items-end justify-between mb-4">
-							<Text className="text-muted text-[13px] font-pretendard-regular">
+							<Text className="text-gray500 text-[13px] font-pretendard-regular">
 								{results.length}건{hasLocation ? ' · 가까운 순' : ''}
 							</Text>
 						</View>
 					}
 					ListEmptyComponent={
 						<View className="items-center py-16 gap-2">
-							<Text className="text-secondary text-[15px] font-pretendard-semibold">
+							<Text className="text-gray700 text-[15px] font-pretendard-semibold">
 								조건에 맞는 전시가 없어요
 							</Text>
-							<Text className="text-muted text-[13px] font-pretendard-regular">
+							<Text className="text-gray500 text-[13px] font-pretendard-regular">
 								검색어나 필터를 조정해 보세요
 							</Text>
 						</View>

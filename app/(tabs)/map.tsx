@@ -503,7 +503,7 @@ export default function MapScreen() {
 					/>
 				) : isVenueSheetOpen ? (
 					<View className="flex-1 items-center justify-center py-12">
-						<ActivityIndicator color={colors.secondary} />
+						<ActivityIndicator color={colors.gray700} />
 					</View>
 				) : null}
 			</BottomSheetModal>

@@ -12,15 +12,15 @@ export function ArchiveLoginPrompt({ onLogin }: ArchiveLoginPromptProps) {
 			<View className="rounded-full bg-bg-light p-5 mb-5">
 				<Ionicons name="lock-closed-outline" size={28} color={ARCHIVE_STAT_ACCENTS.visitDays} />
 			</View>
-			<Text className="text-[20px] text-center mb-2 font-hahmlet-bold text-primary">
+			<Text className="text-[20px] text-center mb-2 font-hahmlet-bold text-gray900">
 				로그인하고 관람을 기록해요
 			</Text>
-			<Text className="text-[14px] text-center leading-[21px] mb-8 font-pretendard-regular text-secondary">
+			<Text className="text-[14px] text-center leading-[21px] mb-8 font-pretendard-regular text-gray700">
 				북마크와 관람 다이어리는 계정에 저장돼요
 			</Text>
 			<Pressable
 				onPress={onLogin}
-				className="w-full rounded-full py-4 items-center bg-primary"
+				className="w-full rounded-full py-4 items-center bg-secondary"
 				accessibilityRole="button"
 				accessibilityLabel="로그인하기"
 				style={({ pressed }) => ({

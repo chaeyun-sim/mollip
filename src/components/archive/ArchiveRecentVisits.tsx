@@ -78,21 +78,21 @@ export function ArchiveRecentVisits({ dateKeys, onSelectDate }: ArchiveRecentVis
 
 							<View className="flex-1 min-w-0">
 								<View className="flex-row items-baseline gap-2 mb-0.5">
-									<Text className="text-[15px] font-pretendard-semibold text-primary">
+									<Text className="text-[15px] font-pretendard-semibold text-gray900">
 										{primary}
 									</Text>
-									<Text className="text-[12px] font-pretendard-regular text-tertiary">
+									<Text className="text-[12px] font-pretendard-regular text-gray600">
 										{secondary}
 									</Text>
 								</View>
 								<Text
-									className="text-[14px] leading-[19px] font-pretendard-medium text-primary"
+									className="text-[14px] leading-[19px] font-pretendard-medium text-gray900"
 									numberOfLines={1}
 								>
 									{title}
 								</Text>
 								{listenedCount > 0 ? (
-									<Text className="text-[12px] mt-1 font-pretendard-regular text-secondary">
+									<Text className="text-[12px] mt-1 font-pretendard-regular text-gray700">
 										들은 작품 {listenedCount}개
 									</Text>
 								) : null}
