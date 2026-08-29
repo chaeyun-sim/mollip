@@ -2,6 +2,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
+import { useArtistIntroStore } from './artistIntroStore';
+
 export interface PlaylistItem {
 	id: string;
 	title: string;
@@ -40,8 +42,12 @@ export const useImmersiveStore = create<ImmersiveStore>()(
 					exhibitionTitle: exhibitionTitle ?? null,
 					playlist: [],
 				}),
-			exit: () =>
-				set({ isImmersiveMode: false, exhibitionId: null, exhibitionTitle: null, playlist: [] }),
+			exit: () => {
+				// 관람 종료 시 작가 소개 세션 상태도 함께 비운다 — 다음 전시에 이전 트랙이 남지 않도록.
+				// (전역 캐시 테이블 데이터는 유지된다)
+				useArtistIntroStore.getState().reset();
+				set({ isImmersiveMode: false, exhibitionId: null, exhibitionTitle: null, playlist: [] });
+			},
 			addToPlaylist: (item) => {
 				const exists = get().playlist.some((p) => p.title === item.title);
 				if (exists) return;

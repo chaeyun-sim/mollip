@@ -68,6 +68,24 @@ export async function* streamRoute(systemPrompt: string, prompt: string): AsyncG
 	yield* readSSEStream(res);
 }
 
+// 작가 소개 인트로는 타이프라이터 표시가 필요 없고 결과를 캐시에 통째로 저장해야 하므로
+// SSE가 아닌 단발 JSON 응답으로 받는다.
+export async function generateArtistIntro(
+	artist: string,
+	exhibitionTitle?: string,
+): Promise<string> {
+	const res = await fetch(edgeFunctionUrl('generate-artist-intro'), {
+		method: 'POST',
+		headers: authHeaders(),
+		body: JSON.stringify({ artist, exhibitionTitle }),
+	});
+	if (!res.ok) throw new Error(`generate-artist-intro ${res.status}`);
+	const data = await res.json();
+	const intro = typeof data.intro === 'string' ? data.intro.trim() : '';
+	if (!intro) throw new Error('generate-artist-intro empty');
+	return intro;
+}
+
 // -- ElevenLabs ---------------------------------------------------------------
 
 export async function fetchVoices() {

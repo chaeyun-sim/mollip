@@ -67,6 +67,25 @@ export type Database = {
 				};
 				Relationships: [];
 			};
+			// [수동 보강] 타입 재생성 전까지 유지 — supabase gen types 실행 시 자동 생성분으로 대체됨
+			artist_intros: {
+				Row: {
+					artist: string;
+					intro: string;
+					updated_at: string;
+				};
+				Insert: {
+					artist: string;
+					intro: string;
+					updated_at?: string;
+				};
+				Update: {
+					artist?: string;
+					intro?: string;
+					updated_at?: string;
+				};
+				Relationships: [];
+			};
 			artist_artworks: {
 				Row: {
 					artist: string;
@@ -103,6 +122,8 @@ export type Database = {
 			exhibitions: {
 				Row: {
 					admission: string | null;
+					// [수동 보강] DB에는 존재하지만 타입 스냅샷이 오래되어 누락된 컬럼
+					artist: string | null;
 					closed_days: string | null;
 					collected_date: string | null;
 					created_at: string;
@@ -128,6 +149,8 @@ export type Database = {
 				};
 				Insert: {
 					admission?: string | null;
+					// [수동 보강] DB에는 존재하지만 타입 스냅샷이 오래되어 누락된 컬럼
+					artist?: string | null;
 					closed_days?: string | null;
 					collected_date?: string | null;
 					created_at?: string;
@@ -153,6 +176,8 @@ export type Database = {
 				};
 				Update: {
 					admission?: string | null;
+					// [수동 보강] DB에는 존재하지만 타입 스냅샷이 오래되어 누락된 컬럼
+					artist?: string | null;
 					closed_days?: string | null;
 					collected_date?: string | null;
 					created_at?: string;

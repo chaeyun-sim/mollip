@@ -49,6 +49,7 @@ export default function ManualScreen() {
 		const artist = artistRef.current.trim();
 		setStoreValues(title, artist);
 		store.artworkDescription = '';
+		store.isArtistIntro = false;
 		Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
 		router.push('/description');
 	};
@@ -86,7 +87,7 @@ export default function ManualScreen() {
 									hitSlop={8}
 									accessibilityLabel="AI 해설 생성"
 									accessibilityRole="button"
-									className="rounded-full px-3.5 py-1.5 bg-accent"
+									className="rounded-full px-3.5 py-1.5 bg-secondary"
 									style={({ pressed }) => ({ opacity: pressed ? 0.8 : 1 })}
 								>
 									<Text className="text-[14px] font-pretendard-semibold text-white">해설 생성</Text>
@@ -98,22 +99,22 @@ export default function ManualScreen() {
 							<Text className="text-[22px] mb-1.5 font-pretendard-bold text-white">
 								작품 정보 입력
 							</Text>
-							<Text className="text-sm mb-9 font-pretendard-regular text-tertiary">
+							<Text className="text-sm mb-9 font-pretendard-regular text-gray600">
 								작품명과 작가명만 입력하면 해설을 생성합니다
 							</Text>
 
 							<View className="mb-5">
-								<Text className="text-xs mb-2 font-pretendard-semibold text-muted tracking-wider">
+								<Text className="text-xs mb-2 font-pretendard-semibold text-gray500 tracking-wider">
 									작품명
 								</Text>
 								<TextInput
 									className={cn(
-										'rounded-lg px-4 border text-base h-[52px] pt-0 pb-0 text-on-dark leading-none font-pretendard-regular bg-primary',
+										'rounded-lg px-4 border text-base h-[52px] pt-0 pb-0 text-on-dark leading-none font-pretendard-regular bg-gray900',
 										titleError ? 'border-error' : 'border-divider-dark',
 									)}
 									textAlignVertical="center"
 									placeholder="예) 별이 빛나는 밤"
-									placeholderTextColor={colors.secondary}
+									placeholderTextColor={colors.gray700}
 									accessibilityLabel="작품명"
 									onChangeText={(t) => {
 										titleRef.current = t;
@@ -131,17 +132,17 @@ export default function ManualScreen() {
 							</View>
 
 							<View className="mb-5">
-								<Text className="text-xs mb-2 font-pretendard-semibold text-muted tracking-wider">
+								<Text className="text-xs mb-2 font-pretendard-semibold text-gray500 tracking-wider">
 									작가명
 								</Text>
 								<TextInput
 									ref={artistInputRef}
 									className={cn(
-										'rounded-lg px-4 border text-base bg-primary h-[52px] py-0 font-pretendard-regular text-on-dark',
+										'rounded-lg px-4 border text-base bg-gray900 h-[52px] py-0 font-pretendard-regular text-on-dark',
 										artistError ? 'border-error' : 'border-divider-dark',
 									)}
 									placeholder="예) 빈센트 반 고흐"
-									placeholderTextColor={colors.secondary}
+									placeholderTextColor={colors.gray700}
 									accessibilityLabel="작가명"
 									onChangeText={(t) => {
 										artistRef.current = t;
@@ -160,16 +161,16 @@ export default function ManualScreen() {
 
 							<View className="mb-5">
 								<View className="flex-row items-center gap-1.5 mb-2">
-									<Text className="text-xs font-pretendard-semibold text-muted tracking-wider">
+									<Text className="text-xs font-pretendard-semibold text-gray500 tracking-wider">
 										제작 연도
 									</Text>
-									<Text className="text-xs font-pretendard-regular text-secondary">(선택)</Text>
+									<Text className="text-xs font-pretendard-regular text-gray700">(선택)</Text>
 								</View>
 								<TextInput
 									ref={yearInputRef}
-									className="rounded-lg px-4 border border-divider-dark text-base bg-primary h-[52px] py-0 font-pretendard-regular text-on-dark"
+									className="rounded-lg px-4 border border-divider-dark text-base bg-gray900 h-[52px] py-0 font-pretendard-regular text-on-dark"
 									placeholder="예) 1889"
-									placeholderTextColor={colors.secondary}
+									placeholderTextColor={colors.gray700}
 									accessibilityLabel="제작 연도 (선택)"
 									onChangeText={(t) => {
 										yearRef.current = t;
@@ -183,16 +184,16 @@ export default function ManualScreen() {
 
 							<View className="mb-5">
 								<View className="flex-row items-center gap-1.5 mb-2">
-									<Text className="text-xs font-pretendard-semibold text-muted tracking-wider">
+									<Text className="text-xs font-pretendard-semibold text-gray500 tracking-wider">
 										캡션 / 메모
 									</Text>
-									<Text className="text-xs font-pretendard-regular text-secondary">(선택)</Text>
+									<Text className="text-xs font-pretendard-regular text-gray700">(선택)</Text>
 								</View>
 								<TextInput
 									ref={captionInputRef}
-									className="rounded-lg px-4 py-3 border border-divider-dark text-[15px] bg-primary font-pretendard-regular text-on-dark"
+									className="rounded-lg px-4 py-3 border border-divider-dark text-[15px] bg-gray900 font-pretendard-regular text-on-dark"
 									placeholder="전시장 캡션이나 메모를 입력하면 더 정확하게 질문할 수 있어요"
-									placeholderTextColor={colors.secondary}
+									placeholderTextColor={colors.gray700}
 									accessibilityLabel="캡션 또는 메모 (선택)"
 									onChangeText={(t) => {
 										captionRef.current = t;
@@ -205,13 +206,13 @@ export default function ManualScreen() {
 							</View>
 
 							<Pressable
-								className="w-full rounded-lg items-center border border-accent py-3.5 mb-6"
+								className="w-full rounded-lg items-center border border-primary py-3.5 mb-6"
 								onPress={handleDirectChat}
 								accessibilityLabel="해설 없이 채팅으로 바로 이동"
 								accessibilityRole="button"
 								style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
 							>
-								<Text className="text-base font-pretendard-semibold text-accent">
+								<Text className="text-base font-pretendard-semibold text-primary">
 									바로 질문하기
 								</Text>
 							</Pressable>

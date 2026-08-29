@@ -28,6 +28,8 @@ export function useDescriptionStream() {
 	const savedToPlaylistRef = useRef(false);
 	const savedToVisitRef = useRef(false);
 	const artworkImageUrl = useRef(store.artworkImageUrl).current;
+	// 작가 소개 인트로는 작품 트랙으로 쌓지 않는다 — 재생목록 최상단 고정 트랙이 담당한다.
+	const isArtistIntro = useRef(store.isArtistIntro).current;
 
 	// 로딩 단계 자동 진행 (5초, 10초)
 	useEffect(() => {
@@ -108,7 +110,7 @@ export function useDescriptionStream() {
 
 	// 스트리밍 완료 시 재생목록 저장 (몰입 모드 전용)
 	useEffect(() => {
-		if (!isTyping && isImmersive && !savedToPlaylistRef.current) {
+		if (!isTyping && isImmersive && !isArtistIntro && !savedToPlaylistRef.current) {
 			savedToPlaylistRef.current = true;
 			addToPlaylist({
 				title: store.inputMode === 'manual' ? store.manualTitle : '촬영한 작품',

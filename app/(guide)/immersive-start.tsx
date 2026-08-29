@@ -11,6 +11,7 @@ import {
 	type ExhibitionSuggestion,
 } from '@/src/components/guide/ExhibitionTitleField';
 import { VenueField } from '@/src/components/guide/VenueField';
+import { useArtistIntroStore } from '../../src/store/artistIntroStore';
 import { useImmersiveStore } from '../../src/store/immersiveStore';
 import { useVisitStore, todayKey } from '../../src/store/visitStore';
 import { supabase } from '../../src/utils/supabase';
@@ -24,6 +25,7 @@ const GUIDE_NOTES = [
 export default function ImmersiveStartScreen() {
 	const router = useRouter();
 	const enterImmersive = useImmersiveStore((s) => s.enter);
+	const prepareArtistIntro = useArtistIntroStore((s) => s.prepare);
 	const recordExhibition = useVisitStore((s) => s.recordExhibition);
 
 	const [titleText, setTitleText] = useState('');
@@ -105,12 +107,14 @@ export default function ImmersiveStartScreen() {
 
 		const exhibitionId = selectedIdRef.current;
 		enterImmersive(exhibitionId, title);
+		// 작가 소개 인트로는 백그라운드로만 준비한다 — await하지 않으므로 시작 흐름이 지연되지 않는다.
+		prepareArtistIntro(exhibitionId, title);
 		recordExhibition(todayKey(), exhibitionId, { title, venue });
 		Keyboard.dismiss();
 		Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
 
 		setOverlayVisible(true);
-	}, [titleText, venueText, enterImmersive, recordExhibition]);
+	}, [titleText, venueText, enterImmersive, prepareArtistIntro, recordExhibition]);
 
 	return (
 		<Screen>
@@ -129,7 +133,7 @@ export default function ImmersiveStartScreen() {
 					<Text className="text-[22px] mb-1.5 font-pretendard-bold text-white">
 						몰입 모드로 시작하기
 					</Text>
-					<Text className="text-sm mb-9 font-pretendard-regular text-tertiary">
+					<Text className="text-sm mb-9 font-pretendard-regular text-gray600">
 						관람 중인 전시를 검색하거나 직접 입력하세요
 					</Text>
 
@@ -166,15 +170,15 @@ export default function ImmersiveStartScreen() {
 					<View className="gap-2.5 px-1">
 						{GUIDE_NOTES.map((note) => (
 							<View key={note.icon} className="flex-row items-center gap-2">
-								<Ionicons name={note.icon} size={14} className="text-secondary" />
-								<Text className="text-xs font-pretendard-regular text-secondary">{note.text}</Text>
+								<Ionicons name={note.icon} size={14} className="text-gray700" />
+								<Text className="text-xs font-pretendard-regular text-gray700">{note.text}</Text>
 							</View>
 						))}
 					</View>
 
 					<Screen.BottomAbsolute className="bottom-2">
 						<Pressable
-							className="w-full rounded-lg items-center bg-accent py-3.5"
+							className="w-full rounded-lg items-center bg-secondary py-3.5"
 							onPress={handleSubmit}
 							style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
 							accessibilityLabel="몰입 모드 시작하기"

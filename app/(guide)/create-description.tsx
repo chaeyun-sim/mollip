@@ -107,6 +107,7 @@ export default function IndexScreen() {
 		store.manualYear = artwork.year ?? '';
 		store.artworkImageUrl = artwork.imageUrl ?? '';
 		store.artworkDescription = '';
+		store.isArtistIntro = false;
 		store.inputMode = 'manual';
 		setSearchQuery('');
 		setSearchResults([]);
@@ -153,6 +154,7 @@ export default function IndexScreen() {
 			(asset.mimeType as 'image/jpeg' | 'image/png' | 'image/webp') ?? 'image/jpeg';
 		store.extractedText = '';
 		store.artworkDescription = '';
+		store.isArtistIntro = false;
 		setIsLoading(false);
 		if (isImmersive) {
 			router.replace('/description');
@@ -250,7 +252,7 @@ export default function IndexScreen() {
 			{!isImmersive && (
 				<View className="mt-3 gap-2">
 					<Text className="text-3xl text-white mb-2 font-pretendard-bold">작품 해설 생성기</Text>
-					<Text className="text-md leading-6 text-tertiary">
+					<Text className="text-md leading-6 text-gray600">
 						{`작품 설명을 촬영하거나 사진을 선택하면\nAI가 바로 해설을 만들어드려요`}
 					</Text>
 				</View>
@@ -260,16 +262,16 @@ export default function IndexScreen() {
 			{isImmersive && (
 				<View className="mt-5">
 					<View
-						className="flex-row items-center rounded-2xl px-4 gap-3 bg-primary h-[52px] border-white/10"
+						className="flex-row items-center rounded-2xl px-4 gap-3 bg-gray900 h-[52px] border-white/10"
 						style={{
 							borderWidth: StyleSheet.hairlineWidth,
 						}}
 					>
-						<Ionicons name="search" size={18} className="text-secondary" />
+						<Ionicons name="search" size={18} className="text-gray700" />
 						<TextInput
 							className="flex-1 text-white font-pretendard-regular text-[16px] pb-0 leading-0"
 							placeholder="작품명으로 검색 (예: 별이 빛나는 밤)"
-							placeholderTextColor={colors.secondary}
+							placeholderTextColor={colors.gray700}
 							value={searchQuery}
 							onChangeText={setSearchQuery}
 							returnKeyType="search"
@@ -277,12 +279,12 @@ export default function IndexScreen() {
 							keyboardAppearance="dark"
 							style={{ lineHeight: 0 }}
 						/>
-						{isSearching && <ActivityIndicator size="small" className="text-secondary" />}
+						{isSearching && <ActivityIndicator size="small" className="text-gray700" />}
 					</View>
 
 					{searchResults.length > 0 && (
 						<View
-							className="mt-2 rounded-2xl overflow-hidden bg-primary max-h-[360px] bg-white/8"
+							className="mt-2 rounded-2xl overflow-hidden bg-gray900 max-h-[360px] bg-white/8"
 							style={{
 								borderWidth: StyleSheet.hairlineWidth,
 							}}
@@ -311,7 +313,7 @@ export default function IndexScreen() {
 											/>
 										) : (
 											<View className="rounded-lg items-center justify-center w-12 h-12 bg-divider-dark">
-												<Ionicons name="image-outline" size={20} className="text-secondary" />
+												<Ionicons name="image-outline" size={20} className="text-gray700" />
 											</View>
 										)}
 										<View className="flex-1">
@@ -321,7 +323,7 @@ export default function IndexScreen() {
 											>
 												{artwork.label}
 												{artwork.year ? (
-													<Text className="font-pretendard-regular text-tertiary">
+													<Text className="font-pretendard-regular text-gray600">
 														{'  '}
 														{artwork.year}
 													</Text>
@@ -329,14 +331,14 @@ export default function IndexScreen() {
 											</Text>
 											{artwork.description ? (
 												<Text
-													className="text-xs mt-0.5 font-pretendard-regular text-tertiary"
+													className="text-xs mt-0.5 font-pretendard-regular text-gray600"
 													numberOfLines={1}
 												>
 													{artwork.description}
 												</Text>
 											) : null}
 										</View>
-										<Ionicons name="chevron-forward" size={16} className="text-secondary" />
+										<Ionicons name="chevron-forward" size={16} className="text-gray700" />
 									</Pressable>
 								))}
 							</ScrollView>
@@ -356,7 +358,7 @@ export default function IndexScreen() {
 					accessibilityLabel="카메라로 촬영"
 					accessibilityRole="button"
 				>
-					<View className="flex-row items-center gap-4 px-6 py-5 bg-accent">
+					<View className="flex-row items-center gap-4 px-6 py-5 bg-secondary">
 						<View className="w-10 h-10 rounded-xl items-center justify-center bg-white/20">
 							<Ionicons name="camera" size={22} className="text-white" />
 						</View>
@@ -378,7 +380,7 @@ export default function IndexScreen() {
 					accessibilityRole="button"
 				>
 					<View
-						className="flex-row items-center gap-4 px-6 py-5 bg-primary bg-white/8"
+						className="flex-row items-center gap-4 px-6 py-5 bg-gray900 bg-white/8"
 						style={{
 							borderWidth: StyleSheet.hairlineWidth,
 						}}
@@ -390,11 +392,11 @@ export default function IndexScreen() {
 							<Text className="text-base font-pretendard-semibold text-on-dark">
 								갤러리에서 선택
 							</Text>
-							<Text className="text-xs mt-0.5 font-pretendard-regular text-tertiary">
+							<Text className="text-xs mt-0.5 font-pretendard-regular text-gray600">
 								저장된 사진을 불러오세요
 							</Text>
 						</View>
-						<Ionicons name="chevron-forward" size={18} className="text-secondary" />
+						<Ionicons name="chevron-forward" size={18} className="text-gray700" />
 					</View>
 				</Pressable>
 
@@ -407,8 +409,8 @@ export default function IndexScreen() {
 					accessibilityLabel="작품명 직접 입력"
 					accessibilityRole="button"
 				>
-					<Ionicons name="pencil-outline" size={15} className="text-tertiary" />
-					<Text className="text-sm text-tertiary">작품명 직접 입력</Text>
+					<Ionicons name="pencil-outline" size={15} className="text-gray600" />
+					<Text className="text-sm text-gray600">작품명 직접 입력</Text>
 				</Pressable>
 			</Screen.BottomAbsolute>
 
@@ -417,14 +419,14 @@ export default function IndexScreen() {
 				ref={bottomSheetRef}
 				snapPoints={['60%']}
 				enablePanDownToClose
-				backgroundStyle={{ backgroundColor: colors.primary }}
-				handleIndicatorStyle={{ backgroundColor: colors.secondary }}
+				backgroundStyle={{ backgroundColor: colors.gray900 }}
+				handleIndicatorStyle={{ backgroundColor: colors.gray700 }}
 			>
 				<BottomSheetView className="px-6 pb-10">
 					<Text className="text-lg text-white mt-2 mb-1 font-pretendard-bold">
 						이렇게 찍어보세요
 					</Text>
-					<Text className="text-sm mb-5 font-pretendard-regular text-tertiary">
+					<Text className="text-sm mb-5 font-pretendard-regular text-gray600">
 						작품 옆 설명 안내판이나 작품 전체를 찍으면{'\n'}정확한 해설을 생성해요
 					</Text>
 
@@ -443,7 +445,7 @@ export default function IndexScreen() {
 									resizeMode="cover"
 									accessibilityLabel={ex.caption}
 								/>
-								<Text className="text-xs text-center font-pretendard-regular text-muted">
+								<Text className="text-xs text-center font-pretendard-regular text-gray500">
 									{ex.caption}
 								</Text>
 							</View>
@@ -451,7 +453,7 @@ export default function IndexScreen() {
 					</ScrollView>
 
 					<Pressable
-						className="w-full py-4 rounded-2xl items-center mb-3 bg-accent"
+						className="w-full py-4 rounded-2xl items-center mb-3 bg-secondary"
 						onPress={handleConfirm}
 						style={({ pressed }) => ({ opacity: pressed ? 0.85 : 1 })}
 						accessibilityLabel="확인했어요"
@@ -467,7 +469,7 @@ export default function IndexScreen() {
 						accessibilityLabel="다시 보지 않기"
 						accessibilityRole="button"
 					>
-						<Text className="text-sm font-pretendard-regular text-secondary">다시 보지 않기</Text>
+						<Text className="text-sm font-pretendard-regular text-gray700">다시 보지 않기</Text>
 					</Pressable>
 				</BottomSheetView>
 			</BottomSheetModal>
@@ -477,8 +479,8 @@ export default function IndexScreen() {
 				ref={settingsSheetRef}
 				snapPoints={['40%']}
 				enablePanDownToClose
-				backgroundStyle={{ backgroundColor: colors.primary }}
-				handleIndicatorStyle={{ backgroundColor: colors.secondary }}
+				backgroundStyle={{ backgroundColor: colors.gray900 }}
+				handleIndicatorStyle={{ backgroundColor: colors.gray700 }}
 			>
 				<BottomSheetView className="px-6 pb-10">
 					<Text className="text-lg text-white mt-2 mb-6 font-pretendard-bold">해설 생성 설정</Text>
@@ -496,10 +498,10 @@ export default function IndexScreen() {
 						>
 							<Text className="text-sm font-pretendard-medium text-on-dark">목소리 변경</Text>
 							<View className="flex-row items-center gap-1.5">
-								<Text className="text-sm font-pretendard-regular text-tertiary" numberOfLines={1}>
+								<Text className="text-sm font-pretendard-regular text-gray600" numberOfLines={1}>
 									{currentVoiceName ? currentVoiceName.split(' - ')[0] : ''}
 								</Text>
-								<Ionicons name="chevron-forward" size={16} className="text-secondary" />
+								<Ionicons name="chevron-forward" size={16} className="text-gray700" />
 							</View>
 						</Pressable>
 						<Pressable
@@ -511,10 +513,10 @@ export default function IndexScreen() {
 						>
 							<Text className="text-sm font-pretendard-medium text-on-dark">강화 항목</Text>
 							<View className="flex-row items-center gap-1.5">
-								<Text className="text-sm font-pretendard-regular text-tertiary">
+								<Text className="text-sm font-pretendard-regular text-gray600">
 									{descriptionFocus.length > 0 ? `${descriptionFocus.length}개 선택` : '선택 안 함'}
 								</Text>
-								<Ionicons name="chevron-forward" size={16} className="text-secondary" />
+								<Ionicons name="chevron-forward" size={16} className="text-gray700" />
 							</View>
 						</Pressable>
 						<View className="flex-row items-center justify-between">
