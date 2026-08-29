@@ -1,9 +1,13 @@
 import { corsHeaders } from '../_shared/cors.ts';
+import { requireUser } from '../_shared/requireUser.ts';
 
 Deno.serve(async (req) => {
 	if (req.method === 'OPTIONS') {
 		return new Response('ok', { headers: corsHeaders });
 	}
+
+	const authError = await requireUser(req);
+	if (authError) return authError;
 
 	try {
 		const { voiceId, text, speed = 1.0 } = await req.json();

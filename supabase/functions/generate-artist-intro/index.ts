@@ -1,4 +1,5 @@
 import { corsHeaders } from '../_shared/cors.ts';
+import { requireUser } from '../_shared/requireUser.ts';
 
 // 작가 소개 인트로는 타이프라이터 표시가 필요 없고(캐시 후 즉시 표시가 목표) 결과를 그대로
 // 캐시 테이블에 넣어야 하므로, stream-description과 달리 non-streaming 단발 응답으로 받는다.
@@ -24,6 +25,9 @@ Deno.serve(async (req) => {
 	if (req.method === 'OPTIONS') {
 		return new Response('ok', { headers: corsHeaders });
 	}
+
+	const authError = await requireUser(req);
+	if (authError) return authError;
 
 	try {
 		const { artist, exhibitionTitle } = await req.json();
