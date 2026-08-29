@@ -33,7 +33,7 @@ module.exports = {
 		userInterfaceStyle: 'light',
 		ios: {
 			supportsTablet: true,
-			bundleIdentifier: 'com.simune.aaa',
+			bundleIdentifier: 'com.simune.mollip',
 			usesAppleSignIn: true,
 			infoPlist: {
 				NSPhotoLibraryUsageDescription: '사진 라이브러리에 접근합니다.',
@@ -57,7 +57,7 @@ module.exports = {
 			},
 		},
 		android: {
-			package: 'com.simune.aaa',
+			package: 'com.simune.mollip',
 			adaptiveIcon: {
 				backgroundColor: '#E6F4FE',
 				foregroundImage: './assets/icon.png',

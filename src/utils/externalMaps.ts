@@ -9,7 +9,7 @@ export const EXTERNAL_MAP_APPS: { key: ExternalMapApp; label: string }[] = [
 	{ key: 'google', label: '구글 지도' },
 ];
 
-const APP_BUNDLE_ID = 'com.simune.aaa';
+const APP_BUNDLE_ID = 'com.simune.mollip';
 
 // 앱 스킴으로 먼저 열어보고(설치돼 있으면 바로 해당 앱으로), 실패하면 웹 주소로 열어 브라우저에서라도 보이게 한다.
 function buildUrls(

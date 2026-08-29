@@ -1,4 +1,4 @@
-appId: com.simune.aaa
+appId: com.simune.mollip
 ---
 - launchApp:
     clearState: false
