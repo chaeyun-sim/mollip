@@ -15,26 +15,30 @@ import { summarizeArtPreferences } from '@/src/utils/artPreferenceSummary';
 export default function OnboardingScreen() {
 	const router = useRouter();
 	const userId = useAuthStore((s) => s.user?.id);
+	const setOnboardingCompleted = useAuthStore((s) => s.setOnboardingCompleted);
 	const [initialCards] = useState(() => shuffle(ART_ITEMS));
 
 	const { cards, liked, done, handleSwipeLeft, handleSwipeRight } =
 		useArtPreferenceSwipe(initialCards);
 
-	// 선호 데이터 저장 후 다음 화면으로 이동 (REQ-UI002-003, REQ-UI002-004, REQ-UI002-006)
+	// 선호 데이터 저장 후 탭으로 이동 (REQ-UI002-003, REQ-UI002-004, REQ-UI002-006)
+	// 위치 권한은 여기서 묻지 않는다 — 서비스 사용이 우선이라, 지도 탭 진입 등 실제 필요한 시점에
+	// useUserLocation이 온디맨드로 요청한다.
 	const handleNext = useCallback(() => {
 		if (userId) {
 			const { genres, artists } = summarizeArtPreferences(liked);
 			// 저장 실패 시 온보딩 플로우를 차단하지 않음
 			supabase
 				.from('profiles')
-				.update({ preferred_genres: genres, preferred_artists: artists })
+				.update({ preferred_genres: genres, preferred_artists: artists, onboarding_completed: true })
 				.eq('id', userId)
 				.then(({ error }) => {
 					if (error) console.error('[onboarding] preference save failed:', error.message);
 				});
+			setOnboardingCompleted(true);
 		}
-		router.push('/onboarding/location');
-	}, [router, userId, liked]);
+		router.replace('/(tabs)');
+	}, [router, userId, liked, setOnboardingCompleted]);
 
 	return (
 		<Screen variant="warm">
