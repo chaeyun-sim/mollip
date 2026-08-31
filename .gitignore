@@ -67,3 +67,5 @@ e2e/screenshots/
 coverage/
 
 .docs/wip/
+# Claude Code local settings
+.claude/settings.local.json
