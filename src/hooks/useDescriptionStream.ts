@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { buildDescriptionPrompt } from '../constants/prompts';
 import { useSettingsStore } from '../store/settingsStore';
-import { store } from '../store';
+import { store, updateStore } from '../store';
 import { useImmersiveStore } from '../store/immersiveStore';
 import { todayKey, useVisitStore } from '../store/visitStore';
 import { streamDescription, streamDescriptionFromImage } from '../utils/api';
@@ -64,7 +64,7 @@ export function useDescriptionStream() {
 	useEffect(() => {
 		if (!fullTextRef.current && store.artworkDescription) {
 			fullTextRef.current = store.artworkDescription;
-			store.artworkDescription = '';
+			updateStore({ artworkDescription: '' });
 		}
 		if (fullTextRef.current) {
 			setDisplayed(fullTextRef.current);
@@ -95,7 +95,7 @@ export function useDescriptionStream() {
 				if (!cancelled && mountedRef.current) setHasError(true);
 			} finally {
 				if (!cancelled && mountedRef.current) {
-					store.artworkDescription = fullTextRef.current;
+					updateStore({ artworkDescription: fullTextRef.current });
 					setIsStreaming(false);
 				}
 			}
