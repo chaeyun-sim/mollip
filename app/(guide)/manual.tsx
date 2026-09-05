@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import { Screen } from '../../src/components/layout/Screen';
 import * as Haptics from 'expo-haptics';
-import { store } from '../../src/store';
+import { updateStore } from '../../src/store';
 import { ScreenHeader } from '../../src/components/layout/ScreenHeader';
 import { cn } from '@/src/lib/cn';
 import { colors } from '@/src/constants/colors';
@@ -29,14 +29,16 @@ export default function ManualScreen() {
 	const [titleError, setTitleError] = useState(false);
 	const [artistError, setArtistError] = useState(false);
 
-	const setStoreValues = (title: string, artist: string) => {
-		store.inputMode = 'manual';
-		store.manualTitle = title;
-		store.manualArtist = artist;
+	const buildManualStorePatch = (title: string, artist: string) => {
 		const year = yearRef.current.trim();
 		const parts = [`작품명: ${title}`, `작가명: ${artist}`];
 		if (year) parts.push(`제작 연도: ${year}`);
-		store.extractedText = parts.join('\n');
+		return {
+			inputMode: 'manual' as const,
+			manualTitle: title,
+			manualArtist: artist,
+			extractedText: parts.join('\n'),
+		};
 	};
 
 	const handleSubmit = () => {
@@ -47,9 +49,11 @@ export default function ManualScreen() {
 		if (titleMissing || artistMissing) return;
 		const title = titleRef.current.trim();
 		const artist = artistRef.current.trim();
-		setStoreValues(title, artist);
-		store.artworkDescription = '';
-		store.isArtistIntro = false;
+		updateStore({
+			...buildManualStorePatch(title, artist),
+			artworkDescription: '',
+			isArtistIntro: false,
+		});
 		Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
 		router.push('/description');
 	};
@@ -62,8 +66,10 @@ export default function ManualScreen() {
 		if (titleMissing || artistMissing) return;
 		const title = titleRef.current.trim();
 		const artist = artistRef.current.trim();
-		setStoreValues(title, artist);
-		store.artworkDescription = captionRef.current.trim();
+		updateStore({
+			...buildManualStorePatch(title, artist),
+			artworkDescription: captionRef.current.trim(),
+		});
 		const sessionId = Date.now().toString();
 		Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
 		router.push({ pathname: '/chat', params: { sessionId } });

@@ -3,11 +3,12 @@ import * as Haptics from 'expo-haptics';
 import { Stack, useNavigation, useRouter } from 'expo-router';
 import { useEffect } from 'react';
 import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { useShallow } from 'zustand/react/shallow';
 import { Screen } from '../../src/components/layout/Screen';
 import { ScreenHeader } from '../../src/components/layout/ScreenHeader';
 import { ImageFallback } from '@/src/components/common/ImageFallback';
 import { ArtistIntroTrack } from '@/src/components/guide/ArtistIntroTrack';
-import { store } from '../../src/store';
+import { updateStore } from '../../src/store';
 import { useArtistIntroStore } from '../../src/store/artistIntroStore';
 import { useImmersiveStore } from '../../src/store/immersiveStore';
 import { cn } from '@/src/lib/cn';
@@ -15,16 +16,30 @@ import { cn } from '@/src/lib/cn';
 export default function PlaylistScreen() {
 	const router = useRouter();
 	const navigation = useNavigation();
-	const playlist = useImmersiveStore((s) => s.playlist);
-	const exhibitionTitle = useImmersiveStore((s) => s.exhibitionTitle);
-	const isImmersive = useImmersiveStore((s) => s.isImmersiveMode);
-	const exhibitionId = useImmersiveStore((s) => s.exhibitionId);
-	const exitImmersive = useImmersiveStore((s) => s.exit);
-	const introArtist = useArtistIntroStore((s) => s.artist);
-	const introImageUrl = useArtistIntroStore((s) => s.imageUrl);
-	const introStatus = useArtistIntroStore((s) => s.status);
-	const introText = useArtistIntroStore((s) => s.text);
-	const retryArtistIntro = useArtistIntroStore((s) => s.retry);
+	const { playlist, exhibitionTitle, isImmersive, exhibitionId, exitImmersive } = useImmersiveStore(
+		useShallow((s) => ({
+			playlist: s.playlist,
+			exhibitionTitle: s.exhibitionTitle,
+			isImmersive: s.isImmersiveMode,
+			exhibitionId: s.exhibitionId,
+			exitImmersive: s.exit,
+		})),
+	);
+	const {
+		artist: introArtist,
+		imageUrl: introImageUrl,
+		status: introStatus,
+		text: introText,
+		retry: retryArtistIntro,
+	} = useArtistIntroStore(
+		useShallow((s) => ({
+			artist: s.artist,
+			imageUrl: s.imageUrl,
+			status: s.status,
+			text: s.text,
+			retry: s.retry,
+		})),
+	);
 
 	const confirmExit = () => {
 		Alert.alert('전시 관람 종료', '재생목록이 초기화돼요', [
@@ -57,12 +72,14 @@ export default function PlaylistScreen() {
 
 	const handlePlay = (item: (typeof playlist)[number]) => {
 		Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-		store.manualTitle = item.title;
-		store.artworkImageUrl = item.imageUrl ?? '';
-		store.artworkDescription = item.description === FAILED_DESCRIPTION ? '' : item.description;
-		store.inputMode = 'manual';
-		store.manualArtist = '';
-		store.isArtistIntro = false;
+		updateStore({
+			manualTitle: item.title,
+			artworkImageUrl: item.imageUrl ?? '',
+			artworkDescription: item.description === FAILED_DESCRIPTION ? '' : item.description,
+			inputMode: 'manual',
+			manualArtist: '',
+			isArtistIntro: false,
+		});
 		router.replace('/description');
 	};
 
@@ -77,12 +94,14 @@ export default function PlaylistScreen() {
 		if (introStatus !== 'ready' || !introArtist || !introText) return;
 
 		Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-		store.manualTitle = introArtist;
-		store.artworkImageUrl = introImageUrl ?? '';
-		store.artworkDescription = introText;
-		store.inputMode = 'manual';
-		store.manualArtist = '';
-		store.isArtistIntro = true;
+		updateStore({
+			manualTitle: introArtist,
+			artworkImageUrl: introImageUrl ?? '',
+			artworkDescription: introText,
+			inputMode: 'manual',
+			manualArtist: '',
+			isArtistIntro: true,
+		});
 		router.replace('/description');
 	};
 
@@ -142,7 +161,7 @@ export default function PlaylistScreen() {
 
 			<ScrollView
 				className="flex-1"
-				contentContainerStyle={{ paddingBottom: 32, flexGrow: 1 }}
+				contentContainerClassName='pb-8 flex-grow'
 				scrollEnabled={playlist.length > 0}
 			>
 				<Text className="mb-4 font-pretendard-semibold text-on-dark text-[15px]">재생목록</Text>

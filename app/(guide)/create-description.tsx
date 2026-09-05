@@ -17,7 +17,7 @@ import {
 } from 'react-native';
 import { Screen } from '../../src/components/layout/Screen';
 import * as Haptics from 'expo-haptics';
-import { store } from '../../src/store';
+import { updateStore } from '../../src/store';
 import { useImmersiveStore } from '../../src/store/immersiveStore';
 import { useSettingsStore } from '@/src/store/settingsStore';
 import { ScreenHeader } from '@/src/components/layout/ScreenHeader';
@@ -78,11 +78,11 @@ export default function IndexScreen() {
 		return unsubscribe;
 	}, [navigation]);
 
+	const isSearchActive = isImmersive && searchQuery.trim().length >= 2;
+
 	useEffect(() => {
-		if (!isImmersive || searchQuery.trim().length < 2) {
-			setSearchResults([]);
-			return;
-		}
+		if (!isSearchActive) return;
+
 		if (searchTimerRef.current) clearTimeout(searchTimerRef.current);
 		searchTimerRef.current = setTimeout(async () => {
 			setIsSearching(true);
@@ -98,23 +98,28 @@ export default function IndexScreen() {
 		return () => {
 			if (searchTimerRef.current) clearTimeout(searchTimerRef.current);
 		};
-	}, [searchQuery, isImmersive]);
+	}, [isSearchActive, searchQuery]);
+
+	// 검색 비활성 상태(짧은 검색어·비몰입모드)에서는 이전 결과를 화면에 노출하지 않는다
+	const displayedSearchResults = isSearchActive ? searchResults : [];
 
 	const handleSelectArtwork = (artwork: WikiArtwork) => {
 		Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-		store.manualTitle = artwork.label;
-		store.manualArtist = artwork.artist ?? '';
-		store.manualYear = artwork.year ?? '';
-		store.artworkImageUrl = artwork.imageUrl ?? '';
-		store.artworkDescription = '';
-		store.isArtistIntro = false;
-		store.inputMode = 'manual';
+		updateStore({
+			manualTitle: artwork.label,
+			manualArtist: artwork.artist ?? '',
+			manualYear: artwork.year ?? '',
+			artworkImageUrl: artwork.imageUrl ?? '',
+			artworkDescription: '',
+			isArtistIntro: false,
+			inputMode: 'manual',
+		});
 		setSearchQuery('');
 		setSearchResults([]);
 		router.replace('/description');
 	};
 
-	const launchPicker = async (useCamera: boolean) => {
+	const launchPicker = useCallback(async (useCamera: boolean) => {
 		setIsLoading(true);
 		const permission = useCamera
 			? await ImagePicker.requestCameraPermissionsAsync()
@@ -149,19 +154,27 @@ export default function IndexScreen() {
 			setIsLoading(false);
 			return;
 		}
-		store.imageBase64 = asset.base64;
-		store.imageMediaType =
-			(asset.mimeType as 'image/jpeg' | 'image/png' | 'image/webp') ?? 'image/jpeg';
-		store.extractedText = '';
-		store.artworkDescription = '';
-		store.isArtistIntro = false;
+		// inputMode를 'image'로 되돌리지 않으면, 이전에 검색/직접입력(manual) 흐름을 한 번이라도
+		// 거친 세션에서는 useDescriptionStream이 여전히 manual 분기를 타서 방금 찍은 사진 대신
+		// 이전 manualTitle/manualArtist로 해설을 생성해버린다 — 그 스테일 필드도 함께 비운다.
+		updateStore({
+			inputMode: 'image',
+			manualTitle: '',
+			manualArtist: '',
+			manualYear: '',
+			imageBase64: asset.base64,
+			imageMediaType: (asset.mimeType as 'image/jpeg' | 'image/png' | 'image/webp') ?? 'image/jpeg',
+			extractedText: '',
+			artworkDescription: '',
+			isArtistIntro: false,
+		});
 		setIsLoading(false);
 		if (isImmersive) {
 			router.replace('/description');
 		} else {
 			router.push('/description');
 		}
-	};
+	}, [isImmersive, router]);
 
 	const pickAndGo = async (useCamera: boolean) => {
 		Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -177,13 +190,13 @@ export default function IndexScreen() {
 	const handleConfirm = useCallback(() => {
 		bottomSheetRef.current?.dismiss();
 		launchPicker(pendingCameraRef.current);
-	}, []);
+	}, [launchPicker]);
 
 	const handleDismissForever = useCallback(async () => {
 		await AsyncStorage.setItem(STORAGE_KEY, 'true');
 		bottomSheetRef.current?.dismiss();
 		launchPicker(pendingCameraRef.current);
-	}, []);
+	}, [launchPicker]);
 
 	return (
 		<Screen>
@@ -282,7 +295,7 @@ export default function IndexScreen() {
 						{isSearching && <ActivityIndicator size="small" className="text-gray700" />}
 					</View>
 
-					{searchResults.length > 0 && (
+					{displayedSearchResults.length > 0 && (
 						<View
 							className="mt-2 rounded-2xl overflow-hidden bg-gray900 max-h-[360px] bg-white/8"
 							style={{
@@ -290,12 +303,12 @@ export default function IndexScreen() {
 							}}
 						>
 							<ScrollView
-								scrollEnabled={searchResults.length > 5}
-								showsVerticalScrollIndicator={searchResults.length > 5}
+								scrollEnabled={displayedSearchResults.length > 5}
+								showsVerticalScrollIndicator={displayedSearchResults.length > 5}
 								keyboardShouldPersistTaps="handled"
 								nestedScrollEnabled
 							>
-								{searchResults.map((artwork, index) => (
+								{displayedSearchResults.map((artwork, index) => (
 									<Pressable
 										key={artwork.qId}
 										className="flex-row items-center gap-3 px-4 py-3 bg-white/6"
@@ -434,7 +447,7 @@ export default function IndexScreen() {
 					<ScrollView
 						horizontal
 						showsHorizontalScrollIndicator={false}
-						contentContainerStyle={{ gap: 12, paddingBottom: 4 }}
+						contentContainerClassName='gap-3 pb-1'
 						className="mb-6"
 					>
 						{EXAMPLES.map((ex, i) => (
