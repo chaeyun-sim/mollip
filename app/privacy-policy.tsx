@@ -19,7 +19,7 @@ export default function PrivacyPolicyScreen() {
 
 			<ScrollView
 				showsVerticalScrollIndicator={false}
-				contentContainerStyle={{ paddingTop: 8, paddingBottom: 48 }}
+				contentContainerClassName='pt-2 pb-12'
 			>
 				{SECTIONS.map((section) => (
 					<View key={section.title} className="mb-6">

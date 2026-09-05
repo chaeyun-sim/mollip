@@ -207,7 +207,7 @@ export default function SearchScreen() {
 				/* 검색 전 — 추천 태그 + 최근 검색어 */
 				<ScrollView
 					showsVerticalScrollIndicator={false}
-					contentContainerStyle={{ paddingBottom: 48 }}
+					contentContainerClassName='pb-12'
 					keyboardShouldPersistTaps="handled"
 					keyboardDismissMode="on-drag"
 				>
@@ -277,7 +277,7 @@ export default function SearchScreen() {
 					onEndReached={hasMore ? handleLoadMore : undefined}
 					onEndReachedThreshold={0.3}
 					showsVerticalScrollIndicator={false}
-					contentContainerStyle={{ paddingBottom: 48 }}
+					contentContainerClassName='pb-12'
 					keyboardShouldPersistTaps="handled"
 					keyboardDismissMode="on-drag"
 					ItemSeparatorComponent={() => <View className="h-5" />}

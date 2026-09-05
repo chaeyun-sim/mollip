@@ -61,7 +61,7 @@ export default function DescriptionSettingsScreen() {
 
 			<ScrollView
 				showsVerticalScrollIndicator={false}
-				contentContainerStyle={{ paddingBottom: 60 }}
+				contentContainerClassName='pb-[60px]'
 			>
 				<Text className="text-[13px] font-pretendard-regular text-gray600 mt-4 mb-3">
 					{`선택한 항목을 해설에서 더 깊게 다뤄요.\n여러 개 선택할 수 있어요.`}

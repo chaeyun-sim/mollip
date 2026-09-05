@@ -59,7 +59,7 @@ export default function DescriptionScreen() {
 	const router = useRouter();
 	const navigation = useNavigation();
 	const insets = useSafeAreaInsets();
-	const sessionId = useRef(Date.now().toString()).current;
+	const [sessionId] = useState(() => Date.now().toString());
 	const isImmersive = useImmersiveStore((s) => s.isImmersiveMode);
 	const { fontSize, highContrast } = useSettingsStore();
 	const bodyFontSize = getEffectiveFontSize(fontSize, highContrast);
@@ -246,7 +246,7 @@ export default function DescriptionScreen() {
 			<ScrollView
 				ref={scrollRef}
 				className="flex-1"
-				contentContainerStyle={{ paddingBottom: 150, paddingTop: 12 }}
+				contentContainerClassName='pb-[150px] pt-3'
 			>
 				{hasError ? (
 					<View className="items-center mt-16 gap-3">
@@ -320,9 +320,9 @@ export default function DescriptionScreen() {
 				</View>
 
 				<View className="flex-row items-center justify-between py-1 w-full">
-					{/* 채팅 버튼 — 해설 완료 후 표시 */}
+					{/* 채팅 버튼 — 몰입 모드에서만, 해설 완료 후 표시 */}
 					<View className="w-9 items-center">
-						{!isTyping && (
+						{!isTyping && isImmersive && (
 							<Pressable
 								onPress={() => router.push({ pathname: '/chat', params: { sessionId } })}
 								hitSlop={8}
@@ -430,7 +430,7 @@ export default function DescriptionScreen() {
 						<Ionicons name="close" size={28} color="white" />
 					</Pressable>
 					<ScrollView
-						contentContainerStyle={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
+						contentContainerClassName='flex-1 justify-center items-center'
 						maximumZoomScale={4}
 						minimumZoomScale={1}
 						showsVerticalScrollIndicator={false}

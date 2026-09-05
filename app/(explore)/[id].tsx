@@ -109,11 +109,7 @@ export default function ExhibitionDetailScreen() {
 					<ScrollView
 						horizontal
 						showsHorizontalScrollIndicator={false}
-						contentContainerStyle={{
-							paddingHorizontal: 18,
-							paddingVertical: 16,
-							gap: 8,
-						}}
+						contentContainerClassName='px-[18px] py-4 gap-2'
 					>
 						<ExhibitionMetaPill icon="location-outline" text={exhibition.venue} />
 						{exhibition.exhibitionType && (
@@ -144,12 +140,7 @@ export default function ExhibitionDetailScreen() {
 						<ScrollView
 							horizontal
 							showsHorizontalScrollIndicator={false}
-							contentContainerStyle={{
-								paddingHorizontal: 18,
-								paddingTop: 12,
-								paddingBottom: 4,
-								gap: 8,
-							}}
+							contentContainerClassName='px-[18px] pt-3 pb-1 gap-2'
 						>
 							{(exhibition.tags ?? [])?.map((tag) => (
 								<ExhibitionMetaPill key={tag} icon="pricetag-outline" text={tag} />

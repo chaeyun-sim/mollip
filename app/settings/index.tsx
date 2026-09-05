@@ -60,7 +60,7 @@ export default function MyPageScreen() {
 
 			<ScrollView
 				showsVerticalScrollIndicator={false}
-				contentContainerStyle={{ paddingBottom: 60 }}
+				contentContainerClassName='pb-[60px]'
 			>
 				<View className="w-full">
 					{/* 로그인 유도 */}

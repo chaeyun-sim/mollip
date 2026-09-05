@@ -275,7 +275,7 @@ export function ChatMessage({ item, onRetry }: ChatMessageProps) {
 						</View>
 					) : artworkImageUrl ? (
 						<ScrollView
-							contentContainerStyle={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
+							contentContainerClassName='flex-1 justify-center items-center'
 							maximumZoomScale={4}
 							minimumZoomScale={1}
 							showsVerticalScrollIndicator={false}

@@ -23,7 +23,7 @@ export function FilterChips({
 			<ScrollView
 				horizontal
 				showsHorizontalScrollIndicator={false}
-				contentContainerStyle={{ paddingHorizontal: 16, gap: 8 }}
+				contentContainerClassName='px-4 gap-2'
 			>
 				<Chip
 					label={

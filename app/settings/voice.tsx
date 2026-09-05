@@ -98,7 +98,7 @@ export default function VoiceScreen() {
 
 			<ScrollView
 				className="flex-1"
-				contentContainerStyle={{ paddingTop: 4, paddingBottom: 48 }}
+				contentContainerClassName='pt-1 pb-12'
 				showsVerticalScrollIndicator={false}
 			>
 				<Text className="text-gray-400 text-[13px] font-pretendard-regular mb-5 leading-[19px]">

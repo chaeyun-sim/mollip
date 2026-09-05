@@ -33,7 +33,7 @@ export function SearchFilterBar({
 		<ScrollView
 			horizontal
 			showsHorizontalScrollIndicator={false}
-			contentContainerStyle={{ gap: 8, paddingRight: 24 }}
+			contentContainerClassName='gap-2 pr-6'
 		>
 			{STATUS_KEYS.map((key) => (
 				<Chip

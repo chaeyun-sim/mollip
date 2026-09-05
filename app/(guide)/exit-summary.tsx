@@ -103,7 +103,7 @@ export default function ExitSummaryScreen() {
 		<Screen variant="warm" edges={['top', 'bottom']}>
 			<ScrollView
 				className="flex-1"
-				contentContainerStyle={{ paddingTop: 20, paddingBottom: 120 }}
+				contentContainerClassName='pt-5 pb-[120px]'
 				showsVerticalScrollIndicator={false}
 			>
 				<View className="items-center mb-10">

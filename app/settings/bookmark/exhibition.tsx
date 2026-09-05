@@ -119,11 +119,7 @@ export default function ExhibitionBookmarkScreen() {
 				keyExtractor={(item) => item.id}
 				renderItem={({ item }) => <ExhibitionCard ex={item} onPress={handlePress} />}
 				ItemSeparatorComponent={() => <View className="h-4" />}
-				contentContainerStyle={{
-					paddingTop: 12,
-					paddingBottom: 32,
-					paddingHorizontal: 4,
-				}}
+				contentContainerClassName='pt-3 pb-8 px-1'
 				showsVerticalScrollIndicator={false}
 			/>
 		);

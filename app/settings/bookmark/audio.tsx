@@ -148,11 +148,7 @@ export default function AudioHistoryScreen() {
 						<AudioHistoryCard item={item} onPress={handleCardPress} onDelete={handleDelete} />
 					)}
 					ItemSeparatorComponent={() => <View className="h-[1px] bg-divider my-2.5" />}
-					contentContainerStyle={{
-						paddingTop: 16,
-						paddingBottom: 40,
-						paddingHorizontal: 4,
-					}}
+					contentContainerClassName='pt-4 pb-10 px-1'
 					showsVerticalScrollIndicator={false}
 				/>
 			)}
@@ -168,7 +164,7 @@ export default function AudioHistoryScreen() {
 			>
 				{selected && (
 					<BottomSheetScrollView
-						contentContainerStyle={{ paddingHorizontal: 24, paddingBottom: 48 }}
+						contentContainerClassName='px-6 pb-12'
 					>
 						<View className="flex-row items-start justify-between pt-2 pb-5">
 							<View className="flex-1 pr-4">

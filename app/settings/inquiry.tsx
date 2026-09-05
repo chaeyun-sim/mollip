@@ -118,7 +118,7 @@ export default function InquiryScreen() {
 			>
 				<ScrollView
 					className="flex-1"
-					contentContainerStyle={{ paddingTop: 8, paddingBottom: 40 }}
+					contentContainerClassName='pt-2 pb-10'
 					showsVerticalScrollIndicator={false}
 					keyboardShouldPersistTaps="handled"
 				>
