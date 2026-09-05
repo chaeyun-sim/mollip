@@ -4,6 +4,7 @@ import { ImageFallback } from '@/src/components/common/ImageFallback';
 import { SectionTitle } from '@/src/components/common/SectionTitle';
 import { archiveTintForKey } from '@/src/components/archive/archivePalette';
 import { useVisitStore } from '@/src/store/visitStore';
+import { WEEKDAYS } from '@/src/constants/week';
 
 interface ArchiveRecentVisitsProps {
 	dateKeys: string[];
@@ -24,10 +25,9 @@ function formatDateLine(dateKey: string): {
 
 	if (dateKey === todayKey) return { primary: '오늘', secondary: `${y}년 ${m}월 ${d}일` };
 	if (dateKey === yesterdayKey) return { primary: '어제', secondary: `${y}년 ${m}월 ${d}일` };
-	const weekdays = ['일', '월', '화', '수', '목', '금', '토'] as const;
 	return {
 		primary: `${m}월 ${d}일`,
-		secondary: `${weekdays[date.getDay()]}요일`,
+		secondary: `${WEEKDAYS[date.getDay()]}요일`,
 	};
 }
 

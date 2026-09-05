@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { Modal, Pressable, ScrollView, Text, View } from 'react-native';
 import Animated, {
 	Easing,
@@ -6,13 +6,11 @@ import Animated, {
 	useSharedValue,
 	withTiming,
 } from 'react-native-reanimated';
-
 import { VisitTicket } from '@/src/components/archive/VisitTicket';
 import { useExhibitionDetail } from '@/src/hooks/useExhibitionDetail';
 import { useImmersiveStore } from '@/src/store/immersiveStore';
 import { useVisitStore, type ListenedItem } from '@/src/store/visitStore';
-
-const WEEKDAYS = ['일', '월', '화', '수', '목', '금', '토'] as const;
+import { WEEKDAYS } from '@/src/constants/week';
 
 function makeDateLabel(dateKey: string): string {
 	const [y, m, d] = dateKey.split('-').map(Number);
@@ -78,18 +76,10 @@ export function TicketFocusOverlay({ dateKey, onClose }: TicketFocusOverlayProps
 	const listenedItems = useMemo((): ListenedItem[] => {
 		if (visit?.listened && visit.listened.length > 0) return visit.listened;
 		return playlist.map((p) => ({ title: p.title, imageUrl: p.imageUrl }));
-	}, [visit?.listened, playlist]);
+	}, [visit, playlist]);
 
 	const listenedTitles = useMemo(() => listenedItems.map((l) => l.title), [listenedItems]);
-	const memo = visit?.memo ?? '';
 	const dateLabel = dateKey ? makeDateLabel(dateKey) : '';
-
-	const handleMemoChange = useCallback(
-		(text: string) => {
-			if (dateKey) setVisitMemo(dateKey, text);
-		},
-		[dateKey, setVisitMemo],
-	);
 
 	if (!dateKey) return null;
 
@@ -133,7 +123,7 @@ export function TicketFocusOverlay({ dateKey, onClose }: TicketFocusOverlayProps
 				<Animated.View style={[{ flex: 1 }, cardStyle]}>
 					<Pressable onPress={(e) => e.stopPropagation()} style={{ flex: 1 }}>
 						<ScrollView
-							contentContainerStyle={{ paddingHorizontal: 16, paddingTop: 8, paddingBottom: 48 }}
+							contentContainerClassName='px-4 pt-2 pb-12'
 							showsVerticalScrollIndicator={false}
 						>
 							<VisitTicket

@@ -2,6 +2,7 @@ import { cn } from '@/src/lib/cn';
 import { Ionicons } from '@expo/vector-icons';
 import { useMemo } from 'react';
 import { Image, Pressable, Text, View, type ImageSourcePropType } from 'react-native';
+import { WEEKDAYS } from '@/src/constants/week';
 
 export interface DayImage {
 	source?: ImageSourcePropType;
@@ -17,7 +18,6 @@ interface DiaryCalendarProps {
 	onChangeMonth: (offset: -1 | 1) => void;
 }
 
-const WEEK_LABELS = ['일', '월', '화', '수', '목', '금', '토'] as const;
 
 function toDateKey(year: number, month: number, day: number): string {
 	return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
@@ -93,7 +93,7 @@ export function DiaryCalendar({
 
 			{/* 요일 헤더 */}
 			<View className="flex-row mt-4 justify-around">
-				{WEEK_LABELS.map((label) => (
+				{WEEKDAYS.map((label) => (
 					<Text
 						key={label}
 						className="text-center text-[11px] text-white/40 font-pretendard-regular"

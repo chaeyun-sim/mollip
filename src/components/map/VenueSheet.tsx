@@ -10,11 +10,11 @@ import { parseDate } from '@/src/utils/mapUtils';
 import { openPhoneDialer } from '@/src/utils/venueContactActions';
 import type { VenueGroup } from '@/src/data/venues';
 import { colors } from '@/src/constants/colors';
+import { WEEKDAYS } from '@/src/constants/week';
 
 // ── 운영시간 파싱 ─────────────────────────────────────────────────────────────
 
-const DAY_NAMES = ['일', '월', '화', '수', '목', '금', '토'] as const;
-type DayName = (typeof DAY_NAMES)[number];
+type DayName = (typeof WEEKDAYS)[number];
 
 interface HoursEntry {
 	days: string;
@@ -25,9 +25,9 @@ interface HoursEntry {
 function expandDayLabel(label: string): DayName[] {
 	const rangeMatch = label.match(/^([월화수목금토일])~([월화수목금토일])$/);
 	if (rangeMatch) {
-		const start = DAY_NAMES.indexOf(rangeMatch[1] as DayName);
-		const end = DAY_NAMES.indexOf(rangeMatch[2] as DayName);
-		if (start !== -1 && end !== -1) return Array.from(DAY_NAMES).slice(start, end + 1) as DayName[];
+		const start = WEEKDAYS.indexOf(rangeMatch[1] as DayName);
+		const end = WEEKDAYS.indexOf(rangeMatch[2] as DayName);
+		if (start !== -1 && end !== -1) return Array.from(WEEKDAYS).slice(start, end + 1) as DayName[];
 	}
 	return label.split(/[·,]/).map((d) => d.trim()) as DayName[];
 }
@@ -49,7 +49,7 @@ function parseHoursEntries(openHours: string, closedDays?: string): HoursEntry[]
 }
 
 function getTodayEntry(entries: HoursEntry[], date: Date): HoursEntry | null {
-	const dayName = DAY_NAMES[date.getDay()];
+	const dayName = WEEKDAYS[date.getDay()];
 	for (const entry of entries) {
 		if (entry.days === '매일') return entry;
 		if (expandDayLabel(entry.days).includes(dayName)) return entry;
@@ -70,7 +70,7 @@ function HoursSection({ openHours, closedDays, filterDate }: HoursSectionProps) 
 
 	const entries = useMemo(() => parseHoursEntries(openHours, closedDays), [openHours, closedDays]);
 	const todayEntry = useMemo(() => getTodayEntry(entries, filterDate), [entries, filterDate]);
-	const todayDayName = DAY_NAMES[filterDate.getDay()];
+	const todayDayName = WEEKDAYS[filterDate.getDay()];
 	const showChevron = entries.length > 1;
 
 	const displayLabel =
@@ -369,7 +369,7 @@ export function VenueSheet({
 						horizontal
 						showsHorizontalScrollIndicator={false}
 						className="mb-4 -mx-5"
-						contentContainerStyle={{ paddingHorizontal: 20, gap: 8 }}
+						contentContainerClassName='px-5 gap-2'
 					>
 						{venue.subVenues!.map((sv, idx) => (
 							<Pressable

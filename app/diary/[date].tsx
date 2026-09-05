@@ -23,8 +23,7 @@ import { useHistoryStore } from '@/src/store/historyStore';
 import type { StoredChatMessage } from '@/src/store/historyStore';
 import { Screen } from '@/src/components/layout/Screen';
 import { ScreenHeader } from '@/src/components/layout/ScreenHeader';
-
-const WEEKDAYS = ['일', '월', '화', '수', '목', '금', '토'] as const;
+import { WEEKDAYS } from '@/src/constants/week';
 
 interface ChatHistorySectionProps {
 	title: string;
@@ -120,7 +119,7 @@ export default function DiaryScreen() {
 	const listenedItems = useMemo((): ListenedItem[] => {
 		if (visit?.listened && visit.listened.length > 0) return visit.listened;
 		return listenedTitles.map((title) => ({ title }));
-	}, [visit?.listened, listenedTitles]);
+	}, [visit, listenedTitles]);
 
 	const dayChatItems = useMemo(
 		() =>
@@ -187,7 +186,7 @@ export default function DiaryScreen() {
 
 			<ScrollView
 				showsVerticalScrollIndicator={false}
-				contentContainerStyle={{ paddingBottom: 40 }}
+				contentContainerClassName='pb-10'
 			>
 				<View className="pt-4">
 					<VisitTicket

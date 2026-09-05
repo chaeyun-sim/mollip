@@ -62,7 +62,7 @@ export function VisitTicket({
 
 	const snapTo = useCallback(
 		(toBack: boolean) => {
-			rotation.value = withTiming(toBack ? 1 : 0, FLIP_TIMING);
+			rotation.set(withTiming(toBack ? 1 : 0, FLIP_TIMING));
 			applyFlipped(toBack);
 		},
 		[applyFlipped, rotation],
@@ -75,23 +75,23 @@ export function VisitTicket({
 					.activeOffsetX([-14, 14])
 					.failOffsetY([-22, 22])
 					.onBegin(() => {
-						dragStartRotation.value = rotation.value;
+						dragStartRotation.set(rotation.value)
 					})
 					.onUpdate((e) => {
 						const next = dragStartRotation.value - e.translationX / FLIP_DRAG_PX;
-						rotation.value = Math.min(1, Math.max(0, next));
+						rotation.set(Math.min(1, Math.max(0, next)));
 					})
 					.onEnd((e) => {
 						const projected = rotation.value - e.velocityX / 2800;
 						const toBack = projected > 0.5;
-						rotation.value = withTiming(toBack ? 1 : 0, FLIP_TIMING);
+						rotation.set(withTiming(toBack ? 1 : 0, FLIP_TIMING));
 						runOnJS(applyFlipped)(toBack);
 					}),
 				Gesture.Tap()
 					.maxDuration(280)
 					.onEnd(() => {
 						const toBack = rotation.value <= 0.5;
-						rotation.value = withTiming(toBack ? 1 : 0, FLIP_TIMING);
+						rotation.set(withTiming(toBack ? 1 : 0, FLIP_TIMING));
 						runOnJS(applyFlipped)(toBack);
 					}),
 			),
@@ -197,11 +197,7 @@ export function VisitTicket({
 								className="flex-1 min-h-0"
 								showsVerticalScrollIndicator={false}
 								nestedScrollEnabled
-								contentContainerStyle={{
-									paddingTop: 16,
-									paddingBottom: 8,
-									flexGrow: 1,
-								}}
+								contentContainerClassName='pt-4 pb-2 flex-grow'
 							>
 								<View className="px-6 pt-2 pb-2">
 									<View className="flex-row items-baseline justify-between mb-1">
