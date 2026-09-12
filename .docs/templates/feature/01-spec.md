@@ -9,47 +9,51 @@ status: draft
 
 ## Problem
 
-- 
+-
 
 ## Goals
 
-- 
+-
+
+## Constraints
+
+-
 
 ## Non-goals (out of scope)
 
-- 
+-
 
 ## Users & context
 
-- 
+-
 
 ## Acceptance criteria
 
 ### AC-1: {제목}
 
-- **Given** 
-- **When** 
-- **Then** 
+- **Given**
+- **When**
+- **Then**
 
 ### AC-2: {제목}
 
-- **Given** 
-- **When** 
-- **Then** 
+- **Given**
+- **When**
+- **Then**
 
 ## Screens / routes
 
 | Route | 변경 |
-|-------|------|
-| | |
+| ----- | ---- |
+|       |      |
 
 ## Risks & dependencies
 
-- 
+-
 
 ## Open questions (for Manager → user)
 
-- [ ] 
+- [ ]
 
 ## Feature breakdown (for Chris)
 

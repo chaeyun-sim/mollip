@@ -12,13 +12,13 @@ status: ready-for-user
 
 ## What changed
 
-- 
+-
 
 ## Evidence
 
 | Feature / AC | tsc | Screenshot | Interaction | Regression |
-|--------------|-----|------------|-------------|------------|
-| | ✅ | | | |
+| ------------ | --- | ---------- | ----------- | ---------- |
+|              | ✅  |            |             |            |
 
 ## Design QA
 
@@ -27,6 +27,23 @@ status: ready-for-user
 ## Open questions
 
 - (none)
+
+## User feedback
+
+### UX feedback
+
+-
+
+### Evidence
+
+-
+
+### Triage
+
+- [ ] Design → Design Agent
+- [ ] Dev → Dev Agent
+- [ ] Spec → Manager Agent
+- [ ] No change required
 
 ---
 

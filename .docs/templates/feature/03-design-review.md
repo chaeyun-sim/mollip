@@ -14,23 +14,27 @@ verdict: Fail
 
 ## Scores (1–5)
 
-| Dimension | Score | Notes |
-|-----------|-------|-------|
-| Brand & tokens | | |
-| Layout & IA | | |
-| Copy & tone | | |
-| Accessibility | | |
-| **Weighted overall** | | |
+| Dimension            | Score | Notes |
+| -------------------- | ----- | ----- |
+| Brand & tokens       |       |       |
+| Layout & IA          |       |       |
+| Copy & tone          |       |       |
+| Accessibility        |       |       |
+| **Weighted overall** |       |       |
 
 Pass rule: overall ≥ 4.0 and no dimension &lt; 3.
 
+## Previous issues addressed
+
+- [ ]
+
 ## Blockers (must fix)
 
-1. 
+1.
 
 ## Suggestions (nice to have)
 
-1. 
+1.
 
 ## Handoff
 

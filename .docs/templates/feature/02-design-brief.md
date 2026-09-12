@@ -8,7 +8,7 @@ status: draft
 
 ## Design intent
 
-- 
+-
 
 ## Tokens (defaults)
 
@@ -21,17 +21,21 @@ status: draft
 ## Layout & components
 
 | 영역 | 설명 | 재사용 컴포넌트 |
-|------|------|-----------------|
-| | | `Screen`, … |
+| ---- | ---- | --------------- |
+|      |      | `Screen`, …     |
+
+## Design decisions
+
+-
 
 ## Copy (KO)
 
 | Element | Text |
-|---------|------|
-| Title | |
-| CTA | |
-| Empty | |
-| Error | |
+| ------- | ---- |
+| Title   |      |
+| CTA     |      |
+| Empty   |      |
+| Error   |      |
 
 ## States
 
@@ -54,4 +58,4 @@ status: draft
 
 ## Out of design scope
 
-- 
+-

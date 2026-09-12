@@ -8,14 +8,18 @@ status: in-progress
 
 ## Implemented ACs
 
-| AC | Status | Files |
-|----|--------|-------|
-| AC-1 | | |
-| AC-2 | | |
+| AC   | Status | Files |
+| ---- | ------ | ----- |
+| AC-1 |        |       |
+| AC-2 |        |       |
+
+## Implementation decisions
+
+-
 
 ## Changed files
 
-- 
+-
 
 ## Deviations from spec/brief
 
@@ -23,8 +27,8 @@ status: in-progress
 
 ## Blockers for Taylor (QA)
 
-- 
+-
 
 ## Native / env notes
 
-- 
+-
