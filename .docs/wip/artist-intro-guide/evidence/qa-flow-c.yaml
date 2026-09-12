@@ -1,0 +1,5 @@
+appId: com.simune.mollip
+---
+- tapOn:
+    point: '50%,40%'
+- waitForAnimationToEnd

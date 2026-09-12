@@ -1,0 +1,10 @@
+appId: com.simune.mollip
+---
+- tapOn:
+    text: '닫기'
+- waitForAnimationToEnd
+- takeScreenshot: e1-after-dismiss
+- tapOn:
+    point: '50%,40%'
+- waitForAnimationToEnd
+- takeScreenshot: e2-second-tap

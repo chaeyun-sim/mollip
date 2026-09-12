@@ -1,0 +1,65 @@
+---
+feature-slug: color-system-overhaul
+author: alex
+iteration: 2
+verdict: Pass
+---
+
+# Design review — 디자인 토큰(컬러 시스템) 전면 개편
+
+## Verdict
+
+- **Pass**
+- Iteration: 2 / 3
+- 대상: `02-design-brief.md` (Sam, iteration 2) / 대조: `01-spec.md` (tier L, AC-1~AC-17), `.docs/DESIGN_SYSTEM.md`, `.claude/rules/component-convention.md`, `03-design-review.md` (iteration 1, Fail)
+
+iteration 1의 Blockers 1~5가 **전부 실질적으로 해소됐다.** 우회·재서술이 아니라 (a) 모순 지점을 한쪽에서 삭제하고, (b) 위임했던 판정을 브리프가 회수해 확정표로 못 박고, (c) 임계값 규칙 자체를 폐기하고 단일 판정 트리로 대체하는 방식으로 처리했다. 특히 §N 확정표는 01-spec Risks P0가 열거한 8개 지점을 전부 덮으면서 "Chris는 옮겨 적을 뿐 판단하지 않는다 / 표에 없는 히트는 Manager 보고"라는 에스컬레이션 경로까지 명시해, AC-2가 디자인 결정을 되돌려 받는 구조를 끊었다.
+
+남은 이슈는 전부 line 단위 정리 항목이며 토큰 체계·표면 위계·상태 배리언트의 완결성에는 영향이 없다. 다만 **Suggestion 1(`app/auth/login.tsx` 카카오/Apple 버튼 배경)은 게이트를 막지 않을 뿐 실행 전 반드시 확정되어야 하는 항목**이므로 Handoff에 별도로 고정한다.
+
+## Blocker 해소 확인 (iteration 1 → 2)
+
+| # | iteration 1 Blocker | 해소 위치 | 판정 |
+|---|---|---|---|
+| 1 | `ArtPreferenceDeck` 진행 바 모순 (§Layout "다크 표면" ↔ §B-2 동시 등장) | §Layout & components 표에서 해당 컴포넌트 **삭제** + line 105 삭제 사실 명시 + §N-7 `brand` → `bg-primary` 확정 (미채움 트랙 3.5:1 / 배경 3.70:1 근거 병기) | ✅ 해소 — 두 위치 중 한 곳에서 삭제하라는 요구를 정확히 이행 |
+| 2 | 비버튼 `bg-primary`/`bg-secondary` brand/neutral 판정 Chris 위임 | §N 확정표 신설. P0 8개 지점 전부 행 존재(N-1 explore/RouteSheet, N-2 map/RouteSheet, N-3b ChatMessage 시트, N-4 diary/[date], N-5 VenueMarker, N-6 VisitTicketFooter, N-7 ArtPreferenceDeck, N-8 ExhibitionVenueInfo) + brand 행에 한 줄 근거. §N-부속으로 나머지 히트까지 확정. `bg-secondary` 히트 0건 전수 확인 명시 | ✅ 해소 — "AC-2에서 분류되면 따른다" 조건부 서술이 실제로 문서에서 사라졌음을 전수 확인 |
+| 3 | B-1/B-2 폰트 임계값 불일치(13~17px 회색지대) + `Chip` active fill 미지정 | §판정 트리 신설 — 두 임계값을 **삭제**하고 "흰 텍스트가 올라가는가 / 배경이 라이트인가" 2질문으로 대체. 폰트 크기가 판정에 개입하지 않는 근거(라벨 크기 변경 시 색이 흔들림·grep 검증 단순화)까지 기재. §B-1-a에서 `Chip.tsx:39` active = **`bg-primary-dark` 확정**(+ 7개 비버튼 fill 동시 확정) | ✅ 해소 — 회색지대 소멸. B-2 목록에서 활성 칩이 제거된 것까지 확인 |
+| 4 | disabled / focus 배리언트 부재 | §States에 Disabled(D-1~D-4) · Focus(F-1~F-3) 신설. D-1 `bg-gray400`+white / D-2 `text-gray400` / D-3 외부 브랜드 예외 / D-4 기존 opacity 유지. 대비 1.94:1·1.54:1을 숨기지 않고 **WCAG 2.1 §1.4.3 비활성 예외**로 명시. focus는 전수 grep 결과 대상 0건임을 근거로 "규격만 확정·신규 구현 금지" | ✅ 해소 — 01-spec Risks 마지막 항목(pressed/disabled/focus 확정)이 충족됨. focus를 억지로 만들지 않고 "없음"을 근거와 함께 확정한 처리가 Non-goals와도 일관 |
+| 5 | 탭바 활성 tint 대비 미달 완화책 Taylor 위임 | §B-7 신설. tint = **`colors.primaryDark`(6.61:1 재검산)** 확정. 형태 신호는 **(a) 아이콘 filled/outline 전환**으로 확정하고 "신규 구현이 아니라 현행 유지가 요구사항, 지우면 회귀"로 못 박음. (b) 라벨 weight 상향은 `tabBarLabelStyle`에 focus 분기가 없어 렌더 함수 신규 도입이 필요하므로 Non-goals·T-4 동시 위반이라며 근거를 달아 반려. 비활성 `#9CA3AF` 2.58:1은 "기존부터 존재, 이번 개편 무관"으로 분리 기록 | ✅ 해소 — 판정이 Taylor에서 브리프로 회수됨("Taylor는 지정대로 렌더되는지만 확인") |
+
+## Scores (1–5)
+
+가중치: Brand & tokens 40% · Layout & IA 25% · Copy & tone 10% · Accessibility 25% (iteration 1과 동일 — 컬러 토큰 개편이므로 토큰·표면 분류 비중을 높게 둔다)
+
+| Dimension | Score | Notes |
+|-----------|-------|-------|
+| Brand & tokens | 4 | T-1 토큰 표가 `DESIGN_SYSTEM.md` §1.3 정본과 1:1 대조 가능하고, 배경 `#F8F6F2`·텍스트 `#1C1917`이 `gray100`/`gray900`으로 값 보존 이관돼 브랜드 기준값이 유지된다. 폰트는 T-4에서 무변경 + className 전용(`component-convention.md` §2) 재확인, radius 무변경. iteration 1 감점 사유 2건이 모두 제거됐다 — (a) disabled/focus 배리언트가 D-1~D-4 / F-1~F-3으로 신설되고 `gray400`이 "강제 적용처 없음"에서 **disabled 전용 토큰**으로 승격돼 T-3 사유·Out of scope·States가 서로 일치한다, (b) 폰트 임계값이 판정 트리로 대체돼 `Chip`을 포함한 전역 fill이 단일 규칙으로 결정된다. Q2/Q3 확정(`background`·`gray` 미도입)을 T-2에 못 박고 01-spec AC-14 문구를 브리프가 무효화한다고 명시한 것도 Chris의 판단 여지를 없앤다. 감점: `app/auth/login.tsx`가 B-1 fill 목록에서 **유일하게 파일:줄 없이** 등재됐고, §Copy 표가 `카카오로 시작하기`/`Apple로 시작하기`를 "CTA (primary fill)" 행에 묶어 둬 외부 브랜드 고정색(`#FEE500`) 버튼이 `bg-primary-dark` 대상으로 읽힐 여지가 남는다(Suggestion 1). 대비 실측값도 재검산치와 소폭 어긋난 채 AC-17로 흘러갈 예정이다(Suggestion 3). |
+| Layout & IA | 4 | iteration 1의 3점 사유(브랜드↔무채색 표면 위계 미확정)가 정면으로 해소됐다. §N이 "brand = 선택·진행·액션 가능성 표시 / neutral = 콘텐츠 그릇이거나 통제 불가 배경 위 최대 명도가 기능인 요소"라는 **판정 원칙 2줄**을 먼저 세우고 8행을 그 원칙으로 일관되게 도출한다 — N-1 시트 전면 라벤더가 내부 흰 텍스트 15.3:1→3.99:1을 무너뜨린다는 근거, N-3a/N-3b가 같은 파일이면서 갈리는 이유(말풍선이 시트에 녹으면 위계 소멸), N-5 지도 타일 색 통제 불가, N-6 "스캔되는 검은 선" 은유, N-8 브랜드색 구분선의 클릭 오인까지 각 행의 근거가 실제로 판정을 지지한다. 신규 화면·컴포넌트 0개 원칙과 기존 컴포넌트 재사용 매핑(13행)이 유지되고, 공용 `Button` 추출을 out of scope로 두되 향후 배치 위치만 지정한 처리도 적절하다. 보조 버튼은 3기준 판정 + S-1~S-4 적용 대상 + 비대상 14행으로 여전히 실행 가능하며, `manual.tsx:208`을 "S-1~S-4와 혼동 금지"로 따로 떼어낸 것도 실수 방지에 기여한다. 감점: §N-부속의 `app/(guide)/chat.tsx:179,220` 행이 "요소" 열에 UI 정체 대신 코드 표현식이 들어가 있어, 이 표면이 말풍선(N-3a=brand)인지 다른 그릇인지 표만으로는 판별되지 않는다(Suggestion 5). |
+| Copy & tone | 4 | "카피를 한 글자도 바꾸지 않는다" 정책이 유지되고, 색이 바뀌는 요소의 현행 문구를 Title / CTA(primary·secondary·destructive) / Empty / Error 전 행에 파일:줄과 함께 확정 기록했다. 브랜드 톤 근거(`예술에 몰입하는 가장 조용한 방법` ↔ 저채도 라벤더, 범용 블루의 "시스템 UI" 인상 제거)가 Design intent에서 팔레트 선택과 직접 연결된다. iteration 2에서 **Disabled 행이 신설**돼 "비활성 상태에서 라벨 텍스트를 바꾸지 않는다 — 색과 `accessibilityState`로만 표현"이 확정된 점은 D-1~D-4와 정합한다. 탭바 라벨 5개도 "라벨 문자열·폰트·크기 전부 무변경"으로 고정됐다. 감점(iteration 1과 동일 사유 — Suggestion이었으므로 미반영이 Fail 근거는 아님): Empty 행의 "아카이브 빈 상태 문구 현행"이 여전히 실제 문구·파일:줄 없이 뭉뚱그려져 있어 이 행만 회귀 대조 기준이 없다. |
+| Accessibility | 4 | 여전히 이 브리프의 최대 강점이고 iteration 2에서 더 두꺼워졌다. 대비 실측표가 14행으로 확장돼 신규 D-1/D-2 값까지 포함하고, AC-16 육안 판단표는 12행으로 늘면서 **판정 열이 전부 확정돼 "Taylor는 판정을 새로 내리지 않는다"**로 바뀌었다 — iteration 1에서 지적한 조건부 위임(탭바 형태 신호)이 B-7로 회수된 결과다. WCAG 1.4.1 비색상 신호 표 5행(탭 filled 전환 / 칩 체크마크+`accessibilityState.selected` / 필 보더 1px→2px / disabled prop+state / 진행도 세그먼트 개수)이 상태별로 빠짐없이 대응되고, disabled 미달 1.94:1·1.54:1을 §1.4.3 예외로 **명시적으로 면제 처리**한 것(숨기지 않음)이 정확하다. AC-16 산출물 요구에서 미달을 "(a) 이번 개편이 만든 것 / (b) 기존부터 존재하던 것"으로 구분 강제하고 "미달 0건 보고는 그 자체가 결함"이라고 못 박은 것도 유지됐다. 터치 타겟은 S-2/S-4의 44pt 미만 위험 + `hitSlop` 지시, `Chip` 33pt는 T-4(spacing 무변경) 근거로 현행 유지가 명시됐다. `accessibilityRole`/`accessibilityLabel` 현행 13행은 "색상 치환 커밋에서 절대 삭제 금지"로 고정. 감점: `accessibilityState` 추가·`hitSlop` 추가·`DatePickerModal` role/label 추가를 "색 변경과 같은 커밋에서" 지시해 01-spec Non-goals("색상 치환 외의 변경을 같은 커밋에 섞지 않는다")와 커밋 단위에서 충돌한다 — Sam 스스로 B-7 (b)를 같은 Non-goal 근거로 반려했으므로 규칙 적용이 비일관하다(Suggestion 2). `DatePickerModal` 행이 "role/label 확인 필요"로 남은 것도 조건부 서술의 잔재다. |
+| **Weighted overall** | **4.00** | 4·4·4·4 → (4×0.40)+(4×0.25)+(4×0.10)+(4×0.25) = 4.00 |
+
+Pass rule: overall ≥ 4.0 and no dimension < 3. → **overall 4.00 ≥ 4.0, 최저 항목 4 ≥ 3 → Pass.**
+
+> 채점 일관성 메모: iteration 1에서 Brand & tokens는 결함 2건(disabled/focus 전면 부재 + 임계값 모순)을 안고도 4점이었다. iteration 2에 남은 결함은 그보다 좁은 line 단위 1~2건이므로 4점 이상이어야 일관되며, 3점으로 내리는 것은 근거 없는 하향이다. Layout & IA의 3점은 "8개 표면 판정 전체가 미확정"이라는 구조적 사유였고 그 사유가 소멸했으므로 4점으로 올린다.
+
+## Blockers (must fix)
+
+없음. iteration 1의 Blockers 1~5는 위 "Blocker 해소 확인" 표대로 전부 해소됐고, 새로 발견된 항목 중 G3 게이트를 막을 만큼 구조적인 것은 없다.
+
+## Suggestions (nice to have)
+
+1. **`app/auth/login.tsx` 소셜 버튼 배경을 한 줄로 확정할 것 — Pass를 막지는 않으나 AC-11/AC-14 착수 전 반드시 패치되어야 한다.** 현재 §B-1 적용 지점 목록의 `app/auth/login.tsx` "로그인 CTA"는 **이 목록에서 유일하게 파일:줄이 없고**, §Copy 표는 `카카오로 시작하기`/`Apple로 시작하기`를 "CTA (primary fill)" 행에 묶어 두었다. 두 서술을 그대로 읽으면 카카오(`#FEE500`)·Apple 버튼이 `bg-primary-dark`가 된다. 반대 신호(Out of design scope "1회성 브랜드 색상 토큰화 없음", §D-3 "외부 브랜드 가이드라인상 색을 바꿀 수 없는 요소")가 문서 안에 있으나 **enabled 상태 배경에 대한 명시가 없다**. §B-1 목록에서 login.tsx 행을 제거하거나 "카카오/Apple 소셜 버튼 배경은 enabled/disabled 모두 현행 유지(D-3), B-1 대상 아님"을 한 줄 추가하고, §Copy 표의 해당 두 문구를 별도 행("CTA (외부 브랜드 고정색 — 무변경)")으로 분리한다.
+2. `accessibilityState` / `hitSlop` / `DatePickerModal` role·label **추가**를 색상 치환과 같은 커밋에 넣을지는 **Manager가 판단할 사항**이다. 01-spec Non-goals("색상 치환 외의 변경을 같은 커밋에 섞지 않는다")와 `component-convention.md` §8(터치 요소 a11y 필수)이 충돌하는 지점이며, 브리프의 a11y 요구 자체는 타당하다(대부분은 "삭제 금지"라는 보존 요구라 충돌하지 않는다). 별도 커밋으로 분리하면 양쪽을 모두 만족한다. Sam이 고칠 항목은 아니므로 Suggestion으로 남긴다.
+3. 대비 실측값을 계산기 출처와 함께 재검산해 병기할 것(iteration 1 Suggestion 2 재게시). 재검산치: `#81759B`+white **3.94** (브리프 3.99), `#625876`+white **6.61** (브리프 6.47), `#81759B` on `#171412` **4.65** (브리프 4.68), `#625876` on `#171412` **2.77** (브리프 2.89), `#81759B` on `#F8F6F2` **3.66** (브리프 3.70). **모든 항목에서 판정 결론은 동일**하므로 Blocker가 아니다. 다만 이 수치가 AC-16 산출물과 AC-17 `DESIGN_SYSTEM.md`에 그대로 기록되므로, 소수점까지 확정해 두는 편이 정본 품질에 유리하다.
+4. §Copy 표 Empty 행 "아카이브 빈 상태 문구 현행"을 실제 문구 + 파일:줄로 채울 것(iteration 1 Suggestion 1 재게시). 같은 표의 다른 행은 전부 그렇게 돼 있어 이 행만 회귀 대조가 불가능하다.
+5. §N-부속의 `app/(guide)/chat.tsx:179,220` 행 "요소" 열에 코드 표현식 대신 **UI 정체(말풍선 / 입력 시트 / 카드 중 무엇인지)**를 적을 것. 현재 근거 열이 `neutral` 판정 사유가 아니라 기존 버그(`backgroundColor`에 className 문자열 `'bg-primary'`) 설명으로 채워져 있어, 이 표면이 N-3a(말풍선=brand)와 같은 역할인지 판별할 수 없다. 버그 지적 자체는 정확하고 `colors.gray900`(JS 값) 수정 방향도 `component-convention.md` §2에 맞다 — 판정 근거 한 줄만 보강하면 된다.
+6. §N이 "표에 없는 히트를 발견하면 판단하지 말고 Manager에게 보고한다"는 에스컬레이션 경로를 둔 것은 적절하다. 다만 AC-2의 Then 조건은 "분류표 행 수 = 실제 grep 히트 수"이므로, Chris가 인벤토리를 만들 때 §N 행 수와 grep 히트 수가 어긋나면 그 시점이 곧 Manager 보고 트리거임을 `bg-primary-inventory.md` 상단에 적어 두면 게이트가 자동으로 걸린다.
+
+## Handoff
+
+- **Pass → Chris (Dev) 착수 가능(필요 시 프로토타입 스모크 이후).** G3 통과로 01-spec Risks & dependencies의 "Alex의 G3 Pass가 AC-14 착수 전제" 조건이 충족됐다.
+- **착수 순서 유지**: AC-1(추가) → AC-2(분류) → AC-3~11(이관) → AC-12 → **AC-13 게이트** → AC-14. AC-13이 Fail이면 AC-14 착수 금지(01-spec P0). AC-2 인벤토리는 §N 확정표를 **옮겨 적는 작업**이며 새로 판단하지 않는다.
+- **G4 프로토타입 스모크**: `02-design-brief.md` §Prototype scope 기준 — AC-1 시점에는 baseline과 **픽셀 동일**해야 Pass(색이 바뀌면 그 자체가 Fail), AC-14 이후에는 fill CTA `#625876` / 탭바 활성 `#625876` / Fab·진행 바 `#81759B`가 Pass 조건. **AC-1 착수 전 `app/` 라우트 33개 baseline 스크린샷 확보가 선행 조건**이다(01-spec P0).
+- **Manager 처리 항목**: (a) Suggestion 1 — `app/auth/login.tsx` 소셜 버튼 배경 확정을 Sam에게 한 줄 패치로 요청(새 iteration 불필요, G3 판정에 영향 없음). Chris가 AC-11/AC-14에서 login.tsx에 도달하기 전에 반영될 것. (b) Suggestion 2 — a11y 속성 추가의 커밋 분리 방침 결정. (c) 01-spec AC-14 When 절의 "`background` `#F7F4F7` 추가" 문구는 Q2 확정과 브리프 T-2에 의해 무효화됐으므로 spec 본문 갱신 필요(iteration 1 Suggestion 3 재게시 — 두 문서가 상충한 채 Chris에게 넘어가지 않도록).
+- Alex의 디자인 QA 루프는 iteration 2에서 **종료**한다. iteration 3은 사용하지 않는다.

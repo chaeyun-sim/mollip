@@ -1,0 +1,6 @@
+appId: com.simune.mollip
+---
+- tapOn: "감상평 입력"
+- eraseText
+- inputText: "색채가 인상 깊었다"
+- hideKeyboard

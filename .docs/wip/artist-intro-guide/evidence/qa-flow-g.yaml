@@ -1,0 +1,10 @@
+appId: com.simune.mollip
+---
+- tapOn:
+    point: '50%,23%'
+- waitForAnimationToEnd
+- takeScreenshot: i1b-keyboard-dismissed
+- tapOn:
+    point: '50%,94%'
+- waitForAnimationToEnd
+- takeScreenshot: i2-overlay

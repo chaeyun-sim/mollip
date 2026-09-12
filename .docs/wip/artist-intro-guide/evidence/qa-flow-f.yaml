@@ -1,0 +1,6 @@
+appId: com.simune.mollip
+---
+- tapOn:
+    text: '종료'
+- waitForAnimationToEnd
+- takeScreenshot: h1-exit-summary

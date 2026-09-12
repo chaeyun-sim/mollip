@@ -1,0 +1,412 @@
+---
+feature-slug: offline-download
+author: alex
+iteration: 4
+scope: revision-3 (bookmark/audio.tsx) — Iteration 3 신규 Blocker(loading 백드롭 크기) 재검증, 사용자 예외 승인 4회차(파이프라인 루프 상한 3/3 초과, 최종 기회)
+verdict: Pass
+---
+
+# Design review — Revision 3 (북마크 화면 기준, 신규 검토)
+
+> **범위 안내**: spec revision 3에서 다운로드 대상이 재생목록 전체(`playlist.tsx`)에서 북마크 항목(`bookmark/audio.tsx`)으로 바뀌면서 Sam이 `02-design-brief.md`를 전면 재작성했다. 대상 화면·색 톤(다크→라이트)·레이아웃이 전부 달라 이전 iteration 1~4(`playlist.tsx` 기준)와는 독립적인 새 검토이며, iteration 카운터를 1부터 다시 시작한다. 이전 이력은 이 파일 하단에 "Archived — superseded by revision 3 scope change"로 그대로 보존한다.
+
+## Verdict (Iteration 4 — current, 사용자 예외 승인 최종 기회)
+
+- **Pass**
+- Iteration: 4 / 3 (⚠️ 사용자가 예외 승인한 4회차 보정 — `.claude/rules/feature-pipeline.md` §2 루프 상한을 초과하는 마지막 기회. 이번이 정말 마지막이므로 이하 판단은 특히 엄격하게 적용했다.)
+
+## Scores (1–5) — Iteration 4
+
+| Dimension | Score | Notes |
+|-----------|-------|-------|
+| Brand & tokens | 5 | 이번 재작업은 백드롭 **크기**만 상태별로 분리했을 뿐 색(`bg-gray900`)은 전혀 바꾸지 않았다(`02-design-brief.md:93` "백드롭 **색**이 그대로이므로 재계산 불필요"). 신규 hex·신규 토큰 도입 없음. iteration 3에서 이미 확인된 `bg-gray900`의 DESIGN_SYSTEM.md 등록 사실도 변동 없음. |
+| Layout & IA | 4 | 백드롭 지름 공식 검증: `loading` 28px = iOS `ActivityIndicator size="small"` 실측 렌더 크기 약 20pt + 여유 패딩 "4px씩"(브리프가 명시적으로 **양쪽(per-side)**임을 밝혀 계산이 명확함 — `20 + 4×2 = 28` 일치). `failed`/`done` 20~22px = 아이콘 12px + 여유 패딩 "4~5px"(기존 iteration 3부터 이어진 표기로, 양쪽 기준으로 해석하면 `12 + 4×2 = 20`, `12 + 5×2 = 22`로 일치 — 이번 `loading` 항목이 "4px씩"이라고 명시적으로 표기해 오히려 기존 표기의 모호성을 줄이는 방향으로 이번 수정이 이루어졌다). 5점을 주지 않는 이유: `failed`/`done`(20~22px)과 `loading`(28px) 백드롭 크기가 달라지면서 상태 전환 시(특히 `loading`→`done`) 백드롭이 눈에 띄게 작아지는 레이아웃 튐이 발생할 수 있다 — 브리프 91행이 이를 스스로 인지하고 "Blocker가 아니라 non-blocking 항목(Alex iteration 3 §Non-blocking, `-top-1 -right-1` 재검토)으로 이미 분리돼 있다"며 프로토타입 시뮬 스모크 단계로 위임했는데, 이 위임 자체는 타당하다(순수 시각적 균형 문제이며 접근성/기능 결함은 아니고, 스크린샷으로 쉽게 확인·조정 가능하기 때문). 다만 문서 시점에는 여전히 실측 검증이 남아 있어 5점은 아니다. |
+| Copy & tone | 5 | 이번 재작업이 Accessibility(백드롭 크기 분리)에만 한정되어 Copy 섹션은 건드리지 않았다. 변동 없음. |
+| Accessibility | 4 | **Iteration 3 Blocker(loading 백드롭 크기 불일치) — RESOLVED**: `02-design-brief.md:88-91`이 상태별로 백드롭 지름을 명시적으로 분리(`failed`/`done` 20~22px, `loading` 28px)하고, "여유 패딩 4px씩"이라는 명확한 산식과 함께 20pt 스피너를 실제로 감싸도록 계산했다(위 Layout & IA의 수치 재검증 참고). Android 렌더 편차에 대해서도 "기기/테마에 따라 다를 수 있으므로 28px보다 작게 잡지 말 것 — 여유를 더 두는 방향으로만 조정 가능"이라는 방어적 하한만 제시하고 정밀 수치를 과장하지 않은 점이 타당하다(정확한 Android 렌더 크기를 검증 없이 단정하지 않음 — `verification-claim-integrity.md` 원칙에도 부합). `text-success`/`text-error`/`text-gray500` on `bg-gray900` 대비(7.07~7.11:1 / 4.65~4.67:1 / 6.93~6.98:1)는 백드롭 색이 그대로이므로 이번 수정과 무관하게 유지, 재검증 불필요(`:93` 명시). 5점을 주지 않는 이유: (1) Android 실측값 자체가 여전히 미확정("작게 잡지 말 것"이라는 방향성 지침일 뿐 정확한 수치는 실기 검증 필요), (2) `-top-1 -right-1` 오프셋이 두 배드롭 크기에서 다르게 보일 수 있는 잔여 시각적 리스크가 non-blocking으로 이월됨. |
+| **Weighted overall** | **4.5** | 산술 평균 (5+4+5+4)/4 = 4.5. Pass 기준(overall ≥ 4.0, 항목별 ≥ 3) 충족 — 항목별 하한 위반 없음. |
+
+Pass rule: overall ≥ 4.0 and no dimension < 3.
+
+## Iteration 4 — Blocker resolution audit (Iteration 3 Blocker)
+
+**[Accessibility / Layout & IA] loading 백드롭 크기가 ActivityIndicator를 감싸지 못하는 문제 — RESOLVED.**
+
+- `02-design-brief.md:88-91`이 Required fix 옵션 1(loading 상태의 백드롭 지름을 `ActivityIndicator size="small"`의 실제 렌더 크기 기준으로 별도 재계산)을 채택했다.
+- 계산 재검증: iOS `size="small"` 실측 렌더 크기 ≈ 20pt. 브리프가 제시한 28px 백드롭에서 여유 = `(28 - 20) / 2 = 4px`(양쪽) — 브리프 문구("여유 패딩 4px씩")와 정확히 일치한다. 스피너가 백드롭 경계 밖으로 삐져나올 위험이 해소됐다.
+- `failed`/`done`은 변경 없음(20~22px, 아이콘 12px 고정 기준 그대로 유지) — 기존에 이미 정확했던 값을 건드리지 않았다.
+- Android 편차 대응: 정밀한 수치를 단정하지 않고 "28px보다 작게 잡지 말 것"이라는 안전한 방향의 하한만 제시 — 검증되지 않은 수치를 확정값처럼 제시하는 오류(iteration 1~3에서 반복 지적된 패턴)를 반복하지 않았다.
+- 결과적으로 브리프 자신이 주장하는 "백드롭 통일이 스피너 상태의 잠재적 접근성 결함도 함께 해소한다"는 명제가 이제 실제로 성립한다 — loading 상태에서도 스피너 전체가 `bg-gray900` 백드롭 안에 들어가 배지-백드롭 간 6.93~6.98:1 대비가 실제로 보장된다.
+
+## Iteration 4 — New defects found
+
+없음. 상태별 백드롭 크기 분리로 인한 전환 시 레이아웃 튐은 새로 발견된 결함이 아니라, iteration 3에서 이미 non-blocking으로 분류된 "`-top-1 -right-1` 오프셋 재검토" 항목의 연장선이며(백드롭 크기가 상태에 따라 달라진다는 원인 자체가 동일), 브리프가 이를 스스로 인지하고 프로토타입 스모크 단계로 명시적으로 위임했으므로 별도 Blocker로 격상하지 않는다.
+
+## Iteration 4 — Non-blocking but flagged (carried over)
+
+- **[Layout & IA, non-blocking, iteration 3에서 이월]** `-top-1 -right-1` 오프셋이 상태별로 다른 백드롭 크기(20~22px vs 28px)를 반영하지 않아, `loading`↔`done` 전환 시 배지 위치·크기가 눈에 띄게 바뀔 수 있다. Blocker로 격상하지 않는 이유는 이전과 동일(시각적 균형 문제이지 접근성/기능 결함 아님) — 프로토타입 시뮬 스모크 단계에서 스크린샷으로 반드시 확인, Taylor QA 체크리스트(Q6/Q7)에서 loading→done 전환 인터랙션까지 실기 확인 권장.
+
+## Iteration 4 — Carried-forward confirmations (unchanged, not re-litigated)
+
+- Row B 대비(`text-gray900` 15.6:1 확정값, `text-error` on `#F8F6F2` 3.49:1 미달 확정값) — 이번 재작업이 건드리지 않음, 훼손 없음.
+- BottomSheet 개별 삭제 hitSlop 46pt(`22+12+12`) — 이번 재작업이 건드리지 않음, 훼손 없음.
+- 배지-백드롭 색상 대비(`text-success` 7.07~7.11:1 / `text-error` 4.65~4.67:1 / `text-gray500` 6.93~6.98:1 on `bg-gray900`) — 백드롭 색 자체는 변경 없이 크기만 상태별로 분리했으므로 대비 수치 전부 그대로 유효, 브리프도 재계산 불필요를 명시(`:93`).
+- `bg-gray900` 토큰의 DESIGN_SYSTEM.md 등록 여부, Layout & IA 기본 구조(idle 조기 반환, `absolute -top-1 -right-1` 컨테이너 구조) — iteration 3에서 검증 완료, 이번 재작업 범위 밖.
+
+## Handoff (Iteration 4 — FINAL)
+
+- **Pass** → **Chris (Dev) 구현 시작 가능.** 프로토타입 시뮬 스모크 단계에서 반드시 확인할 것: (1) `loading` 상태 배지의 `ActivityIndicator`가 28px `bg-gray900` 백드롭 안에 완전히 들어가는지 iOS 시뮬레이터 스크린샷으로 확인(Android는 별도 기기/에뮬레이터에서 추가 확인 권장), (2) `loading`→`done` 상태 전환 시 배지 크기·오프셋이 부자연스럽게 튀지 않는지 인터랙션으로 확인(non-blocking 항목, Blocker 아님). Taylor QA 체크리스트에 두 항목 모두 Q6/Q7로 포함할 것. 이번 iteration은 사용자가 예외 승인한 4회차 보정이었고 Pass로 종료되므로, 이후 디자인 재작업 루프는 재개하지 않는다 — 남은 리스크(Android 실측, 전환 애니메이션)는 전부 Dev/QA 단계로 넘어간다.
+
+---
+
+## Verdict (Iteration 3 — archived, FINAL — loop cap)
+
+- **Fail**
+- Iteration: 3 / 3 (⚠️ 파이프라인 최대 루프 도달 — Handoff 참고, `.claude/rules/feature-pipeline.md` §2에 따라 Sam에게 4번째 재작업을 요청하지 않고 Manager에게 에스컬레이션한다)
+
+## Scores (1–5) — Iteration 3
+
+| Dimension | Score | Notes |
+|-----------|-------|-------|
+| Brand & tokens | 5 | `bg-gray900`가 `.docs/DESIGN_SYSTEM.md` §1.3(무채색 명도 스케일, `#1C1917`, "본문 텍스트 + 무채색 표면")에 실제로 등록된 정본 토큰임을 확인 — 브리프의 "임의 hex 도입 없이 기존 토큰만 사용" 주장은 사실이다. 새 색을 들여오지 않았다. |
+| Layout & IA | 4 | 백드롭 추가 자체(원형 `View`를 배지 아이콘의 새 부모로 삽입)는 `DownloadStatusBadge.tsx`의 기존 구조(각 상태별 `absolute -top-1 -right-1` 컨테이너)와 충돌 없이 구현 가능하다. `idle` 상태는 컴포넌트 최상단에서 `return null`(L25)로 조기 반환되므로 백드롭이 `idle`에서 노출될 위험도 없다 — States 섹션(`:66`)의 "idle은 배지 렌더 없음" 규칙과 일치. 5점을 주지 않는 이유는 Accessibility에서 지적하는 신규 Blocker(스피너-백드롭 크기 불일치)가 결국 레이아웃 치수 문제이기도 하기 때문 — 두 항목에 걸친 단일 결함으로 처리하되 점수는 분산 반영한다. |
+| Copy & tone | 5 | 이번 재작업 범위가 Accessibility(백드롭 추가)에 한정되어 Copy 섹션은 건드리지 않았다. 기존 카피 그대로 유지, 변동 없음. |
+| Accessibility | 2 | 대비 수치 재계산은 대부분 정확했으나(아래 audit 참고), 백드롭 크기 가이드가 실제 컴포넌트 구조와 어긋나는 **신규 Blocker**를 발견했다 — 브리프가 스스로 "해소했다"고 주장하는 스피너 상태의 접근성 결함이 실제로는 미해소 상태로 남을 위험이 있어 3점 이상을 줄 수 없다. |
+| **Weighted overall** | **4.0** | 산술 평균 (5+4+5+2)/4 = 4.0. overall 자체는 ≥4.0 문턱을 만족하지만 Accessibility 항목이 <3이라 Pass rule의 항목별 하한 조건을 위반 — dimension floor 위반으로 Fail. |
+
+Pass rule: overall ≥ 4.0 and no dimension < 3.
+
+## Iteration 3 — Contrast recalculation audit (WCAG 2.1 relative luminance, 독립 재계산)
+
+브리프가 제시한 5개 수치를 전부 WCAG 2.1 relative luminance 공식(`L = 0.2126R + 0.7152G + 0.0722B`, 각 채널 sRGB→linear 변환 후 `(L1+0.05)/(L2+0.05)`)으로 독립 재계산했다.
+
+| 비교 | 브리프 수치 | 독립 재계산 | 판정 |
+|------|-----------|------------|------|
+| `text-success`(#00BC7D) on `bg-white`(#FFFFFF) — 백드롭 기각 근거 | 2.47:1 | **2.474:1** | ✅ 일치. 흰색 백드롭 기각(3:1 미달)이 타당함을 확인 — "흰색으로 바꿔도 이 녹색은 근본적으로 통과하지 못한다"는 브리프 주장이 사실이다. |
+| `text-success`(#00BC7D) on `bg-gray100`(#F8F6F2) — 참고용 재확인 | 2.29:1 | **2.292:1** | ✅ 일치 (iteration 2에서 Alex 자신이 지적한 값과도 동일). |
+| `text-success`(#00BC7D) on `bg-gray900`(#1C1917) — 신규 백드롭 | 7.07:1 | **7.11:1** | ✅ 3:1 기준 통과, 소수점 둘째 자리 수준 오차(반올림 처리 차이로 추정)로 결론 불변. |
+| `text-error`(#EF4444) on `bg-gray900`(#1C1917) — 신규 백드롭 | 4.65:1 | **4.67:1** | ✅ 3:1 기준 통과, 오차 무관. |
+| `text-gray500`(#A8A29E, 스피너) on `bg-gray900`(#1C1917) — 신규 백드롭 | 6.93:1 | **6.98:1** | ✅ 3:1 기준 통과, 오차 무관. |
+
+결론: **대비 수치 계산 자체는 정확하다.** 5개 중 4개가 소수점 둘째 자리 이내로 정확히 일치했고, 나머지 1개(백드롭 위 `text-success`)도 오차가 0.04에 불과해 3:1 통과라는 결론에 영향이 없다. Blocker는 수치 계산이 아니라 아래 §"신규 발견" 항목에 있다.
+
+## Iteration 3 — Blocker resolution audit (Iteration 2 Blocker 3)
+
+Iteration 2 Blocker 3의 두 세부 문제를 재검증했다.
+
+- **(a) 잘못된 배경 기준 문제 — RESOLVED.** 배지가 페이지 배경이 아니라 썸네일(사진/베이지 폴백) 위에 렌더된다는 지적에 대해, 브리프는 "아이콘을 고정된 색의 원형 백드롭으로 감싸 배지-백드롭 간 대비만 정적으로 계산"하는 방식으로 대응했다 — 백드롭이 배지와 사진 배경 사이에 불투명한 중간층을 만들어 사진의 실제 색과 무관하게 배지-백드롭 대비만 보장하면 되므로, 구조적으로 타당한 해법이다.
+- **(b) `text-success` 3:1 미달 문제 — RESOLVED.** 백드롭을 `bg-gray900`으로 확정하면서 `text-success` on `bg-gray900` ≈ 7.11:1(재계산)로 3:1을 크게 상회한다. `text-error`(4.67:1)·스피너(6.98:1)도 모두 통과. 세 상태 모두 대비 계산상 통과.
+- **`bg-gray900` 임의 도입 여부 — 검증 완료, 문제 없음.** `.docs/DESIGN_SYSTEM.md:66`에 `gray900`/`#1C1917`/`bg-gray900`가 "무채색 표면(시트·지도 마커·바코드·구분선)" 용도로 이미 등록되어 있다 — 브리프가 신규 hex를 임의로 들여온 것이 아니다.
+
+여기까지는 Iteration 2 Blocker 3이 완전히 해소된 것으로 보인다. 그러나 검증 과정에서 이 해법의 **구현 가능성 자체**를 깨는 신규 결함을 발견했다(아래).
+
+## Iteration 3 — New defect found (신규 발견, BLOCKER)
+
+**[Accessibility / Layout & IA, BLOCKER — 신규] 백드롭 크기 가이드가 `loading` 상태(`ActivityIndicator`)의 실제 렌더 크기를 반영하지 않아, 브리프가 스스로 "해소했다"고 주장하는 스피너 접근성 결함이 실제로는 미해소로 남을 위험이 있다.**
+
+- `02-design-brief.md:88`(구현 가이드)은 "배지 아이콘(12px)을 감싸는 원형 `View`(`bg-gray900`, 지름 약 20~22px — 아이콘 12px + 여유 패딩 4~5px)를 아이콘의 부모로 추가한다"고 지시한다. 이 공식(원 지름 = 아이콘 크기 + 패딩)은 **`failed`/`done` 상태에만 정확히 맞는다** — 실제 `src/components/guide/DownloadStatusBadge.tsx`를 보면 `failed`(L48)와 `done`(L59)은 `<Ionicons ... size={12} .../>`로 명시적으로 12px 고정이라 "12px + 패딩"이라는 전제가 정확히 성립한다.
+- 그러나 `loading` 상태(L34)는 `<ActivityIndicator size="small" className="text-gray500" />`다. React Native `ActivityIndicator`의 `size` prop은 `'small' | 'large'`(문자열 프리셋)만 지원하며, 임의의 px 값을 지정할 수 없다 — 즉 "12px 아이콘"이라는 브리프의 전제 자체가 `loading` 상태에는 적용되지 않는다. iOS 기준 `size="small"`의 네이티브 렌더 크기는 대략 20×20pt로, 브리프가 제시한 백드롭 지름(20~22px)과 거의 같거나 오히려 스피너가 백드롭보다 크거나 같을 수 있다 — "12px 아이콘 + 여유 패딩 4~5px"라는 여유 공간이 스피너에는 전혀 없다.
+- 이는 단순한 시각적 디테일이 아니라, 이번 재작업이 해결하려는 문제의 핵심을 정확히 겨냥한다. 브리프 자신이(`02-design-brief.md:86`) "스피너를 이번 백드롭 없이 그대로 뒀다면 흰 배경 위에서도 약 2.52:1로 미달했을 것이므로, 백드롭 통일이 스피너 상태의 잠재적 결함도 함께 해소한다"고 명시적으로 주장한다. 그런데 백드롭이 스피너보다 작거나 비슷한 크기라면, 스피너의 상당 부분이 백드롭 경계 밖으로 삐져나와 다시 원래의 사진/폴백 배경과 직접 겹치게 되고, 이는 Iteration 2 Blocker 3이 애초에 지적한 "임의의 배경 위에서 정적으로 대비를 보장할 수 없다"는 문제를 스피너 상태에 한해 고스란히 재도입한다 — 백드롭이 있으나 실질적으로 스피너를 감싸지 못하면 없는 것과 다르지 않다.
+- **Required fix**: 다음 중 하나를 Sam이 결정해 브리프에 명시할 것. (1) `loading` 상태의 백드롭 지름을 `ActivityIndicator size="small"`의 실제 렌더 크기(플랫폼별로 상이 — iOS ~20pt, Android는 기기/테마에 따라 다를 수 있음)를 기준으로 별도로 재계산해 명시하거나, (2) `ActivityIndicator`를 `transform: [{ scale }]`로 축소해 12px 전후로 맞추고 그 축소 후 크기를 기준으로 재계산하거나, (3) `loading` 상태만 스피너 크기에 맞춘 별도 백드롭 치수(failed/done과 다른 값)를 명시할 것. "아이콘 12px" 전제를 `loading`에도 그대로 적용하는 현재 가이드로는 Chris가 구현 시점에 임의로 판단해야 하며, 그 임의 판단이 스피너 상태의 3:1 대비를 실제로 보장한다는 보장이 없다.
+
+## Iteration 3 — Non-blocking but flagged
+
+- **[Layout & IA, non-blocking] `-top-1 -right-1` 오프셋이 확대된 백드롭 크기를 고려해 재검토되지 않았다.** 기존 오프셋(-4px, -4px)은 12px 아이콘 기준으로 설계됐을 가능성이 높은데, 백드롭이 20~22px 원으로 커지면서 같은 오프셋을 적용하면 백드롭이 썸네일 밖으로 더 많이 삐져나오거나 반대로 썸네일과 겹치는 비율이 달라질 수 있다. Blocker로 격상하지 않는 이유는 시각적 균형 문제이지 접근성/기능 결함은 아니며, 프로토타입 시뮬 스모크 단계에서 스크린샷으로 쉽게 확인·조정 가능하기 때문이다 — Taylor QA 체크리스트(Q6)에서 실측 확인 권장.
+
+## Iteration 3 — Carried-forward confirmations (unchanged, not re-litigated)
+
+- Iteration 2에서 해소된 Row B 대비(`text-gray900`+아이콘 `text-error`, 15.6:1 재확인) — 이번 재작업이 Row B를 건드리지 않아 훼손 없음.
+- Iteration 2에서 해소된 BottomSheet 개별 삭제 hitSlop(46pt) — 이번 재작업 범위 밖, 훼손 없음.
+- Line-citation audit, 카드별 개별 다운로드 버튼 배제 판단, BottomSheet 개별 삭제 UI 배치, 빈 상태 유틸리티 바 숨김 로직 — 전부 이번 재작업 범위 밖, 재확인 불필요.
+
+## Handoff (Iteration 3 — FINAL)
+
+- **Fail** → **Manager 에스컬레이션 필요.** `.claude/rules/feature-pipeline.md` §2("max 3 iterations → Fail 지속 시 Manager → user")에 따라 이번이 3회째 루프이므로, Sam에게 4번째 재작업을 요청하지 않는다. Manager는 다음을 사용자에게 보고하고 진행 방향을 확인해야 한다: (1) Iteration 1~2의 모든 Blocker는 완전히 해소되어 재작업 범위가 매우 좁았다는 점, (2) 남은 유일한 결함(스피너 백드롭 크기 불일치)은 디자인 의도보다는 `ActivityIndicator`의 `size` prop이 임의 px를 지원하지 않는다는 React Native 플랫폼 제약에서 비롯된 구체적·좁은 범위의 결함이라는 점, (3) 그럼에도 3회 루프 상한 규칙은 예외 없이 적용된다는 점(이전 revision 2 이력에서 사용자 승인 하에 1회 연장한 선례가 있으나, 이번에는 Manager가 먼저 판단해야 함). 해소 자체는 Sam이 브리프에 한 줄(스피너 전용 백드롭 치수 또는 `transform: scale` 지침) 추가하는 수준으로 좁아 다음 iteration에서 Pass 가능성이 높다는 점도 함께 보고할 것.
+
+## Verdict (Iteration 2 — archived)
+
+- **Fail**
+- Iteration: 2 / 3
+
+## Scores (1–5) — Iteration 2
+
+| Dimension | Score | Notes |
+|-----------|-------|-------|
+| Brand & tokens | 5 | Iteration 1 Blocker 1의 핵심 결함(Tokens 섹션과 Accessibility 섹션이 서로 다른 확정값을 가리키던 내부 모순)이 완전히 해소됐다 — 이번 브리프는 Tokens(`:25`)와 Accessibility(`:79`) 양쪽 모두 "삭제 액션 텍스트 `text-gray900`, destructive 의도는 아이콘 `text-error`만으로 전달"로 동일한 값을 가리키며, "Chris가 실측 후 결정"이라는 유보 문구도 제거되어 하나의 확정값만 남았다. WCAG relative luminance 공식으로 `text-gray900`(#1C1917) on `#F8F6F2` 대비를 독립 재계산한 결과 **약 16.2:1**이 나와 브리프가 적은 15.6:1과 소수점 수준의 차이가 있으나(반올림/중간값 처리 차이로 추정), 4.5:1 기준 대비 3배 이상의 여유가 있어 이 오차가 결론(통과)을 바꾸지 않는다 — Blocking 사유 아님, 참고 각주로만 남김. |
+| Layout & IA | 5 | Iteration 1에서 5점을 주지 못했던 유일한 이유(Row A/B 컨테이너 자체의 높이·패딩이 전혀 지정되지 않아 기존 `FlatList` `pt-4`와의 상호작용이 불명확했던 점)가 해소됐다 — Layout & components 표(`:34`)가 "컨테이너 자체 패딩은 `px-4 py-3`; 기존 `FlatList`의 `pt-4`와는 별개 요소(유틸리티 바 아래·리스트 위)이므로 두 패딩이 겹쳐 중복 여백이 생기지 않는다"로 명시적으로 결정했다. 카드 밀도 판단·BottomSheet 배치 등 기존에 확정된 사항은 이번 재작업에서 문구 그대로 유지되어 훼손되지 않았다. |
+| Copy & tone | 5 | 이번 재작업 범위(Accessibility 2건)가 Copy 섹션을 건드리지 않아 Iteration 1과 동일한 카피가 그대로 유지된다. 기존 화면 톤과의 일관성 재확인 결과 변동 없음. |
+| Accessibility | 2 | **Blocker 2(BottomSheet hitSlop) — RESOLVED**로 확인했으나(아래 참고), 검증 과정에서 이번 재작업이 건드리지 않은 기존 요소에서 **신규 Blocker 3(카드 배지 비텍스트 대비 오류)**를 발견했다 — Iteration 1 Blockers와 같은 급의 결함(브리프가 스스로 "통과"라고 서술한 수치가 실제로는 틀림)이라 3점 이상을 줄 수 없다. |
+| **Weighted overall** | **4.25** | 산술 평균 (5+5+5+2)/4 = 4.25. overall은 ≥4.0을 충족하지만 Accessibility 항목이 <3이라 Pass rule의 항목별 하한 조건을 위반 — dimension floor 위반으로 Fail. |
+
+Pass rule: overall ≥ 4.0 and no dimension < 3.
+
+## Iteration 2 — Blocker resolution audit (Iteration 1 Blockers)
+
+1. **[Accessibility / Brand & tokens] Blocker 1(Row B 대비 오류 + 섹션 간 모순) — RESOLVED.** `02-design-brief.md:25`(Tokens)와 `:79`(Accessibility) 모두 "삭제 액션 텍스트 `text-gray900`(고대비, 확정) + destructive 의도는 `trash-outline` 아이콘의 `text-error`로 전달"로 일치하며, `:79`는 명시적으로 "더 이상 대안/권장 단계 아님"이라고 못박아 유보 문구가 사라졌다. 독립 재계산(WCAG 2.1 relative luminance): `text-gray900`(#1C1917) on `#F8F6F2` ≈ **16.2:1**(브리프 표기 15.6:1과 약간의 오차 있으나 무관한 결론), `text-error`(#EF4444) on `#F8F6F2`(비텍스트 아이콘, 3:1 기준) ≈ **3.48:1**(브리프의 3.49:1과 사실상 일치, 3:1 통과 확인). Blocker 1은 완전히 해소됐다.
+2. **[Accessibility] Blocker 2(BottomSheet 삭제 아이콘 hitSlop 44pt 미달) — RESOLVED.** `02-design-brief.md:77`가 `hitSlop={{top:12,bottom:12,left:12,right:12}}`로 명시했다. 아이콘 22px(기존 닫기 버튼과 동일 크기 가정, `size={22}` 기준) + 12 + 12 = **46pt**로 44pt 원칙을 충족한다(재계산 확인: 22+12+12=46 ✅). 기존 재생/닫기 버튼(`hitSlop=8`)은 이번 spec 범위 밖으로 명시적으로 분리해 혼선도 없앴다(`:77` 마지막 문장). Required fix가 요구한 값(`hitSlop 11+` 또는 `{12,12,12,12}` 권장)과 정확히 일치하게 구현됐다.
+
+## Iteration 2 — New defects found (신규 발견)
+
+3. **[Accessibility, BLOCKER — 신규] 카드 썸네일 배지(`DownloadStatusBadge`)의 비텍스트 대비 검증이 잘못된 배경을 기준으로 계산됐고, 그 잘못된 기준으로도 `text-success` 배지는 3:1을 통과하지 못한다.**
+   - `02-design-brief.md:81`은 "카드 배지 `text-success`(#00BC7D)/`text-error`(#EF4444)는 텍스트가 아닌 아이콘/배지 용도이므로 비텍스트 3:1 기준 적용 — `bg-gray100`(#F8F6F2) 배경 위에서 **둘 다 통과**"라고 서술한다. 그러나 두 가지 독립적인 문제가 있다.
+     - **(a) 비교 배경 자체가 실제 렌더 위치와 다르다.** 실제 `src/components/guide/DownloadStatusBadge.tsx`(L28-61)를 확인한 결과, 배지(`ActivityIndicator`/`Ionicons`)는 자체 배경 채움(원형 필, 그림자 등) 없이 아이콘 색만으로 렌더되며, `02-design-brief.md:37`이 지시한 대로 카드 썸네일(원형 40px `Image` 또는 `bg-[#E8E3DB]` 폴백 `View`)을 감싸는 `relative` 부모의 형제로 `absolute -top-1 -right-1` 배치된다. 즉 배지는 **페이지 배경(`bg-gray100`/#F8F6F2) 위가 아니라 썸네일 이미지 또는 `#E8E3DB` 베이지 폴백 위**에 겹쳐 렌더된다 — 브리프가 대비를 계산한 기준 배경 자체가 실제 렌더 컨텍스트와 일치하지 않는다. 사진 썸네일의 경우 배경색이 사용자 업로드 콘텐츠에 따라 임의로 달라져 정적으로 대비를 보장할 수 없고, 폴백의 경우 `#E8E3DB`(밝은 베이지)는 `#F8F6F2`보다 오히려 더 어두워 대비가 더 나빠질 여지가 있다.
+     - **(b) 브리프가 스스로 인용한 배경(`#F8F6F2`)을 기준으로 재계산해도 `text-success`는 3:1을 통과하지 못한다.** WCAG 2.1 relative luminance 공식으로 `text-success`(#00BC7D) on `#F8F6F2`를 독립 재계산한 결과 **약 2.29:1**이다 — 3:1 기준에 명확히 미달한다(같은 계산 방법으로 `text-error` on `#F8F6F2` ≈ 3.48:1이 나와 계산 방법 자체는 검증됨 — 1번 항목 참고). `text-error` 배지는 (이 잘못된 기준으로는) 통과하지만 `text-success` 배지는 실패라는 뜻이므로, "둘 다 통과"라는 서술은 사실이 아니다.
+   - **Required fix**: (1) 배지에 시인성을 보장하는 배경 처리(예: 흰색 원형 백드롭 + 그림자, 또는 반투명 다크 오버레이)를 추가하고 그 백드롭 색을 기준으로 아이콘 대비를 재계산할 것 — 임의의 사진/폴백 배경 위에 배지 아이콘 색만으로 3:1을 보장하는 것은 구조적으로 불가능하다. (2) 백드롭을 추가하지 않는 방향을 선택한다면 최소한 `text-success`를 3:1을 통과하는 더 진한 녹색(또는 `text-success`와 무관하게 아이콘 자체 형태로 상태를 구분하는 방식 — 예: 체크/경고 아이콘 모양이 이미 서로 다르므로 색만으로 정보 전달하지 않는다는 논리도 가능하나, 브리프에 그 논리가 명시돼 있지 않다)로 교체할 것. 둘 중 하나를 Sam이 결정해 브리프에 명시할 것.
+
+## Iteration 2 — Non-blocking but flagged
+
+4. **[Accessibility, non-blocking] Row A/B 텍스트 버튼의 `py-3` 기반 44pt 확보 논리는 타당하나 폰트 크기 가정이 브리프에 고정돼 있지 않다.** Tokens 섹션(`:28`)은 "텍스트 렌더 높이 약 20px + 상하 패딩 12px×2 = 44px"로 계산한다. `py-3`(Tailwind, 수직 12px×2=24px)은 정확하고, 일반적인 버튼 폰트 크기(14~16px, line-height 1.3~1.5배)라면 텍스트 렌더 높이가 19~21px 범위에 들어와 44px 근사가 합리적이다 — 이는 Iteration 1 Non-blocking Item 3(hitSlop 미지정)을 `hitSlop` 대신 패딩 기반으로 해소한 타당한 접근이다. 다만 정확한 폰트 크기가 브리프에 명시되지 않아 "20px" 추정치가 어떤 폰트 크기를 전제하는지 확인할 수 없다 — Taylor QA 체크리스트(Q6/Q7)에서 실측(버튼 전체 높이 ≥44pt)으로 확인할 것을 권장. (이전과 동일하게 Chris 구현 재량으로 합리적으로 흡수 가능한 범위라 Blocker로 격상하지 않는다.)
+
+## Iteration 2 — Carried-forward confirmations (unchanged, not re-litigated)
+
+- Line-citation audit(L39-49, L138-144, L146, L182-209) — 이번 재작업에서 해당 라인 범위나 인용 대상 코드에 변경 없음, 재확인 불필요.
+- 카드별 개별 다운로드 버튼 배제 판단 — Design intent(`:14`) 문구 그대로 유지, 훼손 없음.
+- BottomSheet 개별 삭제 UI 배치("재생/일시정지 ↔ 닫기 버튼 사이") — `:38` 그대로 유지, 공간 충돌 없음 재확인 불필요(레이아웃 변경 없음).
+- 빈 상태에서 유틸리티 바 숨김 로직 — States 섹션(`:62`, `:65`) 그대로 유지.
+
+## Handoff (Iteration 2)
+
+- **Fail** → **Sam (Design)**에게 재작업을 요청한다. 신규 Blocker 3(카드 배지 비텍스트 대비 — 잘못된 배경 기준 + `text-success` 3:1 미달)이 유일한 남은 결함이며, Iteration 1의 두 Blocker는 완전히 해소되어 재작업 범위가 좁다. 다음 iteration에서 Pass 가능성이 높다. 재작업 시 Non-blocking Item 4(Row A/B 버튼 폰트 크기 미명시)도 함께 명시하면 좋음. (파이프라인 루프 카운터: 2/3 — 다음 Fail 시 3/3이며, `.claude/rules/feature-pipeline.md` §2에 따라 3회째도 Fail이면 Manager에게 에스컬레이션한다.)
+
+---
+
+# Iteration 1 (archived — Fail, revision 3 scope)
+
+## Verdict (Iteration 1)
+
+- **Fail**
+- Iteration: 1 / 3
+
+## Scores (1–5) — Iteration 1
+
+| Dimension | Score | Notes |
+|-----------|-------|-------|
+| Brand & tokens | 4 | 라이트 톤 전환이 명확한 근거(`02-design-brief.md:9,13`)와 함께 이루어졌고, 기존 카드가 이미 쓰는 `text-gray900/700/600/500`, `bg-[#E8E3DB]` 폴백을 그대로 상속해 새 색을 들여오지 않았다(`:24`). 다만 Row B "전체 삭제" 버튼의 색 토큰이 Tokens 섹션(`:25`, `text-error` 확정)과 Accessibility 섹션(`:79`, `text-gray900`+아이콘 "권장"이지만 미확정)에서 서로 다른 값을 가리키는 내부 불일치가 있어(아래 Blocker 1 참고) 5점을 주지 못한다. |
+| Layout & IA | 4 | 유틸리티 바를 `Screen.Header` 바로 아래·`FlatList`(L146) 바깥에 고정 배치한 결정은 실제 파일 구조와 정확히 대조해 검증됨(아래 Line-citation audit 참고) — AC-3(폴링 없는 실시간 갱신)의 의도와도 부합한다. "카드별 다운로드 버튼 배제, 일괄 트리거만" 판단도 spec Open Questions #1(B)가 "항목별 버튼 **또는** 일괄"을 둘 다 허용하고 있어 spec 위반이 아니며, 카드가 이미 썸네일+3줄 텍스트+하트 버튼으로 밀도가 높다는 근거(Enforce Simplicity)도 실제 `AudioHistoryCard` 구조(L21-87)와 일치한다. BottomSheet 개별 삭제 아이콘 배치도 기존 헤더 액션 그룹(L182-209) 안에 수치상 공간 충돌 없이 들어간다(아래 hitSlop 계산 참고). 5점을 주지 못하는 이유는 Row A/B 컨테이너 자체의 높이·패딩이 전혀 지정되지 않아 기존 `FlatList` `pt-4`와의 상호작용(중복 여백 여부)이 브리프에 없다는 점 — 구현 세부이긴 하나 "고정 바 위/아래 여백"은 레이아웃 결정이라 Chris 재량으로만 넘기기엔 애매하다. |
+| Copy & tone | 5 | 모든 카피가 기존 화면 톤(해요체, `AudioHistoryCard`의 "저장 취소" Alert 패턴)과 자연스럽게 이어진다. 전체/개별 삭제 확인 문구가 "다시 들으려면 네트워크가 필요해요"로 삭제의 결과를 명확히 알려주고, 실패 접근성 라벨("다운로드 실패, 탭해서 재시도")도 기존 `DownloadStatusBadge` 문구와 동일해 재사용 원칙에 부합한다. 번역투나 어색한 표현 없음. |
+| Accessibility | 2 | **Blocker 1(대비 재계산 오류)**과 **Blocker 2(44pt 원칙 위반)**가 모두 이 항목에 걸린다 — 둘 다 브리프가 스스로 선언한 기준(4.5:1 텍스트 대비, 44×44pt 터치 영역)을 브리프 자신이 충족하지 못하는 구조적 결함이라 3점 이상을 줄 수 없다. |
+| **Weighted overall** | **3.75** | 산술 평균 (4+4+5+2)/4 = 3.75. Pass 기준(overall ≥ 4.0, 항목별 ≥ 3) 중 overall 미달 + Accessibility 항목 미달(<3) 이중으로 실패. |
+
+Pass rule: overall ≥ 4.0 and no dimension < 3.
+
+## Line-citation audit (브리프가 인용한 실제 파일 대조)
+
+Sam이 인용한 4개 라인 범위를 `app/settings/bookmark/audio.tsx` 실제 코드와 전부 대조했다 — **전부 정확함**(재작업 문서치고 드물게 높은 정확도):
+
+| 브리프 인용 | 실제 내용 | 일치 여부 |
+|---|---|---|
+| L39-49 (이미지/폴백 분기) | `{item.imageUrl ? (<Image .../>) : (<View className="w-[40px] h-[40px] rounded-full bg-[#E8E3DB] ...">...</View>)}` — 정확히 39행에서 열리고 49행에서 닫힘 | ✅ 일치 |
+| L138-144 (빈 상태) | `{items.length === 0 ? (<View className="flex-1 items-center justify-center gap-2">...</View>` — 138행에서 삼항 열림, 144행 `</View>`에서 닫힘(145행이 `) : (`) | ✅ 일치 |
+| L146 (FlatList) | 146행이 정확히 `<FlatList` | ✅ 일치 |
+| L182-209 (BottomSheet 헤더 액션 그룹) | 182행 `<View className="flex-row items-center gap-4">`(재생/일시정지 Pressable + 닫기 Pressable)이 209행 `</View>`에서 닫힘 | ✅ 일치 |
+
+## Iteration 1 — Blockers (must fix)
+
+1. **[Accessibility / Brand & tokens] Row B "전체 삭제" 대비 수치가 실제로 틀렸고, 그로 인한 폴백도 브리프 내부에서 확정되지 않았다** — `02-design-brief.md:79`는 `text-error`(#EF4444) on `#F8F6F2`를 **4.14:1**이라 적고 "4.5:1 기준에 근소하게 미달"이라 서술한다. WCAG 2.1 relative luminance 공식으로 독립 재계산한 결과 실제 값은 **약 3.49:1**이다(검증: 동일 공식으로 #EF4444 on 순백(#FFFFFF)을 계산하면 업계에 알려진 3.76:1과 정확히 일치해 계산 방법 자체는 검증됨 — #F8F6F2는 순백보다 살짝 어두우므로 3.76:1보다 낮은 3.49:1이 나오는 것이 물리적으로 타당하다). 즉 "근소한 미달"이 아니라 **명확한 미달**이며, `text-error`를 본문/버튼 텍스트로 그대로 쓰면 WCAG AA(4.5:1, 일반 텍스트 기준)를 확실히 위반한다.
+   - 더 큰 문제는 이 오류가 **미해결 상태로 남아 있다는 점**이다: Accessibility 섹션(`:79`)은 대안(`text-gray900` 텍스트 + `text-error` 아이콘)을 "권장"으로만 제시하고 "Chris가 실측 후 최종 확정"으로 미룬다. 그런데 Tokens 섹션(`:25`)은 이미 "삭제 액션 `text-error`(#EF4444, destructive)"로 **확정**해 놓았다 — Chris가 Tokens 섹션을 그대로 구현하면(브리프의 다른 부분과 모순 없이 읽으면 오히려 이쪽이 더 권위 있는 섹션처럼 보인다) WCAG 위반 상태로 출시된다. `verification-claim-integrity.md`의 원칙대로, 검증되지 않은(그리고 실제로 틀린) 수치에 기반한 "근소하게 미달"이라는 판단을 그대로 통과시킬 수 없다.
+   - **Required fix**: Tokens 섹션(`:25`)의 "삭제 액션 `text-error`" 서술을 Accessibility 섹션이 제안한 대안(`text-gray900` 텍스트 + `text-error` 아이콘)으로 직접 수정해 **하나의 확정 값**만 남길 것. "Chris가 실측 후 결정"으로 미루지 말 것 — 계산은 지금 정적으로 가능하고 이미 위에서 재검증됐다.
+
+2. **[Accessibility] BottomSheet 개별 삭제 아이콘의 hitSlop이 브리프 자신의 44pt 원칙을 어긴다** — Design intent(`02-design-brief.md`)와 Tokens 섹션(`:28`)은 "모든 다운로드 관련 인터랙션 요소 44×44pt 이상(`hitSlop`으로 확보)"을 명시적 원칙으로 선언한다. 그러나 Layout & components 표(`:38`)와 Accessibility 섹션(`:77`)은 새 삭제 아이콘의 `hitSlop`을 "**8**(기존 재생/닫기 버튼과 동일 기준)"으로 지정한다. 실제 `bookmark/audio.tsx`의 닫기 아이콘은 22px(`size={22}`, L207)이므로 총 터치 영역은 `22 + 8 + 8 = 38pt`로 44pt에 못 미친다 — 이는 기존 코드에 이미 있던 미달이지만(이번 브리프가 만든 문제는 아님), 새로 추가하는 삭제 아이콘에 동일 패턴(`hitSlop=8`)을 그대로 복사하면서, 정작 이 브리프가 스스로 선언한 44pt 원칙을 위반한 값을 신규 요소에 **재도입**한다는 것이 문제다. "기존 패턴과 동일"이 "브리프 자신의 원칙 충족"보다 우선될 이유가 브리프에 없다.
+   - **Required fix**: 신규 삭제 아이콘은 44pt 원칙을 실제로 충족하는 `hitSlop`(아이콘 크기 22px 기준 `hitSlop={11}` 이상, 안전 마진 고려 시 `{top:12,bottom:12,left:12,right:12}` 권장 — `22+12+12=46pt`)으로 지정할 것. 기존 닫기 버튼(`hitSlop=8`)까지 44pt에 맞춰 함께 수정할지는 이번 spec 범위 밖(회귀 방지 대상 아님)이므로 브리프에서 "기존 요소는 out-of-scope"임을 명시해 혼선을 없앨 것.
+
+## Iteration 1 — Non-blocking but flagged
+
+3. **[Accessibility] Row A("전체 받기")/Row B("전체 삭제") 텍스트 버튼의 hitSlop이 전혀 지정되지 않았다** — Tokens 섹션(`:28`)의 "모든 다운로드 관련 인터랙션 요소 44×44pt 이상" 원칙이 있음에도, Copy 표(`:44-48`)와 Accessibility 섹션(`:74-75`)은 두 버튼에 대해 `accessibilityRole`/`accessibilityLabel`만 지정하고 실제 터치 영역 확보 방법(패딩 크기 또는 `hitSlop` 값)은 명시하지 않는다. 텍스트 버튼은 아이콘 배지와 달리 텍스트 자체의 렌더 크기가 가변적이라 44pt 미달 여부가 폰트 크기·패딩 설계에 따라 달라진다 — Blocker로 격상하지 않는 이유는 "텍스트 버튼 + 충분한 패딩"이 일반적으로 44pt를 만족하기 쉬운 형태이고 Chris 구현 재량으로 합리적으로 흡수 가능하기 때문이나, Taylor QA 체크리스트(Q6/Q7)에서 실측 확인을 명시적으로 요구할 것을 권장한다.
+
+## Iteration 1 — Confirmed sound (no action needed)
+
+- **인용 라인 정확도**: 위 Line-citation audit 참고 — 4곳 전부 실제 파일과 일치. 재작업 검토에서 드문 수준의 정확도.
+- **카드별 개별 다운로드 버튼 배제 판단**: spec Open Questions #1(B)가 항목별/일괄 둘 다 허용하므로 spec 위반 아님. 실제 `AudioHistoryCard`(L21-87) 구조(원형 썸네일+3줄 텍스트+하트 버튼)를 볼 때 세 번째 터치 요소 추가 시 과밀해진다는 판단은 타당(Enforce Simplicity 부합).
+- **BottomSheet 개별 삭제 UI 배치**: "재생/일시정지 ↔ 닫기 버튼 사이"에 세 번째 아이콘을 넣어도, `gap-4`(16px) 간격과 각 요소 `hitSlop 8`(8+8=16=gap과 정확히 맞물림)을 감안하면 이론상 터치 영역이 서로 겹치지는 않는다 — 공간 배치 자체는 자리 충돌 없이 가능. (단, hitSlop 값 자체가 44pt 미달인 것은 Blocker 2에서 별도 지적.)
+- **빈 상태에서 유틸리티 바 숨김 로직**: States 섹션(`:62`, `:65`)이 Row A/B를 각각 idle/done 카운트 기반 독립 조건부로 렌더하도록 정의해, `items.length === 0`일 때 자연히 둘 다 숨겨진다 — 로직 자체에 결함 없음(중복 서술이지만 오류는 아님).
+
+## Handoff (Iteration 1)
+
+- **Fail** → **Sam (Design)**에게 재작업을 요청한다. 2개 Blocker(1. Row B 대비/토큰 확정, 2. 삭제 아이콘 hitSlop) 모두 브리프 내부 문장 1~2줄 수정으로 해소 가능한 좁은 범위의 결함이라, 다음 iteration에서 Pass 가능성이 높다. 재작업 시 Non-blocking Item 3(Row A/B 버튼 hitSlop 미지정)도 함께 명시하면 좋음.
+
+---
+
+# Archived — superseded by revision 3 scope change
+
+> 아래는 spec revision 2(재생목록 `playlist.tsx` 기준) 시점의 iteration 1~4 이력이다. revision 3에서 다운로드 대상·화면·톤이 전면적으로 바뀌면서 이 이력의 판정·근거는 더 이상 현재 브리프에 적용되지 않는다. 감사 추적(audit trail) 보존 목적으로만 남겨둔다 — 수정하지 않음.
+
+---
+
+feature-slug: offline-download
+author: alex
+iteration: 4
+verdict: Pass
+
+# Design review
+
+## Verdict (Iteration 4 — current)
+
+- **Pass**
+- Iteration: 4 / 3 (⚠️ 사용자 승인 하에 파이프라인 루프 상한을 예외적으로 1회 연장 — iteration 3 Handoff 참고)
+
+## Scores (1–5) — Iteration 4
+
+| Dimension | Score | Notes |
+|-----------|-------|-------|
+| Brand & tokens | 5 | 재작업에서도 새 색을 들여오지 않고 기존 다크 팔레트를 그대로 상속(`02-design-brief.md:13`, `:20-25`). iteration 2에서 확정된 값과 동일. |
+| Layout & IA | 4 | **Blocker 1(배지 클리핑) — RESOLVED**, **Blocker 2(ScrollView 경계) — RESOLVED**. 두 수정 모두 실제 컴포넌트 구조와 대조해 구조적으로 타당함을 재확인했다(아래 Blocker resolution audit 참고). 5점을 주지 않는 이유 둘: (1) iteration 2와 동일한 이유로, 실제 시뮬레이터 렌더 검증은 여전히 Chris/Taylor 단계로 위임되어 있어 문서 시점의 잔여 실행 리스크가 남는다. (2) 이번 재작업이 Non-blocking Item 3(iteration 3)을 해소하는 과정에서 **새로운 불일치**가 드러났다 — 아래 "Iteration 4 — 새로 발견된 사항" 참고. Blocker로 격상하지는 않되(좁은 엣지 케이스, Chris 구현 재량으로 흡수 가능), 3점 미만으로 떨어뜨릴 정도는 아니다. |
+| Copy & tone | 5 | Iteration 3 Non-blocking Item 3("Row A '받기'가 실패 항목도 재시도하는지 불명확")가 States 섹션(`02-design-brief.md:64`)에서 "받기는 idle 항목만 대상으로 한다"로 명시적으로 해소되었다 — Copy 표와 States 서술 간 모호성이 사라져 iteration 3에서 5점을 주지 못했던 유일한 이유가 없어졌다. "다운로드 완료" 고정 문구 제거 근거(`:59`)와 재실행 시나리오(`:70`) 서술도 spec `01-spec.md` AC-1과 일관되게 이어진다. |
+| Accessibility | 4 | Blocker 1 해소로 완료/실패/진행중 상태를 구분하는 유일한 시각 수단(썸네일 배지)이 실제로 렌더된다는 전제가 성립해, iteration 3에서 3점을 준 근거(라벨이 가리키는 뷰 자체가 안 보일 위험)가 사라졌다. hitSlop 44pt(`:76`)와 "전체 삭제" 대비(text-on-dark, 14.97:1, `:78`)도 그대로 유지. 5점을 주지 않는 이유: iteration 1부터 이어지는 잔여 갭 — `text-success`/`text-error` 아이콘의 비텍스트 3:1 대비가 이번에도 원칙 서술(`:78`)만 있고 정적 계산으로 재확인되지 않았다. 추가로 Layout & IA에서 지적한 "받기 CTA 비활성 상태 미정의" 문제는 접근성 관점에서도 유효하다 — 아무 동작도 하지 않는 버튼에 `accessibilityState={{ disabled: true }}`가 없으면 스크린리더 사용자가 눌러도 아무 피드백을 받지 못한다. |
+| **Weighted overall** | **4.5** | 산술 평균 (5+4+5+4)/4 = 4.5. Pass 기준(overall ≥ 4.0, 항목별 ≥ 3) 충족. |
+
+Pass rule: overall ≥ 4.0 and no dimension < 3.
+
+## Iteration 4 — Blocker resolution audit
+
+1. **[Layout & IA] Blocker 1(썸네일 배지 클리핑) — RESOLVED**: `02-design-brief.md:34`가 수정 방식을 "`ImageFallback`을 감싸는 별도 부모 `View`(`relative`, overflow 미지정)의 자식으로 배치"로 명시하고, 구체 예시 코드(`<View className="relative"><ImageFallback .../><View className="absolute -top-1 -right-1 ...">{배지}</View></View>`)까지 제시했다. 재확인 결과:
+   - `src/components/common/ImageFallback.tsx:96`은 여전히 `overflow-hidden`이 고정된 루트 `View`이지만, 수정안은 배지를 이 `View`의 `children`(`:139`)으로 넘기지 않고 **바깥 별도 부모의 형제**로 배치하므로 `overflow-hidden`의 영향권 밖에 있다.
+   - RN(New Architecture/Fabric, 이 프로젝트는 Expo SDK 56 — `package.json:27`)에서 `overflow` 미지정 `View`의 기본값은 `visible`이므로, 새 부모 `View`는 자식(절대 위치 배지)의 경계 밖 오버플로를 클리핑하지 않는다 — 브리프가 지시한 구조가 실제로 클리핑을 피한다.
+   - `app/(guide)/playlist.tsx:200-205`(리스트 아이템 썸네일)과 `src/components/guide/ArtistIntroTrack.tsx:75-81`(작가 소개 트랙 썸네일) 모두 현재 `ImageFallback`을 flex-row의 직계 자식으로 두고 있어, 크기 지정 없는 래퍼 `View`를 끼워도 flex 레이아웃상 자식(56×56, `w-14 h-14`) 크기에 맞춰 자동으로 shrink-to-fit되므로 배지 위치가 어긋나지 않는다. 두 파일 모두 브리프의 수정 지시(`:34`, `:35`)가 실제 구조와 일치함을 확인.
+2. **[Layout & IA] Blocker 2(ScrollView 경계 미명시) — RESOLVED**: `02-design-brief.md:14`, `:31`이 "유틸리티 영역은 `ScrollView` 바깥(히어로 카드 바로 아래)에 고정 배치"로 명시적으로 결정했다. 실제 `app/(guide)/playlist.tsx` 구조 재확인 결과:
+   - `src/components/layout/Screen.tsx:79-91`(dark variant, 이 화면이 사용하는 기본 variant)은 `SafeAreaView`(flex-1, 기본 column 방향) 안에 `children`을 그대로 렌더한다 — 즉 `playlist.tsx`의 `Screen.Header`(`:138`), 히어로 카드 `View`(`:156-173`), `ScrollView`(`:175-179`)는 전부 이 `SafeAreaView`의 형제 flex 자식이다.
+   - 브리프가 지시한 대로 새 유틸리티 영역(Row A/B 컨테이너)을 히어로 카드 `View`(`:173`에서 닫힘)와 `ScrollView`(`:175`에서 열림) 사이에 삽입하면, 기존 히어로 카드·`ScrollView`와 동일한 층위의 flex column 형제가 되어 항상 고정 노출되고 `ScrollView`는 남은 공간만 차지하도록 자연스럽게 줄어든다 — 브리프 서술과 실제 컴포넌트 트리가 정확히 일치한다.
+   - 이 화면은 `Screen.BottomAbsolute`(하단 절대 위치, `Screen.tsx:106-108`)를 사용하지 않으므로, 새 고정 영역이 다른 절대 위치 요소와 충돌할 가능성도 없다.
+3. **[Copy & tone] Non-blocking Item 3(iteration 3) — RESOLVED**: `02-design-brief.md:64` "Row A '받기'의 대상 범위"가 "받기는 idle 항목만 대상으로 한다. failed 항목은 Row A의 '받기'로 재시도하지 않으며, 썸네일 배지를 개별 탭하는 재시도로만 재시도한다"로 명확히 결정되어 States 섹션과 Copy 표 간 모호성이 해소됐다.
+
+## Iteration 4 — New defects / flags found
+
+4. **[Layout & IA / Accessibility, non-blocking but flagged] Row A 표시 조건과 "받기" 동작 범위가 서로 어긋나는 엣지 케이스** — Item 3 해소 과정에서 새로 드러난 불일치다. `02-design-brief.md:63`("Row A 표시 여부")은 "대기(idle) **또는** 실패(failed) 상태의 항목이 1개 이상 있으면 Row A를 렌더한다"고 되어 있는 반면, 바로 다음 줄(`:64`, 이번에 새로 확정)은 "받기는 **idle 항목만** 대상으로 한다"고 못박는다. 두 규칙을 겹쳐보면: 재생목록에 **실패 항목만 남고 idle 항목이 하나도 없는 상태**(예: 전부 재시도했지만 idle로 돌아오지 않고 계속 failed인 경우는 없지만, "idle 없이 failed만 존재"하는 조합 자체는 표시 조건상 가능)에서도 Row A는 여전히 렌더되어 "받기" 버튼이 보이는데, 정작 이 버튼을 눌러도 처리할 idle 항목이 없어 **아무 일도 일어나지 않는다**. 브리프에는 이 상태에서 버튼을 비활성화하거나(`accessibilityState={{ disabled: true }}` 포함) 숨기는 처리가 명시되어 있지 않다.
+   - Blocker로 격상하지 않는 이유: (a) 발생 조건이 좁다(현재 idle 항목이 전혀 없고 failed 항목만 있는 상태), (b) `component-convention.md` §9.3 수준의 구현 세부(버튼 disabled 처리)로 Chris 단계에서 합리적으로 흡수 가능하다, (c) 파이프라인이 이미 예외적으로 연장된 4회차라 추가 Sam 재작업 루프보다는 dev-notes로 넘기는 편이 낫다.
+   - **권장 처리**: `04-dev-notes.md` 또는 구현 시점에 "표시된 idle 항목이 0개면 '받기' 버튼을 `disabled` 처리(+ `accessibilityState={{ disabled: true }}`)하거나, Row A 표시 조건을 'idle 항목이 1개 이상'으로만 좁힐 것" 중 하나를 Chris가 선택해 명시하도록 Taylor QA 체크리스트(Q3/Q7)에서 확인 권장.
+
+## Iteration 4 — Carried-forward confirmations (unchanged, not re-litigated)
+
+- hitSlop 44pt 통일(`:36`, `:76`) — iteration 2 그대로 유지, 훼손 없음.
+- "전체 삭제" 텍스트 대비(`text-on-dark` 14.97:1, `:78`) — iteration 2 그대로 유지, 훼손 없음.
+- `ActivityIndicator` className 통일(`:66`) — iteration 2 그대로 유지, 훼손 없음.
+- Row A/B 분리(합성하지 않고 두 개의 독립 행으로 유지, `:39`) — iteration 3 재작업 결정 유지, 훼손 없음.
+
+## Handoff (Iteration 4)
+
+- **Pass** → Chris (Dev)는 프로토타입 시뮬 스모크 이후 AC 단위 구현을 시작할 수 있다. 프로토타입 시뮬 스모크 단계에서 반드시 확인할 것: (1) 썸네일 우상단 배지가 실제 iOS 시뮬레이터에서 클리핑 없이 보이는지 스크린샷으로 확인, (2) 유틸리티 영역이 리스트 스크롤과 무관하게 고정 노출되는지 인터랙션으로 확인. 추가로 Taylor QA 체크리스트에 위 "New defects / flags found" 4번(Row A 표시 조건 vs 받기 범위 불일치) 처리 여부 확인 항목을 포함할 것.
+
+---
+
+# Iteration 3 (archived — Fail)
+
+## Verdict (Iteration 3)
+
+- **Fail**
+- Iteration: 3 / 3 (⚠️ 파이프라인 최대 루프 도달 — Handoff 참고)
+
+## Scores (1–5) — Iteration 3
+
+| Dimension | Score | Notes |
+|-----------|-------|-------|
+| Brand & tokens | 5 | 재작업본도 새 색을 들여오지 않고 기존 다크 팔레트를 그대로 상속(`02-design-brief.md:13`, `:20-25`). iteration 2에서 해소된 `ActivityIndicator` className 통일도 유지(`:65` "className=\"text-gray500\""). |
+| Layout & IA | 2 | Blocker 1(썸네일 배지 클리핑) + Blocker 2(ScrollView 경계 미명시)로 실제 구현 시 배지가 안 보이거나 진행률 UI가 스크롤에 종속되는 회귀 위험이 있다. 아래 Blockers 참고. |
+| Copy & tone | 4 | "재실행(신규 항목 추가) 시나리오"(`:69`)가 spec `01-spec.md` AC-1 참고사항(`:47`, "재실행 시 이미 완료된 항목은 재다운로드하지 않고 신규 항목만 처리")과 정확히 일치 — A~C 완료 후 D 추가 시 D만 처리되는 서술이 spec 문구를 그대로 구현 가능한 수준으로 구체화했다. "다운로드 완료" 고정 문구 제거 근거(`:59`)도 이 재실행 시나리오와 논리적으로 이어진다. 5점을 주지 않는 이유: Blocker 3(받기 버튼과 실패 항목 재시도의 상호작용)이 States 섹션 서술과 겹치는 영역이라 완전히 분리된 결함으로 보기 어렵다. |
+| Accessibility | 3 | hitSlop 통일(`:36`, `:75` 모두 16pt, `12+16+16=44pt`)과 대비 확정(`text-on-dark` 14.97:1, `:77`)은 iteration 2 그대로 유지되어 훼손되지 않았다. 그러나 Blocker 1의 배지 클리핑이 실제로 발생하면 완료/실패/진행중 상태를 시각적으로 구분하는 유일한 수단(썸네일 배지)이 사라지므로, "완료 상태 접근성 라벨"(`:74`)이 가리키는 대상 자체가 화면에 없는 상태가 된다 — 라벨/hitSlop 수치 자체는 옳지만 그것이 붙는 뷰가 렌더되지 않을 위험이 있어 3점 이상을 주기 어렵다. |
+| **Weighted overall** | **3.5** | 산술 평균 (5+2+4+3)/4 = 3.5. Pass 기준(overall ≥ 4.0, 항목별 ≥ 3) 중 overall 미달 + Layout & IA 항목 미달(<3) 이중으로 실패. |
+
+Pass rule: overall ≥ 4.0 and no dimension < 3.
+
+## Iteration 3 — Blockers (must fix)
+
+1. **[Layout & IA] 썸네일 다운로드 배지가 `ImageFallback`의 `overflow-hidden`에 클리핑된다** — `02-design-brief.md:34`는 배지를 "썸네일 우상단 오버레이"로 `absolute -top-1 -right-1`(부모 경계 바깥으로 4px씩 삐져나오는 음수 오프셋) 배치하도록 지시한다. 그러나 실제 `src/components/common/ImageFallback.tsx:95-96`의 루트 `View`는 `className={cn('bg-bg-tonal overflow-hidden', className)}`로 **`overflow-hidden`이 고정**되어 있고, 브리프가 지정한 삽입 지점("`ImageFallback` 컨테이너에 `View` 오버레이 추가")도 `children`(`:139`)을 통해 바로 이 `overflow-hidden` 컨테이너 내부에 렌더된다. 즉 브리프가 지시한 대로 구현하면 배지의 상단·우측 일부(또는 전체, RN의 overflow 클리핑은 배지 크기·라운드 처리에 따라 달라짐)가 잘려나가 사용자에게 보이지 않거나 부분적으로만 보인다. 이 문제는 `playlist.tsx`의 리스트 아이템 배지(`:34`)와 `ArtistIntroTrack.tsx`의 동일 패턴(`:35`) 모두에 적용된다 — `ArtistIntroTrack.tsx:75-81`도 동일하게 `ImageFallback`을 그대로 사용 중이라 같은 클리핑이 발생한다.
+   - iteration 1/2에서 이 문제가 지적되지 않은 이유: 이전 두 iteration의 Layout & IA 검토는 전부 `immersive-start.tsx`(트리거 삽입 화면)에 집중되어 있었고, 이번 재작업에서 대상 화면이 `playlist.tsx`로 바뀌면서 처음 등장한 "썸네일 우상단 배지" 패턴은 그동안 실제 컴포넌트 구조(`ImageFallback`의 `overflow-hidden`) 대비 검증된 적이 없다.
+   - **Required fix**: 배지를 `ImageFallback`의 `overflow-hidden` 컨테이너 *바깥*에 두는 형태로 재설계할 것 — 예: 썸네일과 배지를 함께 감싸는 별도 부모 `View`(overflow 미지정)를 두고 그 부모 기준으로 `absolute` 배치하거나, 음수 오프셋 없이 `top-0 right-0`(컨테이너 경계 안쪽)로 배치해 클리핑을 원천적으로 피할 것.
+
+2. **[Layout & IA] Row A/B 삽입 위치가 실제 컴포넌트 트리 경계(ScrollView 안/밖)를 명시하지 않는다** — `02-design-brief.md:31`은 "히어로 카드(`playlist.tsx`, L156-173)와 '재생목록' 헤딩 사이에 유틸리티 영역을 삽입"이라고 서술한다. 그러나 실제 `app/(guide)/playlist.tsx`를 보면 히어로 카드(`:156-173`)는 `ScrollView` **바깥**의 독립된 `View`이고, "재생목록" 헤딩(`:180`)은 `ScrollView`(`:175-179`)를 연 **직후 첫 자식**이다. 즉 "히어로 카드와 헤딩 사이"라는 서술은 서로 다른 두 컨테이너의 경계를 가로지르며, Row A/B를 (a) `ScrollView` 밖(히어로 카드 뒤, 항상 고정 노출) vs (b) `ScrollView` 안(헤딩 앞, 리스트와 함께 스크롤되어 사라짐) 중 어느 쪽에 둘지가 브리프에서 결정되지 않았다. 이는 사소한 배치 디테일이 아니다 — AC-3("전체 진행 현황이 폴링 없이 실시간으로 갱신")을 감안하면, 사용자가 리스트를 스크롤해 아래쪽 항목을 확인하는 동안에도 진행률/저장공간 유틸리티 바가 계속 보여야 하는지가 핵심 UX 결정인데, 이 결정이 누락되어 있다.
+   - **Required fix**: Row A/B를 `ScrollView` 밖(히어로 카드 아래, 헤딩 위)에 고정 배치할지 명시적으로 결정하고 브리프에 반영할 것. (참고: 다운로드 진행 중 사용자가 리스트를 오래 스크롤할 가능성을 고려하면 고정 배치 쪽이 AC-3 의도에 더 부합해 보이나, 이는 디자인 판단이므로 Sam이 결정할 것.)
+
+## Iteration 3 — Non-blocking but flagged (may re-escalate)
+
+3. **[Copy & tone / Layout & IA 경계] Row A "받기"가 실패(failed) 항목도 함께 재시도하는지 불명확** — States 섹션(`02-design-brief.md:63`)은 Row A 노출 조건에 "대기(idle) **또는** 실패(failed) 상태의 항목이 1개 이상"을 포함시킨다. 그런데 실패 항목은 이미 개별 배지 탭으로 재시도하는 별도 메커니즘이 있다(Layout & components 표 "실패 시 재시도", `:36`). 사용자가 실패 항목이 섞인 상태에서 Row A의 "받기"를 누르면 (a) idle 항목만 새로 받고 실패 항목은 그대로 두는지, (b) 실패 항목도 함께 재시도하는지가 브리프에 없다. 이는 Blocker로 격상하지 않는다 — Alex의 3회 루프 상한(§ Handoff)과, 이 항목이 구현 세부(Chris의 판단 여지가 있는 범위)로 흡수될 수 있는 여지가 있기 때문이다. 다만 Sam이 이번 재작업 또는 다음 단계에서 한 줄로 명확히 해 두는 것을 강력히 권장한다.
+
+## Iteration 3 — Carried-forward confirmations (unchanged, not re-litigated)
+
+- hitSlop 44pt 통일(`:36`, `:75`) — iteration 2 그대로 유지, 훼손 없음.
+- "전체 삭제" 텍스트 대비(`text-on-dark` 14.97:1, `:77`) — iteration 2 그대로 유지, 훼손 없음.
+- `ActivityIndicator` className 통일(`:65`) — iteration 2 그대로 유지, 훼손 없음.
+- 리스트 항목 배지-인접 행 터치 영역 근접 관찰(iteration 2 비차단 관찰) — 이번 재작업에서도 동일 레이아웃 여백(`py-4` 16px + 썸네일 56px)이 유지되므로 재확인 불필요, Taylor QA 인터랙션 체크로 위임 유지.
+
+## Handoff (Iteration 3)
+
+- **Fail** → 파이프라인 규칙(`.claude/rules/feature-pipeline.md` §2, "max 3 iterations → Fail 지속 시 Manager → user")상 이번이 3회째 루프이므로, Sam에게 재작업을 다시 요청하지 않고 **Manager에게 에스컬레이션**한다. Manager는 Blocker 1(배지 클리핑)·Blocker 2(ScrollView 경계)를 사용자에게 보고하고 진행 방향을 확인해야 한다 — 두 Blocker 모두 디자인 의도보다는 실제 컴포넌트 구조(`ImageFallback`의 `overflow-hidden`, `playlist.tsx`의 ScrollView 경계) 대조에서 나온 구체적 결함이라 Sam의 다음 리비전에서 비교적 명확하게 해소 가능해 보이지만, 3회 루프 상한 규칙은 예외 없이 적용한다.
+
+---
+
+# Iteration 2 (archived — Pass)
+
+## Verdict (Iteration 2)
+
+- **Pass**
+- Iteration: 2 / 3
+
+## Scores (1–5) — Iteration 2
+
+| Dimension | Score | Notes |
+|-----------|-------|-------|
+| Brand & tokens | 5 | Iteration 1 Suggestion 2(`ActivityIndicator` className 불일치) 반영 완료 — `02-design-brief.md:30`, `:65` 모두 `className="text-gray500"`로 통일되어 `component-convention.md` §2(폰트/색상 className 우선) 준수. 새 색 도입 없음, 기존 다크 팔레트 상속 유지. |
+| Layout & IA | 4 | Blocker 3 해소 확인 — `02-design-brief.md:37-40`이 `immersive-start.tsx`(L124-201) 실제 구조(ScrollView 없음, `Pressable className="flex-1 pt-4"` 내부에 `Screen.BottomAbsolute`가 함께 있음, `Screen.tsx:106-108` 확인상 `absolute` 포지셔닝은 가장 가까운 부모인 이 `Pressable` 기준)를 정확히 반영해, 컴팩트 Row + 조건부 ScrollView 폴백을 제시했다. `Screen.BottomAbsolute`는 ScrollView 밖(같은 Pressable의 형제)에 남겨 항상 하단 고정된다는 서술이 실제 컴포넌트 구현과 일치하고, `ExhibitionTitleField`의 자동완성 목록(`ExhibitionTitleField.tsx:98-132`)이 `position: absolute`가 아니라 일반 흐름(레이아웃 push)이라는 점까지 감안하면 이 ScrollView 폴백은 기존에 잠재해 있던 겹침 위험 자체를 줄이는 방향으로도 타당하다. 5점을 주지 않는 이유: 실측(iPhone SE 스크린샷) 검증은 Chris/Taylor 단계로 명시적으로 위임되어 있어(L40), 디자인 문서 시점에는 여전히 "적용 후 확인 필요"인 잔여 실행 리스크가 남는다. |
+| Copy & tone | 5 | Suggestion 3(조건부 노출 각주, `:61`)과 Suggestion 4(Open Questions #3 추적성, `:68`) 모두 반영 완료. Copy 표와 States 섹션 간 문서 정합성 문제 해소. |
+| Accessibility | 4 | Blocker 1(hitSlop 계산 오류/불일치) — `02-design-brief.md:33`, `:75` 모두 `hitSlop={{top:16,bottom:16,left:16,right:16}}`로 통일, `12+16+16=44`pt 계산 재검증 완료(정확). Blocker 2(대비 폴백 논리 오류) — `text-on-dark`(#E8E8E8) vs `bg-dark`(#171412) 대비를 WCAG 2.1 relative luminance 공식으로 독립 재계산한 결과 **14.97:1**로 브리프 수치와 일치, destructive 의도는 `Alert.alert` destructive 스타일로 전달된다는 논리도 타당하다. 5점을 주지 않는 이유: 상태 아이콘(`text-success`/`text-error`)의 비텍스트 3:1 기준 대비는 원칙 서술(`:77`)만 있고 이번 iteration에서 정적 계산으로 재확인되지 않았다(iteration 1에서 이미 문제 삼지 않은 항목이라 Blocker는 아니나, 완전한 5점 근거는 아니다). |
+| **Weighted overall** | **4.5** | 산술 평균 (5+4+5+4)/4 = 4.5. Pass 기준(overall ≥ 4.0, 항목별 ≥ 3) 충족. |
+
+Pass rule: overall ≥ 4.0 and no dimension < 3.
+
+## Iteration 2 — Blocker resolution audit
+
+1. **[Accessibility] hitSlop 통일 — RESOLVED**: `:33`, `:75` 모두 16pt로 통일, `12+16+16=44pt` 재계산 확인. 문서 내부 불일치 해소.
+2. **[Accessibility] 대비 폴백 논리 — RESOLVED**: `text-on-dark`(14.97:1) 채택으로 근소한 마진(0.5 미만)에 의존하던 iteration 1의 폴백 오류 제거. destructive 의도는 `Alert.alert`로 전달한다는 근거 타당.
+3. **[Layout & IA] 오버플로 대응책 부재 — RESOLVED**: 실제 파일 구조(`immersive-start.tsx`) 기준 컴팩트 Row + 조건부 ScrollView 2단계 폴백 제시, `Screen.BottomAbsolute` 부작용 없음 확인. Chris/Taylor 단계 실측 검증 의무 명시.
+
+## Iteration 2 — New defects found
+
+없음. 새로 도입된 결함은 발견되지 않았다. (참고용 비차단 관찰: 재생목록 항목의 12×12 다운로드 배지에 hitSlop 16을 적용할 경우 인접 행과의 터치 영역 근접 가능성이 이론상 있으나, 실제 레이아웃 여백(`py-4` 16px + 썸네일 56px)을 고려하면 충돌 가능성은 낮아 보이며 Taylor QA 인터랙션 체크에서 실기 확인하는 것으로 충분하다 — Blocker로 격상하지 않음.)
+
+## Handoff (Iteration 2)
+
+- **Pass** → Chris (Dev)는 프로토타입 시뮬 스모크 이후 AC 단위 구현을 시작할 수 있다. `immersive-start.tsx` 오버플로 대응은 브리프가 지정한 대로 컴팩트 Row 우선 적용 후, iPhone SE 시뮬레이터 스크린샷으로 겹침 여부를 반드시 확인하고 필요 시 ScrollView 폴백을 적용할 것(Taylor QA 체크리스트 Q6 항목).
+
+---
+
+# Iteration 1 (archived — Fail)
+
+## Verdict
+
+- **Fail**
+- Iteration: 1 / 3
+
+## Scores (1–5)
+
+| Dimension | Score | Notes |
+|-----------|-------|-------|
+| Brand & tokens | 4 | 새 색 도입 없이 기존 다크 팔레트·상태 컬러(`text-primary/success/error/gray500`)를 그대로 상속(02-design-brief.md L11, L20). 다만 `ActivityIndicator` 색상 지정 방식이 코드베이스 기존 패턴과 다름(Suggestion 2 참고). |
+| Layout & IA | 3 | AC-1~AC-6 매핑은 빠짐없이 존재하나, `immersive-start.tsx`에 새 Row를 삽입할 때 소형 화면 오버플로 검토가 없음(Blocker 3). |
+| Copy & tone | 4 | `confirmExit`의 기존 해요체 톤(`재생목록이 초기화돼요`)과 삭제 확인 카피(`모두 삭제해요`) 톤이 일치. Copy 표와 조건부 노출 조건 사이 문서 정합성만 약함(Suggestion 3). |
+| Accessibility | 2 | 히트 영역 계산이 두 곳 모두 44pt 기준을 충족하지 못하며 서로 값도 다름(Blocker 1). 대비 폴백 전략이 실제로는 대비를 낮추는 방향임(Blocker 2). |
+| **Weighted overall** | 3.25 | 산술 평균 (4+3+4+2)/4 = 3.25. Pass 기준(≥4.0, 항목별 ≥3) 중 overall 미달 + Accessibility 항목 미달(<3) 이중으로 실패. |
+
+Pass rule: overall ≥ 4.0 and no dimension < 3.
+
+## Blockers (must fix)
+
+1. **[Accessibility] 실패 배지 히트 영역 계산 오류 + 브리프 내부 수치 불일치** — `02-design-brief.md:33`는 "배지를 `Pressable`로 감싸고 `hitSlop=8` 부여해 12px 시각 크기에도 44pt 히트 영역 확보"라고 쓰여 있으나, `hitSlop=8`(균등 적용)이면 실제 터치 영역은 `12 + 8 + 8 = 28pt`로 44pt에 크게 못 미친다. 같은 문서 `:66`은 "시각 크기 12px이어도 `hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}`로 44pt 이상 확보"라고 다시 쓰는데, 이 값도 `12 + 12 + 12 = 36pt`로 여전히 44pt 미달이며, 애초에 `:33`의 `8`과 값 자체가 다르다(문서 내부 불일치). Tokens 섹션(`:23`)이 "모든 다운로드 관련 인터랙션 요소 44×44pt 이상 확보"를 명시적 원칙으로 선언해 놓고, 정작 유일하게 수치를 제시한 두 곳 모두 그 기준을 충족하지 못한다.
+   - **Required fix**: 12px 배지 기준 44pt를 만족하려면 `hitSlop`을 상하좌우 각 **16pt 이상**(`12+16+16=44`)으로 통일할 것 — 안전 마진 고려 시 18~20pt 권장. `:33`과 `:66`의 수치를 동일하게 맞출 것.
+
+2. **[Accessibility] "전체 삭제" 텍스트 대비 폴백 전략이 실제로 대비를 개선하지 못함** — `02-design-brief.md:68`는 `text-error-alt`(#F43F5E)를 다크 배경(#171412) 위 텍스트로 쓸 때 "대비 확인 필요(4.5:1 기준, plan 단계에서 실측 권장 — 미달 시 `text-error`로 대체)"라고 적고 있다. 두 색 모두 고정 hex 값이라 지금 계산 가능한데, 실제 계산(WCAG 2.1 relative luminance 공식) 결과:
+     - `text-error-alt`(#F43F5E) vs `bg-dark`(#171412) = **4.99:1**
+     - `text-error`(#EF4444) vs `bg-dark`(#171412) = **4.87:1**
+   둘 다 4.5:1 기준을 0.5 미만의 근소한 차이로 통과하며, 브리프가 제안한 "미달 시 폴백"(`text-error`)은 오히려 원안보다 대비가 **더 낮다** — 폴백이 문제를 해결하지 못하는 논리 오류다. 또한 `error-alt`는 DESIGN_SYSTEM.md §1.3 기준 "스와이프 패스 등" 라이트 배경 용례로만 문서화되어 있어, 다크 배경 텍스트 용도는 검증된 선례가 없다.
+   - **Required fix**: 두 값 모두 정적으로 계산 가능하므로 지금 확정할 것. 근소한 마진(0.5 미만)에 기대지 말고 여유가 큰 색을 채택 — 예: `text-on-dark`(#E8E8E8)는 동일 배경 대비 **14.97:1**로 압도적으로 안전하다. destructive 의도는 텍스트 색이 아니라 `Alert.alert`의 destructive 스타일(확인 다이얼로그)로 이미 전달되므로, 유틸리티 바의 "전체 삭제" 텍스트 자체는 고대비 중립색으로도 의도 전달에 지장 없음.
+
+3. **[Layout & IA] `immersive-start.tsx` 소형 화면 오버플로 검토 없음** — `02-design-brief.md:29-30`은 GUIDE_NOTES 리스트와 "시작하기" 버튼 사이에 새 Row(`PredownloadRow`)를 삽입하도록 지시한다. 실제 `app/(guide)/immersive-start.tsx`(L124-201)를 확인하면 이 화면은 `ScrollView` 없이 `<Pressable className="flex-1 pt-4">` 안에 제목·부제·검색 필드 2개(자동완성 드롭다운 포함)·`GUIDE_NOTES` 3줄이 모두 들어 있고, "시작하기" 버튼은 `Screen.BottomAbsolute`로 화면 하단에 절대 위치 고정된다. 여기에 새 Row를 추가하면, iPhone SE 등 세로 공간이 좁은 기기에서 자동완성 드롭다운이 펼쳐질 때 `GUIDE_NOTES`+신규 Row와 겹치거나 화면 밖으로 밀릴 위험이 있는데, 브리프에는 이에 대한 완화책(스크롤 허용, 컴팩트 레이아웃, 소형 화면 실측 등)이 전혀 없다.
+   - **Required fix**: 소형 화면(iPhone SE 등) 기준 시뮬레이터 스크린샷으로 오버플로 여부를 확인해 브리프에 첨부하거나, 오버플로 시 폴백(예: 상위 컨테이너 스크롤 허용, Row 높이 축소)을 명시할 것.
+
+## Suggestions (nice to have)
+
+1. `DownloadStorageBar` 신규 컴포넌트 분리 근거가 약함 — `playlist.tsx`는 현재 히어로 카드(L156-173)와 리스트 아이템(L190-241) 모두 별도 컴포넌트로 추출하지 않고 화면 파일에 인라인으로 두고 있다. 유사한 크기의 단일 행 유틸리티 바를 굳이 신규 파일로 분리할 재사용 계획이 브리프에 없으므로, `component-convention.md` §9.3(페이지 전용 private 서브컴포넌트: 화면 전용·약 50줄 이하·재사용 계획 없음)의 인라인 예외에 해당하는지 Chris 단계에서 먼저 판단 후 신규 파일 여부를 정할 것을 권장.
+2. `ActivityIndicator` 색상 지정 방식 불일치 — 브리프(L30, States 섹션)는 `colors.gray500`(JS 값)을 제안하지만, 코드베이스에는 이미 `<ActivityIndicator className="text-gray900" />`(`src/components/map/RoutePlanningBar.tsx`) 패턴이 존재한다. `component-convention.md` §2 원칙(className 우선)에 맞춰 JS 값 대신 className 사용을 권장.
+3. "실패 토스트/보조 텍스트"(States > Error, `:58`)는 "디자인 범위 밖(dev-notes 판단)"으로 노출 여부가 유보돼 있는데, Copy 표(`:52`)에는 확정 문구처럼 나열돼 있어 문서 내 일관성이 약하다. Copy 표에도 조건부임을 각주로 표기 권장.
+4. Open Questions #3(몰입모드 종료 시 다운로드 보존)에 대한 디자인 측 대응이 브리프에 명시적으로 없다 — States > Success(개별 완료)의 "배지 유지" 서술이 간접적으로 이를 뒷받침하지만, "재방문 시 완료 배지가 즉시 보이는 것이 보존 결정과 일치한다"는 한 줄을 브리프에 추가하면 spec-design 추적성이 좋아짐.
+
+## Handoff
+
+- Fail → **Sam (Design)** updates `02-design-brief.md` and/or prototype
+- Pass → **Chris (Dev)** may start implementation (after prototype smoke if required)
