@@ -89,15 +89,22 @@ TYPE_TAG_RULES: list[tuple[str, list[str]]] = [
 
 THEME_TAG_RULES: list[tuple[str, list[str]]] = [
     ("무료", ["무료 관람", "무료입장", "관람료 무료"]),
+    ("어린이", ["어린이", "키즈", "kids", "유아", "초등", "가족체험", "어린이 전시"]),
 ]
 
-KIDS_TAG = "키즈"
+KIDS_TAG = "어린이"
 
 
 def finalize_tags(tags: list[str]) -> list[str]:
-    if KIDS_TAG in tags:
-        return []
-    return tags
+    out: list[str] = []
+    seen: set[str] = set()
+    for t in tags:
+        label = KIDS_TAG if t == "키즈" else t
+        if label in seen:
+            continue
+        seen.add(label)
+        out.append(label)
+    return out
 
 ART_GENRE_LABELS = {label for label, _ in ART_GENRE_RULES}
 
@@ -117,7 +124,7 @@ def load_env() -> dict[str, str]:
 
 def supabase_request(method: str, path: str, base_url: str, api_key: str, body=None):
     url = f"{base_url}{path}"
-    data = json.dumps(body).encode("utf-8") if body is not None else None
+    data = json.dumps(body, ensure_ascii=False).encode("utf-8") if body is not None else None
     req = urllib.request.Request(url, data=data, method=method)
     req.add_header("apikey", api_key)
     req.add_header("Authorization", f"Bearer {api_key}")
@@ -341,7 +348,11 @@ def main() -> None:
 
     def patch_one(item: dict) -> tuple[int, bool]:
         eid = item["id"]
-        body = {"genre": item["genre"], "type": item["type"], "tags": item["tags"]}
+        body = {
+            "genre": item["genre"],
+            "type": item["type"],
+            "tags": json.dumps(item["tags"], ensure_ascii=False) if item["tags"] else None,
+        }
         path = f"/rest/v1/exhibitions?id=eq.{eid}"
         try:
             supabase_request("PATCH", path, base_url, api_key, body=body)

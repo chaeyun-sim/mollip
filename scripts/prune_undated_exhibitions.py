@@ -148,7 +148,7 @@ def main() -> None:
         title = r.get("title") or ""
         parsed = parse_from_text(desc) or parse_from_text(title)
         if parsed:
-            # 파싱된 end_date가 기준(2026.08.01) 이전이면 업데이트 대신 삭제
+            # 파싱된 end_date가 기준(2026.09.01) 이전이면 업데이트 대신 삭제
             if not end_date_eligible(parsed[1]):
                 to_delete.append(r["id"])
             else:

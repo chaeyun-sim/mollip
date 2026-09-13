@@ -9,7 +9,7 @@ import sys
 import urllib.parse
 import urllib.request
 
-from exhibition_sync_filters import END_DATE_MIN, end_date_eligible, venue_sync_allowed
+from exhibition_sync_filters import END_DATE_MIN, clean_exhibition_text, end_date_eligible, venue_sync_allowed
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ENV = os.path.join(REPO, ".env")
@@ -57,7 +57,7 @@ def fetch_exhibitions(api_key: str) -> list[dict]:
         for b in items:
             if tag(b, "GENRE") != "전시":
                 continue
-            title = tag(b, "TITLE")
+            title = clean_exhibition_text(tag(b, "TITLE"))
             m = DATE_RANGE.match(tag(b, "PERIOD"))
             if not title or not m:
                 continue

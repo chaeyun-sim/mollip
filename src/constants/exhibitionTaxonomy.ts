@@ -56,9 +56,13 @@ export const EXHIBITION_TYPE_RULES: { type: string; keywords: string[] }[] = [
 
 export const EXHIBITION_TYPE_VALUES = new Set(EXHIBITION_TYPE_RULES.map((r) => r.type));
 
-/** DB tags — 관람·편의 키워드만 (genre/type 값은 넣지 않음). 키즈는 태그로 쓰지 않음 */
+/** DB tags — 관람·편의·대상 키워드만 (genre/type 값은 넣지 않음) */
 export const THEME_TAG_RULES: { tag: string; keywords: string[] }[] = [
 	{ tag: '무료', keywords: ['무료 관람', '무료입장', '관람료 무료'] },
+	{
+		tag: '어린이',
+		keywords: ['어린이', '키즈', 'kids', '유아', '초등', '가족체험', '어린이 전시'],
+	},
 ];
 
 /** genre 컬럼에 들어가면 안 되는 값 (전시 상태·플레이스홀더) */

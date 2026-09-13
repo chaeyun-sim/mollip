@@ -10,8 +10,7 @@ import {
 	type MuseumJoinRow,
 } from '@/src/utils/exhibitionMapper';
 import type { Exhibition } from '@/src/data/exhibitions';
-
-type Status = 'idle' | 'loading' | 'success' | 'error';
+import type { AsyncStatus } from '@/src/types/asyncStatus.types';
 
 type ExhibitionDetailRow = ExhibitionRow & {
 	museums: MuseumJoinRow | MuseumJoinRow[] | null;
@@ -25,7 +24,7 @@ function normalizeMuseumJoin(raw: ExhibitionDetailRow['museums']): MuseumJoinRow
 // exhibitions.id(정수)로 상세 조회 — source(kcisa/culture/manual)와 무관.
 export function useExhibitionDetail(id: string | undefined) {
 	const [exhibition, setExhibition] = useState<Exhibition | null>(null);
-	const [status, setStatus] = useState<Status>('idle');
+	const [status, setStatus] = useState<AsyncStatus>('idle');
 
 	useEffect(() => {
 		if (!id) return;
@@ -57,6 +56,7 @@ export function useExhibitionDetail(id: string | undefined) {
 					fetchArtworks ? fetchArtworksForExhibition(mapped.artist) : Promise.resolve([]),
 					findRelatedExhibitions({
 						excludeId: mapped.id,
+						excludeTitle: mapped.title,
 						venue: row.venue_name_fallback,
 						venueDisplay: mapped.venue,
 						artist: mapped.artist,

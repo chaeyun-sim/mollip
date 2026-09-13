@@ -57,6 +57,20 @@ export function todayExhibitionDateString(base: Date = new Date()): string {
 	return `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')}`;
 }
 
+/** 동기화 하한 — 마감일이 2026년 9월(포함) 이후인 전시만 적재 */
+export const EXHIBITION_END_DATE_MIN = '2026.09.01';
+
+export function isExhibitionEndDateEligible(endDate: string): boolean {
+	return isValidExhibitionDateString(endDate) && endDate >= EXHIBITION_END_DATE_MIN;
+}
+
+/** 대관 공고·모집 제외. 대관람·대관 공간의 실제 전시는 통과 */
+const RENTAL_NOTICE_TITLE_RE = /대관\s*(공고|모집|안내|신청|접수|요강)|정기\s*대관/;
+
+export function isExhibitionListingTitle(title: string): boolean {
+	return Boolean(title.trim()) && !RENTAL_NOTICE_TITLE_RE.test(title);
+}
+
 export function isExhibitionEnded(ex: Exhibition, base: Date = new Date()): boolean {
 	return getExhibitionStatus(ex, base) === 'ended';
 }

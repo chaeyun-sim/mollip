@@ -7,7 +7,7 @@ import {
 	THEME_TAG_RULES,
 } from '@/src/constants/exhibitionTaxonomy';
 
-const KIDS_TAG = '키즈';
+const KIDS_TAG = '어린이';
 
 function normalizeText(...parts: (string | null | undefined)[]): string {
 	return parts.filter(Boolean).join(' ').toLowerCase().replace(/\s+/g, ' ');
@@ -81,10 +81,9 @@ export function inferGenreAndTags(input: {
 
 	const primaryGenre = pickPrimaryGenre(genreCandidates);
 	const exhibitionType = pickExhibitionType(typeMatches);
-	const tagsRaw = [...new Set(themeTags)]
+	const tags = [...new Set(themeTags)]
 		.filter((t) => !EXHIBITION_TYPE_VALUES.has(t) && !ART_GENRE_VALUES.has(t))
 		.sort();
-	const tags = tagsRaw.includes(KIDS_TAG) ? [] : tagsRaw;
 
 	return { genre: primaryGenre, type: exhibitionType, tags };
 }
@@ -96,9 +95,7 @@ export function displayGenre(genre: string | null | undefined): string | null {
 }
 
 export function sanitizeExhibitionTags(tags: string[] | undefined): string[] {
-	const cleaned = (tags ?? []).filter(
-		(t) => !EXHIBITION_TYPE_VALUES.has(t) && !ART_GENRE_VALUES.has(t),
-	);
-	if (cleaned.includes(KIDS_TAG)) return [];
-	return cleaned;
+	return (tags ?? [])
+		.map((t) => (t === '키즈' ? KIDS_TAG : t))
+		.filter((t) => !EXHIBITION_TYPE_VALUES.has(t) && !ART_GENRE_VALUES.has(t));
 }

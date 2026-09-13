@@ -1,14 +1,15 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import type { RecommendableItem } from '@/src/components/explore/RecommendedExhibitions';
+import type { RecommendableItem } from '@/src/components/explore/RecommendableItem.types';
 import { getExhibitionStatus, todayExhibitionDateString } from '@/src/utils/exhibitionSearch';
 import { supabase } from '@/src/utils/supabase';
+import { AsyncStatus } from '../types/asyncStatus.types';
 
 const PAGE_SIZE = 20;
 
 export interface UseAllExhibitionsResult {
 	items: RecommendableItem[];
-	status: 'idle' | 'loading' | 'error' | 'success';
+	status: AsyncStatus;
 	isLoadingMore: boolean;
 	hasMore: boolean;
 	loadMore: () => void;
@@ -17,7 +18,7 @@ export interface UseAllExhibitionsResult {
 
 export function useAllExhibitions(): UseAllExhibitionsResult {
 	const [items, setItems] = useState<RecommendableItem[]>([]);
-	const [status, setStatus] = useState<'idle' | 'loading' | 'error' | 'success'>('idle');
+	const [status, setStatus] = useState<AsyncStatus>('idle');
 	const [isLoadingMore, setIsLoadingMore] = useState(false);
 	const [hasMore, setHasMore] = useState(true);
 	const pageRef = useRef(0);

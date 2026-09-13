@@ -98,7 +98,7 @@ export function mapExhibitionRowToExhibition(
 		id: String(row.id),
 		source: row.source,
 		museumId: row.museum_id,
-		title: row.title,
+		title: row.title ? stripHtml(row.title) : '',
 		description: row.description ? stripHtml(row.description) : '',
 		genre: displayGenre(row.genre) ?? '',
 		exhibitionType: row.type?.trim() || undefined,

@@ -1,4 +1,5 @@
 import type { Exhibition } from '@/src/data/exhibitions';
+import { stripHtml } from '@/src/utils/stripHtml';
 
 export function formatDate(raw: string): string {
 	if (raw.length !== 8) return raw;
@@ -29,7 +30,7 @@ export function mapCultureItemToExhibition(item: {
 	const latitude = parseCoordinate(item.gpsY);
 	return {
 		id: item.seq,
-		title: item.title,
+		title: stripHtml(item.title),
 		venue: item.place,
 		venueAddress: item.placeAddr || undefined,
 		startDate: formatDate(item.startDate),

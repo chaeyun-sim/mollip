@@ -11,9 +11,13 @@ import {
 	todayExhibitionDateString,
 	applyExhibitionDateFilters,
 } from '@/src/utils/exhibitionSearch';
+import { normalizeExhibitionTitle } from '@/src/utils/stripHtml';
 
 interface FindRelatedParams {
 	excludeId: string;
+	// 문화포털 seq와 exhibitions.id는 서로 다른 ID 체계라 excludeId만으로는
+	// 동기화된 동일 전시(다른 내부 id)를 걸러내지 못한다 — 제목으로 한 번 더 걸러낸다.
+	excludeTitle?: string;
 	venue?: string;
 	venueDisplay?: string;
 	artist?: string;
@@ -220,8 +224,15 @@ async function findFromCultureArea({
 	}
 }
 
-function mergeScored(target: Map<string, ScoredExhibition>, candidates: ScoredExhibition[]): void {
+function mergeScored(
+	target: Map<string, ScoredExhibition>,
+	candidates: ScoredExhibition[],
+	excludeTitleKey?: string,
+): void {
 	for (const candidate of candidates) {
+		if (excludeTitleKey && normalizeExhibitionTitle(candidate.exhibition.title) === excludeTitleKey) {
+			continue;
+		}
 		const existing = target.get(candidate.exhibition.id);
 		if (!existing || existing.score < candidate.score) {
 			target.set(candidate.exhibition.id, candidate);
@@ -243,17 +254,21 @@ async function ensureMinimumRelated(
 ): Promise<void> {
 	if (merged.size >= MIN_RELATED) return;
 
+	const excludeTitleKey = params.excludeTitle
+		? normalizeExhibitionTitle(params.excludeTitle)
+		: undefined;
+
 	const [byLocation, byTags2] = await Promise.all([
 		findBySameLocation(params),
 		findBySharedTags(params.excludeId, params.tags, 2),
 	]);
-	mergeScored(merged, byLocation);
-	mergeScored(merged, byTags2);
+	mergeScored(merged, byLocation, excludeTitleKey);
+	mergeScored(merged, byTags2, excludeTitleKey);
 
 	if (merged.size >= MIN_RELATED) return;
 
 	const byTags1 = await findBySharedTags(params.excludeId, params.tags, 1);
-	mergeScored(merged, byTags1);
+	mergeScored(merged, byTags1, excludeTitleKey);
 
 	if (merged.size >= MIN_RELATED) return;
 
@@ -269,6 +284,7 @@ async function ensureMinimumRelated(
 	for (const row of (recent ?? []) as ExhibitionRow[]) {
 		if (merged.size >= MIN_RELATED) break;
 		const exhibition = mapExhibitionRowToExhibition(row);
+		if (excludeTitleKey && normalizeExhibitionTitle(exhibition.title) === excludeTitleKey) continue;
 		if (!isExhibitionListed(exhibition) || merged.has(exhibition.id)) continue;
 		merged.set(exhibition.id, { exhibition, score: 1 });
 	}
@@ -277,13 +293,16 @@ async function ensureMinimumRelated(
 export async function findRelatedExhibitions(params: FindRelatedParams): Promise<Exhibition[]> {
 	const targetLimit = params.limit ?? RELATED_LIMIT;
 	const merged = new Map<string, ScoredExhibition>();
+	const excludeTitleKey = params.excludeTitle
+		? normalizeExhibitionTitle(params.excludeTitle)
+		: undefined;
 
 	const [kcisaResults, areaResults] = await Promise.all([
 		findFromKcisa(params),
 		findFromCultureArea(params),
 	]);
-	mergeScored(merged, kcisaResults);
-	mergeScored(merged, areaResults);
+	mergeScored(merged, kcisaResults, excludeTitleKey);
+	mergeScored(merged, areaResults, excludeTitleKey);
 
 	await ensureMinimumRelated(params, merged);
 

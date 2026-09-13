@@ -1,3 +1,5 @@
+import { fetchWikiJson } from '@/src/utils/wikiFetch';
+
 export interface WikiArtwork {
 	qId: string;
 	label: string;
@@ -40,10 +42,8 @@ async function searchEntities(query: string): Promise<string[]> {
 		format: 'json',
 		origin: '*',
 	});
-	const res = await fetch(`${SEARCH_URL}?${params}`);
-	if (!res.ok) throw new Error(`wbsearchentities ${res.status}`);
-	const json = await res.json();
-	return (json.search ?? []).map((r: { id: string }) => r.id);
+	const json = await fetchWikiJson<{ search?: { id: string }[] }>(`${SEARCH_URL}?${params}`);
+	return (json.search ?? []).map((r) => r.id);
 }
 
 async function fetchEntities(ids: string[]): Promise<EntityMap> {
@@ -56,9 +56,7 @@ async function fetchEntities(ids: string[]): Promise<EntityMap> {
 		format: 'json',
 		origin: '*',
 	});
-	const res = await fetch(`${SEARCH_URL}?${params}`);
-	if (!res.ok) throw new Error(`wbgetentities ${res.status}`);
-	const json = await res.json();
+	const json = await fetchWikiJson<{ entities?: EntityMap }>(`${SEARCH_URL}?${params}`);
 	return json.entities ?? {};
 }
 
@@ -123,6 +121,14 @@ function parseArtwork(id: string, e: EntityMap[string]): RawArtwork | null {
 	// P170 (creator) — 별도 배치로 조회해 이름을 붙인다 (searchWikiArtworks 참고)
 	const creatorId: string | undefined = e.claims?.P170?.[0]?.mainsnak?.datavalue?.value?.id;
 	return { qId: id, label, description, imageUrl, year, creatorId };
+}
+
+/** 위키데이터 Qid가 시각 미술 작품인지 — 위키 썸네일 채택 전에 오매칭을 거른다 */
+export async function isWikidataVisualArtwork(qId: string): Promise<boolean> {
+	if (!qId.startsWith('Q')) return false;
+	const entities = await fetchEntities([qId]);
+	const claims = entities[qId]?.claims;
+	return claims ? isArtwork(claims) : false;
 }
 
 export async function searchWikiArtworks(query: string): Promise<WikiArtwork[]> {

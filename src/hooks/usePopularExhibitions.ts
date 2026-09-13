@@ -13,8 +13,7 @@ import {
 	POPULAR_SECTION_SIZE,
 	type PopularEntry,
 } from '@/src/utils/popularExhibitions';
-
-type Status = 'idle' | 'loading' | 'success' | 'error';
+import type { AsyncStatus } from '@/src/types/asyncStatus.types';
 
 /**
  * 북마크 수 + 조회수 기반 인기 전시 목록.
@@ -24,7 +23,7 @@ type Status = 'idle' | 'loading' | 'success' | 'error';
 export function usePopularExhibitions(excludeIds: string[] = []) {
 	const [entries, setEntries] = useState<PopularEntry[]>([]);
 	const [displayById, setDisplayById] = useState<Map<string, ExhibitionSummary>>(new Map());
-	const [status, setStatus] = useState<Status>('loading');
+	const [status, setStatus] = useState<AsyncStatus>('loading');
 
 	const excludeKey = excludeIds.join(',');
 

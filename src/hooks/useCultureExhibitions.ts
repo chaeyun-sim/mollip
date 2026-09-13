@@ -5,12 +5,16 @@ import { supabase } from '@/src/utils/supabase';
 import {
 	applyExhibitionDateFilters,
 	getExhibitionStatus,
+	isExhibitionEndDateEligible,
+	isExhibitionListingTitle,
 	isValidExhibitionDateString,
 	todayExhibitionDateString,
 	type ExhibitionStatus,
 } from '@/src/utils/exhibitionSearch';
 import { formatDate } from '@/src/utils/cultureExhibitionMapper';
+import { normalizeExhibitionTitle, stripHtml } from '@/src/utils/stripHtml';
 import { isStale, markSynced } from '@/src/utils/syncCache';
+import type { AsyncStatus } from '@/src/types/asyncStatus.types';
 
 export interface CultureExhibitionItem {
 	id: string;
@@ -22,14 +26,10 @@ export interface CultureExhibitionItem {
 	status: ExhibitionStatus;
 }
 
-type Status = 'idle' | 'loading' | 'success' | 'error';
-
 // 홈 UI에 쓸 진행 중 전시 수
 const RECOMMENDED_COUNT = 5;
-// Supabase에 넣을 culture 전시 풀 (period2에서 전시만 모아 저장)
-const CULTURE_SYNC_STORE_SIZE = 300;
 /** data_sync_meta key — 바꾸면 다음 앱 실행 시 재동기화 */
-const CULTURE_SYNC_SOURCE = 'culture_period_v2';
+const CULTURE_SYNC_SOURCE = 'culture_period_v3';
 
 function isOngoing(startDate: string, endDate: string, today: string): boolean {
 	return startDate <= today && today <= endDate;
@@ -44,11 +44,10 @@ interface ExhibitionCultureRow {
 	image_url: string | null;
 }
 
-// exhibitions(source='culture'): 24h마다 period2 전시 목록으로 Supabase 캐시 갱신
-// id가 자동증가 정수라 upsert 대신 source='culture' 행을 통째로 갈아끼운다.
+// exhibitions(source='culture'): 24h마다 period2에서 없는 제목만 추가. 기존 행은 유지.
 async function syncCultureExhibitionsIfStale(): Promise<void> {
 	if (!(await isStale(CULTURE_SYNC_SOURCE))) return;
-	const res = await getCultureExhibitionList(CULTURE_SYNC_STORE_SIZE);
+	const res = await getCultureExhibitionList();
 	const items = res.body.items
 		.map(({ item }) => item)
 		.filter((item) => item.startDate?.length === 8 && item.endDate?.length === 8);
@@ -57,18 +56,25 @@ async function syncCultureExhibitionsIfStale(): Promise<void> {
 		.map((item) => {
 			const start_date = formatDate(item.startDate);
 			const end_date = formatDate(item.endDate);
-			if (!isValidExhibitionDateString(start_date) || !isValidExhibitionDateString(end_date)) {
+			if (
+				!isValidExhibitionDateString(start_date) ||
+				!isExhibitionEndDateEligible(end_date)
+			) {
+				return null;
+			}
+			const title = stripHtml(item.title);
+			if (!isExhibitionListingTitle(title)) {
 				return null;
 			}
 			const { genre, type, tags } = inferGenreAndTags({
-				title: item.title,
+				title,
 				description: item.place,
 				legacyGenre: item.realmName,
 			});
 			return {
 				source: 'culture' as const,
 				venue_name_fallback: item.place || '장소 정보 없음',
-				title: item.title,
+				title,
 				start_date,
 				end_date,
 				genre,
@@ -79,12 +85,23 @@ async function syncCultureExhibitionsIfStale(): Promise<void> {
 			};
 		})
 		.filter((row): row is NonNullable<typeof row> => row != null);
-	const { error: deleteError } = await supabase
-		.from('exhibitions')
-		.delete()
-		.eq('source', 'culture');
-	if (deleteError) throw deleteError;
-	const { error: insertError } = await supabase.from('exhibitions').upsert(rows, {
+	const { data: existing } = await supabase.from('exhibitions').select('title');
+	const taken = new Set(
+		(existing ?? []).map((row) => normalizeExhibitionTitle((row as { title?: string }).title ?? '')),
+	);
+	const deduped: typeof rows = [];
+	const seenTitles = new Set<string>();
+	for (const row of rows) {
+		const key = normalizeExhibitionTitle(row.title);
+		if (!key || taken.has(key) || seenTitles.has(key)) continue;
+		seenTitles.add(key);
+		deduped.push(row);
+	}
+	if (deduped.length === 0) {
+		await markSynced(CULTURE_SYNC_SOURCE);
+		return;
+	}
+	const { error: insertError } = await supabase.from('exhibitions').upsert(deduped, {
 		onConflict: 'title,start_date,end_date',
 		ignoreDuplicates: true,
 	});
@@ -96,7 +113,7 @@ let _cachedItems: CultureExhibitionItem[] | null = null;
 
 export function useCultureExhibitions() {
 	const [items, setItems] = useState<CultureExhibitionItem[]>(_cachedItems ?? []);
-	const [status, setStatus] = useState<Status>(_cachedItems ? 'success' : 'idle');
+	const [status, setStatus] = useState<AsyncStatus>(_cachedItems ? 'success' : 'idle');
 
 	const fetchExhibitions = useCallback(async () => {
 		if (_cachedItems) {
@@ -116,7 +133,7 @@ export function useCultureExhibitions() {
 					.from('exhibitions')
 					.select('id, title, start_date, end_date, venue_name_fallback, image_url')
 					.eq('source', 'culture')
-					.limit(CULTURE_SYNC_STORE_SIZE),
+					.gte('end_date', todayExhibitionDateString()),
 			);
 			if (error) throw error;
 
@@ -131,7 +148,7 @@ export function useCultureExhibitions() {
 				.slice(0, RECOMMENDED_COUNT)
 				.map((item) => ({
 					id: String(item.id),
-					title: item.title,
+					title: stripHtml(item.title),
 					venue: item.venue_name_fallback,
 					startDate: item.start_date,
 					endDate: item.end_date,

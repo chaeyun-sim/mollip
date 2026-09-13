@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 
-import type { RecommendableItem } from '@/src/components/explore/RecommendedExhibitions';
+import type { RecommendableItem } from '@/src/components/explore/RecommendableItem.types';
 import { getExhibitionStatus, todayExhibitionDateString } from '@/src/utils/exhibitionSearch';
 import { supabase } from '@/src/utils/supabase';
 
@@ -58,6 +58,30 @@ function scoreExhibition(
 	return score;
 }
 
+function buildExhibitionQuery(preferredGenres: string[]) {
+	let query = supabase
+		.from('exhibitions')
+		.select('id, title, venue_name_fallback, image_url, genre, tags, synced_at, start_date, end_date')
+		.gte('end_date', todayExhibitionDateString())
+		.order('synced_at', { ascending: false })
+		.limit(FETCH_LIMIT);
+
+	if (preferredGenres.length > 0) {
+		query = query.in('genre', preferredGenres);
+	}
+
+	return query;
+}
+
+async function fetchExhibitionRows(preferredGenres: string[]): Promise<ExhibitionRow[]> {
+	const { data, error } = await buildExhibitionQuery(preferredGenres);
+	if (error) {
+		console.error('[useRecommendedExhibitions] fetch failed:', error.message);
+		return [];
+	}
+	return (data ?? []) as ExhibitionRow[];
+}
+
 function toRecommendableItem(row: ExhibitionRow): RecommendableItem {
 	return {
 		id: String(row.id),
@@ -82,25 +106,23 @@ export function useRecommendedExhibitions(
 	const isPersonalized = preferredGenres.length > 0 || preferredArtists.length > 0;
 
 	useEffect(() => {
-		let query = supabase
-			.from('exhibitions')
-			.select('id, title, venue_name_fallback, image_url, genre, tags, synced_at, start_date, end_date')
-			.gte('end_date', todayExhibitionDateString())
-			.order('synced_at', { ascending: false })
-			.limit(FETCH_LIMIT);
+		let cancelled = false;
 
-		// 선호 장르가 있으면 서버에서 사전 필터링 — 불필요한 행 전송 방지
-		if (preferredGenres.length > 0) {
-			query = query.in('genre', preferredGenres);
-		}
-
-		query.then(({ data, error }) => {
-			if (error) {
-				console.error('[useRecommendedExhibitions] fetch failed:', error.message);
+		async function load() {
+			const filtered = await fetchExhibitionRows(preferredGenres);
+			if (cancelled) return;
+			if (preferredGenres.length > 0 && filtered.length === 0) {
+				const fallback = await fetchExhibitionRows([]);
+				if (!cancelled) setRows(fallback);
 				return;
 			}
-			if (data) setRows(data as ExhibitionRow[]);
-		});
+			setRows(filtered);
+		}
+
+		void load();
+		return () => {
+			cancelled = true;
+		};
 	}, [preferredGenres]);
 
 	const items = useMemo((): RecommendableItem[] => {

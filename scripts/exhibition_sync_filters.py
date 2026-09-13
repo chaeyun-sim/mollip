@@ -1,10 +1,11 @@
 """Shared filters for exhibition sync scripts (culture, kcisa_moca, sac)."""
 from __future__ import annotations
 
+import html
 import re
 
-# 2026-08-01(서비스 기준) 이전에 종료한 전시는 적재하지 않음. end_date >= 이 값만.
-END_DATE_MIN = "2026.08.01"
+# 2026-09-01(9월 포함) 이전에 종료한 전시는 적재하지 않음. end_date >= 이 값만.
+END_DATE_MIN = "2026.09.01"
 
 VENUE_EXACT_BLOCKLIST: frozenset[str] = frozenset(
     {
@@ -29,9 +30,24 @@ _VENUE_TITLE_PATTERN = re.compile(
     re.IGNORECASE,
 )
 
+# 대관 공고·모집 (대관람, 대관 공간의 실제 전시는 제외)
+_TITLE_BLOCK_PATTERN = re.compile(
+    r"대관\s*(공고|모집|안내|신청|접수|요강)|정기\s*대관",
+)
+
 
 def _normalize(text: str) -> str:
     return re.sub(r"\s+", "", text or "").strip()
+
+
+def clean_exhibition_text(text: str) -> str:
+    """&amp;middot; → ·, &amp;lt;제목&amp;gt; → <제목> 처럼 이중 인코딩 엔티티를 푼다."""
+    cleaned = html.unescape(html.unescape(text or ""))
+    return re.sub(r"\s+", " ", cleaned).strip()
+
+
+def title_key(title: str) -> str:
+    return _normalize(clean_exhibition_text(title))
 
 
 VENUE_EXACT_NORM: frozenset[str] = frozenset(_normalize(v) for v in VENUE_EXACT_BLOCKLIST)
@@ -54,5 +70,7 @@ def venue_sync_allowed(venue: str, title: str = "") -> bool:
         if _normalize(needle) in hay_norm:
             return False
     if _VENUE_TITLE_PATTERN.search(hay):
+        return False
+    if _TITLE_BLOCK_PATTERN.search(title) or _TITLE_BLOCK_PATTERN.search(venue):
         return False
     return True

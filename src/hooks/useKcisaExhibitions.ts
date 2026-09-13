@@ -6,6 +6,7 @@ import {
 	todayExhibitionDateString,
 	type ExhibitionStatus,
 } from '@/src/utils/exhibitionSearch';
+import type { AsyncStatus } from '@/src/types/asyncStatus.types';
 
 export interface KcisaExhibitionItem {
 	id: string;
@@ -15,15 +16,13 @@ export interface KcisaExhibitionItem {
 	status: ExhibitionStatus;
 }
 
-type Status = 'idle' | 'loading' | 'success' | 'error';
-
 const LIST_LIMIT = 10;
 
 let _cachedItems: KcisaExhibitionItem[] | null = null;
 
 export function useKcisaExhibitions() {
 	const [items, setItems] = useState<KcisaExhibitionItem[]>(_cachedItems ?? []);
-	const [status, setStatus] = useState<Status>(_cachedItems ? 'success' : 'idle');
+	const [status, setStatus] = useState<AsyncStatus>(_cachedItems ? 'success' : 'idle');
 
 	const fetchExhibitions = useCallback(async () => {
 		if (_cachedItems) {

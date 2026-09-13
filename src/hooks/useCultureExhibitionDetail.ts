@@ -6,8 +6,7 @@ import { fetchArtworksForExhibition } from '@/src/utils/fetchArtworksForExhibiti
 import { findRelatedExhibitions } from '@/src/utils/findRelatedExhibitions';
 import { mapCultureItemToExhibition } from '@/src/utils/cultureExhibitionMapper';
 import type { Exhibition } from '@/src/data/exhibitions';
-
-type Status = 'idle' | 'loading' | 'success' | 'error';
+import type { AsyncStatus } from '@/src/types/asyncStatus.types';
 
 // 문화포털 detail2는 설명(contents1)이 거의 항상 비어있다. exhibitions(source='kcisa')에
 // 제목이 유사한 국공립 전시가 있으면 그 설명만 가져와 채운다 (best-effort, 못 찾아도 무해함).
@@ -28,7 +27,7 @@ async function findDescriptionFromKcisa(title: string): Promise<string | null> {
 
 export function useCultureExhibitionDetail(seq: string | undefined) {
 	const [exhibition, setExhibition] = useState<Exhibition | null>(null);
-	const [status, setStatus] = useState<Status>('idle');
+	const [status, setStatus] = useState<AsyncStatus>('idle');
 
 	useEffect(() => {
 		if (!seq) return;
@@ -53,6 +52,7 @@ export function useCultureExhibitionDetail(seq: string | undefined) {
 					fetchArtworksForExhibition(mapped.artist),
 					findRelatedExhibitions({
 						excludeId: mapped.id,
+						excludeTitle: mapped.title,
 						venue: mapped.venue,
 						venueDisplay: mapped.venue,
 						artist: mapped.artist,

@@ -11,8 +11,7 @@ import {
 	todayExhibitionDateString,
 } from '@/src/utils/exhibitionSearch';
 import type { Exhibition } from '@/src/data/exhibitions';
-
-type Status = 'idle' | 'loading' | 'success' | 'error';
+import type { AsyncStatus } from '@/src/types/asyncStatus.types';
 
 function escapeIlike(value: string): string {
 	return value.replace(/[%_]/g, (c) => `\\${c}`);
@@ -53,7 +52,7 @@ function isSameVenue(a: string, b: string): boolean {
 // 채워 넣으면 여기서 함께 잡힌다 (kcisa/manual 구분 없이 같은 테이블, 같은 쿼리).
 export function useVenueExhibitions(venueName: string | null, museumId?: number | null) {
 	const [exhibitions, setExhibitions] = useState<Exhibition[]>([]);
-	const [status, setStatus] = useState<Status>('idle');
+	const [status, setStatus] = useState<AsyncStatus>('idle');
 
 	useEffect(() => {
 		if (!venueName && museumId == null) {
