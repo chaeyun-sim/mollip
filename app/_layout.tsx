@@ -14,21 +14,21 @@ import {
 	Hahmlet_700Bold,
 } from '@expo-google-fonts/hahmlet';
 import { NanumPenScript_400Regular } from '@expo-google-fonts/nanum-pen-script';
+import { Asset } from 'expo-asset';
 import { useFonts } from 'expo-font';
 import { useRouter, Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useImmersiveStore } from '../src/store/immersiveStore';
-import { useHistoryStore } from '../src/store/historyStore';
 import { AuthProvider } from '../src/providers/AuthProvider';
 import { useAuthStore } from '../src/store/authStore';
-import { usePushNotifications } from '../src/hooks/usePushNotifications';
+// import { usePushNotifications } from '../src/hooks/usePushNotifications';
 import { useBookmarkSync } from '../src/hooks/useBookmarkSync';
 import { useHistorySync } from '../src/hooks/useHistorySync';
 import { useVisitSync } from '../src/hooks/useVisitSync';
 import { useBookmarkAudioSync } from '../src/hooks/useBookmarkAudioSync';
-import * as Notifications from 'expo-notifications';
+// import * as Notifications from 'expo-notifications';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -55,7 +55,7 @@ export default function RootLayout() {
 	const authLoading = useAuthStore((s) => s.isLoading);
 	const user = useAuthStore((s) => s.user);
 	const onboardingCompleted = useAuthStore((s) => s.onboardingCompleted);
-	usePushNotifications(user?.id); // 네이티브 빌드 후 활성화
+	// usePushNotifications(user?.id); // 네이티브 빌드 후 활성화
 	useBookmarkSync(); // 로그인 시 Supabase 북마크 동기화
 	useHistorySync(); // 로그인 시 Supabase 오디오 가이드 히스토리 동기화
 	useVisitSync(); // 로그인 시 Supabase 관람 기록 동기화
@@ -65,29 +65,31 @@ export default function RootLayout() {
 	const router = useRouter();
 
 	// 알림 탭 딥링크 처리
-	useEffect(() => {
-		let sub: ReturnType<typeof Notifications.addNotificationResponseReceivedListener>;
-		try {
-			sub = Notifications.addNotificationResponseReceivedListener((response) => {
-				const data = response.notification.request.content.data as Record<string, unknown>;
-				const id = data?.exhibitionId;
-				if (typeof id === 'string' && id) {
-					router.push(`/(explore)/${id}`);
-				} else {
-					router.push('/(tabs)/');
-				}
-			});
-		} catch {
-			// 네이티브 모듈 미빌드 환경에서 무시
-		}
-		return () => sub?.remove();
-	}, [router]);
+	// useEffect(() => {
+	// 	let sub: ReturnType<typeof Notifications.addNotificationResponseReceivedListener>;
+	// 	try {
+	// 		sub = Notifications.addNotificationResponseReceivedListener((response) => {
+	// 			const data = response.notification.request.content.data as Record<string, unknown>;
+	// 			const id = data?.exhibitionId;
+	// 			if (typeof id === 'string' && id) {
+	// 				router.push(`/(explore)/${id}`);
+	// 			} else {
+	// 				router.push('/(tabs)/');
+	// 			}
+	// 		});
+	// 	} catch {
+	// 		// 네이티브 모듈 미빌드 환경에서 무시
+	// 	}
+	// 	return () => sub?.remove();
+	// }, [router]);
 
-	// wikidataImage.ts가 작가명 검증 없이 매칭하던 시절 저장된 오매칭 이미지 정리 (1회성)
+	// 지도 탭 마커 이미지를 앱 시작 시점에 미리 캐싱 — 미리 로드하지 않으면 지도 진입 직후
+	// 첫 마커가 잠깐 네이버 지도 SDK 기본(초록) 핀으로 보였다가 커스텀 이미지로 바뀐다.
 	useEffect(() => {
-		if (!hasHydrated) return;
-		useHistoryStore.getState().clearUntrustedWikiImages();
-	}, [hasHydrated]);
+		Asset.fromModule(require('../assets/images/skulpture/marker-badge.png'))
+			.downloadAsync()
+			.catch(() => {});
+	}, []);
 
 	useEffect(() => {
 		if (!fontsLoaded || !hasHydrated || authLoading) return;
@@ -105,6 +107,9 @@ export default function RootLayout() {
 			router.push('/(guide)/playlist');
 		}
 		SplashScreen.hideAsync();
+		// 부트스트랩 시점에만 분기한다. isImmersive/router를 deps에 넣으면
+		// 이후 몰입 모드 진입마다 루트에서 playlist로 다시 push된다.
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [fontsLoaded, hasHydrated, authLoading, user, onboardingCompleted]);
 
 	if (!fontsLoaded) return null;

@@ -1,5 +1,5 @@
 import { useRouter } from 'expo-router';
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import {
 	Keyboard,
 	Pressable,
@@ -10,12 +10,13 @@ import {
 	TouchableWithoutFeedback,
 	View,
 } from 'react-native';
-import { Screen } from '../../src/components/layout/Screen';
 import * as Haptics from 'expo-haptics';
-import { updateStore } from '../../src/store';
+
+import { TextField } from '@/src/components/common/TextField';
+import { Screen } from '../../src/components/layout/Screen';
 import { ScreenHeader } from '../../src/components/layout/ScreenHeader';
-import { cn } from '@/src/lib/cn';
-import { colors } from '@/src/constants/colors';
+import { useTextFieldError } from '@/src/hooks/useTextField';
+import { updateStore } from '../../src/store';
 
 export default function ManualScreen() {
 	const router = useRouter();
@@ -26,8 +27,8 @@ export default function ManualScreen() {
 	const artistInputRef = useRef<TextInput>(null);
 	const yearInputRef = useRef<TextInput>(null);
 	const captionInputRef = useRef<TextInput>(null);
-	const [titleError, setTitleError] = useState(false);
-	const [artistError, setArtistError] = useState(false);
+	const titleField = useTextFieldError();
+	const artistField = useTextFieldError();
 
 	const buildManualStorePatch = (title: string, artist: string) => {
 		const year = yearRef.current.trim();
@@ -44,8 +45,8 @@ export default function ManualScreen() {
 	const handleSubmit = () => {
 		const titleMissing = !titleRef.current.trim();
 		const artistMissing = !artistRef.current.trim();
-		setTitleError(titleMissing);
-		setArtistError(artistMissing);
+		titleField.setError(titleMissing);
+		artistField.setError(artistMissing);
 		if (titleMissing || artistMissing) return;
 		const title = titleRef.current.trim();
 		const artist = artistRef.current.trim();
@@ -61,8 +62,8 @@ export default function ManualScreen() {
 	const handleDirectChat = () => {
 		const titleMissing = !titleRef.current.trim();
 		const artistMissing = !artistRef.current.trim();
-		setTitleError(titleMissing);
-		setArtistError(artistMissing);
+		titleField.setError(titleMissing);
+		artistField.setError(artistMissing);
 		if (titleMissing || artistMissing) return;
 		const title = titleRef.current.trim();
 		const artist = artistRef.current.trim();
@@ -113,24 +114,19 @@ export default function ManualScreen() {
 								<Text className="text-xs mb-2 font-pretendard-semibold text-gray500 tracking-wider">
 									작품명
 								</Text>
-								<TextInput
-									className={cn(
-										'rounded-lg px-4 border text-base h-[52px] pt-0 pb-0 text-on-dark leading-none font-pretendard-regular bg-gray900',
-										titleError ? 'border-error' : 'border-divider-dark',
-									)}
-									textAlignVertical="center"
+								<TextField
+									tone="dark"
+									error={titleField.error}
 									placeholder="예) 별이 빛나는 밤"
-									placeholderTextColor={colors.gray700}
 									accessibilityLabel="작품명"
-									onChangeText={(t) => {
+									onChangeText={titleField.onChangeText((t) => {
 										titleRef.current = t;
-										if (titleError) setTitleError(false);
-									}}
+									})}
 									onSubmitEditing={() => artistInputRef.current?.focus()}
 									returnKeyType="next"
 									autoFocus
 								/>
-								{titleError && (
+								{titleField.error && (
 									<Text className="text-xs mt-1.5 font-pretendard-regular text-error">
 										작품명을 입력해 주세요
 									</Text>
@@ -141,24 +137,19 @@ export default function ManualScreen() {
 								<Text className="text-xs mb-2 font-pretendard-semibold text-gray500 tracking-wider">
 									작가명
 								</Text>
-								<TextInput
+								<TextField
 									ref={artistInputRef}
-									className={cn(
-										'rounded-lg px-4 border text-base bg-gray900 h-[52px] py-0 font-pretendard-regular text-on-dark',
-										artistError ? 'border-error' : 'border-divider-dark',
-									)}
+									tone="dark"
+									error={artistField.error}
 									placeholder="예) 빈센트 반 고흐"
-									placeholderTextColor={colors.gray700}
 									accessibilityLabel="작가명"
-									onChangeText={(t) => {
+									onChangeText={artistField.onChangeText((t) => {
 										artistRef.current = t;
-										if (artistError) setArtistError(false);
-									}}
+									})}
 									returnKeyType="next"
 									onSubmitEditing={() => yearInputRef.current?.focus()}
-									style={{ lineHeight: 0 }}
 								/>
-								{artistError && (
+								{artistField.error && (
 									<Text className="text-xs mt-1.5 font-pretendard-regular text-error">
 										작가명을 입력해 주세요
 									</Text>
@@ -172,11 +163,10 @@ export default function ManualScreen() {
 									</Text>
 									<Text className="text-xs font-pretendard-regular text-gray700">(선택)</Text>
 								</View>
-								<TextInput
+								<TextField
 									ref={yearInputRef}
-									className="rounded-lg px-4 border border-divider-dark text-base bg-gray900 h-[52px] py-0 font-pretendard-regular text-on-dark"
+									tone="dark"
 									placeholder="예) 1889"
-									placeholderTextColor={colors.gray700}
 									accessibilityLabel="제작 연도 (선택)"
 									onChangeText={(t) => {
 										yearRef.current = t;
@@ -184,7 +174,6 @@ export default function ManualScreen() {
 									returnKeyType="next"
 									onSubmitEditing={() => captionInputRef.current?.focus()}
 									keyboardType="number-pad"
-									style={{ lineHeight: 0 }}
 								/>
 							</View>
 
@@ -195,19 +184,16 @@ export default function ManualScreen() {
 									</Text>
 									<Text className="text-xs font-pretendard-regular text-gray700">(선택)</Text>
 								</View>
-								<TextInput
+								<TextField
 									ref={captionInputRef}
-									className="rounded-lg px-4 py-3 border border-divider-dark text-[15px] bg-gray900 font-pretendard-regular text-on-dark"
+									variant="area"
+									tone="dark"
 									placeholder="전시장 캡션이나 메모를 입력하면 더 정확하게 질문할 수 있어요"
-									placeholderTextColor={colors.gray700}
 									accessibilityLabel="캡션 또는 메모 (선택)"
 									onChangeText={(t) => {
 										captionRef.current = t;
 									}}
-									multiline
 									numberOfLines={3}
-									textAlignVertical="top"
-									style={{ minHeight: 80 }}
 								/>
 							</View>
 

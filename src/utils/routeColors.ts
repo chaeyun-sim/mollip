@@ -1,3 +1,4 @@
+import { colors } from '@/src/constants/colors';
 import type { RouteLeg } from '@/src/api/tmap';
 
 export const LEG_DEFAULT_COLOR: Record<RouteLeg['mode'], string> = {
@@ -121,9 +122,15 @@ function subwayColor(leg: RouteLeg): string {
 	return subwayColorFromName(leg.routeName);
 }
 
-// 경로 구간(도보/버스/지하철)의 표시 색상 — 지도 경로선과 경로 카드가 같은 색을 쓴다.
+// 경로 카드·타임라인용. 도보는 연한 석고색, 버스/지하철은 노선 공식색.
 export function legColor(leg: RouteLeg): string {
 	if (leg.mode === 'subway') return subwayColor(leg);
 	if (leg.mode === 'bus') return busColor(leg);
 	return LEG_DEFAULT_COLOR.walk;
+}
+
+// 지도 경로선·환승점용. 도보는 잉크색으로 덮어 지도 위에서 읽히게 하고,
+// 버스/지하철은 legColor와 같다.
+export function mapPathColor(leg: RouteLeg): string {
+	return leg.mode === 'walk' ? colors.gray900 : legColor(leg);
 }

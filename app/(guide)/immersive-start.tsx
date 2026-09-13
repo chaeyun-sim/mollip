@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { Keyboard, KeyboardAvoidingView, Platform, Pressable, Text, View } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { ImmersiveOverlay } from '@/src/components/explore';
+import { Button } from '@/src/components/common/Button';
 import { Screen } from '../../src/components/layout/Screen';
 import { ScreenHeader } from '../../src/components/layout/ScreenHeader';
 import {
@@ -13,7 +14,7 @@ import {
 import { VenueField } from '@/src/components/guide/VenueField';
 import { useArtistIntroStore } from '../../src/store/artistIntroStore';
 import { useImmersiveStore } from '../../src/store/immersiveStore';
-import { useVisitStore, todayKey } from '../../src/store/visitStore';
+import { useVisitStore } from '../../src/store/visitStore';
 import { supabase } from '../../src/utils/supabase';
 
 const GUIDE_NOTES = [
@@ -29,32 +30,35 @@ export default function ImmersiveStartScreen() {
 	const recordExhibition = useVisitStore((s) => s.recordExhibition);
 
 	const [titleText, setTitleText] = useState('');
-	const [searchQuery, setSearchQuery] = useState(''); // 사용자 직접 입력만 반영
 	const [venueText, setVenueText] = useState('');
 	const [titleError, setTitleError] = useState(false);
 	const [venueError, setVenueError] = useState(false);
 	const [suggestions, setSuggestions] = useState<ExhibitionSuggestion[]>([]);
 	const [isSearching, setIsSearching] = useState(false);
-	const [titleFocused, setTitleFocused] = useState(false);
-	const [venueFocused, setVenueFocused] = useState(false);
+	const [focusedField, setFocusedField] = useState<'title' | 'venue' | null>(null);
 
 	const [overlayVisible, setOverlayVisible] = useState(false);
 
 	const selectedIdRef = useRef<string | null>(null);
 	const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-	useEffect(() => {
-		if (searchQuery.trim().length < 2) {
+	// 사용자가 실제로 타이핑할 때만 호출 — suggestion 선택 시에는 호출하지 않아 재검색을 막는다.
+	const runSearch = useCallback((query: string) => {
+		if (debounceRef.current) clearTimeout(debounceRef.current);
+
+		const trimmed = query.trim();
+		if (trimmed.length < 2) {
 			setSuggestions([]);
+			setIsSearching(false);
 			return;
 		}
-		if (debounceRef.current) clearTimeout(debounceRef.current);
+
 		debounceRef.current = setTimeout(async () => {
 			setIsSearching(true);
 			const { data } = await supabase
 				.from('exhibitions')
 				.select('id, title, event_site, venue_name_fallback')
-				.ilike('title', `%${searchQuery.trim()}%`)
+				.ilike('title', `%${trimmed}%`)
 				.limit(5);
 			setSuggestions(
 				(data ?? []).map((row) => ({
@@ -65,23 +69,25 @@ export default function ImmersiveStartScreen() {
 			);
 			setIsSearching(false);
 		}, 300);
+	}, []);
+
+	useEffect(() => {
 		return () => {
 			if (debounceRef.current) clearTimeout(debounceRef.current);
 		};
-	}, [searchQuery]);
+	}, []);
 
 	const handleSelectSuggestion = useCallback(
 		(suggestion: ExhibitionSuggestion) => {
+			if (debounceRef.current) clearTimeout(debounceRef.current);
 			selectedIdRef.current = suggestion.id;
 			setTitleText(suggestion.title);
-			setSearchQuery(''); // 검색 트리거 리셋 — useEffect 재실행 방지
 			setVenueText(suggestion.venue);
 			setSuggestions([]);
-			setTitleFocused(false);
 			if (titleError) setTitleError(false);
 			if (venueError) setVenueError(false);
 			Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-			setVenueFocused(true);
+			setFocusedField('venue');
 		},
 		[titleError, venueError],
 	);
@@ -90,10 +96,10 @@ export default function ImmersiveStartScreen() {
 		(text: string) => {
 			selectedIdRef.current = null;
 			setTitleText(text);
-			setSearchQuery(text); // 사용자 타이핑만 검색 트리거
+			runSearch(text);
 			if (titleError) setTitleError(false);
 		},
-		[titleError],
+		[titleError, runSearch],
 	);
 
 	const handleSubmit = useCallback(() => {
@@ -109,7 +115,7 @@ export default function ImmersiveStartScreen() {
 		enterImmersive(exhibitionId, title);
 		// 작가 소개 인트로는 백그라운드로만 준비한다 — await하지 않으므로 시작 흐름이 지연되지 않는다.
 		prepareArtistIntro(exhibitionId, title);
-		recordExhibition(todayKey(), exhibitionId, { title, venue });
+		recordExhibition(new Date().toISOString().split('T')[0], exhibitionId, { title, venue });
 		Keyboard.dismiss();
 		Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
 
@@ -140,25 +146,22 @@ export default function ImmersiveStartScreen() {
 					<ExhibitionTitleField
 						value={titleText}
 						error={titleError}
-						focused={titleFocused}
+						focused={focusedField === 'title'}
 						isSearching={isSearching}
 						suggestions={suggestions}
-						onFocus={() => setTitleFocused(true)}
-						onBlur={() => setTitleFocused(false)}
+						onFocus={() => setFocusedField('title')}
+						onBlur={() => setFocusedField((f) => (f === 'title' ? null : f))}
 						onChangeText={handleTitleChange}
-						onSubmitEditing={() => {
-							setTitleFocused(false);
-							setVenueFocused(true);
-						}}
+						onSubmitEditing={() => setFocusedField('venue')}
 						onSelectSuggestion={handleSelectSuggestion}
 					/>
 
 					<VenueField
 						value={venueText}
 						error={venueError}
-						focused={venueFocused}
-						onFocus={() => setVenueFocused(true)}
-						onBlur={() => setVenueFocused(false)}
+						focused={focusedField === 'venue'}
+						onFocus={() => setFocusedField('venue')}
+						onBlur={() => setFocusedField((f) => (f === 'venue' ? null : f))}
 						onChangeText={(t) => {
 							setVenueText(t);
 							if (venueError) setVenueError(false);
@@ -177,15 +180,13 @@ export default function ImmersiveStartScreen() {
 					</View>
 
 					<Screen.BottomAbsolute className="bottom-2">
-						<Pressable
-							className="w-full rounded-lg items-center bg-secondary py-3.5"
+						<Button
+							tone="inverse"
 							onPress={handleSubmit}
-							style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
 							accessibilityLabel="몰입 모드 시작하기"
-							accessibilityRole="button"
 						>
-							<Text className="text-base font-pretendard-semibold text-white">시작하기</Text>
-						</Pressable>
+							시작하기
+						</Button>
 					</Screen.BottomAbsolute>
 				</Pressable>
 			</KeyboardAvoidingView>

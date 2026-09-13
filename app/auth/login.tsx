@@ -5,7 +5,6 @@ import { useCallback, useState } from 'react';
 import { Platform, Pressable, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { SocialPill } from '@/src/components/auth/SocialPill';
-import { SERVICE_NAME } from '@/src/constants/service-name';
 import { signInWithApple, signInWithKakao } from '@/src/utils/authOAuth';
 import { supabase } from '@/src/utils/supabase';
 import { useAuthStore } from '@/src/store/authStore';
@@ -130,7 +129,7 @@ export default function LoginScreen() {
 					) : null}
 
 					<View
-						className="mt-7 px-2 flex-col justify-center gap-1"
+						className="mt-7 px-2 justify-center gap-1"
 						style={{ marginBottom: insets.bottom + 12 }}
 					>
 						<Text className="text-[11px] leading-[16px] text-gray500 text-center font-pretendard-regular">

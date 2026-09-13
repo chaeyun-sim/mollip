@@ -1,24 +1,36 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { Pressable, ScrollView, Text, View } from 'react-native';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import {
+	Dimensions,
+	FlatList,
+	Pressable,
+	ScrollView,
+	Text,
+	useWindowDimensions,
+	View,
+} from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { CenteredLoader } from '@/src/components/common/CenteredLoader';
-import { RetryErrorState } from '@/src/components/common/RetryErrorState';
+
+import { LoginRequiredPressable } from '@/src/components/auth/LoginRequiredPressable';
 import { SectionTitle } from '@/src/components/common/SectionTitle';
-import { KcisaSection } from '@/src/components/explore/KcisaSection';
+import { FeaturedExhibitionHero } from '@/src/components/explore';
+import { HorizontalSection } from '@/src/components/explore/HorizontalSection';
 import { KcisaExhibitionCard } from '@/src/components/explore/KcisaExhibitionCard';
-import { FeaturedCarousel } from '@/src/components/explore/FeaturedCarousel';
-import { PopularSection } from '@/src/components/explore/PopularSection';
+import { KcisaSection } from '@/src/components/explore/KcisaSection';
+import { PopularExhibitionAvatar } from '@/src/components/explore/PopularExhibitionAvatar';
 import { Screen } from '@/src/components/layout/Screen';
-import { useExploreScreenData, type ExhibitionSummary } from '@/src/hooks/useExploreScreenData';
-import { usePopularExhibitions } from '@/src/hooks/usePopularExhibitions';
-import { Fab } from '@/src/components/common/Fab';
+import { ScreenHeader } from '@/src/components/layout/ScreenHeader';
 import { colors } from '@/src/constants/colors';
+import { useExploreScreenData, type ExhibitionSummary } from '@/src/hooks/useExploreScreenData';
+import { FEATURED_TAGLINES, useFeaturedTrio } from '@/src/hooks/useFeaturedTrio';
+import { usePopularExhibitions } from '@/src/hooks/usePopularExhibitions';
 import { useAuthStore } from '@/src/store/authStore';
 
 export default function ExploreScreen() {
 	const router = useRouter();
 	const insets = useSafeAreaInsets();
+	const { width: cardWidth } = useWindowDimensions();
 
 	const {
 		cultureStatus,
@@ -39,10 +51,35 @@ export default function ExploreScreen() {
 		refetch: popularRefetch,
 	} = usePopularExhibitions(featuredCarousel.map((item) => item.id));
 
+	// 메인 캐러셀: 특별전 · 인기 · 곧 개봉 3장
+	const { picks: featuredTrio } = useFeaturedTrio(popularItems);
+	const featuredTrioIds = useMemo(() => new Set(featuredTrio.map((p) => p.id)), [featuredTrio]);
+	const displayedPopularItems = useMemo(
+		() => popularItems.filter((item) => !featuredTrioIds.has(item.id)),
+		[popularItems, featuredTrioIds],
+	);
+
 	const carousel = resolveKcisaCarousel();
 	const name = useAuthStore((s) => s.user?.user_metadata?.full_name);
 
+	const featuredListRef = useRef<FlatList>(null);
+	const [, setFeaturedIndex] = useState(0);
+
 	const openExhibition = (id: string) => router.push(`/(explore)/${id}`);
+
+	useEffect(() => {
+		if (featuredTrio.length <= 1) return;
+
+		const timer = setInterval(() => {
+			setFeaturedIndex((prev) => {
+				const next = (prev + 1) % featuredTrio.length;
+				featuredListRef.current?.scrollToOffset({ offset: next * cardWidth, animated: true });
+				return next;
+			});
+		}, 3500);
+
+		return () => clearInterval(timer);
+	}, [featuredTrio.length, cardWidth]);
 
 	function resolveKcisaCarousel(): ExhibitionSummary[] {
 		if (kcisaCarousel.length > 0) return kcisaCarousel;
@@ -50,54 +87,16 @@ export default function ExploreScreen() {
 		return kcisaItems;
 	}
 
-	function renderRecommendedContent() {
-		if (cultureStatus === 'loading' && displayedRecommended.length === 0) {
-			return <CenteredLoader className="py-16" />;
-		}
-
-		if (cultureStatus === 'error') {
-			return (
-				<RetryErrorState
-					message="전시 정보를 불러오지 못했어요"
-					onRetry={refetch}
-					retryAccessibilityLabel="추천 전시 다시 불러오기"
-					className="py-16"
-				/>
-			);
-		}
-
-		if (displayedRecommended.length === 0) {
-			return (
-				<Text className="text-gray500 text-[13px] font-pretendard-regular">추천할 전시가 없어요</Text>
-			);
-		}
-
-		return (
-			<View className="-mx-6">
-				<ScrollView
-					horizontal
-					showsHorizontalScrollIndicator={false}
-					contentContainerStyle={{
-						flexDirection: 'row',
-						gap: 14,
-						paddingHorizontal: 24,
-					}}
-				>
-					{displayedRecommended.map((item) => (
-						<KcisaExhibitionCard key={item.id} item={item} onPress={openExhibition} />
-					))}
-				</ScrollView>
-			</View>
-		);
-	}
-
 	return (
-		<Screen variant="warm">
-			<Screen.Header className="items-end pb-3">
-				<Screen.Header.Logo />
-				<Screen.Header.Right>
+		<Screen variant="warm" className="px-0">
+			<ScreenHeader className="items-end pb-3 px-6 bg-bg-light">
+				<ScreenHeader.Left>
+					<ScreenHeader.Logo />
+				</ScreenHeader.Left>
+				<ScreenHeader.Right className="-mr-12">
 					<Pressable
-						onPress={() => router.push('/settings')}
+						// onPress={() => router.push('/settings')}
+						onPress={() => router.push('/onboarding')}
 						hitSlop={8}
 						accessibilityRole="button"
 						accessibilityLabel="마이페이지"
@@ -105,19 +104,53 @@ export default function ExploreScreen() {
 					>
 						<Ionicons name="person-outline" size={24} className="text-gray900" />
 					</Pressable>
-				</Screen.Header.Right>
-			</Screen.Header>
+				</ScreenHeader.Right>
+			</ScreenHeader>
 			<ScrollView
 				showsVerticalScrollIndicator={false}
-				contentContainerStyle={{ paddingBottom: 96, gap: 28, paddingTop: 16 }}
+				contentContainerClassName='pb-10 gap-7 pt-4'
 			>
-				<FeaturedCarousel items={featuredCarousel} onPress={openExhibition} />
+				<FlatList
+					ref={featuredListRef}
+					data={featuredTrio.map((item) => ({
+						id: item.id,
+						title: FEATURED_TAGLINES[item.badge],
+						exhibitionTitle: item.title,
+						venue: item.venue,
+						thumbnail: item.thumbnail,
+						status: item.status,
+					}))}
+					keyExtractor={(item) => item.id}
+					horizontal
+					showsHorizontalScrollIndicator={false}
+					snapToInterval={cardWidth}
+					decelerationRate="fast"
+					onMomentumScrollEnd={(e) => {
+						setFeaturedIndex(Math.round(e.nativeEvent.contentOffset.x / cardWidth));
+					}}
+					renderItem={({ item, index }) => (
+						<View
+							style={{
+								width: Dimensions.get('window').width - 40,
+								marginLeft: index > 0 ? 40 : 20,
+								marginRight: index === featuredTrio.length - 1 ? 20 : 0,
+							}}
+						>
+							<FeaturedExhibitionHero {...item} onPress={openExhibition} />
+						</View>
+					)}
+				/>
 
-				<PopularSection
-					items={popularItems}
+				<HorizontalSection
+					items={displayedPopularItems.slice(0, 7)}
 					status={popularStatus}
-					onPress={openExhibition}
 					onRefetch={popularRefetch}
+					renderItem={(item) => (
+						<PopularExhibitionAvatar key={item.id} item={item} onPress={openExhibition} />
+					)}
+					sectionName="인기 전시"
+					placeholder="인기 전시가 없어요"
+					contentContainerClassName="gap-0"
 				/>
 
 				<KcisaSection
@@ -145,7 +178,16 @@ export default function ExploreScreen() {
 							)
 						}
 					/>
-					{renderRecommendedContent()}
+					<HorizontalSection
+						items={displayedRecommended}
+						status={cultureStatus}
+						onRefetch={refetch}
+						renderItem={(item) => (
+							<KcisaExhibitionCard key={item.id} item={item} onPress={openExhibition} />
+						)}
+						sectionName="추천 전시"
+						placeholder="추천할 전시가 없어요"
+					/>
 				</View>
 			</ScrollView>
 
@@ -161,22 +203,16 @@ export default function ExploreScreen() {
 					elevation: 8,
 				}}
 			>
-				{/* 몰입 모드 pill */}
-				<Fab
-					onPress={() => router.push('/(guide)/immersive-start')}
-					icon="headset-outline"
-					accessibilityLabel="몰입 모드로 시작하기"
-					needsLogin
-				/>
-
-				{/* 카메라 FAB */}
-				<Fab
+				<LoginRequiredPressable
 					onPress={() => router.push('/(guide)/create-description')}
-					icon="camera"
+					accessibilityRole="button"
 					accessibilityLabel="작품 해설 만들기"
 					accessibilityHint="카메라로 작품을 촬영하거나 직접 입력하여 AI 해설을 받을 수 있어요"
-					needsLogin
-				/>
+					className="h-[58px] w-[58px] items-center justify-center rounded-full bg-secondary"
+					style={({ pressed }) => ({ opacity: pressed ? 0.88 : 1 })}
+				>
+					<Ionicons name="camera" size={26} className="text-bg-tonal" />
+				</LoginRequiredPressable>
 			</View>
 		</Screen>
 	);

@@ -1,14 +1,13 @@
 import { Ionicons } from '@expo/vector-icons';
 import * as Location from 'expo-location';
-import { useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Pressable, ScrollView, Text, View } from 'react-native';
 import { useNearbyPlaces, type NearbyPlace } from '@/src/hooks/useNearbyPlaces';
 import { supabase } from '@/src/utils/supabase';
-import { todayKey, useVisitStore } from '@/src/store/visitStore';
 import { useImmersiveStore } from '@/src/store/immersiveStore';
 import { Screen } from '@/src/components/layout/Screen';
-import { ExternalMapSheet, type ExternalMapTarget } from '@/src/components/common/ExternalMapSheet';
+import { ExternalMapSheet, type ExternalMapTarget } from '@/src/components/map/ExternalMapSheet';
 import { NearbyPlaceRow, type PlaceVariant } from '@/src/components/guide/NearbyPlaceRow';
 import { NearbyPlaceRowSkeleton } from '@/src/components/guide/NearbyPlaceRowSkeleton';
 
@@ -19,7 +18,10 @@ export default function ExitSummaryScreen() {
 	const router = useRouter();
 	const exitImmersive = useImmersiveStore((s) => s.exit);
 
-	const exhibitionId = useVisitStore((s) => s.visits[todayKey()]?.exhibitionId);
+	// visits가 "날짜::전시" 복합 키라 todayKey()만으로 찾을 수 없다 — playlist.tsx가
+	// exitImmersive() 호출 전에 route param으로 넘겨준다.
+	const { exhibitionId: exhibitionIdParam } = useLocalSearchParams<{ exhibitionId?: string }>();
+	const exhibitionId = exhibitionIdParam || null;
 
 	const [location, setLocation] = useState<{
 		latitude: number;
@@ -27,42 +29,34 @@ export default function ExitSummaryScreen() {
 	} | null>(null);
 	useEffect(() => {
 		async function resolveLocation() {
-			console.log('[exit] exhibitionId:', exhibitionId);
 			// 1순위: DB에서 전시 좌표 조회 (gps_x = 경도, gps_y = 위도)
 			if (exhibitionId) {
-				const { data, error } = await supabase
+				const { data } = await supabase
 					.from('exhibitions')
 					.select('museums(gps_x, gps_y)')
 					.eq('id', Number(exhibitionId))
 					.single();
-				console.log('[exit] db result:', JSON.stringify(data), error?.message);
 				const museum = Array.isArray(data?.museums) ? data?.museums[0] : data?.museums;
-				console.log('[exit] museum coords:', museum?.gps_x, museum?.gps_y);
 				if (museum?.gps_x && museum?.gps_y) {
 					const lat = parseFloat(museum.gps_y);
 					const lng = parseFloat(museum.gps_x);
 					if (!isNaN(lat) && !isNaN(lng)) {
-						console.log('[exit] setLocation from DB:', lat, lng);
 						setLocation({ latitude: lat, longitude: lng });
 						return;
 					}
 				}
 			}
 			// 2순위: 현재 GPS 위치
-			console.log('[exit] falling back to GPS');
 			const { status } = await Location.requestForegroundPermissionsAsync();
-			console.log('[exit] GPS permission:', status);
 			if (status !== 'granted') return;
 			Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Balanced })
 				.then((pos) => {
-					console.log('[exit] GPS coords:', pos.coords.latitude, pos.coords.longitude);
 					setLocation({
 						latitude: pos.coords.latitude,
 						longitude: pos.coords.longitude,
 					});
 				})
-				.catch((e) => {
-					console.log('[exit] GPS error:', e);
+				.catch(() => {
 					setLocation(null);
 				});
 		}

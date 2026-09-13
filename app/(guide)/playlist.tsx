@@ -1,11 +1,12 @@
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { Stack, useNavigation, useRouter } from 'expo-router';
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useShallow } from 'zustand/react/shallow';
 import { Screen } from '../../src/components/layout/Screen';
 import { ScreenHeader } from '../../src/components/layout/ScreenHeader';
+import { Button } from '@/src/components/common/Button';
 import { ImageFallback } from '@/src/components/common/ImageFallback';
 import { ArtistIntroTrack } from '@/src/components/guide/ArtistIntroTrack';
 import { updateStore } from '../../src/store';
@@ -16,15 +17,17 @@ import { cn } from '@/src/lib/cn';
 export default function PlaylistScreen() {
 	const router = useRouter();
 	const navigation = useNavigation();
-	const { playlist, exhibitionTitle, isImmersive, exhibitionId, exitImmersive } = useImmersiveStore(
-		useShallow((s) => ({
-			playlist: s.playlist,
-			exhibitionTitle: s.exhibitionTitle,
-			isImmersive: s.isImmersiveMode,
-			exhibitionId: s.exhibitionId,
-			exitImmersive: s.exit,
-		})),
-	);
+	const { playlist, exhibitionTitle, isImmersive, exhibitionId, chatSessionId, exitImmersive } =
+		useImmersiveStore(
+			useShallow((s) => ({
+				playlist: s.playlist,
+				exhibitionTitle: s.exhibitionTitle,
+				isImmersive: s.isImmersiveMode,
+				exhibitionId: s.exhibitionId,
+				chatSessionId: s.chatSessionId,
+				exitImmersive: s.exit,
+			})),
+		);
 	const {
 		artist: introArtist,
 		imageUrl: introImageUrl,
@@ -40,22 +43,30 @@ export default function PlaylistScreen() {
 			retry: s.retry,
 		})),
 	);
+	const FAILED_DESCRIPTION = '해설 생성에 실패했어요.';
 
-	const confirmExit = () => {
+	const confirmExit = useCallback(() => {
 		Alert.alert('전시 관람 종료', '재생목록이 초기화돼요', [
 			{ text: '닫기', style: 'cancel' },
 			{
 				text: '종료',
 				style: 'destructive',
 				onPress: () => {
+					// exitImmersive()가 exhibitionId를 지우기 전에 route param으로 넘긴다 —
+					// visits가 이제 "날짜::전시" 복합 키라 exit-summary가 todayKey()만으로는
+					// 어떤 전시였는지 알 수 없다.
+					const exitedExhibitionId = exhibitionId;
 					exitImmersive();
 					// 바로 나가지 않고, 관람 마무리 화면(종료 요약 + 주변 추천)을 먼저 보여준다.
 					// replace — 뒤로가기로 다시 재생목록으로 못 돌아오게 스택에서 제거.
-					router.replace('/(guide)/exit-summary');
+					router.replace({
+						pathname: '/(guide)/exit-summary',
+						params: { exhibitionId: exitedExhibitionId ?? '' },
+					});
 				},
 			},
 		]);
-	};
+	}, [exhibitionId, exitImmersive, router]);
 
 	// 몰입 모드의 홈 화면 — 헤더 버튼뿐 아니라 스와이프 제스처/하드웨어 back까지
 	// 전부 가로채서, 확인 없이 메인 서비스로 빠져나가지 못하게 막는다.
@@ -66,9 +77,7 @@ export default function PlaylistScreen() {
 			confirmExit();
 		});
 		return unsubscribe;
-	}, [navigation, isImmersive, exitImmersive, router]);
-
-	const FAILED_DESCRIPTION = '해설 생성에 실패했어요.';
+	}, [navigation, isImmersive, confirmExit]);
 
 	const handlePlay = (item: (typeof playlist)[number]) => {
 		Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -80,7 +89,9 @@ export default function PlaylistScreen() {
 			manualArtist: '',
 			isArtistIntro: false,
 		});
-		router.replace('/description');
+		// push — replace를 쓰면 재생목록(몰입모드 기본 화면)이 스택에서 사라져서,
+		// 해설 화면에서 뒤로 가면 재생목록이 아니라 그 이전 화면으로 튀는 버그가 있었다.
+		router.push('/description');
 	};
 
 	// ready면 재생, failed면 재생성. loading은 트랙이 disabled라 호출되지 않는다.
@@ -102,7 +113,9 @@ export default function PlaylistScreen() {
 			manualArtist: '',
 			isArtistIntro: true,
 		});
-		router.replace('/description');
+		// push — replace를 쓰면 재생목록(몰입모드 기본 화면)이 스택에서 사라져서,
+		// 해설 화면에서 뒤로 가면 재생목록이 아니라 그 이전 화면으로 튀는 버그가 있었다.
+		router.push('/description');
 	};
 
 	// artist가 없거나 전시를 검색으로 선택하지 않은 경우 트랙 자체를 렌더하지 않는다.
@@ -229,27 +242,32 @@ export default function PlaylistScreen() {
 				)}
 			</ScrollView>
 
-			{/* 플로팅 추가 버튼 — 작품 찾기(create-description)로 이동 */}
-			<Screen.BottomAbsolute className="bottom-10 flex-row mr-6 justify-end">
-				<Pressable
-					className="w-14 h-14 rounded-full items-center justify-center bg-secondary"
-					onPress={() => {
-						Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-						router.push('/(guide)/create-description');
-					}}
-					style={({ pressed }) => ({
-						opacity: pressed ? 0.85 : 1,
-						shadowColor: '#000',
-						shadowOffset: { width: 0, height: 4 },
-						shadowOpacity: 0.3,
-						shadowRadius: 8,
-						elevation: 6,
-					})}
+			{/* 플로팅 버튼 — 위: 전시 채팅으로 이동, 아래: 작품 찾기(create-description)로 이동 */}
+			<Screen.BottomAbsolute className="bottom-10 flex-col items-end gap-5 mr-6">
+				<Button.Icon
+					variant="ghost"
+					icon="chatbubble-ellipses-outline"
+					elevated
+					haptic="light"
+					accessibilityLabel="이 전시에 대해 채팅으로 물어보기"
+					onPress={() =>
+						router.push({
+							pathname: '/chat',
+							params: {
+								sessionId: chatSessionId ?? 'default',
+								...(exhibitionTitle ? { title: exhibitionTitle } : {}),
+							},
+						})
+					}
+				/>
+				<Button.Icon
+					tone="inverse"
+					icon="add"
+					elevated
+					haptic="light"
 					accessibilityLabel="작품 추가하기"
-					accessibilityRole="button"
-				>
-					<Ionicons name="add" size={30} color="#fff" />
-				</Pressable>
+					onPress={() => router.push('/(guide)/create-description')}
+				/>
 			</Screen.BottomAbsolute>
 		</Screen>
 	);

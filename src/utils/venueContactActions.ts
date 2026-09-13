@@ -1,4 +1,16 @@
-import { Linking } from 'react-native';
+import { Linking, Share } from 'react-native';
+import * as Haptics from 'expo-haptics';
+import * as Clipboard from 'expo-clipboard';
+
+/** 주소 복사 — 클립보드 실패 시(권한 등) 공유 시트로 대체 */
+export async function copyVenueAddress(address: string): Promise<void> {
+	try {
+		await Clipboard.setStringAsync(address);
+		await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+	} catch {
+		await Share.share({ message: address });
+	}
+}
 
 /** 전화번호 → tel: URI (공백·하이픈 제거) */
 export function phoneToTelUri(phone: string): string {

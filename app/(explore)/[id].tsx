@@ -1,15 +1,22 @@
-import { LinearGradient } from 'expo-linear-gradient';
-import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useState } from 'react';
-import { Dimensions, Pressable, ScrollView, Text, View } from 'react-native';
-import Animated from 'react-native-reanimated';
-import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useCallback, useEffect, useState, type ReactNode } from 'react';
+import { Pressable, ScrollView, Text, View } from 'react-native';
+import Animated, {
+	useAnimatedStyle,
+	useSharedValue,
+	withDelay,
+	withSpring,
+	withTiming,
+} from 'react-native-reanimated';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+
 import {
 	AccessibilityBadges,
 	ExhibitionDescription,
 	ExhibitionDetailFloatingActions,
 	ExhibitionDetailHeader,
+	ExhibitionDetailHero,
 	ExhibitionImmersiveFab,
 	ExhibitionMapPreview,
 	ExhibitionMetaPill,
@@ -17,11 +24,9 @@ import {
 	ExhibitionVenueInfo,
 	ImmersiveOverlay,
 	RelatedExhibitions,
-	RouteSheet,
 } from '@/src/components/explore';
-import { FadeInView } from '@/src/components/common/FadeInView';
-import { ImageFallback } from '@/src/components/common/ImageFallback';
 import { ExhibitionDetailSkeleton } from '@/src/components/layout/Loading';
+import { Screen } from '@/src/components/layout/Screen';
 import { useExhibitionData } from '@/src/hooks/useExhibitionData';
 import { useHeroAnimation } from '@/src/hooks/useHeroAnimation';
 import { useRecordExhibitionView } from '@/src/hooks/useRecordExhibitionView';
@@ -36,14 +41,12 @@ import {
 	cancelDeadlineNotifications,
 	scheduleDeadlineNotifications,
 } from '@/src/utils/notificationScheduler';
-import { Screen } from '@/src/components/layout/Screen';
 
 export default function ExhibitionDetailScreen() {
 	const { id } = useLocalSearchParams<{ id: string }>();
 	const router = useRouter();
 	const insets = useSafeAreaInsets();
 	const [immersiveOpen, setImmersiveOpen] = useState(false);
-	const [routeOpen, setRouteOpen] = useState(false);
 	const enterImmersive = useImmersiveStore((s) => s.enter);
 	const recordVisit = useVisitStore((s) => s.recordExhibition);
 
@@ -52,14 +55,37 @@ export default function ExhibitionDetailScreen() {
 	const toggle = useBookmarkStore((s) => s.toggle);
 	const pushNotificationsEnabled = useSettingsStore((s) => s.pushNotificationsEnabled);
 	const { ensureAuth } = useRequireAuth();
-
-	// 인기 랭킹용 조회 기록 — 로그인 사용자 · 데이터 로딩 완료 후 하루 1회 (UI 영향 없음)
 	useRecordExhibitionView(id, !!exhibition);
 	const { scrollHandler, heroImageStyle } = useHeroAnimation(exhibition?.id);
 	const { handleShare } = useShareExhibition(exhibition ?? null);
 
 	const fabBottom = insets.bottom + 20 + (exhibition?.ticketUrl ? 68 : 0);
-	const HERO_HEIGHT = Dimensions.get('window').height * 0.62;
+
+	const handleBookmark = useCallback(() => {
+		if (!ensureAuth(`/(explore)/${id}`)) return;
+		const willAdd = !isBookmarked;
+		toggle(id);
+		if (!exhibition?.endDate) return;
+		if (willAdd && pushNotificationsEnabled) {
+			void scheduleDeadlineNotifications(id, exhibition.title, exhibition.endDate);
+			return;
+		}
+		if (!willAdd) {
+			void cancelDeadlineNotifications(id);
+		}
+	}, [ensureAuth, exhibition, id, isBookmarked, pushNotificationsEnabled, toggle]);
+
+	const handleStartImmersive = useCallback(() => {
+		setImmersiveOpen(false);
+		if (!ensureAuth(`/(explore)/${id}`) || !exhibition) return;
+		enterImmersive(id, exhibition.title);
+		recordVisit(todayKey(), id, {
+			title: exhibition.title,
+			venue: exhibition.venue,
+			thumbnail: exhibition.posterImage ?? exhibition.heroImageUri,
+		});
+		router.replace('/(guide)/playlist');
+	}, [ensureAuth, enterImmersive, exhibition, id, recordVisit, router]);
 
 	if (isLoading) return <ExhibitionDetailSkeleton />;
 
@@ -69,7 +95,11 @@ export default function ExhibitionDetailScreen() {
 				<Text className="text-gray-500 text-base font-pretendard-regular mb-4">
 					전시를 찾을 수 없어요
 				</Text>
-				<Pressable onPress={() => router.back()}>
+				<Pressable
+					onPress={() => router.back()}
+					accessibilityRole="button"
+					accessibilityLabel="돌아가기"
+				>
 					<Text className="text-gray-900 text-sm font-pretendard-medium">돌아가기</Text>
 				</Pressable>
 			</SafeAreaView>
@@ -85,38 +115,27 @@ export default function ExhibitionDetailScreen() {
 				bounces={false}
 				contentContainerStyle={{ paddingBottom: fabBottom + 40 }}
 			>
-				<View className="overflow-hidden w-full" style={{ height: HERO_HEIGHT }}>
-					<Animated.View style={[{ width: '100%', height: HERO_HEIGHT }, heroImageStyle]}>
-						<ImageFallback
-							heroImageUri={exhibition.heroImageUri}
-							posterImage={exhibition.posterImage}
-							style={{ height: HERO_HEIGHT }}
-							iconSize={160}
-							resizeMode="cover"
-							dimOverlay
-							className="w-full"
-							accessibilityLabel={`${exhibition.title} 전시 포스터`}
-						/>
-					</Animated.View>
-
-					<LinearGradient
-						colors={['transparent', 'rgba(0,0,0,0.7)']}
-						className="absolute bottom-0 left-0 right-0 h-[292px] justify-end pb-6"
-					/>
-				</View>
+				<ExhibitionDetailHero
+					title={exhibition.title}
+					heroImageUri={exhibition.heroImageUri}
+					posterImage={exhibition.posterImage}
+					animatedStyle={heroImageStyle}
+				/>
 
 				<FadeInView delay={100}>
 					<ScrollView
 						horizontal
 						showsHorizontalScrollIndicator={false}
-						contentContainerClassName='px-[18px] py-4 gap-2'
+						contentContainerClassName="px-[18px] py-4 gap-2"
 					>
 						<ExhibitionMetaPill icon="location-outline" text={exhibition.venue} />
 						{exhibition.exhibitionType && (
 							<ExhibitionMetaPill text={getExhibitionTypeDisplay(exhibition)} />
 						)}
 						{exhibition.genre &&
-							exhibition.genre.split(',').map((g) => <ExhibitionMetaPill key={g} text={g} />)}
+							exhibition.genre.split(',').map((g) => (
+								<ExhibitionMetaPill key={g} text={g.trim()} />
+							))}
 					</ScrollView>
 				</FadeInView>
 
@@ -140,9 +159,9 @@ export default function ExhibitionDetailScreen() {
 						<ScrollView
 							horizontal
 							showsHorizontalScrollIndicator={false}
-							contentContainerClassName='px-[18px] pt-3 pb-1 gap-2'
+							contentContainerClassName="px-[18px] pt-3 pb-1 gap-2"
 						>
-							{(exhibition.tags ?? [])?.map((tag) => (
+							{exhibition.tags.map((tag) => (
 								<ExhibitionMetaPill key={tag} icon="pricetag-outline" text={tag} />
 							))}
 						</ScrollView>
@@ -210,19 +229,7 @@ export default function ExhibitionDetailScreen() {
 				onBack={() => router.back()}
 				onShare={handleShare}
 				onRoute={() => router.push(`/(explore)/route?id=${id}`)}
-				onBookmark={() => {
-					if (!ensureAuth(`/(explore)/${id}`)) return;
-					const willAdd = !isBookmarked;
-					toggle(id);
-					if (!exhibition?.endDate) return;
-					if (willAdd) {
-						if (pushNotificationsEnabled) {
-							void scheduleDeadlineNotifications(id, exhibition.title, exhibition.endDate);
-						}
-					} else {
-						void cancelDeadlineNotifications(id);
-					}
-				}}
+				onBookmark={handleBookmark}
 				isBookmarked={isBookmarked}
 				insetTop={insets.top}
 			/>
@@ -244,27 +251,26 @@ export default function ExhibitionDetailScreen() {
 			<ImmersiveOverlay
 				visible={immersiveOpen}
 				title={exhibition.title}
-				onStart={() => {
-					setImmersiveOpen(false);
-					if (!ensureAuth(`/(explore)/${id}`)) return;
-					enterImmersive(id, exhibition.title);
-					recordVisit(todayKey(), id, {
-						title: exhibition.title,
-						venue: exhibition.venue,
-						thumbnail: exhibition.posterImage ?? exhibition.heroImageUri,
-					});
-					router.replace('/(guide)/playlist');
-				}}
+				onStart={handleStartImmersive}
 				onClose={() => setImmersiveOpen(false)}
-			/>
-
-			<RouteSheet
-				visible={routeOpen}
-				exhibitionTitle={exhibition.title}
-				venue={exhibition.venue}
-				artworks={exhibition.artworks}
-				onClose={() => setRouteOpen(false)}
 			/>
 		</Screen>
 	);
+}
+
+function FadeInView({ children, delay = 0 }: { children: ReactNode; delay?: number }) {
+	const opacity = useSharedValue(0);
+	const translateY = useSharedValue(24);
+
+	useEffect(() => {
+		opacity.value = withDelay(delay, withTiming(1, { duration: 450 }));
+		translateY.value = withDelay(delay, withSpring(0, { damping: 18, stiffness: 120 }));
+	}, [delay, opacity, translateY]);
+
+	const style = useAnimatedStyle(() => ({
+		opacity: opacity.value,
+		transform: [{ translateY: translateY.value }],
+	}));
+
+	return <Animated.View style={style}>{children}</Animated.View>;
 }

@@ -9,7 +9,6 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ActivityIndicator, Alert, Modal, Pressable, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
-import { FloatingBackButton } from '@/src/components/common/FloatingBackButton';
 import { getWalkingRoute, type RouteCoord, type RouteResult } from '@/src/api/tmap';
 import { useExhibitionData } from '@/src/hooks/useExhibitionData';
 import { useMuseums } from '@/src/hooks/useMuseums';
@@ -17,6 +16,7 @@ import { useUserLocation } from '@/src/hooks/useUserLocation';
 import { supabase } from '@/src/utils/supabase';
 import { distanceKm } from '@/src/utils/mapUtils';
 import { cn } from '@/src/lib/cn';
+import { FloatingIconButton } from '@/src/components/explore/FloatingIconButton';
 
 interface Waypoint {
 	id: string;
@@ -51,14 +51,11 @@ export default function RouteScreen() {
 	const [routeReady, setRouteReady] = useState(false);
 	const [nearbyExhibitions, setNearbyExhibitions] = useState<NearbyExhibition[]>([]);
 	const [sheetVisible, setSheetVisible] = useState(false);
-	const initializedRef = useRef(false);
+	const [initialized, setInitialized] = useState(false);
 
-	// 초기 핀: 내 위치(1) + 목적지 전시(2)
-	useEffect(() => {
-		if (initializedRef.current) return;
-		if (!currentCoord || !exhibition?.coordinates) return;
-
-		initializedRef.current = true;
+	// 초기 핀: 내 위치(1) + 목적지 전시(2) — 데이터가 준비되면 렌더 중 1회만 세팅
+	if (!initialized && currentCoord && exhibition?.coordinates) {
+		setInitialized(true);
 		setWaypoints([
 			{ id: 'start', coord: currentCoord, label: '내 위치' },
 			{
@@ -68,8 +65,13 @@ export default function RouteScreen() {
 				exhibitionId: id,
 			},
 		]);
+	}
 
-		setTimeout(() => {
+	// 초기 핀이 세팅된 직후 카메라를 두 지점에 맞춰 이동 (지도 SDK 호출이므로 effect에 둔다)
+	useEffect(() => {
+		if (!initialized || !currentCoord || !exhibition?.coordinates) return;
+
+		const timer = setTimeout(() => {
 			const pad = 0.008;
 			const lats = [currentCoord.latitude, exhibition.coordinates!.latitude];
 			const lngs = [currentCoord.longitude, exhibition.coordinates!.longitude];
@@ -78,7 +80,9 @@ export default function RouteScreen() {
 				coord2: { latitude: Math.max(...lats) + pad, longitude: Math.max(...lngs) + pad },
 			});
 		}, 400);
-	}, [currentCoord, exhibition, id]);
+
+		return () => clearTimeout(timer);
+	}, [initialized, currentCoord, exhibition, id]);
 
 	// 지도 탭 → 목적지 앞에 경유지 삽입 (경로 생성 후에도 추가 가능)
 	const handleTapMap = useCallback(
@@ -137,61 +141,6 @@ export default function RouteScreen() {
 		setRouteSegments([]);
 		setSheetVisible(false);
 	}, []);
-
-	// 경로 생성
-	const handleBuildRoute = useCallback(async () => {
-		if (waypoints.length < 2) return;
-
-		setBuilding(true);
-		setRouteReady(false);
-		setRouteSegments([]);
-
-		try {
-			const segments: RouteResult[] = [];
-			for (let i = 0; i < waypoints.length - 1; i++) {
-				const from = waypoints[i];
-				const to = waypoints[i + 1];
-				const seg = await getWalkingRoute(from.coord, to.coord, from.label, to.label);
-				console.log(
-					`[route] segment ${i}: legs=${seg.legs.length}, coords=${seg.legs.flatMap((l) => l.coords).length}`,
-				);
-				// ODsay가 경로를 못 찾으면 (거리 초과 등) 직선 fallback 사용
-				if (seg.legs.length === 0) {
-					seg.legs = [
-						{
-							mode: 'walk',
-							coords: [from.coord, to.coord],
-							sectionSeconds: 0,
-							distanceMeters: 0,
-							startName: from.label,
-							endName: to.label,
-						},
-					];
-				}
-				segments.push(seg);
-			}
-
-			setRouteSegments(segments);
-			setRouteReady(true);
-
-			const allCoords = segments.flatMap((s) => s.legs.flatMap((l) => l.coords));
-			if (allCoords.length >= 2) {
-				const pad = 0.005;
-				const lats = allCoords.map((c) => c.latitude);
-				const lngs = allCoords.map((c) => c.longitude);
-				mapRef.current?.animateCameraWithTwoCoords({
-					coord1: { latitude: Math.min(...lats) - pad, longitude: Math.min(...lngs) - pad },
-					coord2: { latitude: Math.max(...lats) + pad, longitude: Math.max(...lngs) + pad },
-				});
-			}
-
-			await findNearbyExhibitions(allCoords, waypoints);
-		} catch (e) {
-			console.warn('[route] build error:', e);
-		} finally {
-			setBuilding(false);
-		}
-	}, [waypoints]);
 
 	// 경로 근처 전시 조회
 	const findNearbyExhibitions = async (routeCoords: RouteCoord[], currentWaypoints: Waypoint[]) => {
@@ -280,6 +229,58 @@ export default function RouteScreen() {
 			console.warn('[route] nearby error:', e);
 		}
 	};
+
+	// 경로 생성
+	const handleBuildRoute = useCallback(async () => {
+		if (waypoints.length < 2) return;
+
+		setBuilding(true);
+		setRouteReady(false);
+		setRouteSegments([]);
+
+		try {
+			const segments: RouteResult[] = [];
+			for (let i = 0; i < waypoints.length - 1; i++) {
+				const from = waypoints[i];
+				const to = waypoints[i + 1];
+				const seg = await getWalkingRoute(from.coord, to.coord, from.label, to.label);
+				// ODsay가 경로를 못 찾으면 (거리 초과 등) 직선 fallback 사용
+				if (seg.legs.length === 0) {
+					seg.legs = [
+						{
+							mode: 'walk',
+							coords: [from.coord, to.coord],
+							sectionSeconds: 0,
+							distanceMeters: 0,
+							startName: from.label,
+							endName: to.label,
+						},
+					];
+				}
+				segments.push(seg);
+			}
+
+			setRouteSegments(segments);
+			setRouteReady(true);
+
+			const allCoords = segments.flatMap((s) => s.legs.flatMap((l) => l.coords));
+			if (allCoords.length >= 2) {
+				const pad = 0.005;
+				const lats = allCoords.map((c) => c.latitude);
+				const lngs = allCoords.map((c) => c.longitude);
+				mapRef.current?.animateCameraWithTwoCoords({
+					coord1: { latitude: Math.min(...lats) - pad, longitude: Math.min(...lngs) - pad },
+					coord2: { latitude: Math.max(...lats) + pad, longitude: Math.max(...lngs) + pad },
+				});
+			}
+
+			await findNearbyExhibitions(allCoords, waypoints);
+		} catch (e) {
+			console.warn('[route] build error:', e);
+		} finally {
+			setBuilding(false);
+		}
+	}, [waypoints]);
 
 	const allLegs = useMemo(() => routeSegments.flatMap((s) => s.legs), [routeSegments]);
 
@@ -401,13 +402,14 @@ export default function RouteScreen() {
 			</NaverMapView>
 
 			{/* 상단 헤더 */}
-			<SafeAreaView
-				className="absolute top-0 left-0 right-0"
-				edges={['top']}
-				pointerEvents="box-none"
-			>
+			<SafeAreaView className="absolute top-0 inset-x-0" edges={['top']} pointerEvents="box-none">
 				<View className="flex-row items-center px-5 pt-2 gap-3">
-					<FloatingBackButton onPress={() => router.back()} variant="onLight" />
+					<FloatingIconButton
+						onPress={() => router.back()}
+						icon={<Ionicons name="chevron-back" size={22} color="#1a1a1a" />}
+						accessibilityLabel="뒤로가기"
+						variant="onLight"
+					/>
 					<View className="flex-1 bg-white/90 rounded-2xl px-4 py-2.5">
 						<Text className="font-pretendard-semibold text-[15px] text-gray900">관람 루트</Text>
 						<Text className="font-pretendard-regular text-[11px] text-gray-400 mt-0.5">
@@ -437,7 +439,7 @@ export default function RouteScreen() {
 						horizontal
 						showsHorizontalScrollIndicator={false}
 						className="border-b border-gray-100"
-						contentContainerStyle={{ paddingHorizontal: 16, paddingVertical: 10, gap: 8 }}
+						contentContainerClassName="px-4 py-[10px] gap-2"
 					>
 						{waypoints.map((wp, i) => (
 							<View

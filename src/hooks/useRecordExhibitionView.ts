@@ -2,17 +2,10 @@ import { useEffect } from 'react';
 
 import { useAuthStore } from '@/src/store/authStore';
 import { supabase } from '@/src/utils/supabase';
+import { formatDate } from '../utils/cultureExhibitionMapper';
 
 /** 같은 앱 세션 안에서 동일 (user, exhibition, date) 조합을 반복 전송하지 않기 위한 캐시 */
 const recordedKeys = new Set<string>();
-
-/** 로컬 기준 오늘 날짜 키 (세션 내 중복 억제용, DB 값은 서버 default를 사용한다) */
-function todayViewKey(): string {
-	const now = new Date();
-	const month = String(now.getMonth() + 1).padStart(2, '0');
-	const day = String(now.getDate()).padStart(2, '0');
-	return `${now.getFullYear()}-${month}-${day}`;
-}
 
 /**
  * 로그인 사용자의 전시 상세 조회를 하루 1회 기록한다.
@@ -28,7 +21,7 @@ export function useRecordExhibitionView(exhibitionId: string | undefined, enable
 		if (!exhibitionId) return;
 		if (!enabled) return;
 
-		const key = `${userId}:${exhibitionId}:${todayViewKey()}`;
+		const key = `${userId}:${exhibitionId}:${formatDate(new Date().toISOString())}`;
 
 		if (recordedKeys.has(key)) return;
 

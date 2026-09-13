@@ -8,14 +8,15 @@ import {
 	KeyboardAvoidingView,
 	Platform,
 	Text,
-	TextInput,
 	View,
 } from 'react-native';
 import * as WebBrowser from 'expo-web-browser';
 import { Screen } from '../../src/components/layout/Screen';
 import { ScreenHeader } from '../../src/components/layout/ScreenHeader';
+import { TextField } from '@/src/components/common/TextField';
 import { ChatMessage } from '@/src/components/guide/ChatMessage';
-import { CHAT_SYSTEM_PROMPT } from '../../src/constants/prompts';
+import { useSubmitOnNewline } from '@/src/hooks/useTextField';
+import { CHAT_SYSTEM_PROMPT, CHAT_SYSTEM_PROMPT_FOR_EXHIBITION } from '../../src/constants/prompts';
 import { store } from '../../src/store';
 import { useChatStore } from '../../src/store/chatStore';
 import { useSettingsStore } from '@/src/store/settingsStore';
@@ -28,7 +29,10 @@ const HIGH_CONTRAST_COLOR = '#F0EFED';
 
 export default function ChatScreen() {
 	const router = useRouter();
-	const { sessionId } = useLocalSearchParams<{ sessionId: string }>();
+	const { sessionId, title: exhibitionTitle } = useLocalSearchParams<{
+		sessionId: string;
+		title?: string;
+	}>();
 	const sid = sessionId ?? 'default';
 
 	const {
@@ -47,14 +51,18 @@ export default function ChatScreen() {
 
 	const openArtworkSearch = () => {
 		const title =
-			store.manualTitle || store.extractedText.split('\n')[0]?.replace('작품명: ', '') || '';
-		const artist = store.manualArtist || '';
+			exhibitionTitle ||
+			store.manualTitle ||
+			store.extractedText.split('\n')[0]?.replace('작품명: ', '') ||
+			'';
+		const artist = exhibitionTitle ? '' : store.manualArtist || '';
 		const query = encodeURIComponent([title, artist].filter(Boolean).join(' '));
 		WebBrowser.openBrowserAsync(`https://www.google.com/search?q=${query}&tbm=isch`);
 	};
 	const [input, setInput] = useState('');
 	const [isLoading, setIsLoading] = useState(false);
 	const flatListRef = useRef<FlatList>(null);
+	const [isFocusing, setIsFocusing] = useState(false);
 
 	// 사용자 메시지(질문) 수 — 재시도는 기존 메시지를 교체하므로 카운트 증가 없음
 	const exchangeCount = messages.filter((m) => m.role === 'user').length;
@@ -82,10 +90,10 @@ export default function ChatScreen() {
 		let fullText = '';
 		try {
 			const currentHistory = getHistory(sid);
-			const gen = streamChat(CHAT_SYSTEM_PROMPT(store.extractedText, store.artworkDescription), [
-				...currentHistory,
-				{ role: 'user', content: text },
-			]);
+			const systemPrompt = exhibitionTitle
+				? CHAT_SYSTEM_PROMPT_FOR_EXHIBITION(exhibitionTitle)
+				: CHAT_SYSTEM_PROMPT(store.extractedText, store.artworkDescription);
+			const gen = streamChat(systemPrompt, [...currentHistory, { role: 'user', content: text }]);
 			for await (const chunk of gen) {
 				fullText += chunk;
 				updateMessage(sid, assistantId, fullText);
@@ -97,6 +105,10 @@ export default function ChatScreen() {
 			setIsLoading(false);
 		}
 	};
+
+	const bindComposer = useSubmitOnNewline(() => {
+		void sendMessage();
+	});
 
 	const retryMessage = (item: ReturnType<typeof getMessages>[0]) => {
 		const idx = messages.findIndex((m) => m.id === item.id);
@@ -139,8 +151,9 @@ export default function ChatScreen() {
 							'text-base font-pretendard-semibold',
 							highContrast ? 'text-gray900' : 'text-white',
 						)}
+						numberOfLines={1}
 					>
-						작품에 대해 물어보기
+						{exhibitionTitle ? `${exhibitionTitle}에 대해 물어보기` : '작품에 대해 물어보기'}
 					</Text>
 				</ScreenHeader.Center>
 				<ScreenHeader.Right>
@@ -184,10 +197,12 @@ export default function ChatScreen() {
 								className="text-base text-center font-pretendard-bold"
 								style={{ color: highContrast ? colors.gray900 : colors.onDark }}
 							>
-								작품이 궁금하신가요?
+								{exhibitionTitle ? '전시가 궁금하신가요?' : '작품이 궁금하신가요?'}
 							</Text>
 							<Text className="text-sm text-center text-gray600 leading-5">
-								{'작가, 시대적 배경, 기법 등\n무엇이든 물어보세요'}
+								{exhibitionTitle
+									? '참여 작가, 전시 주제, 배경 등\n무엇이든 물어보세요'
+									: '작가, 시대적 배경, 기법 등\n무엇이든 물어보세요'}
 							</Text>
 						</View>
 					}
@@ -208,29 +223,31 @@ export default function ChatScreen() {
 				) : (
 					<View
 						className={cn(
-							'mb-10 flex-row items-end gap-2 py-3 border-t-[1px]',
+							'flex-row items-end gap-2 pt-3 border-t-[1px]',
 							highContrast ? 'border-t-divider' : 'border-t-gray900',
+							isFocusing ? 'mb-5' : 'mb-10',
 						)}
 					>
-						<TextInput
+						<TextField
+							variant="plain"
+							tone={highContrast ? 'light' : 'dark'}
+							multiline
 							className={cn(
-								'flex-1 rounded-2xl px-4 pt-3 pb-3 text-[14px] font-pretendard-regular min-h-[48px] max-h-[120px]',
+								'flex-1 rounded-2xl px-4 py-[15px] text-[14px] min-h-[48px] max-h-[120px]',
 								highContrast ? 'text-gray900' : 'text-on-dark',
 							)}
-							style={{ backgroundColor: highContrast ? HIGH_CONTRAST_COLOR : colors.gray900 }}
+							style={{
+								backgroundColor: highContrast ? HIGH_CONTRAST_COLOR : colors.gray900,
+								lineHeight: 0,
+							}}
 							returnKeyType="send"
 							value={input}
-							onChangeText={(t) => {
-								if (t.endsWith('\n')) {
-									sendMessage();
-								} else {
-									setInput(t);
-								}
-							}}
+							onChangeText={bindComposer(setInput)}
 							placeholder="질문을 입력하세요..."
-							placeholderTextColor={colors.gray700}
 							keyboardAppearance={highContrast ? 'light' : 'dark'}
-							multiline
+							onFocus={() => setIsFocusing(true)}
+							onBlur={() => setIsFocusing(false)}
+							onEndEditing={() => setIsFocusing(false)}
 						/>
 						<Pressable
 							className="w-11 h-11 rounded-full items-center justify-center"

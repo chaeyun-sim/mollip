@@ -1,11 +1,10 @@
 import { useCallback, useRef } from 'react';
 import { useRouter } from 'expo-router';
-import { ActivityIndicator, FlatList, Text, View, useWindowDimensions } from 'react-native';
+import { ActivityIndicator, FlatList, Pressable, Text, View, useWindowDimensions } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { CenteredLoader } from '@/src/components/common/CenteredLoader';
-import { RetryErrorState } from '@/src/components/common/RetryErrorState';
+
 import { ExhibitionListRow } from '@/src/components/explore/ExhibitionListRow';
-import type { RecommendableItem } from '@/src/components/explore/RecommendedExhibitions';
+import type { RecommendableItem } from '@/src/components/explore/RecommendableItem.types';
 import { useAllExhibitions } from '@/src/hooks/useAllExhibitions';
 import { Screen } from '@/src/components/layout/Screen';
 import { colors } from '@/src/constants/colors';
@@ -82,17 +81,28 @@ export default function ExhibitionsScreen() {
 
 	const renderEmpty = useCallback(() => {
 		if (status === 'loading') {
-			return <CenteredLoader className="flex-1 py-24" />;
+			return (
+				<View className="flex-1 items-center justify-center py-24">
+					<ActivityIndicator color={colors.gray500} />
+				</View>
+			);
 		}
 
 		if (status === 'error') {
 			return (
-				<RetryErrorState
-					message="전시 정보를 불러오지 못했어요"
-					onRetry={refetch}
-					retryAccessibilityLabel="다시 불러오기"
-					className="flex-1 py-24"
-				/>
+				<View className="flex-1 items-center justify-center gap-2 py-24">
+					<Text className="text-gray500 text-[13px] font-pretendard-regular">
+						전시 정보를 불러오지 못했어요
+					</Text>
+					<Pressable
+						onPress={refetch}
+						accessibilityLabel="다시 불러오기"
+						accessibilityRole="button"
+						hitSlop={8}
+					>
+						<Text className="text-gray900 text-[13px] font-pretendard-semibold">다시 시도</Text>
+					</Pressable>
+				</View>
 			);
 		}
 

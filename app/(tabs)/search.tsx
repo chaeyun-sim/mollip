@@ -1,5 +1,4 @@
 import { Ionicons } from '@expo/vector-icons';
-import { StatusBar } from 'expo-status-bar';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { FlatList, Keyboard, Pressable, ScrollView, Text, View } from 'react-native';
@@ -53,7 +52,6 @@ export default function SearchScreen() {
 		toggleFreeOnly,
 		hasLocation,
 		results,
-		popularTags,
 	} = useExhibitionSearch();
 
 	const recentWords = useRecentSearchStore((s) => s.words);
@@ -242,7 +240,7 @@ export default function SearchScreen() {
 									<Text className="text-gray500 text-[13px] font-pretendard-regular">전체 삭제</Text>
 								</Pressable>
 							</View>
-							{recentWords.map((word) => (
+							{recentWords.slice(0, 5).map((word) => (
 								<View key={word} className="flex-row items-center gap-2.5 py-3">
 									<Ionicons name="time-outline" size={15} className="text-gray500" />
 									<Pressable

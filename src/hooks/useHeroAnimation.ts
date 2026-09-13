@@ -20,7 +20,7 @@ export function useHeroAnimation(exhibitionId: string | undefined) {
 		if (!exhibitionId) return;
 		heroOpacity.value = 0;
 		heroOpacity.value = withTiming(1, { duration: 450 });
-	}, [exhibitionId]);
+	}, [exhibitionId, heroOpacity]);
 
 	const heroImageStyle = useAnimatedStyle(() => ({
 		opacity: heroOpacity.value,
@@ -29,3 +29,5 @@ export function useHeroAnimation(exhibitionId: string | undefined) {
 
 	return { scrollHandler, heroImageStyle };
 }
+
+export type HeroImageStyle = ReturnType<typeof useHeroAnimation>['heroImageStyle'];

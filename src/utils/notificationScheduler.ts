@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import * as Notifications from 'expo-notifications';
+// import * as Notifications from 'expo-notifications';
 
 const STORAGE_KEY = 'deadline_notification_ids';
 
@@ -33,26 +33,26 @@ export async function scheduleDeadlineNotifications(
 		{ daysLeft: 2, body: '북마크한 전시가 이틀 후 마감이에요' },
 	];
 
-	for (const { daysLeft, body } of triggers) {
+	for (const { daysLeft } of triggers) {
 		const triggerDate = new Date(endDate);
 		triggerDate.setDate(triggerDate.getDate() - daysLeft);
 		triggerDate.setHours(10, 0, 0, 0);
 
 		if (triggerDate <= now) continue;
 
-		const id = await Notifications.scheduleNotificationAsync({
-			content: {
-				title,
-				body,
-				data: { exhibitionId },
-			},
-			trigger: {
-				type: Notifications.SchedulableTriggerInputTypes.DATE,
-				date: triggerDate,
-			},
-		});
+		// const id = await Notifications.scheduleNotificationAsync({
+		// 	content: {
+		// 		title,
+		// 		body,
+		// 		data: { exhibitionId },
+		// 	},
+		// 	trigger: {
+		// 		type: Notifications.SchedulableTriggerInputTypes.DATE,
+		// 		date: triggerDate,
+		// 	},
+		// });
 
-		ids.push(id);
+		// ids.push(id);
 	}
 
 	if (ids.length > 0) {
@@ -68,7 +68,7 @@ export async function cancelDeadlineNotifications(exhibitionId: string): Promise
 	const ids = map[exhibitionId];
 	if (!ids) return;
 
-	await Promise.all(ids.map((id) => Notifications.cancelScheduledNotificationAsync(id)));
+	// await Promise.all(ids.map((id) => Notifications.cancelScheduledNotificationAsync(id)));
 	delete map[exhibitionId];
 	await saveMap(map);
 }

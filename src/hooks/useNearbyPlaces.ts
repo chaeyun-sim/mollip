@@ -86,20 +86,6 @@ export function useNearbyPlaces(location: { latitude: number; longitude: number 
 		Promise.allSettled([searchNaverLocal('카페', 5, loc), searchNaverLocal('관광명소', 5, loc)])
 			.then(([cafeResult, attrResult]) => {
 				if (cancelled) return;
-				console.log(
-					'[nearby] cafe:',
-					cafeResult.status,
-					cafeResult.status === 'rejected'
-						? String(cafeResult.reason)
-						: cafeResult.value.length + '개',
-				);
-				console.log(
-					'[nearby] attr:',
-					attrResult.status,
-					attrResult.status === 'rejected'
-						? String(attrResult.reason)
-						: attrResult.value.length + '개',
-				);
 				const cafeItems = cafeResult.status === 'fulfilled' ? cafeResult.value : [];
 				const attrItems = attrResult.status === 'fulfilled' ? attrResult.value : [];
 				const cafeRated = cafeItems.map((item, i) =>
@@ -120,6 +106,8 @@ export function useNearbyPlaces(location: { latitude: number; longitude: number 
 		return () => {
 			cancelled = true;
 		};
+		// location 객체 identity 대신 좌표만 본다.
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [location?.latitude, location?.longitude]);
 
 	return { data, isLoading, error };

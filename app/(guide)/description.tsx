@@ -11,11 +11,9 @@ import {
 	Modal,
 	Pressable,
 	ScrollView,
-	Share,
 	Text,
 	View,
 } from 'react-native';
-import { shareFeedTemplate } from '@react-native-kakao/share';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Easing, useSharedValue, withRepeat, withTiming } from 'react-native-reanimated';
 import { Screen } from '../../src/components/layout/Screen';
@@ -28,7 +26,7 @@ import { useImmersiveStore } from '../../src/store/immersiveStore';
 import { getEffectiveFontSize, useSettingsStore } from '../../src/store/settingsStore';
 import { formatTime } from '../../src/utils/text';
 import { ScreenHeader } from '../../src/components/layout/ScreenHeader';
-import { MarkdownBoldText } from '@/src/components/common/MarkdownBoldText';
+import { Button } from '@/src/components/common/Button';
 import { cn } from '@/src/lib/cn';
 import { useHistoryStore } from '@/src/store/historyStore';
 import { useBookmarkAudioStore } from '@/src/store/bookmarkAudioStore';
@@ -137,14 +135,14 @@ export default function DescriptionScreen() {
 		} else {
 			barTranslate.value = -SCREEN_WIDTH;
 		}
-	}, [isTyping]);
+	}, [isTyping, barTranslate]);
 
 	// 스트리밍 완료 시 TTS 프리로드
 	useEffect(() => {
 		if (!isTyping && fullTextRef.current) {
 			preload(fullTextRef.current);
 		}
-	}, [isTyping]);
+	}, [isTyping, fullTextRef, preload]);
 
 	// 스트리밍 완료 시 audio_guides에 자동 저장 (들은 것 전체 기록)
 	useEffect(() => {
@@ -162,48 +160,18 @@ export default function DescriptionScreen() {
 			});
 			setSavedId(id);
 			if (!artworkImageUrl) {
-				fetchWikidataImage(title, artist).then((url) => {
+				fetchWikidataImage(title, artist, fullTextRef.current).then((url) => {
 					if (url) updateHistory(id, { imageUrl: url });
 				});
 			}
 		}
-	}, [isTyping]);
+	}, [isTyping, addHistory, artworkImageUrl, fullTextRef, savedId, updateHistory]);
 
 	const handlePlayPause = () => {
 		if (isTTSLoading) return;
 		if (isSpeaking) pause();
 		else if (elapsed > 0) resume();
 		else speak(fullTextRef.current);
-	};
-
-	const handleShare = async () => {
-		const fullText = fullTextRef.current ?? '';
-		const title = store.manualTitle || store.extractedText || extractFallbackTitle(fullText);
-		const firstSentence = fullText.split(/[.\n]/)[0]?.trim() ?? '';
-		const description =
-			(firstSentence.length > 80 ? firstSentence.slice(0, 80) + '…' : firstSentence) +
-			'\nmollip에서 감상했어요 🎨';
-
-		const link = { mobileWebUrl: 'https://mollip.app', webUrl: 'https://mollip.app' };
-
-		try {
-			await shareFeedTemplate({
-				template: {
-					content: {
-						title,
-						description,
-						imageUrl: artworkImageUrl ?? '',
-						link,
-					},
-					buttons: [{ title: '해설 들으러 가기', link }],
-				},
-			});
-		} catch {
-			await Share.share({
-				message: `${title}\n${firstSentence}\nmollip에서 감상했어요 🎨`,
-				title,
-			});
-		}
 	};
 
 	const handleProgressTap = (e: GestureResponderEvent) => {
@@ -218,7 +186,7 @@ export default function DescriptionScreen() {
 		<Screen edges={['top', 'bottom']} highContrast={highContrast}>
 			{!isTyping && (
 				<Screen.Header>
-					<ScreenHeader.Back onPress={() => router.back()} color="white-90" />
+					<ScreenHeader.Back onPress={() => router.dismissTo('/playlist')} color="white-90" />
 					<Screen.Header.Right>
 						<Pressable
 							onPress={() => {
@@ -243,11 +211,7 @@ export default function DescriptionScreen() {
 				</Screen.Header>
 			)}
 
-			<ScrollView
-				ref={scrollRef}
-				className="flex-1"
-				contentContainerClassName='pb-[150px] pt-3'
-			>
+			<ScrollView ref={scrollRef} className="flex-1" contentContainerClassName="pb-[150px] pt-3">
 				{hasError ? (
 					<View className="items-center mt-16 gap-3">
 						<Ionicons name="alert-circle-outline" size={40} className="text-gray600" />
@@ -268,14 +232,23 @@ export default function DescriptionScreen() {
 					</View>
 				) : (
 					<>
-						<MarkdownBoldText
-							text={displayed}
-							className={cn('font-pretendard-medium', highContrast ? 'text-black' : 'text-on-dark')}
+						<Text
 							style={{
 								fontSize: bodyFontSize,
 								lineHeight: bodyFontSize * 1.9,
 							}}
-						/>
+							className={cn('font-pretendard-medium', highContrast ? 'text-black' : 'text-on-dark')}
+						>
+							{displayed.split(/\*\*(.+?)\*\*/g).map((part, i) =>
+								i % 2 === 1 ? (
+									<Text key={i} className="font-pretendard-semibold">
+										{part}
+									</Text>
+								) : (
+									part
+								),
+							)}
+						</Text>
 						{!isTyping && artworkImageUrl ? (
 							<Pressable
 								onPress={() => setImageModalVisible(true)}
@@ -320,73 +293,37 @@ export default function DescriptionScreen() {
 				</View>
 
 				<View className="flex-row items-center justify-between py-1 w-full">
-					{/* 채팅 버튼 — 몰입 모드에서만, 해설 완료 후 표시 */}
 					<View className="w-9 items-center">
-						{!isTyping && isImmersive && (
-							<Pressable
-								onPress={() => router.push({ pathname: '/chat', params: { sessionId } })}
-								hitSlop={8}
+						{isImmersive && !isTyping && (
+							<Button.Icon
+								variant="bare"
+								icon="chatbubble"
 								accessibilityLabel="작품에 대해 질문하기"
-								accessibilityRole="button"
-								style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
-							>
-								<Ionicons name="chatbubble" size={26} className="text-gray600" />
-							</Pressable>
+								onPress={() => router.push({ pathname: '/chat', params: { sessionId } })}
+							/>
 						)}
 					</View>
 
-					{/* 플레이 버튼 */}
-					<Pressable
-						className={cn(
-							'w-16 h-16 rounded-[32px] items-center justify-center',
-							isTTSLoading || isTyping || !displayed ? 'bg-divider-dark' : 'bg-primary',
-						)}
-						style={({ pressed }) => ({
-							transform: [
-								{ scale: pressed && !(isTTSLoading || isTyping || !displayed) ? 0.93 : 1 },
-							],
-						})}
-						onPress={() => {
-							Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-							handlePlayPause();
-						}}
+					<Button.Icon
+						size="lg"
+						icon={isSpeaking ? 'pause' : 'play'}
+						loading={isTTSLoading}
 						disabled={isTTSLoading || isTyping || !displayed}
+						haptic="medium"
 						accessibilityLabel={isSpeaking ? '일시정지' : '재생'}
-						accessibilityRole="button"
-					>
-						{isTTSLoading ? (
-							<ActivityIndicator color="#fff" size="small" />
-						) : (
-							<Ionicons name={isSpeaking ? 'pause' : 'play'} size={30} color="#fff" />
-						)}
-					</Pressable>
+						onPress={handlePlayPause}
+					/>
 
-					{/* 우측: 공유 (몰입 모드에서는 뒤로가기로 재생목록에 돌아가므로 버튼 없음) */}
-					<View className="w-9 items-center">
-						{!isTyping && !isImmersive && (
-							<Pressable
-								onPress={() => {
-									Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-									void handleShare();
-								}}
-								hitSlop={8}
-								accessibilityLabel="작품 감상 공유"
-								accessibilityRole="button"
-								style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
-							>
-								<Ionicons name="share-outline" size={26} className="text-gray600" />
-							</Pressable>
-						)}
-					</View>
+					<View className="w-9 items-center" />
 				</View>
 			</Screen.BottomAbsolute>
 
 			{/* 플레이어 위 재시도 버튼 — 오류 상태에서만 표시 */}
 			{hasError && retryCount < MAX_DESCRIPTION_RETRIES && (
 				<View
-					className="absolute left-0 right-0 items-center"
+					className="absolute left-0 right-0 items-center z-[10]"
 					pointerEvents="box-none"
-					style={{ bottom: insets.bottom + 196, zIndex: 10 }}
+					style={{ bottom: insets.bottom + 196 }}
 				>
 					<Pressable
 						onPress={handleRetry}
@@ -419,18 +356,13 @@ export default function DescriptionScreen() {
 						hitSlop={12}
 						accessibilityLabel="닫기"
 						accessibilityRole="button"
-						style={({ pressed }) => ({
-							position: 'absolute',
-							top: 56,
-							right: 20,
-							zIndex: 10,
-							opacity: pressed ? 0.6 : 1,
-						})}
+						className="absolute top-[56px] right-5 z-[10]"
+						style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
 					>
 						<Ionicons name="close" size={28} color="white" />
 					</Pressable>
 					<ScrollView
-						contentContainerClassName='flex-1 justify-center items-center'
+						contentContainerClassName="flex-1 justify-center items-center"
 						maximumZoomScale={4}
 						minimumZoomScale={1}
 						showsVerticalScrollIndicator={false}
