@@ -8,6 +8,9 @@ import type { DayVisit } from '@/src/store/visitStore';
  */
 export function useExhibitionPosterUrls(visits: Record<string, DayVisit>): Record<string, string> {
 	const [posterMap, setPosterMap] = useState<Record<string, string>>({});
+	const visitIdsKey = JSON.stringify(
+		Object.fromEntries(Object.entries(visits).map(([k, v]) => [k, v.exhibitionId])),
+	);
 
 	useEffect(() => {
 		const entries = Object.entries(visits).filter(
@@ -40,10 +43,9 @@ export function useExhibitionPosterUrls(visits: Record<string, DayVisit>): Recor
 		return () => {
 			cancelled = true;
 		};
+		// visitIdsKey가 실제 변경 조건. visits 객체 identity는 매 렌더 달라질 수 있다.
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [
-		JSON.stringify(Object.fromEntries(Object.entries(visits).map(([k, v]) => [k, v.exhibitionId]))),
-	]);
+	}, [visitIdsKey]);
 
 	return posterMap;
 }

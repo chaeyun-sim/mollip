@@ -1,82 +1,122 @@
 import { Ionicons } from '@expo/vector-icons';
-import * as Haptics from 'expo-haptics';
+import { BottomSheetBackdrop, BottomSheetModal } from '@gorhom/bottom-sheet';
 import { useRouter } from 'expo-router';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Pressable, ScrollView, Text, View } from 'react-native';
 import { ArchiveDiaryEmpty } from '@/src/components/archive/ArchiveDiaryEmpty';
-import { ArchiveLoginPrompt } from '@/src/components/archive/ArchiveLoginPrompt';
 import { DiaryCalendar } from '@/src/components/archive/DiaryCalendar';
-import { VisitTicketGrid } from '@/src/components/archive/VisitTicketGrid';
+import { PendingVisitsBanner } from '@/src/components/archive/PendingVisitsBanner';
+import { VisitPickerSheet, type VisitPickerEntry } from '@/src/components/archive/VisitPickerSheet';
 import { Screen } from '@/src/components/layout/Screen';
 import { useDayImages } from '@/src/hooks/useDayImages';
+import { useExhibitionPosterUrls } from '@/src/hooks/useExhibitionPosterUrls';
 import { useAuthStore } from '@/src/store/authStore';
-import { useVisitStore } from '@/src/store/visitStore';
-
-type DiaryViewMode = 'grid' | 'calendar';
+import { dateKeyOf, useVisitStore } from '@/src/store/visitStore';
+import { ARCHIVE_STAT_ACCENTS } from '@/src/constants/archivePalette';
+import { colors } from '@/src/constants/colors';
+import { WEEKDAYS } from '@/src/constants/week';
+import { LoginRequiredPressable } from '@/src/components/auth/LoginRequiredPressable';
+import { cn } from '@/src/lib/cn';
 
 export default function DiaryScreen() {
 	const router = useRouter();
 	const session = useAuthStore((s) => s.session);
 	const authLoading = useAuthStore((s) => s.isLoading);
-	const [diaryViewMode, setDiaryViewMode] = useState<DiaryViewMode>('grid');
 
 	const today = new Date();
-	const [calYear, setCalYear] = useState(today.getFullYear());
-	const [calMonth, setCalMonth] = useState(today.getMonth() + 1);
+	const [cal, setCal] = useState({ year: today.getFullYear(), month: today.getMonth() + 1 });
+	const { year: calYear, month: calMonth } = cal;
 
 	const visits = useVisitStore((s) => s.visits);
-	const visitDateKeys = useMemo(
-		() => Object.keys(visits).filter((k) => typeof visits[k].exhibitionId === 'string'),
+	// visits 키는 "날짜::전시" 복합 키 — 확정된 기록 개수는 날짜 수가 아니라 방문 수다
+	const confirmedKeys = useMemo(
+		() => Object.keys(visits).filter((k) => visits[k].status === 'confirmed'),
+		[visits],
+	);
+	const pendingCount = useMemo(
+		() => Object.keys(visits).filter((k) => visits[k].status === 'pending').length,
 		[visits],
 	);
 
-	const dayImages = useDayImages(visits);
-
-	const handleChangeMonth = useCallback(
-		(offset: -1 | 1) => {
-			setCalMonth((prev) => {
-				let m = prev + offset;
-				let y = calYear;
-				if (m > 12) {
-					m = 1;
-					y += 1;
-				}
-				if (m < 1) {
-					m = 12;
-					y -= 1;
-				}
-				setCalYear(y);
-				return m;
-			});
-		},
-		[calYear],
+	// 캘린더는 날짜 단위 — 하루에 확정 기록이 여러 개여도 그 날짜 하나로 묶어서 표시한다
+	const markedDates = useMemo(
+		() => [...new Set(confirmedKeys.map((k) => dateKeyOf(k)))],
+		[confirmedKeys],
 	);
+	const confirmedVisits = useMemo(() => {
+		const entries = confirmedKeys.map((k) => [k, visits[k]] as const);
+		return Object.fromEntries(entries);
+	}, [confirmedKeys, visits]);
+	const dayImages = useDayImages(confirmedVisits);
+	const exhibitionPosterUrls = useExhibitionPosterUrls(confirmedVisits);
+
+	// 하루에 전시를 여러 개 봤을 때 고를 바텀시트 상태 — dateKey가 세팅되면 present()
+	const pickerSheetRef = useRef<BottomSheetModal>(null);
+	const [pickerDateKey, setPickerDateKey] = useState<string | null>(null);
+
+	const pickerEntries = useMemo((): VisitPickerEntry[] => {
+		if (!pickerDateKey) return [];
+		return Object.entries(confirmedVisits)
+			.filter(([key]) => dateKeyOf(key) === pickerDateKey)
+			.map(([visitKey, visit]) => ({
+				visitKey,
+				visit,
+				imageUrl:
+					exhibitionPosterUrls[visitKey] ??
+					visit.thumbnail ??
+					visit.listened.find((l) => l.imageUrl)?.imageUrl,
+			}));
+	}, [confirmedVisits, pickerDateKey, exhibitionPosterUrls]);
+
+	const pickerDateLabel = useMemo(() => {
+		if (!pickerDateKey) return '';
+		const [y, m, d] = pickerDateKey.split('-').map(Number);
+		const weekday = WEEKDAYS[new Date(y, m - 1, d).getDay()];
+		return `${y}.${m}.${d} ${weekday}요일`;
+	}, [pickerDateKey]);
+
+	useEffect(() => {
+		useVisitStore.getState().pruneExpiredPending();
+	}, []);
+
+	const handleChangeMonth = useCallback((offset: -1 | 1) => {
+		setCal((prev) => {
+			let month = prev.month + offset;
+			let year = prev.year;
+			if (month > 12) {
+				month = 1;
+				year += 1;
+			}
+			if (month < 1) {
+				month = 12;
+				year -= 1;
+			}
+			return { year, month };
+		});
+	}, []);
 
 	const handleSelectDate = useCallback(
 		(dateKey: string) => {
-			router.push(`/diary/${dateKey}`);
+			const dayVisitKeys = confirmedKeys.filter((k) => dateKeyOf(k) === dateKey);
+			// 그날 전시가 1개뿐이면 바로 그 티켓으로, 여러 개면 고르는 시트를 먼저 띄운다
+			if (dayVisitKeys.length <= 1) {
+				const query = dayVisitKeys[0] ? `?visit=${dayVisitKeys[0]}` : '';
+				router.push(`/diary/${dateKey}${query}`);
+				return;
+			}
+			setPickerDateKey(dateKey);
+			pickerSheetRef.current?.present();
 		},
-		[router],
+		[router, confirmedKeys],
 	);
 
-	const handleGridTicketPress = useCallback(
-		(dateKey: string) => {
-			router.push(`/diary/${dateKey}`);
+	const handlePickVisit = useCallback(
+		(visitKey: string) => {
+			pickerSheetRef.current?.dismiss();
+			if (pickerDateKey) router.push(`/diary/${pickerDateKey}?visit=${visitKey}`);
 		},
-		[router],
+		[pickerDateKey, router],
 	);
-
-	const handleToggleViewMode = useCallback(() => {
-		Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-		setDiaryViewMode((prev) => (prev === 'grid' ? 'calendar' : 'grid'));
-	}, []);
-
-	const handleLogin = useCallback(() => {
-		router.push({
-			pathname: '/auth/login',
-			params: { returnTo: '/(tabs)/diary' },
-		});
-	}, [router]);
 
 	if (authLoading) return null;
 
@@ -86,7 +126,29 @@ export default function DiaryScreen() {
 				<Screen.Header>
 					<Screen.Header.Logo />
 				</Screen.Header>
-				<ArchiveLoginPrompt onLogin={handleLogin} />
+				<View className="flex-1 items-center justify-center px-8 py-16">
+					<View className="rounded-full bg-bg-light p-5 mb-5">
+						<Ionicons name="lock-closed-outline" size={28} color={ARCHIVE_STAT_ACCENTS.visitDays} />
+					</View>
+					<Text className="text-[20px] text-center mb-2 font-hahmlet-bold text-gray900">
+						로그인하고 관람을 기록해요
+					</Text>
+					<Text className="text-[14px] text-center leading-[21px] mb-8 font-pretendard-regular text-gray700">
+						북마크와 관람 다이어리는 계정에 저장돼요
+					</Text>
+					<LoginRequiredPressable
+						className="w-full rounded-full py-4 items-center bg-secondary"
+						accessibilityRole="button"
+						accessibilityLabel="로그인하기"
+						style={({ pressed }) => ({
+							opacity: pressed ? 0.9 : 1,
+						})}
+						onPress={() => router.push('/auth/login')}
+						returnTo="/(tabs)/diary"
+					>
+						<Text className="text-white text-[15px] font-pretendard-semibold">로그인하기</Text>
+					</LoginRequiredPressable>
+				</View>
 			</Screen>
 		);
 	}
@@ -111,75 +173,51 @@ export default function DiaryScreen() {
 			<ScrollView
 				showsVerticalScrollIndicator={false}
 				bounces={false}
-				contentContainerStyle={{ paddingBottom: 48, alignItems: 'stretch' }}
+				contentContainerClassName="pb-12 items-stretch"
 			>
-				<View className="flex-row items-end justify-between" style={{ marginBottom: 20 }}>
-					<View className="flex-row items-end gap-[6px]">
-						<Text
-							className="font-hahmlet-bold text-[60px] text-gray900 tracking-[-1.5px]"
-							style={{ lineHeight: 68 }}
-						>
-							{visitDateKeys.length}
-						</Text>
-						<Text
-							className="font-hahmlet-bold text-[19px] text-gray900 tracking-[-0.3px] pb-[10px]"
-							style={{ lineHeight: 22 }}
-						>
-							Tickets
-						</Text>
-					</View>
-
-					{visitDateKeys.length > 0 && (
-						<Pressable
-							onPress={handleToggleViewMode}
-							accessibilityRole="button"
-							accessibilityLabel={
-								diaryViewMode === 'grid' ? '캘린더 보기로 전환' : '그리드 보기로 전환'
-							}
-							hitSlop={8}
-							style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
-							className="flex-row items-center gap-1 pb-[9px]"
-						>
-							<Ionicons
-								name={diaryViewMode === 'grid' ? 'calendar-outline' : 'grid-outline'}
-								size={16}
-								className="text-gray900"
-							/>
-							<Text
-								className="text-[13px] text-gray900"
-								style={{ fontFamily: 'Pretendard-Medium' }}
-							>
-								{diaryViewMode === 'grid' ? '캘린더' : '그리드'}
-							</Text>
-						</Pressable>
-					)}
-				</View>
-
-				{!visitDateKeys.length ? (
-					<ArchiveDiaryEmpty
-						onExplore={() => router.push('/(tabs)/')}
-						onMap={() => router.push('/(tabs)/map')}
+				{pendingCount > 0 && (
+					<PendingVisitsBanner
+						count={pendingCount}
+						onPress={() => router.push('/diary/confirm-visits')}
 					/>
-				) : diaryViewMode === 'grid' ? (
-					<View className="px-1">
-						<VisitTicketGrid onPress={handleGridTicketPress} />
-						<Text className="font-pretendard-regular text-[11px] text-[rgba(61,43,26,0.28)] tracking-[0.3px] text-center mt-10">
-							방문한 전시를 기록하면 티켓이 쌓여요
-						</Text>
-					</View>
-				) : (
-					<View className="px-2">
+				)}
+				{confirmedKeys.length > 0 ? (
+					<View className={cn('px-2', pendingCount > 0 ? 'mt-4' : 'mt-5')}>
 						<DiaryCalendar
 							year={calYear}
 							month={calMonth}
-							markedDates={visitDateKeys}
+							markedDates={markedDates}
 							dayImages={dayImages}
 							onSelectDate={handleSelectDate}
 							onChangeMonth={handleChangeMonth}
 						/>
 					</View>
+				) : (
+					<ArchiveDiaryEmpty
+						onExplore={() => router.push('/(tabs)/')}
+						onMap={() => router.push('/(tabs)/map')}
+					/>
 				)}
 			</ScrollView>
+
+			{/* 하루에 전시를 여러 개 봤을 때 캘린더 우표를 탭하면 뜨는 티켓 선택 시트 */}
+			<BottomSheetModal
+				ref={pickerSheetRef}
+				snapPoints={['45%']}
+				enablePanDownToClose
+				backgroundStyle={{ backgroundColor: colors.white }}
+				handleIndicatorStyle={{ backgroundColor: colors.gray400 }}
+				backdropComponent={(props) => (
+					<BottomSheetBackdrop {...props} disappearsOnIndex={-1} appearsOnIndex={0} opacity={0.5} />
+				)}
+				onDismiss={() => setPickerDateKey(null)}
+			>
+				<VisitPickerSheet
+					dateLabel={pickerDateLabel}
+					entries={pickerEntries}
+					onSelect={handlePickVisit}
+				/>
+			</BottomSheetModal>
 		</Screen>
 	);
 }
