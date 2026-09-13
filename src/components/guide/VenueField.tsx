@@ -1,5 +1,6 @@
-import { Pressable, Text, TextInput, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 
+import { TextField } from '@/src/components/common/TextField';
 import { cn } from '@/src/lib/cn';
 
 interface VenueFieldProps {
@@ -27,28 +28,27 @@ export function VenueField({
 			<Text className="text-xs mb-2 font-pretendard-semibold text-gray500 tracking-wider">위치</Text>
 			<View
 				className={cn(
-					'rounded-lg border bg-gray900',
+					'rounded-lg border bg-gray900 h-[52px] overflow-hidden',
 					error ? 'border-error' : 'border-divider-dark',
 				)}
-				style={{ height: 52, overflow: 'hidden' }}
 			>
 				{focused ? (
-					<TextInput
+					<TextField
+						variant="plain"
+						tone="dark"
 						autoFocus
-						className="flex-1 px-4 text-base font-pretendard-regular text-on-dark"
+						className="px-4 text-base"
 						placeholder="예) 국립현대미술관 과천관"
-						placeholderTextColor="#57534E"
 						value={value}
 						onChangeText={onChangeText}
 						returnKeyType="done"
 						onSubmitEditing={onSubmitEditing}
 						numberOfLines={1}
-						style={{ lineHeight: 0 }}
 						onBlur={onBlur}
 					/>
 				) : (
 					<Pressable
-						style={{ flex: 1, paddingHorizontal: 16, justifyContent: 'center' }}
+						className="flex-1 px-4 justify-center"
 						onPress={onFocus}
 						accessibilityRole="button"
 						accessibilityLabel="위치 입력"

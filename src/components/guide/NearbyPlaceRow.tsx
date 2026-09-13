@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
-import type { ExternalMapTarget } from '@/src/components/common/ExternalMapSheet';
+import type { ExternalMapTarget } from '@/src/components/map/ExternalMapSheet';
 import type { NearbyPlace } from '@/src/hooks/useNearbyPlaces';
 
 export type PlaceVariant = 'cafe' | 'attraction';

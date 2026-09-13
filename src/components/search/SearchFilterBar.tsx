@@ -15,10 +15,6 @@ interface SearchFilterBarProps {
 	onPressExclude: () => void;
 }
 
-function formatChipDate(date: Date): string {
-	return `${date.getMonth() + 1}.${date.getDate()}`;
-}
-
 export function SearchFilterBar({
 	statusFilters,
 	onToggleStatus,
@@ -29,6 +25,10 @@ export function SearchFilterBar({
 	excludedCount,
 	onPressExclude,
 }: SearchFilterBarProps) {
+	function formatChipDate(date: Date) {
+		return `${date.getMonth() + 1}.${date.getDate()}`;
+	}
+	
 	return (
 		<ScrollView
 			horizontal

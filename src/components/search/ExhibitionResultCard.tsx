@@ -4,7 +4,7 @@ import { useBookmarkStore } from '@/src/store/bookmarkStore';
 import { ImageFallback } from '@/src/components/common/ImageFallback';
 import { formatDistance } from '@/src/utils/mapUtils';
 import { getDdayLabel, STATUS_LABELS } from '@/src/utils/exhibitionSearch';
-import { StatusBadge } from './StatusBadge';
+import { StatusBadge } from '@/src/components/explore/StatusBadge';
 import type { SearchResult } from '@/src/hooks/useExhibitionSearch';
 
 interface ExhibitionResultCardProps {
@@ -14,6 +14,7 @@ interface ExhibitionResultCardProps {
 
 export function ExhibitionResultCard({ result, onPress }: ExhibitionResultCardProps) {
 	const { exhibition: ex, status, distanceKm } = result;
+	
 	const ddayLabel = getDdayLabel(ex);
 	const isBookmarked = useBookmarkStore((s) => s.isBookmarked(ex.id));
 	const toggleBookmark = useBookmarkStore((s) => s.toggle);
@@ -33,6 +34,7 @@ export function ExhibitionResultCard({ result, onPress }: ExhibitionResultCardPr
 				className="rounded-lg w-[76px] h-[100px]"
 				iconSize={36}
 				resizeMode="cover"
+				useImageProxy
 			/>
 
 			{/* 정보 */}
@@ -48,11 +50,11 @@ export function ExhibitionResultCard({ result, onPress }: ExhibitionResultCardPr
 				</Text>
 
 				<View className="flex-row items-center gap-1.5">
-					<Text className="text-gray500 text-[12px] font-pretendard-regular">
-						{ex.startDate} – {ex.endDate}
+					<Text className="text-gray500 text-xs font-pretendard-regular">
+						{ex.startDate} - {ex.endDate}
 					</Text>
 					{ddayLabel && (
-						<Text className="text-orange-700 text-[12px] font-pretendard-semibold">
+						<Text className="text-orange-700 text-xs font-pretendard-semibold">
 							{ddayLabel}
 						</Text>
 					)}

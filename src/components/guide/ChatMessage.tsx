@@ -17,7 +17,7 @@ import type { Message } from '@/src/store/chatStore';
 import { getEffectiveFontSize, useSettingsStore } from '@/src/store/settingsStore';
 import { fetchWikidataImage } from '@/src/utils/wikidataImage';
 
-const DOCENT_AVATAR = require('../../../assets/images/marker/gogh.png');
+const DOCENT_AVATAR = require('../../../assets/images/logo/logo.png');
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 interface Segment {
@@ -51,6 +51,7 @@ interface ChatMessageProps {
 export function ChatMessage({ item, onRetry }: ChatMessageProps) {
 	const isUser = item.role === 'user';
 	const { fontSize, highContrast } = useSettingsStore();
+	
 	const bodyFontSize = getEffectiveFontSize(fontSize, highContrast);
 
 	const [copyMenuVisible, setCopyMenuVisible] = useState(false);
@@ -91,7 +92,7 @@ export function ChatMessage({ item, onRetry }: ChatMessageProps) {
 	function renderMessageText() {
 		const textClass = cn(isUser ? 'text-white' : highContrast ? 'text-black' : 'text-on-dark');
 
-		const textStyle = { fontSize: bodyFontSize, lineHeight: bodyFontSize * 1.6 };
+		const textStyle = { fontSize: bodyFontSize - 1, lineHeight: (bodyFontSize - 1) * 1.6 };
 
 		if (!hasArtwork) {
 			return (
@@ -144,10 +145,9 @@ export function ChatMessage({ item, onRetry }: ChatMessageProps) {
 						'rounded-2xl px-4 py-3 max-w-[80%]',
 						isUser
 							? 'rounded-tr-sm bg-primary'
-							: cn(
-									'rounded-tl-sm',
-									highContrast ? 'bg-[#F0EFED]' : 'bg-primary border-white/[0.08]',
-								),
+							: highContrast
+								? 'bg-[#F0EFED rounded-tl-sm'
+								: 'bg-primary border-white/[0.08] rounded-tl-sm',
 					)}
 					style={{ borderWidth: isUser ? 0 : highContrast ? 0 : StyleSheet.hairlineWidth }}
 					onLongPress={!isUser ? () => setCopyMenuVisible(true) : undefined}
@@ -179,18 +179,13 @@ export function ChatMessage({ item, onRetry }: ChatMessageProps) {
 							{ label: '선택 복사', onPress: handleSelectCopy },
 						].map((action, i) => (
 							<View key={action.label}>
-								{i > 0 && (
-									<View
-										className="bg-black/[0.08] mx-5"
-										style={{ height: StyleSheet.hairlineWidth }}
-									/>
-								)}
+								{i > 0 && <View className="bg-black/8 mx-5 h-hairline" />}
 								<Pressable
 									onPress={action.onPress}
 									className="px-6 py-5"
 									style={({ pressed }) => ({ opacity: pressed ? 0.4 : 1 })}
 								>
-									<Text className="text-[18px] font-pretendard-regular text-gray900">
+									<Text className="text-lg font-pretendard-regular text-gray900">
 										{action.label}
 									</Text>
 								</Pressable>
@@ -208,7 +203,7 @@ export function ChatMessage({ item, onRetry }: ChatMessageProps) {
 				onRequestClose={() => setSelectCopyVisible(false)}
 			>
 				<Pressable
-					style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.6)' }}
+					className="flex-1 bg-black/60"
 					onPress={() => setSelectCopyVisible(false)}
 				>
 					<View className="absolute bottom-0 left-0 right-0 bg-gray900 rounded-t-[24px] px-6 pt-5 pb-12">
@@ -224,7 +219,7 @@ export function ChatMessage({ item, onRetry }: ChatMessageProps) {
 								<Ionicons name="close" size={20} color="rgba(255,255,255,0.6)" />
 							</Pressable>
 						</View>
-						<ScrollView style={{ maxHeight: 320 }} showsVerticalScrollIndicator={false}>
+						<ScrollView className="max-h-80" showsVerticalScrollIndicator={false}>
 							<Text
 								selectable
 								className="text-on-dark font-pretendard-regular text-[15px] leading-[24px]"
@@ -246,8 +241,7 @@ export function ChatMessage({ item, onRetry }: ChatMessageProps) {
 			>
 				<View style={{ flex: 1, backgroundColor: 'black' }}>
 					<View
-						className="absolute left-0 right-0 flex-row items-center justify-between px-5 z-10"
-						style={{ top: 56 }}
+						className="absolute left-0 right-0 flex-row items-center justify-between px-5 z-10 top-14"
 					>
 						<Text
 							className="text-white font-pretendard-semibold text-[15px] flex-1 mr-4"
@@ -275,7 +269,7 @@ export function ChatMessage({ item, onRetry }: ChatMessageProps) {
 						</View>
 					) : artworkImageUrl ? (
 						<ScrollView
-							contentContainerClassName='flex-1 justify-center items-center'
+							contentContainerClassName="flex-1 justify-center items-center"
 							maximumZoomScale={4}
 							minimumZoomScale={1}
 							showsVerticalScrollIndicator={false}
@@ -291,7 +285,7 @@ export function ChatMessage({ item, onRetry }: ChatMessageProps) {
 						</ScrollView>
 					) : (
 						<View className="flex-1 items-center justify-center gap-3">
-							<Ionicons name="image-outline" size={48} color="rgba(255,255,255,0.3)" />
+							<Ionicons name="image-outline" size={48} className="text-white/30" />
 							<Text className="text-white/40 font-pretendard-regular text-[14px]">
 								이미지를 찾을 수 없어요
 							</Text>

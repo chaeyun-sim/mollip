@@ -1,6 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
-import { ActivityIndicator, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native';
 
+import { TextField } from '@/src/components/common/TextField';
 import { cn } from '@/src/lib/cn';
 
 export interface ExhibitionSuggestion {
@@ -48,18 +49,16 @@ export function ExhibitionTitleField({
 				style={{ height: 52, overflow: 'hidden' }}
 			>
 				{focused ? (
-					<TextInput
+					<TextField
+						variant="plain"
+						tone="dark"
 						autoFocus
-						className="flex-1 px-4 text-base text-on-dark font-pretendard-regular"
-						textAlignVertical="center"
+						className="px-4 text-base"
 						placeholder="예) 이우환: 시간의 여백"
-						placeholderTextColor="#57534E"
 						value={value}
 						onChangeText={onChangeText}
 						returnKeyType="next"
 						onSubmitEditing={onSubmitEditing}
-						style={{ lineHeight: 0 }}
-						multiline={false}
 						numberOfLines={1}
 						onBlur={onBlur}
 						clearButtonMode="while-editing"
@@ -117,14 +116,14 @@ export function ExhibitionTitleField({
 								<Text className="text-on-dark text-sm font-pretendard-semibold" numberOfLines={1}>
 									{s.title}
 								</Text>
-								{s.venue ? (
+								{s.venue && (	
 									<Text
 										className="text-xs mt-0.5 font-pretendard-regular text-gray600"
 										numberOfLines={1}
 									>
 										{s.venue}
 									</Text>
-								) : null}
+								)}
 							</View>
 							<Ionicons name="return-down-back" size={14} className="text-gray700" />
 						</Pressable>

@@ -1,8 +1,9 @@
 import { View } from 'react-native';
 import { colors } from '@/src/constants/colors';
+import { ReactNode } from 'react';
 
 interface SettingsCardProps {
-	children: React.ReactNode;
+	children: ReactNode;
 }
 
 export function SettingsCard({ children }: SettingsCardProps) {

@@ -1,14 +1,6 @@
 import { useEffect, useRef } from 'react';
-import {
-	AccessibilityInfo,
-	ActivityIndicator,
-	Pressable,
-	StyleSheet,
-	Text,
-	View,
-} from 'react-native';
+import { AccessibilityInfo, ActivityIndicator, Pressable, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-
 import { ImageFallback } from '@/src/components/common/ImageFallback';
 import { colors } from '@/src/constants/colors';
 import { cn } from '@/src/lib/cn';
@@ -85,6 +77,7 @@ export function ArtistIntroTrack({ artist, imageUrl, status, onPress }: ArtistIn
 					className={cn('w-14 h-14 rounded-[10px]', isLoading && 'opacity-60')}
 					iconSize={22}
 					resizeMode="cover"
+					useImageProxy
 				/>
 				<View className="flex-1 gap-1">
 					<View className="flex-row">
@@ -114,10 +107,7 @@ export function ArtistIntroTrack({ artist, imageUrl, status, onPress }: ArtistIn
 				</View>
 				<View className="w-[26px] h-[26px] items-center justify-center">{renderControl()}</View>
 			</Pressable>
-			<View
-				className="mt-3 border-b-white/6"
-				style={{ borderBottomWidth: StyleSheet.hairlineWidth }}
-			/>
+			<View className="mt-3 border-b-white/6 border-b-hairline" />
 		</View>
 	);
 }

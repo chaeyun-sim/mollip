@@ -6,11 +6,10 @@ import {
 	Platform,
 	Pressable,
 	Text,
-	TextInput,
 	View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { colors } from '@/src/constants/colors';
+import { TextField } from '@/src/components/common/TextField';
 
 interface ExcludeWordsModalProps {
 	visible: boolean;
@@ -60,16 +59,15 @@ export function ExcludeWordsModal({
 
 							<View className="flex-row items-center gap-2 bg-bg-tonal rounded-2xl px-4 py-3 mb-4">
 								<Ionicons name="remove-circle-outline" size={16} className="text-gray600" />
-								<TextInput
-									className="flex-1 text-gray900 text-sm font-pretendard-regular leading-none"
+								<TextField
+									variant="plain"
+									className="text-sm"
 									placeholder="예: 미디어아트"
-									placeholderTextColor={colors.gray500}
 									value={input}
 									onChangeText={setInput}
 									onSubmitEditing={handleSubmit}
 									returnKeyType="done"
 									submitBehavior="submit"
-									style={{ lineHeight: 0 }}
 								/>
 								<Pressable
 									onPress={onClearAll}
@@ -99,7 +97,7 @@ export function ExcludeWordsModal({
 											style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
 										>
 											<Text className="text-white text-[13px] font-pretendard-medium">{word}</Text>
-											<Ionicons name="close" size={13} color="rgba(255,255,255,0.7)" />
+											<Ionicons name="close" size={13} className="text-white/70" />
 										</Pressable>
 									))}
 								</View>
