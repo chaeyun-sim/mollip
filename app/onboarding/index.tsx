@@ -1,72 +1,141 @@
 import { useRouter } from 'expo-router';
 import { useCallback, useState } from 'react';
-import { Text, View } from 'react-native';
-import { ArtPreferenceComplete } from '@/src/components/onboarding/ArtPreferenceComplete';
-import { ArtPreferenceDeck } from '@/src/components/onboarding/ArtPreferenceDeck';
+import { View } from 'react-native';
+
 import { Screen } from '@/src/components/layout/Screen';
-import { WarmGradientBackdrop } from '@/src/components/common/WarmGradientBackdrop';
-import { useArtPreferenceSwipe } from '@/src/hooks/useArtPreferenceSwipe';
+import { OnboardingArtworkTray } from '@/src/components/onboarding/OnboardingArtworkTray';
+import { OnboardingSaveErrorBar } from '@/src/components/onboarding/OnboardingSaveErrorBar';
+import { OnboardingWallConfirm } from '@/src/components/onboarding/OnboardingWallConfirm';
+import { OnboardingWallPrologue } from '@/src/components/onboarding/OnboardingWallPrologue';
+import { OnboardingWallProgress } from '@/src/components/onboarding/OnboardingWallProgress';
+import { useOnboardingWallFlow } from '@/src/hooks/useOnboardingWallFlow';
 import { useAuthStore } from '@/src/store/authStore';
+import { setLocalOnboardingCompleted, setPendingGenres } from '@/src/utils/onboardingLocalStorage';
+import { toValidGenres } from '@/src/utils/onboardingWallGenres';
 import { supabase } from '@/src/utils/supabase';
-import { ART_ITEMS } from '@/src/data/onboardingArtItems';
-import { shuffle } from '@/src/utils/shuffle';
-import { summarizeArtPreferences } from '@/src/utils/artPreferenceSummary';
 
 export default function OnboardingScreen() {
 	const router = useRouter();
 	const userId = useAuthStore((s) => s.user?.id);
 	const setOnboardingCompleted = useAuthStore((s) => s.setOnboardingCompleted);
-	const [initialCards] = useState(() => shuffle(ART_ITEMS));
+	const [saving, setSaving] = useState(false);
+	// 오류 바는 실패 이후 재시도가 끝날 때까지(성공 또는 무저장 시작 전까지) 화면에 남는다 (AC-5)
+	// 0 = 오류 없음, 그 외에는 실패 횟수 — key로 써서 재실패마다 알림을 다시 발화한다 (AC-7)
+	const [errorCount, setErrorCount] = useState(0);
+	const hasError = errorCount > 0;
 
-	const { cards, liked, done, handleSwipeLeft, handleSwipeRight } =
-		useArtPreferenceSwipe(initialCards);
+	const {
+		step,
+		trays,
+		selections,
+		canCompleteEarly,
+		selectedGenres,
+		lastAnnouncement,
+		lastChangedTrayIndex,
+		startCuration,
+		selectPiece,
+		requestChange,
+		completeEarly,
+		restart,
+	} = useOnboardingWallFlow();
 
-	// 선호 데이터 저장 후 탭으로 이동 (REQ-UI002-003, REQ-UI002-004, REQ-UI002-006)
-	// 위치 권한은 여기서 묻지 않는다 — 서비스 사용이 우선이라, 지도 탭 진입 등 실제 필요한 시점에
-	// useUserLocation이 온디맨드로 요청한다.
-	const handleNext = useCallback(() => {
+	const handleSkip = useCallback(() => {
+		// 스킵은 preferred_genres를 바꾸지 않고 완료 상태만 남긴다 (AC-1, AC-5)
 		if (userId) {
-			const { genres, artists } = summarizeArtPreferences(liked);
-			// 저장 실패 시 온보딩 플로우를 차단하지 않음
-			supabase
-				.from('profiles')
-				.update({ preferred_genres: genres, preferred_artists: artists, onboarding_completed: true })
-				.eq('id', userId)
-				.then(({ error }) => {
-					if (error) console.error('[onboarding] preference save failed:', error.message);
-				});
-			setOnboardingCompleted(true);
+			void setLocalOnboardingCompleted(userId, true);
+			void supabase.from('profiles').update({ onboarding_completed: true }).eq('id', userId);
 		}
+		setOnboardingCompleted(true);
 		router.replace('/(tabs)');
-	}, [router, userId, liked, setOnboardingCompleted]);
+	}, [userId, router, setOnboardingCompleted]);
 
-	return (
-		<Screen variant="warm">
-			<WarmGradientBackdrop />
-			{/* 헤더 */}
-			<View className="pt-4 pb-2 gap-1">
-				<Text className="text-gray900 text-[26px] font-hahmlet-bold">
-					당신의 취향을{'\n'}골라보세요
-				</Text>
-				<Text className="text-description text-[13px] font-pretendard-regular">
-					마음에 드는 그림을 저장하면 맞춤 전시를 추천해드릴게요
-				</Text>
-			</View>
+	// AC-4: taxonomy 검증 후 preferred_genres만 명시적으로 저장한다 (preferred_artists는 건드리지 않음)
+	// AC-5: 실패 시 선택 결과를 화면과 사용자별 로컬 pending 레코드에 남기고 재시도/무저장 시작을 제공한다
+	const handleConfirm = useCallback(async () => {
+		if (!userId || saving) return;
+		setSaving(true);
 
-			{done ? (
-				<ArtPreferenceComplete
-					likedCount={liked.length}
-					buttonLabel="다음으로"
-					onPress={handleNext}
-				/>
-			) : (
-				<ArtPreferenceDeck
-					cards={cards}
-					totalCount={ART_ITEMS.length}
-					onSwipeLeft={handleSwipeLeft}
-					onSwipeRight={handleSwipeRight}
-				/>
-			)}
-		</Screen>
-	);
+		const genres = toValidGenres(selectedGenres);
+		const { error } = await supabase
+			.from('profiles')
+			.update({ preferred_genres: genres, onboarding_completed: true })
+			.eq('id', userId);
+
+		if (error) {
+			console.error('[onboarding] save failed:', error.message);
+			await setPendingGenres(userId, genres);
+			setSaving(false);
+			setErrorCount((n) => n + 1);
+			return;
+		}
+
+		await setLocalOnboardingCompleted(userId, true);
+		setOnboardingCompleted(true);
+		router.replace('/(tabs)');
+	}, [userId, saving, selectedGenres, setOnboardingCompleted, router]);
+
+	// AC-5: 취향 저장 없이 시작 — pending 레코드는 남겨 다음 인증 가능 시점에 재동기화된다
+	const handleSkipWithoutSave = useCallback(async () => {
+		if (!userId) return;
+		await setLocalOnboardingCompleted(userId, true);
+		setOnboardingCompleted(true);
+		router.replace('/(tabs)');
+	}, [userId, setOnboardingCompleted, router]);
+
+	function renderContent() {
+		if (step.kind === 'prologue') {
+			return <OnboardingWallPrologue onStart={startCuration} onSkip={handleSkip} />;
+		}
+
+		if (step.kind === 'tray') {
+			const tray = trays[step.trayIndex];
+			return (
+				<View className="flex-1 pt-2">
+					<View style={{ maxHeight: '45%' }}>
+						<OnboardingWallProgress
+							selections={selections}
+							canCompleteEarly={canCompleteEarly}
+							onCompleteEarly={completeEarly}
+							onRequestChange={requestChange}
+							onSkip={handleSkip}
+							changeAnnouncement={lastChangedTrayIndex !== null ? lastAnnouncement : null}
+							changedTrayIndex={lastChangedTrayIndex}
+						/>
+					</View>
+					<View className="flex-1 pt-2">
+						<OnboardingArtworkTray
+							tray={tray}
+							onSelect={(piece) => selectPiece(step.trayIndex, piece)}
+							announcement={lastChangedTrayIndex === null ? lastAnnouncement : null}
+						/>
+					</View>
+				</View>
+			);
+		}
+
+		// step.kind === 'confirm'
+		return (
+			<OnboardingWallConfirm
+				selections={selections}
+				onRequestChange={requestChange}
+				onRestart={restart}
+				onConfirm={handleConfirm}
+				confirmDisabled={saving || hasError}
+				changeAnnouncement={lastChangedTrayIndex !== null ? lastAnnouncement : null}
+				changedTrayIndex={lastChangedTrayIndex}
+				errorSlot={
+					hasError ? (
+						<OnboardingSaveErrorBar
+							key={errorCount}
+							onRetry={handleConfirm}
+							onSkipSave={handleSkipWithoutSave}
+							busy={saving}
+						/>
+					) : undefined
+				}
+			/>
+		);
+	}
+
+	return <Screen variant="warm">{renderContent()}</Screen>;
 }

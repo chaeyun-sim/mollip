@@ -1,0 +1,24 @@
+import type { ImageSourcePropType } from 'react-native';
+
+export interface OnboardingWallPiece {
+ id: string; image: ImageSourcePropType; genre: string; label: string; fit: 'contain' | 'cover'; focus: [number, number]; representative: boolean;
+}
+
+export const ONBOARDING_WALL_PIECES: OnboardingWallPiece[] = [
+ { id: 'photo-1', image: require('../../assets/images/genres/photo-empire_building-horizontal.jpg'), genre: '사진', label: '높은 철골 위에 나란히 앉은 사람들, 사진', fit: 'contain', focus: [.5, .5], representative: true },
+ { id: 'photo-2', image: require('../../assets/images/genres/photo-1-square.webp'), genre: '사진', label: '달 표면에 선 우주인과 긴 그림자, 사진', fit: 'contain', focus: [.5, .5], representative: false },
+ { id: 'sculpture-1', image: require('../../assets/images/genres/skulpture-thinking-vertical.jpg'), genre: '조각', label: '턱을 괴고 몸을 웅크린 인물, 조각', fit: 'cover', focus: [.48, .40], representative: true },
+ { id: 'sculpture-2', image: require('../../assets/images/genres/skulpture-pieta-square.jpg'), genre: '조각', label: '누운 인물을 품에 안은 대리석 형상, 조각', fit: 'contain', focus: [.5, .5], representative: false },
+ { id: 'print-1', image: require('../../assets/images/genres/print-wave-horizontal.jpg'), genre: '판화', label: '배 위로 굽이치는 커다란 푸른 파도, 판화', fit: 'cover', focus: [.40, .45], representative: true },
+ { id: 'print-2', image: require('../../assets/images/genres/print-melencolia-vertical.jpg'), genre: '판화', label: '도구들 사이에서 생각에 잠긴 날개 달린 인물, 판화', fit: 'cover', focus: [.61, .48], representative: false },
+ { id: 'korean-1', image: require('../../assets/images/genres/korean-Irworobongdo-horizontal.jpg'), genre: '한국화', label: '해와 달 아래 펼쳐진 푸른 산과 물결, 한국화', fit: 'contain', focus: [.5, .5], representative: true },
+ { id: 'korean-2', image: require('../../assets/images/genres/korean-1-vertical.jpg'), genre: '한국화', label: '둘러앉은 사람들 가운데 씨름하는 두 사람, 한국화', fit: 'cover', focus: [.52, .51], representative: false },
+ { id: 'painting-1', image: require('../../assets/images/genres/paintings-pearl-vertical.jpg'), genre: '회화', label: '푸른 두건을 쓰고 뒤돌아보는 인물, 회화', fit: 'cover', focus: [.53, .40], representative: true },
+ { id: 'painting-2', image: require('../../assets/images/genres/paintings-gogh-horizontal.jpg'), genre: '회화', label: '소용돌이치는 푸른 밤하늘과 노란 별, 회화', fit: 'cover', focus: [.55, .38], representative: false },
+ { id: 'craft-1', image: require('../../assets/images/genres/crafts-korean-vertical.jpg'), genre: '공예', label: '둥근 무늬와 새가 새겨진 푸른 도자기, 공예', fit: 'contain', focus: [.5, .5], representative: true },
+ { id: 'craft-2', image: require('../../assets/images/genres/crafs-egg-vertical.png'), genre: '공예', label: '노란 보석 장식의 달걀과 작은 마차, 공예', fit: 'contain', focus: [.5, .5], representative: false },
+ { id: 'contemporary-1', image: require('../../assets/images/genres/contemporary-1-horizontal.png'), genre: '현대미술', label: '은색 테이프로 붙인 검정·분홍 로고, 현대 미술', fit: 'contain', focus: [.5, .5], representative: true },
+ { id: 'contemporary-2', image: require('../../assets/images/genres/contemporary-2-vertical.png'), genre: '현대미술', label: '로고가 켜진 모니터를 높이 쌓은 탑, 현대 미술', fit: 'contain', focus: [.5, .5], representative: false },
+ { id: 'contemporary-3', image: require('../../assets/images/genres/contemporary-3-square.png'), genre: '현대미술', label: '얼굴과 기하학적 면으로 구성한 로고, 현대 미술', fit: 'contain', focus: [.5, .5], representative: false },
+ { id: 'contemporary-4', image: require('../../assets/images/genres/contemporary-4-horizontal.png'), genre: '현대미술', label: '분홍·보라 빛으로 녹아내리는 로고들, 현대 미술', fit: 'contain', focus: [.5, .5], representative: false },
+];
