@@ -20,13 +20,13 @@ status: ready-for-user
 
 ## Evidence
 
-| AC | tsc | 스크린샷 | 회귀 |
-|----|-----|----------|------|
-| AC-1~13 (토큰 추가 + 전 사용처 이관 + grep 게이트) | ✅ 0 errors | 32라우트 baseline↔after 픽셀 비교, 대부분 IDENTICAL | 실시간 데이터/랜덤 요소 외 회귀 없음 |
-| AC-14~15 (브랜드 컬러 값 교체 + 구 accent 이관) | ✅ 0 errors | `evidence/ac14/`, `evidence/ac15/` | `#3B82F6`/구 accent 참조 0건 |
-| AC-16 (다크 variant 대비 검증) | — | `ac16-contrast-report.md` | 다크 화면 흰 라벨 1건 AA 미달(완화책 `highContrast` 정상 동작) |
-| AC-17 (DESIGN_SYSTEM.md 갱신) | — | hex 자동 대조 mismatch 0건 | 대비 수치 오류 3건 발견 → Manager가 직접 수정 |
-| P1-1 (홈 화면 범위 밖 색상 회귀) | ✅ 0 errors | 코드 수정 확인, 시각 확인은 스크롤 하단이라 미실시 | 원상 복구(`#B8623D`) |
+| AC                                                 | tsc         | 스크린샷                                            | 회귀                                                           |
+| -------------------------------------------------- | ----------- | --------------------------------------------------- | -------------------------------------------------------------- |
+| AC-1~13 (토큰 추가 + 전 사용처 이관 + grep 게이트) | ✅ 0 errors | 32라우트 baseline↔after 픽셀 비교, 대부분 IDENTICAL | 실시간 데이터/랜덤 요소 외 회귀 없음                           |
+| AC-14~15 (브랜드 컬러 값 교체 + 구 accent 이관)    | ✅ 0 errors | `evidence/ac14/`, `evidence/ac15/`                  | `#3B82F6`/구 accent 참조 0건                                   |
+| AC-16 (다크 variant 대비 검증)                     | —           | `ac16-contrast-report.md`                           | 다크 화면 흰 라벨 1건 AA 미달(완화책 `highContrast` 정상 동작) |
+| AC-17 (DESIGN_SYSTEM.md 갱신)                      | —           | hex 자동 대조 mismatch 0건                          | 대비 수치 오류 3건 발견 → Manager가 직접 수정                  |
+| P1-1 (홈 화면 범위 밖 색상 회귀)                   | ✅ 0 errors | 코드 수정 확인, 시각 확인은 스크롤 하단이라 미실시  | 원상 복구(`#B8623D`)                                           |
 
 ## Design QA
 

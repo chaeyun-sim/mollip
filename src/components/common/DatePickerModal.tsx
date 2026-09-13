@@ -94,7 +94,9 @@ export function DatePickerModal({
 									accessibilityRole="button"
 									accessibilityLabel={resetLabel}
 								>
-									<Text className="text-sm font-pretendard-medium text-secondary">{resetLabel}</Text>
+									<Text className="text-sm font-pretendard-medium text-secondary">
+										{resetLabel}
+									</Text>
 								</Pressable>
 							) : (
 								<View />

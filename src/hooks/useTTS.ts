@@ -79,7 +79,9 @@ export function useTTS() {
 		try {
 			if (!audioCache.current.has(cacheKey)) {
 				// 로컬 다운로드 파일이 있으면 네트워크 요청 없이 즉시 사용(AC-2), 없으면 기존처럼 네트워크 요청(AC-6).
-				const uri = await resolveAudioUri(cacheKey, () => fetchTTSBlob(voiceId, cleaned, voiceSpeed));
+				const uri = await resolveAudioUri(cacheKey, () =>
+					fetchTTSBlob(voiceId, cleaned, voiceSpeed),
+				);
 				// 이탈 후 응답이 돌아온 경우 캐시하지 않음
 				if (!ac.signal.aborted) {
 					audioCache.current.set(cacheKey, uri);

@@ -102,11 +102,11 @@ parent: archive-hub-v2
 
 ## Screens / routes
 
-| Route / file | 변경 |
-|--------------|------|
-| `app/diary/[date].tsx` | `listened` items pass-through, header refresh 제거 |
-| `src/components/archive/VisitTicket.tsx` | 뒷면 UI, props 확장 (`listenedItems?: ListenedItem[]`) |
-| `src/components/archive/PlaylistModal.tsx` | 변경 없음 (또는 제목만 KO 통일 — optional) |
+| Route / file                               | 변경                                                   |
+| ------------------------------------------ | ------------------------------------------------------ |
+| `app/diary/[date].tsx`                     | `listened` items pass-through, header refresh 제거     |
+| `src/components/archive/VisitTicket.tsx`   | 뒷면 UI, props 확장 (`listenedItems?: ListenedItem[]`) |
+| `src/components/archive/PlaylistModal.tsx` | 변경 없음 (또는 제목만 KO 통일 — optional)             |
 
 ## Risks
 

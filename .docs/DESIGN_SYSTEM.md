@@ -19,10 +19,10 @@
 
 두 파일의 값이 일부 어긋나 있다. 새 토큰을 추가하거나 기존 값을 바꿀 때 반드시 두 파일을 함께 갱신할 것.
 
-| 토큰                                                                                                                                                                        | `tailwind.config.js` | `src/constants/colors.ts` | 상태                                                                                                                           |
-| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------- | ------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| description                                                                                                                                                                 | 없음                 | `#6B6360`                 | tailwind.config.js에 대응 className 없음 — className으로 이 색을 쓰려면 `text-[#6B6360]` 임의값을 써야 함(정식 토큰화 안 됨)         |
-| 그 외 (primary, primaryDark/primary-dark, secondary, gray100~gray900, white, bgLight/bg-light, bgDark, bgTonal, onDark, imagePlaceholder, border/divider, borderDark/divider-dark, accent, error, errorAlt/error-alt, success) | 동일                 | 동일                      | 일치 (2026-08-26 전수 대조)                                                                                                     |
+| 토큰                                                                                                                                                                                                                           | `tailwind.config.js` | `src/constants/colors.ts` | 상태                                                                                                                         |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------- | ------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| description                                                                                                                                                                                                                    | 없음                 | `#6B6360`                 | tailwind.config.js에 대응 className 없음 — className으로 이 색을 쓰려면 `text-[#6B6360]` 임의값을 써야 함(정식 토큰화 안 됨) |
+| 그 외 (primary, primaryDark/primary-dark, secondary, gray100~gray900, white, bgLight/bg-light, bgDark, bgTonal, onDark, imagePlaceholder, border/divider, borderDark/divider-dark, accent, error, errorAlt/error-alt, success) | 동일                 | 동일                      | 일치 (2026-08-26 전수 대조)                                                                                                  |
 
 2026-08-25: bgLight/bg-light 드리프트 해소 — `tailwind.config.js`의 `bg-light`를 `#f4f4f1` → `#F8F6F2`로 통일(`Screen.tsx`가 그라디언트에 실제 사용 중인 값 기준).
 
@@ -32,20 +32,20 @@
 
 `primary` / `secondary` / `tertiary` / `muted`는 원래 브랜드 컬러 이름인데 무채색 텍스트 명도 사다리로 쓰이고 있었다. 명도는 `gray100~900`이 담당하도록 전량 이관했고, `tertiary`와 `muted`는 **정의에서 제거**했다.
 
-| 구 토큰 (className)                | 신 토큰                | 값 변화             |
-| ---------------------------------- | ---------------------- | ------------------- |
-| `text-primary` (#1C1917)           | `text-gray900`         | 동일 (#1C1917)      |
-| `text-secondary` (#57534E)         | `text-gray700`         | 동일 (#57534E)      |
-| `text-tertiary` (#78716C)          | `text-gray600`         | 동일 (#78716C)      |
-| `text-muted` / `bg-muted` (#A8A29E)| `text-gray500` / `bg-gray500` | 동일 (#A8A29E) |
-| `colors.primary`                   | `colors.gray900`       | 동일                |
-| `colors.secondary`                 | `colors.gray700`       | 동일                |
-| `colors.tertiary`                  | `colors.gray600`       | 동일                |
-| `colors.muted`                     | `colors.gray500`       | 동일                |
-| `bg-primary` (무채색 표면: 시트·마커·바코드·구분선·다크 입력 필드) | `bg-gray900` | 동일 (#1C1917) |
-| `bg-primary` (브랜드 표면, 흰 텍스트 O) | `bg-primary-dark`  | #1C1917 → **#625876** |
-| `bg-primary` (브랜드 표면, 텍스트 X)    | `bg-primary`       | #1C1917 → **#81759B** |
-| `accent` / `text-accent` / `bg-accent` (#3B82F6) | 라이트 배경 → `primary-dark` / 다크 배경 → `primary` | 블루 제거 |
+| 구 토큰 (className)                                                | 신 토큰                                              | 값 변화               |
+| ------------------------------------------------------------------ | ---------------------------------------------------- | --------------------- |
+| `text-primary` (#1C1917)                                           | `text-gray900`                                       | 동일 (#1C1917)        |
+| `text-secondary` (#57534E)                                         | `text-gray700`                                       | 동일 (#57534E)        |
+| `text-tertiary` (#78716C)                                          | `text-gray600`                                       | 동일 (#78716C)        |
+| `text-muted` / `bg-muted` (#A8A29E)                                | `text-gray500` / `bg-gray500`                        | 동일 (#A8A29E)        |
+| `colors.primary`                                                   | `colors.gray900`                                     | 동일                  |
+| `colors.secondary`                                                 | `colors.gray700`                                     | 동일                  |
+| `colors.tertiary`                                                  | `colors.gray600`                                     | 동일                  |
+| `colors.muted`                                                     | `colors.gray500`                                     | 동일                  |
+| `bg-primary` (무채색 표면: 시트·마커·바코드·구분선·다크 입력 필드) | `bg-gray900`                                         | 동일 (#1C1917)        |
+| `bg-primary` (브랜드 표면, 흰 텍스트 O)                            | `bg-primary-dark`                                    | #1C1917 → **#625876** |
+| `bg-primary` (브랜드 표면, 텍스트 X)                               | `bg-primary`                                         | #1C1917 → **#81759B** |
+| `accent` / `text-accent` / `bg-accent` (#3B82F6)                   | 라이트 배경 → `primary-dark` / 다크 배경 → `primary` | 블루 제거             |
 
 **`tertiary` / `muted`는 더 이상 유효 토큰이 아니다.** NativeWind는 미정의 className을 런타임 에러 없이 무시하므로 `tsc`로 잡히지 않는다 — 새로 쓰지 말 것.
 
@@ -53,27 +53,27 @@
 
 #### 무채색 명도 스케일
 
-| 시맨틱 이름 | Hex       | className                        | 용도                                                      |
-| ----------- | --------- | -------------------------------- | --------------------------------------------------------- |
-| gray100     | `#F8F6F2` | `bg-gray100`                     | 최상위 밝기 배경. **`background` 토큰은 도입하지 않으며 이 토큰이 그 역할을 대신한다** (`bg-light`와 동일 값) |
-| gray200     | `#F2EFE9` | `bg-gray200`                     | 톤온톤 카드 배경 (`bg-tonal`과 동일 값)                    |
-| gray300     | `#E7E5E4` | `border-gray300`                 | 라이트 구분선 (`divider`와 동일 값)                        |
-| gray400     | `#C7C3BD` | `bg-gray400` / `text-gray400`    | **disabled 전용** — 비활성 fill 배경·비활성 아이콘/텍스트  |
-| gray500     | `#A8A29E` | `text-gray500`                   | placeholder·비활성 텍스트                                  |
-| gray600     | `#78716C` | `text-gray600`                   | 3차 텍스트·로딩 인디케이터                                 |
-| gray700     | `#57534E` | `text-gray700`                   | 보조 텍스트                                                |
-| gray800     | `#292524` | `border-gray800`                 | 다크 구분선 (`divider-dark`와 동일 값)                     |
-| gray900     | `#1C1917` | `text-gray900` / `bg-gray900`    | 본문 텍스트 + 무채색 표면(시트·지도 마커·바코드·구분선)    |
+| 시맨틱 이름 | Hex       | className                     | 용도                                                                                                          |
+| ----------- | --------- | ----------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| gray100     | `#F8F6F2` | `bg-gray100`                  | 최상위 밝기 배경. **`background` 토큰은 도입하지 않으며 이 토큰이 그 역할을 대신한다** (`bg-light`와 동일 값) |
+| gray200     | `#F2EFE9` | `bg-gray200`                  | 톤온톤 카드 배경 (`bg-tonal`과 동일 값)                                                                       |
+| gray300     | `#E7E5E4` | `border-gray300`              | 라이트 구분선 (`divider`와 동일 값)                                                                           |
+| gray400     | `#C7C3BD` | `bg-gray400` / `text-gray400` | **disabled 전용** — 비활성 fill 배경·비활성 아이콘/텍스트                                                     |
+| gray500     | `#A8A29E` | `text-gray500`                | placeholder·비활성 텍스트                                                                                     |
+| gray600     | `#78716C` | `text-gray600`                | 3차 텍스트·로딩 인디케이터                                                                                    |
+| gray700     | `#57534E` | `text-gray700`                | 보조 텍스트                                                                                                   |
+| gray800     | `#292524` | `border-gray800`              | 다크 구분선 (`divider-dark`와 동일 값)                                                                        |
+| gray900     | `#1C1917` | `text-gray900` / `bg-gray900` | 본문 텍스트 + 무채색 표면(시트·지도 마커·바코드·구분선)                                                       |
 
 #### 브랜드 컬러
 
-| 시맨틱 이름  | Hex       | className                          | 용도                                                                                |
-| ------------ | --------- | ---------------------------------- | ----------------------------------------------------------------------------------- |
-| primary      | `#81759B` | `bg-primary` / `text-primary`      | 브랜드 메인(더스티 라벤더). **텍스트를 얹지 않는 브랜드 표면** + **다크 배경 위 브랜드 표면** 전용 |
-| primary-dark | `#625876` | `bg-primary-dark` / `text-primary-dark` | **흰 텍스트를 얹는 모든 라이트 배경 브랜드 표면** + 탭바 활성 tint + 라이트 배경 위 브랜드 텍스트 |
-| secondary    | `#302D33` | `border-secondary` / `text-secondary` | 보조/아웃라인 버튼(취소·닫기·스킵 계열)                                            |
-| accent       | `#D9A0A0` | `bg-accent`                        | 포인트 강조(더스티 코럴). **현재 적용처 없음 — 정의만.** 이 색 위에는 반드시 `text-gray900`(7.90:1), 흰 글씨 금지(2.21:1) |
-| white        | `#FFFFFF` | `bg-white` / `text-white`          | 순백 (정식 토큰화)                                                                  |
+| 시맨틱 이름  | Hex       | className                               | 용도                                                                                                                      |
+| ------------ | --------- | --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| primary      | `#81759B` | `bg-primary` / `text-primary`           | 브랜드 메인(더스티 라벤더). **텍스트를 얹지 않는 브랜드 표면** + **다크 배경 위 브랜드 표면** 전용                        |
+| primary-dark | `#625876` | `bg-primary-dark` / `text-primary-dark` | **흰 텍스트를 얹는 모든 라이트 배경 브랜드 표면** + 탭바 활성 tint + 라이트 배경 위 브랜드 텍스트                         |
+| secondary    | `#302D33` | `border-secondary` / `text-secondary`   | 보조/아웃라인 버튼(취소·닫기·스킵 계열)                                                                                   |
+| accent       | `#D9A0A0` | `bg-accent`                             | 포인트 강조(더스티 코럴). **현재 적용처 없음 — 정의만.** 이 색 위에는 반드시 `text-gray900`(7.90:1), 흰 글씨 금지(2.21:1) |
+| white        | `#FFFFFF` | `bg-white` / `text-white`               | 순백 (정식 토큰화)                                                                                                        |
 
 **브랜드 컬러 사용 판정 (폰트 크기는 판정에 개입하지 않는다)**
 
@@ -92,19 +92,19 @@
 
 #### 기타 (이번 개편에서 변경 없음)
 
-| 시맨틱 이름       | Hex                    | className                     | 용도                                       |
-| ----------------- | ---------------------- | ----------------------------- | ------------------------------------------ |
-| description       | `#6B6360`              | (tailwind 미등록)             | 설명 텍스트 — JS 값(`colors.description`)으로만 사용 |
-| bg-light          | `#F8F6F2`              | `bg-bg-light`                 | 라이트 모드 배경                           |
-| bg-dark           | `#171412`              | `bg-bg-dark`                  | 다크 모드 배경                             |
-| bg-tonal          | `#F2EFE9`              | `bg-bg-tonal`                 | 카드 등 톤온톤 배경                        |
-| on-dark           | `#E8E8E8`              | `text-on-dark`                | 다크 배경 위 텍스트                        |
-| image-placeholder | `#E5E1D8`              | `bg-image-placeholder`        | 이미지 로딩 전 배경                        |
-| divider           | `#E7E5E4`              | `border-divider`              | 라이트 모드 구분선                         |
-| divider-dark      | `#292524`              | `border-divider-dark`         | 다크 모드 구분선                           |
-| error             | `#EF4444`              | `text-error` / `bg-error`     | 에러/경고                                  |
-| error-alt         | `#F43F5E`              | `text-error-alt`              | 에러와 톤이 다른 빨강 (스와이프 "패스" 등) |
-| success           | `#00BC7D`              | `text-success` / `bg-success` | 성공 상태                                  |
+| 시맨틱 이름       | Hex       | className                     | 용도                                                 |
+| ----------------- | --------- | ----------------------------- | ---------------------------------------------------- |
+| description       | `#6B6360` | (tailwind 미등록)             | 설명 텍스트 — JS 값(`colors.description`)으로만 사용 |
+| bg-light          | `#F8F6F2` | `bg-bg-light`                 | 라이트 모드 배경                                     |
+| bg-dark           | `#171412` | `bg-bg-dark`                  | 다크 모드 배경                                       |
+| bg-tonal          | `#F2EFE9` | `bg-bg-tonal`                 | 카드 등 톤온톤 배경                                  |
+| on-dark           | `#E8E8E8` | `text-on-dark`                | 다크 배경 위 텍스트                                  |
+| image-placeholder | `#E5E1D8` | `bg-image-placeholder`        | 이미지 로딩 전 배경                                  |
+| divider           | `#E7E5E4` | `border-divider`              | 라이트 모드 구분선                                   |
+| divider-dark      | `#292524` | `border-divider-dark`         | 다크 모드 구분선                                     |
+| error             | `#EF4444` | `text-error` / `bg-error`     | 에러/경고                                            |
+| error-alt         | `#F43F5E` | `text-error-alt`              | 에러와 톤이 다른 빨강 (스와이프 "패스" 등)           |
+| success           | `#00BC7D` | `text-success` / `bg-success` | 성공 상태                                            |
 
 className 조합 예: `bg-[rgba(28,25,23,0.06)]`처럼 위 hex를 rgba 임의값으로 쓰는 경우도 있다 — 이는 [`component-convention.md`](../.claude/rules/component-convention.md) §2 표를 따른다.
 

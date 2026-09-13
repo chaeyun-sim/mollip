@@ -34,8 +34,14 @@ function formatReadingSeconds(seconds: number): string {
 }
 
 function buildLengthGuideline(multiplier: DescriptionLength): string {
-	const generalChars = [Math.round((220 * multiplier) / 10) * 10, Math.round((280 * multiplier) / 10) * 10];
-	const importantChars = [Math.round((280 * multiplier) / 10) * 10, Math.round((400 * multiplier) / 10) * 10];
+	const generalChars = [
+		Math.round((220 * multiplier) / 10) * 10,
+		Math.round((280 * multiplier) / 10) * 10,
+	];
+	const importantChars = [
+		Math.round((280 * multiplier) / 10) * 10,
+		Math.round((400 * multiplier) / 10) * 10,
+	];
 	const generalTime = `${formatReadingSeconds(40 * multiplier)}~${formatReadingSeconds(55 * multiplier)}`;
 	const importantTime = `${formatReadingSeconds(55 * multiplier)}~${formatReadingSeconds(80 * multiplier)}`;
 

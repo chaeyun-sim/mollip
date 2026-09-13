@@ -40,7 +40,10 @@ export function VenueExhibitionTabs({
 					accessibilityLabel={`${label} 전시 ${count}개`}
 				>
 					<Text
-						className={cn('text-sm font-pretendard-bold', tab === key ? 'text-black' : 'text-black/55')}
+						className={cn(
+							'text-sm font-pretendard-bold',
+							tab === key ? 'text-black' : 'text-black/55',
+						)}
 					>
 						{label} <Text className="text-xs font-pretendard-medium">{count}</Text>
 					</Text>

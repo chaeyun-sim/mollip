@@ -51,7 +51,7 @@ interface ChatMessageProps {
 export function ChatMessage({ item, onRetry }: ChatMessageProps) {
 	const isUser = item.role === 'user';
 	const { fontSize, highContrast } = useSettingsStore();
-	
+
 	const bodyFontSize = getEffectiveFontSize(fontSize, highContrast);
 
 	const [copyMenuVisible, setCopyMenuVisible] = useState(false);
@@ -202,10 +202,7 @@ export function ChatMessage({ item, onRetry }: ChatMessageProps) {
 				animationType="slide"
 				onRequestClose={() => setSelectCopyVisible(false)}
 			>
-				<Pressable
-					className="flex-1 bg-black/60"
-					onPress={() => setSelectCopyVisible(false)}
-				>
+				<Pressable className="flex-1 bg-black/60" onPress={() => setSelectCopyVisible(false)}>
 					<View className="absolute bottom-0 left-0 right-0 bg-gray900 rounded-t-[24px] px-6 pt-5 pb-12">
 						<View className="flex-row items-center justify-between mb-4">
 							<Text className="text-white/50 font-pretendard-regular text-[13px]">
@@ -240,9 +237,7 @@ export function ChatMessage({ item, onRetry }: ChatMessageProps) {
 				onRequestClose={() => setImageModalVisible(false)}
 			>
 				<View style={{ flex: 1, backgroundColor: 'black' }}>
-					<View
-						className="absolute left-0 right-0 flex-row items-center justify-between px-5 z-10 top-14"
-					>
+					<View className="absolute left-0 right-0 flex-row items-center justify-between px-5 z-10 top-14">
 						<Text
 							className="text-white font-pretendard-semibold text-[15px] flex-1 mr-4"
 							numberOfLines={1}

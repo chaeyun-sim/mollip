@@ -169,7 +169,6 @@ export default function InquiryScreen() {
 					</Button>
 				</Screen.BottomAbsolute>
 			</KeyboardAvoidingView>
-			
 		</Screen>
 	);
 }

@@ -1,43 +1,30 @@
 {
-  "$schema": "https://raw.githubusercontent.com/anthropics/claude-code/main/.mcp.schema.json",
-  "mcpServers": {
-    "context7": {
-      "$comment": "Up-to-date documentation and code examples via Context7",
-      "args": [
-        "-l",
-        "-c",
-        "exec npx -y @upstash/context7-mcp@latest"
-      ],
-      "command": "/bin/bash"
-    },
-    "moai": {
-      "args": [
-        "mcp-server"
-      ],
-      "command": "moai"
-    },
-    "moai-lsp": {
-      "$comment": "LSP code intelligence via moai binary (goto definition, find references, hover, diagnostics, rename)",
-      "args": [
-        "mcp",
-        "lsp"
-      ],
-      "command": "moai",
-      "timeout": 30
-    },
-    "sequential-thinking": {
-      "$comment": "Step-by-step reasoning for complex problems",
-      "args": [
-        "-l",
-        "-c",
-        "exec npx -y @modelcontextprotocol/server-sequential-thinking"
-      ],
-      "command": "/bin/bash"
-    }
-  },
-  "staggeredStartup": {
-    "connectionTimeout": 15000,
-    "delayMs": 500,
-    "enabled": true
-  }
+	"$schema": "https://raw.githubusercontent.com/anthropics/claude-code/main/.mcp.schema.json",
+	"mcpServers": {
+		"context7": {
+			"$comment": "Up-to-date documentation and code examples via Context7",
+			"args": ["-l", "-c", "exec npx -y @upstash/context7-mcp@latest"],
+			"command": "/bin/bash"
+		},
+		"moai": {
+			"args": ["mcp-server"],
+			"command": "moai"
+		},
+		"moai-lsp": {
+			"$comment": "LSP code intelligence via moai binary (goto definition, find references, hover, diagnostics, rename)",
+			"args": ["mcp", "lsp"],
+			"command": "moai",
+			"timeout": 30
+		},
+		"sequential-thinking": {
+			"$comment": "Step-by-step reasoning for complex problems",
+			"args": ["-l", "-c", "exec npx -y @modelcontextprotocol/server-sequential-thinking"],
+			"command": "/bin/bash"
+		}
+	},
+	"staggeredStartup": {
+		"connectionTimeout": 15000,
+		"delayMs": 500,
+		"enabled": true
+	}
 }

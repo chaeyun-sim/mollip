@@ -206,20 +206,19 @@ export function VisitTicket({
 
 					{/* 뒷면: 오늘의 프로그램 */}
 					<Animated.View
-						className={cn("overflow-hidden rounded-3xl bg-white absolute inset-0", flipped ? 'z-[2]' : 'z-0')}
+						className={cn(
+							'overflow-hidden rounded-3xl bg-white absolute inset-0',
+							flipped ? 'z-[2]' : 'z-0',
+						)}
 						pointerEvents={flipped ? 'box-none' : 'none'}
-						style={[
-							cardShadow,
-							backStyle,
-							ticketShellStyle,
-						]}
+						style={[cardShadow, backStyle, ticketShellStyle]}
 					>
 						<View style={{ height: TICKET_BODY_HEIGHT }}>
 							<ScrollView
 								className="flex-1 min-h-0"
 								showsVerticalScrollIndicator={false}
 								nestedScrollEnabled
-								contentContainerClassName='pt-4 pb-2 flex-grow'
+								contentContainerClassName="pt-4 pb-2 flex-grow"
 							>
 								<View className="px-6 pt-2 pb-2">
 									<View className="flex-row items-baseline justify-between mb-1">
@@ -230,7 +229,7 @@ export function VisitTicket({
 											<Text className="text-[12px] font-pretendard-regular text-gray500">
 												{listenedItems.length}작품
 											</Text>
-										)}	
+										)}
 									</View>
 									<Text className="text-[11px] mb-3 font-pretendard-medium text-gray500">
 										{dateLabel}

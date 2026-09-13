@@ -21,13 +21,13 @@ status: ready-for-user
 
 ## Evidence
 
-| Feature / AC | tsc | Screenshot | Interaction | Regression |
-|--------------|-----|------------|-------------|------------|
-| AC-1 마스트헤드 헤더 | ✅ 0 errors | `evidence/ac1-header.png` | N/A | 콜드 리런치 정상 |
-| AC-2 히어로 에디토리얼 | ✅ 0 errors | `evidence/ac2-hero.png` | N/A | 콜드 리런치 정상 |
-| AC-3 커버스토리 | ✅ 0 errors | `evidence/ac3-coverstory.png` | 탭→상세 이동 확인 | 콜드 리런치 정상 |
-| AC-4 인덱스 리스트 | ✅ 0 errors | `evidence/ac4-fix-04.png` | 탭→상세 이동 확인 | 콜드 리런치 정상 |
-| AC-5 KCISA 넘버링 | ✅ 0 errors | `evidence/ac5-kcisa-check.png` | 탭→상세 이동 확인 | 전시 탭 정상 |
+| Feature / AC           | tsc         | Screenshot                     | Interaction       | Regression       |
+| ---------------------- | ----------- | ------------------------------ | ----------------- | ---------------- |
+| AC-1 마스트헤드 헤더   | ✅ 0 errors | `evidence/ac1-header.png`      | N/A               | 콜드 리런치 정상 |
+| AC-2 히어로 에디토리얼 | ✅ 0 errors | `evidence/ac2-hero.png`        | N/A               | 콜드 리런치 정상 |
+| AC-3 커버스토리        | ✅ 0 errors | `evidence/ac3-coverstory.png`  | 탭→상세 이동 확인 | 콜드 리런치 정상 |
+| AC-4 인덱스 리스트     | ✅ 0 errors | `evidence/ac4-fix-04.png`      | 탭→상세 이동 확인 | 콜드 리런치 정상 |
+| AC-5 KCISA 넘버링      | ✅ 0 errors | `evidence/ac5-kcisa-check.png` | 탭→상세 이동 확인 | 전시 탭 정상     |
 
 전체 리포트: `.docs/wip/main-editorial-redesign/05-qa-report.md`
 

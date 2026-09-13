@@ -89,9 +89,7 @@ function MyReviewSection({ rating, memo }: MyReviewSectionProps) {
 
 	return (
 		<View className="mt-5 px-4">
-			{rating && (
-				<StarRating value={rating} onChange={() => {}} disabled size={20} tone="dark" />
-			)}
+			{rating && <StarRating value={rating} onChange={() => {}} disabled size={20} tone="dark" />}
 			{memo && (
 				<Text className="mt-2.5 text-[14px] font-pretendard-regular text-white leading-[20px]">
 					{memo}
@@ -341,7 +339,9 @@ export default function DiaryDateScreen() {
 
 	const dayHistoryItems = useMemo(
 		() =>
-			historyItems.filter((item) => item.savedAt.startsWith(dateKey) && item.text.trim().length > 0),
+			historyItems.filter(
+				(item) => item.savedAt.startsWith(dateKey) && item.text.trim().length > 0,
+			),
 		[historyItems, dateKey],
 	);
 
@@ -392,11 +392,7 @@ export default function DiaryDateScreen() {
 				))}
 			</ScrollView>
 
-			<DiaryGuidePlayer
-				ref={playerRef}
-				item={playingGuide}
-				onClose={() => setPlayingGuide(null)}
-			/>
+			<DiaryGuidePlayer ref={playerRef} item={playingGuide} onClose={() => setPlayingGuide(null)} />
 
 			{/* 메모 편집 모달 */}
 			<Modal

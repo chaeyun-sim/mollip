@@ -9,25 +9,25 @@ status: dev-complete (Taylor 검증 대기)
 
 ## Implemented ACs
 
-| AC | 내용 | 상태 | tsc | grep 게이트 | 시각 증빙 |
-|---|---|---|---|---|---|
-| AC-1 | `gray100`~`gray900` 9토큰 두 정본 파일에 추가 | ✅ Done | 0 errors | 두 파일 9개 hex 100% 일치 (스크립트 대조) | `evidence/ac01/` — `settings-index` **픽셀 IDENTICAL** |
-| AC-2 | `bg-primary`/`bg-secondary` 전수 분류표 | ✅ Done | — | 53건 전수, 미분류 0건, `bg-secondary` 0건 | 산출물: `bg-primary-inventory.md` |
-| AC-3 | `src/components/common` + `layout` | ✅ Done | 0 errors | `text-*` 잔여 0 | `evidence/ac03/` — settings-index IDENTICAL, search/terms ~0.18%(홈 인디케이터만) |
-| AC-4 | `src/components/explore` + `search` | ✅ Done | 0 errors | `text-*`/neutral `bg-*` 잔여 0 | `evidence/ac04/` — tabs-search IDENTICAL |
-| AC-5 | `archive` + `mypage` + `settings` 컴포넌트 | ✅ Done | 0 errors | 잔여 0 (brand만 남음) | `evidence/ac05/` — tabs-diary IDENTICAL, diary-date ~0.18% |
-| AC-6 | `map` + `guide` + `auth` + `onboarding` 컴포넌트 | ✅ Done | 0 errors | 잔여 0 | `evidence/ac06/` — guide-chat IDENTICAL, auth-login ~0.18% |
-| AC-7 | `app/(tabs)/` | ✅ Done | 0 errors | 잔여 **0건** | `evidence/ac07/` — 5개 탭 중 3개 IDENTICAL, 2개 ~0.18%/동적 데이터 |
-| AC-8 | `app/(guide)/` (최대 규모) | ✅ Done | 0 errors | 잔여 0 (brand 1건만) | `evidence/ac08/` — 7화면 중 5개 IDENTICAL |
-| AC-9 | `app/(explore)/` + `app/diary/` | ✅ Done | 0 errors | 잔여 0 (brand 4건만) | `evidence/ac09/` |
-| AC-10 | `app/settings/` (하위 10화면) | ✅ Done | 0 errors | 잔여 0 (brand 7건만) | `evidence/ac10/` — 10화면 중 4개 IDENTICAL, 4개 ~0.18% |
-| AC-11 | `app/auth/` + `app/onboarding/` + 최상위 3화면 | ✅ Done | 0 errors | 잔여 0 (brand 2건만) | `evidence/ac11/` — 3개 IDENTICAL |
-| AC-12 | `colors.*` JS 직접 참조 이관 | ✅ Done | 0 errors | `colors.(primary\|secondary\|tertiary\|muted)` **0건** | AC-13 전수 스윕에 포함 |
-| **AC-13** | **잔여 참조 0건 게이트** | ✅ **PASS** | 0 errors | 아래 §AC-13 게이트 결과 | `evidence/ac13/` — **32개 라우트 전수 스윕** |
-| AC-14 | 브랜드 컬러 정의 교체 + brand 표면 적용 | ✅ Done | 0 errors | — | `evidence/ac14/` |
-| AC-15 | 구 `accent` 19개 지점 → 브랜드 컬러 | ✅ Done | 0 errors | `#3B82F6` **0건**, 구 `accent` 참조 **0건** | `evidence/ac15/` — 32개 라우트 전수 스윕 |
-| AC-16 | dark/warm/gradient + highContrast 대비 검증 | ✅ Done | — | — | 산출물: `ac16-contrast-report.md`, `evidence/ac16/` |
-| AC-17 | `.docs/DESIGN_SYSTEM.md` 정본 갱신 | ✅ Done | — | 문서 hex ↔ `tailwind.config.js` 자동 대조 **MISMATCH 0건** | — |
+| AC        | 내용                                             | 상태        | tsc      | grep 게이트                                                | 시각 증빙                                                                         |
+| --------- | ------------------------------------------------ | ----------- | -------- | ---------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| AC-1      | `gray100`~`gray900` 9토큰 두 정본 파일에 추가    | ✅ Done     | 0 errors | 두 파일 9개 hex 100% 일치 (스크립트 대조)                  | `evidence/ac01/` — `settings-index` **픽셀 IDENTICAL**                            |
+| AC-2      | `bg-primary`/`bg-secondary` 전수 분류표          | ✅ Done     | —        | 53건 전수, 미분류 0건, `bg-secondary` 0건                  | 산출물: `bg-primary-inventory.md`                                                 |
+| AC-3      | `src/components/common` + `layout`               | ✅ Done     | 0 errors | `text-*` 잔여 0                                            | `evidence/ac03/` — settings-index IDENTICAL, search/terms ~0.18%(홈 인디케이터만) |
+| AC-4      | `src/components/explore` + `search`              | ✅ Done     | 0 errors | `text-*`/neutral `bg-*` 잔여 0                             | `evidence/ac04/` — tabs-search IDENTICAL                                          |
+| AC-5      | `archive` + `mypage` + `settings` 컴포넌트       | ✅ Done     | 0 errors | 잔여 0 (brand만 남음)                                      | `evidence/ac05/` — tabs-diary IDENTICAL, diary-date ~0.18%                        |
+| AC-6      | `map` + `guide` + `auth` + `onboarding` 컴포넌트 | ✅ Done     | 0 errors | 잔여 0                                                     | `evidence/ac06/` — guide-chat IDENTICAL, auth-login ~0.18%                        |
+| AC-7      | `app/(tabs)/`                                    | ✅ Done     | 0 errors | 잔여 **0건**                                               | `evidence/ac07/` — 5개 탭 중 3개 IDENTICAL, 2개 ~0.18%/동적 데이터                |
+| AC-8      | `app/(guide)/` (최대 규모)                       | ✅ Done     | 0 errors | 잔여 0 (brand 1건만)                                       | `evidence/ac08/` — 7화면 중 5개 IDENTICAL                                         |
+| AC-9      | `app/(explore)/` + `app/diary/`                  | ✅ Done     | 0 errors | 잔여 0 (brand 4건만)                                       | `evidence/ac09/`                                                                  |
+| AC-10     | `app/settings/` (하위 10화면)                    | ✅ Done     | 0 errors | 잔여 0 (brand 7건만)                                       | `evidence/ac10/` — 10화면 중 4개 IDENTICAL, 4개 ~0.18%                            |
+| AC-11     | `app/auth/` + `app/onboarding/` + 최상위 3화면   | ✅ Done     | 0 errors | 잔여 0 (brand 2건만)                                       | `evidence/ac11/` — 3개 IDENTICAL                                                  |
+| AC-12     | `colors.*` JS 직접 참조 이관                     | ✅ Done     | 0 errors | `colors.(primary\|secondary\|tertiary\|muted)` **0건**     | AC-13 전수 스윕에 포함                                                            |
+| **AC-13** | **잔여 참조 0건 게이트**                         | ✅ **PASS** | 0 errors | 아래 §AC-13 게이트 결과                                    | `evidence/ac13/` — **32개 라우트 전수 스윕**                                      |
+| AC-14     | 브랜드 컬러 정의 교체 + brand 표면 적용          | ✅ Done     | 0 errors | —                                                          | `evidence/ac14/`                                                                  |
+| AC-15     | 구 `accent` 19개 지점 → 브랜드 컬러              | ✅ Done     | 0 errors | `#3B82F6` **0건**, 구 `accent` 참조 **0건**                | `evidence/ac15/` — 32개 라우트 전수 스윕                                          |
+| AC-16     | dark/warm/gradient + highContrast 대비 검증      | ✅ Done     | —        | —                                                          | 산출물: `ac16-contrast-report.md`, `evidence/ac16/`                               |
+| AC-17     | `.docs/DESIGN_SYSTEM.md` 정본 갱신               | ✅ Done     | —        | 문서 hex ↔ `tailwind.config.js` 자동 대조 **MISMATCH 0건** | —                                                                                 |
 
 **최종 통합 검증**: `npx tsc --noEmit` → 0 errors / `npm test` → **2 suites, 37 tests PASS**.
 
@@ -41,13 +41,13 @@ status: dev-complete (Taylor 검증 대기)
 
 ### DIFF로 표시된 항목의 원인 (전부 색상 회귀 아님 — 이미지 직접 확인 완료)
 
-| 화면 | 원인 |
-|---|---|
-| `tabs-index`, `tabs-map`, `explore-route` | 실시간 API 데이터 / 지도 카메라 위치 변동 |
-| `onboarding-index`, `settings-preferences` | 취향 스와이프 덱의 랜덤 작품 |
-| `settings-voice` | 음성 목록 정렬 순서가 매 로드마다 다름 (baseline과 나란히 비교해 색상 동일 확인) |
-| `settings-index`, `settings-general`, `diary-date` 등 상단 bbox | Expo dev 모드 "Refreshing..." 배너로 인한 레이아웃 시프트 |
-| `guide-chat` (0.72%) | **의도된 버그 수정** — 아래 §Deviations 1번 |
+| 화면                                                            | 원인                                                                             |
+| --------------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| `tabs-index`, `tabs-map`, `explore-route`                       | 실시간 API 데이터 / 지도 카메라 위치 변동                                        |
+| `onboarding-index`, `settings-preferences`                      | 취향 스와이프 덱의 랜덤 작품                                                     |
+| `settings-voice`                                                | 음성 목록 정렬 순서가 매 로드마다 다름 (baseline과 나란히 비교해 색상 동일 확인) |
+| `settings-index`, `settings-general`, `diary-date` 등 상단 bbox | Expo dev 모드 "Refreshing..." 배너로 인한 레이아웃 시프트                        |
+| `guide-chat` (0.72%)                                            | **의도된 버그 수정** — 아래 §Deviations 1번                                      |
 
 ## AC-13 게이트 결과
 
@@ -76,10 +76,10 @@ AC-13 PASS를 확인한 뒤에만 AC-14에 착수했다.
 
 ### a11y 보강 (커밋 단위 B — 색상 치환과 분리, Manager 지시)
 
-| 파일 | 변경 |
-|---|---|
+| 파일                                        | 변경                                                                                            |
+| ------------------------------------------- | ----------------------------------------------------------------------------------------------- |
 | `src/components/common/DatePickerModal.tsx` | 초기화·확인 버튼에 `hitSlop={8}` + `accessibilityRole='button'` + `accessibilityLabel` **추가** |
-| `app/onboarding/location.tsx` | "나중에 설정할게요" 버튼에 `hitSlop={8}` **추가** |
+| `app/onboarding/location.tsx`               | "나중에 설정할게요" 버튼에 `hitSlop={8}` **추가**                                               |
 
 > `app/settings/inquiry.tsx:103`(D-1 대상)은 `accessibilityState={{ disabled }}`·`hitSlop`이 **이미 존재**해서 추가 작업이 없었다. `ExcludeWordsModal`·`DiaryCalendar`도 동일.
 
@@ -91,13 +91,13 @@ AC-13 PASS를 확인한 뒤에만 AC-14에 착수했다.
 
 ### 커밋 분리 제안
 
-| 단위 | 대상 | 메시지(안) |
-|---|---|---|
-| A-1 | `tailwind.config.js`, `src/constants/colors.ts` (AC-1 부분) | `feat(config): 무채색 명도 스케일 gray100~gray900 토큰 추가` |
-| A-2 | AC-3~12 치환 파일 전체 | `refactor(ui): 텍스트 명도 토큰을 gray 스케일로 이관` |
-| A-3 | 토큰 정의 교체 + brand 표면 + accent 이관 (AC-14/15) | `feat(config): 브랜드 컬러를 더스티 라벤더로 교체` |
-| **B** | `DatePickerModal.tsx`, `onboarding/location.tsx` | `fix(ui): 보조 버튼 터치 타겟·접근성 속성 보강` |
-| C | `.docs/*` | `docs(config): 컬러 토큰 정본 개편 반영` |
+| 단위  | 대상                                                        | 메시지(안)                                                   |
+| ----- | ----------------------------------------------------------- | ------------------------------------------------------------ |
+| A-1   | `tailwind.config.js`, `src/constants/colors.ts` (AC-1 부분) | `feat(config): 무채색 명도 스케일 gray100~gray900 토큰 추가` |
+| A-2   | AC-3~12 치환 파일 전체                                      | `refactor(ui): 텍스트 명도 토큰을 gray 스케일로 이관`        |
+| A-3   | 토큰 정의 교체 + brand 표면 + accent 이관 (AC-14/15)        | `feat(config): 브랜드 컬러를 더스티 라벤더로 교체`           |
+| **B** | `DatePickerModal.tsx`, `onboarding/location.tsx`            | `fix(ui): 보조 버튼 터치 타겟·접근성 속성 보강`              |
+| C     | `.docs/*`                                                   | `docs(config): 컬러 토큰 정본 개편 반영`                     |
 
 ## Deviations (브리프/스펙과 다르게 처리한 것 — Manager 판단 요청)
 
@@ -137,15 +137,15 @@ AC-13 PASS를 확인한 뒤에만 AC-14에 착수했다.
 
 ## Empty 상태 카피 확정 기록 (03-design-review Suggestion 4 반영 — 문구 무변경 확인용)
 
-| 화면 / 컴포넌트 | Title | Subtitle / 안내 | CTA (색만 변경) |
-|---|---|---|---|
-| `ArchiveDiaryEmpty` | `아직 관람 기록이 없어요` | `전시 가이드를 들으면 이 달력이 채워져요` | `전시 둘러보기` (`bg-primary-dark`) / `지도에서 찾기` (`border-divider bg-white`, 무변경) |
-| `ArchiveLoginPrompt` | `로그인하고 관람을 기록해요` | `북마크와 관람 다이어리는 계정에 저장돼요` | `로그인하기` (`bg-primary-dark`) |
-| `ExcludeWordsModal` | `제외할 검색어` | `입력한 단어가 포함된 전시는 결과에서 빠집니다` | `완료` (`bg-primary-dark`) |
-| `SavedExhibitions` | `저장한 전시가 없어요` | — | — |
-| `app/(guide)/playlist.tsx` | `아직 들은 작품이 없어요` | — | FAB (`bg-primary`) |
-| `app/(guide)/chat.tsx` | `작품이 궁금하신가요?` | `작가, 시대적 배경, 기법 등\n무엇이든 물어보세요` | 전송 버튼 (활성 `colors.primary` / 비활성 `text-gray400`) |
-| `VisitTicket` | `이날 들은 작품이 없어요` | — | — |
+| 화면 / 컴포넌트            | Title                        | Subtitle / 안내                                   | CTA (색만 변경)                                                                           |
+| -------------------------- | ---------------------------- | ------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| `ArchiveDiaryEmpty`        | `아직 관람 기록이 없어요`    | `전시 가이드를 들으면 이 달력이 채워져요`         | `전시 둘러보기` (`bg-primary-dark`) / `지도에서 찾기` (`border-divider bg-white`, 무변경) |
+| `ArchiveLoginPrompt`       | `로그인하고 관람을 기록해요` | `북마크와 관람 다이어리는 계정에 저장돼요`        | `로그인하기` (`bg-primary-dark`)                                                          |
+| `ExcludeWordsModal`        | `제외할 검색어`              | `입력한 단어가 포함된 전시는 결과에서 빠집니다`   | `완료` (`bg-primary-dark`)                                                                |
+| `SavedExhibitions`         | `저장한 전시가 없어요`       | —                                                 | —                                                                                         |
+| `app/(guide)/playlist.tsx` | `아직 들은 작품이 없어요`    | —                                                 | FAB (`bg-primary`)                                                                        |
+| `app/(guide)/chat.tsx`     | `작품이 궁금하신가요?`       | `작가, 시대적 배경, 기법 등\n무엇이든 물어보세요` | 전송 버튼 (활성 `colors.primary` / 비활성 `text-gray400`)                                 |
+| `VisitTicket`              | `이날 들은 작품이 없어요`    | —                                                 | —                                                                                         |
 
 **카피는 한 글자도 바뀌지 않았다.** 위 문자열은 코드에서 그대로 추출한 현행 값이다.
 

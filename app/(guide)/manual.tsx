@@ -25,7 +25,7 @@ export default function ManualScreen() {
 
 	const [year, setYear] = useState('');
 	const [caption, setCaption] = useState('');
-	
+
 	const artistInputRef = useRef<TextInput>(null);
 	const yearInputRef = useRef<TextInput>(null);
 	const captionInputRef = useRef<TextInput>(null);

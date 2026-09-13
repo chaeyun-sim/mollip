@@ -7,12 +7,12 @@
 
 ## AC map
 
-| AC | Done |
-|----|------|
-| AC-1 program hero | ✅ |
-| AC-2 empty program | ✅ |
-| AC-3 ♪ modal | ✅ unchanged |
-| AC-4 diary demote | ✅ |
-| AC-5 header | ✅ |
-| AC-6 front flip | ✅ |
-| AC-7 data | ✅ |
+| AC                 | Done         |
+| ------------------ | ------------ |
+| AC-1 program hero  | ✅           |
+| AC-2 empty program | ✅           |
+| AC-3 ♪ modal       | ✅ unchanged |
+| AC-4 diary demote  | ✅           |
+| AC-5 header        | ✅           |
+| AC-6 front flip    | ✅           |
+| AC-7 data          | ✅           |

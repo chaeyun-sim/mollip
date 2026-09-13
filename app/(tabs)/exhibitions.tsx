@@ -1,6 +1,13 @@
 import { useCallback, useRef } from 'react';
 import { useRouter } from 'expo-router';
-import { ActivityIndicator, FlatList, Pressable, Text, View, useWindowDimensions } from 'react-native';
+import {
+	ActivityIndicator,
+	FlatList,
+	Pressable,
+	Text,
+	View,
+	useWindowDimensions,
+} from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ExhibitionListRow } from '@/src/components/explore/ExhibitionListRow';

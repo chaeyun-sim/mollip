@@ -19,7 +19,6 @@ export function ArchiveDiaryEmpty({ onExplore, onMap }: ArchiveDiaryEmptyProps) 
 				accessibilityRole="button"
 				accessibilityLabel="전시 둘러보기"
 				style={({ pressed }) => ({ opacity: pressed ? 0.9 : 1 })}
-
 			>
 				<Text className="text-white text-[14px] font-pretendard-semibold">전시 둘러보기</Text>
 			</Pressable>

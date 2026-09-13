@@ -2,7 +2,8 @@ import { Image, View, type ImageSourcePropType } from 'react-native';
 
 interface DiaryStampCellProps {
 	source?: ImageSourcePropType;
-	color?: string;}
+	color?: string;
+}
 
 // 캘린더 날짜 셀을 가득 채우는 우표 스타일 썸네일 — 흰 프레임(우표 마진) + 톱니 느낌의 점선 테두리 + 살짝 랜덤 회전.
 // VisitStamp(잉크 도장, 관람 완료 표시)와는 다른 컴포넌트 — 이름 혼동 주의.

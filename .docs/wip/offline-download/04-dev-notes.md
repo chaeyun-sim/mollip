@@ -8,14 +8,14 @@ status: in-progress
 
 ## Implemented ACs
 
-| AC | Status | Files |
-|----|--------|-------|
-| AC-1 | Done | `src/utils/offlineAudio.ts`, `src/store/offlineDownloadStore.ts`, `src/components/guide/PredownloadRow.tsx`, `app/(guide)/playlist.tsx` |
-| AC-2 | Done | `src/hooks/useTTS.ts`, `src/utils/offlineAudio.ts`(`resolveAudioUri` 추가) |
-| AC-3 | Done | `src/components/guide/DownloadStatusBadge.tsx`(신규, revision 3에서 `app/settings/bookmark/audio.tsx`용 백드롭 추가), `app/(guide)/playlist.tsx`(revision 2, 이후 롤백), `src/components/guide/ArtistIntroTrack.tsx`(revision 2, 이후 롤백), `app/settings/bookmark/audio.tsx`(revision 3 카드 통합) |
-| AC-4 | Done | `src/store/offlineDownloadStore.ts`(`retryDownload` 추가), `app/(guide)/playlist.tsx`, `src/components/guide/ArtistIntroTrack.tsx` |
-| AC-5 | Done | `src/utils/offlineAudio.ts`(`deleteOfflineAudio`, `formatOfflineAudioSize` 신규), `src/store/offlineDownloadStore.ts`(`computeCacheKey`, `deleteAllDownloads` 신규), `app/settings/bookmark/audio.tsx`(Row B) |
-| AC-6 | Done | `src/utils/offlineAudio.ts`(`deleteOfflineAudio`), `src/store/offlineDownloadStore.ts`(`deleteDownload` 신규), `app/settings/bookmark/audio.tsx`(BottomSheet 삭제 아이콘) |
+| AC   | Status | Files                                                                                                                                                                                                                                                                                                |
+| ---- | ------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| AC-1 | Done   | `src/utils/offlineAudio.ts`, `src/store/offlineDownloadStore.ts`, `src/components/guide/PredownloadRow.tsx`, `app/(guide)/playlist.tsx`                                                                                                                                                              |
+| AC-2 | Done   | `src/hooks/useTTS.ts`, `src/utils/offlineAudio.ts`(`resolveAudioUri` 추가)                                                                                                                                                                                                                           |
+| AC-3 | Done   | `src/components/guide/DownloadStatusBadge.tsx`(신규, revision 3에서 `app/settings/bookmark/audio.tsx`용 백드롭 추가), `app/(guide)/playlist.tsx`(revision 2, 이후 롤백), `src/components/guide/ArtistIntroTrack.tsx`(revision 2, 이후 롤백), `app/settings/bookmark/audio.tsx`(revision 3 카드 통합) |
+| AC-4 | Done   | `src/store/offlineDownloadStore.ts`(`retryDownload` 추가), `app/(guide)/playlist.tsx`, `src/components/guide/ArtistIntroTrack.tsx`                                                                                                                                                                   |
+| AC-5 | Done   | `src/utils/offlineAudio.ts`(`deleteOfflineAudio`, `formatOfflineAudioSize` 신규), `src/store/offlineDownloadStore.ts`(`computeCacheKey`, `deleteAllDownloads` 신규), `app/settings/bookmark/audio.tsx`(Row B)                                                                                        |
+| AC-6 | Done   | `src/utils/offlineAudio.ts`(`deleteOfflineAudio`), `src/store/offlineDownloadStore.ts`(`deleteDownload` 신규), `app/settings/bookmark/audio.tsx`(BottomSheet 삭제 아이콘)                                                                                                                            |
 
 ## AC-1 이력 — immersive-start.tsx → playlist.tsx 재구현
 

@@ -25,10 +25,10 @@ Deno.serve(async (req) => {
 
 		const { start, end, searchMethod } = await req.json();
 		if (!start || !end || (searchMethod !== '1' && searchMethod !== '2')) {
-			return new Response(
-				JSON.stringify({ error: 'start, end, searchMethod(1|2) are required' }),
-				{ status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
-			);
+			return new Response(JSON.stringify({ error: 'start, end, searchMethod(1|2) are required' }), {
+				status: 400,
+				headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+			});
 		}
 
 		const params = new URLSearchParams({

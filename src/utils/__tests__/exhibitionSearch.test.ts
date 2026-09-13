@@ -161,8 +161,6 @@ describe('isExhibitionListingTitle — 대관 공고 제외', () => {
 	});
 	it('대관람·실제 전시는 통과', () => {
 		expect(isExhibitionListingTitle('서울도시계획 대관람')).toBe(true);
-		expect(
-			isExhibitionListingTitle('함석헌기념관 대관 전시 서정희 개인전'),
-		).toBe(true);
+		expect(isExhibitionListingTitle('함석헌기념관 대관 전시 서정희 개인전')).toBe(true);
 	});
 });

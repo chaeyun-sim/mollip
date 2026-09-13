@@ -4,12 +4,12 @@ mollip 앱의 E2E 테스트는 [Maestro](https://maestro.mobile.dev/)를 사용�
 
 ## 사전 요구사항
 
-| 항목 | 버전 |
-|---|---|
-| Maestro CLI | 1.39.x 이상 |
-| Xcode | 16.x 이상 |
+| 항목           | 버전               |
+| -------------- | ------------------ |
+| Maestro CLI    | 1.39.x 이상        |
+| Xcode          | 16.x 이상          |
 | iOS 시뮬레이터 | iPhone 16 / iOS 18 |
-| Node.js | 20 LTS 이상 |
+| Node.js        | 20 LTS 이상        |
 
 앱이 iOS 시뮬레이터에서 **이미 실행 중**이어야 합니다. Maestro는 시뮬레이터를 직접 부팅하지 않습니다.
 
@@ -45,10 +45,10 @@ npm run e2e:single -- e2e/01-tab-navigation.yaml
 
 ## 테스트 파일 목록
 
-| 파일 | 내용 |
-|---|---|
-| `01-tab-navigation.yaml` | 하단 탭 5개 이동 확인 |
-| `02-search-flow.yaml` | 검색 탭 → 검색어 입력 → 결과 확인 |
+| 파일                        | 내용                               |
+| --------------------------- | ---------------------------------- |
+| `01-tab-navigation.yaml`    | 하단 탭 5개 이동 확인              |
+| `02-search-flow.yaml`       | 검색 탭 → 검색어 입력 → 결과 확인  |
 | `03-exhibition-detail.yaml` | 홈 → 전시 카드 탭 → 상세 화면 진입 |
 
 ## 스크린샷

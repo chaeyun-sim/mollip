@@ -230,7 +230,10 @@ function mergeScored(
 	excludeTitleKey?: string,
 ): void {
 	for (const candidate of candidates) {
-		if (excludeTitleKey && normalizeExhibitionTitle(candidate.exhibition.title) === excludeTitleKey) {
+		if (
+			excludeTitleKey &&
+			normalizeExhibitionTitle(candidate.exhibition.title) === excludeTitleKey
+		) {
 			continue;
 		}
 		const existing = target.get(candidate.exhibition.id);

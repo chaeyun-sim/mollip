@@ -28,20 +28,12 @@ export function VenueDetails({ activeVenue }: VenueDetailsProps) {
 						accessibilityRole="link"
 					>
 						<Text className="text-black text-[13px] font-pretendard-semibold">홈페이지</Text>
-						<Ionicons
-							name="arrow-up-outline"
-							size={11}
-							className="text-gray900 rotate-45"
-						/>
+						<Ionicons name="arrow-up-outline" size={11} className="text-gray900 rotate-45" />
 					</Pressable>
 				)}
 				{activeVenue.note && (
 					<View className="mt-3 px-3.5 py-3 rounded-2xl bg-black/4 flex-row gap-2.5">
-						<Ionicons
-							name="information-circle-outline"
-							size={15}
-							className="text-black/45 mt-px"
-						/>
+						<Ionicons name="information-circle-outline" size={15} className="text-black/45 mt-px" />
 						<Text className="flex-1 text-[13px] leading-[20px] text-black/55 font-pretendard-regular">
 							{activeVenue.note}
 						</Text>

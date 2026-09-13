@@ -8,22 +8,23 @@ status: in-progress
 
 ## Implemented ACs
 
-| AC | Status | Files |
-|----|--------|-------|
-| AC-1 조회 기록 테이블 마이그레이션 | 코드 작성 완료 · **DB 미적용(Manager 승인 대기)** | `supabase/migrations/20260826000000_create_exhibition_views.sql`, `src/types/database.types.ts` |
-| AC-2 로그인 사용자 조회 기록 | 구현 완료 · 런타임 검증 대기 | `src/hooks/useRecordExhibitionView.ts`, `app/(explore)/[id].tsx` |
-| AC-3 동일 사용자·전시·날짜 중복 제거 | 구현 완료 · 런타임 검증 대기 | `src/hooks/useRecordExhibitionView.ts`(세션 캐시) + 마이그레이션 PK(`on conflict do nothing`) |
-| AC-4 비로그인 사용자 미기록 | 구현 완료 · 런타임 검증 대기 | `src/hooks/useRecordExhibitionView.ts` (`userId` 없으면 effect 조기 return — 네트워크 호출 없음) |
-| AC-5 인기 점수 집계 결과 반환 | 구현 완료 · Jest 통과 · 런타임 검증 대기 | `supabase/migrations/...sql`(가중치 상수), `src/utils/popularExhibitions.ts`, `src/utils/__tests__/popularExhibitions.test.ts`, `src/hooks/usePopularExhibitions.ts` |
-| AC-6 홈 "인기 전시" 섹션 노출 | 구현 완료 · 런타임 검증 대기 | `src/components/explore/PopularSection.tsx`, `app/(tabs)/index.tsx` |
-| AC-7 카드 탭 → 전시 상세 이동 | 구현 완료 · 런타임 검증 대기 | `app/(tabs)/index.tsx` (`openExhibition` 재사용) |
-| AC-8 로딩·에러·빈 상태 | 구현 완료 · 런타임 검증 대기 | `src/components/explore/PopularSection.tsx` (`renderContent()` 분리) |
+| AC                                   | Status                                            | Files                                                                                                                                                                |
+| ------------------------------------ | ------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| AC-1 조회 기록 테이블 마이그레이션   | 코드 작성 완료 · **DB 미적용(Manager 승인 대기)** | `supabase/migrations/20260826000000_create_exhibition_views.sql`, `src/types/database.types.ts`                                                                      |
+| AC-2 로그인 사용자 조회 기록         | 구현 완료 · 런타임 검증 대기                      | `src/hooks/useRecordExhibitionView.ts`, `app/(explore)/[id].tsx`                                                                                                     |
+| AC-3 동일 사용자·전시·날짜 중복 제거 | 구현 완료 · 런타임 검증 대기                      | `src/hooks/useRecordExhibitionView.ts`(세션 캐시) + 마이그레이션 PK(`on conflict do nothing`)                                                                        |
+| AC-4 비로그인 사용자 미기록          | 구현 완료 · 런타임 검증 대기                      | `src/hooks/useRecordExhibitionView.ts` (`userId` 없으면 effect 조기 return — 네트워크 호출 없음)                                                                     |
+| AC-5 인기 점수 집계 결과 반환        | 구현 완료 · Jest 통과 · 런타임 검증 대기          | `supabase/migrations/...sql`(가중치 상수), `src/utils/popularExhibitions.ts`, `src/utils/__tests__/popularExhibitions.test.ts`, `src/hooks/usePopularExhibitions.ts` |
+| AC-6 홈 "인기 전시" 섹션 노출        | 구현 완료 · 런타임 검증 대기                      | `src/components/explore/PopularSection.tsx`, `app/(tabs)/index.tsx`                                                                                                  |
+| AC-7 카드 탭 → 전시 상세 이동        | 구현 완료 · 런타임 검증 대기                      | `app/(tabs)/index.tsx` (`openExhibition` 재사용)                                                                                                                     |
+| AC-8 로딩·에러·빈 상태               | 구현 완료 · 런타임 검증 대기                      | `src/components/explore/PopularSection.tsx` (`renderContent()` 분리)                                                                                                 |
 
 자체 확인 결과: `npx tsc --noEmit` 0 errors / `npx jest` 2 suites · 37 tests 통과(신규 9건 포함).
 
 ## Changed files
 
 신규
+
 - `supabase/migrations/20260826000000_create_exhibition_views.sql` — `exhibition_views` 테이블 + RLS 2개 정책 + 보조 인덱스 + `get_popular_exhibitions(p_limit)` security definer 함수 + grant
 - `src/hooks/useRecordExhibitionView.ts` — 상세 진입 시 조회 기록(로그인 한정, 세션 캐시 dedup, 실패 무시)
 - `src/hooks/usePopularExhibitions.ts` — 집계 RPC 호출 + `exhibitions` 표시 정보 조인 → `ExhibitionSummary[]`
@@ -32,6 +33,7 @@ status: in-progress
 - `src/components/explore/PopularSection.tsx` — `KcisaSection` 구조 복제, eyebrow `POPULAR NOW` / title `지금 인기 있는 전시`
 
 수정
+
 - `src/types/database.types.ts` — `exhibition_views` Row/Insert/Update/Relationships + `get_popular_exhibitions` Functions 타입 (마이그레이션 적용 후 `npm run gen:types` 재생성 권장)
 - `app/(explore)/[id].tsx` — `useRecordExhibitionView(id, !!exhibition)` 1줄 + import (UI 변경 없음)
 - `app/(tabs)/index.tsx` — `usePopularExhibitions` 호출 + `FeaturedCarousel`과 `KcisaSection` 사이에 `<PopularSection />` 배치

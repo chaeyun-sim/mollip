@@ -15,7 +15,7 @@ export function SortChips({ criterion, onChangeCriterion }: SortChipsProps) {
 		<ScrollView
 			horizontal
 			showsHorizontalScrollIndicator={false}
-			contentContainerClassName='gap-1.5'
+			contentContainerClassName="gap-1.5"
 		>
 			{SORT_OPTIONS.map((option) => {
 				const active = criterion === option.key;

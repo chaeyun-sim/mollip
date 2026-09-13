@@ -48,7 +48,8 @@ export function NarrationSettingsFields({ theme = 'light' }: NarrationSettingsFi
 	}, [voiceId]);
 
 	const voiceLabel = currentVoiceName ? currentVoiceName.split(' - ')[0] : '';
-	const focusLabel = descriptionFocus.length > 0 ? `${descriptionFocus.length}개 선택` : '선택 안 함';
+	const focusLabel =
+		descriptionFocus.length > 0 ? `${descriptionFocus.length}개 선택` : '선택 안 함';
 
 	if (theme === 'dark') {
 		return (
@@ -113,7 +114,11 @@ export function NarrationSettingsFields({ theme = 'light' }: NarrationSettingsFi
 					onPress={setDescriptionLength}
 				/>
 			</CardRow>
-			<CardRow label={LABEL_VOICE} value={voiceLabel || undefined} onPress={() => router.push('/settings/voice')} />
+			<CardRow
+				label={LABEL_VOICE}
+				value={voiceLabel || undefined}
+				onPress={() => router.push('/settings/voice')}
+			/>
 			<CardRow label={LABEL_FOCUS} onPress={() => router.push('/settings/description')} />
 			<CardRow label={LABEL_FONT_SIZE} className="py-3.5">
 				<SettingPills options={FONT_SIZE_OPTIONS} value={fontSize} onPress={setFontSize} />
@@ -128,7 +133,11 @@ interface SettingPillsProps<T extends string | number> {
 	onPress: (v: T) => void;
 }
 
-function SettingPills<T extends string | number>({ options, value, onPress }: SettingPillsProps<T>) {
+function SettingPills<T extends string | number>({
+	options,
+	value,
+	onPress,
+}: SettingPillsProps<T>) {
 	return (
 		<View className="flex-row gap-1.5 items-center absolute right-0">
 			{options.map((opt) => {

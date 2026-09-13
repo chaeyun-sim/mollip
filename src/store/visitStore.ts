@@ -22,11 +22,7 @@ export function todayKey(): string {
  * 같은 전시(id 같음, 또는 id 없이 같은 제목)를 같은 날 또 들으면 같은 키로 합쳐진다.
  * exhibitionId가 있으면 id로, 검색 없이 직접 입력한 경우(id 없음)는 제목으로 식별한다.
  */
-export function makeVisitKey(
-	dateKey: string,
-	exhibitionId: string | null,
-	title?: string,
-): string {
+export function makeVisitKey(dateKey: string, exhibitionId: string | null, title?: string): string {
 	const idPart = exhibitionId ? `id:${exhibitionId}` : title ? `t:${title}` : 'manual';
 	return `${dateKey}::${idPart}`;
 }

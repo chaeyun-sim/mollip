@@ -52,10 +52,10 @@ status: draft
 
 ## Screens / routes
 
-| Route | 변경 |
-|-------|------|
-| `app/(tabs)/index.tsx` | 변경 없음 (하위 컴포넌트만 수정) |
-| `src/components/explore/ExploreHomeHero.tsx` | AC-1 |
+| Route                                            | 변경                                                                   |
+| ------------------------------------------------ | ---------------------------------------------------------------------- |
+| `app/(tabs)/index.tsx`                           | 변경 없음 (하위 컴포넌트만 수정)                                       |
+| `src/components/explore/ExploreHomeHero.tsx`     | AC-1                                                                   |
 | `src/components/explore/ExploreHomeSections.tsx` | AC-2 (FeaturedExhibitionHero), AC-3 (RecommendedExhibitions 리드 카드) |
 
 ## Risks & dependencies

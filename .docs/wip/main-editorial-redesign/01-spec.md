@@ -66,14 +66,14 @@ status: draft
 
 ## Screens / routes
 
-| Route | 변경 |
-|-------|------|
-| `app/(tabs)/index.tsx` | 헤더 구성 변경(AC-1), 하위 컴포넌트 교체 |
-| `src/components/explore/ExploreHomeHero.tsx` | AC-2 (전면 재작성) |
+| Route                                            | 변경                                                                 |
+| ------------------------------------------------ | -------------------------------------------------------------------- |
+| `app/(tabs)/index.tsx`                           | 헤더 구성 변경(AC-1), 하위 컴포넌트 교체                             |
+| `src/components/explore/ExploreHomeHero.tsx`     | AC-2 (전면 재작성)                                                   |
 | `src/components/explore/ExploreHomeSections.tsx` | AC-3(FeaturedExhibitionHero), AC-4(RecommendedExhibitions 구조 변경) |
-| `src/components/explore/KcisaExhibitionCard.tsx` | AC-5 (넘버 배지 추가) |
-| `src/components/explore/KcisaSection.tsx` | AC-5 (넘버 전달) |
-| `src/components/common/SectionTitle.tsx` | 필요 시 룰선 옵션 추가 (여러 섹션에서 공용 재사용) |
+| `src/components/explore/KcisaExhibitionCard.tsx` | AC-5 (넘버 배지 추가)                                                |
+| `src/components/explore/KcisaSection.tsx`        | AC-5 (넘버 전달)                                                     |
+| `src/components/common/SectionTitle.tsx`         | 필요 시 룰선 옵션 추가 (여러 섹션에서 공용 재사용)                   |
 
 ## Risks & dependencies
 

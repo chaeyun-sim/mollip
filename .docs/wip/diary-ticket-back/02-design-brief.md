@@ -14,12 +14,12 @@ status: approved
 
 ## Back layout
 
-| Zone | Content |
-| --- | --- |
-| Header row | `오늘의 프로그램` (Pretendard-SemiBold 15) + `{n}작품` muted |
-| List | Row: 40–48px thumb rounded-lg, index, title (2 lines max), preview 12px muted |
-| Divider | dashed or hairline (ticket language) |
-| Footer | `도슨트 일기` — Hahmlet or SemiBold 14, body Pretendard-Regular 15, generate link-style or small pill |
+| Zone       | Content                                                                                               |
+| ---------- | ----------------------------------------------------------------------------------------------------- |
+| Header row | `오늘의 프로그램` (Pretendard-SemiBold 15) + `{n}작품` muted                                          |
+| List       | Row: 40–48px thumb rounded-lg, index, title (2 lines max), preview 12px muted                         |
+| Divider    | dashed or hairline (ticket language)                                                                  |
+| Footer     | `도슨트 일기` — Hahmlet or SemiBold 14, body Pretendard-Regular 15, generate link-style or small pill |
 
 ## Tokens
 

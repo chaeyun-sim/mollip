@@ -14,7 +14,7 @@ export function ExhibitionMetaPill({ icon, text, searchable = true }: Exhibition
 
 	const handlePress = () => {
 		if (!searchable) return;
-		
+
 		Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
 		router.push({ pathname: '/(tabs)/search', params: { q: text } });
 	};

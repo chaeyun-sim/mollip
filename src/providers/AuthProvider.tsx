@@ -74,7 +74,7 @@ export function AuthProvider({ children }: Props) {
 			subscription.unsubscribe();
 			sub.remove();
 		};
-	}, [setAuth, setLoading]);
+	}, [setAuth, setLoading, setOnboardingCompleted]);
 
 	return children;
 }

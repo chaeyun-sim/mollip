@@ -14,19 +14,19 @@ on:
   workflow_dispatch:
     inputs:
       dry_run:
-        description: "Preview changes without applying (true/false)"
+        description: 'Preview changes without applying (true/false)'
         required: false
-        default: "false"
+        default: 'false'
         type: choice
         options:
-          - "true"
-          - "false"
+          - 'true'
+          - 'false'
   push:
     branches:
       - main
     paths:
-      - ".github/labels.yml"
-      - ".github/workflows/label-sync.yml"
+      - '.github/labels.yml'
+      - '.github/workflows/label-sync.yml'
 
 permissions:
   issues: write

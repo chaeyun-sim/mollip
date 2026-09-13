@@ -13,7 +13,6 @@ interface RawArtwork extends WikiArtwork {
 	creatorId?: string;
 }
 
- 
 type EntityClaims = Record<string, any[]>;
 type EntityMap = Record<
 	string,

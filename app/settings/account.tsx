@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { ActivityIndicator, Modal, Pressable, Text, View } from 'react-native';
 import { Screen } from '@/src/components/layout/Screen';
 import { useAuthStore } from '@/src/store/authStore';
-import { Ionicons } from '@expo/vector-icons';
 import { colors } from '@/src/constants/colors';
 
 export default function AccountScreen() {

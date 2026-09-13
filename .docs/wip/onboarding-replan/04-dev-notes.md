@@ -8,9 +8,9 @@ status: prototype-in-progress
 
 ## Implemented ACs
 
-| AC | Status | Files |
-| --- | --- | --- |
-| AC-9 | G4 prototype data, QA pending | onboardingWallPieces.ts |
+| AC   | Status                                | Files                     |
+| ---- | ------------------------------------- | ------------------------- |
+| AC-9 | G4 prototype data, QA pending         | onboardingWallPieces.ts   |
 | AC-3 | G4 minimum drag/tap wall, in progress | OnboardingGalleryWall.tsx |
 
 ## Implementation decisions

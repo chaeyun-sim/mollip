@@ -1,7 +1,9 @@
 import { useRouter } from 'expo-router';
 import { ScrollView, Text, View } from 'react-native';
 import { Screen } from '@/src/components/layout/Screen';
-{/* 본 문서는 실제 앱의 데이터 흐름(코드 확인)을 기반으로 작성한 초안이며, 법률 전문가의 정식 검토를 거치지 않았습니다. 배포 전 반드시 변호사 등 법률 전문가의 검토를 받으세요. */}
+{
+	/* 본 문서는 실제 앱의 데이터 흐름(코드 확인)을 기반으로 작성한 초안이며, 법률 전문가의 정식 검토를 거치지 않았습니다. 배포 전 반드시 변호사 등 법률 전문가의 검토를 받으세요. */
+}
 
 const SECTIONS = [
 	{

@@ -18,15 +18,15 @@ status: complete
 
 ### 재검증한 게이트 (Chris 보고와 대조)
 
-| 항목 | Chris 보고 | Taylor 재실행 | 일치 |
-|---|---|---|---|
-| `npx tsc --noEmit` | 0 errors | **0 errors** (exit 0) | ✅ |
-| `npm test` | 2 suites / 37 tests | **2 suites / 37 tests PASS** | ✅ |
-| 토큰 두 정본 hex 대조 | 100% 일치 | **VALUE MISMATCH 0건**, `tertiary`/`muted` 양쪽 제거 확인 | ✅ |
-| `#3B82F6` / 구 `accent` 잔여 | 0건 | **0건** | ✅ |
-| AC-16 대비 수치 | 4.24 / 4.32 / 3.93 | **4.24 / 4.32 / 3.93** (독립 계산 일치) | ✅ |
-| AC-13 패턴 2 (`colors.*`) | **0건** | **1건** (`app/(guide)/chat.tsx:245`) | ⚠️ 아래 §보고 정확도 1 |
-| AC-13 패턴 1 구성 | "33건 **전부 bg-primary**" | 33건이나 **bg 22 + text 8 + border 3** | ⚠️ 아래 §보고 정확도 1 |
+| 항목                         | Chris 보고                 | Taylor 재실행                                             | 일치                   |
+| ---------------------------- | -------------------------- | --------------------------------------------------------- | ---------------------- |
+| `npx tsc --noEmit`           | 0 errors                   | **0 errors** (exit 0)                                     | ✅                     |
+| `npm test`                   | 2 suites / 37 tests        | **2 suites / 37 tests PASS**                              | ✅                     |
+| 토큰 두 정본 hex 대조        | 100% 일치                  | **VALUE MISMATCH 0건**, `tertiary`/`muted` 양쪽 제거 확인 | ✅                     |
+| `#3B82F6` / 구 `accent` 잔여 | 0건                        | **0건**                                                   | ✅                     |
+| AC-16 대비 수치              | 4.24 / 4.32 / 3.93         | **4.24 / 4.32 / 3.93** (독립 계산 일치)                   | ✅                     |
+| AC-13 패턴 2 (`colors.*`)    | **0건**                    | **1건** (`app/(guide)/chat.tsx:245`)                      | ⚠️ 아래 §보고 정확도 1 |
+| AC-13 패턴 1 구성            | "33건 **전부 bg-primary**" | 33건이나 **bg 22 + text 8 + border 3**                    | ⚠️ 아래 §보고 정확도 1 |
 
 ---
 
@@ -35,25 +35,25 @@ status: complete
 Q10(네이티브 모듈)은 전 AC 공통 **N/A** — 네이티브 모듈 추가/제거 0건을 `package.json` diff로 확인했고, `pod install` / 리빌드 불필요하다는 Chris 판단이 맞다.
 Q7은 **구조적 차단**(터치 자동화 불가, §Blockers)으로 전 AC에서 **정적 코드 리뷰 + 딥링크 네비게이션**으로 대체했다. `SIM` = 실탭 미실행, 대체 검증만 수행했다는 뜻이다.
 
-| AC | Q1 tsc | Q2 jest | Q3 bug | Q4 UX | Q5 conv | Q6 visual | Q7 interact | Q8 regress | Q9 perf |
-|----|--------|---------|--------|-------|---------|-----------|-------------|------------|---------|
-| AC-1 토큰 추가 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ IDENTICAL | SIM | ✅ | ✅ |
-| AC-2 분류표 | — | — | ✅ | ✅ | — | — | — | — | — |
-| AC-3 common/layout | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | SIM | ✅ | ✅ |
-| AC-4 explore/search | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | SIM | ✅ | ✅ |
-| AC-5 archive/mypage/settings | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | SIM | ✅ | ✅ |
-| AC-6 map/guide/auth/onboarding | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | SIM | ✅ | ✅ |
-| AC-7 app/(tabs) | ✅ | ✅ | ⚠️ **P1-1** | ⚠️ **P1-1** | ✅ | ⚠️ 미커버 | SIM | ✅ | ✅ |
-| AC-8 app/(guide) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | SIM | ✅ | ✅ |
-| AC-9 app/(explore)+diary | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | SIM | ✅ | ✅ |
-| AC-10 app/settings | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | SIM | ✅ | ✅ |
-| AC-11 auth/onboarding/최상위 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | SIM | ✅ | ✅ |
-| AC-12 colors.* 이관 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | SIM | ✅ | ✅ |
-| AC-13 잔여 0 게이트 | ✅ | ✅ | ✅ | — | ✅ | ✅ 32라우트 | SIM | ✅ | ✅ |
-| AC-14 브랜드 정의 교체 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | SIM | ✅ | ✅ |
-| AC-15 accent 이관 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ 32라우트 | SIM | ✅ | ✅ |
-| AC-16 대비 검증 | — | — | ✅ | ✅ | — | ✅ | SIM | ✅ | ✅ |
-| AC-17 DESIGN_SYSTEM.md | — | — | ✅ | ⚠️ **P1-2** | — | — | — | — | — |
+| AC                             | Q1 tsc | Q2 jest | Q3 bug      | Q4 UX       | Q5 conv | Q6 visual    | Q7 interact | Q8 regress | Q9 perf |
+| ------------------------------ | ------ | ------- | ----------- | ----------- | ------- | ------------ | ----------- | ---------- | ------- |
+| AC-1 토큰 추가                 | ✅     | ✅      | ✅          | ✅          | ✅      | ✅ IDENTICAL | SIM         | ✅         | ✅      |
+| AC-2 분류표                    | —      | —       | ✅          | ✅          | —       | —            | —           | —          | —       |
+| AC-3 common/layout             | ✅     | ✅      | ✅          | ✅          | ✅      | ✅           | SIM         | ✅         | ✅      |
+| AC-4 explore/search            | ✅     | ✅      | ✅          | ✅          | ✅      | ✅           | SIM         | ✅         | ✅      |
+| AC-5 archive/mypage/settings   | ✅     | ✅      | ✅          | ✅          | ✅      | ✅           | SIM         | ✅         | ✅      |
+| AC-6 map/guide/auth/onboarding | ✅     | ✅      | ✅          | ✅          | ✅      | ✅           | SIM         | ✅         | ✅      |
+| AC-7 app/(tabs)                | ✅     | ✅      | ⚠️ **P1-1** | ⚠️ **P1-1** | ✅      | ⚠️ 미커버    | SIM         | ✅         | ✅      |
+| AC-8 app/(guide)               | ✅     | ✅      | ✅          | ✅          | ✅      | ✅           | SIM         | ✅         | ✅      |
+| AC-9 app/(explore)+diary       | ✅     | ✅      | ✅          | ✅          | ✅      | ✅           | SIM         | ✅         | ✅      |
+| AC-10 app/settings             | ✅     | ✅      | ✅          | ✅          | ✅      | ✅           | SIM         | ✅         | ✅      |
+| AC-11 auth/onboarding/최상위   | ✅     | ✅      | ✅          | ✅          | ✅      | ✅           | SIM         | ✅         | ✅      |
+| AC-12 colors.* 이관            | ✅     | ✅      | ✅          | ✅          | ✅      | ✅           | SIM         | ✅         | ✅      |
+| AC-13 잔여 0 게이트            | ✅     | ✅      | ✅          | —           | ✅      | ✅ 32라우트  | SIM         | ✅         | ✅      |
+| AC-14 브랜드 정의 교체         | ✅     | ✅      | ✅          | ✅          | ✅      | ✅           | SIM         | ✅         | ✅      |
+| AC-15 accent 이관              | ✅     | ✅      | ✅          | ✅          | ✅      | ✅ 32라우트  | SIM         | ✅         | ✅      |
+| AC-16 대비 검증                | —      | —       | ✅          | ✅          | —       | ✅           | SIM         | ✅         | ✅      |
+| AC-17 DESIGN_SYSTEM.md         | —      | —       | ✅          | ⚠️ **P1-2** | —       | —            | —           | —          | —       |
 
 **AC-7만 조건부.** 나머지 16개 AC는 Then 절 기준 전부 충족.
 
@@ -94,6 +94,7 @@ Q7은 **구조적 차단**(터치 자동화 불가, §Blockers)으로 전 AC에�
 - **증빙 공백**: `evidence/final/tabs-index.png`는 이 줄이 **스크롤 하단이라 화면에 없다**. 즉 이 변경은 **어떤 스크린샷으로도 확인된 적이 없다.**
 
 **재현 스텝**
+
 1. `xcrun simctl openurl booted "my-app://"` → 홈 탭
 2. 히어로 캐러셀 아래로 스크롤 → 추천 안내 문장 영역
 3. "딱 맞는 전시를 추천" 이 라벤더(`#81759B`)로 렌더 — 주변 본문 대비 흐릿함
@@ -102,6 +103,7 @@ Q7은 **구조적 차단**(터치 자동화 불가, §Blockers)으로 전 AC에�
 **스크린샷**: 없음 (미커버 — 이것 자체가 결함)
 **우선순위**: **P1** — 회귀는 홈 화면(최다 트래픽) + 자체 규칙 위반. 다만 단일 텍스트 1줄이라 ship blocker는 아님.
 **권고 조치 (Manager 택1)**
+
 - (a) **원복** `text-[#B8623D]` — 01-spec Non-goals 준수, 최소 diff. **Taylor 권장.**
 - (b) 브랜드 강조가 의도라면 `text-primary-dark`(**6.12:1**, AA 통과)로 변경하고 02-design-brief에 근거 행 추가.
 - (c) 현행 유지는 **비권장** — 문서화된 자체 금지 규칙과 정면 충돌.
@@ -110,11 +112,11 @@ Q7은 **구조적 차단**(터치 자동화 불가, §Blockers)으로 전 AC에�
 
 AC-17 Then 절은 **hex** 일치만 요구하므로 AC-17은 Pass다. 그러나 정본 문서가 **Chris 본인이 이미 틀렸다고 증명한 숫자**를 싣고 있다.
 
-| §1.3 판정 트리 표기 | 실제 (Taylor 독립 계산 = `ac16-contrast-report.md`와 일치) | 차이 |
-|---|---|---|
-| `bg-primary` 다크 표면 "4.68:1 ✅" | **4.32:1** | Sam 원본 오류. `ac16-contrast-report.md` L21이 "Sam은 ✅로 표기했으나 재계산 4.32"라고 **명시 정정**했는데 정본 문서엔 반영 안 됨 |
-| `primary` 라이트 "3.70:1" | **3.93:1** | |
-| `primary-dark` + white "6.47:1" | **6.61:1** | |
+| §1.3 판정 트리 표기                | 실제 (Taylor 독립 계산 = `ac16-contrast-report.md`와 일치) | 차이                                                                                                                              |
+| ---------------------------------- | ---------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| `bg-primary` 다크 표면 "4.68:1 ✅" | **4.32:1**                                                 | Sam 원본 오류. `ac16-contrast-report.md` L21이 "Sam은 ✅로 표기했으나 재계산 4.32"라고 **명시 정정**했는데 정본 문서엔 반영 안 됨 |
+| `primary` 라이트 "3.70:1"          | **3.93:1**                                                 |                                                                                                                                   |
+| `primary-dark` + white "6.47:1"    | **6.61:1**                                                 |                                                                                                                                   |
 
 `bg-primary` 다크 표면은 4.32:1이라 **AA 본문 4.5:1 미달**인데 문서엔 "4.68:1 ✅"로 적혀 있어, 앞으로 이 표를 보고 다크 화면에 본문 텍스트를 얹는 오판을 유발한다.
 
@@ -156,16 +158,16 @@ Chris 보고를 스크린샷으로 검증했고 사실이다. 01-spec Non-goals(
 
 ## Deviations 검토 (8건 — 전건 승인)
 
-| # | 내용 | Taylor 판정 | 근거 |
-|---|---|---|---|
-| 1 | `chat.tsx:179,220` 기존 버그 수정으로 실제 색 변화 | **승인** | `backgroundColor: 'bg-primary'`는 RN에서 **무효값**(className 문자열을 style에 주입) → 배경이 아예 안 그려지던 진짜 버그. `colors.gray900`으로 수정 정당. `evidence/final/guide-chat.png`에서 빈 상태 원형 아이콘·입력 필드에 배경이 생긴 것 확인. baseline 0.72% 차이는 **회귀 아님**. 02-design-brief §N-부속이 예고한 케이스. |
-| 2 | `delete-account.tsx:193` → `text-primary-dark` (브리프 §B-6 배경 판정 오류) | **승인** | 코드 확인 결과 `<Screen variant="warm">` + `bg-blue-50` 팁 카드 = **라이트**가 맞다. 브리프 문장이 틀렸고 Chris는 브리프의 **규칙**(라이트+브랜드 텍스트→`primary-dark`)을 따랐다. 6.12:1로 AA 통과. ⚠️ 단 이 카드는 조건부 렌더라 **어떤 스크린샷에도 없음** — 렌더 미검증(§증빙 공백). |
-| 3 | 확정표 밖 `bg-primary` 히트 2건 판정 트리로 기계 적용 | **승인** | `location.tsx:43` 아이콘 원형→`bg-primary`(비텍스트 3:1), `ExcludeWordsModal.tsx:98` 흰 13px 라벨 pill→`bg-primary-dark`(6.61:1). 둘 다 판정 트리 정확 적용. 인벤토리 하단 별도 표기도 확인. |
-| 4 | 구 `accent` "16곳"이 아니라 실측 19곳 | **승인** | 01-spec 자체가 "앱 코드 기준 16건"을 **추정치**로 적었다. Taylor 독립 확인: 구 `accent`·`#3B82F6` 잔여 **0건** — 19곳 전건 이관 완료. |
-| 5 | `accent` 값 교체를 AC-14 → AC-15로 연기 | **승인** | AC-14에서 값만 바꾸면 미이관 지점이 일시적으로 코럴 렌더. 연기가 **더 안전**하며 01-spec의 "어느 중간 상태에서도 잘못된 색으로 렌더되지 않는다"(Goals)에 오히려 부합. 최종 결과는 T-1 표와 동일 확인. |
-| 6 | `inquiry.tsx` 비활성 라벨 `text-white` 통일 + 무의미 삼항 정리 | **승인 (사실상 Deviation 아님)** | 02-design-brief **§D-1이 `bg-gray400` + `text-white`를 명시적으로 요구**한다. 브리프 준수이지 이탈이 아니다. `bg-divider`→`bg-gray400` 값 변경도 D-1이 지시한 것. (참고: Chris의 "1.1:1"은 실제 **1.44:1** — 방향·결론은 동일, disabled는 WCAG 1.4.3 예외.) 브리프가 함께 요구한 `route.tsx:498` `bg-border` 이관도 완료 확인(`bg-border` 잔여 0건). |
-| 7 | `exit-summary.tsx:131` 다크→라이트 재분류, `bg-primary-dark`로 정정 | **승인 — 8건 중 가장 가치 있는 발견** | 코드 확인: `<Screen variant="warm">`(라이트) + CTA 흰 라벨이 맞다. 브리프대로 `bg-primary`면 **4.24:1(AA 미달)**, 정정한 `primary-dark`는 **6.61:1(통과)**. `evidence/final/guide-exit-summary.png`에서 CTA가 짙은 보라로 렌더됨을 육안 확인. `:111` 아이콘 `text-primary` 유지도 비텍스트 3:1 기준상 타당(3.70:1) — P2-3으로 별도 기록. |
-| 8 | `gradient` variant 사용처 0건, AC-16 위해 임시 적용 후 원복 | **승인 + 원복 검증 완료** | `variant="gradient"` 현재 **0건**, diff에 gradient 관련 추가분 **0건** → 임시 적용이 남아 있지 않음을 독립 확인. |
+| #   | 내용                                                                        | Taylor 판정                           | 근거                                                                                                                                                                                                                                                                                                                                                 |
+| --- | --------------------------------------------------------------------------- | ------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | `chat.tsx:179,220` 기존 버그 수정으로 실제 색 변화                          | **승인**                              | `backgroundColor: 'bg-primary'`는 RN에서 **무효값**(className 문자열을 style에 주입) → 배경이 아예 안 그려지던 진짜 버그. `colors.gray900`으로 수정 정당. `evidence/final/guide-chat.png`에서 빈 상태 원형 아이콘·입력 필드에 배경이 생긴 것 확인. baseline 0.72% 차이는 **회귀 아님**. 02-design-brief §N-부속이 예고한 케이스.                     |
+| 2   | `delete-account.tsx:193` → `text-primary-dark` (브리프 §B-6 배경 판정 오류) | **승인**                              | 코드 확인 결과 `<Screen variant="warm">` + `bg-blue-50` 팁 카드 = **라이트**가 맞다. 브리프 문장이 틀렸고 Chris는 브리프의 **규칙**(라이트+브랜드 텍스트→`primary-dark`)을 따랐다. 6.12:1로 AA 통과. ⚠️ 단 이 카드는 조건부 렌더라 **어떤 스크린샷에도 없음** — 렌더 미검증(§증빙 공백).                                                             |
+| 3   | 확정표 밖 `bg-primary` 히트 2건 판정 트리로 기계 적용                       | **승인**                              | `location.tsx:43` 아이콘 원형→`bg-primary`(비텍스트 3:1), `ExcludeWordsModal.tsx:98` 흰 13px 라벨 pill→`bg-primary-dark`(6.61:1). 둘 다 판정 트리 정확 적용. 인벤토리 하단 별도 표기도 확인.                                                                                                                                                         |
+| 4   | 구 `accent` "16곳"이 아니라 실측 19곳                                       | **승인**                              | 01-spec 자체가 "앱 코드 기준 16건"을 **추정치**로 적었다. Taylor 독립 확인: 구 `accent`·`#3B82F6` 잔여 **0건** — 19곳 전건 이관 완료.                                                                                                                                                                                                                |
+| 5   | `accent` 값 교체를 AC-14 → AC-15로 연기                                     | **승인**                              | AC-14에서 값만 바꾸면 미이관 지점이 일시적으로 코럴 렌더. 연기가 **더 안전**하며 01-spec의 "어느 중간 상태에서도 잘못된 색으로 렌더되지 않는다"(Goals)에 오히려 부합. 최종 결과는 T-1 표와 동일 확인.                                                                                                                                                |
+| 6   | `inquiry.tsx` 비활성 라벨 `text-white` 통일 + 무의미 삼항 정리              | **승인 (사실상 Deviation 아님)**      | 02-design-brief **§D-1이 `bg-gray400` + `text-white`를 명시적으로 요구**한다. 브리프 준수이지 이탈이 아니다. `bg-divider`→`bg-gray400` 값 변경도 D-1이 지시한 것. (참고: Chris의 "1.1:1"은 실제 **1.44:1** — 방향·결론은 동일, disabled는 WCAG 1.4.3 예외.) 브리프가 함께 요구한 `route.tsx:498` `bg-border` 이관도 완료 확인(`bg-border` 잔여 0건). |
+| 7   | `exit-summary.tsx:131` 다크→라이트 재분류, `bg-primary-dark`로 정정         | **승인 — 8건 중 가장 가치 있는 발견** | 코드 확인: `<Screen variant="warm">`(라이트) + CTA 흰 라벨이 맞다. 브리프대로 `bg-primary`면 **4.24:1(AA 미달)**, 정정한 `primary-dark`는 **6.61:1(통과)**. `evidence/final/guide-exit-summary.png`에서 CTA가 짙은 보라로 렌더됨을 육안 확인. `:111` 아이콘 `text-primary` 유지도 비텍스트 3:1 기준상 타당(3.70:1) — P2-3으로 별도 기록.             |
+| 8   | `gradient` variant 사용처 0건, AC-16 위해 임시 적용 후 원복                 | **승인 + 원복 검증 완료**             | `variant="gradient"` 현재 **0건**, diff에 gradient 관련 추가분 **0건** → 임시 적용이 남아 있지 않음을 독립 확인.                                                                                                                                                                                                                                     |
 
 ---
 
@@ -174,27 +176,27 @@ Chris 보고를 스크린샷으로 검증했고 사실이다. 01-spec Non-goals(
 1. **AC-13 게이트 결과가 "현재 상태"로 읽힌다.** dev-notes는 "패턴 2 → 0건", "33건 **전부 bg-primary**"라고 적었으나 현재 워킹트리는 `colors.primary` **1건**(`chat.tsx:245` 전송 버튼 활성 배경), className 33건의 구성은 `bg-primary` 21 / `bg-primary-dark`는 별도 21 / `text-primary` 4 / `text-secondary` 4 / `border-secondary` 2 / `border-primary` 1 / `bg-secondary` 1이다.
    → **게이트 자체는 유효하다.** 이 히트들은 전부 **AC-14/15에서 브랜드 컬러를 의도적으로 적용하며 새로 생긴 것**이고, AC-13 실행 시점(AC-14 착수 전)엔 실제로 0건/33 bg-primary였다. 순서 위반 없음. 문장을 "AC-13 실행 시점 기준"으로 한정 표기하면 된다.
 2. **Blocker 4(로그인 미검증)는 과장이다.** `evidence/final/tabs-diary.png`는 **실제 로그인 상태**(1 Tickets, 이대원 전시 실데이터, 바코드 렌더)이고 `evidence/final/settings-account.png`도 실제 이메일이 노출된 로그인 상태다. `VisitTicketFooter` 바코드 바가 `neutral`(검정) 유지됨도 이 스크린샷으로 검증됐다.
-   → 실제 미검증분은 "로그인 필요 화면" 전체가 아니라 **계정에 데이터가 있어 도달 불가한 *빈 상태*** (`ArchiveDiaryEmpty`, `ArchiveLoginPrompt`)로 한정된다.
+   → 실제 미검증분은 "로그인 필요 화면" 전체가 아니라 **계정에 데이터가 있어 도달 불가한 _빈 상태_** (`ArchiveDiaryEmpty`, `ArchiveLoginPrompt`)로 한정된다.
 3. **미신고 Deviation 9번**: 탭바 활성 tint가 `colors.primaryDark`(#625876)다(`app/(tabs)/_layout.tsx:15`). Q1 확정문("16곳 전부 신규 `primary` 라벤더")과 다르다. **판정: 승인** — 라이트 배경 위 텍스트라 `primary`는 3.93:1 미달, `primary-dark`는 6.12:1 통과이며 `.docs/DESIGN_SYSTEM.md` §1.3이 "탭바 활성 tint = primary-dark"로 이미 문서화했다. 올바른 결정이나 Deviations 목록에 없었다.
 
 ---
 
 ## Evidence
 
-| ID | Path | 확인 내용 (Taylor가 **이미지를 직접 열어** 확인) |
-|----|------|------|
-| E-1 | `evidence/final/tabs-index.png` ↔ `evidence/baseline/tabs-index.png` | FAB 2개 검정→라벤더, 탭바 활성 블루→라벤더. 그 외 레이아웃·텍스트 명도 동일. **P1-1 대상 줄은 스크롤 하단이라 미커버** |
-| E-2 | `evidence/final/guide-playlist.png` | 라벤더 FAB + **블루 라벨 공존** (P2-2 시각 확정) |
-| E-3 | `evidence/final/guide-exit-summary.png` | CTA `primary-dark` 짙은 보라 + 흰 라벨(Deviation 7 정상), 체크 아이콘 옅음(P2-3), 블루 카테고리 아이콘 공존(P2-2) |
-| E-4 | `evidence/final/guide-chat.png` | 빈 상태 원형 아이콘·입력 필드 **배경 생성** = Deviation 1 버그 수정 반영 |
-| E-5 | `evidence/final/auth-login.png` | 카카오 `#FEE500`·Apple 흰색 **무변경** (Non-goals·D-3 준수) |
-| E-6 | `evidence/final/settings-index.png` | 선택 pill(1.0x·중) `bg-primary-dark`+흰 라벨(6.61:1), 토글은 `neutral` 검정 유지 |
-| E-7 | `evidence/final/settings-account.png` | 로그인 상태 확인. 단 "닫기" 아웃라인 버튼은 모달 내부라 미커버 |
-| E-8 | `evidence/final/tabs-diary.png` | **로그인 실데이터** 티켓 + 바코드 바 `neutral` 검정 유지 (AC-2 분류 정확성 입증) |
-| E-9 | `evidence/final/settings-delete-account.png` | 우상단 disabled pill `bg-black/10` (P2-1) |
-| E-10 | `evidence/final/tabs-search.png` | 태그 칩·최근 검색 명도 위계 baseline과 동일 |
-| E-11 | `evidence/baseline/` (32) · `evidence/final/` (32) | 라우트 커버리지 **32/32 양쪽 완비** 확인 |
-| E-12 | `evidence/ac13/` (32) · `evidence/ac15/` (32) | 게이트 시점 전수 스윕 존재 확인 |
+| ID   | Path                                                                 | 확인 내용 (Taylor가 **이미지를 직접 열어** 확인)                                                                       |
+| ---- | -------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| E-1  | `evidence/final/tabs-index.png` ↔ `evidence/baseline/tabs-index.png` | FAB 2개 검정→라벤더, 탭바 활성 블루→라벤더. 그 외 레이아웃·텍스트 명도 동일. **P1-1 대상 줄은 스크롤 하단이라 미커버** |
+| E-2  | `evidence/final/guide-playlist.png`                                  | 라벤더 FAB + **블루 라벨 공존** (P2-2 시각 확정)                                                                       |
+| E-3  | `evidence/final/guide-exit-summary.png`                              | CTA `primary-dark` 짙은 보라 + 흰 라벨(Deviation 7 정상), 체크 아이콘 옅음(P2-3), 블루 카테고리 아이콘 공존(P2-2)      |
+| E-4  | `evidence/final/guide-chat.png`                                      | 빈 상태 원형 아이콘·입력 필드 **배경 생성** = Deviation 1 버그 수정 반영                                               |
+| E-5  | `evidence/final/auth-login.png`                                      | 카카오 `#FEE500`·Apple 흰색 **무변경** (Non-goals·D-3 준수)                                                            |
+| E-6  | `evidence/final/settings-index.png`                                  | 선택 pill(1.0x·중) `bg-primary-dark`+흰 라벨(6.61:1), 토글은 `neutral` 검정 유지                                       |
+| E-7  | `evidence/final/settings-account.png`                                | 로그인 상태 확인. 단 "닫기" 아웃라인 버튼은 모달 내부라 미커버                                                         |
+| E-8  | `evidence/final/tabs-diary.png`                                      | **로그인 실데이터** 티켓 + 바코드 바 `neutral` 검정 유지 (AC-2 분류 정확성 입증)                                       |
+| E-9  | `evidence/final/settings-delete-account.png`                         | 우상단 disabled pill `bg-black/10` (P2-1)                                                                              |
+| E-10 | `evidence/final/tabs-search.png`                                     | 태그 칩·최근 검색 명도 위계 baseline과 동일                                                                            |
+| E-11 | `evidence/baseline/` (32) · `evidence/final/` (32)                   | 라우트 커버리지 **32/32 양쪽 완비** 확인                                                                               |
+| E-12 | `evidence/ac13/` (32) · `evidence/ac15/` (32)                        | 게이트 시점 전수 스윕 존재 확인                                                                                        |
 
 ### 증빙 공백 (통과로 위장하지 않고 명시)
 
@@ -240,11 +242,11 @@ Chris 보고를 스크린샷으로 검증했고 사실이다. 01-spec Non-goals(
 
 **Chris 반려는 하지 않는다.** 17개 AC의 Then 절이 전부 충족됐고 P0가 없다. 다만 Manager는 핸드오프 전 아래를 처리해야 한다.
 
-| 순위 | 조치 | 담당 |
-|---|---|---|
-| 1 | **P1-1 결정** — `index.tsx:140`을 원복(권장) 또는 `primary-dark`로 변경. 현행 유지는 자체 문서 규칙과 충돌하므로 비권장 | Manager 결정 → Chris 1줄 수정 |
-| 2 | **P1-2** — `.docs/DESIGN_SYSTEM.md` §1.3 대비 수치 3건을 4.32 / 3.93 / 6.61로 정정 | Chris (문서) |
-| 3 | 06-handoff에 **보고 정확도 3건**(AC-13 시점 한정 표기, Blocker 4 범위 축소, Deviation 9번 탭바 tint) 반영 | Manager |
-| 4 | P2-1 / P2-2 / P2-3을 후속 스펙으로 등록. 특히 **P2-2(블루 잔존)** 는 브랜드 일관성상 우선 | Manager |
+| 순위 | 조치                                                                                                                    | 담당                          |
+| ---- | ----------------------------------------------------------------------------------------------------------------------- | ----------------------------- |
+| 1    | **P1-1 결정** — `index.tsx:140`을 원복(권장) 또는 `primary-dark`로 변경. 현행 유지는 자체 문서 규칙과 충돌하므로 비권장 | Manager 결정 → Chris 1줄 수정 |
+| 2    | **P1-2** — `.docs/DESIGN_SYSTEM.md` §1.3 대비 수치 3건을 4.32 / 3.93 / 6.61로 정정                                      | Chris (문서)                  |
+| 3    | 06-handoff에 **보고 정확도 3건**(AC-13 시점 한정 표기, Blocker 4 범위 축소, Deviation 9번 탭바 tint) 반영               | Manager                       |
+| 4    | P2-1 / P2-2 / P2-3을 후속 스펙으로 등록. 특히 **P2-2(블루 잔존)** 는 브랜드 일관성상 우선                               | Manager                       |
 
 P1 2건은 각각 **1줄 코드 수정**과 **문서 수치 3개 교체**로 끝나므로 전체 재검증(Q1~Q10) 부담은 작다. P1-1을 코드 수정하면 `npx tsc --noEmit` + 홈 화면 스크린샷 재캡처만 추가로 필요하다.

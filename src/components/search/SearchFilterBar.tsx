@@ -28,12 +28,12 @@ export function SearchFilterBar({
 	function formatChipDate(date: Date) {
 		return `${date.getMonth() + 1}.${date.getDate()}`;
 	}
-	
+
 	return (
 		<ScrollView
 			horizontal
 			showsHorizontalScrollIndicator={false}
-			contentContainerClassName='gap-2 pr-6'
+			contentContainerClassName="gap-2 pr-6"
 		>
 			{STATUS_KEYS.map((key) => (
 				<Chip

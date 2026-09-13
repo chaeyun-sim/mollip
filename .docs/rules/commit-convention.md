@@ -10,32 +10,32 @@ type, scope, text 세 항목 모두 필수입니다.
 
 ## Type
 
-| type | 용도 |
-|---|---|
-| `feat` | 새 기능 |
-| `fix` | 버그 수정 |
-| `chore` | 빌드·설정·의존성 등 기능 외 작업 |
-| `refactor` | 동작 변경 없는 코드 개선 |
-| `style` | 포맷·공백·세미콜론 등 코드 스타일 |
-| `docs` | 문서 작성·수정 |
-| `perf` | 성능 개선 |
-| `test` | 테스트 추가·수정 |
-| `build` | 빌드 시스템·CI 변경 |
+| type       | 용도                              |
+| ---------- | --------------------------------- |
+| `feat`     | 새 기능                           |
+| `fix`      | 버그 수정                         |
+| `chore`    | 빌드·설정·의존성 등 기능 외 작업  |
+| `refactor` | 동작 변경 없는 코드 개선          |
+| `style`    | 포맷·공백·세미콜론 등 코드 스타일 |
+| `docs`     | 문서 작성·수정                    |
+| `perf`     | 성능 개선                         |
+| `test`     | 테스트 추가·수정                  |
+| `build`    | 빌드 시스템·CI 변경               |
 
 ## Scope
 
 프로젝트 주요 도메인 단위로만 사용합니다. 세부 파일명은 쓰지 않습니다.
 
-| scope | 대상 |
-|---|---|
-| `app` | 화면·라우팅 (`app/`) |
-| `api` | API 클라이언트 (`src/utils/api.ts`) |
-| `ui` | 컴포넌트·레이아웃 (`src/components/`) |
-| `store` | 상태 관리 (`src/store/`) |
-| `tts` | TTS·오디오 (`src/hooks/useTTS.ts`) |
+| scope      | 대상                                   |
+| ---------- | -------------------------------------- |
+| `app`      | 화면·라우팅 (`app/`)                   |
+| `api`      | API 클라이언트 (`src/utils/api.ts`)    |
+| `ui`       | 컴포넌트·레이아웃 (`src/components/`)  |
+| `store`    | 상태 관리 (`src/store/`)               |
+| `tts`      | TTS·오디오 (`src/hooks/useTTS.ts`)     |
 | `supabase` | Edge Functions (`supabase/functions/`) |
-| `deps` | 의존성 추가·제거·업데이트 |
-| `config` | 설정 파일 (env, tsconfig, tailwind 등) |
+| `deps`     | 의존성 추가·제거·업데이트              |
+| `config`   | 설정 파일 (env, tsconfig, tailwind 등) |
 
 ## Text 규칙
 

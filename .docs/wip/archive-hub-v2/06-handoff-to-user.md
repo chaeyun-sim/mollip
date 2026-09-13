@@ -12,12 +12,12 @@ status: pending-user
 
 ## 산출물
 
-| 단계 | 파일 |
-|------|------|
-| Spec | `.docs/wip/archive-hub-v2/01-spec.md` |
-| Design | `02-design-brief.md`, `03-design-review.md` |
-| Dev | `04-dev-notes.md` + `app/(tabs)/archive.tsx` 등 |
-| QA | `05-qa-report.md` |
+| 단계   | 파일                                            |
+| ------ | ----------------------------------------------- |
+| Spec   | `.docs/wip/archive-hub-v2/01-spec.md`           |
+| Design | `02-design-brief.md`, `03-design-review.md`     |
+| Dev    | `04-dev-notes.md` + `app/(tabs)/archive.tsx` 등 |
+| QA     | `05-qa-report.md`                               |
 
 ## 팀 보드 보는 법
 

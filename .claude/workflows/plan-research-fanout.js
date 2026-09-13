@@ -44,37 +44,59 @@
 //              args: { topic: "add OAuth2 login", lenses: ["codebase-precedent", "external-docs"] } })
 
 export const meta = {
-  name: 'plan-research-fanout',
-  description: 'Parallel plan-phase research fan-out — 3-4 read-only lens explorers (fixed-heading markdown) + one synthesizer that marks cross-lens contradictions; returns research_md as a string, writes no files',
-  phases: [
-    { title: 'Explore', detail: 'three-to-four parallel read-only Explore agents, one per distinct lens, each returning fixed-heading markdown with a mandatory confidence_and_gaps section' },
-    { title: 'Synthesize', detail: 'one read-only Explore agent merges the surviving lens reports and marks every cross-lens contradiction explicitly (never smooths); aborts to insufficient_coverage on >= 2 null lenses' },
-  ],
-}
+	name: 'plan-research-fanout',
+	description:
+		'Parallel plan-phase research fan-out — 3-4 read-only lens explorers (fixed-heading markdown) + one synthesizer that marks cross-lens contradictions; returns research_md as a string, writes no files',
+	phases: [
+		{
+			title: 'Explore',
+			detail:
+				'three-to-four parallel read-only Explore agents, one per distinct lens, each returning fixed-heading markdown with a mandatory confidence_and_gaps section',
+		},
+		{
+			title: 'Synthesize',
+			detail:
+				'one read-only Explore agent merges the surviving lens reports and marks every cross-lens contradiction explicitly (never smooths); aborts to insufficient_coverage on >= 2 null lenses',
+		},
+	],
+};
 
 // determinism: all inputs injected via args; no wall-clock, no random in body
-const TOPIC = (args && args.topic) || '(unspecified research topic)'
-const DEFAULT_LENSES = ['codebase-precedent', 'external-docs', 'constraints-risks', 'prior-SPEC-memory']
+const TOPIC = (args && args.topic) || '(unspecified research topic)';
+const DEFAULT_LENSES = [
+	'codebase-precedent',
+	'external-docs',
+	'constraints-risks',
+	'prior-SPEC-memory',
+];
 // hard cap: at most 4 lenses — a fifth lens is silently dropped
-const LENSES = ((args && args.lenses) || DEFAULT_LENSES).slice(0, 4)
+const LENSES = ((args && args.lenses) || DEFAULT_LENSES).slice(0, 4);
 
 // Per-lens tool guidance (element 3 of the 4-element prompt). Known lenses map to a concrete tool
 // set; an unknown custom lens falls back to the general read-only toolset.
 const TOOL_GUIDANCE = {
-  'codebase-precedent': 'Use Read + Grep + Glob to find existing in-repo precedents, prior implementations, and conventions.',
-  'external-docs': 'Use WebSearch + WebFetch to find current official library/framework documentation and versioned APIs; verify every URL before citing it.',
-  'constraints-risks': 'Use Read + Grep + Glob over the codebase and config to surface constraints, invariants, coupling, and regression risks.',
-  'prior-SPEC-memory': 'Use Read + Grep + Glob over .moai/specs/ and project memory files to find prior SPECs, decisions, and superseded approaches.',
-}
-const toolGuidanceFor = (lens) => TOOL_GUIDANCE[lens] || 'Use Read + Grep + Glob (and WebSearch + WebFetch when external evidence is required). Read-only only.'
+	'codebase-precedent':
+		'Use Read + Grep + Glob to find existing in-repo precedents, prior implementations, and conventions.',
+	'external-docs':
+		'Use WebSearch + WebFetch to find current official library/framework documentation and versioned APIs; verify every URL before citing it.',
+	'constraints-risks':
+		'Use Read + Grep + Glob over the codebase and config to surface constraints, invariants, coupling, and regression risks.',
+	'prior-SPEC-memory':
+		'Use Read + Grep + Glob over .moai/specs/ and project memory files to find prior SPECs, decisions, and superseded approaches.',
+};
+const toolGuidanceFor = (lens) =>
+	TOOL_GUIDANCE[lens] ||
+	'Use Read + Grep + Glob (and WebSearch + WebFetch when external evidence is required). Read-only only.';
 
 // ---------------------------------------------------------------------------
-phase('Explore')
+phase('Explore');
 
 // 4-element lens prompt: (1) objective, (2) output format (fixed headings), (3) tool guidance,
 // (4) boundaries. The fixed headings keep honesty structural — the confidence_and_gaps heading is
 // mandatory and "NONE found" is a valid, valuable answer (an honest empty result, never padding).
-const EXPLORE_PROMPT = (lens) => `You are a read-only research analyst investigating ONE lens: "${lens}".
+const EXPLORE_PROMPT = (
+	lens,
+) => `You are a read-only research analyst investigating ONE lens: "${lens}".
 Do NOT modify any file.
 
 (1) OBJECTIVE: For the research topic "${TOPIC}", gather evidence strictly from the "${lens}" angle.
@@ -92,29 +114,45 @@ Do NOT modify any file.
 
 (4) BOUNDARIES: Stay strictly within the "${lens}" lens — do NOT cover the other lenses (another agent
 owns each of them). Do NOT speculate beyond your evidence. If this lens yields nothing, "NONE found"
-under every heading is the correct answer.`
+under every heading is the correct answer.`;
 
-const reports = await parallel(LENSES.map((lens) => () =>
-  agent(EXPLORE_PROMPT(lens), { label: `explore:${lens}`, phase: 'Explore', agentType: 'Explore', effort: 'medium' })
-))
+const reports = await parallel(
+	LENSES.map(
+		(lens) => () =>
+			agent(EXPLORE_PROMPT(lens), {
+				label: `explore:${lens}`,
+				phase: 'Explore',
+				agentType: 'Explore',
+				effort: 'medium',
+			}),
+	),
+);
 
 // Pair each lens with its report (null where the agent did not return — e.g. rate-limited).
-const perLensReports = LENSES.map((lens, i) => ({ lens, report: reports[i] || null }))
-const failedLenses = perLensReports.filter((r) => !r.report).map((r) => r.lens)
+const perLensReports = LENSES.map((lens, i) => ({ lens, report: reports[i] || null }));
+const failedLenses = perLensReports.filter((r) => !r.report).map((r) => r.lens);
 
 // ---------------------------------------------------------------------------
-phase('Synthesize')
+phase('Synthesize');
 
 // >= 2 null lenses → a synthesis over half the lenses would smooth over unknown unknowns; abort honestly.
 // (A single null lens is tolerated below — its gap is named for the synthesizer.)
 if (failedLenses.length >= 2) {
-  return { status: 'insufficient_coverage', failed_lenses: failedLenses, lenses: LENSES, per_lens_reports: perLensReports }
+	return {
+		status: 'insufficient_coverage',
+		failed_lenses: failedLenses,
+		lenses: LENSES,
+		per_lens_reports: perLensReports,
+	};
 }
 
 // null-filter the agent results before aggregation: keep only the lenses that actually returned.
-const validReports = perLensReports.filter((r) => r.report)
+const validReports = perLensReports.filter((r) => r.report);
 
-const SYNTHESIZE_PROMPT = (surviving, failed) => `You are a read-only research synthesizer. Do NOT modify any file.
+const SYNTHESIZE_PROMPT = (
+	surviving,
+	failed,
+) => `You are a read-only research synthesizer. Do NOT modify any file.
 Merge the per-lens research reports below into ONE coherent research narrative for the topic "${TOPIC}".
 
 Per-lens reports (each already scoped to its own lens):
@@ -129,8 +167,13 @@ Produce a research.md BODY (markdown). Requirements:
   attribute each side to its lens so the reader decides.
 - Preserve the honest "NONE found" results; do not invent evidence to fill a gap.
 
-Return ONLY the markdown body (a string). Do NOT write any file — the orchestrator persists research.md.`
+Return ONLY the markdown body (a string). Do NOT write any file — the orchestrator persists research.md.`;
 
-const research_md = await agent(SYNTHESIZE_PROMPT(validReports, failedLenses), { label: 'synthesize:research', phase: 'Synthesize', agentType: 'Explore', effort: 'high' })
+const research_md = await agent(SYNTHESIZE_PROMPT(validReports, failedLenses), {
+	label: 'synthesize:research',
+	phase: 'Synthesize',
+	agentType: 'Explore',
+	effort: 'high',
+});
 
-return { lenses: LENSES, per_lens_reports: perLensReports, research_md }
+return { lenses: LENSES, per_lens_reports: perLensReports, research_md };

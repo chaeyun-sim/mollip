@@ -58,50 +58,50 @@ FE 구현 현황의 단일 정본. 코드 탐색 전에 먼저 읽을 것.
 
 ### `onboarding`
 
-| 파일                       | 역할                            |
-| -------------------------- | ------------------------------- |
+| 파일                       | 역할                                           |
+| -------------------------- | ---------------------------------------------- |
 | `app/onboarding/index.tsx` | 온보딩 — 티켓 소개 → 샘플 청취 → 초대권 → 입장 |
 
 위치 권한 페이지(`app/onboarding/location.tsx`)는 2026-08-30 커밋 `ad6a14f`로 온보딩 플로우에서 제거됨.
 
 ### `diary`
 
-| 파일                   | 역할                    |
-| ---------------------- | ----------------------- |
-| `app/diary/[date].tsx` | 특정 날짜 다이어리 상세 |
+| 파일                           | 역할                                                            |
+| ------------------------------ | --------------------------------------------------------------- |
+| `app/diary/[date].tsx`         | 특정 날짜 다이어리 상세                                         |
 | `app/diary/confirm-visits.tsx` | pending 관람 확정 큐 — 별점 → 감상평(직접 쓰기/생성하기) → 서명 |
 
 ### `settings`
 
-| 파일                                   | 역할                          |
-| -------------------------------------- | ----------------------------- |
-| `app/settings/_layout.tsx`             | 설정 스택 레이아웃            |
-| `app/settings/index.tsx`               | 설정 메인 (토글 등)           |
-| `app/settings/account.tsx`             | 계정 정보                     |
-| `app/settings/delete-account.tsx`      | 계정 삭제                     |
-| `app/settings/description.tsx`         | 설명 관련 설정                |
-| `app/settings/inquiry.tsx`             | 문의하기                      |
+| 파일                                   | 역할                                   |
+| -------------------------------------- | -------------------------------------- |
+| `app/settings/_layout.tsx`             | 설정 스택 레이아웃                     |
+| `app/settings/index.tsx`               | 설정 메인 (토글 등)                    |
+| `app/settings/account.tsx`             | 계정 정보                              |
+| `app/settings/delete-account.tsx`      | 계정 삭제                              |
+| `app/settings/description.tsx`         | 설명 관련 설정                         |
+| `app/settings/inquiry.tsx`             | 문의하기                               |
 | `app/settings/preferences.tsx`         | 내 취향 수정 — 온보딩과 같은 초대권 덱 |
-| `app/settings/voice.tsx`               | TTS 음성 선택 설정            |
-| `app/settings/bookmark/audio.tsx`      | 오디오 북마크(청취 기록) 목록 |
-| `app/settings/bookmark/exhibition.tsx` | 전시 북마크 목록              |
+| `app/settings/voice.tsx`               | TTS 음성 선택 설정                     |
+| `app/settings/bookmark/audio.tsx`      | 오디오 북마크(청취 기록) 목록          |
+| `app/settings/bookmark/exhibition.tsx` | 전시 북마크 목록                       |
 
 ## 2. `src/components/` 도메인별 인벤토리
 
-| 도메인        | 파일 수                       | 비고                                                                                                                                                            |
-| ------------- | ----------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `archive/`    | 21                            | 관람 기록/티켓 UI — `VisitTicket*`, `DiaryCalendar`, `ReceiptSummary`, `EssayInputSection`(확정 큐 감상평) 등. 컬러 팔레트는 `archivePalette.ts` |
-| `auth/`       | 2                             | `SocialPill`, `LoginRequiredPressable`                                                                                                                          |
-| `character/`  | 0                             | **디렉터리는 존재하나 파일 없음** — 미사용/정리 대상 후보                                                                                                       |
-| `common/`     | 8                             | 도메인 무관 프리미티브만 — `Button`, `IconButton`, `Chip`, `ImageFallback`, `SearchBar`, `TextField`, `DatePickerModal`, `SectionTitle`                           |
-| `explore/`    | 24                            | 전시 탐색/상세 — 카드, 상세 헤더, `HorizontalSection`, `StatusBadge`, `FloatingIconButton`, 몰입모드 오버레이. 경로 시트는 `map/`에도 동명 파일 존재            |
-| `guide/`      | 8                             | 오디오 가이드 채팅/입력 필드, `SourceActionRow`(작품 입력 카메라·갤러리 행)                                                                                     |
-| `layout/`     | 3 (+ `Loading/` 서브디렉터리) | `Screen.tsx`, `ScreenHeader.tsx` — 모든 화면의 레이아웃 프리미티브 (CLAUDE.md에 명시)                                                                           |
-| `map/`        | 19                            | 지도 마커, 경로 시트, `ExternalMapSheet`, 필터 칩 등. 노선 색상은 `src/utils/routeColors.ts` 참조                                                               |
-| `mypage/`     | 5 (+ `index.ts`)              | 설정 화면 카드/셀렉터 UI                                                                                                                                        |
-| `onboarding/` | 6                             | 티켓 스택 소개, 샘플 청취, 초대권 덱, 입장 확인                                                                                                                  |
-| `search/`     | 4                             | 검색 결과 카드, 필터 바, 상태 배지                                                                                                                              |
-| `settings/`   | 1                             | `VoiceListSkeletonItem` — 설정 화면 UI 조각이 대부분 `mypage/`에 있어 상대적으로 적음                                                                           |
+| 도메인        | 파일 수                       | 비고                                                                                                                                                 |
+| ------------- | ----------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `archive/`    | 21                            | 관람 기록/티켓 UI — `VisitTicket*`, `DiaryCalendar`, `ReceiptSummary`, `EssayInputSection`(확정 큐 감상평) 등. 컬러 팔레트는 `archivePalette.ts`     |
+| `auth/`       | 2                             | `SocialPill`, `LoginRequiredPressable`                                                                                                               |
+| `character/`  | 0                             | **디렉터리는 존재하나 파일 없음** — 미사용/정리 대상 후보                                                                                            |
+| `common/`     | 8                             | 도메인 무관 프리미티브만 — `Button`, `IconButton`, `Chip`, `ImageFallback`, `SearchBar`, `TextField`, `DatePickerModal`, `SectionTitle`              |
+| `explore/`    | 24                            | 전시 탐색/상세 — 카드, 상세 헤더, `HorizontalSection`, `StatusBadge`, `FloatingIconButton`, 몰입모드 오버레이. 경로 시트는 `map/`에도 동명 파일 존재 |
+| `guide/`      | 8                             | 오디오 가이드 채팅/입력 필드, `SourceActionRow`(작품 입력 카메라·갤러리 행)                                                                          |
+| `layout/`     | 3 (+ `Loading/` 서브디렉터리) | `Screen.tsx`, `ScreenHeader.tsx` — 모든 화면의 레이아웃 프리미티브 (CLAUDE.md에 명시)                                                                |
+| `map/`        | 19                            | 지도 마커, 경로 시트, `ExternalMapSheet`, 필터 칩 등. 노선 색상은 `src/utils/routeColors.ts` 참조                                                    |
+| `mypage/`     | 5 (+ `index.ts`)              | 설정 화면 카드/셀렉터 UI                                                                                                                             |
+| `onboarding/` | 6                             | 티켓 스택 소개, 샘플 청취, 초대권 덱, 입장 확인                                                                                                      |
+| `search/`     | 4                             | 검색 결과 카드, 필터 바, 상태 배지                                                                                                                   |
+| `settings/`   | 1                             | `VoiceListSkeletonItem` — 설정 화면 UI 조각이 대부분 `mypage/`에 있어 상대적으로 적음                                                                |
 
 ## 3. `src/store/` — Zustand 스토어 (반응형)
 

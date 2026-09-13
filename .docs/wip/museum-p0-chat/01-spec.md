@@ -57,15 +57,15 @@ status: draft
 
 ## Screens / routes
 
-| Route | 변경 |
-|-------|------|
-| `app/(guide)/chat.tsx` | 변경 없음 (재사용) |
-| `src/store/chatStore.ts` | 변경 없음 |
-| `src/store/historyStore.ts` | `HistoryItem`에 `chatMessages?` 필드 추가, `saveChatMessages()` 액션 추가 |
-| `app/(guide)/description.tsx` | 화면 unmount 시 채팅 flush 대신 historyStore에 저장 |
-| `app/diary/[date].tsx` | 해당 날짜 히스토리 항목의 채팅 내역 섹션 추가 (읽기 전용) |
-| `app/(guide)/manual.tsx` | "바로 질문하기" 버튼 추가 → 채팅 직행 |
-| `src/constants/prompts.ts` | 캡션 채팅용 시스템 프롬프트 변형 추가 |
+| Route                         | 변경                                                                      |
+| ----------------------------- | ------------------------------------------------------------------------- |
+| `app/(guide)/chat.tsx`        | 변경 없음 (재사용)                                                        |
+| `src/store/chatStore.ts`      | 변경 없음                                                                 |
+| `src/store/historyStore.ts`   | `HistoryItem`에 `chatMessages?` 필드 추가, `saveChatMessages()` 액션 추가 |
+| `app/(guide)/description.tsx` | 화면 unmount 시 채팅 flush 대신 historyStore에 저장                       |
+| `app/diary/[date].tsx`        | 해당 날짜 히스토리 항목의 채팅 내역 섹션 추가 (읽기 전용)                 |
+| `app/(guide)/manual.tsx`      | "바로 질문하기" 버튼 추가 → 채팅 직행                                     |
+| `src/constants/prompts.ts`    | 캡션 채팅용 시스템 프롬프트 변형 추가                                     |
 
 ## Risks & dependencies
 

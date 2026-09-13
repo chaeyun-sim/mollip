@@ -30,15 +30,6 @@ interface DiaryCalendarProps {
 	onChangeMonth: (offset: -1 | 1) => void;
 }
 
-
-function rotationForDateKey(dateKey: string): number {
-	const seed = dateKey
-		.replace(/-/g, '')
-		.split('')
-		.reduce((a, c) => a + c.charCodeAt(0), 0);
-	return (seed % 13) - 6;
-}
-
 export function DiaryCalendar({
 	year,
 	month,
@@ -143,9 +134,7 @@ export function DiaryCalendar({
 								onPress={() => hasEntry && onSelectDate(dateKey)}
 								disabled={!hasEntry}
 								accessibilityLabel={
-									hasEntry
-										? `${month}월 ${day}일 일기 보기`
-										: `${month}월 ${day}일, 기록 없음`
+									hasEntry ? `${month}월 ${day}일 일기 보기` : `${month}월 ${day}일, 기록 없음`
 								}
 								accessibilityRole="button"
 								accessibilityState={{ disabled: !hasEntry }}
@@ -172,10 +161,7 @@ export function DiaryCalendar({
 
 								{(hasImage || hasColor) && (
 									<View className="w-full flex-1 mt-1">
-										<DiaryStampCell
-											source={dayImage?.source}
-											color={dayImage?.color}
-										/>
+										<DiaryStampCell source={dayImage?.source} color={dayImage?.color} />
 									</View>
 								)}
 							</Pressable>

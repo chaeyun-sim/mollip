@@ -67,7 +67,11 @@ function renderTexture(texture: OnboardingWallPiece['texture']) {
 }
 
 /** 현재 라운드의 3분할 작품 조각 트레이 — 탭 1회로 선택, 스와이프 없음 (AC-2). */
-export function OnboardingArtworkTray({ tray, onSelect, announcement }: OnboardingArtworkTrayProps) {
+export function OnboardingArtworkTray({
+	tray,
+	onSelect,
+	announcement,
+}: OnboardingArtworkTrayProps) {
 	const reduceMotion = useReducedMotion();
 	const firstPanelRef = useRef<View>(null);
 
@@ -79,10 +83,7 @@ export function OnboardingArtworkTray({ tray, onSelect, announcement }: Onboardi
 	}
 
 	return (
-		<ScrollView
-			showsVerticalScrollIndicator={false}
-			contentContainerClassName="flex-grow"
-		>
+		<ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="flex-grow">
 			<Animated.View
 				key={tray.id}
 				entering={reduceMotion ? undefined : FadeIn.duration(200)}

@@ -20,19 +20,31 @@
 //              args: { packages: ["pkg/version", "internal/spec", ...] } })
 
 export const meta = {
-  name: 'codemaps-extract',
-  description: 'Read-only per-package codemaps extraction fan-out — architecture-insight augmentation for high-count codemaps (NOT an extraction replacement; go list -deps -json + go doc is the deterministic baseline)',
-  phases: [
-    { title: 'Extract', detail: 'one read-only Explore agent per Go package extracts dep graph + public surface + architectural synthesis, aggregated in script variables' },
-  ],
-}
+	name: 'codemaps-extract',
+	description:
+		'Read-only per-package codemaps extraction fan-out — architecture-insight augmentation for high-count codemaps (NOT an extraction replacement; go list -deps -json + go doc is the deterministic baseline)',
+	phases: [
+		{
+			title: 'Extract',
+			detail:
+				'one read-only Explore agent per Go package extracts dep graph + public surface + architectural synthesis, aggregated in script variables',
+		},
+	],
+};
 
 // determinism: package list injected via args; no wall-clock, no random in body
-const PACKAGES = (args && args.packages) || ['pkg/version', 'internal/spec', 'internal/config', 'cmd/moai']
+const PACKAGES = (args && args.packages) || [
+	'pkg/version',
+	'internal/spec',
+	'internal/config',
+	'cmd/moai',
+];
 
-phase('Extract')
+phase('Extract');
 
-const PROMPT = (pkg) => `You are a read-only code analyst. Analyze the Go package "${pkg}" in this repository. Read the package source (Read/Grep/Glob). Do NOT modify any file.
+const PROMPT = (
+	pkg,
+) => `You are a read-only code analyst. Analyze the Go package "${pkg}" in this repository. Read the package source (Read/Grep/Glob). Do NOT modify any file.
 
 Return a markdown report with EXACTLY these 4 sections:
 
@@ -47,16 +59,24 @@ Return a markdown report with EXACTLY these 4 sections:
 - fan_in_implication: <what its fan-in means for change risk>
 - domain_boundary: <what domain concept it owns>
 ### claims_beyond_baseline
-A numbered list of SPECIFIC claims NOT mechanically derivable from "go list -deps -json" (import edges) + "go doc" (exported symbol names). Each item MUST be a genuine inference (layering, role, fan-in implication, domain boundary) — NOT a restatement of an import edge or symbol name. If you cannot make a non-trivial claim beyond the mechanical baseline, write exactly "NONE — reducible to baseline" (an honest, valuable outcome). Do NOT pad with restated mechanical facts.`
+A numbered list of SPECIFIC claims NOT mechanically derivable from "go list -deps -json" (import edges) + "go doc" (exported symbol names). Each item MUST be a genuine inference (layering, role, fan-in implication, domain boundary) — NOT a restatement of an import edge or symbol name. If you cannot make a non-trivial claim beyond the mechanical baseline, write exactly "NONE — reducible to baseline" (an honest, valuable outcome). Do NOT pad with restated mechanical facts.`;
 
-const syntheses = await parallel(PACKAGES.map(pkg => () =>
-  // read-only-extract purpose → effort: 'low' per dynamic-workflows.md § Purpose-driven model+effort selection
-  agent(PROMPT(pkg), { label: `extract:${pkg}`, phase: 'Extract', agentType: 'Explore', effort: 'low' })
-))
+const syntheses = await parallel(
+	PACKAGES.map(
+		(pkg) => () =>
+			// read-only-extract purpose → effort: 'low' per dynamic-workflows.md § Purpose-driven model+effort selection
+			agent(PROMPT(pkg), {
+				label: `extract:${pkg}`,
+				phase: 'Extract',
+				agentType: 'Explore',
+				effort: 'low',
+			}),
+	),
+);
 
 return {
-  packages: PACKAGES,
-  syntheses: syntheses
-    .map((s, i) => ({ package: PACKAGES[i], synthesis: s }))
-    .filter((x) => x.synthesis),
-}
+	packages: PACKAGES,
+	syntheses: syntheses
+		.map((s, i) => ({ package: PACKAGES[i], synthesis: s }))
+		.filter((x) => x.synthesis),
+};

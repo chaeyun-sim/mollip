@@ -8,7 +8,10 @@ interface NearbyPlaceRowSkeletonProps {
 export function NearbyPlaceRowSkeleton({ isFirst }: NearbyPlaceRowSkeletonProps) {
 	return (
 		<View
-			className={cn("flex-row items-center gap-3 py-3 border-border", isFirst ? 'border-t-0' : 'border-t-hairline')}
+			className={cn(
+				'flex-row items-center gap-3 py-3 border-border',
+				isFirst ? 'border-t-0' : 'border-t-hairline',
+			)}
 		>
 			<View className="w-12 h-12 rounded-full bg-divider" />
 			<View className="flex-1 gap-1.5">

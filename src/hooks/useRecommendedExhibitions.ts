@@ -61,7 +61,9 @@ function scoreExhibition(
 function buildExhibitionQuery(preferredGenres: string[]) {
 	let query = supabase
 		.from('exhibitions')
-		.select('id, title, venue_name_fallback, image_url, genre, tags, synced_at, start_date, end_date')
+		.select(
+			'id, title, venue_name_fallback, image_url, genre, tags, synced_at, start_date, end_date',
+		)
 		.gte('end_date', todayExhibitionDateString())
 		.order('synced_at', { ascending: false })
 		.limit(FETCH_LIMIT);

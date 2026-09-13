@@ -3,9 +3,7 @@ import { useCallback, useMemo, useState } from 'react';
 import { ONBOARDING_WALL_TRAYS, type OnboardingWallPiece } from '@/src/data/onboardingWallTrays';
 
 export type OnboardingWallStep =
-	| { kind: 'prologue' }
-	| { kind: 'tray'; trayIndex: number }
-	| { kind: 'confirm' };
+	{ kind: 'prologue' } | { kind: 'tray'; trayIndex: number } | { kind: 'confirm' };
 
 export interface OnboardingWallSelection {
 	trayIndex: number;
@@ -25,8 +23,8 @@ export function useOnboardingWallFlow(options?: UseOnboardingWallFlowOptions) {
 	const [step, setStep] = useState<OnboardingWallStep>(
 		options?.startAtCuration ? { kind: 'tray', trayIndex: 0 } : { kind: 'prologue' },
 	);
-	const [selections, setSelections] = useState<(OnboardingWallSelection | undefined)[]>(
-		() => new Array(TRAY_COUNT).fill(undefined),
+	const [selections, setSelections] = useState<(OnboardingWallSelection | undefined)[]>(() =>
+		new Array(TRAY_COUNT).fill(undefined),
 	);
 	// 바꾸기 진입 전 있던 단계 — 새 조각 선택 뒤 이 단계로 복귀한다
 	const [resumeStep, setResumeStep] = useState<OnboardingWallStep | null>(null);
@@ -39,9 +37,7 @@ export function useOnboardingWallFlow(options?: UseOnboardingWallFlowOptions) {
 
 	const selectedGenres = useMemo(
 		() =>
-			selections
-				.filter((s): s is OnboardingWallSelection => Boolean(s))
-				.map((s) => s.piece.genre),
+			selections.filter((s): s is OnboardingWallSelection => Boolean(s)).map((s) => s.piece.genre),
 		[selections],
 	);
 
@@ -60,7 +56,9 @@ export function useOnboardingWallFlow(options?: UseOnboardingWallFlowOptions) {
 			});
 
 			setLastAnnouncement(
-				isChange ? `${piece.genre}로 바꿨어요.` : `${piece.genre}를 벽에 걸었어요. ${filledCount + 1}/5.`,
+				isChange
+					? `${piece.genre}로 바꿨어요.`
+					: `${piece.genre}를 벽에 걸었어요. ${filledCount + 1}/5.`,
 			);
 			setLastChangedTrayIndex(isChange ? trayIndex : null);
 

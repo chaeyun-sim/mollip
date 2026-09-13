@@ -25,7 +25,9 @@ export function VenueField({
 }: VenueFieldProps) {
 	return (
 		<View className="mb-8">
-			<Text className="text-xs mb-2 font-pretendard-semibold text-gray500 tracking-wider">위치</Text>
+			<Text className="text-xs mb-2 font-pretendard-semibold text-gray500 tracking-wider">
+				위치
+			</Text>
 			<View
 				className={cn(
 					'rounded-lg border bg-gray900 h-[52px] overflow-hidden',

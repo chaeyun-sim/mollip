@@ -73,12 +73,12 @@ export function OnboardingWallProgress({
 							accessibilityLabel={`${selection.piece.genre}, 선택됨, 탭하여 바꾸기`}
 							accessibilityState={{ selected: true }}
 							className="flex-1 h-16 rounded-xl border-2 border-primary-dark items-center justify-center px-1"
-							style={({ pressed }) => ({ backgroundColor: selection.piece.color, opacity: pressed ? 0.8 : 1 })}
+							style={({ pressed }) => ({
+								backgroundColor: selection.piece.color,
+								opacity: pressed ? 0.8 : 1,
+							})}
 						>
-							<Text
-								numberOfLines={1}
-								className="text-gray900 text-[10px] font-pretendard-semibold"
-							>
+							<Text numberOfLines={1} className="text-gray900 text-[10px] font-pretendard-semibold">
 								{selection.piece.genre}
 							</Text>
 						</Pressable>
@@ -91,7 +91,9 @@ export function OnboardingWallProgress({
 					onPress={onCompleteEarly}
 					accessibilityRole="button"
 					accessibilityLabel="이만큼으로 시작하기"
-					className={cn('self-center min-h-11 px-5 items-center justify-center rounded-full bg-white border-[0.5px] border-gray300')}
+					className={cn(
+						'self-center min-h-11 px-5 items-center justify-center rounded-full bg-white border-[0.5px] border-gray300',
+					)}
 					style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
 				>
 					<Text className="text-gray900 text-[13px] font-pretendard-semibold">

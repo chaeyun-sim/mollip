@@ -91,11 +91,11 @@ status: draft
 
 ## Screens / routes
 
-| Route | 변경 |
-|-------|------|
-| `app/(guide)/immersive-start.tsx` | 몰입 시작 제출 시 선택된 전시의 `artist` 조회 → 캐시 확인 → 미스면 백그라운드 생성 트리거. 화면 UI·오버레이 연출은 변경 없음 |
-| `app/(guide)/playlist.tsx` | 재생목록 최상단에 작가 소개 트랙 렌더링(대기/활성/실패 3상태). `artist` 없으면 미렌더 |
-| `app/(guide)/description.tsx` | 변경 없음 — 기존 `store.artworkDescription` 주입 방식으로 인트로 본문을 그대로 재생 (변경이 필요해지면 Chris가 04-dev-notes에 사유 기록) |
+| Route                             | 변경                                                                                                                                     |
+| --------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| `app/(guide)/immersive-start.tsx` | 몰입 시작 제출 시 선택된 전시의 `artist` 조회 → 캐시 확인 → 미스면 백그라운드 생성 트리거. 화면 UI·오버레이 연출은 변경 없음             |
+| `app/(guide)/playlist.tsx`        | 재생목록 최상단에 작가 소개 트랙 렌더링(대기/활성/실패 3상태). `artist` 없으면 미렌더                                                    |
+| `app/(guide)/description.tsx`     | 변경 없음 — 기존 `store.artworkDescription` 주입 방식으로 인트로 본문을 그대로 재생 (변경이 필요해지면 Chris가 04-dev-notes에 사유 기록) |
 
 비-라우트 영향 파일(참고): `src/store/immersiveStore.ts`(인트로 상태 필드), `src/utils/api.ts`(Edge Function 호출 래퍼), `src/types/database.types.ts`(`exhibitions.artist` 및 신규 캐시 테이블 타입), `supabase/functions/`(신규 인트로 생성 함수).
 

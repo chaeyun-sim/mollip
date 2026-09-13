@@ -43,7 +43,10 @@ export default function PreferencesScreen() {
 		setSaving(true);
 
 		const genres = toValidGenres(selectedGenres);
-		const { error } = await supabase.from('profiles').update({ preferred_genres: genres }).eq('id', userId);
+		const { error } = await supabase
+			.from('profiles')
+			.update({ preferred_genres: genres })
+			.eq('id', userId);
 
 		if (error) {
 			console.error('[preferences] save failed:', error.message);
@@ -154,7 +157,9 @@ export default function PreferencesScreen() {
 	return (
 		<Screen variant="warm">
 			<Screen.Header>
-				<Screen.Header.Back onPress={mode === 'list' ? () => router.back() : () => setMode('list')} />
+				<Screen.Header.Back
+					onPress={mode === 'list' ? () => router.back() : () => setMode('list')}
+				/>
 				<Screen.Header.Center>내 취향 수정</Screen.Header.Center>
 			</Screen.Header>
 

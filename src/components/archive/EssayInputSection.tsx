@@ -142,9 +142,7 @@ export const EssayInputSection = forwardRef<EssayInputSectionHandle, EssayInputS
 				: `${remainingGenerates}회 더 생성할 수 있어요`;
 
 			return (
-				<Text className="mt-2 text-[11px] font-pretendard-regular text-gray500">
-					{helperText}
-				</Text>
+				<Text className="mt-2 text-[11px] font-pretendard-regular text-gray500">{helperText}</Text>
 			);
 		}
 
@@ -179,9 +177,7 @@ export const EssayInputSection = forwardRef<EssayInputSectionHandle, EssayInputS
 				<View className="flex-row items-center justify-between flex-wrap gap-2 mb-1.5">
 					<View className="flex-row items-center gap-1.5">
 						<Text className="text-[13px] text-gray600 font-pretendard-medium">감상평</Text>
-						{isStreaming && (
-							<ActivityIndicator size="small" color={colors.primaryDark} />
-						)}
+						{isStreaming && <ActivityIndicator size="small" color={colors.primaryDark} />}
 					</View>
 					{renderModeToggle()}
 				</View>

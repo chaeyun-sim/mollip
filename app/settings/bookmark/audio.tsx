@@ -275,9 +275,7 @@ export default function AudioHistoryScreen() {
 										? `받는 중… ${downloadProgress.done}/${downloadProgress.total}`
 										: '전체 받기'}
 								</Text>
-								{isDownloading && (
-									<ActivityIndicator size="small" className="text-gray500" />
-								)}
+								{isDownloading && <ActivityIndicator size="small" className="text-gray500" />}
 							</View>
 						</Pressable>
 					</View>
@@ -299,9 +297,7 @@ export default function AudioHistoryScreen() {
 						>
 							<View className="flex-row items-center gap-1.5">
 								<Ionicons name="trash-outline" size={14} className="text-error" />
-								<Text className="font-pretendard-semibold text-gray900 text-[13px]">
-									전체 삭제
-								</Text>
+								<Text className="font-pretendard-semibold text-gray900 text-[13px]">전체 삭제</Text>
 							</View>
 						</Pressable>
 					</View>
@@ -329,7 +325,7 @@ export default function AudioHistoryScreen() {
 						/>
 					)}
 					ItemSeparatorComponent={() => <View className="h-[1px] bg-divider my-2.5" />}
-					contentContainerClassName='pt-4 pb-10 px-1'
+					contentContainerClassName="pt-4 pb-10 px-1"
 					showsVerticalScrollIndicator={false}
 				/>
 			)}
@@ -344,9 +340,7 @@ export default function AudioHistoryScreen() {
 				handleIndicatorStyle={{ backgroundColor: colors.gray700 }}
 			>
 				{selected && (
-					<BottomSheetScrollView
-						contentContainerClassName='px-6 pb-12'
-					>
+					<BottomSheetScrollView contentContainerClassName="px-6 pb-12">
 						<View className="flex-row items-start justify-between pt-2 pb-5">
 							<View className="flex-1 pr-4">
 								<Text className="text-white text-[17px] font-pretendard-semibold leading-[24px]">

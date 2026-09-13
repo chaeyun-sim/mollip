@@ -113,7 +113,9 @@ describe('formatOfflineAudioSize — 사람이 읽기 쉬운 용량 포맷(AC-5)
 describe('resolveAudioUri — 재생 시 로컬 우선 조회(AC-2)', () => {
 	it('로컬 파일이 있으면 네트워크 호출 없이 로컬 URI를 즉시 반환한다', async () => {
 		saveOfflineAudioFromDataUri('cache-key-resolve-local', SAMPLE_DATA_URI);
-		const fetchFromNetwork = jest.fn().mockResolvedValue('data:audio/mpeg;base64,SHOULD_NOT_BE_USED');
+		const fetchFromNetwork = jest
+			.fn()
+			.mockResolvedValue('data:audio/mpeg;base64,SHOULD_NOT_BE_USED');
 
 		const uri = await resolveAudioUri('cache-key-resolve-local', fetchFromNetwork);
 

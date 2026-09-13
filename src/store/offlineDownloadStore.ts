@@ -38,12 +38,7 @@ interface OfflineDownloadState {
 	 * 실패(failed) 항목 1개만 재시도한다(AC-4). 다른 항목의 상태·진행 중인 배치(batchIds)에는
 	 * 영향을 주지 않는다 — "다른 항목의 다운로드 진행은 실패와 무관하게 계속된다" 요구.
 	 */
-	retryDownload: (
-		id: string,
-		text: string,
-		voiceId: string,
-		voiceSpeed: number,
-	) => Promise<void>;
+	retryDownload: (id: string, text: string, voiceId: string, voiceSpeed: number) => Promise<void>;
 	/** 항목 1개의 다운로드 파일만 삭제하고 상태를 idle로 되돌린다(AC-6). */
 	deleteDownload: (id: string, cacheKey: string) => void;
 	/** 다운로드된 오디오 파일 전체를 삭제하고, 대상 id들의 상태를 idle로 되돌린다(AC-5). */
@@ -61,10 +56,9 @@ export const useOfflineDownloadStore = create<OfflineDownloadState>()((set, get)
 
 		set((state) => ({
 			batchIds: idleTargets.map((t) => t.id),
-			statuses: idleTargets.reduce(
-				(acc, t) => ({ ...acc, [t.id]: 'loading' as DownloadStatus }),
-				{ ...state.statuses },
-			),
+			statuses: idleTargets.reduce((acc, t) => ({ ...acc, [t.id]: 'loading' as DownloadStatus }), {
+				...state.statuses,
+			}),
 		}));
 
 		await Promise.all(
@@ -102,10 +96,9 @@ export const useOfflineDownloadStore = create<OfflineDownloadState>()((set, get)
 	deleteAllDownloads: (ids) => {
 		deleteAllOfflineAudio();
 		set((state) => ({
-			statuses: ids.reduce(
-				(acc, id) => ({ ...acc, [id]: 'idle' as DownloadStatus }),
-				{ ...state.statuses },
-			),
+			statuses: ids.reduce((acc, id) => ({ ...acc, [id]: 'idle' as DownloadStatus }), {
+				...state.statuses,
+			}),
 		}));
 	},
 

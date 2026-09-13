@@ -133,9 +133,9 @@ export default function ExhibitionDetailScreen() {
 							<ExhibitionMetaPill text={getExhibitionTypeDisplay(exhibition)} />
 						)}
 						{exhibition.genre &&
-							exhibition.genre.split(',').map((g) => (
-								<ExhibitionMetaPill key={g} text={g.trim()} />
-							))}
+							exhibition.genre
+								.split(',')
+								.map((g) => <ExhibitionMetaPill key={g} text={g.trim()} />)}
 					</ScrollView>
 				</FadeInView>
 

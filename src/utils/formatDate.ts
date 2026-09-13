@@ -1,5 +1,6 @@
-export function formatDate(iso?: string, date?: { year: number, month: number, day: number }) {
-	if (date) return `${date.year}.${String(date.month).padStart(2, '0')}.${String(date.day).padStart(2, '0')}`;
+export function formatDate(iso?: string, date?: { year: number; month: number; day: number }) {
+	if (date)
+		return `${date.year}.${String(date.month).padStart(2, '0')}.${String(date.day).padStart(2, '0')}`;
 
 	const d = iso ? new Date(iso) : new Date();
 	return `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')}`;

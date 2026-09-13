@@ -21,13 +21,11 @@ export function RelatedExhibitions({ exhibitions }: RelatedExhibitionsProps) {
 
 	return (
 		<View className="mt-12">
-			<Text className="font-pretendard-semibold text-lg text-gray-900 mb-4 px-6">
-				관련 전시
-			</Text>
+			<Text className="font-pretendard-semibold text-lg text-gray-900 mb-4 px-6">관련 전시</Text>
 			<ScrollView
 				horizontal
 				showsHorizontalScrollIndicator={false}
-				contentContainerClassName='px-6 gap-3.5'
+				contentContainerClassName="px-6 gap-3.5"
 			>
 				{related.map((ex) => (
 					<RelatedExhibitionCard

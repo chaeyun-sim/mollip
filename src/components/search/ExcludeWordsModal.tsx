@@ -1,13 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useState } from 'react';
-import {
-	KeyboardAvoidingView,
-	Modal,
-	Platform,
-	Pressable,
-	Text,
-	View,
-} from 'react-native';
+import { KeyboardAvoidingView, Modal, Platform, Pressable, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { TextField } from '@/src/components/common/TextField';
 

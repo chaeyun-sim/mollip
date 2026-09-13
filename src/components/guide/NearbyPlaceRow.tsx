@@ -45,10 +45,7 @@ export function NearbyPlaceRow({
 				<Text className="text-gray900 font-pretendard-semibold text-[14px]" numberOfLines={1}>
 					{place.name}
 				</Text>
-				<Text
-					className="text-gray600 font-pretendard-regular text-[12px] mt-0.5"
-					numberOfLines={1}
-				>
+				<Text className="text-gray600 font-pretendard-regular text-[12px] mt-0.5" numberOfLines={1}>
 					{place.distance}
 				</Text>
 			</View>

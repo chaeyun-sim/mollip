@@ -153,7 +153,10 @@ export const ReceiptSummary = forwardRef<ReceiptSummaryHandle, ReceiptSummaryPro
 					{listenedTitles.length > 0 ? (
 						<>
 							{listenedTitles.slice(0, MAX_VISIBLE_TITLES).map((title, i) => (
-								<View key={`${title}-${i}`} className="flex-row items-baseline justify-between mb-1.5">
+								<View
+									key={`${title}-${i}`}
+									className="flex-row items-baseline justify-between mb-1.5"
+								>
 									<Text
 										className="flex-1 text-[13px] font-pretendard-regular text-gray700"
 										numberOfLines={1}
@@ -177,7 +180,9 @@ export const ReceiptSummary = forwardRef<ReceiptSummaryHandle, ReceiptSummaryPro
 					<View className="border-t border-dashed border-gray300 mt-3 pt-3">
 						<View className="flex-row justify-between">
 							<Text className="text-[13px] text-gray500 font-pretendard-medium">장소</Text>
-							<Text className="text-[13px] text-gray900 font-pretendard-medium">{venue ?? '-'}</Text>
+							<Text className="text-[13px] text-gray900 font-pretendard-medium">
+								{venue ?? '-'}
+							</Text>
 						</View>
 						{visitedAt && (
 							<View className="flex-row justify-between mt-3">

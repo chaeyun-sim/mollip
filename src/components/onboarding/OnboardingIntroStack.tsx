@@ -35,7 +35,7 @@ function IntroTicketCard({ ticket, index, isTop, reduceMotion }: IntroTicketCard
 		if (!isTop) return;
 		const next = !flipped;
 		setFlipped(next);
-		rotation.set(reduceMotion ? next ? 1 : 0 : withTiming(next ? 1 : 0, FLIP_TIMING));
+		rotation.set(reduceMotion ? (next ? 1 : 0) : withTiming(next ? 1 : 0, FLIP_TIMING));
 	}, [flipped, isTop, reduceMotion, rotation]);
 
 	const frontStyle = useAnimatedStyle(() => ({
@@ -52,10 +52,7 @@ function IntroTicketCard({ ticket, index, isTop, reduceMotion }: IntroTicketCard
 	const backStyle = useAnimatedStyle(() => ({
 		transform: reduceMotion
 			? []
-			: [
-					{ perspective: 1200 },
-					{ rotateY: `${interpolate(rotation.value, [0, 1], [180, 0])}deg` },
-				],
+			: [{ perspective: 1200 }, { rotateY: `${interpolate(rotation.value, [0, 1], [180, 0])}deg` }],
 		opacity: reduceMotion ? (flipped ? 1 : 0) : 1,
 		backfaceVisibility: 'hidden',
 	}));

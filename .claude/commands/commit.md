@@ -1,6 +1,6 @@
 ---
 description: 그룹핑 → 스테이징 → 리뷰 → 버그 수정 → 커밋 루프 실행
-argument-hint: "[선택: 커밋할 범위나 우선순위 설명]"
+argument-hint: '[선택: 커밋할 범위나 우선순위 설명]'
 allowed-tools: Bash, Read, Edit, Grep, Glob, AskUserQuestion
 ---
 

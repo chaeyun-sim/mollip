@@ -56,7 +56,11 @@ export default function MyPageScreen() {
 				)}
 			</Screen.Header>
 
-			<ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-[60px]" scrollEnabled={!!session}>
+			<ScrollView
+				showsVerticalScrollIndicator={false}
+				contentContainerClassName="pb-[60px]"
+				scrollEnabled={!!session}
+			>
 				<View className="w-full">
 					{/* 로그인 유도 */}
 					{!session && (
@@ -89,32 +93,31 @@ export default function MyPageScreen() {
 
 					{session && (
 						<>
-						<View>
-							<SettingsCard>
-								<CardRow label="내 정보" onPress={() => router.push('/settings/account')} />
-								<CardRow
-									label="내 취향 수정"
-									onPress={() => router.push('/settings/preferences')}
-								/>
-								<CardRow label="고대비 모드">
-									<Switch
-										value={highContrast}
-										onValueChange={setHighContrast}
-										trackColor={{ false: colors.border, true: colors.gray900 }}
-										thumbColor="#FFFFFF"
-										ios_backgroundColor={colors.border}
-										style={{ transform: [{ scaleX: 0.75 }, { scaleY: 0.75 }] }}
-										className="absolute -right-1 top-2"
+							<View>
+								<SettingsCard>
+									<CardRow label="내 정보" onPress={() => router.push('/settings/account')} />
+									<CardRow
+										label="내 취향 수정"
+										onPress={() => router.push('/settings/preferences')}
 									/>
-								</CardRow>
-							</SettingsCard>
-						</View>
-						<View className="h-[1px] w-full bg-gray500/30 my-4" /></>
+									<CardRow label="고대비 모드">
+										<Switch
+											value={highContrast}
+											onValueChange={setHighContrast}
+											trackColor={{ false: colors.border, true: colors.gray900 }}
+											thumbColor="#FFFFFF"
+											ios_backgroundColor={colors.border}
+											style={{ transform: [{ scaleX: 0.75 }, { scaleY: 0.75 }] }}
+											className="absolute -right-1 top-2"
+										/>
+									</CardRow>
+								</SettingsCard>
+							</View>
+							<View className="h-[1px] w-full bg-gray500/30 my-4" />
+						</>
 					)}
 
-					
-
-					<View className={session ? "mt-0" : 'mt-4'}>
+					<View className={session ? 'mt-0' : 'mt-4'}>
 						<SettingsCard>
 							{(session ? SCRAP_TILES : SCRAP_TILES.slice(0, 1)).map((tile) => (
 								<CardRow
@@ -130,7 +133,7 @@ export default function MyPageScreen() {
 
 					{session && (
 						<>
-						<NarrationSettingsFields />
+							<NarrationSettingsFields />
 
 							<View className="h-[1px] w-full bg-gray500/30 my-4" />
 						</>
@@ -171,7 +174,6 @@ export default function MyPageScreen() {
 							<CardRow label="버전" value={APP_VERSION} />
 						</SettingsCard>
 					</View>
-
 				</View>
 			</ScrollView>
 		</Screen>

@@ -71,7 +71,8 @@ function voiceDescription(voice: Voice): VoiceDescription | null {
 		: '';
 
 	if (!personLabel && !descriptiveLabel) return null;
-	if (descriptiveLabel) return { keyword: descriptiveLabel, prefix: personLabel ? `${personLabel}의 ` : '' };
+	if (descriptiveLabel)
+		return { keyword: descriptiveLabel, prefix: personLabel ? `${personLabel}의 ` : '' };
 	return { keyword: personLabel, prefix: '' };
 }
 
@@ -123,7 +124,7 @@ export default function VoiceScreen() {
 
 			<ScrollView
 				className="flex-1"
-				contentContainerClassName='pt-1 pb-12'
+				contentContainerClassName="pt-1 pb-12"
 				showsVerticalScrollIndicator={false}
 			>
 				<Text className="text-gray-400 text-[13px] font-pretendard-regular mb-5 leading-[19px]">

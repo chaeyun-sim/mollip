@@ -33,33 +33,33 @@ type Props = { ... };
 
 ### className으로 써야 하는 것들 (임의값 포함)
 
-| 값 유형 | className 예시 |
-|---|---|
-| 고정 픽셀 크기 | `w-[82px]` `h-[124px]` `w-7` |
-| rgba 색상 (배경) | `bg-[rgba(61,43,26,0.06)]` `bg-[rgba(0,0,0,0.35)]` |
-| rgba 색상 (텍스트) | `text-[rgba(61,43,26,0.42)]` |
-| rgba 색상 (테두리) | `border-[rgba(61,43,26,0.2)]` |
-| 불투명도 슬래시 | `bg-white/15` `text-black/70` |
-| hex 색상 | `bg-[#FAF7F2]` `text-[#3D2B1A]` |
-| 테두리 두께 | `border-[0.5px]` `border-l-[1.5px]` |
-| 레이아웃 | `flex-row` `items-center` `absolute` `overflow-hidden` |
-| 폰트 (tailwind.config.js 등록됨) | `font-hahmlet-bold` `font-pretendard-medium` |
-| 폰트 크기·행간·자간 | `text-[13.5px]` `leading-[19px]` `tracking-[1.2px]` |
-| 라운드 | `rounded-tl-[14px]` `rounded-xl` |
-| 패딩·마진 | `px-[11px]` `pt-3` `mb-0.5` `mt-px` |
-| z-index | `z-10` `z-20` |
+| 값 유형                          | className 예시                                         |
+| -------------------------------- | ------------------------------------------------------ |
+| 고정 픽셀 크기                   | `w-[82px]` `h-[124px]` `w-7`                           |
+| rgba 색상 (배경)                 | `bg-[rgba(61,43,26,0.06)]` `bg-[rgba(0,0,0,0.35)]`     |
+| rgba 색상 (텍스트)               | `text-[rgba(61,43,26,0.42)]`                           |
+| rgba 색상 (테두리)               | `border-[rgba(61,43,26,0.2)]`                          |
+| 불투명도 슬래시                  | `bg-white/15` `text-black/70`                          |
+| hex 색상                         | `bg-[#FAF7F2]` `text-[#3D2B1A]`                        |
+| 테두리 두께                      | `border-[0.5px]` `border-l-[1.5px]`                    |
+| 레이아웃                         | `flex-row` `items-center` `absolute` `overflow-hidden` |
+| 폰트 (tailwind.config.js 등록됨) | `font-hahmlet-bold` `font-pretendard-medium`           |
+| 폰트 크기·행간·자간              | `text-[13.5px]` `leading-[19px]` `tracking-[1.2px]`    |
+| 라운드                           | `rounded-tl-[14px]` `rounded-xl`                       |
+| 패딩·마진                        | `px-[11px]` `pt-3` `mb-0.5` `mt-px`                    |
+| z-index                          | `z-10` `z-20`                                          |
 
 ### style={{}}만 허용되는 예외
 
-| 상황 | 이유 |
-|---|---|
-| JS 변수/상수 참조 (`width: STUB_WIDTH`) | Tailwind는 런타임 변수 불가 |
-| 계산값 (`top: -(NOTCH / 2)`, `borderRadius: NOTCH / 2`) | 동적 계산 |
-| 동적 색상 (`backgroundColor: stubColor`) | 런타임 결정값 |
-| 그림자 (`shadowColor`, `shadowOffset`, `shadowOpacity`, `shadowRadius`, `elevation`) | Tailwind 미지원 |
-| `transform: [{ rotate: '90deg' }]` | RN transform 배열 문법 |
-| Pressable pressed 상태 opacity (`opacity: pressed ? 0.85 : 1`) | 동적 boolean |
-| `insets.top + 16` 등 SafeArea 계산값 | 동적 계산 |
+| 상황                                                                                 | 이유                        |
+| ------------------------------------------------------------------------------------ | --------------------------- |
+| JS 변수/상수 참조 (`width: STUB_WIDTH`)                                              | Tailwind는 런타임 변수 불가 |
+| 계산값 (`top: -(NOTCH / 2)`, `borderRadius: NOTCH / 2`)                              | 동적 계산                   |
+| 동적 색상 (`backgroundColor: stubColor`)                                             | 런타임 결정값               |
+| 그림자 (`shadowColor`, `shadowOffset`, `shadowOpacity`, `shadowRadius`, `elevation`) | Tailwind 미지원             |
+| `transform: [{ rotate: '90deg' }]`                                                   | RN transform 배열 문법      |
+| Pressable pressed 상태 opacity (`opacity: pressed ? 0.85 : 1`)                       | 동적 boolean                |
+| `insets.top + 16` 등 SafeArea 계산값                                                 | 동적 계산                   |
 
 ```tsx
 // ✅ Good — rgba도 className으로
@@ -113,11 +113,11 @@ boolean 조건이 여러 개일 때는 객체 형식을 활용한다.
 
 ```tsx
 <Text
-  className={cn('text-sm', {
-    'text-white': active,
-    'text-black/70': !active,
-    'font-pretendard-bold': important,
-  })}
+	className={cn('text-sm', {
+		'text-white': active,
+		'text-black/70': !active,
+		'font-pretendard-bold': important,
+	})}
 />
 ```
 
@@ -130,12 +130,12 @@ boolean 조건이 여러 개일 때는 객체 형식을 활용한다.
 
 **분리 기준:**
 
-| 역할 | 위치 |
-|---|---|
-| 데이터 패칭 / 상태 관리 | `src/store/`, `src/hooks/` |
-| 비즈니스 로직 / 계산 | `src/utils/` |
-| UI 렌더링 | `src/components/` |
-| 화면 조립 (컴포넌트 + 훅 연결) | `app/` |
+| 역할                           | 위치                       |
+| ------------------------------ | -------------------------- |
+| 데이터 패칭 / 상태 관리        | `src/store/`, `src/hooks/` |
+| 비즈니스 로직 / 계산           | `src/utils/`               |
+| UI 렌더링                      | `src/components/`          |
+| 화면 조립 (컴포넌트 + 훅 연결) | `app/`                     |
 
 ```tsx
 // Good — VenueSheet는 데이터를 props로 받고 렌더링만 담당
@@ -179,8 +179,8 @@ export default function MapScreen() { ... }       // default
 ```tsx
 // Props (외부)
 interface CardProps {
-  onPress: (id: string) => void;
-  onLayout: (height: number) => void;
+	onPress: (id: string) => void;
+	onLayout: (height: number) => void;
 }
 
 // 내부 핸들러
@@ -197,15 +197,15 @@ const handlePress = () => onPress(id);
 
 ```tsx
 // Good
-const handleMarkerPress = useCallback((name: string, lat: number, lon: number) => {
-  selectVenue(name);
-  mapRef.current?.animateCameraTo({ latitude: lat, longitude: lon, zoom: 14 });
-}, [selectVenue]);
-
-const clusters = useMemo(
-  () => computeClusters(mapVenues, displayZoom),
-  [mapVenues, displayZoom],
+const handleMarkerPress = useCallback(
+	(name: string, lat: number, lon: number) => {
+		selectVenue(name);
+		mapRef.current?.animateCameraTo({ latitude: lat, longitude: lon, zoom: 14 });
+	},
+	[selectVenue],
 );
+
+const clusters = useMemo(() => computeClusters(mapVenues, displayZoom), [mapVenues, displayZoom]);
 ```
 
 ---
@@ -256,8 +256,8 @@ app/               # expo-router 화면 — default export 1개(스크린)만
 
 ```tsx
 <Screen.Header>
-  <Screen.Header.Logo />
-  <Screen.Header.Right>...</Screen.Header.Right>
+	<Screen.Header.Logo />
+	<Screen.Header.Right>...</Screen.Header.Right>
 </Screen.Header>
 ```
 
@@ -328,16 +328,16 @@ export default function ExploreScreen() {
 ```tsx
 // Good
 if (isLoggedIn) {
-  return <Dashboard />;
+	return <Dashboard />;
 } else {
-  return <Login />;
+	return <Login />;
 }
 
 // Bad — 부정으로 시작
 if (!isLoggedIn) {
-  return <Login />;
+	return <Login />;
 } else {
-  return <Dashboard />;
+	return <Dashboard />;
 }
 ```
 
@@ -345,10 +345,14 @@ JSX 삼항도 동일하게 적용한다.
 
 ```tsx
 // Good
-{hasItems ? <List /> : <Empty />}
+{
+	hasItems ? <List /> : <Empty />;
+}
 
 // Bad — 부정으로 시작
-{!hasItems ? <Empty /> : <List />}
+{
+	!hasItems ? <Empty /> : <List />;
+}
 ```
 
 ### 11.2 삼항 연산자 중첩 금지
@@ -357,20 +361,20 @@ JSX 삼항도 동일하게 적용한다.
 
 ```tsx
 // Bad — 2중 중첩 삼항
-{isLoading
-  ? <Spinner />
-  : hasError
-    ? <ErrorView />
-    : <List />}
+{
+	isLoading ? <Spinner /> : hasError ? <ErrorView /> : <List />;
+}
 
 // Good — 렌더 함수로 분리
 function renderContent() {
-  if (isLoading) return <Spinner />;
-  if (hasError) return <ErrorView />;
-  return <List />;
+	if (isLoading) return <Spinner />;
+	if (hasError) return <ErrorView />;
+	return <List />;
 }
 
-{renderContent()}
+{
+	renderContent();
+}
 ```
 
 ### 11.3 null 분기
@@ -379,17 +383,23 @@ null을 렌더링하는 분기는 `&&` 연산자를 사용한다. 삼항 연산�
 
 ```tsx
 // Good
-{featured && <FeaturedExhibitionHero {...featured} />}
+{
+	featured && <FeaturedExhibitionHero {...featured} />;
+}
 
 // Bad — `: null` 분기는 불필요하게 길다
-{featured ? <FeaturedExhibitionHero {...featured} /> : null}
+{
+	featured ? <FeaturedExhibitionHero {...featured} /> : null;
+}
 ```
 
 단, 두 분기 모두 무언가를 렌더링하는 경우에는 삼항 연산자를 사용한다.
 
 ```tsx
 // Good — 두 분기 모두 렌더링
-{isPersonalized ? '추천 전시 · 당신의 취향' : '추천 전시'}
+{
+	isPersonalized ? '추천 전시 · 당신의 취향' : '추천 전시';
+}
 ```
 
 ### 11.4 if 블록 간격
@@ -399,26 +409,26 @@ null을 렌더링하는 분기는 `&&` 연산자를 사용한다. 삼항 연산�
 ```tsx
 // Good
 function renderContent() {
-  if (status === 'loading') {
-    return <Spinner />;
-  }
+	if (status === 'loading') {
+		return <Spinner />;
+	}
 
-  if (status === 'error') {
-    return <ErrorView />;
-  }
+	if (status === 'error') {
+		return <ErrorView />;
+	}
 
-  return <List />;
+	return <List />;
 }
 
 // Bad — 블록 사이 빈 줄 없음
 function renderContent() {
-  if (status === 'loading') {
-    return <Spinner />;
-  }
-  if (status === 'error') {
-    return <ErrorView />;
-  }
-  return <List />;
+	if (status === 'loading') {
+		return <Spinner />;
+	}
+	if (status === 'error') {
+		return <ErrorView />;
+	}
+	return <List />;
 }
 ```
 
@@ -426,20 +436,24 @@ JSX 안에서 즉시 실행 함수(IIFE)를 사용하지 않는다. 로직이 �
 
 ```tsx
 // Bad — JSX 안에서 IIFE
-{(() => {
-  const entries = buildEntries(data);
-  if (entries.length === 0) return null;
-  return entries.map((e) => <Row key={e.label} {...e} />);
-})()}
+{
+	(() => {
+		const entries = buildEntries(data);
+		if (entries.length === 0) return null;
+		return entries.map((e) => <Row key={e.label} {...e} />);
+	})();
+}
 
 // Good — 렌더 함수로 분리 (컴포넌트 내부, 섹션 10 선언 순서 6번 위치)
 function renderEntries() {
-  const entries = buildEntries(data);
-  if (entries.length === 0) return null;
-  return entries.map((e) => <Row key={e.label} {...e} />);
+	const entries = buildEntries(data);
+	if (entries.length === 0) return null;
+	return entries.map((e) => <Row key={e.label} {...e} />);
 }
 
-{renderEntries()}
+{
+	renderEntries();
+}
 ```
 
 ---
@@ -449,7 +463,7 @@ function renderEntries() {
 외부 라이브러리 블록과 내부 경로 블록, 두 블록만 구분한다. 빈 줄은 **블록 사이에만** 넣는다. 블록 내부에는 빈 줄을 넣지 않는다.
 
 1. 외부 라이브러리 (react, react-native, expo-*, 서드파티) — 블록 내 빈 줄 없음
-2. *(빈 줄 1개)*
+2. _(빈 줄 1개)_
 3. 내부 절대 경로 (`@/src/...`) — 컴포넌트 → 훅 → 스토어 → 유틸 → 타입 순, 블록 내 빈 줄 없음
 
 ```tsx
@@ -475,10 +489,10 @@ import type { VenueGroup } from '@/src/data/venues';
 
 한 파일·한 컴포넌트는 하나의 역할만 갖는다. CTA·아이콘 버튼·설정 행을 한 옴니 컴포넌트에 묶지 않는다.
 
-| 역할 | 위치 |
-|---|---|
-| 라벨 CTA (solid / ghost) | `common/Button` |
-| 원형·아이콘 전용 버튼 | `common/IconButton` |
+| 역할                          | 위치                                                     |
+| ----------------------------- | -------------------------------------------------------- |
+| 라벨 CTA (solid / ghost)      | `common/Button`                                          |
+| 원형·아이콘 전용 버튼         | `common/IconButton`                                      |
 | 한 화면의 아이콘+제목+설명 행 | 해당 도메인 (`guide/SourceActionRow` 등). `common/` 금지 |
 
 `Button.Row`, `Button.Icon`처럼 역할이 다른 API를 한 컴포넌트에 붙이지 않는다. 컴파운드(`Screen.Header`)는 **같은 레이아웃 API의 slot**일 때만 허용한다 (§9.2).
@@ -511,10 +525,10 @@ export function Chip({ exhibitionId, onConfirmVisit }: ChipProps) { ... }
 
 ```tsx
 interface ButtonProps extends Omit<PressableProps, 'children' | 'onPress'> {
-  children: ReactNode;
-  onPress: () => void;
-  variant?: 'solid' | 'ghost';
-  className?: string;
+	children: ReactNode;
+	onPress: () => void;
+	variant?: 'solid' | 'ghost';
+	className?: string;
 }
 ```
 
@@ -522,11 +536,10 @@ interface ButtonProps extends Omit<PressableProps, 'children' | 'onPress'> {
 
 ### 13.4 관심사 분리
 
-| | `common/` | `src/components/{도메인}/` |
-|---|---|---|
-| 하는 일 | 그리기·접근성·기본 인터랙션 | 도메인 카피, 스토어, API, 화면 전용 레이아웃 |
-| 알면 안 되는 것 | 전시·관람·해설·설정 스토어 | — |
-| 상태 | `active`, `disabled`, `loading` 등 표시 상태만 | 방문 확정, 위키 검색, 온보딩 스텝 등 |
+|                 | `common/`                                      | `src/components/{도메인}/`                   |
+| --------------- | ---------------------------------------------- | -------------------------------------------- |
+| 하는 일         | 그리기·접근성·기본 인터랙션                    | 도메인 카피, 스토어, API, 화면 전용 레이아웃 |
+| 알면 안 되는 것 | 전시·관람·해설·설정 스토어                     | —                                            |
+| 상태            | `active`, `disabled`, `loading` 등 표시 상태만 | 방문 확정, 위키 검색, 온보딩 스텝 등         |
 
 훅(`useTextField`)은 입력 프리미티브의 표시 상태만 다룬다. 제출·검증 규칙이 도메인에 묶이면 화면이나 도메인 훅에 둔다.
-

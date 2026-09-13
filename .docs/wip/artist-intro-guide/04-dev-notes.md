@@ -8,16 +8,16 @@ status: in-progress
 
 ## Implemented ACs
 
-| AC | Status | Files |
-|----|--------|-------|
-| AC-1 캐시 미스 시 백그라운드 생성 트리거 | Done | `supabase/migrations/20260828000000_create_artist_intros.sql`, `supabase/functions/generate-artist-intro/index.ts`, `src/utils/api.ts`, `src/utils/artistIntro.ts`, `src/store/artistIntroStore.ts`, `app/(guide)/immersive-start.tsx`, `src/types/database.types.ts` |
-| AC-2 전역 캐시 저장·재사용 | Done | `src/utils/artistIntro.ts`, `src/store/artistIntroStore.ts` |
-| AC-3 최상단 고정 트랙 | Done | `src/components/guide/ArtistIntroTrack.tsx`, `app/(guide)/playlist.tsx` |
-| AC-4 생성 중 disabled + ActivityIndicator | Done | `src/components/guide/ArtistIntroTrack.tsx` |
-| AC-5 재진입 없이 활성 전환 → 재생 | Done | `src/store/artistIntroStore.ts`, `app/(guide)/playlist.tsx`, `src/store.ts`, `src/hooks/useDescriptionStream.ts` |
-| AC-6 artist 없음 → 완전 스킵 | Done | `src/store/artistIntroStore.ts`, `app/(guide)/playlist.tsx` |
-| AC-7 실패 표시 + 탭 재시도 | Done | `src/store/artistIntroStore.ts`, `src/components/guide/ArtistIntroTrack.tsx`, `app/(guide)/playlist.tsx` |
-| AC-8 종료 시 세션 상태 초기화 | Done | `src/store/immersiveStore.ts`, `src/store/artistIntroStore.ts` |
+| AC                                        | Status | Files                                                                                                                                                                                                                                                                 |
+| ----------------------------------------- | ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| AC-1 캐시 미스 시 백그라운드 생성 트리거  | Done   | `supabase/migrations/20260828000000_create_artist_intros.sql`, `supabase/functions/generate-artist-intro/index.ts`, `src/utils/api.ts`, `src/utils/artistIntro.ts`, `src/store/artistIntroStore.ts`, `app/(guide)/immersive-start.tsx`, `src/types/database.types.ts` |
+| AC-2 전역 캐시 저장·재사용                | Done   | `src/utils/artistIntro.ts`, `src/store/artistIntroStore.ts`                                                                                                                                                                                                           |
+| AC-3 최상단 고정 트랙                     | Done   | `src/components/guide/ArtistIntroTrack.tsx`, `app/(guide)/playlist.tsx`                                                                                                                                                                                               |
+| AC-4 생성 중 disabled + ActivityIndicator | Done   | `src/components/guide/ArtistIntroTrack.tsx`                                                                                                                                                                                                                           |
+| AC-5 재진입 없이 활성 전환 → 재생         | Done   | `src/store/artistIntroStore.ts`, `app/(guide)/playlist.tsx`, `src/store.ts`, `src/hooks/useDescriptionStream.ts`                                                                                                                                                      |
+| AC-6 artist 없음 → 완전 스킵              | Done   | `src/store/artistIntroStore.ts`, `app/(guide)/playlist.tsx`                                                                                                                                                                                                           |
+| AC-7 실패 표시 + 탭 재시도                | Done   | `src/store/artistIntroStore.ts`, `src/components/guide/ArtistIntroTrack.tsx`, `app/(guide)/playlist.tsx`                                                                                                                                                              |
+| AC-8 종료 시 세션 상태 초기화             | Done   | `src/store/immersiveStore.ts`, `src/store/artistIntroStore.ts`                                                                                                                                                                                                        |
 
 ## 구현 요약 (AC별)
 
@@ -103,12 +103,12 @@ status: in-progress
 
 ## 자체 확인 결과
 
-| 항목 | 결과 |
-|------|------|
-| `npx tsc --noEmit` | 0 errors |
-| `npm test` (jest) | 2 suites / 37 tests pass |
-| `npx prettier --check` (변경 파일) | pass |
-| 시뮬레이터 스크린샷·인터랙션 | 미실시 — Taylor 담당 |
+| 항목                               | 결과                     |
+| ---------------------------------- | ------------------------ |
+| `npx tsc --noEmit`                 | 0 errors                 |
+| `npm test` (jest)                  | 2 suites / 37 tests pass |
+| `npx prettier --check` (변경 파일) | pass                     |
+| 시뮬레이터 스크린샷·인터랙션       | 미실시 — Taylor 담당     |
 
 ## Native / env notes
 

@@ -112,11 +112,7 @@ export function RouteCandidateCard({
 						<View className="flex-1">
 							<RouteSummaryHeader summary={summary} showBar barDelay={order * 60 + 120} />
 						</View>
-						<Animated.View
-							style={chevronStyle}
-							className="ml-2 mt-1.5"
-							pointerEvents="none"
-						>
+						<Animated.View style={chevronStyle} className="ml-2 mt-1.5" pointerEvents="none">
 							<Ionicons name="chevron-down" size={18} className="text-gray900/30" />
 						</Animated.View>
 					</View>

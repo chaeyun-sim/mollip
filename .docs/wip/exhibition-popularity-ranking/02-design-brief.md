@@ -17,21 +17,21 @@ status: draft
 
 이번 브리프는 **새 토큰을 1개도 추가하지 않는다.** 사용하는 값 전부 기존 토큰이다.
 
-| 용도 | 토큰 / className | 값 |
-|------|------------------|-----|
-| 화면 배경 | `Screen variant="warm"` (기존) | `#F8F6F2` (bg-light) |
-| 섹션 제목 | `text-primary` `font-pretendard-semibold` `text-[20px]` (SectionTitle 내부) | `#1C1917` |
-| eyebrow | `text-muted` `font-pretendard-semibold` `text-[11px]` (SectionTitle 내부) | `#A8A29E` |
-| 카드 제목 | `text-primary` `text-[13px]` `leading-[18px]` `font-pretendard-semibold` | `#1C1917` |
-| 카드 기관명 | `text-muted` `text-[11px]` `font-pretendard-regular` | `#A8A29E` |
-| 순번 배지 | `text-white` `text-[13px]` `font-hahmlet-bold` + textShadow(style 예외) | `#FFFFFF` on 썸네일 |
-| 썸네일 플레이스홀더 | `bg-image-placeholder` | `#E5E1D8` |
-| StatusBadge | `bg-black/10` `text-black` `rounded-full` (기존 컴포넌트) | — |
-| 에러/빈 문구 | `text-muted` `text-[13px]` `font-pretendard-regular` | `#A8A29E` |
-| 재시도 라벨 | `text-primary` `text-[13px]` `font-pretendard-semibold` | `#1C1917` |
-| 로더 | `CenteredLoader` (`colors.muted`) | `#A8A29E` |
-| 카드 radius | `rounded-[8px]` | 8px (오늘 세션 리브랜딩 값. 정본 §3에 radius 토큰 없음 — Tailwind 임의값 그대로 사용) |
-| 카드 그림자 | `shadowColor: colors.primary`, opacity 0.1, radius 10, offset (0,4) — style 예외 | 기존 카드 내부 값 |
+| 용도                | 토큰 / className                                                                 | 값                                                                                    |
+| ------------------- | -------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| 화면 배경           | `Screen variant="warm"` (기존)                                                   | `#F8F6F2` (bg-light)                                                                  |
+| 섹션 제목           | `text-primary` `font-pretendard-semibold` `text-[20px]` (SectionTitle 내부)      | `#1C1917`                                                                             |
+| eyebrow             | `text-muted` `font-pretendard-semibold` `text-[11px]` (SectionTitle 내부)        | `#A8A29E`                                                                             |
+| 카드 제목           | `text-primary` `text-[13px]` `leading-[18px]` `font-pretendard-semibold`         | `#1C1917`                                                                             |
+| 카드 기관명         | `text-muted` `text-[11px]` `font-pretendard-regular`                             | `#A8A29E`                                                                             |
+| 순번 배지           | `text-white` `text-[13px]` `font-hahmlet-bold` + textShadow(style 예외)          | `#FFFFFF` on 썸네일                                                                   |
+| 썸네일 플레이스홀더 | `bg-image-placeholder`                                                           | `#E5E1D8`                                                                             |
+| StatusBadge         | `bg-black/10` `text-black` `rounded-full` (기존 컴포넌트)                        | —                                                                                     |
+| 에러/빈 문구        | `text-muted` `text-[13px]` `font-pretendard-regular`                             | `#A8A29E`                                                                             |
+| 재시도 라벨         | `text-primary` `text-[13px]` `font-pretendard-semibold`                          | `#1C1917`                                                                             |
+| 로더                | `CenteredLoader` (`colors.muted`)                                                | `#A8A29E`                                                                             |
+| 카드 radius         | `rounded-[8px]`                                                                  | 8px (오늘 세션 리브랜딩 값. 정본 §3에 radius 토큰 없음 — Tailwind 임의값 그대로 사용) |
+| 카드 그림자         | `shadowColor: colors.primary`, opacity 0.1, radius 10, offset (0,4) — style 예외 | 기존 카드 내부 값                                                                     |
 
 > 정본 미등록 값 사유: `rounded-[8px]`, 카드 폭 148px, 갭 14px은 `KcisaExhibitionCard`/`KcisaSection`에 이미 존재하는 값을 그대로 상속하는 것이며, 이번 기능이 새로 도입하는 값이 아니다.
 
@@ -49,20 +49,21 @@ KcisaSection
 
 **배치 확정**: `FeaturedCarousel` 바로 다음, `KcisaSection` 앞 — John의 01-spec Open questions 기본값 그대로. 근거: 사회적 증거(다수가 본 전시)는 발견 단계 상단에 있을 때 가치가 가장 크고, 개인화 섹션(`추천 전시`)은 하단에 남겨 대비를 만든다. 홈 `ScrollView`의 `contentContainerStyle.gap: 28`이 섹션 간격을 이미 담당하므로 PopularSection에 추가 마진을 넣지 않는다.
 
-| 영역 | 설명 | 재사용 컴포넌트 |
-|------|------|-----------------|
-| 섹션 래퍼 | `<View className="pb-2 pt-3">` — `KcisaSection`과 동일 | (신규 `PopularSection.tsx`, `src/components/explore/`) |
-| 섹션 헤더 | eyebrow + title. **`right`(더보기) 미전달** — 대응하는 목록 화면이 없으므로 빈 링크를 만들지 않는다 | `SectionTitle` (`src/components/common/`) |
-| 카드 레일 | `<View className="-mx-6">` + 가로 `ScrollView`, `showsHorizontalScrollIndicator={false}`, `contentContainerStyle={{ flexDirection: 'row', gap: 14, paddingHorizontal: 24 }}` — `KcisaSection` 값 그대로 | RN `ScrollView` |
-| 카드 | 최대 10개, 인기 점수 내림차순. `index={i + 1}`로 순위 전달(1부터) | `KcisaExhibitionCard` (변경 없음) |
-| 카드 내 상태 라벨 | 진행중/예정/종료 | `StatusBadge` (변경 없음) |
-| 로딩 | `<CenteredLoader className="py-8" />` — `KcisaSection`과 동일한 세로 여백 | `CenteredLoader` |
-| 에러 | `<RetryErrorState ... className="py-8" />` | `RetryErrorState` |
-| 빈 상태 | 섹션 전체 미렌더(`return null`) | — |
+| 영역              | 설명                                                                                                                                                                                                    | 재사용 컴포넌트                                        |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------ |
+| 섹션 래퍼         | `<View className="pb-2 pt-3">` — `KcisaSection`과 동일                                                                                                                                                  | (신규 `PopularSection.tsx`, `src/components/explore/`) |
+| 섹션 헤더         | eyebrow + title. **`right`(더보기) 미전달** — 대응하는 목록 화면이 없으므로 빈 링크를 만들지 않는다                                                                                                     | `SectionTitle` (`src/components/common/`)              |
+| 카드 레일         | `<View className="-mx-6">` + 가로 `ScrollView`, `showsHorizontalScrollIndicator={false}`, `contentContainerStyle={{ flexDirection: 'row', gap: 14, paddingHorizontal: 24 }}` — `KcisaSection` 값 그대로 | RN `ScrollView`                                        |
+| 카드              | 최대 10개, 인기 점수 내림차순. `index={i + 1}`로 순위 전달(1부터)                                                                                                                                       | `KcisaExhibitionCard` (변경 없음)                      |
+| 카드 내 상태 라벨 | 진행중/예정/종료                                                                                                                                                                                        | `StatusBadge` (변경 없음)                              |
+| 로딩              | `<CenteredLoader className="py-8" />` — `KcisaSection`과 동일한 세로 여백                                                                                                                               | `CenteredLoader`                                       |
+| 에러              | `<RetryErrorState ... className="py-8" />`                                                                                                                                                              | `RetryErrorState`                                      |
+| 빈 상태           | 섹션 전체 미렌더(`return null`)                                                                                                                                                                         | —                                                      |
 
 **신규 컴포넌트는 `PopularSection.tsx` 하나뿐이다.** 배치 위치: `src/components/explore/PopularSection.tsx`. `KcisaExhibitionCard`, `SectionTitle`, `StatusBadge`, `CenteredLoader`, `RetryErrorState`는 **수정하지 않는다.**
 
 구현 주의(컨벤션):
+
 - 상태 분기는 삼항 중첩 금지(§11.2) — `PopularSection` 내부 `renderContent()` 렌더 함수로 분리하고, `if` 블록 사이에 빈 줄을 넣는다(§11.4). 긍정 조건 우선(§11.1).
 - 조건부 className이 필요하면 `cn()` 사용(§3). 이 섹션에는 조건부 스타일이 없으므로 템플릿 리터럴이 등장할 이유가 없다.
 - 폰트는 전부 className. `style={{ fontFamily }}` 금지.
@@ -73,6 +74,7 @@ KcisaSection
 **결정: `KcisaExhibitionCard`의 기존 인덱스 배지(`01`, `02`…)를 그대로 사용한다. 별도 인기 표식(🔥 / "HOT" / 랭킹 왕관 등)을 추가하지 않는다.**
 
 근거:
+
 1. **톤** — mollip의 시각 언어는 무채색(Ink `#1C1917` / Muted `#A8A29E`)과 두 서체(Pretendard·Hahmlet)로만 구성돼 있다. 이모지나 형광 강조는 이 팔레트에 존재하지 않는 색·형태를 끌어들여 홈 전체 톤을 깬다.
 2. **일관성** — 같은 홈 화면에서 `KcisaSection`이 이미 동일한 배지로 "01, 02…"를 쓰고 있다. 인기 섹션만 배지 형태가 달라지면 사용자는 두 번호 체계가 서로 다른 의미라고 오독한다. 지금은 둘 다 "왼쪽부터 순서"라는 동일 의미로 읽힌다.
 3. **정보 전달로 충분** — "무엇이 인기인가"는 섹션 제목이 이미 명시한다. 순위 자체는 배열 순서 + 번호로 전달된다. 표식을 더해도 새 정보가 없다.
@@ -82,17 +84,18 @@ KcisaSection
 
 ## Copy (KO)
 
-| Element | Text |
-|---------|------|
-| Eyebrow | `POPULAR NOW` |
-| Title | `지금 인기 있는 전시` |
-| CTA (더보기) | **없음** — 대응 목록 화면이 없으므로 `SectionTitle`의 `right`를 전달하지 않는다 |
-| CTA (카드) | 카드 전체가 탭 타깃. 별도 버튼 라벨 없음 |
-| Empty | **문구 없음** — 섹션 전체를 렌더링하지 않는다 (아래 States 참고) |
-| Error | `인기 전시를 불러오지 못했어요` + 버튼 `다시 시도`(RetryErrorState 내장) |
-| Error a11y label | `인기 전시 다시 불러오기` |
+| Element          | Text                                                                            |
+| ---------------- | ------------------------------------------------------------------------------- |
+| Eyebrow          | `POPULAR NOW`                                                                   |
+| Title            | `지금 인기 있는 전시`                                                           |
+| CTA (더보기)     | **없음** — 대응 목록 화면이 없으므로 `SectionTitle`의 `right`를 전달하지 않는다 |
+| CTA (카드)       | 카드 전체가 탭 타깃. 별도 버튼 라벨 없음                                        |
+| Empty            | **문구 없음** — 섹션 전체를 렌더링하지 않는다 (아래 States 참고)                |
+| Error            | `인기 전시를 불러오지 못했어요` + 버튼 `다시 시도`(RetryErrorState 내장)        |
+| Error a11y label | `인기 전시 다시 불러오기`                                                       |
 
 카피 결정 근거:
+
 - John의 제안은 eyebrow `TRENDING NOW`였다. 기존 두 섹션(`PUBLIC MUSEUMS`, `FOR YOU`)이 모두 담백한 명사구인 데 비해 `TRENDING`은 상대적으로 마케팅 톤이 강해 **`POPULAR NOW`** 로 확정한다. 글자 수(11자)도 `PUBLIC MUSEUMS`(14자)와 같은 범위라 `text-[11px]` eyebrow 라인에서 시각적 무게가 균형을 이룬다.
 - Title은 John 제안 `지금 인기 있는 전시`를 그대로 채택. `국공립 기관 전시`·`추천 전시`와 동일한 명사구 형식이고, 20px 한 줄에 여유롭게 들어간다.
 - 에러 문구는 기존 `전시 정보를 불러오지 못했어요` 대신 **`인기 전시를 불러오지 못했어요`** 로 특정한다. 홈에는 실패 가능한 섹션이 여럿이라, 같은 문구가 두 곳에 동시에 뜨면 어느 영역이 실패했는지 구분되지 않는다.
@@ -111,17 +114,18 @@ KcisaSection
 
 신규 요소만 점검한다 — 카드·에러·로더는 기존 컴포넌트라 이미 충족한다.
 
-| 요소 | 요구사항 | 상태 |
-|------|----------|------|
-| 카드 `Pressable` | `accessibilityRole="button"`, `accessibilityLabel={`${title}, ${venue}`}` | 기존 `KcisaExhibitionCard`에 구현됨 — 변경 없음 |
-| 카드 터치 타깃 | 148 × 197px 썸네일 + 텍스트 영역 → 44pt 훨씬 상회 | 충족 |
-| 순위 배지 `01` | 장식 텍스트. 부모 `Pressable`의 `accessibilityLabel`이 우선하므로 스크린리더가 "01"을 따로 읽지 않는다. 순위는 읽기 순서(왼→오)로 전달된다 | 충족(의도된 동작). 라벨에 순위를 넣으려면 카드 수정이 필요해 이번 스코프 밖 |
-| 섹션 제목/eyebrow | 순수 텍스트, 인터랙티브 아님 → role 불필요 | 충족 |
-| 다시 시도 버튼 | `accessibilityRole="button"` + `accessibilityLabel="인기 전시 다시 불러오기"`, `hitSlop 8` | `RetryErrorState`에 구현됨. **label만 이 섹션 전용 문구로 전달할 것** |
-| 가로 `ScrollView` | 별도 라벨 불필요(기존 두 레일과 동일 패턴) | 충족 |
-| 아이콘 단독 버튼 | 이 섹션에 없음(더보기 미도입) | 해당 없음 |
+| 요소              | 요구사항                                                                                                                                   | 상태                                                                        |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------- |
+| 카드 `Pressable`  | `accessibilityRole="button"`, `accessibilityLabel={`${title}, ${venue}`}`                                                                  | 기존 `KcisaExhibitionCard`에 구현됨 — 변경 없음                             |
+| 카드 터치 타깃    | 148 × 197px 썸네일 + 텍스트 영역 → 44pt 훨씬 상회                                                                                          | 충족                                                                        |
+| 순위 배지 `01`    | 장식 텍스트. 부모 `Pressable`의 `accessibilityLabel`이 우선하므로 스크린리더가 "01"을 따로 읽지 않는다. 순위는 읽기 순서(왼→오)로 전달된다 | 충족(의도된 동작). 라벨에 순위를 넣으려면 카드 수정이 필요해 이번 스코프 밖 |
+| 섹션 제목/eyebrow | 순수 텍스트, 인터랙티브 아님 → role 불필요                                                                                                 | 충족                                                                        |
+| 다시 시도 버튼    | `accessibilityRole="button"` + `accessibilityLabel="인기 전시 다시 불러오기"`, `hitSlop 8`                                                 | `RetryErrorState`에 구현됨. **label만 이 섹션 전용 문구로 전달할 것**       |
+| 가로 `ScrollView` | 별도 라벨 불필요(기존 두 레일과 동일 패턴)                                                                                                 | 충족                                                                        |
+| 아이콘 단독 버튼  | 이 섹션에 없음(더보기 미도입)                                                                                                              | 해당 없음                                                                   |
 
 대비 확인:
+
 - 제목 `#1C1917` on `#F8F6F2` — 명도 대비 매우 높음(약 16:1). 통과.
 - eyebrow/기관명 `#A8A29E` on `#F8F6F2` — 약 2.2:1로 WCAG AA(4.5:1) 미달이나, **홈의 기존 두 섹션과 동일한 처리**이며 보조 정보(장식적 레이블)에 한정된다. 이번 기능에서 새로 악화시키는 지점은 없다. 전역 muted 대비 개선은 디자인 시스템 차원의 별건으로 남긴다.
 - 순위 배지 흰 텍스트 on 임의 썸네일 — `textShadowColor: 'rgba(0,0,0,0.5)'`, radius 4가 이미 적용되어 밝은 이미지 위에서도 판독 가능. 기존 카드 동작 그대로.

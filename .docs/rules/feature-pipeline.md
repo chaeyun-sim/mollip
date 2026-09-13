@@ -20,14 +20,14 @@ John(01-spec)
 
 ### 게이트
 
-| # | Gate | Pass 조건 |
-|---|------|-----------|
-| G1 | Spec | AC ≥ 1, out-of-scope, tier |
-| G2 | Design | `02-design-brief.md` |
-| G3 | Design QA | Alex → **Pass** (Fail → Sam) |
-| G4 | Prototype | sim 스크린샷 + 1 인터랙션 (L 필수, M은 UI 변경 시) |
-| G5 | Dev+QA | AC Done, P0=0, tsc+Jest+회귀 |
-| G6 | User | `06-handoff-to-user.md` 후 사용자 승인 |
+| #   | Gate      | Pass 조건                                          |
+| --- | --------- | -------------------------------------------------- |
+| G1  | Spec      | AC ≥ 1, out-of-scope, tier                         |
+| G2  | Design    | `02-design-brief.md`                               |
+| G3  | Design QA | Alex → **Pass** (Fail → Sam)                       |
+| G4  | Prototype | sim 스크린샷 + 1 인터랙션 (L 필수, M은 UI 변경 시) |
+| G5  | Dev+QA    | AC Done, P0=0, tsc+Jest+회귀                       |
+| G6  | User      | `06-handoff-to-user.md` 후 사용자 승인             |
 
 ---
 
@@ -51,19 +51,19 @@ Fail → Sam 또는 Chris.
 
 ## 4. QA 회귀 루프 (Taylor)
 
-AC마다 Q1~Q10. Fail → Chris 수정 후 전체 재실행. Self-fix 반복 횟수 제한 없음 — Q1~Q10 전부 Pass할 때까지 계속(예외 조건은 CLAUDE.md "자가 수정 루프" 참고).
+AC마다 Q1~~Q10. Fail → Chris 수정 후 전체 재실행. Self-fix 반복 횟수 제한 없음 — Q1~~Q10 전부 Pass할 때까지 계속(예외 조건은 CLAUDE.md "자가 수정 루프" 참고).
 
-| # | 영역 |
-|---|------|
-| Q1 | `npx tsc --noEmit` |
-| Q2 | `npm test` |
-| Q3 | 버그 / edge |
-| Q4 | UX |
-| Q5 | component-convention |
-| Q6 | sim screenshot + inspect |
-| Q7 | interaction |
-| Q8 | regression paths |
-| Q9 | perf (light) |
+| #   | 영역                            |
+| --- | ------------------------------- |
+| Q1  | `npx tsc --noEmit`              |
+| Q2  | `npm test`                      |
+| Q3  | 버그 / edge                     |
+| Q4  | UX                              |
+| Q5  | component-convention            |
+| Q6  | sim screenshot + inspect        |
+| Q7  | interaction                     |
+| Q8  | regression paths                |
+| Q9  | perf (light)                    |
 | Q10 | native module rebuild if needed |
 
 ---
@@ -99,8 +99,8 @@ G6 전 "완료" 보고 금지. `06-handoff-to-user.md` + evidence table.
 
 ### 티어별 최소 아티팩트
 
-| 티어 | 필수 아티팩트 |
-|------|------------|
-| S | 인라인 evidence 표 (06-handoff 대체) |
-| M | 01-spec, 02-design-brief, 05-qa-report, 06-handoff-to-user |
-| L | 01-spec, 02-design-brief, 03-design-review, 04-dev-notes, 05-qa-report, 06-handoff-to-user |
+| 티어 | 필수 아티팩트                                                                              |
+| ---- | ------------------------------------------------------------------------------------------ |
+| S    | 인라인 evidence 표 (06-handoff 대체)                                                       |
+| M    | 01-spec, 02-design-brief, 05-qa-report, 06-handoff-to-user                                 |
+| L    | 01-spec, 02-design-brief, 03-design-review, 04-dev-notes, 05-qa-report, 06-handoff-to-user |

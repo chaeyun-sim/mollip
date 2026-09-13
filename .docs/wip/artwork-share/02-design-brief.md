@@ -19,13 +19,13 @@ status: approved
 
 ## 공유 카드 콘텐츠 (카카오)
 
-| 필드 | 값 |
-|------|----|
-| title | 작품명 (store.manualTitle \|\| store.extractedText \|\| '작품') |
-| description | AI 해설 첫 문장 (최대 80자) + "\nmollip에서 감상했어요 🎨" |
-| imageUrl | artworkImageUrl (없으면 생략) |
-| link | https://mollip.app |
-| button | '해설 들으러 가기' |
+| 필드        | 값                                                              |
+| ----------- | --------------------------------------------------------------- |
+| title       | 작품명 (store.manualTitle \|\| store.extractedText \|\| '작품') |
+| description | AI 해설 첫 문장 (최대 80자) + "\nmollip에서 감상했어요 🎨"      |
+| imageUrl    | artworkImageUrl (없으면 생략)                                   |
+| link        | https://mollip.app                                              |
+| button      | '해설 들으러 가기'                                              |
 
 ## 색상 / 폰트
 

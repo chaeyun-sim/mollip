@@ -49,22 +49,35 @@
 //              args: { spec_id: "SPEC-FOO-001", threshold: 0.85, tier: "L" } })
 
 export const meta = {
-  name: 'sync-audit-4dim',
-  description: 'Sync-phase 4-dimension quality read (Functionality/Security/Craft/Consistency) — parallel read-only judges + in-script harmonic-mean verdict; execution vehicle, NOT the binding sync-auditor verdict owner',
-  phases: [
-    { title: 'Context', detail: 'one read-only Explore agent extracts the SPEC audit surface (id, acceptance criteria, changed files, test command)' },
-    { title: 'Judge', detail: 'four parallel read-only Explore judges, one per dimension, each scoring 0-1 with command+verbatim-output evidence under a skeptical-auditor stance' },
-    { title: 'Verdict', detail: 'in-script harmonic mean of the four scores with a zero-score guard and an INCOMPLETE branch on any missing judge (no agent call)' },
-  ],
-}
+	name: 'sync-audit-4dim',
+	description:
+		'Sync-phase 4-dimension quality read (Functionality/Security/Craft/Consistency) — parallel read-only judges + in-script harmonic-mean verdict; execution vehicle, NOT the binding sync-auditor verdict owner',
+	phases: [
+		{
+			title: 'Context',
+			detail:
+				'one read-only Explore agent extracts the SPEC audit surface (id, acceptance criteria, changed files, test command)',
+		},
+		{
+			title: 'Judge',
+			detail:
+				'four parallel read-only Explore judges, one per dimension, each scoring 0-1 with command+verbatim-output evidence under a skeptical-auditor stance',
+		},
+		{
+			title: 'Verdict',
+			detail:
+				'in-script harmonic mean of the four scores with a zero-score guard and an INCOMPLETE branch on any missing judge (no agent call)',
+		},
+	],
+};
 
 // determinism: all inputs injected via args; no wall-clock, no random in body
-const SPEC_ID = (args && args.spec_id) || 'SPEC-UNKNOWN'
-const THRESHOLD = (args && typeof args.threshold === 'number') ? args.threshold : 0.85
-const TIER = (args && args.tier) || 'M'
+const SPEC_ID = (args && args.spec_id) || 'SPEC-UNKNOWN';
+const THRESHOLD = args && typeof args.threshold === 'number' ? args.threshold : 0.85;
+const TIER = (args && args.tier) || 'M';
 
 // The four audit dimensions. Verdict order below MUST match this array (judges[i] <-> DIMENSIONS[i]).
-const DIMENSIONS = ['Functionality', 'Security', 'Craft', 'Consistency']
+const DIMENSIONS = ['Functionality', 'Security', 'Craft', 'Consistency'];
 
 // Schema-forced output: the verdict computation consumes typed fields, so the Context + Judge
 // outputs are schema-shaped (arithmetic needs structure). Explorer narrative in the sibling
@@ -73,24 +86,24 @@ const DIMENSIONS = ['Functionality', 'Security', 'Craft', 'Consistency']
 // where a bare field name at the top level is an unknown keyword and the call throws
 // before any agent runs — so a shape-object sketch here disables the whole fan-out.
 const CONTEXT_SCHEMA = {
-  type: 'object',
-  properties: {
-    spec_id: { type: 'string', description: 'the audited SPEC id' },
-    acceptance_criteria: {
-      type: 'array',
-      description: 'one AC statement per entry',
-      items: { type: 'string' },
-    },
-    changed_files: {
-      type: 'array',
-      description: 'repo-relative paths this SPEC touches',
-      items: { type: 'string' },
-    },
-    test_command: { type: 'string', description: 'the command that runs this SPEC test suite' },
-  },
-  required: ['spec_id', 'acceptance_criteria', 'changed_files', 'test_command'],
-  additionalProperties: false,
-}
+	type: 'object',
+	properties: {
+		spec_id: { type: 'string', description: 'the audited SPEC id' },
+		acceptance_criteria: {
+			type: 'array',
+			description: 'one AC statement per entry',
+			items: { type: 'string' },
+		},
+		changed_files: {
+			type: 'array',
+			description: 'repo-relative paths this SPEC touches',
+			items: { type: 'string' },
+		},
+		test_command: { type: 'string', description: 'the command that runs this SPEC test suite' },
+	},
+	required: ['spec_id', 'acceptance_criteria', 'changed_files', 'test_command'],
+	additionalProperties: false,
+};
 
 // `score` is nullable on purpose: the judge prompt instructs a judge that cannot evaluate
 // its dimension to return null rather than fabricate a number, and the Verdict phase reads
@@ -98,45 +111,46 @@ const CONTEXT_SCHEMA = {
 // force the fabrication the prompt forbids. anyOf rather than a union `type` keeps the
 // range constraint unambiguous under strict validation.
 const JUDGE_SCHEMA = {
-  type: 'object',
-  properties: {
-    dimension: {
-      type: 'string',
-      enum: ['Functionality', 'Security', 'Craft', 'Consistency'],
-    },
-    score: {
-      anyOf: [
-        { type: 'number', minimum: 0, maximum: 1 },
-        { type: 'null' },
-      ],
-      description: 'quality score for this dimension (0 = hard fail, 1 = flawless); null when the dimension could not be evaluated at all',
-    },
-    findings: {
-      type: 'array',
-      items: {
-        type: 'object',
-        properties: {
-          severity: { type: 'string', enum: ['critical', 'major', 'minor'] },
-          summary: { type: 'string' },
-          file: { type: 'string' },
-          evidence: { type: 'string', description: 'the command run PLUS its verbatim output — never a summary' },
-        },
-        required: ['severity', 'summary', 'file', 'evidence'],
-        additionalProperties: false,
-      },
-    },
-    evidence_gaps: {
-      type: 'array',
-      description: 'a check the judge could NOT run, and why (evidence absent != pass)',
-      items: { type: 'string' },
-    },
-  },
-  required: ['dimension', 'score', 'findings', 'evidence_gaps'],
-  additionalProperties: false,
-}
+	type: 'object',
+	properties: {
+		dimension: {
+			type: 'string',
+			enum: ['Functionality', 'Security', 'Craft', 'Consistency'],
+		},
+		score: {
+			anyOf: [{ type: 'number', minimum: 0, maximum: 1 }, { type: 'null' }],
+			description:
+				'quality score for this dimension (0 = hard fail, 1 = flawless); null when the dimension could not be evaluated at all',
+		},
+		findings: {
+			type: 'array',
+			items: {
+				type: 'object',
+				properties: {
+					severity: { type: 'string', enum: ['critical', 'major', 'minor'] },
+					summary: { type: 'string' },
+					file: { type: 'string' },
+					evidence: {
+						type: 'string',
+						description: 'the command run PLUS its verbatim output — never a summary',
+					},
+				},
+				required: ['severity', 'summary', 'file', 'evidence'],
+				additionalProperties: false,
+			},
+		},
+		evidence_gaps: {
+			type: 'array',
+			description: 'a check the judge could NOT run, and why (evidence absent != pass)',
+			items: { type: 'string' },
+		},
+	},
+	required: ['dimension', 'score', 'findings', 'evidence_gaps'],
+	additionalProperties: false,
+};
 
 // ---------------------------------------------------------------------------
-phase('Context')
+phase('Context');
 
 const CONTEXT_PROMPT = `You are a read-only audit-context extractor. Do NOT modify any file.
 
@@ -150,16 +164,24 @@ Return the audit surface as an object with EXACTLY these fields:
 - test_command: the single command that runs this SPEC's test suite (e.g. "go test ./internal/foo/...")
 
 Report only what you can VERIFY from the artifacts. If a field cannot be determined, return it empty
-rather than guessing.`
+rather than guessing.`;
 
-const context = await agent(CONTEXT_PROMPT, { label: `context:${SPEC_ID}`, phase: 'Context', agentType: 'Explore', effort: 'medium', schema: CONTEXT_SCHEMA })
+const context = await agent(CONTEXT_PROMPT, {
+	label: `context:${SPEC_ID}`,
+	phase: 'Context',
+	agentType: 'Explore',
+	effort: 'medium',
+	schema: CONTEXT_SCHEMA,
+});
 
 // ---------------------------------------------------------------------------
-phase('Judge')
+phase('Judge');
 
 // Skeptical-auditor stance: every score claim MUST be backed by a command that was actually run
 // plus its verbatim output. Evidence absent is NOT evidence of a pass — it is an evidence_gap.
-const JUDGE_PROMPT = (dimension) => `You are a read-only, skeptical quality auditor judging ONE dimension: ${dimension}.
+const JUDGE_PROMPT = (
+	dimension,
+) => `You are a read-only, skeptical quality auditor judging ONE dimension: ${dimension}.
 Do NOT modify any file. You have Read/Grep/Glob and read-only Bash (test/lint/build) only.
 
 Audit context for the SPEC under review:
@@ -179,54 +201,95 @@ Dimension focus for "${dimension}":
   - Consistency: does it match the existing codebase style, conventions, and neighbouring patterns?
 
 Return an object with EXACTLY: dimension, score (0..1), findings[{severity,summary,file,evidence}],
-evidence_gaps[]. If you cannot evaluate this dimension at all, return score as null (do NOT fabricate a score).`
+evidence_gaps[]. If you cannot evaluate this dimension at all, return score as null (do NOT fabricate a score).`;
 
 // Four judge agent calls in parallel — ALL read-only (agentType 'Explore'), effort 'xhigh'. Each
 // call site inlines the read-only opts so the read-only contract is pinned to the JUDGE site itself.
 // Thunk order MUST match DIMENSIONS so judges[i] aligns with DIMENSIONS[i] in the Verdict phase.
 const judges = await parallel([
-  () => agent(JUDGE_PROMPT('Functionality'), { label: 'judge:Functionality', phase: 'Judge', agentType: 'Explore', effort: 'xhigh', schema: JUDGE_SCHEMA }),
-  () => agent(JUDGE_PROMPT('Security'),      { label: 'judge:Security',      phase: 'Judge', agentType: 'Explore', effort: 'xhigh', schema: JUDGE_SCHEMA }),
-  () => agent(JUDGE_PROMPT('Craft'),         { label: 'judge:Craft',         phase: 'Judge', agentType: 'Explore', effort: 'xhigh', schema: JUDGE_SCHEMA }),
-  () => agent(JUDGE_PROMPT('Consistency'),   { label: 'judge:Consistency',   phase: 'Judge', agentType: 'Explore', effort: 'xhigh', schema: JUDGE_SCHEMA }),
-])
+	() =>
+		agent(JUDGE_PROMPT('Functionality'), {
+			label: 'judge:Functionality',
+			phase: 'Judge',
+			agentType: 'Explore',
+			effort: 'xhigh',
+			schema: JUDGE_SCHEMA,
+		}),
+	() =>
+		agent(JUDGE_PROMPT('Security'), {
+			label: 'judge:Security',
+			phase: 'Judge',
+			agentType: 'Explore',
+			effort: 'xhigh',
+			schema: JUDGE_SCHEMA,
+		}),
+	() =>
+		agent(JUDGE_PROMPT('Craft'), {
+			label: 'judge:Craft',
+			phase: 'Judge',
+			agentType: 'Explore',
+			effort: 'xhigh',
+			schema: JUDGE_SCHEMA,
+		}),
+	() =>
+		agent(JUDGE_PROMPT('Consistency'), {
+			label: 'judge:Consistency',
+			phase: 'Judge',
+			agentType: 'Explore',
+			effort: 'xhigh',
+			schema: JUDGE_SCHEMA,
+		}),
+]);
 
 // ---------------------------------------------------------------------------
-phase('Verdict')
+phase('Verdict');
 
 // SCRIPT JS ONLY — no agent call sits between judge collection and the returned verdict.
 // A judge is "missing" if it did not return or its score is not a finite number.
-const scoreOf = (j) => (j && typeof j.score === 'number' && Number.isFinite(j.score)) ? j.score : null
+const scoreOf = (j) =>
+	j && typeof j.score === 'number' && Number.isFinite(j.score) ? j.score : null;
 
 // Null-judge guard FIRST, before any mean computation: 4 dimensions are the contract; 3/4 is no verdict.
-const missing = DIMENSIONS.filter((dim, i) => scoreOf(judges[i]) === null)
+const missing = DIMENSIONS.filter((dim, i) => scoreOf(judges[i]) === null);
 if (missing.length > 0) {
-  return { verdict: 'INCOMPLETE', missing, tier: TIER, threshold: THRESHOLD, spec_id: SPEC_ID }
+	return { verdict: 'INCOMPLETE', missing, tier: TIER, threshold: THRESHOLD, spec_id: SPEC_ID };
 }
 
 // All four judges returned a finite score. Aggregate their findings/gaps (null-filtered) for the report.
-const scores = DIMENSIONS.map((dim, i) => judges[i].score)
-const findings = DIMENSIONS.flatMap((dim, i) => (judges[i].findings || []).filter(Boolean).map((f) => ({ dimension: dim, ...f })))
-const evidenceGaps = DIMENSIONS.flatMap((dim, i) => (judges[i].evidence_gaps || []).filter(Boolean).map((g) => ({ dimension: dim, gap: g })))
+const scores = DIMENSIONS.map((dim, i) => judges[i].score);
+const findings = DIMENSIONS.flatMap((dim, i) =>
+	(judges[i].findings || []).filter(Boolean).map((f) => ({ dimension: dim, ...f })),
+);
+const evidenceGaps = DIMENSIONS.flatMap((dim, i) =>
+	(judges[i].evidence_gaps || []).filter(Boolean).map((g) => ({ dimension: dim, gap: g })),
+);
 
 // Zero-score guard: the harmonic mean divides by each score, so a 0 dimension is a hard FAIL naming
 // the dimension — never a division by zero, never Infinity.
-const zeroScored = DIMENSIONS.filter((dim, i) => scores[i] <= 0)
+const zeroScored = DIMENSIONS.filter((dim, i) => scores[i] <= 0);
 if (zeroScored.length > 0) {
-  return { verdict: 'FAIL', zero_scored: zeroScored, tier: TIER, threshold: THRESHOLD, spec_id: SPEC_ID, findings, evidence_gaps: evidenceGaps }
+	return {
+		verdict: 'FAIL',
+		zero_scored: zeroScored,
+		tier: TIER,
+		threshold: THRESHOLD,
+		spec_id: SPEC_ID,
+		findings,
+		evidence_gaps: evidenceGaps,
+	};
 }
 
 // Harmonic mean n / Σ(1/sᵢ) — in-script, deterministic, auditable. One low dimension drags it down.
-const reciprocalSum = scores.reduce((acc, s) => acc + 1 / s, 0)
-const harmonicMean = DIMENSIONS.length / reciprocalSum
+const reciprocalSum = scores.reduce((acc, s) => acc + 1 / s, 0);
+const harmonicMean = DIMENSIONS.length / reciprocalSum;
 
 return {
-  verdict: harmonicMean >= THRESHOLD ? 'PASS' : 'FAIL',
-  harmonic_mean: harmonicMean,
-  threshold: THRESHOLD,
-  tier: TIER,
-  spec_id: SPEC_ID,
-  scores: DIMENSIONS.map((dim, i) => ({ dimension: dim, score: scores[i] })),
-  findings,
-  evidence_gaps: evidenceGaps,
-}
+	verdict: harmonicMean >= THRESHOLD ? 'PASS' : 'FAIL',
+	harmonic_mean: harmonicMean,
+	threshold: THRESHOLD,
+	tier: TIER,
+	spec_id: SPEC_ID,
+	scores: DIMENSIONS.map((dim, i) => ({ dimension: dim, score: scores[i] })),
+	findings,
+	evidence_gaps: evidenceGaps,
+};

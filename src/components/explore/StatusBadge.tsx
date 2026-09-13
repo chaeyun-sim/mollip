@@ -9,7 +9,12 @@ interface StatusBadgeProps {
 
 export function StatusBadge({ status, className }: StatusBadgeProps) {
 	return (
-		<Text className={cn("text-black text-[10px] font-pretendard-semibold px-2 py-0.5 bg-black/10 rounded-full self-start", className)}>
+		<Text
+			className={cn(
+				'text-black text-[10px] font-pretendard-semibold px-2 py-0.5 bg-black/10 rounded-full self-start',
+				className,
+			)}
+		>
 			{STATUS_LABELS[status]}
 		</Text>
 	);

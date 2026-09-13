@@ -14,7 +14,7 @@ interface ExhibitionResultCardProps {
 
 export function ExhibitionResultCard({ result, onPress }: ExhibitionResultCardProps) {
 	const { exhibition: ex, status, distanceKm } = result;
-	
+
 	const ddayLabel = getDdayLabel(ex);
 	const isBookmarked = useBookmarkStore((s) => s.isBookmarked(ex.id));
 	const toggleBookmark = useBookmarkStore((s) => s.toggle);
@@ -54,9 +54,7 @@ export function ExhibitionResultCard({ result, onPress }: ExhibitionResultCardPr
 						{ex.startDate} - {ex.endDate}
 					</Text>
 					{ddayLabel && (
-						<Text className="text-orange-700 text-xs font-pretendard-semibold">
-							{ddayLabel}
-						</Text>
+						<Text className="text-orange-700 text-xs font-pretendard-semibold">{ddayLabel}</Text>
 					)}
 				</View>
 			</View>

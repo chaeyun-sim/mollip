@@ -52,16 +52,16 @@ status: draft
 
 - **Given** `tailwind.config.js`와 `src/constants/colors.ts`에 기존 컬러 토큰이 정의되어 있고, 아직 어떤 사용처도 수정되지 않은 상태
 - **When** 아래 9개 토큰을 두 파일에 **추가만** 하고(기존 토큰은 한 줄도 삭제·수정하지 않음) `npx tsc --noEmit`을 실행한다
-  | 토큰 | Hex | 기존 대응 |
-  |---|---|---|
-  | `gray100` | `#F8F6F2` | bg-light 와 동일 |
-  | `gray200` | `#F2EFE9` | bg-tonal 과 동일 |
-  | `gray300` | `#E7E5E4` | divider 와 동일 |
-  | `gray400` | `#C7C3BD` | 신규 보간값 |
-  | `gray500` | `#A8A29E` | muted 와 동일 |
-  | `gray600` | `#78716C` | tertiary 와 동일 |
-  | `gray700` | `#57534E` | secondary 와 동일 |
-  | `gray800` | `#292524` | divider-dark 와 동일 |
+  | 토큰      | Hex       | 기존 대응               |
+  | --------- | --------- | ----------------------- |
+  | `gray100` | `#F8F6F2` | bg-light 와 동일        |
+  | `gray200` | `#F2EFE9` | bg-tonal 과 동일        |
+  | `gray300` | `#E7E5E4` | divider 와 동일         |
+  | `gray400` | `#C7C3BD` | 신규 보간값             |
+  | `gray500` | `#A8A29E` | muted 와 동일           |
+  | `gray600` | `#78716C` | tertiary 와 동일        |
+  | `gray700` | `#57534E` | secondary 와 동일       |
+  | `gray800` | `#292524` | divider-dark 와 동일    |
   | `gray900` | `#1C1917` | primary(텍스트) 와 동일 |
 - **Then** 타입 오류 0건이고, 시뮬레이터에서 임의의 3개 화면(홈 / 전시 상세 / 설정)이 변경 전과 **픽셀 단위로 동일하게** 렌더되며, 두 파일의 9개 hex 값이 서로 100% 일치한다
 
@@ -165,41 +165,41 @@ status: draft
 
 ## Screens / routes
 
-| Route | 변경 |
-|-------|------|
-| `app/(tabs)/_layout.tsx` | 탭바 활성색 (`accent` 사용처 — AC-15, Q1 대기) |
-| `app/(tabs)/index.tsx` | 텍스트 토큰 이관 (AC-7) |
-| `app/(tabs)/exhibitions.tsx` | 텍스트 토큰 이관 (AC-7) |
-| `app/(tabs)/search.tsx` | 텍스트 토큰 이관 (AC-7) |
-| `app/(tabs)/diary.tsx` | 텍스트 토큰 이관 (AC-7) |
-| `app/(tabs)/map.tsx` | `colors.*` JS 참조 이관 (AC-12) |
-| `app/(explore)/[id].tsx` | 텍스트 토큰 이관 (AC-9) |
-| `app/(explore)/route.tsx` | 텍스트 토큰 이관 (AC-9, 12건 — explore 최다) |
-| `app/(guide)/create-description.tsx` | 텍스트 토큰 이관 (AC-8, 21건 — 전체 최다) |
-| `app/(guide)/manual.tsx` | 텍스트 토큰 이관 (AC-8) + accent (AC-15) |
-| `app/(guide)/description.tsx` | 텍스트 토큰 이관 (AC-8) + accent (AC-15) |
-| `app/(guide)/chat.tsx` | 텍스트 토큰 이관 (AC-8) + 채팅 버블 브랜드 컬러 (AC-14) |
-| `app/(guide)/playlist.tsx` | 텍스트 토큰 이관 (AC-8) + accent (AC-15) |
-| `app/(guide)/immersive-start.tsx` | 텍스트 토큰 이관 (AC-8) + accent (AC-15) |
-| `app/(guide)/exit-summary.tsx` | 텍스트 토큰 이관 (AC-8) + accent (AC-15) |
-| `app/settings/index.tsx` | 텍스트 토큰 이관 (AC-10) + `bg-primary` 배지 (AC-14) |
-| `app/settings/account.tsx` | 텍스트 토큰 이관 (AC-10) |
-| `app/settings/inquiry.tsx` | 텍스트 토큰 이관 (AC-10, 12건) + 제출 버튼 (AC-14) |
-| `app/settings/voice.tsx` | 텍스트 토큰 이관 (AC-10) + accent (AC-15) |
-| `app/settings/description.tsx` | 텍스트 토큰 이관 (AC-10) |
-| `app/settings/general.tsx` | 텍스트 토큰 이관 (AC-10) |
-| `app/settings/delete-account.tsx` | 텍스트 토큰 이관 (AC-10) + accent (AC-15) |
-| `app/settings/preferences.tsx` | `colors.*` JS 참조 이관 (AC-12) |
-| `app/settings/bookmark/audio.tsx` | 텍스트 토큰 이관 (AC-10) |
-| `app/settings/bookmark/exhibition.tsx` | 텍스트 토큰 이관 (AC-10) |
-| `app/auth/login.tsx` | 텍스트 토큰 이관 (AC-11) + 로그인 버튼 브랜드 컬러 (AC-14) |
-| `app/onboarding/index.tsx` | 텍스트 토큰 이관 (AC-11) |
-| `app/onboarding/location.tsx` | 텍스트 토큰 이관 (AC-11) + CTA 버튼 (AC-14) |
-| `app/diary/[date].tsx` | 텍스트 토큰 이관 (AC-9) + accent (AC-15) |
-| `app/terms.tsx` | 텍스트 토큰 이관 (AC-11) |
-| `app/privacy-policy.tsx` | 텍스트 토큰 이관 (AC-11) |
-| `app/notifications.tsx` | 텍스트 토큰 이관 (AC-11) |
-| `app/_layout.tsx` | 변경 없음 (폰트 로드 전용) — 회귀 확인 대상 |
+| Route                                  | 변경                                                       |
+| -------------------------------------- | ---------------------------------------------------------- |
+| `app/(tabs)/_layout.tsx`               | 탭바 활성색 (`accent` 사용처 — AC-15, Q1 대기)             |
+| `app/(tabs)/index.tsx`                 | 텍스트 토큰 이관 (AC-7)                                    |
+| `app/(tabs)/exhibitions.tsx`           | 텍스트 토큰 이관 (AC-7)                                    |
+| `app/(tabs)/search.tsx`                | 텍스트 토큰 이관 (AC-7)                                    |
+| `app/(tabs)/diary.tsx`                 | 텍스트 토큰 이관 (AC-7)                                    |
+| `app/(tabs)/map.tsx`                   | `colors.*` JS 참조 이관 (AC-12)                            |
+| `app/(explore)/[id].tsx`               | 텍스트 토큰 이관 (AC-9)                                    |
+| `app/(explore)/route.tsx`              | 텍스트 토큰 이관 (AC-9, 12건 — explore 최다)               |
+| `app/(guide)/create-description.tsx`   | 텍스트 토큰 이관 (AC-8, 21건 — 전체 최다)                  |
+| `app/(guide)/manual.tsx`               | 텍스트 토큰 이관 (AC-8) + accent (AC-15)                   |
+| `app/(guide)/description.tsx`          | 텍스트 토큰 이관 (AC-8) + accent (AC-15)                   |
+| `app/(guide)/chat.tsx`                 | 텍스트 토큰 이관 (AC-8) + 채팅 버블 브랜드 컬러 (AC-14)    |
+| `app/(guide)/playlist.tsx`             | 텍스트 토큰 이관 (AC-8) + accent (AC-15)                   |
+| `app/(guide)/immersive-start.tsx`      | 텍스트 토큰 이관 (AC-8) + accent (AC-15)                   |
+| `app/(guide)/exit-summary.tsx`         | 텍스트 토큰 이관 (AC-8) + accent (AC-15)                   |
+| `app/settings/index.tsx`               | 텍스트 토큰 이관 (AC-10) + `bg-primary` 배지 (AC-14)       |
+| `app/settings/account.tsx`             | 텍스트 토큰 이관 (AC-10)                                   |
+| `app/settings/inquiry.tsx`             | 텍스트 토큰 이관 (AC-10, 12건) + 제출 버튼 (AC-14)         |
+| `app/settings/voice.tsx`               | 텍스트 토큰 이관 (AC-10) + accent (AC-15)                  |
+| `app/settings/description.tsx`         | 텍스트 토큰 이관 (AC-10)                                   |
+| `app/settings/general.tsx`             | 텍스트 토큰 이관 (AC-10)                                   |
+| `app/settings/delete-account.tsx`      | 텍스트 토큰 이관 (AC-10) + accent (AC-15)                  |
+| `app/settings/preferences.tsx`         | `colors.*` JS 참조 이관 (AC-12)                            |
+| `app/settings/bookmark/audio.tsx`      | 텍스트 토큰 이관 (AC-10)                                   |
+| `app/settings/bookmark/exhibition.tsx` | 텍스트 토큰 이관 (AC-10)                                   |
+| `app/auth/login.tsx`                   | 텍스트 토큰 이관 (AC-11) + 로그인 버튼 브랜드 컬러 (AC-14) |
+| `app/onboarding/index.tsx`             | 텍스트 토큰 이관 (AC-11)                                   |
+| `app/onboarding/location.tsx`          | 텍스트 토큰 이관 (AC-11) + CTA 버튼 (AC-14)                |
+| `app/diary/[date].tsx`                 | 텍스트 토큰 이관 (AC-9) + accent (AC-15)                   |
+| `app/terms.tsx`                        | 텍스트 토큰 이관 (AC-11)                                   |
+| `app/privacy-policy.tsx`               | 텍스트 토큰 이관 (AC-11)                                   |
+| `app/notifications.tsx`                | 텍스트 토큰 이관 (AC-11)                                   |
+| `app/_layout.tsx`                      | 변경 없음 (폰트 로드 전용) — 회귀 확인 대상                |
 
 비-라우트 변경 파일: `tailwind.config.js`(AC-1, AC-14), `src/constants/colors.ts`(AC-1, AC-12, AC-14), `src/components/` 12개 도메인 디렉터리 74파일 중 해당분(AC-3~6), `.docs/DESIGN_SYSTEM.md`(AC-17).
 

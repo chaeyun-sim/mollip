@@ -8,14 +8,14 @@ status: done
 
 ## Checks
 
-| AC | tsc | tests | screenshot | interaction | regression |
-|----|-----|-------|------------|-------------|------------|
-| AC-1 Hero | ✅ | ✅ | `.docs/wip/archive-hub-v2/qa-archive-tab.png` | — | — |
-| AC-2 Segments | ✅ | ✅ | (동일) | haptic pill | settings pills |
-| AC-3 Recent | ✅ | ✅ | visit 데이터 시 | tap → diary | — |
-| AC-4 Empty | ✅ | ✅ | 기록 없을 때 | CTA → tabs | — |
-| AC-5 Saved | ✅ | ✅ | saved tab | list tap | — |
-| AC-6 Login | ✅ | ✅ | logged out | login CTA | tab login |
+| AC            | tsc | tests | screenshot                                    | interaction | regression     |
+| ------------- | --- | ----- | --------------------------------------------- | ----------- | -------------- |
+| AC-1 Hero     | ✅  | ✅    | `.docs/wip/archive-hub-v2/qa-archive-tab.png` | —           | —              |
+| AC-2 Segments | ✅  | ✅    | (동일)                                        | haptic pill | settings pills |
+| AC-3 Recent   | ✅  | ✅    | visit 데이터 시                               | tap → diary | —              |
+| AC-4 Empty    | ✅  | ✅    | 기록 없을 때                                  | CTA → tabs  | —              |
+| AC-5 Saved    | ✅  | ✅    | saved tab                                     | list tap    | —              |
+| AC-6 Login    | ✅  | ✅    | logged out                                    | login CTA   | tab login      |
 
 ## P0/P1/P2
 

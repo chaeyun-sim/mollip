@@ -18,7 +18,12 @@ interface LogoProps {
 	textStyle?: TextStyle;
 }
 
-function ScreenHeader({ children, className, style, topOffset = false }: { topOffset?: boolean } & SlotProps) {
+function ScreenHeader({
+	children,
+	className,
+	style,
+	topOffset = false,
+}: { topOffset?: boolean } & SlotProps) {
 	const insets = useSafeAreaInsets();
 
 	return (
@@ -26,9 +31,7 @@ function ScreenHeader({ children, className, style, topOffset = false }: { topOf
 			className={cn('pb-4 z-[9999] -ml-6 w-screen', className)}
 			style={[{ marginTop: topOffset ? 0 : -insets.top, paddingTop: insets.top + 16 }, style]}
 		>
-			<View className="relative flex-row items-center px-6">
-				{children}
-			</View>
+			<View className="relative flex-row items-center px-6">{children}</View>
 		</View>
 	);
 }

@@ -47,9 +47,7 @@ export function RouteTimeline({
 					>
 						<View className="items-center w-[44px]">
 							{mode === 'bus' && item.type === 'endpoint' && (
-								<View
-									className="w-[22px] h-[22px] rounded-full items-center justify-center bg-gray900/[0.08]"
-								>
+								<View className="w-[22px] h-[22px] rounded-full items-center justify-center bg-gray900/[0.08]">
 									{item.variant === 'start' ? (
 										<View className="w-[8px] h-[8px] rounded-full bg-primary" />
 									) : (

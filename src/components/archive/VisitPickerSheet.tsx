@@ -43,10 +43,7 @@ export function VisitPickerSheet({ dateLabel, entries, onSelect }: VisitPickerSh
 							resizeMode="cover"
 						/>
 						<View className="flex-1">
-							<Text
-								className="text-[15px] font-pretendard-semibold text-gray900"
-								numberOfLines={1}
-							>
+							<Text className="text-[15px] font-pretendard-semibold text-gray900" numberOfLines={1}>
 								{visit.exhibitionTitle ?? '오늘의 전시'}
 							</Text>
 							{visit.venue && (

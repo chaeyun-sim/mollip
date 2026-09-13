@@ -94,10 +94,9 @@ async function searchMaasPaths(
 	end: RouteCoord,
 	searchMethod: '1' | '2',
 ): Promise<OdsayPath[]> {
-	const { data, error } = await supabase.functions.invoke<{ paths?: OdsayPath[] }>(
-		'odsay-route',
-		{ body: { start, end, searchMethod } },
-	);
+	const { data, error } = await supabase.functions.invoke<{ paths?: OdsayPath[] }>('odsay-route', {
+		body: { start, end, searchMethod },
+	});
 	if (error) {
 		console.warn('[ODsay] 경로 조회 오류:', error.message);
 		return [];

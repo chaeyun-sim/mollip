@@ -2,17 +2,13 @@ import { artworkTitleCandidates, normalizeWikiTitle, titlesAreClose } from '../w
 
 describe('normalizeWikiTitle', () => {
 	it('공백과 따옴표를 제거한다', () => {
-		expect(normalizeWikiTitle("『자식을 잡아먹는 사투르누스』")).toBe(
-			'자식을잡아먹는사투르누스',
-		);
+		expect(normalizeWikiTitle('『자식을 잡아먹는 사투르누스』')).toBe('자식을잡아먹는사투르누스');
 	});
 });
 
 describe('titlesAreClose', () => {
 	it('같은 작품 제목은 가깝다', () => {
-		expect(titlesAreClose('자식을 잡아먹는 사투르누스', '자식을 잡아먹는 사투르누스')).toBe(
-			true,
-		);
+		expect(titlesAreClose('자식을 잡아먹는 사투르누스', '자식을 잡아먹는 사투르누스')).toBe(true);
 	});
 
 	it('한쪽이 다른 쪽을 포함하면 가깝다', () => {

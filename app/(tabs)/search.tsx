@@ -157,11 +157,7 @@ export default function SearchScreen() {
 
 	function renderItem({ item }: { item: ResultListItem }) {
 		if (item.kind === 'section') {
-			return (
-				<Text className="text-gray900 text-[16px] font-pretendard-bold">
-					{item.label}
-				</Text>
-			);
+			return <Text className="text-gray900 text-[16px] font-pretendard-bold">{item.label}</Text>;
 		}
 		return (
 			<Animated.View entering={ITEM_ENTERING} exiting={ITEM_EXITING} layout={ITEM_LAYOUT}>
@@ -205,7 +201,7 @@ export default function SearchScreen() {
 				/* 검색 전 — 추천 태그 + 최근 검색어 */
 				<ScrollView
 					showsVerticalScrollIndicator={false}
-					contentContainerClassName='pb-12'
+					contentContainerClassName="pb-12"
 					keyboardShouldPersistTaps="handled"
 					keyboardDismissMode="on-drag"
 				>
@@ -237,7 +233,9 @@ export default function SearchScreen() {
 									accessibilityLabel="최근 검색어 전체 삭제"
 									accessibilityRole="button"
 								>
-									<Text className="text-gray500 text-[13px] font-pretendard-regular">전체 삭제</Text>
+									<Text className="text-gray500 text-[13px] font-pretendard-regular">
+										전체 삭제
+									</Text>
 								</Pressable>
 							</View>
 							{recentWords.slice(0, 5).map((word) => (
@@ -275,7 +273,7 @@ export default function SearchScreen() {
 					onEndReached={hasMore ? handleLoadMore : undefined}
 					onEndReachedThreshold={0.3}
 					showsVerticalScrollIndicator={false}
-					contentContainerClassName='pb-12'
+					contentContainerClassName="pb-12"
 					keyboardShouldPersistTaps="handled"
 					keyboardDismissMode="on-drag"
 					ItemSeparatorComponent={() => <View className="h-5" />}

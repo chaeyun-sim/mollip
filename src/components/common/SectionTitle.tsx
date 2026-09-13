@@ -25,7 +25,11 @@ export function SectionTitle({ title, eyebrow, subtitle, right, className }: Sec
 							{eyebrow}
 						</Text>
 					)}
-					{typeof title === 'string' ? <Text className="text-gray900 text-[18px] font-pretendard-semibold">{title}</Text> : title}
+					{typeof title === 'string' ? (
+						<Text className="text-gray900 text-[18px] font-pretendard-semibold">{title}</Text>
+					) : (
+						title
+					)}
 				</View>
 				{right}
 			</View>

@@ -19,5 +19,5 @@ export function useAccessibilityAnnouncement(
 		const tag = findNodeHandle(node);
 		if (tag) AccessibilityInfo.setAccessibilityFocus(tag);
 		// message가 바뀔 때만 재발화한다 — targetRef는 안정적인 ref 객체이므로 의존성에서 제외해도 안전
-	}, [message]);
+	}, [message, targetRef]);
 }

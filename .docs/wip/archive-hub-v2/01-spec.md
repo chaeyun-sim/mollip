@@ -32,11 +32,11 @@ phase: 2-visual-refresh
 
 ## Design principles (Sam 입력 전 가드레일)
 
-| Do | Don't |
-|----|--------|
+| Do                                                               | Don't                                             |
+| ---------------------------------------------------------------- | ------------------------------------------------- |
 | `#F8F6F2`, `#1C1917`, Explore 히어로 계열 그라데이션·소프트 blob | `#3B82F6`, iOS system blue, 회색만 쌓인 flat card |
-| Hahmlet(제목) + Pretendard(UI), 44pt 터치 | 영문 ALL CAPS 장식만으로 채운 헤더 |
-| 이미지·포스터 틴트, 카드별 미세 hue variation | 모든 카드 동일 `#F2EFE9` |
+| Hahmlet(제목) + Pretendard(UI), 44pt 터치                        | 영문 ALL CAPS 장식만으로 채운 헤더                |
+| 이미지·포스터 틴트, 카드별 미세 hue variation                    | 모든 카드 동일 `#F2EFE9`                          |
 
 ## Users & context
 
@@ -91,15 +91,15 @@ phase: 2-visual-refresh
 
 ## Screens / routes
 
-| Route / file | 변경 |
-|--------------|------|
-| `app/(tabs)/archive.tsx` | 섹션 순서·조건부 렌더(empty vs calendar) 정리 |
-| `ArchiveSummaryHero.tsx` | 비주얼 전면 |
-| `ArchiveRecentVisits.tsx` | 썸네일/틴트 카드 |
-| `ArchiveDiaryEmpty.tsx` | warm empty |
-| `ArchiveLoginPrompt.tsx` | Explore 짝 톤 |
-| `DiaryCalendar.tsx` | (선택) shell 밖 스타일만; 셀 로직 최소 diff |
-| `02-design-brief.md` | Phase 2 토큰·와이어·레퍼런스 반영 |
+| Route / file              | 변경                                          |
+| ------------------------- | --------------------------------------------- |
+| `app/(tabs)/archive.tsx`  | 섹션 순서·조건부 렌더(empty vs calendar) 정리 |
+| `ArchiveSummaryHero.tsx`  | 비주얼 전면                                   |
+| `ArchiveRecentVisits.tsx` | 썸네일/틴트 카드                              |
+| `ArchiveDiaryEmpty.tsx`   | warm empty                                    |
+| `ArchiveLoginPrompt.tsx`  | Explore 짝 톤                                 |
+| `DiaryCalendar.tsx`       | (선택) shell 밖 스타일만; 셀 로직 최소 diff   |
+| `02-design-brief.md`      | Phase 2 토큰·와이어·레퍼런스 반영             |
 
 ## Risks & dependencies
 

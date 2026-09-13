@@ -19,11 +19,11 @@ status: ready-for-user
 
 ## Evidence
 
-| Feature / AC | tsc | Screenshot | Interaction | Regression |
-|--------------|-----|------------|-------------|------------|
-| AC-1 히어로 비주얼 | ✅ 0 errors | `evidence/main-hero-after-fix.png` | N/A(정적 카드) | 콜드 리런치 정상 |
-| AC-2 오늘의 전시 배지 | ✅ 0 errors | `evidence/main-hero-after-fix2.png` | 탭 → 상세 이동 확인 | 콜드 리런치 정상 |
-| AC-3 추천 리드 PICK 배지 | ✅ 0 errors | `evidence/scroll-recommended.png` | 탭 → 상세 이동 확인 | 지도 탭 정상 |
+| Feature / AC             | tsc         | Screenshot                          | Interaction         | Regression       |
+| ------------------------ | ----------- | ----------------------------------- | ------------------- | ---------------- |
+| AC-1 히어로 비주얼       | ✅ 0 errors | `evidence/main-hero-after-fix.png`  | N/A(정적 카드)      | 콜드 리런치 정상 |
+| AC-2 오늘의 전시 배지    | ✅ 0 errors | `evidence/main-hero-after-fix2.png` | 탭 → 상세 이동 확인 | 콜드 리런치 정상 |
+| AC-3 추천 리드 PICK 배지 | ✅ 0 errors | `evidence/scroll-recommended.png`   | 탭 → 상세 이동 확인 | 지도 탭 정상     |
 
 전체 리포트: `.docs/wip/main-hero-visual-boost/05-qa-report.md`
 

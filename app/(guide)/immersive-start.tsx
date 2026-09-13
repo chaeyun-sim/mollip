@@ -180,11 +180,7 @@ export default function ImmersiveStartScreen() {
 					</View>
 
 					<Screen.BottomAbsolute className="bottom-2">
-						<Button
-							tone="inverse"
-							onPress={handleSubmit}
-							accessibilityLabel="몰입 모드 시작하기"
-						>
+						<Button tone="inverse" onPress={handleSubmit} accessibilityLabel="몰입 모드 시작하기">
 							시작하기
 						</Button>
 					</Screen.BottomAbsolute>

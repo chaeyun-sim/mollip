@@ -55,11 +55,11 @@ status: draft
 
 ## Screens / routes
 
-| Route | 변경 |
-|-------|------|
-| `settings/index` | "계정" 섹션에 CardRow 1줄 추가 |
+| Route                  | 변경                                |
+| ---------------------- | ----------------------------------- |
+| `settings/index`       | "계정" 섹션에 CardRow 1줄 추가      |
 | `settings/preferences` | 신규 — 스와이프 카드 취향 선택 화면 |
-| `settings/_layout` | `preferences` Stack.Screen 등록 |
+| `settings/_layout`     | `preferences` Stack.Screen 등록     |
 
 ## Risks & dependencies
 

@@ -93,15 +93,15 @@ status: draft
 
 ## Screens / routes
 
-| Route | 변경 |
-|-------|------|
-| `app/(tabs)/index.tsx` | 인기 전시 섹션 컴포넌트 추가 (기존 섹션 사이에 배치, 위치는 Open questions 참고) |
-| `app/(explore)/[id].tsx` | 전시 조회 기록 훅 호출 추가 (UI 변경 없음) |
-| `src/components/explore/PopularSection.tsx` (신규) | `KcisaSection` 패턴을 따른 인기 전시 섹션 — `SectionTitle` + 가로 스크롤 + `KcisaExhibitionCard` 재사용 |
-| `src/hooks/usePopularExhibitions.ts` (신규) | 인기 랭킹 집계 조회 + 표시 정보 조인 → `ExhibitionSummary[]` 반환 |
-| `src/hooks/useRecordExhibitionView.ts` (신규) | 로그인 사용자 상세 진입 시 조회 기록 |
-| `supabase/migrations/{timestamp}_create_exhibition_views.sql` (신규) | `exhibition_views` 테이블 + RLS 정책 + 인기 랭킹 집계 함수 |
-| `src/types/database.types.ts` | `exhibition_views` 테이블 타입 및 RPC 타입 추가 |
+| Route                                                                | 변경                                                                                                    |
+| -------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| `app/(tabs)/index.tsx`                                               | 인기 전시 섹션 컴포넌트 추가 (기존 섹션 사이에 배치, 위치는 Open questions 참고)                        |
+| `app/(explore)/[id].tsx`                                             | 전시 조회 기록 훅 호출 추가 (UI 변경 없음)                                                              |
+| `src/components/explore/PopularSection.tsx` (신규)                   | `KcisaSection` 패턴을 따른 인기 전시 섹션 — `SectionTitle` + 가로 스크롤 + `KcisaExhibitionCard` 재사용 |
+| `src/hooks/usePopularExhibitions.ts` (신규)                          | 인기 랭킹 집계 조회 + 표시 정보 조인 → `ExhibitionSummary[]` 반환                                       |
+| `src/hooks/useRecordExhibitionView.ts` (신규)                        | 로그인 사용자 상세 진입 시 조회 기록                                                                    |
+| `supabase/migrations/{timestamp}_create_exhibition_views.sql` (신규) | `exhibition_views` 테이블 + RLS 정책 + 인기 랭킹 집계 함수                                              |
+| `src/types/database.types.ts`                                        | `exhibition_views` 테이블 타입 및 RPC 타입 추가                                                         |
 
 기존 재사용 자산 (변경 없음): `src/components/explore/KcisaExhibitionCard.tsx`, `src/components/common/SectionTitle.tsx`, `src/components/common/CenteredLoader.tsx`, `src/components/common/RetryErrorState.tsx`, `src/hooks/useExploreScreenData.ts`의 `ExhibitionSummary` 타입.
 

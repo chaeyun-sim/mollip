@@ -19,21 +19,21 @@ tier: L
 
 정본은 `tailwind.config.js`의 `theme.extend.colors`(DESIGN_SYSTEM.md §1.1). 아래 값은 2026-08-28 `tailwind.config.js` + `src/constants/colors.ts` 실측값이며 **신규 토큰 도입 0건**이다.
 
-| 용도 | 토큰 | Hex | 지정 방법 |
-|------|------|-----|-----------|
-| 화면 배경 (몰입 다크) | `Screen` variant `dark` 그라디언트 | `#0C0A09` → `#171412` | `<Screen>` 기본값, 변경 없음 |
-| 트랙 카드 배경 | 흰색 6% 오버레이 | `rgba(255,255,255,0.06)` | `bg-white/6` (히어로 블록과 동일 값 재사용) |
-| 트랙 제목 텍스트 | on-dark | `#E8E8E8` | `text-on-dark` |
-| 트랙 보조 텍스트 | gray600 | `#78716C` | `text-gray600` |
-| 배지 텍스트·아이콘 | primary | `#AB77F1` | `text-primary` |
-| 배지 배경 | primary 15% | `rgba(171,119,241,0.15)` | `bg-primary/15` |
-| 재생 아이콘 (활성) | primary | `#AB77F1` | `text-primary` |
-| 재시도 아이콘 (실패) | gray600 | `#78716C` | `text-gray600` — 기존 작품 트랙 실패 표현과 동일 |
-| 실패 안내 문구 | error | `#EF4444` | `text-error` |
-| 로딩 인디케이터 | gray500 | `#A8A29E` | `color={colors.gray500}` (ActivityIndicator `color`는 JS prop — convention §2 허용 예외) |
-| 구분선 | 흰색 6% | `rgba(255,255,255,0.06)` | `border-b-white/6` + `borderBottomWidth: StyleSheet.hairlineWidth` (hairline은 JS 계산값이라 style 허용) |
-| 폰트 | Pretendard | — | `font-pretendard-semibold`(제목·배지) / `font-pretendard-regular`(보조) |
-| Radius | 썸네일 10, 카드 16, 배지 full | — | `rounded-[10px]` / `rounded-2xl` / `rounded-full` |
+| 용도                  | 토큰                               | Hex                      | 지정 방법                                                                                                |
+| --------------------- | ---------------------------------- | ------------------------ | -------------------------------------------------------------------------------------------------------- |
+| 화면 배경 (몰입 다크) | `Screen` variant `dark` 그라디언트 | `#0C0A09` → `#171412`    | `<Screen>` 기본값, 변경 없음                                                                             |
+| 트랙 카드 배경        | 흰색 6% 오버레이                   | `rgba(255,255,255,0.06)` | `bg-white/6` (히어로 블록과 동일 값 재사용)                                                              |
+| 트랙 제목 텍스트      | on-dark                            | `#E8E8E8`                | `text-on-dark`                                                                                           |
+| 트랙 보조 텍스트      | gray600                            | `#78716C`                | `text-gray600`                                                                                           |
+| 배지 텍스트·아이콘    | primary                            | `#AB77F1`                | `text-primary`                                                                                           |
+| 배지 배경             | primary 15%                        | `rgba(171,119,241,0.15)` | `bg-primary/15`                                                                                          |
+| 재생 아이콘 (활성)    | primary                            | `#AB77F1`                | `text-primary`                                                                                           |
+| 재시도 아이콘 (실패)  | gray600                            | `#78716C`                | `text-gray600` — 기존 작품 트랙 실패 표현과 동일                                                         |
+| 실패 안내 문구        | error                              | `#EF4444`                | `text-error`                                                                                             |
+| 로딩 인디케이터       | gray500                            | `#A8A29E`                | `color={colors.gray500}` (ActivityIndicator `color`는 JS prop — convention §2 허용 예외)                 |
+| 구분선                | 흰색 6%                            | `rgba(255,255,255,0.06)` | `border-b-white/6` + `borderBottomWidth: StyleSheet.hairlineWidth` (hairline은 JS 계산값이라 style 허용) |
+| 폰트                  | Pretendard                         | —                        | `font-pretendard-semibold`(제목·배지) / `font-pretendard-regular`(보조)                                  |
+| Radius                | 썸네일 10, 카드 16, 배지 full      | —                        | `rounded-[10px]` / `rounded-2xl` / `rounded-full`                                                        |
 
 **드리프트 메모 (Chris/Alex 참고, 이번 범위에서 고치지 않음):**
 
@@ -56,27 +56,27 @@ tier: L
 [썸네일] 작품명                       [▶]
 ```
 
-| 영역 | 설명 | 재사용 컴포넌트 |
-|------|------|-----------------|
-| 화면 셸 | 몰입 다크 배경·헤더·FAB — **변경 없음** | `Screen`, `Screen.Header`, `ScreenHeader.Right`, `Screen.BottomAbsolute` |
-| 히어로 블록 | 몰입 모드 진행 중 카드 — **변경 없음** (작가 소개는 카운트 문구 `지금까지 N개의 작품을 만났어요`에 포함하지 않는다. N은 스캔 작품 수 그대로) | 기존 인라인 JSX |
-| **작가 소개 트랙 (신규)** | 3상태(대기/활성/실패)를 가진 한 줄. 행 전체가 `Pressable` | **신규** `src/components/guide/ArtistIntroTrack.tsx` (named export) |
-| ├ 썸네일 | 56×56, `rounded-[10px]`, 전시 대표 이미지. 없으면 question.png 폴백 | `ImageFallback` (`heroImageUri`, `iconSize={22}`, `resizeMode="cover"`) |
-| ├ 배지 | `작가 소개` — `person-outline` 12px + 11px 텍스트, `px-2 py-0.5 rounded-full bg-primary/15` | Ionicons + View (신규 인라인, 15줄 미만) |
-| ├ 제목 | 작가명 (`exhibitions.artist` 원문 그대로, 예: `이대원(1921-2005)`), `numberOfLines={1}` | Text |
-| ├ 보조 | 상태별 문구 (아래 Copy 표), `numberOfLines={1}` | Text |
-| └ 우측 컨트롤 | 26px 아이콘 또는 `ActivityIndicator` — 상태별 스왑 | Ionicons / ActivityIndicator |
-| 구분선 | 트랙 하단 hairline. **작품 트랙이 0개여도 표시**해 "고정 트랙"임을 드러낸다 | 인라인 |
-| 빈 상태 | 작품 0개일 때의 `아직 들은 작품이 없어요` 블록은 **작가 소개 트랙 아래에 그대로 유지** (문구·아이콘 변경 없음). 트랙이 항상 위 (AC-3) | 기존 인라인 JSX |
+| 영역                      | 설명                                                                                                                                         | 재사용 컴포넌트                                                          |
+| ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| 화면 셸                   | 몰입 다크 배경·헤더·FAB — **변경 없음**                                                                                                      | `Screen`, `Screen.Header`, `ScreenHeader.Right`, `Screen.BottomAbsolute` |
+| 히어로 블록               | 몰입 모드 진행 중 카드 — **변경 없음** (작가 소개는 카운트 문구 `지금까지 N개의 작품을 만났어요`에 포함하지 않는다. N은 스캔 작품 수 그대로) | 기존 인라인 JSX                                                          |
+| **작가 소개 트랙 (신규)** | 3상태(대기/활성/실패)를 가진 한 줄. 행 전체가 `Pressable`                                                                                    | **신규** `src/components/guide/ArtistIntroTrack.tsx` (named export)      |
+| ├ 썸네일                  | 56×56, `rounded-[10px]`, 전시 대표 이미지. 없으면 question.png 폴백                                                                          | `ImageFallback` (`heroImageUri`, `iconSize={22}`, `resizeMode="cover"`)  |
+| ├ 배지                    | `작가 소개` — `person-outline` 12px + 11px 텍스트, `px-2 py-0.5 rounded-full bg-primary/15`                                                  | Ionicons + View (신규 인라인, 15줄 미만)                                 |
+| ├ 제목                    | 작가명 (`exhibitions.artist` 원문 그대로, 예: `이대원(1921-2005)`), `numberOfLines={1}`                                                      | Text                                                                     |
+| ├ 보조                    | 상태별 문구 (아래 Copy 표), `numberOfLines={1}`                                                                                              | Text                                                                     |
+| └ 우측 컨트롤             | 26px 아이콘 또는 `ActivityIndicator` — 상태별 스왑                                                                                           | Ionicons / ActivityIndicator                                             |
+| 구분선                    | 트랙 하단 hairline. **작품 트랙이 0개여도 표시**해 "고정 트랙"임을 드러낸다                                                                  | 인라인                                                                   |
+| 빈 상태                   | 작품 0개일 때의 `아직 들은 작품이 없어요` 블록은 **작가 소개 트랙 아래에 그대로 유지** (문구·아이콘 변경 없음). 트랙이 항상 위 (AC-3)        | 기존 인라인 JSX                                                          |
 
 **Props 계약 (Chris용, `ArtistIntroTrackProps`):**
 
-| Prop | 타입 | 비고 |
-|------|------|------|
-| `artist` | `string` | 제목에 표시. 빈 문자열이면 화면 쪽에서 렌더 자체를 스킵 (AC-6) |
-| `imageUrl` | `string \| undefined` | 전시 대표 이미지 |
-| `status` | `'loading' \| 'ready' \| 'failed'` | 3상태 |
-| `onPress` | `() => void` | `ready`면 재생, `failed`면 재생성 트리거. `loading`은 호출되지 않음 |
+| Prop       | 타입                               | 비고                                                                |
+| ---------- | ---------------------------------- | ------------------------------------------------------------------- |
+| `artist`   | `string`                           | 제목에 표시. 빈 문자열이면 화면 쪽에서 렌더 자체를 스킵 (AC-6)      |
+| `imageUrl` | `string \| undefined`              | 전시 대표 이미지                                                    |
+| `status`   | `'loading' \| 'ready' \| 'failed'` | 3상태                                                               |
+| `onPress`  | `() => void`                       | `ready`면 재생, `failed`면 재생성 트리거. `loading`은 호출되지 않음 |
 
 - **화면(`playlist.tsx`)은 조립만** 한다: `artist`가 없거나 `exhibitionId === null`이면 `ArtistIntroTrack` 자체를 렌더하지 않는다(AC-6 — `&&` 단축 렌더, convention §11.3).
 - **`playlist.tsx`가 100줄을 이미 넘으므로 신규 UI는 `app/` 안에 두지 않는다** (convention §9.3/§9.4).
@@ -85,41 +85,41 @@ tier: L
 
 ## Copy (KO)
 
-| Element | Text |
-|---------|------|
-| 배지 | `작가 소개` |
-| Title | `{exhibitions.artist}` 원문 (예: `이대원(1921-2005)`) |
-| 보조 — Loading | `해설을 준비하고 있어요` |
-| 보조 — Success(ready) | `작가의 시선으로 전시 보기` |
-| 보조 — Error(failed) | `해설을 불러오지 못했어요 · 탭해서 다시 시도` |
-| CTA | 별도 버튼 텍스트 없음 — 행 전체 탭 + 우측 `play-circle-outline` 아이콘이 CTA |
-| Empty | **이 트랙 전용 empty 없음.** 작품 0개일 때의 기존 문구 `아직 들은 작품이 없어요` 유지 (작가 소개 트랙은 그 위에 존재) |
-| Error(전역) | 없음 — Alert·토스트·배너를 띄우지 않는다 (AC-4/AC-7) |
-| 해설 화면 제목 | `store.manualTitle`에 `{artist}` 원문을 그대로 넣는다. `작가 소개 - ` 같은 접두사를 붙이지 않는다 (기존 해설 화면 헤더 규격 유지) |
+| Element               | Text                                                                                                                              |
+| --------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| 배지                  | `작가 소개`                                                                                                                       |
+| Title                 | `{exhibitions.artist}` 원문 (예: `이대원(1921-2005)`)                                                                             |
+| 보조 — Loading        | `해설을 준비하고 있어요`                                                                                                          |
+| 보조 — Success(ready) | `작가의 시선으로 전시 보기`                                                                                                       |
+| 보조 — Error(failed)  | `해설을 불러오지 못했어요 · 탭해서 다시 시도`                                                                                     |
+| CTA                   | 별도 버튼 텍스트 없음 — 행 전체 탭 + 우측 `play-circle-outline` 아이콘이 CTA                                                      |
+| Empty                 | **이 트랙 전용 empty 없음.** 작품 0개일 때의 기존 문구 `아직 들은 작품이 없어요` 유지 (작가 소개 트랙은 그 위에 존재)             |
+| Error(전역)           | 없음 — Alert·토스트·배너를 띄우지 않는다 (AC-4/AC-7)                                                                              |
+| 해설 화면 제목        | `store.manualTitle`에 `{artist}` 원문을 그대로 넣는다. `작가 소개 - ` 같은 접두사를 붙이지 않는다 (기존 해설 화면 헤더 규격 유지) |
 
 문구 규칙: 마침표 없음, 존댓말 `~어요` 체 — 재생목록 기존 문구(`작품을 스캔하면 해설이 여기에 쌓여요`, `아직 들은 작품이 없어요`)와 통일.
 
 ## States
 
-| 상태 | 좌측 | 중앙 | 우측 | 인터랙션 |
-|------|------|------|------|----------|
-| **Loading** (생성 중, AC-1/AC-4) | 썸네일 정상 노출, `opacity-60` | 배지 정상 / 제목 `text-on-dark` + `opacity-60` / 보조 `해설을 준비하고 있어요` | `ActivityIndicator size="small" color={colors.gray500}`, 26×26 컨테이너로 자리 고정 | `disabled` — 탭 무반응, 햅틱·네비게이션 없음. 눌림 opacity 변화도 없음 |
-| **Success** (ready, AC-2/AC-5) | 썸네일 100% | 보조 `작가의 시선으로 전시 보기` | `play-circle-outline` 26 `text-primary` | 탭 → `Haptics.Light` → `store` 주입 후 `router.replace('/description')` (기존 `handlePlay`와 동일 경로) |
-| **Error** (failed, AC-7) | 썸네일 100% | 보조 `해설을 불러오지 못했어요 · 탭해서 다시 시도` (`text-error`) | `refresh-outline` 26 `text-gray600` — 기존 작품 트랙 실패 표현과 동일 | 탭 → `Haptics.Light` → 재생성 트리거 → 즉시 Loading 상태로 전환. Alert 없음 |
-| **Hidden** (AC-6) | — | — | — | `artist` 없음/`exhibitionId === null` → 트랙·구분선 모두 미렌더. 화면이 도입 전과 픽셀 동일 |
-| **Reset** (AC-8) | — | — | — | 몰입 종료 후 다른 전시 진입 시 이전 트랙이 남지 않는다. 세션 상태이므로 `persist` 대상에서 제외 권장(01-spec Risks 참고) |
+| 상태                             | 좌측                           | 중앙                                                                           | 우측                                                                                | 인터랙션                                                                                                                 |
+| -------------------------------- | ------------------------------ | ------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| **Loading** (생성 중, AC-1/AC-4) | 썸네일 정상 노출, `opacity-60` | 배지 정상 / 제목 `text-on-dark` + `opacity-60` / 보조 `해설을 준비하고 있어요` | `ActivityIndicator size="small" color={colors.gray500}`, 26×26 컨테이너로 자리 고정 | `disabled` — 탭 무반응, 햅틱·네비게이션 없음. 눌림 opacity 변화도 없음                                                   |
+| **Success** (ready, AC-2/AC-5)   | 썸네일 100%                    | 보조 `작가의 시선으로 전시 보기`                                               | `play-circle-outline` 26 `text-primary`                                             | 탭 → `Haptics.Light` → `store` 주입 후 `router.replace('/description')` (기존 `handlePlay`와 동일 경로)                  |
+| **Error** (failed, AC-7)         | 썸네일 100%                    | 보조 `해설을 불러오지 못했어요 · 탭해서 다시 시도` (`text-error`)              | `refresh-outline` 26 `text-gray600` — 기존 작품 트랙 실패 표현과 동일               | 탭 → `Haptics.Light` → 재생성 트리거 → 즉시 Loading 상태로 전환. Alert 없음                                              |
+| **Hidden** (AC-6)                | —                              | —                                                                              | —                                                                                   | `artist` 없음/`exhibitionId === null` → 트랙·구분선 모두 미렌더. 화면이 도입 전과 픽셀 동일                              |
+| **Reset** (AC-8)                 | —                              | —                                                                              | —                                                                                   | 몰입 종료 후 다른 전시 진입 시 이전 트랙이 남지 않는다. 세션 상태이므로 `persist` 대상에서 제외 권장(01-spec Risks 참고) |
 
 전환 규칙: Loading → Success는 **화면 재진입 없이** 우측 컨트롤만 스왑된다(AC-5). 별도 애니메이션 없음 — 레이아웃 시프트를 막기 위해 우측 컨트롤 슬롯은 세 상태 모두 **26×26 고정**.
 
 ## Accessibility
 
-| 요소 | role | label | 비고 |
-|------|------|-------|------|
-| 트랙 행 (loading) | `button` | `작가 소개 해설 준비 중` | `accessibilityState={{ disabled: true, busy: true }}` |
-| 트랙 행 (ready) | `button` | `작가 소개 재생, {artist}` | `accessibilityHint='작가 소개 해설 화면으로 이동해요'` |
-| 트랙 행 (failed) | `button` | `작가 소개 해설 다시 생성` | 아이콘 단독이 아니어도 상태가 label에 드러나야 함 |
-| 썸네일 | `image` (ImageFallback 내부 처리) | 지정하지 않음 (장식적 — 행 label이 정보를 전달) | `ImageFallback`에 `accessibilityLabel` 미전달 → role 자동 미부여 |
-| 배지 | 없음 | 없음 | 시각 전용. 스크린리더 중복 읽기 방지를 위해 배지 텍스트는 행 label에 이미 `작가 소개`로 포함됨 |
+| 요소              | role                              | label                                           | 비고                                                                                           |
+| ----------------- | --------------------------------- | ----------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| 트랙 행 (loading) | `button`                          | `작가 소개 해설 준비 중`                        | `accessibilityState={{ disabled: true, busy: true }}`                                          |
+| 트랙 행 (ready)   | `button`                          | `작가 소개 재생, {artist}`                      | `accessibilityHint='작가 소개 해설 화면으로 이동해요'`                                         |
+| 트랙 행 (failed)  | `button`                          | `작가 소개 해설 다시 생성`                      | 아이콘 단독이 아니어도 상태가 label에 드러나야 함                                              |
+| 썸네일            | `image` (ImageFallback 내부 처리) | 지정하지 않음 (장식적 — 행 label이 정보를 전달) | `ImageFallback`에 `accessibilityLabel` 미전달 → role 자동 미부여                               |
+| 배지              | 없음                              | 없음                                            | 시각 전용. 스크린리더 중복 읽기 방지를 위해 배지 텍스트는 행 label에 이미 `작가 소개`로 포함됨 |
 
 - **터치 타겟**: 행 전체가 `Pressable`이며 `py-4` + 56px 썸네일로 **높이 ≥ 88pt**, 폭은 화면 전체 폭 - 48. 44pt 기준 충족. (기존 작품 트랙은 26px 아이콘만 탭 가능해 44pt 미달인데, 이 신규 트랙은 그 문제를 답습하지 않는다. 기존 트랙 수정은 이번 범위 밖.)
 - **대비** (배경 `#171412` 기준, WCAG AA):

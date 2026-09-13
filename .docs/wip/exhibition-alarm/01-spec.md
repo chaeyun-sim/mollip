@@ -47,10 +47,10 @@ status: draft
 
 ## Screens / routes
 
-| 파일 | 변경 |
-|------|------|
-| `src/utils/notificationScheduler.ts` | D-1 트리거 추가 |
-| `app/(explore)/[id].tsx` | onBookmark 핸들러에 schedule/cancel 연결 |
+| 파일                                 | 변경                                     |
+| ------------------------------------ | ---------------------------------------- |
+| `src/utils/notificationScheduler.ts` | D-1 트리거 추가                          |
+| `app/(explore)/[id].tsx`             | onBookmark 핸들러에 schedule/cancel 연결 |
 
 ## Feature breakdown (for Chris)
 

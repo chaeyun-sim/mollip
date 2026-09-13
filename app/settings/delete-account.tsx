@@ -139,7 +139,7 @@ export default function DeleteAccountScreen() {
 			>
 				<ScrollView
 					className="flex-1"
-					contentContainerClassName='pt-3 pb-6'
+					contentContainerClassName="pt-3 pb-6"
 					showsVerticalScrollIndicator={false}
 					keyboardShouldPersistTaps="handled"
 				>

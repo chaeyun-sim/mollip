@@ -53,8 +53,8 @@ status: approved
 
 ## Screens / Routes
 
-| 파일 | 변경 |
-|------|------|
+| 파일                          | 변경                              |
+| ----------------------------- | --------------------------------- |
 | `app/(guide)/description.tsx` | 공유 버튼 추가 + 공유 핸들러 구현 |
 
 ## Feature Breakdown (for Chris)

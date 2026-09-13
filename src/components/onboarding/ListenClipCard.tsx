@@ -65,7 +65,9 @@ export function ListenClipCard({ clip, onKeep, onPass }: ListenClipCardProps) {
 				<View className="rounded-3xl bg-white border border-gray300 px-6 py-7 gap-5">
 					<View className="flex-row items-center justify-between">
 						<View className="bg-gray200 rounded-full px-2.5 py-1">
-							<Text className="text-[11px] text-gray700 font-pretendard-semibold">{clip.genre}</Text>
+							<Text className="text-[11px] text-gray700 font-pretendard-semibold">
+								{clip.genre}
+							</Text>
 						</View>
 						<Pressable
 							onPress={handleMute}
@@ -102,11 +104,7 @@ export function ListenClipCard({ clip, onKeep, onPass }: ListenClipCardProps) {
 							className="w-16 h-16 rounded-full bg-primary-dark items-center justify-center"
 							style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
 						>
-							<Ionicons
-								name={status.playing ? 'pause' : 'play'}
-								size={26}
-								color={colors.white}
-							/>
+							<Ionicons name={status.playing ? 'pause' : 'play'} size={26} color={colors.white} />
 						</Pressable>
 					</View>
 				</View>

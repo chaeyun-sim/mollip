@@ -6,12 +6,12 @@ status: pass
 
 # QA Report — 저장된 해설 다시 듣기
 
-| AC | tsc | 로직 | 비고 |
-|----|-----|------|------|
-| AC-1 재생 버튼 표시 | ✅ 0 errors | BottomSheet 헤더 우측에 play-circle / pause-circle 아이콘 | |
-| AC-2 TTS 재생 | ✅ | `speak(selected.text)` 호출, 로딩 중 ActivityIndicator | ElevenLabs in-memory 캐시 활용 |
-| AC-3 일시정지/재개 | ✅ | `isSpeaking` 분기로 pause / speak 전환 | |
-| AC-4 시트 닫으면 중단 | ✅ | `handleSheetClose`에서 `stop()` 호출 | 카드 전환 시에도 `stop()` 호출 |
+| AC                    | tsc         | 로직                                                      | 비고                           |
+| --------------------- | ----------- | --------------------------------------------------------- | ------------------------------ |
+| AC-1 재생 버튼 표시   | ✅ 0 errors | BottomSheet 헤더 우측에 play-circle / pause-circle 아이콘 |                                |
+| AC-2 TTS 재생         | ✅          | `speak(selected.text)` 호출, 로딩 중 ActivityIndicator    | ElevenLabs in-memory 캐시 활용 |
+| AC-3 일시정지/재개    | ✅          | `isSpeaking` 분기로 pause / speak 전환                    |                                |
+| AC-4 시트 닫으면 중단 | ✅          | `handleSheetClose`에서 `stop()` 호출                      | 카드 전환 시에도 `stop()` 호출 |
 
 ## 회귀
 

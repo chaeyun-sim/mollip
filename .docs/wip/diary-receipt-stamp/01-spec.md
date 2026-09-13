@@ -81,13 +81,13 @@ status: draft
 
 ## Screens / routes
 
-| Route | 변경 |
-|-------|------|
-| `app/(guide)/exit-summary.tsx` | **변경 없음** — 관람 종료 시점에는 아무 CTA도 추가하지 않는다 (의도적으로 그대로 둠) |
-| `app/(tabs)/diary.tsx` | 상단에 미확정 기록 배너 추가, 캘린더·그리드 카드를 우표 스타일로 교체, "관람 기록 추가" 진입점 추가 |
-| `app/diary/confirm-visits.tsx` (신규) | 배너 탭 시 진입 — 미확정 기록을 하나씩 영수증 요약 + 서명으로 확정하는 큐 화면 |
-| `app/diary/[date].tsx` | 별점 입력, 서명 썸네일, 위치/시간 정보 섹션 추가 |
-| `app/diary/add-manual.tsx` (신규) | 오디오가이드 없이 관람 수동 기록 (전시 선택 + 사진 업로드) |
+| Route                                 | 변경                                                                                                |
+| ------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| `app/(guide)/exit-summary.tsx`        | **변경 없음** — 관람 종료 시점에는 아무 CTA도 추가하지 않는다 (의도적으로 그대로 둠)                |
+| `app/(tabs)/diary.tsx`                | 상단에 미확정 기록 배너 추가, 캘린더·그리드 카드를 우표 스타일로 교체, "관람 기록 추가" 진입점 추가 |
+| `app/diary/confirm-visits.tsx` (신규) | 배너 탭 시 진입 — 미확정 기록을 하나씩 영수증 요약 + 서명으로 확정하는 큐 화면                      |
+| `app/diary/[date].tsx`                | 별점 입력, 서명 썸네일, 위치/시간 정보 섹션 추가                                                    |
+| `app/diary/add-manual.tsx` (신규)     | 오디오가이드 없이 관람 수동 기록 (전시 선택 + 사진 업로드)                                          |
 
 ## UX Flow
 
@@ -138,31 +138,31 @@ app/(tabs)/diary.tsx  ── 우표로 즉시 반영 (미확정 큐를 거치지
 
 **신규**
 
-| 컴포넌트 | 역할 |
-|---|---|
-| `PendingVisitsBanner` | 다이어리 홈 상단에 미확정 개수 + 만료 안내를 보여주는 배너, 탭하면 확정 큐로 이동 |
-| `ReceiptSummary` | 확정 큐(`confirm-visits.tsx`)에서 보여주는 영수증 스타일 요약 카드(재생목록/장소/시간, 점선 절취선 느낌) |
-| `SignaturePad` | `react-native-svg` 기반 손그림 서명 캡처 (신규 네이티브 모듈 불필요) |
-| `StampCell` | 톱니 테두리(우표) 썸네일 셀 — 캘린더·그리드 공용 |
-| `RatingStars` | 별점 입력/표시 (상세 화면용) |
-| `ReceiptStampTransition` | 서명 완료 후 보관함으로 빨려 들어가는 트랜지션 애니메이션 (큐 안에서 항목별로 재생) |
+| 컴포넌트                 | 역할                                                                                                     |
+| ------------------------ | -------------------------------------------------------------------------------------------------------- |
+| `PendingVisitsBanner`    | 다이어리 홈 상단에 미확정 개수 + 만료 안내를 보여주는 배너, 탭하면 확정 큐로 이동                        |
+| `ReceiptSummary`         | 확정 큐(`confirm-visits.tsx`)에서 보여주는 영수증 스타일 요약 카드(재생목록/장소/시간, 점선 절취선 느낌) |
+| `SignaturePad`           | `react-native-svg` 기반 손그림 서명 캡처 (신규 네이티브 모듈 불필요)                                     |
+| `StampCell`              | 톱니 테두리(우표) 썸네일 셀 — 캘린더·그리드 공용                                                         |
+| `RatingStars`            | 별점 입력/표시 (상세 화면용)                                                                             |
+| `ReceiptStampTransition` | 서명 완료 후 보관함으로 빨려 들어가는 트랜지션 애니메이션 (큐 안에서 항목별로 재생)                      |
 
 **수정**
 
-| 컴포넌트 | 변경 |
-|---|---|
-| `DiaryCalendar.tsx` | 날짜 셀 렌더링을 `StampCell`로 교체 |
-| `VisitTicketGrid.tsx` / `VisitTicketGridCard.tsx` | 카드 렌더링을 `StampCell` 스타일로 교체 |
-| `VisitTicket.tsx` | 뒷면(프로그램)에 서명 썸네일 + 위치/시간 정보 행 추가 |
-| `ArchiveDiaryEmpty.tsx` | "관람 기록 추가" 수동 진입 버튼 추가 |
-| `useDayImages.ts` | 이미지 우선순위에 서명/사용자 업로드 사진 반영 여부 결정 필요 (Open question 참고) |
+| 컴포넌트                                          | 변경                                                                               |
+| ------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| `DiaryCalendar.tsx`                               | 날짜 셀 렌더링을 `StampCell`로 교체                                                |
+| `VisitTicketGrid.tsx` / `VisitTicketGridCard.tsx` | 카드 렌더링을 `StampCell` 스타일로 교체                                            |
+| `VisitTicket.tsx`                                 | 뒷면(프로그램)에 서명 썸네일 + 위치/시간 정보 행 추가                              |
+| `ArchiveDiaryEmpty.tsx`                           | "관람 기록 추가" 수동 진입 버튼 추가                                               |
+| `useDayImages.ts`                                 | 이미지 우선순위에 서명/사용자 업로드 사진 반영 여부 결정 필요 (Open question 참고) |
 
 **스토어**
 
-| 스토어 | 변경 |
-|---|---|
+| 스토어                       | 변경                                                                                                                                                                                                   |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `visitStore.ts` (`DayVisit`) | `status: 'pending' \| 'confirmed'`, `pendingSince?: string`(만료 계산용), `rating?: number`, `signatureUri?: string`, `visitedAt?: { start: string; end: string }`, `locationLabel?: string` 필드 추가 |
-| `immersiveStore.ts` | `enter()` 시점에 `enteredAt` 타임스탬프 기록 (관람 시간 계산용) |
+| `immersiveStore.ts`          | `enter()` 시점에 `enteredAt` 타임스탬프 기록 (관람 시간 계산용)                                                                                                                                        |
 
 ## Risks & dependencies
 

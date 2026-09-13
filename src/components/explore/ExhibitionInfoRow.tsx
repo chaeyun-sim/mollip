@@ -11,7 +11,10 @@ interface ExhibitionInfoRowProps {
 export function ExhibitionInfoRow({ label, isLast, children }: ExhibitionInfoRowProps) {
 	return (
 		<View
-			className={cn("flex-row items-start justify-between gap-28 py-3", !isLast && "border-b-hairline border-b-gray900/15")}
+			className={cn(
+				'flex-row items-start justify-between gap-28 py-3',
+				!isLast && 'border-b-hairline border-b-gray900/15',
+			)}
 		>
 			<Text className="text-gray-500 text-[12px] font-pretendard-semibold tracking-wider uppercase pt-1 whitespace-pre">
 				{label}

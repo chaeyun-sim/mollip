@@ -106,10 +106,7 @@ export default function ExploreScreen() {
 					</Pressable>
 				</ScreenHeader.Right>
 			</ScreenHeader>
-			<ScrollView
-				showsVerticalScrollIndicator={false}
-				contentContainerClassName='pb-10 gap-7 pt-4'
-			>
+			<ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-10 gap-7 pt-4">
 				<FlatList
 					ref={featuredListRef}
 					data={featuredTrio.map((item) => ({

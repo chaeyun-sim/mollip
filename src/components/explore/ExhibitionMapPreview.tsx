@@ -32,9 +32,7 @@ export function ExhibitionMapPreview({ coordinates, venueName }: ExhibitionMapPr
 			accessibilityRole="button"
 			style={({ pressed }) => ({ opacity: pressed ? 0.85 : 1 })}
 		>
-			<View
-				className="mx-6 rounded-md overflow-hidden border border-gray-200 h-40"
-			>
+			<View className="mx-6 rounded-md overflow-hidden border border-gray-200 h-40">
 				<NaverMapView
 					style={{ flex: 1 }}
 					mapType="Basic"

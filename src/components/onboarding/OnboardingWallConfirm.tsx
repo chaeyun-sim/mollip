@@ -34,9 +34,7 @@ export function OnboardingWallConfirm({
 	errorSlot,
 }: OnboardingWallConfirmProps) {
 	const frameRefs = useRef<(View | null)[]>([]);
-	const filled = selections.filter(
-		(s): s is OnboardingWallSelection => Boolean(s),
-	);
+	const filled = selections.filter((s): s is OnboardingWallSelection => Boolean(s));
 	const genreSummary = filled.map((s) => s.piece.genre).join(' · ');
 
 	useEffect(() => {
@@ -106,11 +104,7 @@ export function OnboardingWallConfirm({
 
 			<Screen.BottomAbsolute className="px-6">
 				{errorSlot}
-				<Button
-					onPress={onConfirm}
-					disabled={confirmDisabled}
-					accessibilityLabel={confirmLabel}
-				>
+				<Button onPress={onConfirm} disabled={confirmDisabled} accessibilityLabel={confirmLabel}>
 					{confirmLabel}
 				</Button>
 			</Screen.BottomAbsolute>

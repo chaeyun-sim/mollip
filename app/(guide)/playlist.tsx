@@ -174,7 +174,7 @@ export default function PlaylistScreen() {
 
 			<ScrollView
 				className="flex-1"
-				contentContainerClassName='pb-8 flex-grow'
+				contentContainerClassName="pb-8 flex-grow"
 				scrollEnabled={playlist.length > 0}
 			>
 				<Text className="mb-4 font-pretendard-semibold text-on-dark text-[15px]">재생목록</Text>

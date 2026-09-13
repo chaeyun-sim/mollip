@@ -8,15 +8,15 @@ status: done
 
 ## Files
 
-| File | Purpose |
-|------|---------|
-| `app/(tabs)/archive.tsx` | Hub layout, login gate, tabs |
-| `src/hooks/useArchiveStats.ts` | Stats + recent date keys |
-| `src/components/archive/ArchiveSummaryHero.tsx` | AC-1 |
-| `src/components/archive/ArchiveRecentVisits.tsx` | AC-3 |
-| `src/components/archive/ArchiveDiaryEmpty.tsx` | AC-4 |
-| `src/components/archive/ArchiveLoginPrompt.tsx` | AC-6 |
-| `src/components/settings/SettingsPillGroup.tsx` | `equalWidth` for AC-2 |
+| File                                             | Purpose                      |
+| ------------------------------------------------ | ---------------------------- |
+| `app/(tabs)/archive.tsx`                         | Hub layout, login gate, tabs |
+| `src/hooks/useArchiveStats.ts`                   | Stats + recent date keys     |
+| `src/components/archive/ArchiveSummaryHero.tsx`  | AC-1                         |
+| `src/components/archive/ArchiveRecentVisits.tsx` | AC-3                         |
+| `src/components/archive/ArchiveDiaryEmpty.tsx`   | AC-4                         |
+| `src/components/archive/ArchiveLoginPrompt.tsx`  | AC-6                         |
+| `src/components/settings/SettingsPillGroup.tsx`  | `equalWidth` for AC-2        |
 
 ## AC mapping
 

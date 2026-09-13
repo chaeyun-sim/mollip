@@ -25,7 +25,10 @@ export function OnboardingWallPrologue({ onStart, onSkip }: OnboardingWallProlog
 						source={require('@/assets/images/onboarding/wall-bg.png')}
 						className="w-full h-full"
 					/>
-					<Image source={require('@/assets/images/skulpture/heart.png')} className="absolute bottom-1 right-1/2 translate-x-1/2 w-[60px] h-[70px]" />
+					<Image
+						source={require('@/assets/images/skulpture/heart.png')}
+						className="absolute bottom-1 right-1/2 translate-x-1/2 w-[60px] h-[70px]"
+					/>
 				</View>
 
 				<View className="items-center gap-2 px-4">

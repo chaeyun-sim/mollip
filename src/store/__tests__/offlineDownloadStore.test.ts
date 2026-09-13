@@ -7,6 +7,12 @@ import {
 	isAnyLoading,
 	useOfflineDownloadStore,
 } from '../offlineDownloadStore';
+import { fetchTTSBlob } from '@/src/utils/api';
+import {
+	deleteAllOfflineAudio,
+	deleteOfflineAudio,
+	saveOfflineAudioFromDataUri,
+} from '@/src/utils/offlineAudio';
 
 jest.mock('@/src/utils/api', () => ({
 	fetchTTSBlob: jest.fn(),
@@ -16,13 +22,6 @@ jest.mock('@/src/utils/offlineAudio', () => ({
 	deleteOfflineAudio: jest.fn(),
 	deleteAllOfflineAudio: jest.fn(),
 }));
-
-import { fetchTTSBlob } from '@/src/utils/api';
-import {
-	deleteAllOfflineAudio,
-	deleteOfflineAudio,
-	saveOfflineAudioFromDataUri,
-} from '@/src/utils/offlineAudio';
 
 const mockFetchTTSBlob = fetchTTSBlob as jest.Mock;
 const mockSave = saveOfflineAudioFromDataUri as jest.Mock;
@@ -82,16 +81,14 @@ describe('startDownload — idle 항목만 대상으로 다운로드 시작(AC-1
 		mockFetchTTSBlob.mockResolvedValue('data:audio/mpeg;base64,AAAA');
 		useOfflineDownloadStore.setState({ statuses: { existing: 'done' }, batchIds: [] });
 
-		await useOfflineDownloadStore
-			.getState()
-			.startDownload(
-				[
-					{ id: 'existing', text: '이미 완료됨' },
-					{ id: 'new-1', text: '새 항목' },
-				],
-				'voice-1',
-				1.0,
-			);
+		await useOfflineDownloadStore.getState().startDownload(
+			[
+				{ id: 'existing', text: '이미 완료됨' },
+				{ id: 'new-1', text: '새 항목' },
+			],
+			'voice-1',
+			1.0,
+		);
 
 		const { statuses, batchIds } = useOfflineDownloadStore.getState();
 		expect(statuses['new-1']).toBe('done');
@@ -125,16 +122,14 @@ describe('startDownload — idle 항목만 대상으로 다운로드 시작(AC-1
 			return Promise.resolve('data:audio/mpeg;base64,AAAA');
 		});
 
-		await useOfflineDownloadStore
-			.getState()
-			.startDownload(
-				[
-					{ id: 'ok-1', text: '성공할 항목' },
-					{ id: 'fail-1', text: '실패할 항목' },
-				],
-				'voice-1',
-				1.0,
-			);
+		await useOfflineDownloadStore.getState().startDownload(
+			[
+				{ id: 'ok-1', text: '성공할 항목' },
+				{ id: 'fail-1', text: '실패할 항목' },
+			],
+			'voice-1',
+			1.0,
+		);
 
 		const { statuses } = useOfflineDownloadStore.getState();
 		expect(statuses['ok-1']).toBe('done');
@@ -147,7 +142,9 @@ describe('retryDownload — 실패 항목 1개만 재시도(AC-4)', () => {
 		mockFetchTTSBlob.mockResolvedValue('data:audio/mpeg;base64,AAAA');
 		useOfflineDownloadStore.setState({ statuses: { 'fail-1': 'failed' }, batchIds: [] });
 
-		await useOfflineDownloadStore.getState().retryDownload('fail-1', '실패했던 텍스트', 'voice-1', 1.0);
+		await useOfflineDownloadStore
+			.getState()
+			.retryDownload('fail-1', '실패했던 텍스트', 'voice-1', 1.0);
 
 		expect(useOfflineDownloadStore.getState().statuses['fail-1']).toBe('done');
 		expect(mockFetchTTSBlob).toHaveBeenCalledTimes(1);
@@ -161,7 +158,9 @@ describe('retryDownload — 실패 항목 1개만 재시도(AC-4)', () => {
 			batchIds: ['other-loading'],
 		});
 
-		await useOfflineDownloadStore.getState().retryDownload('fail-1', '실패했던 텍스트', 'voice-1', 1.0);
+		await useOfflineDownloadStore
+			.getState()
+			.retryDownload('fail-1', '실패했던 텍스트', 'voice-1', 1.0);
 
 		const { statuses, batchIds } = useOfflineDownloadStore.getState();
 		expect(statuses['other-loading']).toBe('loading');
@@ -173,7 +172,9 @@ describe('retryDownload — 실패 항목 1개만 재시도(AC-4)', () => {
 		mockFetchTTSBlob.mockRejectedValue(new Error('network error'));
 		useOfflineDownloadStore.setState({ statuses: { 'fail-1': 'failed' }, batchIds: [] });
 
-		await useOfflineDownloadStore.getState().retryDownload('fail-1', '실패했던 텍스트', 'voice-1', 1.0);
+		await useOfflineDownloadStore
+			.getState()
+			.retryDownload('fail-1', '실패했던 텍스트', 'voice-1', 1.0);
 
 		expect(useOfflineDownloadStore.getState().statuses['fail-1']).toBe('failed');
 	});

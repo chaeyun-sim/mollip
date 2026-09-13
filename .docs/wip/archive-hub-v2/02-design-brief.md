@@ -19,13 +19,12 @@ phase: 2-visual-refresh-v2
 - **Ref**: journal/or picker — soft surface + clear selection.
 - Track `#F8F6F2`, **sliding white thumb** + spring, label ink/muted.
 
-
-| ❌ | ✅ |
-|----|-----|
-| `LinearGradient` hero (Explore 동일) | 흰 배경 + **타이포 헤더** |
-| `ExploreSectionTitle` | `ArchiveSectionTitle` (아카이브 전용) |
-| 최근 관람 리스트 + 달력 **중복** | **달력이 주 콘텐츠** (marked day = 진입) |
-| scrapbook/폴라roid 카피 | 달력·일기 UX에 맞는 **짧은 안내** |
+| ❌                                   | ✅                                       |
+| ------------------------------------ | ---------------------------------------- |
+| `LinearGradient` hero (Explore 동일) | 흰 배경 + **타이포 헤더**                |
+| `ExploreSectionTitle`                | `ArchiveSectionTitle` (아카이브 전용)    |
+| 최근 관람 리스트 + 달력 **중복**     | **달력이 주 콘텐츠** (marked day = 진입) |
+| scrapbook/폴라roid 카피              | 달력·일기 UX에 맞는 **짧은 안내**        |
 
 ## Archive identity
 
@@ -41,9 +40,9 @@ phase: 2-visual-refresh-v2
 
 ## Copy
 
-| Element | Text |
-|---------|------|
-| Page title | 관람 기록 |
-| Subtitle | 달력에서 날짜를 눌러 그날의 일기를 열어요 |
-| Empty title | 아직 관람 기록이 없어요 |
-| Empty body | 전시 가이드를 들으면 이 달력이 채워져요 |
+| Element     | Text                                      |
+| ----------- | ----------------------------------------- |
+| Page title  | 관람 기록                                 |
+| Subtitle    | 달력에서 날짜를 눌러 그날의 일기를 열어요 |
+| Empty title | 아직 관람 기록이 없어요                   |
+| Empty body  | 전시 가이드를 들으면 이 달력이 채워져요   |

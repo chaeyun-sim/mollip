@@ -184,7 +184,7 @@ export default function ChatScreen() {
 					keyExtractor={(item) => item.id}
 					renderItem={renderMessage}
 					showsVerticalScrollIndicator={false}
-					contentContainerClassName='flex-grow pt-4 pb-2'
+					contentContainerClassName="flex-grow pt-4 pb-2"
 					ListEmptyComponent={
 						<View className="flex-1 items-center justify-center gap-3">
 							<View

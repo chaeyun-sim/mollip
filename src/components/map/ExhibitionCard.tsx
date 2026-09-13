@@ -23,7 +23,7 @@ export function ExhibitionCard({ ex, status, onPress }: ExhibitionCardProps) {
 	}));
 
 	const statusLabel = status === 'active' ? '진행 중' : '예정';
-	const statusEngLabel = status === 'active' ? 'On View' : 'Opening Soon'
+	const statusEngLabel = status === 'active' ? 'On View' : 'Opening Soon';
 
 	return (
 		<Pressable

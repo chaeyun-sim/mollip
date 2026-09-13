@@ -12,13 +12,13 @@ status: in-progress
 
 ## 구현 요약
 
-| AC | 상태 | 변경 파일 |
-|---|---|---|
-| AC-1 | 완료 | `src/store/visitStore.ts`(`status`/`pendingSince`/`visitedAt`/`signatureSvg` 필드 + `markPending`/`todayKey`/`loadFromRemote` 마이그레이션), `src/store/immersiveStore.ts`(`enteredAt` + `exit()`에서 `markPending` 호출), `src/hooks/useVisitSync.ts`(로컬 status 필드 보존) |
-| AC-2 | 완료 | `src/components/archive/PendingVisitsBanner.tsx`(신규), `app/(tabs)/diary.tsx`(배너 렌더 + pendingCount) |
-| AC-3 | 완료 | `src/components/archive/ReceiptSummary.tsx`, `SignaturePad.tsx`, `ReceiptStampTransition.tsx`(전부 신규), `app/diary/confirm-visits.tsx`(신규 큐 화면), `visitStore.confirmVisit` |
-| AC-4 | 완료 | `visitStore.pruneExpiredPending` + `app/(tabs)/diary.tsx`의 mount 시 호출 |
-| AC-5 | 완료(스코프 축소, 아래 참고) | `src/components/archive/DiaryStampCell.tsx`(신규), `DiaryCalendar.tsx`(교체), `VisitTicketGrid.tsx`(확정 필터만) |
+| AC   | 상태                         | 변경 파일                                                                                                                                                                                                                                                                     |
+| ---- | ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| AC-1 | 완료                         | `src/store/visitStore.ts`(`status`/`pendingSince`/`visitedAt`/`signatureSvg` 필드 + `markPending`/`todayKey`/`loadFromRemote` 마이그레이션), `src/store/immersiveStore.ts`(`enteredAt` + `exit()`에서 `markPending` 호출), `src/hooks/useVisitSync.ts`(로컬 status 필드 보존) |
+| AC-2 | 완료                         | `src/components/archive/PendingVisitsBanner.tsx`(신규), `app/(tabs)/diary.tsx`(배너 렌더 + pendingCount)                                                                                                                                                                      |
+| AC-3 | 완료                         | `src/components/archive/ReceiptSummary.tsx`, `SignaturePad.tsx`, `ReceiptStampTransition.tsx`(전부 신규), `app/diary/confirm-visits.tsx`(신규 큐 화면), `visitStore.confirmVisit`                                                                                             |
+| AC-4 | 완료                         | `visitStore.pruneExpiredPending` + `app/(tabs)/diary.tsx`의 mount 시 호출                                                                                                                                                                                                     |
+| AC-5 | 완료(스코프 축소, 아래 참고) | `src/components/archive/DiaryStampCell.tsx`(신규), `DiaryCalendar.tsx`(교체), `VisitTicketGrid.tsx`(확정 필터만)                                                                                                                                                              |
 
 추가로 재구성한 파일: `app/diary/[date].tsx` — 사용자가 기존 파일을 `app/diary-1/[date].tsx`로 백업해둔 뒤 `app/diary/`를 비워둔 상태였어서, 기존 티켓 플립·메모·삭제·채팅기록 기능을 그대로 옮기고 서명 표시 섹션(`SignatureSection`)만 추가해 새로 작성함.
 

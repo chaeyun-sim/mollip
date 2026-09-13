@@ -1,1 +1,1746 @@
-<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>온보딩 디자인 검수 시안</title><style>@font-face{font-family:Pretendard;src:url('../../../assets/fonts/Pretendard-Regular.otf')}@font-face{font-family:Pretendard;src:url('../../../assets/fonts/Pretendard-SemiBold.otf');font-weight:600}@font-face{font-family:Hahmlet;src:url('../../../node_modules/@expo-google-fonts/hahmlet/600SemiBold/Hahmlet_600SemiBold.ttf');font-weight:600}*{box-sizing:border-box}body{margin:0;padding:24px;background:#E7E5E4;color:#1C1917;font-family:Pretendard,sans-serif}h1{font-size:24px}.intro{line-height:1.6;color:#57534E}.boards{display:flex;align-items:flex-start;gap:24px;flex-wrap:wrap}.sample{width:390px;max-width:100%}.sample>h2{font-size:16px}.phone{background:#F8F6F2;border-radius:24px;padding:20px;width:100%}.phone h3{font-family:Hahmlet,serif;font-weight:600;font-size:24px;line-height:34px;margin:0 0 8px}.phone p{font-size:14px;line-height:21px;color:#57534E;margin:8px 0}svg{width:100%;display:block}.tray{display:flex;gap:12px;overflow-x:auto;padding:12px 0;background:#F2EFE9}.tile{width:88px;flex:none;font-size:12px;line-height:18px}.thumb{position:relative;width:88px;height:88px}.tile img{width:88px;height:88px;background:#F2EFE9;border-radius:12px}.used{opacity:.5}.badge{position:absolute;bottom:0;left:0;background:#F8F6F2;color:#1C1917;font-size:11px;padding:2px 4px}.cta{margin-top:12px;min-height:52px;padding:14px 16px;background:#7C3AED;color:white;border-radius:18px;text-align:center;font-size:16px;line-height:24px;font-weight:600}.disabled{background:#C7C3BD}.actions{display:flex;flex-wrap:wrap;gap:8px}.action{min-height:44px;display:flex;align-items:center;justify-content:center;flex:1;padding:10px 12px;border:1px solid #C7C3BD;border-radius:16px;font-size:14px;background:#F8F6F2}.status{min-height:48px;padding-top:8px}.summary,.error{padding:16px;background:#F2EFE9;border-radius:16px;margin-top:12px}.error .action:first-child{background:#7C3AED;color:white;border-color:#7C3AED}.error{background:white;border:1px solid #E7E5E4}.chips{display:flex;flex-wrap:wrap;gap:8px}.chip{padding:8px 12px;border-radius:20px;background:#F8F6F2;font-size:14px}.assets{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:16px}.assets figure{margin:0;background:#F8F6F2;padding:12px;border-radius:12px}.assets img{width:100%;height:160px;object-fit:contain}.assets figcaption{font-size:13px;line-height:20px}.sample.narrow{width:320px}small{color:#57534E;display:block;margin:12px 0;font-size:12px}@media(max-width:500px){body{padding:12px}.sample{width:100%}.boards{gap:16px}}</style></head><body><h1>나의 첫 전시 벽 · 디자인 검수 시안</h1><p class="intro">실제 에셋·Pretendard·Hahmlet를 사용한 정적 상태 비교입니다. 드래그와 저장은 동작하지 않습니다.<br>기기 높이 대응·VoiceOver·네이티브 동작은 후속 프로토타입 검증 대상입니다.</p><div class="boards"><section class="sample"><h2>빈 벽</h2><div class="phone"><h3>나의 첫 전시 벽</h3><p>마음에 드는 작품을 걸어 보세요</p><svg viewBox="0 0 1060 1080" role="img" aria-label="비대칭 액자 5개"><image href="../../../assets/images/onboarding/wall-bg.png" width="1060" height="1080" preserveAspectRatio="xMidYMid slice"/><defs><clipPath id="empty-0"><ellipse cx="181.0" cy="357.5" rx="88.0" ry="123.5"/></clipPath></defs><g clip-path="url(#empty-0)"><rect x="93" y="234" width="176" height="247" fill="#F2EFE9"/><text x="181.0" y="369.5" text-anchor="middle" font-size="38" fill="#57534E">+</text></g><image href="../../../assets/images/onboarding/oval-1.png" x="45" y="140" width="275" height="424"/><defs><clipPath id="empty-1"><ellipse cx="829.5" cy="437.0" rx="81.5" ry="116.0"/></clipPath></defs><g clip-path="url(#empty-1)"><rect x="748" y="321" width="163" height="232" fill="#F2EFE9"/><text x="829.5" y="449.0" text-anchor="middle" font-size="38" fill="#57534E">+</text></g><image href="../../../assets/images/onboarding/oval-2.png" x="715" y="225" width="229" height="371"/><defs><clipPath id="empty-2"><rect x="411" y="127" width="213" height="146"/></clipPath></defs><g clip-path="url(#empty-2)"><rect x="411" y="127" width="213" height="146" fill="#F2EFE9"/><text x="517.5" y="212.0" text-anchor="middle" font-size="38" fill="#57534E">+</text></g><image href="../../../assets/images/onboarding/square-1.png" x="370" y="85" width="296" height="231"/><defs><clipPath id="empty-3"><rect x="389" y="484" width="238" height="301"/></clipPath></defs><g clip-path="url(#empty-3)"><rect x="389" y="484" width="238" height="301" fill="#F2EFE9"/><text x="508.0" y="646.5" text-anchor="middle" font-size="38" fill="#57534E">+</text></g><image href="../../../assets/images/onboarding/square-2.png" x="325" y="390" width="366" height="476"/><defs><clipPath id="empty-4"><rect x="768" y="710" width="213" height="169"/></clipPath></defs><g clip-path="url(#empty-4)"><rect x="768" y="710" width="213" height="169" fill="#F2EFE9"/><text x="874.5" y="806.5" text-anchor="middle" font-size="38" fill="#57534E">+</text></g><image href="../../../assets/images/onboarding/square-3.png" x="705" y="650" width="343" height="288"/></svg><div class="status"><p>3개 더 걸면 시작할 수 있어요 · 0/5</p></div><p>눌러서 걸거나, 길게 눌러 옮겨 보세요</p><div class="tray" aria-label="작품 후보 16개"><div class="tile"><div class="thumb"><img style="object-fit:contain;object-position:50.0% 50.0%" class="" src="../../../assets/images/genres/photo-empire_building-horizontal.jpg" alt="높은 철골 위에 나란히 앉은 사람들, 사진"></div><div>사진</div></div><div class="tile"><div class="thumb"><img style="object-fit:contain;object-position:50.0% 50.0%" class="" src="../../../assets/images/genres/photo-1-square.webp" alt="달 표면에 선 우주인과 긴 그림자, 사진"></div><div>사진</div></div><div class="tile"><div class="thumb"><img style="object-fit:cover;object-position:48.0% 40.0%" class="" src="../../../assets/images/genres/skulpture-thinking-vertical.jpg" alt="턱을 괴고 몸을 웅크린 인물, 조각"></div><div>조각</div></div><div class="tile"><div class="thumb"><img style="object-fit:contain;object-position:50.0% 50.0%" class="" src="../../../assets/images/genres/skulpture-pieta-square.jpg" alt="누운 인물을 품에 안은 대리석 형상, 조각"></div><div>조각</div></div><div class="tile"><div class="thumb"><img style="object-fit:cover;object-position:40.0% 45.0%" class="" src="../../../assets/images/genres/print-wave-horizontal.jpg" alt="배 위로 굽이치는 커다란 푸른 파도, 판화"></div><div>판화</div></div><div class="tile"><div class="thumb"><img style="object-fit:cover;object-position:61.0% 48.0%" class="" src="../../../assets/images/genres/print-melencolia-vertical.jpg" alt="도구들 사이에서 생각에 잠긴 날개 달린 인물, 판화"></div><div>판화</div></div><div class="tile"><div class="thumb"><img style="object-fit:contain;object-position:50.0% 50.0%" class="" src="../../../assets/images/genres/korean-Irworobongdo-horizontal.jpg" alt="해와 달 아래 펼쳐진 푸른 산과 물결, 한국화"></div><div>한국화</div></div><div class="tile"><div class="thumb"><img style="object-fit:cover;object-position:52.0% 51.0%" class="" src="../../../assets/images/genres/korean-1-vertical.jpg" alt="둘러앉은 사람들 가운데 씨름하는 두 사람, 한국화"></div><div>한국화</div></div><div class="tile"><div class="thumb"><img style="object-fit:cover;object-position:53.0% 40.0%" class="" src="../../../assets/images/genres/paintings-pearl-vertical.jpg" alt="푸른 두건을 쓰고 뒤돌아보는 인물, 회화"></div><div>회화</div></div><div class="tile"><div class="thumb"><img style="object-fit:cover;object-position:55.00000000000001% 38.0%" class="" src="../../../assets/images/genres/paintings-gogh-horizontal.jpg" alt="소용돌이치는 푸른 밤하늘과 노란 별, 회화"></div><div>회화</div></div><div class="tile"><div class="thumb"><img style="object-fit:contain;object-position:50.0% 50.0%" class="" src="../../../assets/images/genres/crafts-korean-vertical.jpg" alt="둥근 무늬와 새가 새겨진 푸른 도자기, 공예"></div><div>공예</div></div><div class="tile"><div class="thumb"><img style="object-fit:contain;object-position:50.0% 50.0%" class="" src="../../../assets/images/genres/crafs-egg-vertical.png" alt="노란 보석 장식의 달걀과 작은 마차, 공예"></div><div>공예</div></div><div class="tile"><div class="thumb"><img style="object-fit:contain;object-position:50.0% 50.0%" class="" src="../../../assets/images/genres/contemporary-1-horizontal.png" alt="은색 테이프로 붙인 검정·분홍 로고, 현대 미술"></div><div>현대 미술</div></div><div class="tile"><div class="thumb"><img style="object-fit:contain;object-position:50.0% 50.0%" class="" src="../../../assets/images/genres/contemporary-2-vertical.png" alt="로고가 켜진 모니터를 높이 쌓은 탑, 현대 미술"></div><div>현대 미술</div></div><div class="tile"><div class="thumb"><img style="object-fit:contain;object-position:50.0% 50.0%" class="" src="../../../assets/images/genres/contemporary-3-square.png" alt="얼굴과 기하학적 면으로 구성한 로고, 현대 미술"></div><div>현대 미술</div></div><div class="tile"><div class="thumb"><img style="object-fit:contain;object-position:50.0% 50.0%" class="" src="../../../assets/images/genres/contemporary-4-horizontal.png" alt="분홍·보라 빛으로 녹아내리는 로고들, 현대 미술"></div><div>현대 미술</div></div></div><div class="cta disabled">이 전시로 시작하기</div></div></section><section class="sample"><h2>3개 배치</h2><div class="phone"><h3>나의 첫 전시 벽</h3><p>마음에 드는 작품을 걸어 보세요</p><svg viewBox="0 0 1060 1080" role="img" aria-label="비대칭 액자 5개"><image href="../../../assets/images/onboarding/wall-bg.png" width="1060" height="1080" preserveAspectRatio="xMidYMid slice"/><defs><clipPath id="filled-0"><ellipse cx="181.0" cy="357.5" rx="88.0" ry="123.5"/></clipPath></defs><g clip-path="url(#filled-0)"><rect x="93" y="234" width="176" height="247" fill="#F2EFE9"/><image href="../../../assets/images/genres/paintings-pearl-vertical.jpg" x="70.43412162162161" y="234.0" width="208.61486486486487" height="247.0"/></g><image href="../../../assets/images/onboarding/oval-1.png" x="45" y="140" width="275" height="424"/><defs><clipPath id="filled-1"><ellipse cx="829.5" cy="437.0" rx="81.5" ry="116.0"/></clipPath></defs><g clip-path="url(#filled-1)"><rect x="748" y="321" width="163" height="232" fill="#F2EFE9"/><image href="../../../assets/images/genres/contemporary-2-vertical.png" x="773.4018803779975" y="352.8528205669963" width="112.19623924400497" height="168.29435886600746"/></g><image href="../../../assets/images/onboarding/oval-2.png" x="715" y="225" width="229" height="371"/><defs><clipPath id="filled-2"><rect x="411" y="127" width="213" height="146"/></clipPath></defs><g clip-path="url(#filled-2)"><rect x="411" y="127" width="213" height="146" fill="#F2EFE9"/><image href="../../../assets/images/genres/print-wave-horizontal.jpg" x="411.0" y="127" width="213.0" height="150.378"/></g><image href="../../../assets/images/onboarding/square-1.png" x="370" y="85" width="296" height="231"/><defs><clipPath id="filled-3"><rect x="389" y="484" width="238" height="301"/></clipPath></defs><g clip-path="url(#filled-3)"><rect x="389" y="484" width="238" height="301" fill="#F2EFE9"/><text x="508.0" y="646.5" text-anchor="middle" font-size="38" fill="#57534E">+</text></g><image href="../../../assets/images/onboarding/square-2.png" x="325" y="390" width="366" height="476"/><defs><clipPath id="filled-4"><rect x="768" y="710" width="213" height="169"/></clipPath></defs><g clip-path="url(#filled-4)"><rect x="768" y="710" width="213" height="169" fill="#F2EFE9"/><text x="874.5" y="806.5" text-anchor="middle" font-size="38" fill="#57534E">+</text></g><image href="../../../assets/images/onboarding/square-3.png" x="705" y="650" width="343" height="288"/></svg><div class="status"><p>나만의 전시가 완성되고 있어요 · 3/5</p></div><p>눌러서 걸거나, 길게 눌러 옮겨 보세요</p><div class="tray" aria-label="작품 후보 16개"><div class="tile"><div class="thumb"><img style="object-fit:contain;object-position:50.0% 50.0%" class="" src="../../../assets/images/genres/photo-empire_building-horizontal.jpg" alt="높은 철골 위에 나란히 앉은 사람들, 사진"></div><div>사진</div></div><div class="tile"><div class="thumb"><img style="object-fit:contain;object-position:50.0% 50.0%" class="" src="../../../assets/images/genres/photo-1-square.webp" alt="달 표면에 선 우주인과 긴 그림자, 사진"></div><div>사진</div></div><div class="tile"><div class="thumb"><img style="object-fit:cover;object-position:48.0% 40.0%" class="" src="../../../assets/images/genres/skulpture-thinking-vertical.jpg" alt="턱을 괴고 몸을 웅크린 인물, 조각"></div><div>조각</div></div><div class="tile"><div class="thumb"><img style="object-fit:contain;object-position:50.0% 50.0%" class="" src="../../../assets/images/genres/skulpture-pieta-square.jpg" alt="누운 인물을 품에 안은 대리석 형상, 조각"></div><div>조각</div></div><div class="tile"><div class="thumb"><img style="object-fit:cover;object-position:40.0% 45.0%" class="used" src="../../../assets/images/genres/print-wave-horizontal.jpg" alt="배 위로 굽이치는 커다란 푸른 파도, 판화"><span class="badge">✓ 배치됨</span></div><div>판화</div></div><div class="tile"><div class="thumb"><img style="object-fit:cover;object-position:61.0% 48.0%" class="" src="../../../assets/images/genres/print-melencolia-vertical.jpg" alt="도구들 사이에서 생각에 잠긴 날개 달린 인물, 판화"></div><div>판화</div></div><div class="tile"><div class="thumb"><img style="object-fit:contain;object-position:50.0% 50.0%" class="" src="../../../assets/images/genres/korean-Irworobongdo-horizontal.jpg" alt="해와 달 아래 펼쳐진 푸른 산과 물결, 한국화"></div><div>한국화</div></div><div class="tile"><div class="thumb"><img style="object-fit:cover;object-position:52.0% 51.0%" class="" src="../../../assets/images/genres/korean-1-vertical.jpg" alt="둘러앉은 사람들 가운데 씨름하는 두 사람, 한국화"></div><div>한국화</div></div><div class="tile"><div class="thumb"><img style="object-fit:cover;object-position:53.0% 40.0%" class="used" src="../../../assets/images/genres/paintings-pearl-vertical.jpg" alt="푸른 두건을 쓰고 뒤돌아보는 인물, 회화"><span class="badge">✓ 배치됨</span></div><div>회화</div></div><div class="tile"><div class="thumb"><img style="object-fit:cover;object-position:55.00000000000001% 38.0%" class="" src="../../../assets/images/genres/paintings-gogh-horizontal.jpg" alt="소용돌이치는 푸른 밤하늘과 노란 별, 회화"></div><div>회화</div></div><div class="tile"><div class="thumb"><img style="object-fit:contain;object-position:50.0% 50.0%" class="" src="../../../assets/images/genres/crafts-korean-vertical.jpg" alt="둥근 무늬와 새가 새겨진 푸른 도자기, 공예"></div><div>공예</div></div><div class="tile"><div class="thumb"><img style="object-fit:contain;object-position:50.0% 50.0%" class="" src="../../../assets/images/genres/crafs-egg-vertical.png" alt="노란 보석 장식의 달걀과 작은 마차, 공예"></div><div>공예</div></div><div class="tile"><div class="thumb"><img style="object-fit:contain;object-position:50.0% 50.0%" class="" src="../../../assets/images/genres/contemporary-1-horizontal.png" alt="은색 테이프로 붙인 검정·분홍 로고, 현대 미술"></div><div>현대 미술</div></div><div class="tile"><div class="thumb"><img style="object-fit:contain;object-position:50.0% 50.0%" class="used" src="../../../assets/images/genres/contemporary-2-vertical.png" alt="로고가 켜진 모니터를 높이 쌓은 탑, 현대 미술"><span class="badge">✓ 배치됨</span></div><div>현대 미술</div></div><div class="tile"><div class="thumb"><img style="object-fit:contain;object-position:50.0% 50.0%" class="" src="../../../assets/images/genres/contemporary-3-square.png" alt="얼굴과 기하학적 면으로 구성한 로고, 현대 미술"></div><div>현대 미술</div></div><div class="tile"><div class="thumb"><img style="object-fit:contain;object-position:50.0% 50.0%" class="" src="../../../assets/images/genres/contemporary-4-horizontal.png" alt="분홍·보라 빛으로 녹아내리는 로고들, 현대 미술"></div><div>현대 미술</div></div></div><div class="cta ">이 전시로 시작하기</div></div></section><section class="sample"><h2>5개 배치 · 현대 로고 4개</h2><div class="phone"><h3>나의 첫 전시 벽</h3><p>마음에 드는 작품을 걸어 보세요</p><svg viewBox="0 0 1060 1080" role="img" aria-label="비대칭 액자 5개"><image href="../../../assets/images/onboarding/wall-bg.png" width="1060" height="1080" preserveAspectRatio="xMidYMid slice"/><defs><clipPath id="full-0"><ellipse cx="181.0" cy="357.5" rx="88.0" ry="123.5"/></clipPath></defs><g clip-path="url(#full-0)"><rect x="93" y="234" width="176" height="247" fill="#F2EFE9"/><image href="../../../assets/images/genres/contemporary-1-horizontal.png" x="105.47548894378913" y="294.112371655525" width="151.04902211242174" height="126.77525668895002"/></g><image href="../../../assets/images/onboarding/oval-1.png" x="45" y="140" width="275" height="424"/><defs><clipPath id="full-1"><ellipse cx="829.5" cy="437.0" rx="81.5" ry="116.0"/></clipPath></defs><g clip-path="url(#full-1)"><rect x="748" y="321" width="163" height="232" fill="#F2EFE9"/><image href="../../../assets/images/genres/contemporary-2-vertical.png" x="773.4018803779975" y="352.8528205669963" width="112.19623924400497" height="168.29435886600746"/></g><image href="../../../assets/images/onboarding/oval-2.png" x="715" y="225" width="229" height="371"/><defs><clipPath id="full-2"><rect x="411" y="127" width="213" height="146"/></clipPath></defs><g clip-path="url(#full-2)"><rect x="411" y="127" width="213" height="146" fill="#F2EFE9"/><image href="../../../assets/images/genres/contemporary-3-square.png" x="444.5" y="127.0" width="146.0" height="146.0"/></g><image href="../../../assets/images/onboarding/square-1.png" x="370" y="85" width="296" height="231"/><defs><clipPath id="full-3"><rect x="389" y="484" width="238" height="301"/></clipPath></defs><g clip-path="url(#full-3)"><rect x="389" y="484" width="238" height="301" fill="#F2EFE9"/><image href="../../../assets/images/genres/contemporary-4-horizontal.png" x="389.0" y="549.5" width="238.0" height="170.0"/></g><image href="../../../assets/images/onboarding/square-2.png" x="325" y="390" width="366" height="476"/><defs><clipPath id="full-4"><rect x="768" y="710" width="213" height="169"/></clipPath></defs><g clip-path="url(#full-4)"><rect x="768" y="710" width="213" height="169" fill="#F2EFE9"/><image href="../../../assets/images/genres/paintings-gogh-horizontal.jpg" x="767.6161616161617" y="710.0" width="213.38383838383837" height="169.0"/></g><image href="../../../assets/images/onboarding/square-3.png" x="705" y="650" width="343" height="288"/></svg><div class="status"><p>나만의 전시가 완성되고 있어요 · 5/5</p></div><p>눌러서 걸거나, 길게 눌러 옮겨 보세요</p><div class="tray" aria-label="작품 후보 16개"><div class="tile"><div class="thumb"><img style="object-fit:contain;object-position:50.0% 50.0%" class="" src="../../../assets/images/genres/photo-empire_building-horizontal.jpg" alt="높은 철골 위에 나란히 앉은 사람들, 사진"></div><div>사진</div></div><div class="tile"><div class="thumb"><img style="object-fit:contain;object-position:50.0% 50.0%" class="" src="../../../assets/images/genres/photo-1-square.webp" alt="달 표면에 선 우주인과 긴 그림자, 사진"></div><div>사진</div></div><div class="tile"><div class="thumb"><img style="object-fit:cover;object-position:48.0% 40.0%" class="" src="../../../assets/images/genres/skulpture-thinking-vertical.jpg" alt="턱을 괴고 몸을 웅크린 인물, 조각"></div><div>조각</div></div><div class="tile"><div class="thumb"><img style="object-fit:contain;object-position:50.0% 50.0%" class="" src="../../../assets/images/genres/skulpture-pieta-square.jpg" alt="누운 인물을 품에 안은 대리석 형상, 조각"></div><div>조각</div></div><div class="tile"><div class="thumb"><img style="object-fit:cover;object-position:40.0% 45.0%" class="" src="../../../assets/images/genres/print-wave-horizontal.jpg" alt="배 위로 굽이치는 커다란 푸른 파도, 판화"></div><div>판화</div></div><div class="tile"><div class="thumb"><img style="object-fit:cover;object-position:61.0% 48.0%" class="" src="../../../assets/images/genres/print-melencolia-vertical.jpg" alt="도구들 사이에서 생각에 잠긴 날개 달린 인물, 판화"></div><div>판화</div></div><div class="tile"><div class="thumb"><img style="object-fit:contain;object-position:50.0% 50.0%" class="" src="../../../assets/images/genres/korean-Irworobongdo-horizontal.jpg" alt="해와 달 아래 펼쳐진 푸른 산과 물결, 한국화"></div><div>한국화</div></div><div class="tile"><div class="thumb"><img style="object-fit:cover;object-position:52.0% 51.0%" class="" src="../../../assets/images/genres/korean-1-vertical.jpg" alt="둘러앉은 사람들 가운데 씨름하는 두 사람, 한국화"></div><div>한국화</div></div><div class="tile"><div class="thumb"><img style="object-fit:cover;object-position:53.0% 40.0%" class="" src="../../../assets/images/genres/paintings-pearl-vertical.jpg" alt="푸른 두건을 쓰고 뒤돌아보는 인물, 회화"></div><div>회화</div></div><div class="tile"><div class="thumb"><img style="object-fit:cover;object-position:55.00000000000001% 38.0%" class="used" src="../../../assets/images/genres/paintings-gogh-horizontal.jpg" alt="소용돌이치는 푸른 밤하늘과 노란 별, 회화"><span class="badge">✓ 배치됨</span></div><div>회화</div></div><div class="tile"><div class="thumb"><img style="object-fit:contain;object-position:50.0% 50.0%" class="" src="../../../assets/images/genres/crafts-korean-vertical.jpg" alt="둥근 무늬와 새가 새겨진 푸른 도자기, 공예"></div><div>공예</div></div><div class="tile"><div class="thumb"><img style="object-fit:contain;object-position:50.0% 50.0%" class="" src="../../../assets/images/genres/crafs-egg-vertical.png" alt="노란 보석 장식의 달걀과 작은 마차, 공예"></div><div>공예</div></div><div class="tile"><div class="thumb"><img style="object-fit:contain;object-position:50.0% 50.0%" class="used" src="../../../assets/images/genres/contemporary-1-horizontal.png" alt="은색 테이프로 붙인 검정·분홍 로고, 현대 미술"><span class="badge">✓ 배치됨</span></div><div>현대 미술</div></div><div class="tile"><div class="thumb"><img style="object-fit:contain;object-position:50.0% 50.0%" class="used" src="../../../assets/images/genres/contemporary-2-vertical.png" alt="로고가 켜진 모니터를 높이 쌓은 탑, 현대 미술"><span class="badge">✓ 배치됨</span></div><div>현대 미술</div></div><div class="tile"><div class="thumb"><img style="object-fit:contain;object-position:50.0% 50.0%" class="used" src="../../../assets/images/genres/contemporary-3-square.png" alt="얼굴과 기하학적 면으로 구성한 로고, 현대 미술"><span class="badge">✓ 배치됨</span></div><div>현대 미술</div></div><div class="tile"><div class="thumb"><img style="object-fit:contain;object-position:50.0% 50.0%" class="used" src="../../../assets/images/genres/contemporary-4-horizontal.png" alt="분홍·보라 빛으로 녹아내리는 로고들, 현대 미술"><span class="badge">✓ 배치됨</span></div><div>현대 미술</div></div></div><div class="cta ">이 전시로 시작하기</div></div></section><section class="sample"><h2>교체 대상 선택</h2><div class="phone"><h3>나의 첫 전시 벽</h3><p>마음에 드는 작품을 걸어 보세요</p><svg viewBox="0 0 1060 1080" role="img" aria-label="비대칭 액자 5개"><image href="../../../assets/images/onboarding/wall-bg.png" width="1060" height="1080" preserveAspectRatio="xMidYMid slice"/><defs><clipPath id="replace-0"><ellipse cx="181.0" cy="357.5" rx="88.0" ry="123.5"/></clipPath></defs><g clip-path="url(#replace-0)"><rect x="93" y="234" width="176" height="247" fill="#F2EFE9"/><image href="../../../assets/images/genres/paintings-pearl-vertical.jpg" x="70.43412162162161" y="234.0" width="208.61486486486487" height="247.0"/></g><image href="../../../assets/images/onboarding/oval-1.png" x="45" y="140" width="275" height="424"/><rect x="42" y="137" width="281" height="430" fill="none" stroke="#1C1917" stroke-width="9"/><rect x="42" y="137" width="281" height="430" fill="none" stroke="#AB77F1" stroke-width="6"/><defs><clipPath id="replace-1"><ellipse cx="829.5" cy="437.0" rx="81.5" ry="116.0"/></clipPath></defs><g clip-path="url(#replace-1)"><rect x="748" y="321" width="163" height="232" fill="#F2EFE9"/><image href="../../../assets/images/genres/contemporary-2-vertical.png" x="773.4018803779975" y="352.8528205669963" width="112.19623924400497" height="168.29435886600746"/></g><image href="../../../assets/images/onboarding/oval-2.png" x="715" y="225" width="229" height="371"/><defs><clipPath id="replace-2"><rect x="411" y="127" width="213" height="146"/></clipPath></defs><g clip-path="url(#replace-2)"><rect x="411" y="127" width="213" height="146" fill="#F2EFE9"/><image href="../../../assets/images/genres/print-wave-horizontal.jpg" x="411.0" y="127" width="213.0" height="150.378"/></g><image href="../../../assets/images/onboarding/square-1.png" x="370" y="85" width="296" height="231"/><defs><clipPath id="replace-3"><rect x="389" y="484" width="238" height="301"/></clipPath></defs><g clip-path="url(#replace-3)"><rect x="389" y="484" width="238" height="301" fill="#F2EFE9"/><text x="508.0" y="646.5" text-anchor="middle" font-size="38" fill="#57534E">+</text></g><image href="../../../assets/images/onboarding/square-2.png" x="325" y="390" width="366" height="476"/><defs><clipPath id="replace-4"><rect x="768" y="710" width="213" height="169"/></clipPath></defs><g clip-path="url(#replace-4)"><rect x="768" y="710" width="213" height="169" fill="#F2EFE9"/><text x="874.5" y="806.5" text-anchor="middle" font-size="38" fill="#57534E">+</text></g><image href="../../../assets/images/onboarding/square-3.png" x="705" y="650" width="343" height="288"/></svg><div class="status"><p>1번 액자에 새 작품을 골라 주세요</p></div><div class="actions"><div class="action">작품 빼기</div><div class="action">취소</div></div><p>눌러서 걸거나, 길게 눌러 옮겨 보세요</p><div class="tray" aria-label="작품 후보 16개"><div class="tile"><div class="thumb"><img style="object-fit:contain;object-position:50.0% 50.0%" class="" src="../../../assets/images/genres/photo-empire_building-horizontal.jpg" alt="높은 철골 위에 나란히 앉은 사람들, 사진"></div><div>사진</div></div><div class="tile"><div class="thumb"><img style="object-fit:contain;object-position:50.0% 50.0%" class="" src="../../../assets/images/genres/photo-1-square.webp" alt="달 표면에 선 우주인과 긴 그림자, 사진"></div><div>사진</div></div><div class="tile"><div class="thumb"><img style="object-fit:cover;object-position:48.0% 40.0%" class="" src="../../../assets/images/genres/skulpture-thinking-vertical.jpg" alt="턱을 괴고 몸을 웅크린 인물, 조각"></div><div>조각</div></div><div class="tile"><div class="thumb"><img style="object-fit:contain;object-position:50.0% 50.0%" class="" src="../../../assets/images/genres/skulpture-pieta-square.jpg" alt="누운 인물을 품에 안은 대리석 형상, 조각"></div><div>조각</div></div><div class="tile"><div class="thumb"><img style="object-fit:cover;object-position:40.0% 45.0%" class="used" src="../../../assets/images/genres/print-wave-horizontal.jpg" alt="배 위로 굽이치는 커다란 푸른 파도, 판화"><span class="badge">✓ 배치됨</span></div><div>판화</div></div><div class="tile"><div class="thumb"><img style="object-fit:cover;object-position:61.0% 48.0%" class="" src="../../../assets/images/genres/print-melencolia-vertical.jpg" alt="도구들 사이에서 생각에 잠긴 날개 달린 인물, 판화"></div><div>판화</div></div><div class="tile"><div class="thumb"><img style="object-fit:contain;object-position:50.0% 50.0%" class="" src="../../../assets/images/genres/korean-Irworobongdo-horizontal.jpg" alt="해와 달 아래 펼쳐진 푸른 산과 물결, 한국화"></div><div>한국화</div></div><div class="tile"><div class="thumb"><img style="object-fit:cover;object-position:52.0% 51.0%" class="" src="../../../assets/images/genres/korean-1-vertical.jpg" alt="둘러앉은 사람들 가운데 씨름하는 두 사람, 한국화"></div><div>한국화</div></div><div class="tile"><div class="thumb"><img style="object-fit:cover;object-position:53.0% 40.0%" class="used" src="../../../assets/images/genres/paintings-pearl-vertical.jpg" alt="푸른 두건을 쓰고 뒤돌아보는 인물, 회화"><span class="badge">✓ 배치됨</span></div><div>회화</div></div><div class="tile"><div class="thumb"><img style="object-fit:cover;object-position:55.00000000000001% 38.0%" class="" src="../../../assets/images/genres/paintings-gogh-horizontal.jpg" alt="소용돌이치는 푸른 밤하늘과 노란 별, 회화"></div><div>회화</div></div><div class="tile"><div class="thumb"><img style="object-fit:contain;object-position:50.0% 50.0%" class="" src="../../../assets/images/genres/crafts-korean-vertical.jpg" alt="둥근 무늬와 새가 새겨진 푸른 도자기, 공예"></div><div>공예</div></div><div class="tile"><div class="thumb"><img style="object-fit:contain;object-position:50.0% 50.0%" class="" src="../../../assets/images/genres/crafs-egg-vertical.png" alt="노란 보석 장식의 달걀과 작은 마차, 공예"></div><div>공예</div></div><div class="tile"><div class="thumb"><img style="object-fit:contain;object-position:50.0% 50.0%" class="" src="../../../assets/images/genres/contemporary-1-horizontal.png" alt="은색 테이프로 붙인 검정·분홍 로고, 현대 미술"></div><div>현대 미술</div></div><div class="tile"><div class="thumb"><img style="object-fit:contain;object-position:50.0% 50.0%" class="used" src="../../../assets/images/genres/contemporary-2-vertical.png" alt="로고가 켜진 모니터를 높이 쌓은 탑, 현대 미술"><span class="badge">✓ 배치됨</span></div><div>현대 미술</div></div><div class="tile"><div class="thumb"><img style="object-fit:contain;object-position:50.0% 50.0%" class="" src="../../../assets/images/genres/contemporary-3-square.png" alt="얼굴과 기하학적 면으로 구성한 로고, 현대 미술"></div><div>현대 미술</div></div><div class="tile"><div class="thumb"><img style="object-fit:contain;object-position:50.0% 50.0%" class="" src="../../../assets/images/genres/contemporary-4-horizontal.png" alt="분홍·보라 빛으로 녹아내리는 로고들, 현대 미술"></div><div>현대 미술</div></div></div><div class="cta ">이 전시로 시작하기</div></div></section><section class="sample"><h2>저장 중</h2><div class="phone"><h3>나의 첫 전시 벽</h3><p>마음에 드는 작품을 걸어 보세요</p><svg viewBox="0 0 1060 1080" role="img" aria-label="비대칭 액자 5개"><image href="../../../assets/images/onboarding/wall-bg.png" width="1060" height="1080" preserveAspectRatio="xMidYMid slice"/><defs><clipPath id="summary-0"><ellipse cx="181.0" cy="357.5" rx="88.0" ry="123.5"/></clipPath></defs><g clip-path="url(#summary-0)"><rect x="93" y="234" width="176" height="247" fill="#F2EFE9"/><image href="../../../assets/images/genres/paintings-pearl-vertical.jpg" x="70.43412162162161" y="234.0" width="208.61486486486487" height="247.0"/></g><image href="../../../assets/images/onboarding/oval-1.png" x="45" y="140" width="275" height="424"/><defs><clipPath id="summary-1"><ellipse cx="829.5" cy="437.0" rx="81.5" ry="116.0"/></clipPath></defs><g clip-path="url(#summary-1)"><rect x="748" y="321" width="163" height="232" fill="#F2EFE9"/><image href="../../../assets/images/genres/contemporary-2-vertical.png" x="773.4018803779975" y="352.8528205669963" width="112.19623924400497" height="168.29435886600746"/></g><image href="../../../assets/images/onboarding/oval-2.png" x="715" y="225" width="229" height="371"/><defs><clipPath id="summary-2"><rect x="411" y="127" width="213" height="146"/></clipPath></defs><g clip-path="url(#summary-2)"><rect x="411" y="127" width="213" height="146" fill="#F2EFE9"/><image href="../../../assets/images/genres/print-wave-horizontal.jpg" x="411.0" y="127" width="213.0" height="150.378"/></g><image href="../../../assets/images/onboarding/square-1.png" x="370" y="85" width="296" height="231"/><defs><clipPath id="summary-3"><rect x="389" y="484" width="238" height="301"/></clipPath></defs><g clip-path="url(#summary-3)"><rect x="389" y="484" width="238" height="301" fill="#F2EFE9"/><text x="508.0" y="646.5" text-anchor="middle" font-size="38" fill="#57534E">+</text></g><image href="../../../assets/images/onboarding/square-2.png" x="325" y="390" width="366" height="476"/><defs><clipPath id="summary-4"><rect x="768" y="710" width="213" height="169"/></clipPath></defs><g clip-path="url(#summary-4)"><rect x="768" y="710" width="213" height="169" fill="#F2EFE9"/><text x="874.5" y="806.5" text-anchor="middle" font-size="38" fill="#57534E">+</text></g><image href="../../../assets/images/onboarding/square-3.png" x="705" y="650" width="343" height="288"/></svg><div class="summary"><p>이런 취향을 담았어요</p><div class="chips"><span class="chip">회화</span><span class="chip">현대 미술</span><span class="chip">판화</span></div><p>선택한 취향으로 전시를 만나 보세요</p></div><div class="cta disabled"><span aria-hidden="true">◌</span> 취향 저장 중…</div></div></section><section class="sample"><h2>저장 실패</h2><div class="phone"><h3>나의 첫 전시 벽</h3><p>마음에 드는 작품을 걸어 보세요</p><svg viewBox="0 0 1060 1080" role="img" aria-label="비대칭 액자 5개"><image href="../../../assets/images/onboarding/wall-bg.png" width="1060" height="1080" preserveAspectRatio="xMidYMid slice"/><defs><clipPath id="error-0"><ellipse cx="181.0" cy="357.5" rx="88.0" ry="123.5"/></clipPath></defs><g clip-path="url(#error-0)"><rect x="93" y="234" width="176" height="247" fill="#F2EFE9"/><image href="../../../assets/images/genres/paintings-pearl-vertical.jpg" x="70.43412162162161" y="234.0" width="208.61486486486487" height="247.0"/></g><image href="../../../assets/images/onboarding/oval-1.png" x="45" y="140" width="275" height="424"/><defs><clipPath id="error-1"><ellipse cx="829.5" cy="437.0" rx="81.5" ry="116.0"/></clipPath></defs><g clip-path="url(#error-1)"><rect x="748" y="321" width="163" height="232" fill="#F2EFE9"/><image href="../../../assets/images/genres/contemporary-2-vertical.png" x="773.4018803779975" y="352.8528205669963" width="112.19623924400497" height="168.29435886600746"/></g><image href="../../../assets/images/onboarding/oval-2.png" x="715" y="225" width="229" height="371"/><defs><clipPath id="error-2"><rect x="411" y="127" width="213" height="146"/></clipPath></defs><g clip-path="url(#error-2)"><rect x="411" y="127" width="213" height="146" fill="#F2EFE9"/><image href="../../../assets/images/genres/print-wave-horizontal.jpg" x="411.0" y="127" width="213.0" height="150.378"/></g><image href="../../../assets/images/onboarding/square-1.png" x="370" y="85" width="296" height="231"/><defs><clipPath id="error-3"><rect x="389" y="484" width="238" height="301"/></clipPath></defs><g clip-path="url(#error-3)"><rect x="389" y="484" width="238" height="301" fill="#F2EFE9"/><text x="508.0" y="646.5" text-anchor="middle" font-size="38" fill="#57534E">+</text></g><image href="../../../assets/images/onboarding/square-2.png" x="325" y="390" width="366" height="476"/><defs><clipPath id="error-4"><rect x="768" y="710" width="213" height="169"/></clipPath></defs><g clip-path="url(#error-4)"><rect x="768" y="710" width="213" height="169" fill="#F2EFE9"/><text x="874.5" y="806.5" text-anchor="middle" font-size="38" fill="#57534E">+</text></g><image href="../../../assets/images/onboarding/square-3.png" x="705" y="650" width="343" height="288"/></svg><div class="summary"><p>이런 취향을 담았어요</p><div class="chips"><span class="chip">회화</span><span class="chip">현대 미술</span><span class="chip">판화</span></div><p>선택한 취향으로 전시를 만나 보세요</p></div><div class="error"><p>저장에 실패했어요. 네트워크를 확인하고 다시 시도해 주세요.</p><div class="actions"><div class="action">다시 시도</div><div class="action">취향 저장 없이 시작</div></div></div></div></section></div><h2>전체 16개 에셋과 감상 라벨</h2><div class="assets"><figure><img src="../../../assets/images/genres/photo-empire_building-horizontal.jpg" alt="높은 철골 위에 나란히 앉은 사람들"><figcaption>사진<br>높은 철골 위에 나란히 앉은 사람들</figcaption></figure><figure><img src="../../../assets/images/genres/photo-1-square.webp" alt="달 표면에 선 우주인과 긴 그림자"><figcaption>사진<br>달 표면에 선 우주인과 긴 그림자</figcaption></figure><figure><img src="../../../assets/images/genres/skulpture-thinking-vertical.jpg" alt="턱을 괴고 몸을 웅크린 인물"><figcaption>조각<br>턱을 괴고 몸을 웅크린 인물</figcaption></figure><figure><img src="../../../assets/images/genres/skulpture-pieta-square.jpg" alt="누운 인물을 품에 안은 대리석 형상"><figcaption>조각<br>누운 인물을 품에 안은 대리석 형상</figcaption></figure><figure><img src="../../../assets/images/genres/print-wave-horizontal.jpg" alt="배 위로 굽이치는 커다란 푸른 파도"><figcaption>판화<br>배 위로 굽이치는 커다란 푸른 파도</figcaption></figure><figure><img src="../../../assets/images/genres/print-melencolia-vertical.jpg" alt="도구들 사이에서 생각에 잠긴 날개 달린 인물"><figcaption>판화<br>도구들 사이에서 생각에 잠긴 날개 달린 인물</figcaption></figure><figure><img src="../../../assets/images/genres/korean-Irworobongdo-horizontal.jpg" alt="해와 달 아래 펼쳐진 푸른 산과 물결"><figcaption>한국화<br>해와 달 아래 펼쳐진 푸른 산과 물결</figcaption></figure><figure><img src="../../../assets/images/genres/korean-1-vertical.jpg" alt="둘러앉은 사람들 가운데 씨름하는 두 사람"><figcaption>한국화<br>둘러앉은 사람들 가운데 씨름하는 두 사람</figcaption></figure><figure><img src="../../../assets/images/genres/paintings-pearl-vertical.jpg" alt="푸른 두건을 쓰고 뒤돌아보는 인물"><figcaption>회화<br>푸른 두건을 쓰고 뒤돌아보는 인물</figcaption></figure><figure><img src="../../../assets/images/genres/paintings-gogh-horizontal.jpg" alt="소용돌이치는 푸른 밤하늘과 노란 별"><figcaption>회화<br>소용돌이치는 푸른 밤하늘과 노란 별</figcaption></figure><figure><img src="../../../assets/images/genres/crafts-korean-vertical.jpg" alt="둥근 무늬와 새가 새겨진 푸른 도자기"><figcaption>공예<br>둥근 무늬와 새가 새겨진 푸른 도자기</figcaption></figure><figure><img src="../../../assets/images/genres/crafs-egg-vertical.png" alt="노란 보석 장식의 달걀과 작은 마차"><figcaption>공예<br>노란 보석 장식의 달걀과 작은 마차</figcaption></figure><figure><img src="../../../assets/images/genres/contemporary-1-horizontal.png" alt="은색 테이프로 붙인 검정·분홍 로고"><figcaption>현대 미술<br>은색 테이프로 붙인 검정·분홍 로고</figcaption></figure><figure><img src="../../../assets/images/genres/contemporary-2-vertical.png" alt="로고가 켜진 모니터를 높이 쌓은 탑"><figcaption>현대 미술<br>로고가 켜진 모니터를 높이 쌓은 탑</figcaption></figure><figure><img src="../../../assets/images/genres/contemporary-3-square.png" alt="얼굴과 기하학적 면으로 구성한 로고"><figcaption>현대 미술<br>얼굴과 기하학적 면으로 구성한 로고</figcaption></figure><figure><img src="../../../assets/images/genres/contemporary-4-horizontal.png" alt="분홍·보라 빛으로 녹아내리는 로고들"><figcaption>현대 미술<br>분홍·보라 빛으로 녹아내리는 로고들</figcaption></figure></div></body></html>
+<!doctype html>
+<html lang="ko">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width,initial-scale=1" />
+		<title>온보딩 디자인 검수 시안</title>
+		<style>
+			@font-face {
+				font-family: Pretendard;
+				src: url('../../../assets/fonts/Pretendard-Regular.otf');
+			}
+			@font-face {
+				font-family: Pretendard;
+				src: url('../../../assets/fonts/Pretendard-SemiBold.otf');
+				font-weight: 600;
+			}
+			@font-face {
+				font-family: Hahmlet;
+				src: url('../../../node_modules/@expo-google-fonts/hahmlet/600SemiBold/Hahmlet_600SemiBold.ttf');
+				font-weight: 600;
+			}
+			* {
+				box-sizing: border-box;
+			}
+			body {
+				margin: 0;
+				padding: 24px;
+				background: #e7e5e4;
+				color: #1c1917;
+				font-family: Pretendard, sans-serif;
+			}
+			h1 {
+				font-size: 24px;
+			}
+			.intro {
+				line-height: 1.6;
+				color: #57534e;
+			}
+			.boards {
+				display: flex;
+				align-items: flex-start;
+				gap: 24px;
+				flex-wrap: wrap;
+			}
+			.sample {
+				width: 390px;
+				max-width: 100%;
+			}
+			.sample > h2 {
+				font-size: 16px;
+			}
+			.phone {
+				background: #f8f6f2;
+				border-radius: 24px;
+				padding: 20px;
+				width: 100%;
+			}
+			.phone h3 {
+				font-family: Hahmlet, serif;
+				font-weight: 600;
+				font-size: 24px;
+				line-height: 34px;
+				margin: 0 0 8px;
+			}
+			.phone p {
+				font-size: 14px;
+				line-height: 21px;
+				color: #57534e;
+				margin: 8px 0;
+			}
+			svg {
+				width: 100%;
+				display: block;
+			}
+			.tray {
+				display: flex;
+				gap: 12px;
+				overflow-x: auto;
+				padding: 12px 0;
+				background: #f2efe9;
+			}
+			.tile {
+				width: 88px;
+				flex: none;
+				font-size: 12px;
+				line-height: 18px;
+			}
+			.thumb {
+				position: relative;
+				width: 88px;
+				height: 88px;
+			}
+			.tile img {
+				width: 88px;
+				height: 88px;
+				background: #f2efe9;
+				border-radius: 12px;
+			}
+			.used {
+				opacity: 0.5;
+			}
+			.badge {
+				position: absolute;
+				bottom: 0;
+				left: 0;
+				background: #f8f6f2;
+				color: #1c1917;
+				font-size: 11px;
+				padding: 2px 4px;
+			}
+			.cta {
+				margin-top: 12px;
+				min-height: 52px;
+				padding: 14px 16px;
+				background: #7c3aed;
+				color: white;
+				border-radius: 18px;
+				text-align: center;
+				font-size: 16px;
+				line-height: 24px;
+				font-weight: 600;
+			}
+			.disabled {
+				background: #c7c3bd;
+			}
+			.actions {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 8px;
+			}
+			.action {
+				min-height: 44px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				flex: 1;
+				padding: 10px 12px;
+				border: 1px solid #c7c3bd;
+				border-radius: 16px;
+				font-size: 14px;
+				background: #f8f6f2;
+			}
+			.status {
+				min-height: 48px;
+				padding-top: 8px;
+			}
+			.summary,
+			.error {
+				padding: 16px;
+				background: #f2efe9;
+				border-radius: 16px;
+				margin-top: 12px;
+			}
+			.error .action:first-child {
+				background: #7c3aed;
+				color: white;
+				border-color: #7c3aed;
+			}
+			.error {
+				background: white;
+				border: 1px solid #e7e5e4;
+			}
+			.chips {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 8px;
+			}
+			.chip {
+				padding: 8px 12px;
+				border-radius: 20px;
+				background: #f8f6f2;
+				font-size: 14px;
+			}
+			.assets {
+				display: grid;
+				grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+				gap: 16px;
+			}
+			.assets figure {
+				margin: 0;
+				background: #f8f6f2;
+				padding: 12px;
+				border-radius: 12px;
+			}
+			.assets img {
+				width: 100%;
+				height: 160px;
+				object-fit: contain;
+			}
+			.assets figcaption {
+				font-size: 13px;
+				line-height: 20px;
+			}
+			.sample.narrow {
+				width: 320px;
+			}
+			small {
+				color: #57534e;
+				display: block;
+				margin: 12px 0;
+				font-size: 12px;
+			}
+			@media (max-width: 500px) {
+				body {
+					padding: 12px;
+				}
+				.sample {
+					width: 100%;
+				}
+				.boards {
+					gap: 16px;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<h1>나의 첫 전시 벽 · 디자인 검수 시안</h1>
+		<p class="intro">
+			실제 에셋·Pretendard·Hahmlet를 사용한 정적 상태 비교입니다. 드래그와 저장은 동작하지
+			않습니다.<br />기기 높이 대응·VoiceOver·네이티브 동작은 후속 프로토타입 검증 대상입니다.
+		</p>
+		<div class="boards">
+			<section class="sample">
+				<h2>빈 벽</h2>
+				<div class="phone">
+					<h3>나의 첫 전시 벽</h3>
+					<p>마음에 드는 작품을 걸어 보세요</p>
+					<svg viewBox="0 0 1060 1080" role="img" aria-label="비대칭 액자 5개">
+						<image
+							href="../../../assets/images/onboarding/wall-bg.png"
+							width="1060"
+							height="1080"
+							preserveAspectRatio="xMidYMid slice"
+						/>
+						<defs>
+							<clipPath id="empty-0">
+								<ellipse cx="181.0" cy="357.5" rx="88.0" ry="123.5" />
+							</clipPath>
+						</defs>
+						<g clip-path="url(#empty-0)">
+							<rect x="93" y="234" width="176" height="247" fill="#F2EFE9" />
+							<text x="181.0" y="369.5" text-anchor="middle" font-size="38" fill="#57534E">+</text>
+						</g>
+						<image
+							href="../../../assets/images/onboarding/oval-1.png"
+							x="45"
+							y="140"
+							width="275"
+							height="424"
+						/>
+						<defs>
+							<clipPath id="empty-1">
+								<ellipse cx="829.5" cy="437.0" rx="81.5" ry="116.0" />
+							</clipPath>
+						</defs>
+						<g clip-path="url(#empty-1)">
+							<rect x="748" y="321" width="163" height="232" fill="#F2EFE9" />
+							<text x="829.5" y="449.0" text-anchor="middle" font-size="38" fill="#57534E">+</text>
+						</g>
+						<image
+							href="../../../assets/images/onboarding/oval-2.png"
+							x="715"
+							y="225"
+							width="229"
+							height="371"
+						/>
+						<defs>
+							<clipPath id="empty-2"><rect x="411" y="127" width="213" height="146" /></clipPath>
+						</defs>
+						<g clip-path="url(#empty-2)">
+							<rect x="411" y="127" width="213" height="146" fill="#F2EFE9" />
+							<text x="517.5" y="212.0" text-anchor="middle" font-size="38" fill="#57534E">+</text>
+						</g>
+						<image
+							href="../../../assets/images/onboarding/square-1.png"
+							x="370"
+							y="85"
+							width="296"
+							height="231"
+						/>
+						<defs>
+							<clipPath id="empty-3"><rect x="389" y="484" width="238" height="301" /></clipPath>
+						</defs>
+						<g clip-path="url(#empty-3)">
+							<rect x="389" y="484" width="238" height="301" fill="#F2EFE9" />
+							<text x="508.0" y="646.5" text-anchor="middle" font-size="38" fill="#57534E">+</text>
+						</g>
+						<image
+							href="../../../assets/images/onboarding/square-2.png"
+							x="325"
+							y="390"
+							width="366"
+							height="476"
+						/>
+						<defs>
+							<clipPath id="empty-4"><rect x="768" y="710" width="213" height="169" /></clipPath>
+						</defs>
+						<g clip-path="url(#empty-4)">
+							<rect x="768" y="710" width="213" height="169" fill="#F2EFE9" />
+							<text x="874.5" y="806.5" text-anchor="middle" font-size="38" fill="#57534E">+</text>
+						</g>
+						<image
+							href="../../../assets/images/onboarding/square-3.png"
+							x="705"
+							y="650"
+							width="343"
+							height="288"
+						/>
+					</svg>
+					<div class="status"><p>3개 더 걸면 시작할 수 있어요 · 0/5</p></div>
+					<p>눌러서 걸거나, 길게 눌러 옮겨 보세요</p>
+					<div class="tray" aria-label="작품 후보 16개">
+						<div class="tile">
+							<div class="thumb">
+								<img
+									style="object-fit: contain; object-position: 50% 50%"
+									class=""
+									src="../../../assets/images/genres/photo-empire_building-horizontal.jpg"
+									alt="높은 철골 위에 나란히 앉은 사람들, 사진"
+								/>
+							</div>
+							<div>사진</div>
+						</div>
+						<div class="tile">
+							<div class="thumb">
+								<img
+									style="object-fit: contain; object-position: 50% 50%"
+									class=""
+									src="../../../assets/images/genres/photo-1-square.webp"
+									alt="달 표면에 선 우주인과 긴 그림자, 사진"
+								/>
+							</div>
+							<div>사진</div>
+						</div>
+						<div class="tile">
+							<div class="thumb">
+								<img
+									style="object-fit: cover; object-position: 48% 40%"
+									class=""
+									src="../../../assets/images/genres/skulpture-thinking-vertical.jpg"
+									alt="턱을 괴고 몸을 웅크린 인물, 조각"
+								/>
+							</div>
+							<div>조각</div>
+						</div>
+						<div class="tile">
+							<div class="thumb">
+								<img
+									style="object-fit: contain; object-position: 50% 50%"
+									class=""
+									src="../../../assets/images/genres/skulpture-pieta-square.jpg"
+									alt="누운 인물을 품에 안은 대리석 형상, 조각"
+								/>
+							</div>
+							<div>조각</div>
+						</div>
+						<div class="tile">
+							<div class="thumb">
+								<img
+									style="object-fit: cover; object-position: 40% 45%"
+									class=""
+									src="../../../assets/images/genres/print-wave-horizontal.jpg"
+									alt="배 위로 굽이치는 커다란 푸른 파도, 판화"
+								/>
+							</div>
+							<div>판화</div>
+						</div>
+						<div class="tile">
+							<div class="thumb">
+								<img
+									style="object-fit: cover; object-position: 61% 48%"
+									class=""
+									src="../../../assets/images/genres/print-melencolia-vertical.jpg"
+									alt="도구들 사이에서 생각에 잠긴 날개 달린 인물, 판화"
+								/>
+							</div>
+							<div>판화</div>
+						</div>
+						<div class="tile">
+							<div class="thumb">
+								<img
+									style="object-fit: contain; object-position: 50% 50%"
+									class=""
+									src="../../../assets/images/genres/korean-Irworobongdo-horizontal.jpg"
+									alt="해와 달 아래 펼쳐진 푸른 산과 물결, 한국화"
+								/>
+							</div>
+							<div>한국화</div>
+						</div>
+						<div class="tile">
+							<div class="thumb">
+								<img
+									style="object-fit: cover; object-position: 52% 51%"
+									class=""
+									src="../../../assets/images/genres/korean-1-vertical.jpg"
+									alt="둘러앉은 사람들 가운데 씨름하는 두 사람, 한국화"
+								/>
+							</div>
+							<div>한국화</div>
+						</div>
+						<div class="tile">
+							<div class="thumb">
+								<img
+									style="object-fit: cover; object-position: 53% 40%"
+									class=""
+									src="../../../assets/images/genres/paintings-pearl-vertical.jpg"
+									alt="푸른 두건을 쓰고 뒤돌아보는 인물, 회화"
+								/>
+							</div>
+							<div>회화</div>
+						</div>
+						<div class="tile">
+							<div class="thumb">
+								<img
+									style="object-fit: cover; object-position: 55.00000000000001% 38%"
+									class=""
+									src="../../../assets/images/genres/paintings-gogh-horizontal.jpg"
+									alt="소용돌이치는 푸른 밤하늘과 노란 별, 회화"
+								/>
+							</div>
+							<div>회화</div>
+						</div>
+						<div class="tile">
+							<div class="thumb">
+								<img
+									style="object-fit: contain; object-position: 50% 50%"
+									class=""
+									src="../../../assets/images/genres/crafts-korean-vertical.jpg"
+									alt="둥근 무늬와 새가 새겨진 푸른 도자기, 공예"
+								/>
+							</div>
+							<div>공예</div>
+						</div>
+						<div class="tile">
+							<div class="thumb">
+								<img
+									style="object-fit: contain; object-position: 50% 50%"
+									class=""
+									src="../../../assets/images/genres/crafs-egg-vertical.png"
+									alt="노란 보석 장식의 달걀과 작은 마차, 공예"
+								/>
+							</div>
+							<div>공예</div>
+						</div>
+						<div class="tile">
+							<div class="thumb">
+								<img
+									style="object-fit: contain; object-position: 50% 50%"
+									class=""
+									src="../../../assets/images/genres/contemporary-1-horizontal.png"
+									alt="은색 테이프로 붙인 검정·분홍 로고, 현대 미술"
+								/>
+							</div>
+							<div>현대 미술</div>
+						</div>
+						<div class="tile">
+							<div class="thumb">
+								<img
+									style="object-fit: contain; object-position: 50% 50%"
+									class=""
+									src="../../../assets/images/genres/contemporary-2-vertical.png"
+									alt="로고가 켜진 모니터를 높이 쌓은 탑, 현대 미술"
+								/>
+							</div>
+							<div>현대 미술</div>
+						</div>
+						<div class="tile">
+							<div class="thumb">
+								<img
+									style="object-fit: contain; object-position: 50% 50%"
+									class=""
+									src="../../../assets/images/genres/contemporary-3-square.png"
+									alt="얼굴과 기하학적 면으로 구성한 로고, 현대 미술"
+								/>
+							</div>
+							<div>현대 미술</div>
+						</div>
+						<div class="tile">
+							<div class="thumb">
+								<img
+									style="object-fit: contain; object-position: 50% 50%"
+									class=""
+									src="../../../assets/images/genres/contemporary-4-horizontal.png"
+									alt="분홍·보라 빛으로 녹아내리는 로고들, 현대 미술"
+								/>
+							</div>
+							<div>현대 미술</div>
+						</div>
+					</div>
+					<div class="cta disabled">이 전시로 시작하기</div>
+				</div>
+			</section>
+			<section class="sample">
+				<h2>3개 배치</h2>
+				<div class="phone">
+					<h3>나의 첫 전시 벽</h3>
+					<p>마음에 드는 작품을 걸어 보세요</p>
+					<svg viewBox="0 0 1060 1080" role="img" aria-label="비대칭 액자 5개">
+						<image
+							href="../../../assets/images/onboarding/wall-bg.png"
+							width="1060"
+							height="1080"
+							preserveAspectRatio="xMidYMid slice"
+						/>
+						<defs>
+							<clipPath id="filled-0">
+								<ellipse cx="181.0" cy="357.5" rx="88.0" ry="123.5" />
+							</clipPath>
+						</defs>
+						<g clip-path="url(#filled-0)">
+							<rect x="93" y="234" width="176" height="247" fill="#F2EFE9" />
+							<image
+								href="../../../assets/images/genres/paintings-pearl-vertical.jpg"
+								x="70.43412162162161"
+								y="234.0"
+								width="208.61486486486487"
+								height="247.0"
+							/>
+						</g>
+						<image
+							href="../../../assets/images/onboarding/oval-1.png"
+							x="45"
+							y="140"
+							width="275"
+							height="424"
+						/>
+						<defs>
+							<clipPath id="filled-1">
+								<ellipse cx="829.5" cy="437.0" rx="81.5" ry="116.0" />
+							</clipPath>
+						</defs>
+						<g clip-path="url(#filled-1)">
+							<rect x="748" y="321" width="163" height="232" fill="#F2EFE9" />
+							<image
+								href="../../../assets/images/genres/contemporary-2-vertical.png"
+								x="773.4018803779975"
+								y="352.8528205669963"
+								width="112.19623924400497"
+								height="168.29435886600746"
+							/>
+						</g>
+						<image
+							href="../../../assets/images/onboarding/oval-2.png"
+							x="715"
+							y="225"
+							width="229"
+							height="371"
+						/>
+						<defs>
+							<clipPath id="filled-2"><rect x="411" y="127" width="213" height="146" /></clipPath>
+						</defs>
+						<g clip-path="url(#filled-2)">
+							<rect x="411" y="127" width="213" height="146" fill="#F2EFE9" />
+							<image
+								href="../../../assets/images/genres/print-wave-horizontal.jpg"
+								x="411.0"
+								y="127"
+								width="213.0"
+								height="150.378"
+							/>
+						</g>
+						<image
+							href="../../../assets/images/onboarding/square-1.png"
+							x="370"
+							y="85"
+							width="296"
+							height="231"
+						/>
+						<defs>
+							<clipPath id="filled-3"><rect x="389" y="484" width="238" height="301" /></clipPath>
+						</defs>
+						<g clip-path="url(#filled-3)">
+							<rect x="389" y="484" width="238" height="301" fill="#F2EFE9" />
+							<text x="508.0" y="646.5" text-anchor="middle" font-size="38" fill="#57534E">+</text>
+						</g>
+						<image
+							href="../../../assets/images/onboarding/square-2.png"
+							x="325"
+							y="390"
+							width="366"
+							height="476"
+						/>
+						<defs>
+							<clipPath id="filled-4"><rect x="768" y="710" width="213" height="169" /></clipPath>
+						</defs>
+						<g clip-path="url(#filled-4)">
+							<rect x="768" y="710" width="213" height="169" fill="#F2EFE9" />
+							<text x="874.5" y="806.5" text-anchor="middle" font-size="38" fill="#57534E">+</text>
+						</g>
+						<image
+							href="../../../assets/images/onboarding/square-3.png"
+							x="705"
+							y="650"
+							width="343"
+							height="288"
+						/>
+					</svg>
+					<div class="status"><p>나만의 전시가 완성되고 있어요 · 3/5</p></div>
+					<p>눌러서 걸거나, 길게 눌러 옮겨 보세요</p>
+					<div class="tray" aria-label="작품 후보 16개">
+						<div class="tile">
+							<div class="thumb">
+								<img
+									style="object-fit: contain; object-position: 50% 50%"
+									class=""
+									src="../../../assets/images/genres/photo-empire_building-horizontal.jpg"
+									alt="높은 철골 위에 나란히 앉은 사람들, 사진"
+								/>
+							</div>
+							<div>사진</div>
+						</div>
+						<div class="tile">
+							<div class="thumb">
+								<img
+									style="object-fit: contain; object-position: 50% 50%"
+									class=""
+									src="../../../assets/images/genres/photo-1-square.webp"
+									alt="달 표면에 선 우주인과 긴 그림자, 사진"
+								/>
+							</div>
+							<div>사진</div>
+						</div>
+						<div class="tile">
+							<div class="thumb">
+								<img
+									style="object-fit: cover; object-position: 48% 40%"
+									class=""
+									src="../../../assets/images/genres/skulpture-thinking-vertical.jpg"
+									alt="턱을 괴고 몸을 웅크린 인물, 조각"
+								/>
+							</div>
+							<div>조각</div>
+						</div>
+						<div class="tile">
+							<div class="thumb">
+								<img
+									style="object-fit: contain; object-position: 50% 50%"
+									class=""
+									src="../../../assets/images/genres/skulpture-pieta-square.jpg"
+									alt="누운 인물을 품에 안은 대리석 형상, 조각"
+								/>
+							</div>
+							<div>조각</div>
+						</div>
+						<div class="tile">
+							<div class="thumb">
+								<img
+									style="object-fit: cover; object-position: 40% 45%"
+									class="used"
+									src="../../../assets/images/genres/print-wave-horizontal.jpg"
+									alt="배 위로 굽이치는 커다란 푸른 파도, 판화"
+								/><span class="badge">✓ 배치됨</span>
+							</div>
+							<div>판화</div>
+						</div>
+						<div class="tile">
+							<div class="thumb">
+								<img
+									style="object-fit: cover; object-position: 61% 48%"
+									class=""
+									src="../../../assets/images/genres/print-melencolia-vertical.jpg"
+									alt="도구들 사이에서 생각에 잠긴 날개 달린 인물, 판화"
+								/>
+							</div>
+							<div>판화</div>
+						</div>
+						<div class="tile">
+							<div class="thumb">
+								<img
+									style="object-fit: contain; object-position: 50% 50%"
+									class=""
+									src="../../../assets/images/genres/korean-Irworobongdo-horizontal.jpg"
+									alt="해와 달 아래 펼쳐진 푸른 산과 물결, 한국화"
+								/>
+							</div>
+							<div>한국화</div>
+						</div>
+						<div class="tile">
+							<div class="thumb">
+								<img
+									style="object-fit: cover; object-position: 52% 51%"
+									class=""
+									src="../../../assets/images/genres/korean-1-vertical.jpg"
+									alt="둘러앉은 사람들 가운데 씨름하는 두 사람, 한국화"
+								/>
+							</div>
+							<div>한국화</div>
+						</div>
+						<div class="tile">
+							<div class="thumb">
+								<img
+									style="object-fit: cover; object-position: 53% 40%"
+									class="used"
+									src="../../../assets/images/genres/paintings-pearl-vertical.jpg"
+									alt="푸른 두건을 쓰고 뒤돌아보는 인물, 회화"
+								/><span class="badge">✓ 배치됨</span>
+							</div>
+							<div>회화</div>
+						</div>
+						<div class="tile">
+							<div class="thumb">
+								<img
+									style="object-fit: cover; object-position: 55.00000000000001% 38%"
+									class=""
+									src="../../../assets/images/genres/paintings-gogh-horizontal.jpg"
+									alt="소용돌이치는 푸른 밤하늘과 노란 별, 회화"
+								/>
+							</div>
+							<div>회화</div>
+						</div>
+						<div class="tile">
+							<div class="thumb">
+								<img
+									style="object-fit: contain; object-position: 50% 50%"
+									class=""
+									src="../../../assets/images/genres/crafts-korean-vertical.jpg"
+									alt="둥근 무늬와 새가 새겨진 푸른 도자기, 공예"
+								/>
+							</div>
+							<div>공예</div>
+						</div>
+						<div class="tile">
+							<div class="thumb">
+								<img
+									style="object-fit: contain; object-position: 50% 50%"
+									class=""
+									src="../../../assets/images/genres/crafs-egg-vertical.png"
+									alt="노란 보석 장식의 달걀과 작은 마차, 공예"
+								/>
+							</div>
+							<div>공예</div>
+						</div>
+						<div class="tile">
+							<div class="thumb">
+								<img
+									style="object-fit: contain; object-position: 50% 50%"
+									class=""
+									src="../../../assets/images/genres/contemporary-1-horizontal.png"
+									alt="은색 테이프로 붙인 검정·분홍 로고, 현대 미술"
+								/>
+							</div>
+							<div>현대 미술</div>
+						</div>
+						<div class="tile">
+							<div class="thumb">
+								<img
+									style="object-fit: contain; object-position: 50% 50%"
+									class="used"
+									src="../../../assets/images/genres/contemporary-2-vertical.png"
+									alt="로고가 켜진 모니터를 높이 쌓은 탑, 현대 미술"
+								/><span class="badge">✓ 배치됨</span>
+							</div>
+							<div>현대 미술</div>
+						</div>
+						<div class="tile">
+							<div class="thumb">
+								<img
+									style="object-fit: contain; object-position: 50% 50%"
+									class=""
+									src="../../../assets/images/genres/contemporary-3-square.png"
+									alt="얼굴과 기하학적 면으로 구성한 로고, 현대 미술"
+								/>
+							</div>
+							<div>현대 미술</div>
+						</div>
+						<div class="tile">
+							<div class="thumb">
+								<img
+									style="object-fit: contain; object-position: 50% 50%"
+									class=""
+									src="../../../assets/images/genres/contemporary-4-horizontal.png"
+									alt="분홍·보라 빛으로 녹아내리는 로고들, 현대 미술"
+								/>
+							</div>
+							<div>현대 미술</div>
+						</div>
+					</div>
+					<div class="cta">이 전시로 시작하기</div>
+				</div>
+			</section>
+			<section class="sample">
+				<h2>5개 배치 · 현대 로고 4개</h2>
+				<div class="phone">
+					<h3>나의 첫 전시 벽</h3>
+					<p>마음에 드는 작품을 걸어 보세요</p>
+					<svg viewBox="0 0 1060 1080" role="img" aria-label="비대칭 액자 5개">
+						<image
+							href="../../../assets/images/onboarding/wall-bg.png"
+							width="1060"
+							height="1080"
+							preserveAspectRatio="xMidYMid slice"
+						/>
+						<defs>
+							<clipPath id="full-0">
+								<ellipse cx="181.0" cy="357.5" rx="88.0" ry="123.5" />
+							</clipPath>
+						</defs>
+						<g clip-path="url(#full-0)">
+							<rect x="93" y="234" width="176" height="247" fill="#F2EFE9" />
+							<image
+								href="../../../assets/images/genres/contemporary-1-horizontal.png"
+								x="105.47548894378913"
+								y="294.112371655525"
+								width="151.04902211242174"
+								height="126.77525668895002"
+							/>
+						</g>
+						<image
+							href="../../../assets/images/onboarding/oval-1.png"
+							x="45"
+							y="140"
+							width="275"
+							height="424"
+						/>
+						<defs>
+							<clipPath id="full-1">
+								<ellipse cx="829.5" cy="437.0" rx="81.5" ry="116.0" />
+							</clipPath>
+						</defs>
+						<g clip-path="url(#full-1)">
+							<rect x="748" y="321" width="163" height="232" fill="#F2EFE9" />
+							<image
+								href="../../../assets/images/genres/contemporary-2-vertical.png"
+								x="773.4018803779975"
+								y="352.8528205669963"
+								width="112.19623924400497"
+								height="168.29435886600746"
+							/>
+						</g>
+						<image
+							href="../../../assets/images/onboarding/oval-2.png"
+							x="715"
+							y="225"
+							width="229"
+							height="371"
+						/>
+						<defs>
+							<clipPath id="full-2"><rect x="411" y="127" width="213" height="146" /></clipPath>
+						</defs>
+						<g clip-path="url(#full-2)">
+							<rect x="411" y="127" width="213" height="146" fill="#F2EFE9" />
+							<image
+								href="../../../assets/images/genres/contemporary-3-square.png"
+								x="444.5"
+								y="127.0"
+								width="146.0"
+								height="146.0"
+							/>
+						</g>
+						<image
+							href="../../../assets/images/onboarding/square-1.png"
+							x="370"
+							y="85"
+							width="296"
+							height="231"
+						/>
+						<defs>
+							<clipPath id="full-3"><rect x="389" y="484" width="238" height="301" /></clipPath>
+						</defs>
+						<g clip-path="url(#full-3)">
+							<rect x="389" y="484" width="238" height="301" fill="#F2EFE9" />
+							<image
+								href="../../../assets/images/genres/contemporary-4-horizontal.png"
+								x="389.0"
+								y="549.5"
+								width="238.0"
+								height="170.0"
+							/>
+						</g>
+						<image
+							href="../../../assets/images/onboarding/square-2.png"
+							x="325"
+							y="390"
+							width="366"
+							height="476"
+						/>
+						<defs>
+							<clipPath id="full-4"><rect x="768" y="710" width="213" height="169" /></clipPath>
+						</defs>
+						<g clip-path="url(#full-4)">
+							<rect x="768" y="710" width="213" height="169" fill="#F2EFE9" />
+							<image
+								href="../../../assets/images/genres/paintings-gogh-horizontal.jpg"
+								x="767.6161616161617"
+								y="710.0"
+								width="213.38383838383837"
+								height="169.0"
+							/>
+						</g>
+						<image
+							href="../../../assets/images/onboarding/square-3.png"
+							x="705"
+							y="650"
+							width="343"
+							height="288"
+						/>
+					</svg>
+					<div class="status"><p>나만의 전시가 완성되고 있어요 · 5/5</p></div>
+					<p>눌러서 걸거나, 길게 눌러 옮겨 보세요</p>
+					<div class="tray" aria-label="작품 후보 16개">
+						<div class="tile">
+							<div class="thumb">
+								<img
+									style="object-fit: contain; object-position: 50% 50%"
+									class=""
+									src="../../../assets/images/genres/photo-empire_building-horizontal.jpg"
+									alt="높은 철골 위에 나란히 앉은 사람들, 사진"
+								/>
+							</div>
+							<div>사진</div>
+						</div>
+						<div class="tile">
+							<div class="thumb">
+								<img
+									style="object-fit: contain; object-position: 50% 50%"
+									class=""
+									src="../../../assets/images/genres/photo-1-square.webp"
+									alt="달 표면에 선 우주인과 긴 그림자, 사진"
+								/>
+							</div>
+							<div>사진</div>
+						</div>
+						<div class="tile">
+							<div class="thumb">
+								<img
+									style="object-fit: cover; object-position: 48% 40%"
+									class=""
+									src="../../../assets/images/genres/skulpture-thinking-vertical.jpg"
+									alt="턱을 괴고 몸을 웅크린 인물, 조각"
+								/>
+							</div>
+							<div>조각</div>
+						</div>
+						<div class="tile">
+							<div class="thumb">
+								<img
+									style="object-fit: contain; object-position: 50% 50%"
+									class=""
+									src="../../../assets/images/genres/skulpture-pieta-square.jpg"
+									alt="누운 인물을 품에 안은 대리석 형상, 조각"
+								/>
+							</div>
+							<div>조각</div>
+						</div>
+						<div class="tile">
+							<div class="thumb">
+								<img
+									style="object-fit: cover; object-position: 40% 45%"
+									class=""
+									src="../../../assets/images/genres/print-wave-horizontal.jpg"
+									alt="배 위로 굽이치는 커다란 푸른 파도, 판화"
+								/>
+							</div>
+							<div>판화</div>
+						</div>
+						<div class="tile">
+							<div class="thumb">
+								<img
+									style="object-fit: cover; object-position: 61% 48%"
+									class=""
+									src="../../../assets/images/genres/print-melencolia-vertical.jpg"
+									alt="도구들 사이에서 생각에 잠긴 날개 달린 인물, 판화"
+								/>
+							</div>
+							<div>판화</div>
+						</div>
+						<div class="tile">
+							<div class="thumb">
+								<img
+									style="object-fit: contain; object-position: 50% 50%"
+									class=""
+									src="../../../assets/images/genres/korean-Irworobongdo-horizontal.jpg"
+									alt="해와 달 아래 펼쳐진 푸른 산과 물결, 한국화"
+								/>
+							</div>
+							<div>한국화</div>
+						</div>
+						<div class="tile">
+							<div class="thumb">
+								<img
+									style="object-fit: cover; object-position: 52% 51%"
+									class=""
+									src="../../../assets/images/genres/korean-1-vertical.jpg"
+									alt="둘러앉은 사람들 가운데 씨름하는 두 사람, 한국화"
+								/>
+							</div>
+							<div>한국화</div>
+						</div>
+						<div class="tile">
+							<div class="thumb">
+								<img
+									style="object-fit: cover; object-position: 53% 40%"
+									class=""
+									src="../../../assets/images/genres/paintings-pearl-vertical.jpg"
+									alt="푸른 두건을 쓰고 뒤돌아보는 인물, 회화"
+								/>
+							</div>
+							<div>회화</div>
+						</div>
+						<div class="tile">
+							<div class="thumb">
+								<img
+									style="object-fit: cover; object-position: 55.00000000000001% 38%"
+									class="used"
+									src="../../../assets/images/genres/paintings-gogh-horizontal.jpg"
+									alt="소용돌이치는 푸른 밤하늘과 노란 별, 회화"
+								/><span class="badge">✓ 배치됨</span>
+							</div>
+							<div>회화</div>
+						</div>
+						<div class="tile">
+							<div class="thumb">
+								<img
+									style="object-fit: contain; object-position: 50% 50%"
+									class=""
+									src="../../../assets/images/genres/crafts-korean-vertical.jpg"
+									alt="둥근 무늬와 새가 새겨진 푸른 도자기, 공예"
+								/>
+							</div>
+							<div>공예</div>
+						</div>
+						<div class="tile">
+							<div class="thumb">
+								<img
+									style="object-fit: contain; object-position: 50% 50%"
+									class=""
+									src="../../../assets/images/genres/crafs-egg-vertical.png"
+									alt="노란 보석 장식의 달걀과 작은 마차, 공예"
+								/>
+							</div>
+							<div>공예</div>
+						</div>
+						<div class="tile">
+							<div class="thumb">
+								<img
+									style="object-fit: contain; object-position: 50% 50%"
+									class="used"
+									src="../../../assets/images/genres/contemporary-1-horizontal.png"
+									alt="은색 테이프로 붙인 검정·분홍 로고, 현대 미술"
+								/><span class="badge">✓ 배치됨</span>
+							</div>
+							<div>현대 미술</div>
+						</div>
+						<div class="tile">
+							<div class="thumb">
+								<img
+									style="object-fit: contain; object-position: 50% 50%"
+									class="used"
+									src="../../../assets/images/genres/contemporary-2-vertical.png"
+									alt="로고가 켜진 모니터를 높이 쌓은 탑, 현대 미술"
+								/><span class="badge">✓ 배치됨</span>
+							</div>
+							<div>현대 미술</div>
+						</div>
+						<div class="tile">
+							<div class="thumb">
+								<img
+									style="object-fit: contain; object-position: 50% 50%"
+									class="used"
+									src="../../../assets/images/genres/contemporary-3-square.png"
+									alt="얼굴과 기하학적 면으로 구성한 로고, 현대 미술"
+								/><span class="badge">✓ 배치됨</span>
+							</div>
+							<div>현대 미술</div>
+						</div>
+						<div class="tile">
+							<div class="thumb">
+								<img
+									style="object-fit: contain; object-position: 50% 50%"
+									class="used"
+									src="../../../assets/images/genres/contemporary-4-horizontal.png"
+									alt="분홍·보라 빛으로 녹아내리는 로고들, 현대 미술"
+								/><span class="badge">✓ 배치됨</span>
+							</div>
+							<div>현대 미술</div>
+						</div>
+					</div>
+					<div class="cta">이 전시로 시작하기</div>
+				</div>
+			</section>
+			<section class="sample">
+				<h2>교체 대상 선택</h2>
+				<div class="phone">
+					<h3>나의 첫 전시 벽</h3>
+					<p>마음에 드는 작품을 걸어 보세요</p>
+					<svg viewBox="0 0 1060 1080" role="img" aria-label="비대칭 액자 5개">
+						<image
+							href="../../../assets/images/onboarding/wall-bg.png"
+							width="1060"
+							height="1080"
+							preserveAspectRatio="xMidYMid slice"
+						/>
+						<defs>
+							<clipPath id="replace-0">
+								<ellipse cx="181.0" cy="357.5" rx="88.0" ry="123.5" />
+							</clipPath>
+						</defs>
+						<g clip-path="url(#replace-0)">
+							<rect x="93" y="234" width="176" height="247" fill="#F2EFE9" />
+							<image
+								href="../../../assets/images/genres/paintings-pearl-vertical.jpg"
+								x="70.43412162162161"
+								y="234.0"
+								width="208.61486486486487"
+								height="247.0"
+							/>
+						</g>
+						<image
+							href="../../../assets/images/onboarding/oval-1.png"
+							x="45"
+							y="140"
+							width="275"
+							height="424"
+						/>
+						<rect
+							x="42"
+							y="137"
+							width="281"
+							height="430"
+							fill="none"
+							stroke="#1C1917"
+							stroke-width="9"
+						/>
+						<rect
+							x="42"
+							y="137"
+							width="281"
+							height="430"
+							fill="none"
+							stroke="#AB77F1"
+							stroke-width="6"
+						/>
+						<defs>
+							<clipPath id="replace-1">
+								<ellipse cx="829.5" cy="437.0" rx="81.5" ry="116.0" />
+							</clipPath>
+						</defs>
+						<g clip-path="url(#replace-1)">
+							<rect x="748" y="321" width="163" height="232" fill="#F2EFE9" />
+							<image
+								href="../../../assets/images/genres/contemporary-2-vertical.png"
+								x="773.4018803779975"
+								y="352.8528205669963"
+								width="112.19623924400497"
+								height="168.29435886600746"
+							/>
+						</g>
+						<image
+							href="../../../assets/images/onboarding/oval-2.png"
+							x="715"
+							y="225"
+							width="229"
+							height="371"
+						/>
+						<defs>
+							<clipPath id="replace-2"><rect x="411" y="127" width="213" height="146" /></clipPath>
+						</defs>
+						<g clip-path="url(#replace-2)">
+							<rect x="411" y="127" width="213" height="146" fill="#F2EFE9" />
+							<image
+								href="../../../assets/images/genres/print-wave-horizontal.jpg"
+								x="411.0"
+								y="127"
+								width="213.0"
+								height="150.378"
+							/>
+						</g>
+						<image
+							href="../../../assets/images/onboarding/square-1.png"
+							x="370"
+							y="85"
+							width="296"
+							height="231"
+						/>
+						<defs>
+							<clipPath id="replace-3"><rect x="389" y="484" width="238" height="301" /></clipPath>
+						</defs>
+						<g clip-path="url(#replace-3)">
+							<rect x="389" y="484" width="238" height="301" fill="#F2EFE9" />
+							<text x="508.0" y="646.5" text-anchor="middle" font-size="38" fill="#57534E">+</text>
+						</g>
+						<image
+							href="../../../assets/images/onboarding/square-2.png"
+							x="325"
+							y="390"
+							width="366"
+							height="476"
+						/>
+						<defs>
+							<clipPath id="replace-4"><rect x="768" y="710" width="213" height="169" /></clipPath>
+						</defs>
+						<g clip-path="url(#replace-4)">
+							<rect x="768" y="710" width="213" height="169" fill="#F2EFE9" />
+							<text x="874.5" y="806.5" text-anchor="middle" font-size="38" fill="#57534E">+</text>
+						</g>
+						<image
+							href="../../../assets/images/onboarding/square-3.png"
+							x="705"
+							y="650"
+							width="343"
+							height="288"
+						/>
+					</svg>
+					<div class="status"><p>1번 액자에 새 작품을 골라 주세요</p></div>
+					<div class="actions">
+						<div class="action">작품 빼기</div>
+						<div class="action">취소</div>
+					</div>
+					<p>눌러서 걸거나, 길게 눌러 옮겨 보세요</p>
+					<div class="tray" aria-label="작품 후보 16개">
+						<div class="tile">
+							<div class="thumb">
+								<img
+									style="object-fit: contain; object-position: 50% 50%"
+									class=""
+									src="../../../assets/images/genres/photo-empire_building-horizontal.jpg"
+									alt="높은 철골 위에 나란히 앉은 사람들, 사진"
+								/>
+							</div>
+							<div>사진</div>
+						</div>
+						<div class="tile">
+							<div class="thumb">
+								<img
+									style="object-fit: contain; object-position: 50% 50%"
+									class=""
+									src="../../../assets/images/genres/photo-1-square.webp"
+									alt="달 표면에 선 우주인과 긴 그림자, 사진"
+								/>
+							</div>
+							<div>사진</div>
+						</div>
+						<div class="tile">
+							<div class="thumb">
+								<img
+									style="object-fit: cover; object-position: 48% 40%"
+									class=""
+									src="../../../assets/images/genres/skulpture-thinking-vertical.jpg"
+									alt="턱을 괴고 몸을 웅크린 인물, 조각"
+								/>
+							</div>
+							<div>조각</div>
+						</div>
+						<div class="tile">
+							<div class="thumb">
+								<img
+									style="object-fit: contain; object-position: 50% 50%"
+									class=""
+									src="../../../assets/images/genres/skulpture-pieta-square.jpg"
+									alt="누운 인물을 품에 안은 대리석 형상, 조각"
+								/>
+							</div>
+							<div>조각</div>
+						</div>
+						<div class="tile">
+							<div class="thumb">
+								<img
+									style="object-fit: cover; object-position: 40% 45%"
+									class="used"
+									src="../../../assets/images/genres/print-wave-horizontal.jpg"
+									alt="배 위로 굽이치는 커다란 푸른 파도, 판화"
+								/><span class="badge">✓ 배치됨</span>
+							</div>
+							<div>판화</div>
+						</div>
+						<div class="tile">
+							<div class="thumb">
+								<img
+									style="object-fit: cover; object-position: 61% 48%"
+									class=""
+									src="../../../assets/images/genres/print-melencolia-vertical.jpg"
+									alt="도구들 사이에서 생각에 잠긴 날개 달린 인물, 판화"
+								/>
+							</div>
+							<div>판화</div>
+						</div>
+						<div class="tile">
+							<div class="thumb">
+								<img
+									style="object-fit: contain; object-position: 50% 50%"
+									class=""
+									src="../../../assets/images/genres/korean-Irworobongdo-horizontal.jpg"
+									alt="해와 달 아래 펼쳐진 푸른 산과 물결, 한국화"
+								/>
+							</div>
+							<div>한국화</div>
+						</div>
+						<div class="tile">
+							<div class="thumb">
+								<img
+									style="object-fit: cover; object-position: 52% 51%"
+									class=""
+									src="../../../assets/images/genres/korean-1-vertical.jpg"
+									alt="둘러앉은 사람들 가운데 씨름하는 두 사람, 한국화"
+								/>
+							</div>
+							<div>한국화</div>
+						</div>
+						<div class="tile">
+							<div class="thumb">
+								<img
+									style="object-fit: cover; object-position: 53% 40%"
+									class="used"
+									src="../../../assets/images/genres/paintings-pearl-vertical.jpg"
+									alt="푸른 두건을 쓰고 뒤돌아보는 인물, 회화"
+								/><span class="badge">✓ 배치됨</span>
+							</div>
+							<div>회화</div>
+						</div>
+						<div class="tile">
+							<div class="thumb">
+								<img
+									style="object-fit: cover; object-position: 55.00000000000001% 38%"
+									class=""
+									src="../../../assets/images/genres/paintings-gogh-horizontal.jpg"
+									alt="소용돌이치는 푸른 밤하늘과 노란 별, 회화"
+								/>
+							</div>
+							<div>회화</div>
+						</div>
+						<div class="tile">
+							<div class="thumb">
+								<img
+									style="object-fit: contain; object-position: 50% 50%"
+									class=""
+									src="../../../assets/images/genres/crafts-korean-vertical.jpg"
+									alt="둥근 무늬와 새가 새겨진 푸른 도자기, 공예"
+								/>
+							</div>
+							<div>공예</div>
+						</div>
+						<div class="tile">
+							<div class="thumb">
+								<img
+									style="object-fit: contain; object-position: 50% 50%"
+									class=""
+									src="../../../assets/images/genres/crafs-egg-vertical.png"
+									alt="노란 보석 장식의 달걀과 작은 마차, 공예"
+								/>
+							</div>
+							<div>공예</div>
+						</div>
+						<div class="tile">
+							<div class="thumb">
+								<img
+									style="object-fit: contain; object-position: 50% 50%"
+									class=""
+									src="../../../assets/images/genres/contemporary-1-horizontal.png"
+									alt="은색 테이프로 붙인 검정·분홍 로고, 현대 미술"
+								/>
+							</div>
+							<div>현대 미술</div>
+						</div>
+						<div class="tile">
+							<div class="thumb">
+								<img
+									style="object-fit: contain; object-position: 50% 50%"
+									class="used"
+									src="../../../assets/images/genres/contemporary-2-vertical.png"
+									alt="로고가 켜진 모니터를 높이 쌓은 탑, 현대 미술"
+								/><span class="badge">✓ 배치됨</span>
+							</div>
+							<div>현대 미술</div>
+						</div>
+						<div class="tile">
+							<div class="thumb">
+								<img
+									style="object-fit: contain; object-position: 50% 50%"
+									class=""
+									src="../../../assets/images/genres/contemporary-3-square.png"
+									alt="얼굴과 기하학적 면으로 구성한 로고, 현대 미술"
+								/>
+							</div>
+							<div>현대 미술</div>
+						</div>
+						<div class="tile">
+							<div class="thumb">
+								<img
+									style="object-fit: contain; object-position: 50% 50%"
+									class=""
+									src="../../../assets/images/genres/contemporary-4-horizontal.png"
+									alt="분홍·보라 빛으로 녹아내리는 로고들, 현대 미술"
+								/>
+							</div>
+							<div>현대 미술</div>
+						</div>
+					</div>
+					<div class="cta">이 전시로 시작하기</div>
+				</div>
+			</section>
+			<section class="sample">
+				<h2>저장 중</h2>
+				<div class="phone">
+					<h3>나의 첫 전시 벽</h3>
+					<p>마음에 드는 작품을 걸어 보세요</p>
+					<svg viewBox="0 0 1060 1080" role="img" aria-label="비대칭 액자 5개">
+						<image
+							href="../../../assets/images/onboarding/wall-bg.png"
+							width="1060"
+							height="1080"
+							preserveAspectRatio="xMidYMid slice"
+						/>
+						<defs>
+							<clipPath id="summary-0">
+								<ellipse cx="181.0" cy="357.5" rx="88.0" ry="123.5" />
+							</clipPath>
+						</defs>
+						<g clip-path="url(#summary-0)">
+							<rect x="93" y="234" width="176" height="247" fill="#F2EFE9" />
+							<image
+								href="../../../assets/images/genres/paintings-pearl-vertical.jpg"
+								x="70.43412162162161"
+								y="234.0"
+								width="208.61486486486487"
+								height="247.0"
+							/>
+						</g>
+						<image
+							href="../../../assets/images/onboarding/oval-1.png"
+							x="45"
+							y="140"
+							width="275"
+							height="424"
+						/>
+						<defs>
+							<clipPath id="summary-1">
+								<ellipse cx="829.5" cy="437.0" rx="81.5" ry="116.0" />
+							</clipPath>
+						</defs>
+						<g clip-path="url(#summary-1)">
+							<rect x="748" y="321" width="163" height="232" fill="#F2EFE9" />
+							<image
+								href="../../../assets/images/genres/contemporary-2-vertical.png"
+								x="773.4018803779975"
+								y="352.8528205669963"
+								width="112.19623924400497"
+								height="168.29435886600746"
+							/>
+						</g>
+						<image
+							href="../../../assets/images/onboarding/oval-2.png"
+							x="715"
+							y="225"
+							width="229"
+							height="371"
+						/>
+						<defs>
+							<clipPath id="summary-2"><rect x="411" y="127" width="213" height="146" /></clipPath>
+						</defs>
+						<g clip-path="url(#summary-2)">
+							<rect x="411" y="127" width="213" height="146" fill="#F2EFE9" />
+							<image
+								href="../../../assets/images/genres/print-wave-horizontal.jpg"
+								x="411.0"
+								y="127"
+								width="213.0"
+								height="150.378"
+							/>
+						</g>
+						<image
+							href="../../../assets/images/onboarding/square-1.png"
+							x="370"
+							y="85"
+							width="296"
+							height="231"
+						/>
+						<defs>
+							<clipPath id="summary-3"><rect x="389" y="484" width="238" height="301" /></clipPath>
+						</defs>
+						<g clip-path="url(#summary-3)">
+							<rect x="389" y="484" width="238" height="301" fill="#F2EFE9" />
+							<text x="508.0" y="646.5" text-anchor="middle" font-size="38" fill="#57534E">+</text>
+						</g>
+						<image
+							href="../../../assets/images/onboarding/square-2.png"
+							x="325"
+							y="390"
+							width="366"
+							height="476"
+						/>
+						<defs>
+							<clipPath id="summary-4"><rect x="768" y="710" width="213" height="169" /></clipPath>
+						</defs>
+						<g clip-path="url(#summary-4)">
+							<rect x="768" y="710" width="213" height="169" fill="#F2EFE9" />
+							<text x="874.5" y="806.5" text-anchor="middle" font-size="38" fill="#57534E">+</text>
+						</g>
+						<image
+							href="../../../assets/images/onboarding/square-3.png"
+							x="705"
+							y="650"
+							width="343"
+							height="288"
+						/>
+					</svg>
+					<div class="summary">
+						<p>이런 취향을 담았어요</p>
+						<div class="chips">
+							<span class="chip">회화</span><span class="chip">현대 미술</span
+							><span class="chip">판화</span>
+						</div>
+						<p>선택한 취향으로 전시를 만나 보세요</p>
+					</div>
+					<div class="cta disabled"><span aria-hidden="true">◌</span> 취향 저장 중…</div>
+				</div>
+			</section>
+			<section class="sample">
+				<h2>저장 실패</h2>
+				<div class="phone">
+					<h3>나의 첫 전시 벽</h3>
+					<p>마음에 드는 작품을 걸어 보세요</p>
+					<svg viewBox="0 0 1060 1080" role="img" aria-label="비대칭 액자 5개">
+						<image
+							href="../../../assets/images/onboarding/wall-bg.png"
+							width="1060"
+							height="1080"
+							preserveAspectRatio="xMidYMid slice"
+						/>
+						<defs>
+							<clipPath id="error-0">
+								<ellipse cx="181.0" cy="357.5" rx="88.0" ry="123.5" />
+							</clipPath>
+						</defs>
+						<g clip-path="url(#error-0)">
+							<rect x="93" y="234" width="176" height="247" fill="#F2EFE9" />
+							<image
+								href="../../../assets/images/genres/paintings-pearl-vertical.jpg"
+								x="70.43412162162161"
+								y="234.0"
+								width="208.61486486486487"
+								height="247.0"
+							/>
+						</g>
+						<image
+							href="../../../assets/images/onboarding/oval-1.png"
+							x="45"
+							y="140"
+							width="275"
+							height="424"
+						/>
+						<defs>
+							<clipPath id="error-1">
+								<ellipse cx="829.5" cy="437.0" rx="81.5" ry="116.0" />
+							</clipPath>
+						</defs>
+						<g clip-path="url(#error-1)">
+							<rect x="748" y="321" width="163" height="232" fill="#F2EFE9" />
+							<image
+								href="../../../assets/images/genres/contemporary-2-vertical.png"
+								x="773.4018803779975"
+								y="352.8528205669963"
+								width="112.19623924400497"
+								height="168.29435886600746"
+							/>
+						</g>
+						<image
+							href="../../../assets/images/onboarding/oval-2.png"
+							x="715"
+							y="225"
+							width="229"
+							height="371"
+						/>
+						<defs>
+							<clipPath id="error-2"><rect x="411" y="127" width="213" height="146" /></clipPath>
+						</defs>
+						<g clip-path="url(#error-2)">
+							<rect x="411" y="127" width="213" height="146" fill="#F2EFE9" />
+							<image
+								href="../../../assets/images/genres/print-wave-horizontal.jpg"
+								x="411.0"
+								y="127"
+								width="213.0"
+								height="150.378"
+							/>
+						</g>
+						<image
+							href="../../../assets/images/onboarding/square-1.png"
+							x="370"
+							y="85"
+							width="296"
+							height="231"
+						/>
+						<defs>
+							<clipPath id="error-3"><rect x="389" y="484" width="238" height="301" /></clipPath>
+						</defs>
+						<g clip-path="url(#error-3)">
+							<rect x="389" y="484" width="238" height="301" fill="#F2EFE9" />
+							<text x="508.0" y="646.5" text-anchor="middle" font-size="38" fill="#57534E">+</text>
+						</g>
+						<image
+							href="../../../assets/images/onboarding/square-2.png"
+							x="325"
+							y="390"
+							width="366"
+							height="476"
+						/>
+						<defs>
+							<clipPath id="error-4"><rect x="768" y="710" width="213" height="169" /></clipPath>
+						</defs>
+						<g clip-path="url(#error-4)">
+							<rect x="768" y="710" width="213" height="169" fill="#F2EFE9" />
+							<text x="874.5" y="806.5" text-anchor="middle" font-size="38" fill="#57534E">+</text>
+						</g>
+						<image
+							href="../../../assets/images/onboarding/square-3.png"
+							x="705"
+							y="650"
+							width="343"
+							height="288"
+						/>
+					</svg>
+					<div class="summary">
+						<p>이런 취향을 담았어요</p>
+						<div class="chips">
+							<span class="chip">회화</span><span class="chip">현대 미술</span
+							><span class="chip">판화</span>
+						</div>
+						<p>선택한 취향으로 전시를 만나 보세요</p>
+					</div>
+					<div class="error">
+						<p>저장에 실패했어요. 네트워크를 확인하고 다시 시도해 주세요.</p>
+						<div class="actions">
+							<div class="action">다시 시도</div>
+							<div class="action">취향 저장 없이 시작</div>
+						</div>
+					</div>
+				</div>
+			</section>
+		</div>
+		<h2>전체 16개 에셋과 감상 라벨</h2>
+		<div class="assets">
+			<figure>
+				<img
+					src="../../../assets/images/genres/photo-empire_building-horizontal.jpg"
+					alt="높은 철골 위에 나란히 앉은 사람들"
+				/>
+				<figcaption>사진<br />높은 철골 위에 나란히 앉은 사람들</figcaption>
+			</figure>
+			<figure>
+				<img
+					src="../../../assets/images/genres/photo-1-square.webp"
+					alt="달 표면에 선 우주인과 긴 그림자"
+				/>
+				<figcaption>사진<br />달 표면에 선 우주인과 긴 그림자</figcaption>
+			</figure>
+			<figure>
+				<img
+					src="../../../assets/images/genres/skulpture-thinking-vertical.jpg"
+					alt="턱을 괴고 몸을 웅크린 인물"
+				/>
+				<figcaption>조각<br />턱을 괴고 몸을 웅크린 인물</figcaption>
+			</figure>
+			<figure>
+				<img
+					src="../../../assets/images/genres/skulpture-pieta-square.jpg"
+					alt="누운 인물을 품에 안은 대리석 형상"
+				/>
+				<figcaption>조각<br />누운 인물을 품에 안은 대리석 형상</figcaption>
+			</figure>
+			<figure>
+				<img
+					src="../../../assets/images/genres/print-wave-horizontal.jpg"
+					alt="배 위로 굽이치는 커다란 푸른 파도"
+				/>
+				<figcaption>판화<br />배 위로 굽이치는 커다란 푸른 파도</figcaption>
+			</figure>
+			<figure>
+				<img
+					src="../../../assets/images/genres/print-melencolia-vertical.jpg"
+					alt="도구들 사이에서 생각에 잠긴 날개 달린 인물"
+				/>
+				<figcaption>판화<br />도구들 사이에서 생각에 잠긴 날개 달린 인물</figcaption>
+			</figure>
+			<figure>
+				<img
+					src="../../../assets/images/genres/korean-Irworobongdo-horizontal.jpg"
+					alt="해와 달 아래 펼쳐진 푸른 산과 물결"
+				/>
+				<figcaption>한국화<br />해와 달 아래 펼쳐진 푸른 산과 물결</figcaption>
+			</figure>
+			<figure>
+				<img
+					src="../../../assets/images/genres/korean-1-vertical.jpg"
+					alt="둘러앉은 사람들 가운데 씨름하는 두 사람"
+				/>
+				<figcaption>한국화<br />둘러앉은 사람들 가운데 씨름하는 두 사람</figcaption>
+			</figure>
+			<figure>
+				<img
+					src="../../../assets/images/genres/paintings-pearl-vertical.jpg"
+					alt="푸른 두건을 쓰고 뒤돌아보는 인물"
+				/>
+				<figcaption>회화<br />푸른 두건을 쓰고 뒤돌아보는 인물</figcaption>
+			</figure>
+			<figure>
+				<img
+					src="../../../assets/images/genres/paintings-gogh-horizontal.jpg"
+					alt="소용돌이치는 푸른 밤하늘과 노란 별"
+				/>
+				<figcaption>회화<br />소용돌이치는 푸른 밤하늘과 노란 별</figcaption>
+			</figure>
+			<figure>
+				<img
+					src="../../../assets/images/genres/crafts-korean-vertical.jpg"
+					alt="둥근 무늬와 새가 새겨진 푸른 도자기"
+				/>
+				<figcaption>공예<br />둥근 무늬와 새가 새겨진 푸른 도자기</figcaption>
+			</figure>
+			<figure>
+				<img
+					src="../../../assets/images/genres/crafs-egg-vertical.png"
+					alt="노란 보석 장식의 달걀과 작은 마차"
+				/>
+				<figcaption>공예<br />노란 보석 장식의 달걀과 작은 마차</figcaption>
+			</figure>
+			<figure>
+				<img
+					src="../../../assets/images/genres/contemporary-1-horizontal.png"
+					alt="은색 테이프로 붙인 검정·분홍 로고"
+				/>
+				<figcaption>현대 미술<br />은색 테이프로 붙인 검정·분홍 로고</figcaption>
+			</figure>
+			<figure>
+				<img
+					src="../../../assets/images/genres/contemporary-2-vertical.png"
+					alt="로고가 켜진 모니터를 높이 쌓은 탑"
+				/>
+				<figcaption>현대 미술<br />로고가 켜진 모니터를 높이 쌓은 탑</figcaption>
+			</figure>
+			<figure>
+				<img
+					src="../../../assets/images/genres/contemporary-3-square.png"
+					alt="얼굴과 기하학적 면으로 구성한 로고"
+				/>
+				<figcaption>현대 미술<br />얼굴과 기하학적 면으로 구성한 로고</figcaption>
+			</figure>
+			<figure>
+				<img
+					src="../../../assets/images/genres/contemporary-4-horizontal.png"
+					alt="분홍·보라 빛으로 녹아내리는 로고들"
+				/>
+				<figcaption>현대 미술<br />분홍·보라 빛으로 녹아내리는 로고들</figcaption>
+			</figure>
+		</div>
+	</body>
+</html>

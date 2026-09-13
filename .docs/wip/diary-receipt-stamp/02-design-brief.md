@@ -21,46 +21,46 @@ status: draft
 
 기존 `tailwind.config.js` 정본 그대로 사용 (`.docs/DESIGN_SYSTEM.md` 참고). 새로 추가하는 색은 없다.
 
-| 용도 | 토큰 |
-|---|---|
-| 화면 배경 | `bg-bg-light` (#F8F6F2) |
-| 영수증/우표 카드 표면 | `bg-white` (영수증), `bg-bg-tonal` (배너) |
-| 잉크 텍스트 / 서명 스트로크 | `text-gray900` (#1C1917) |
-| 보조 텍스트 (영수증 라벨, 배너 서브텍스트) | `text-gray600` / `text-gray500` |
-| 점선 구분선 (절취선·영수증 섹션 구분) | `border-divider` / `border-gray300` (dashed) |
-| 주요 CTA ("확정하고 보관하기") | `bg-primary-dark` (#625876) + `text-white` |
-| 보조 액션 ("다시 쓰기", 스킵) | `text-secondary` (#302D33) 텍스트 버튼, 배경 없음 |
-| 배너 카운트 뱃지 | `bg-primary-dark` 원형 + `text-white` 숫자 |
-| 만료 경고 뉘앙스 | 별도 `error` 색 쓰지 않음 — 급박함은 카피로 전달, 색은 중립 유지 (배너가 매번 빨갛게 보이면 피로감) |
-| 폰트 — 본문/영수증 | `font-pretendard-regular` / `font-pretendard-medium` |
-| 폰트 — 타이틀 ("오늘의 영수증" 등) | `font-hahmlet-bold` |
-| 폰트 — 서명 캡션 (제안, 신규 등록 필요) | `font-nanum-pen` — Nanum Pen Script는 `app/_layout.tsx`에 이미 로드돼 있지만 `tailwind.config.js`에 미등록 상태(DESIGN_SYSTEM.md §2 확인됨). 서명 패드의 안내 캡션("여기에 서명해주세요") 같은 아주 작은 영역에만 한정해서 이번에 정식 등록해 쓴다 — 사용 범위를 좁게 제한하는 게 조건 |
+| 용도                                       | 토큰                                                                                                                                                                                                                                                                                   |
+| ------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 화면 배경                                  | `bg-bg-light` (#F8F6F2)                                                                                                                                                                                                                                                                |
+| 영수증/우표 카드 표면                      | `bg-white` (영수증), `bg-bg-tonal` (배너)                                                                                                                                                                                                                                              |
+| 잉크 텍스트 / 서명 스트로크                | `text-gray900` (#1C1917)                                                                                                                                                                                                                                                               |
+| 보조 텍스트 (영수증 라벨, 배너 서브텍스트) | `text-gray600` / `text-gray500`                                                                                                                                                                                                                                                        |
+| 점선 구분선 (절취선·영수증 섹션 구분)      | `border-divider` / `border-gray300` (dashed)                                                                                                                                                                                                                                           |
+| 주요 CTA ("확정하고 보관하기")             | `bg-primary-dark` (#625876) + `text-white`                                                                                                                                                                                                                                             |
+| 보조 액션 ("다시 쓰기", 스킵)              | `text-secondary` (#302D33) 텍스트 버튼, 배경 없음                                                                                                                                                                                                                                      |
+| 배너 카운트 뱃지                           | `bg-primary-dark` 원형 + `text-white` 숫자                                                                                                                                                                                                                                             |
+| 만료 경고 뉘앙스                           | 별도 `error` 색 쓰지 않음 — 급박함은 카피로 전달, 색은 중립 유지 (배너가 매번 빨갛게 보이면 피로감)                                                                                                                                                                                    |
+| 폰트 — 본문/영수증                         | `font-pretendard-regular` / `font-pretendard-medium`                                                                                                                                                                                                                                   |
+| 폰트 — 타이틀 ("오늘의 영수증" 등)         | `font-hahmlet-bold`                                                                                                                                                                                                                                                                    |
+| 폰트 — 서명 캡션 (제안, 신규 등록 필요)    | `font-nanum-pen` — Nanum Pen Script는 `app/_layout.tsx`에 이미 로드돼 있지만 `tailwind.config.js`에 미등록 상태(DESIGN_SYSTEM.md §2 확인됨). 서명 패드의 안내 캡션("여기에 서명해주세요") 같은 아주 작은 영역에만 한정해서 이번에 정식 등록해 쓴다 — 사용 범위를 좁게 제한하는 게 조건 |
 
 ## Layout & components
 
-| 영역 | 설명 | 재사용/신규 컴포넌트 |
-|------|------|-----------------|
-| 다이어리 홈 상단 배너 | 헤더 바로 아래, "N Tickets" 카운터 위에 배치. `bg-bg-tonal` 카드, 점선 테두리(영수증 절취선 느낌), 좌측 영수증 아이콘 + 우측 카운트 뱃지 + chevron. 전체가 탭 가능(min-height 56). pending이 0개면 렌더 자체를 안 함 | 신규 `PendingVisitsBanner` |
-| 확정 큐 화면 (`confirm-visits.tsx`) | 화면 상단 "n / 총N" 진행 표시 → `ReceiptSummary` 카드 → 하단 고정 `SignaturePad` 진입 CTA. 한 번에 카드 1장만 보여주고(리스트 스크롤 아님), 확정되면 다음 카드가 슬라이드로 교체 | `Screen`, 신규 `ReceiptSummary`, 신규 `SignaturePad`, 신규 `ReceiptStampTransition` |
-| 영수증 카드 (`ReceiptSummary`) | `bg-white` 세로형 카드, 위/아래 절취선은 `VisitTicketFooter`의 `Perforation` 패턴 재사용(양옆 노치+점선). 상단 전시명(Hahmlet-bold)+날짜, 구분선, "오늘의 프로그램" 재생목록 행(제목만, 점선 리더), 구분선, 장소/시작~종료 시각 2열 | `VisitTicketFooter`(패턴 재사용), `ImageFallback` |
-| 서명 패드 (`SignaturePad`) | 하단 시트 또는 전체화면 모달. `bg-white` 캔버스에 `border-dashed border-gray300` 안내 박스, 안내 문구(`font-nanum-pen`, 미입력 시만 표시). 스트로크는 `text-gray900` 잉크색, 두께 ~3px. 하단 좌측 "다시 쓰기"(텍스트), 우측 "확정하고 보관하기"(`bg-primary-dark` pill) | 신규 |
-| 확정 → 우표 전환 (`ReceiptStampTransition`) | 서명 완료 즉시 `VisitStamp`(기존 잉크 도장)가 카드 위에 쿵 찍히는 애니메이션 → 카드가 축소되며 사라짐. 화려한 3D 폴드는 1차 스코프 아님(단순 scale+fade) | `VisitStamp`(재사용), Reanimated |
-| 캘린더/그리드 우표 셀 (`DiaryStampCell`) | 사진/포스터 썸네일에 흰색 여백 프레임(우표 마진) + 살짝 랜덤 회전(`DiaryCalendar`의 기존 `rotationForDateKey` 로직 그대로 재사용). **캘린더 셀(40px, 작음)은 흰 프레임만** — 절취 노치를 넣으면 그 크기에서 뭉개져 보임. **그리드 카드(116px, 더 큼)는 상/하 절취 노치까지 추가** — `VisitTicketFooter`의 `Perforation` 노치 크기를 절반으로 줄여 재사용. (Alex 리뷰 확정) | `DiaryCalendar`, `VisitTicketGridCard` 내부 셀 교체 |
+| 영역                                        | 설명                                                                                                                                                                                                                                                                                                                                                                       | 재사용/신규 컴포넌트                                                                |
+| ------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| 다이어리 홈 상단 배너                       | 헤더 바로 아래, "N Tickets" 카운터 위에 배치. `bg-bg-tonal` 카드, 점선 테두리(영수증 절취선 느낌), 좌측 영수증 아이콘 + 우측 카운트 뱃지 + chevron. 전체가 탭 가능(min-height 56). pending이 0개면 렌더 자체를 안 함                                                                                                                                                       | 신규 `PendingVisitsBanner`                                                          |
+| 확정 큐 화면 (`confirm-visits.tsx`)         | 화면 상단 "n / 총N" 진행 표시 → `ReceiptSummary` 카드 → 하단 고정 `SignaturePad` 진입 CTA. 한 번에 카드 1장만 보여주고(리스트 스크롤 아님), 확정되면 다음 카드가 슬라이드로 교체                                                                                                                                                                                           | `Screen`, 신규 `ReceiptSummary`, 신규 `SignaturePad`, 신규 `ReceiptStampTransition` |
+| 영수증 카드 (`ReceiptSummary`)              | `bg-white` 세로형 카드, 위/아래 절취선은 `VisitTicketFooter`의 `Perforation` 패턴 재사용(양옆 노치+점선). 상단 전시명(Hahmlet-bold)+날짜, 구분선, "오늘의 프로그램" 재생목록 행(제목만, 점선 리더), 구분선, 장소/시작~종료 시각 2열                                                                                                                                        | `VisitTicketFooter`(패턴 재사용), `ImageFallback`                                   |
+| 서명 패드 (`SignaturePad`)                  | 하단 시트 또는 전체화면 모달. `bg-white` 캔버스에 `border-dashed border-gray300` 안내 박스, 안내 문구(`font-nanum-pen`, 미입력 시만 표시). 스트로크는 `text-gray900` 잉크색, 두께 ~3px. 하단 좌측 "다시 쓰기"(텍스트), 우측 "확정하고 보관하기"(`bg-primary-dark` pill)                                                                                                    | 신규                                                                                |
+| 확정 → 우표 전환 (`ReceiptStampTransition`) | 서명 완료 즉시 `VisitStamp`(기존 잉크 도장)가 카드 위에 쿵 찍히는 애니메이션 → 카드가 축소되며 사라짐. 화려한 3D 폴드는 1차 스코프 아님(단순 scale+fade)                                                                                                                                                                                                                   | `VisitStamp`(재사용), Reanimated                                                    |
+| 캘린더/그리드 우표 셀 (`DiaryStampCell`)    | 사진/포스터 썸네일에 흰색 여백 프레임(우표 마진) + 살짝 랜덤 회전(`DiaryCalendar`의 기존 `rotationForDateKey` 로직 그대로 재사용). **캘린더 셀(40px, 작음)은 흰 프레임만** — 절취 노치를 넣으면 그 크기에서 뭉개져 보임. **그리드 카드(116px, 더 큼)는 상/하 절취 노치까지 추가** — `VisitTicketFooter`의 `Perforation` 노치 크기를 절반으로 줄여 재사용. (Alex 리뷰 확정) | `DiaryCalendar`, `VisitTicketGridCard` 내부 셀 교체                                 |
 
 ## Copy (KO)
 
-| Element | Text |
-|---------|------|
-| 배너 타이틀 | 최근 저장하지 못한 관람 기록이 {n}개 있어요 |
-| 배너 서브텍스트 | 7일이 지나면 사라져요 · 지금 확인하기 |
-| 확정 큐 진행 표시 | {현재} / {전체} |
-| 영수증 섹션 라벨 | 오늘의 프로그램 · 장소 · 관람 시간 |
-| 서명 안내 캡션 | 여기에 서명해주세요 |
-| 서명 지우기 | 다시 쓰기 |
-| 서명 확정 CTA | 확정하고 보관하기 |
-| 확정 완료 토스트 | 오늘의 우표가 저장됐어요 |
-| 큐 완료 후 | 모두 확인했어요! |
-| 빈 배너 상태 | (렌더 안 함 — 카피 없음) |
+| Element           | Text                                        |
+| ----------------- | ------------------------------------------- |
+| 배너 타이틀       | 최근 저장하지 못한 관람 기록이 {n}개 있어요 |
+| 배너 서브텍스트   | 7일이 지나면 사라져요 · 지금 확인하기       |
+| 확정 큐 진행 표시 | {현재} / {전체}                             |
+| 영수증 섹션 라벨  | 오늘의 프로그램 · 장소 · 관람 시간          |
+| 서명 안내 캡션    | 여기에 서명해주세요                         |
+| 서명 지우기       | 다시 쓰기                                   |
+| 서명 확정 CTA     | 확정하고 보관하기                           |
+| 확정 완료 토스트  | 오늘의 우표가 저장됐어요                    |
+| 큐 완료 후        | 모두 확인했어요!                            |
+| 빈 배너 상태      | (렌더 안 함 — 카피 없음)                    |
 
 ## States
 

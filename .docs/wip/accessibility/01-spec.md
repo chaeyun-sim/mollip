@@ -58,12 +58,12 @@ status: approved
 
 ## 파일
 
-| 파일 | 변경 |
-|------|------|
-| `src/store/settingsStore.ts` | `highContrast`, `setHighContrast`, `getEffectiveFontSize` 추가, version 2 |
-| `src/data/mypage.ts` | `FONT_SIZE_OPTIONS` 추가 |
-| `src/components/layout/Screen.tsx` | dark variant에 `highContrast` prop 추가 |
-| `app/settings/index.tsx` | 텍스트 크기 행 + 접근성 섹션 추가 |
-| `app/(guide)/description.tsx` | highContrast 배경·텍스트·플레이어 분기 |
-| `app/(guide)/chat.tsx` | highContrast Screen 전달 + 입력창 분기 |
-| `src/components/guide/ChatMessage.tsx` | fontSize 동적 적용 + highContrast 버블 분기 |
+| 파일                                   | 변경                                                                      |
+| -------------------------------------- | ------------------------------------------------------------------------- |
+| `src/store/settingsStore.ts`           | `highContrast`, `setHighContrast`, `getEffectiveFontSize` 추가, version 2 |
+| `src/data/mypage.ts`                   | `FONT_SIZE_OPTIONS` 추가                                                  |
+| `src/components/layout/Screen.tsx`     | dark variant에 `highContrast` prop 추가                                   |
+| `app/settings/index.tsx`               | 텍스트 크기 행 + 접근성 섹션 추가                                         |
+| `app/(guide)/description.tsx`          | highContrast 배경·텍스트·플레이어 분기                                    |
+| `app/(guide)/chat.tsx`                 | highContrast Screen 전달 + 입력창 분기                                    |
+| `src/components/guide/ChatMessage.tsx` | fontSize 동적 적용 + highContrast 버블 분기                               |

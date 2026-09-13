@@ -8,10 +8,22 @@ export function toValidGenres(genres: string[]): string[] {
 
 /** Only onboarding preferences are grouped; exhibition taxonomy remains unchanged. */
 export function normalizeOnboardingGenres(genres: string[]): string[] {
- const mapping: Record<string, string> = {
-  사진: '사진', 조각: '조각', 판화: '판화', 한국화: '한국화', 회화: '회화', 공예: '공예',
-  현대미술: '현대미술', 설치: '현대미술', 미디어아트: '현대미술', 영상: '현대미술', 사운드: '현대미술', 팝아트: '현대미술',
-  드로잉: '회화', 섬유: '공예', 그래픽: '판화',
- };
- return toValidGenres(genres.flatMap((genre) => mapping[genre] ? [mapping[genre]] : []));
+	const mapping: Record<string, string> = {
+		사진: '사진',
+		조각: '조각',
+		판화: '판화',
+		한국화: '한국화',
+		회화: '회화',
+		공예: '공예',
+		현대미술: '현대미술',
+		설치: '현대미술',
+		미디어아트: '현대미술',
+		영상: '현대미술',
+		사운드: '현대미술',
+		팝아트: '현대미술',
+		드로잉: '회화',
+		섬유: '공예',
+		그래픽: '판화',
+	};
+	return toValidGenres(genres.flatMap((genre) => (mapping[genre] ? [mapping[genre]] : [])));
 }

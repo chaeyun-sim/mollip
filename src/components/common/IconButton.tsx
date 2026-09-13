@@ -87,11 +87,7 @@ export function IconButton({
 
 		if (icon) {
 			return (
-				<Ionicons
-					name={icon}
-					size={iconSize}
-					className={isBare ? 'text-gray600' : 'text-white'}
-				/>
+				<Ionicons name={icon} size={iconSize} className={isBare ? 'text-gray600' : 'text-white'} />
 			);
 		}
 

@@ -14,11 +14,11 @@ status: final
 
 ## AC matrix
 
-| AC | Q1 tsc | Q2 jest | Q3 bug | Q4 UX | Q5 conv | Q6 visual | Q7 interact | Q8 regress | Q9 perf |
-|----|--------|---------|--------|-------|---------|-----------|---------------|------------|---------|
-| AC-1 히어로 비주얼 강화 | ✅ | N/A(테스트 없음) | ✅(1차 발견 후 수정) | ✅ | ✅ | ✅ | N/A(정적 카드) | ✅ | ✅ |
-| AC-2 오늘의 전시 배지 | ✅ | N/A | ✅(1차 발견 후 수정) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| AC-3 추천 리드 카드 PICK 배지 | ✅ | N/A | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| AC                            | Q1 tsc | Q2 jest          | Q3 bug               | Q4 UX | Q5 conv | Q6 visual | Q7 interact    | Q8 regress | Q9 perf |
+| ----------------------------- | ------ | ---------------- | -------------------- | ----- | ------- | --------- | -------------- | ---------- | ------- |
+| AC-1 히어로 비주얼 강화       | ✅     | N/A(테스트 없음) | ✅(1차 발견 후 수정) | ✅    | ✅      | ✅        | N/A(정적 카드) | ✅         | ✅      |
+| AC-2 오늘의 전시 배지         | ✅     | N/A              | ✅(1차 발견 후 수정) | ✅    | ✅      | ✅        | ✅             | ✅         | ✅      |
+| AC-3 추천 리드 카드 PICK 배지 | ✅     | N/A              | ✅                   | ✅    | ✅      | ✅        | ✅             | ✅         | ✅      |
 
 ## Findings
 
@@ -41,15 +41,15 @@ status: final
 
 ## Evidence
 
-| ID | Path | Description |
-|----|------|-------------|
-| E1 | `.docs/wip/main-hero-visual-boost/evidence/main-hero-after.png` | 1차 구현 직후 — AC-1 줄바꿈 회귀, AC-2 배지 미표시 확인 |
-| E2 | `.docs/wip/main-hero-visual-boost/evidence/main-hero-after-fix.png` | AC-1 수정 후 — 히어로 타이틀 2줄 정상 |
-| E3 | `.docs/wip/main-hero-visual-boost/evidence/main-hero-after-fix2.png` | AC-2 수정 후 — "오늘의 전시" 배지 정상 표시 |
-| E4 | `.docs/wip/main-hero-visual-boost/evidence/scroll-recommended.png` | AC-3 — 추천 전시 리드 카드 PICK 배지 확인 |
-| E5 | `.docs/wip/main-hero-visual-boost/evidence/interaction-tap.png` | 인터랙션 — 리드 카드 탭 → 전시 상세 이동 확인 |
-| E6 | `.docs/wip/main-hero-visual-boost/evidence/regression-fresh-launch2.png` | 회귀 — 앱 콜드 리런치 후 메인 화면 정상 렌더링 |
-| E7 | `.docs/wip/main-hero-visual-boost/evidence/regression-map-tab.png` | 회귀 — 인접 탭(지도) 정상 렌더링, 우리 변경과 무관 |
+| ID  | Path                                                                     | Description                                             |
+| --- | ------------------------------------------------------------------------ | ------------------------------------------------------- |
+| E1  | `.docs/wip/main-hero-visual-boost/evidence/main-hero-after.png`          | 1차 구현 직후 — AC-1 줄바꿈 회귀, AC-2 배지 미표시 확인 |
+| E2  | `.docs/wip/main-hero-visual-boost/evidence/main-hero-after-fix.png`      | AC-1 수정 후 — 히어로 타이틀 2줄 정상                   |
+| E3  | `.docs/wip/main-hero-visual-boost/evidence/main-hero-after-fix2.png`     | AC-2 수정 후 — "오늘의 전시" 배지 정상 표시             |
+| E4  | `.docs/wip/main-hero-visual-boost/evidence/scroll-recommended.png`       | AC-3 — 추천 전시 리드 카드 PICK 배지 확인               |
+| E5  | `.docs/wip/main-hero-visual-boost/evidence/interaction-tap.png`          | 인터랙션 — 리드 카드 탭 → 전시 상세 이동 확인           |
+| E6  | `.docs/wip/main-hero-visual-boost/evidence/regression-fresh-launch2.png` | 회귀 — 앱 콜드 리런치 후 메인 화면 정상 렌더링          |
+| E7  | `.docs/wip/main-hero-visual-boost/evidence/regression-map-tab.png`       | 회귀 — 인접 탭(지도) 정상 렌더링, 우리 변경과 무관      |
 
 ## Regression paths walked
 

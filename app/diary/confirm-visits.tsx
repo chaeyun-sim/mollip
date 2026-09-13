@@ -1,6 +1,15 @@
 import { useRouter } from 'expo-router';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Alert, Keyboard, KeyboardAvoidingView, Platform, Pressable, ScrollView, Text, View } from 'react-native';
+import {
+	Alert,
+	Keyboard,
+	KeyboardAvoidingView,
+	Platform,
+	Pressable,
+	ScrollView,
+	Text,
+	View,
+} from 'react-native';
 
 import type { EssayInputMode } from '@/src/components/archive/EssayInputSection';
 import { ReceiptSummary, type ReceiptSummaryHandle } from '@/src/components/archive/ReceiptSummary';
@@ -135,24 +144,28 @@ export default function ConfirmVisitsScreen() {
 	function handleSkip() {
 		if (!currentKey || isConfirming) return;
 		const visitKey = currentKey;
-		Alert.alert('이 기록을 삭제할까요?', '관람하지 않은 것으로 처리하고 삭제해요. 복구할 수 없어요.', [
-			{ text: '취소', style: 'cancel' },
-			{
-				text: '삭제',
-				style: 'destructive',
-				onPress: async () => {
-					await deleteVisit(visitKey);
-					const remaining = Object.values(useVisitStore.getState().visits).filter(
-						(v) => v.status === 'pending',
-					).length;
-					if (remaining > 0) {
-						resetCardState();
-					} else {
-						router.back();
-					}
+		Alert.alert(
+			'이 기록을 삭제할까요?',
+			'관람하지 않은 것으로 처리하고 삭제해요. 복구할 수 없어요.',
+			[
+				{ text: '취소', style: 'cancel' },
+				{
+					text: '삭제',
+					style: 'destructive',
+					onPress: async () => {
+						await deleteVisit(visitKey);
+						const remaining = Object.values(useVisitStore.getState().visits).filter(
+							(v) => v.status === 'pending',
+						).length;
+						if (remaining > 0) {
+							resetCardState();
+						} else {
+							router.back();
+						}
+					},
 				},
-			},
-		]);
+			],
+		);
 	}
 
 	function handleEssayGenerate() {

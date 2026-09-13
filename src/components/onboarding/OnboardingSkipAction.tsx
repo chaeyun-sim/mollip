@@ -18,9 +18,7 @@ export function OnboardingSkipAction({ onPress, className }: OnboardingSkipActio
 			className={cn('min-h-11 min-w-11 items-center justify-center px-2', className)}
 			style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
 		>
-			<Text className="text-gray700 text-[13px] font-pretendard-medium underline">
-				스킵하기
-			</Text>
+			<Text className="text-gray700 text-[13px] font-pretendard-medium underline">스킵하기</Text>
 		</Pressable>
 	);
 }

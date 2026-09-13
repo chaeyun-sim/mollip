@@ -127,16 +127,16 @@ status: spec-confirmed
 
 ## Screens / routes
 
-| Route / 파일 | 변경 |
-|-------|------|
-| `src/components/archive/ReceiptSummary.tsx` | "한줄평" 입력칸 + 별도 감상 생성 섹션(`EssayStageSection`)을 하나의 "감상평" 입력칸 + 작성 방식 토글 UI로 통합. `editable` 잠금 제어, 스트리밍 값의 `TextInput` 바인딩, 에러/재시도 UI를 이 컴포넌트(또는 신규 서브컴포넌트)에서 처리 |
-| `src/components/archive/EssayStageSection.tsx` | **폐기(삭제)** — 별도 3단계 UI 컴포넌트라는 개념 자체가 사라진다 |
-| `app/diary/confirm-visits.tsx` | `essayStageReady`/`signatureStageReady` 2단계 상태 분리를 단순화된 흐름(별점 → 감상평 → 서명)에 맞게 재설계. `useEssayStream`의 소비 방식을 "읽기전용 텍스트 표시"에서 "TextInput value 바인딩"으로 변경. `onMemoDone` prop을 의미에 맞게 개명(예: `onEssayStepDone`) 및 트리거 로직 재정의(AC-11/AC-12) |
-| `src/hooks/useEssayStream.ts` | 델타 누적/문자 단위 표시 로직(SSE 수신, `CHAR_INTERVAL_MS` 타이머)은 그대로 재사용 — 소비처만 변경됨(읽기전용 렌더링 → 부모가 `TextInput` value로 사용) |
-| `src/constants/prompts.ts` | `EssayMaterials`/`ESSAY_SYSTEM_PROMPT`/`buildEssayPrompt` — 구조 변경 없이 재사용. `memo` 파라미터가 이제 "생성 시점에 입력칸에 있던 기존 텍스트(참고 재료, AC-4)"를 가리키도록 의미만 재해석 |
-| `src/store/visitStore.ts` | `DayVisit.essay` 필드 제거를 권장(Risks 참고), `memo` 필드 하나로 통합 저장. `confirmVisit` 시그니처에서 `essay` 파라미터 제거 여부는 Open Questions #1 확정 후 결정 |
-| `supabase/functions/stream-chat/index.ts` | 변경 없음 — 그대로 재사용 |
-| `src/utils/api.ts` | 변경 없음 — `streamChat()` 그대로 재사용 |
+| Route / 파일                                   | 변경                                                                                                                                                                                                                                                                                                     |
+| ---------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `src/components/archive/ReceiptSummary.tsx`    | "한줄평" 입력칸 + 별도 감상 생성 섹션(`EssayStageSection`)을 하나의 "감상평" 입력칸 + 작성 방식 토글 UI로 통합. `editable` 잠금 제어, 스트리밍 값의 `TextInput` 바인딩, 에러/재시도 UI를 이 컴포넌트(또는 신규 서브컴포넌트)에서 처리                                                                    |
+| `src/components/archive/EssayStageSection.tsx` | **폐기(삭제)** — 별도 3단계 UI 컴포넌트라는 개념 자체가 사라진다                                                                                                                                                                                                                                         |
+| `app/diary/confirm-visits.tsx`                 | `essayStageReady`/`signatureStageReady` 2단계 상태 분리를 단순화된 흐름(별점 → 감상평 → 서명)에 맞게 재설계. `useEssayStream`의 소비 방식을 "읽기전용 텍스트 표시"에서 "TextInput value 바인딩"으로 변경. `onMemoDone` prop을 의미에 맞게 개명(예: `onEssayStepDone`) 및 트리거 로직 재정의(AC-11/AC-12) |
+| `src/hooks/useEssayStream.ts`                  | 델타 누적/문자 단위 표시 로직(SSE 수신, `CHAR_INTERVAL_MS` 타이머)은 그대로 재사용 — 소비처만 변경됨(읽기전용 렌더링 → 부모가 `TextInput` value로 사용)                                                                                                                                                  |
+| `src/constants/prompts.ts`                     | `EssayMaterials`/`ESSAY_SYSTEM_PROMPT`/`buildEssayPrompt` — 구조 변경 없이 재사용. `memo` 파라미터가 이제 "생성 시점에 입력칸에 있던 기존 텍스트(참고 재료, AC-4)"를 가리키도록 의미만 재해석                                                                                                            |
+| `src/store/visitStore.ts`                      | `DayVisit.essay` 필드 제거를 권장(Risks 참고), `memo` 필드 하나로 통합 저장. `confirmVisit` 시그니처에서 `essay` 파라미터 제거 여부는 Open Questions #1 확정 후 결정                                                                                                                                     |
+| `supabase/functions/stream-chat/index.ts`      | 변경 없음 — 그대로 재사용                                                                                                                                                                                                                                                                                |
+| `src/utils/api.ts`                             | 변경 없음 — `streamChat()` 그대로 재사용                                                                                                                                                                                                                                                                 |
 
 ## Risks & dependencies
 

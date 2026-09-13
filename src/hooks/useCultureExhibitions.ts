@@ -56,10 +56,7 @@ async function syncCultureExhibitionsIfStale(): Promise<void> {
 		.map((item) => {
 			const start_date = formatDate(item.startDate);
 			const end_date = formatDate(item.endDate);
-			if (
-				!isValidExhibitionDateString(start_date) ||
-				!isExhibitionEndDateEligible(end_date)
-			) {
+			if (!isValidExhibitionDateString(start_date) || !isExhibitionEndDateEligible(end_date)) {
 				return null;
 			}
 			const title = stripHtml(item.title);
@@ -87,7 +84,9 @@ async function syncCultureExhibitionsIfStale(): Promise<void> {
 		.filter((row): row is NonNullable<typeof row> => row != null);
 	const { data: existing } = await supabase.from('exhibitions').select('title');
 	const taken = new Set(
-		(existing ?? []).map((row) => normalizeExhibitionTitle((row as { title?: string }).title ?? '')),
+		(existing ?? []).map((row) =>
+			normalizeExhibitionTitle((row as { title?: string }).title ?? ''),
+		),
 	);
 	const deduped: typeof rows = [];
 	const seenTitles = new Set<string>();

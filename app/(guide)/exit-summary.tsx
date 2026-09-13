@@ -97,7 +97,7 @@ export default function ExitSummaryScreen() {
 		<Screen variant="warm" edges={['top', 'bottom']}>
 			<ScrollView
 				className="flex-1"
-				contentContainerClassName='pt-5 pb-[120px]'
+				contentContainerClassName="pt-5 pb-[120px]"
 				showsVerticalScrollIndicator={false}
 			>
 				<View className="items-center mb-10">

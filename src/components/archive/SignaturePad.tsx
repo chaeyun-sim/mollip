@@ -40,7 +40,7 @@ export const SignaturePad = forwardRef<SignaturePadHandle, SignaturePadProps>(fu
 		setCurrentPath('');
 	};
 
-		const panResponder = useRef(
+	const panResponder = useRef(
 		PanResponder.create({
 			onStartShouldSetPanResponder: () => !disabledRef.current,
 			onMoveShouldSetPanResponder: () => !disabledRef.current,

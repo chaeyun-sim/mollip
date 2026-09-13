@@ -116,7 +116,7 @@ export function ExhibitionTitleField({
 								<Text className="text-on-dark text-sm font-pretendard-semibold" numberOfLines={1}>
 									{s.title}
 								</Text>
-								{s.venue && (	
+								{s.venue && (
 									<Text
 										className="text-xs mt-0.5 font-pretendard-regular text-gray600"
 										numberOfLines={1}

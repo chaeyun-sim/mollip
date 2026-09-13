@@ -122,7 +122,7 @@ export function TicketFocusOverlay({ dateKey, onClose }: TicketFocusOverlayProps
 				<Animated.View style={[{ flex: 1 }, cardStyle]}>
 					<Pressable onPress={(e) => e.stopPropagation()} style={{ flex: 1 }}>
 						<ScrollView
-							contentContainerClassName='px-4 pt-2 pb-12'
+							contentContainerClassName="px-4 pt-2 pb-12"
 							showsVerticalScrollIndicator={false}
 						>
 							<VisitTicket

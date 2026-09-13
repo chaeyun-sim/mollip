@@ -122,10 +122,7 @@ export function ImageFallback({
 				</View>
 			)}
 			{showImage && dimOverlay && (
-				<View
-					pointerEvents="none"
-					className="absolute inset-0 bg-black/15"
-				/>
+				<View pointerEvents="none" className="absolute inset-0 bg-black/15" />
 			)}
 			{showPlaceholder && (
 				<View className="absolute inset-0 items-center justify-center">

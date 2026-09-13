@@ -33,12 +33,12 @@ status: ready-for-design
 - `assets/images/onboarding/wall-bg.png`(1536×1024)와 아래 액자 에셋은 이미 존재한다. 신규 생성이나 외부 작품 검색은 선행 조건이 아니다.
 
 | 액자 ID / 파일 | 원본 치수 | 형태 |
-| --- | --- | --- |
-| `oval-1.png` | 275×424 | 타원 |
-| `oval-2.png` | 229×371 | 타원 |
-| `square-1.png` | 296×231 | 사각 |
-| `square-2.png` | 366×476 | 사각 |
-| `square-3.png` | 343×288 | 사각 |
+| -------------- | --------- | ---- |
+| `oval-1.png`   | 275×424   | 타원 |
+| `oval-2.png`   | 229×371   | 타원 |
+| `square-1.png` | 296×231   | 사각 |
+| `square-2.png` | 366×476   | 사각 |
+| `square-3.png` | 343×288   | 사각 |
 
 - 액자는 대/중/소 그룹으로 묶지 않는다. 원본 종횡비와 액자별 상대 크기를 보존하되 화면에 맞춘 공통 비율 축소는 허용한다. 원본 픽셀 수를 화면의 논리 크기로 강제하지 않는다.
 - 좌우 대칭 계단식이 아닌 비대칭 자유 배치를 사용한다. 좌표, 액자 안쪽 마스크, 작품별 크롭과 드롭 영역은 Sam이 실제 에셋에 맞춰 정의한다. 액자 장식 위에 작품이 덮이지 않아야 한다.
@@ -49,25 +49,25 @@ status: ready-for-design
 
 파일 경로는 모두 `assets/images/genres/` 기준이다. 파일명 철자도 실제 파일 그대로 사용한다. 아래 분류는 온보딩 큐레이션 분류이며 작가·작품명이나 미술사적 분류를 확정하는 메타데이터가 아니다. 화면에 출처가 확인되지 않은 작품명·작가명을 추측해 붙이지 않는다.
 
-| UI 장르 | 저장 값 | 기본 대표 작품(프리필) | 추가 후보 |
-| --- | --- | --- | --- |
-| 사진 | `사진` | `photo-empire_building-horizontal.jpg` | `photo-1-square.webp` |
-| 조각 | `조각` | `skulpture-thinking-vertical.jpg` | `skulpture-pieta-square.jpg` |
-| 판화 | `판화` | `print-wave-horizontal.jpg` | `print-melencolia-vertical.jpg` |
-| 한국화 | `한국화` | `korean-Irworobongdo-horizontal.jpg` | `korean-1-vertical.jpg` |
-| 회화 | `회화` | `paintings-pearl-vertical.jpg` | `paintings-gogh-horizontal.jpg` |
-| 공예 | `공예` | `crafts-korean-vertical.jpg` | `crafs-egg-vertical.png` |
-| 현대 미술 | `현대미술` | `contemporary-1-horizontal.png` | `contemporary-2-vertical.png`, `contemporary-3-square.png`, `contemporary-4-horizontal.png` |
+| UI 장르   | 저장 값    | 기본 대표 작품(프리필)                 | 추가 후보                                                                                   |
+| --------- | ---------- | -------------------------------------- | ------------------------------------------------------------------------------------------- |
+| 사진      | `사진`     | `photo-empire_building-horizontal.jpg` | `photo-1-square.webp`                                                                       |
+| 조각      | `조각`     | `skulpture-thinking-vertical.jpg`      | `skulpture-pieta-square.jpg`                                                                |
+| 판화      | `판화`     | `print-wave-horizontal.jpg`            | `print-melencolia-vertical.jpg`                                                             |
+| 한국화    | `한국화`   | `korean-Irworobongdo-horizontal.jpg`   | `korean-1-vertical.jpg`                                                                     |
+| 회화      | `회화`     | `paintings-pearl-vertical.jpg`         | `paintings-gogh-horizontal.jpg`                                                             |
+| 공예      | `공예`     | `crafts-korean-vertical.jpg`           | `crafs-egg-vertical.png`                                                                    |
+| 현대 미술 | `현대미술` | `contemporary-1-horizontal.png`        | `contemporary-2-vertical.png`, `contemporary-3-square.png`, `contemporary-4-horizontal.png` |
 
 - 최종 후보 16개는 모두 로컬 폴더에서 파일 존재를 확인했다. 현대 미술 4개는 원작 도판 대신 로고 재해석 이미지를 사용한다. 사용자가 밝힌 교체 이유는 저작권 우려다.
 - 현대 미술의 세부 콘셉트는 아래 사용자 설명을 기준으로 한다. 작가명은 내부 스타일 참고이며 해당 작가의 실제 작품이나 공식 로고로 표시하지 않는다.
 
-| 후보 | 파일 | 사용자 지정 콘셉트 |
-| --- | --- | --- |
+| 후보   | 파일                            | 사용자 지정 콘셉트                        |
+| ------ | ------------------------------- | ----------------------------------------- |
 | 현대 1 | `contemporary-1-horizontal.png` | 바나나를 테이프로 붙인 설치 콘셉트의 로고 |
-| 현대 2 | `contemporary-2-vertical.png` | 백남준 풍의 미디어아트 로고 |
-| 현대 3 | `contemporary-3-square.png` | 피카소 풍의 큐비즘 스타일 로고 |
-| 현대 4 | `contemporary-4-horizontal.png` | 달리 스타일의 로고(초현실주의 콘셉트) |
+| 현대 2 | `contemporary-2-vertical.png`   | 백남준 풍의 미디어아트 로고               |
+| 현대 3 | `contemporary-3-square.png`     | 피카소 풍의 큐비즘 스타일 로고            |
+| 현대 4 | `contemporary-4-horizontal.png` | 달리 스타일의 로고(초현실주의 콘셉트)     |
 
 - 네 이미지 모두 저장 장르는 `현대미술`이다. 현대 3·4도 기존 `회화` 장르로 옮기지 않는다. 세부 콘셉트는 현대 미술 취향의 폭을 보여주는 내부 설명이며 별도 저장 장르를 만들지 않는다.
 - 작품마다 고유 `id`, 로컬 이미지 참조, 저장용 `genre`, 인상/감상 단서가 있는 접근성 라벨을 둔다. 현대 미술 후보는 4개, 나머지 장르는 각 2개이며 **프리필 기본 대표는 장르당 1개**만 지정한다.
@@ -78,14 +78,14 @@ status: ready-for-design
 
 선택 작품의 장르, 완료 요약, 기존 취향 프리필은 동일한 온보딩용 정규화 규칙을 사용한다.
 
-| 입력 장르 | 온보딩 저장 값 | UI 표기 |
-| --- | --- | --- |
-| 사진·조각·판화·한국화·회화·공예 | 각각 유지 | 각각 유지 |
-| 현대미술·설치·미디어아트·영상·사운드·팝아트 | `현대미술` | 현대 미술 |
-| 드로잉 | `회화` | 회화 |
-| 섬유 | `공예` | 공예 |
-| 그래픽 | `판화` | 판화 |
-| 위 목록에 없는 값 | 제외 | 표시하지 않음 |
+| 입력 장르                                   | 온보딩 저장 값 | UI 표기       |
+| ------------------------------------------- | -------------- | ------------- |
+| 사진·조각·판화·한국화·회화·공예             | 각각 유지      | 각각 유지     |
+| 현대미술·설치·미디어아트·영상·사운드·팝아트 | `현대미술`     | 현대 미술     |
+| 드로잉                                      | `회화`         | 회화          |
+| 섬유                                        | `공예`         | 공예          |
+| 그래픽                                      | `판화`         | 판화          |
+| 위 목록에 없는 값                           | 제외           | 표시하지 않음 |
 
 - 설치·미디어아트·영상·사운드·팝아트를 ‘현대 미술’로 묶는 것은 사용자 요청을 반영한 취향 그룹이다. 각 세부 매체의 별도 이미지 확보는 필수가 아니다.
 - 드로잉→회화, 섬유→공예, 그래픽→판화는 나머지 기존 취향도 버리지 않기 위한 이번 기획의 기본 매핑이다. 미술사적 동치 관계를 뜻하지 않는다.
@@ -190,10 +190,10 @@ status: ready-for-design
 - **When** 저장 성공, 실패, 재시도 또는 무저장 진행이 발생한다.
 - **Then** 정규화한 장르를 `toValidGenres`로 검증·중복 제거한 뒤 아래 계약을 따른다. 오류 시 배치와 요약을 유지하고 `OnboardingSaveErrorBar`의 재시도·무저장 동작을 제공한다.
 
-| 경로 | 성공 | 실패·재시도 | 무저장 진행 |
-| --- | --- | --- | --- |
-| 최초 온보딩 | `preferred_genres`와 `onboarding_completed` 갱신, 기존 완료 경로 진행 | 사용자별 `setPendingGenres` 레코드 보존, 같은 장르로 재시도 | 기존 로컬 완료·이후 pending 동기화 계약 유지 |
-| 설정 재편집 | `preferred_genres`만 갱신 후 기존 복귀 경로 진행 | 새 온보딩 pending을 만들지 않고 선택 유지·재시도 | 서버 취향을 변경하지 않고 기존 복귀 경로 진행 |
+| 경로        | 성공                                                                  | 실패·재시도                                                 | 무저장 진행                                   |
+| ----------- | --------------------------------------------------------------------- | ----------------------------------------------------------- | --------------------------------------------- |
+| 최초 온보딩 | `preferred_genres`와 `onboarding_completed` 갱신, 기존 완료 경로 진행 | 사용자별 `setPendingGenres` 레코드 보존, 같은 장르로 재시도 | 기존 로컬 완료·이후 pending 동기화 계약 유지  |
+| 설정 재편집 | `preferred_genres`만 갱신 후 기존 복귀 경로 진행                      | 새 온보딩 pending을 만들지 않고 선택 유지·재시도            | 서버 취향을 변경하지 않고 기존 복귀 경로 진행 |
 
 - 두 경로 모두 `preferred_artists`를 변경하지 않는다. 설정의 ‘내 취향 지우기’도 기존 계약을 유지한다.
 
@@ -212,18 +212,18 @@ status: ready-for-design
 
 ## Screens / routes
 
-| Route / 파일 | 변경 |
-| --- | --- |
-| `app/onboarding/index.tsx` | 프롤로그 유지, 벽→요약→기존 온보딩 저장 연결 |
-| `app/settings/preferences.tsx` | 저장 취향 조회·프리필, 새 벽 연결, 설정 전용 저장 계약 유지 |
-| `src/hooks/useOnboardingWallFlow.ts` | 예상 대체 `useOnboardingWallPlacement.ts`: 액자 배치, 이동·교체, 탭 대상, 프리필, 요약 상태 |
-| `src/data/onboardingWallTrays.ts` | 예상 대체 `onboardingWallPieces.ts`: 16개 평면 목록과 장르별 대표 ID |
-| `src/utils/onboardingWallGenres.ts` | 온보딩 정규화 규칙 추가, 기존 canonical 검증과 연결 |
-| `src/components/onboarding/OnboardingArtworkTray.tsx` | 스크롤 가능한 16개 썸네일, 드래그·탭·배치됨 상태 |
-| 신규 `OnboardingGalleryWall.tsx`, `OnboardingFrame.tsx` | 기존 onboarding 컴포넌트 폴더에 벽·액자·마스크·드롭 대상 구현 |
-| 신규 `OnboardingGenreSummary.tsx` | 같은 폴더에 비차단 요약 및 저장 상태 구현 |
-| `OnboardingWallProgress.tsx`, `OnboardingWallConfirm.tsx` | 두 진입 경로의 기존 소비를 대체한 후 미사용 여부에 따라 정리 |
-| `OnboardingWallPrologue.tsx`, `OnboardingSaveErrorBar.tsx` | 기존 컴포넌트 재사용 |
+| Route / 파일                                               | 변경                                                                                        |
+| ---------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| `app/onboarding/index.tsx`                                 | 프롤로그 유지, 벽→요약→기존 온보딩 저장 연결                                                |
+| `app/settings/preferences.tsx`                             | 저장 취향 조회·프리필, 새 벽 연결, 설정 전용 저장 계약 유지                                 |
+| `src/hooks/useOnboardingWallFlow.ts`                       | 예상 대체 `useOnboardingWallPlacement.ts`: 액자 배치, 이동·교체, 탭 대상, 프리필, 요약 상태 |
+| `src/data/onboardingWallTrays.ts`                          | 예상 대체 `onboardingWallPieces.ts`: 16개 평면 목록과 장르별 대표 ID                        |
+| `src/utils/onboardingWallGenres.ts`                        | 온보딩 정규화 규칙 추가, 기존 canonical 검증과 연결                                         |
+| `src/components/onboarding/OnboardingArtworkTray.tsx`      | 스크롤 가능한 16개 썸네일, 드래그·탭·배치됨 상태                                            |
+| 신규 `OnboardingGalleryWall.tsx`, `OnboardingFrame.tsx`    | 기존 onboarding 컴포넌트 폴더에 벽·액자·마스크·드롭 대상 구현                               |
+| 신규 `OnboardingGenreSummary.tsx`                          | 같은 폴더에 비차단 요약 및 저장 상태 구현                                                   |
+| `OnboardingWallProgress.tsx`, `OnboardingWallConfirm.tsx`  | 두 진입 경로의 기존 소비를 대체한 후 미사용 여부에 따라 정리                                |
+| `OnboardingWallPrologue.tsx`, `OnboardingSaveErrorBar.tsx` | 기존 컴포넌트 재사용                                                                        |
 
 ## Risks & dependencies
 

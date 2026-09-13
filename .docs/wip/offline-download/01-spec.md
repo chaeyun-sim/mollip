@@ -91,11 +91,11 @@ revision: 3
 
 ## Screens / routes
 
-| Route | 변경 |
-|-------|------|
-| `app/settings/bookmark/audio.tsx` | (확장, 확정) 카드별 다운로드 상태 배지(`DownloadStatusBadge` 재사용) + 다운로드 트리거 버튼(항목별 또는 일괄) + 재시도 액션(AC-4) + 저장 공간 인라인 UI(총 용량 표시 + 개별/전체 삭제, AC-5·AC-6) |
-| `app/(guide)/playlist.tsx` | **롤백** — revision 2에서 추가된 Row A(`PredownloadRow` 트리거) 및 관련 상태 연결(`showPredownloadRow`/`canStartDownload`/`isDownloading`/`downloadProgress`)을 제거하고 revision-2-이전 상태로 복원한다 |
-| `app/(guide)/description.tsx` | **변경 없음(확정)** — Open Questions #1에서 하트=자동 다운로드 방향은 채택되지 않았다 |
+| Route                             | 변경                                                                                                                                                                                                     |
+| --------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `app/settings/bookmark/audio.tsx` | (확장, 확정) 카드별 다운로드 상태 배지(`DownloadStatusBadge` 재사용) + 다운로드 트리거 버튼(항목별 또는 일괄) + 재시도 액션(AC-4) + 저장 공간 인라인 UI(총 용량 표시 + 개별/전체 삭제, AC-5·AC-6)        |
+| `app/(guide)/playlist.tsx`        | **롤백** — revision 2에서 추가된 Row A(`PredownloadRow` 트리거) 및 관련 상태 연결(`showPredownloadRow`/`canStartDownload`/`isDownloading`/`downloadProgress`)을 제거하고 revision-2-이전 상태로 복원한다 |
+| `app/(guide)/description.tsx`     | **변경 없음(확정)** — Open Questions #1에서 하트=자동 다운로드 방향은 채택되지 않았다                                                                                                                    |
 
 ## Risks & dependencies
 
