@@ -2,6 +2,7 @@ import { setAudioModeAsync, useAudioPlayer, useAudioPlayerStatus } from 'expo-au
 import { useEffect, useRef, useState } from 'react';
 import { useSettingsStore } from '../store/settingsStore';
 import { fetchTTSBlob, fetchVoices } from '../utils/api';
+import { resolveAudioUri } from '../utils/offlineAudio';
 import { cleanTextForTTS } from '../utils/text';
 
 export type Voice = {
@@ -52,7 +53,8 @@ export function useTTS() {
 			let uri = audioCache.current.get(cacheKey);
 
 			if (!uri) {
-				uri = await fetchTTSBlob(voiceId, cleaned, voiceSpeed);
+				// 로컬 다운로드 파일이 있으면 네트워크 요청 없이 즉시 재생(AC-2), 없으면 기존처럼 네트워크 요청(AC-6).
+				uri = await resolveAudioUri(cacheKey, () => fetchTTSBlob(voiceId, cleaned, voiceSpeed));
 				audioCache.current.set(cacheKey, uri);
 			}
 
@@ -76,7 +78,8 @@ export function useTTS() {
 		const cacheKey = `${voiceId}\x00${voiceSpeed}\x00${cleaned}`;
 		try {
 			if (!audioCache.current.has(cacheKey)) {
-				const uri = await fetchTTSBlob(voiceId, cleaned, voiceSpeed);
+				// 로컬 다운로드 파일이 있으면 네트워크 요청 없이 즉시 사용(AC-2), 없으면 기존처럼 네트워크 요청(AC-6).
+				const uri = await resolveAudioUri(cacheKey, () => fetchTTSBlob(voiceId, cleaned, voiceSpeed));
 				// 이탈 후 응답이 돌아온 경우 캐시하지 않음
 				if (!ac.signal.aborted) {
 					audioCache.current.set(cacheKey, uri);
