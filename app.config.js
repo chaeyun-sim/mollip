@@ -23,7 +23,7 @@ console.log('[app.config.js] NAVER_CLIENT_ID:', NAVER_CLIENT_ID ? '✓ 로드됨
 
 module.exports = {
 	expo: {
-		name: 'mollip',
+		name: '몰립',
 		slug: 'mollip',
 		scheme: 'mollip',
 		owner: 'bysimune',
@@ -34,7 +34,8 @@ module.exports = {
 		ios: {
 			supportsTablet: true,
 			bundleIdentifier: 'com.simune.mollip',
-			usesAppleSignIn: true,
+			// Personal Team(무료 Apple ID)은 Sign In with Apple capability를 지원하지 않음 — 유료 계정 전환 시 true로 복구
+			usesAppleSignIn: false,
 			infoPlist: {
 				NSPhotoLibraryUsageDescription: '사진 라이브러리에 접근합니다.',
 				NSCameraUsageDescription: '카메라를 사용합니다.',
@@ -103,16 +104,18 @@ module.exports = {
 			'expo-font',
 			'expo-image',
 			'expo-splash-screen',
-			'expo-apple-authentication',
-			[
-				'expo-notifications',
-				{
-					icon: './assets/icon.png',
-					color: '#1C1917',
-					sounds: [],
-					mode: 'production',
-				},
-			],
+			// Personal Team(무료 Apple ID)은 Sign In with Apple / Push Notifications capability를 지원하지 않아 로컬 빌드에서 임시 비활성화
+			// 유료 개발자 계정 전환 시 복구: 'expo-apple-authentication' 추가, 아래 expo-notifications를 push entitlement 포함 설정으로 복구
+			// 'expo-apple-authentication',
+			// [
+			// 	'expo-notifications',
+			// 	{
+			// 		icon: './assets/icon.png',
+			// 		color: '#1C1917',
+			// 		sounds: [],
+			// 		mode: 'production',
+			// 	},
+			// ],
 			// NMFClientId를 마지막에 강제 주입 (다른 플러그인이 덮어쓰는 것 방지)
 			(config) =>
 				withInfoPlist(config, (c) => {
