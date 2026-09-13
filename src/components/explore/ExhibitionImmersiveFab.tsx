@@ -4,14 +4,6 @@ import { View } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 import { LoginRequiredPressable } from '../auth/LoginRequiredPressable';
 
-const FAB_SHADOW = {
-	shadowColor: '#000',
-	shadowOpacity: 0.25,
-	shadowRadius: 8,
-	shadowOffset: { width: 0, height: 3 },
-	elevation: 6,
-} as const;
-
 interface ExhibitionImmersiveFabProps {
 	onPress: () => void;
 }
@@ -38,7 +30,19 @@ export function ExhibitionImmersiveFab({ onPress }: ExhibitionImmersiveFabProps)
 			accessibilityRole="button"
 			hitSlop={8}
 		>
-			<Animated.View style={[pressStyle, FAB_SHADOW]} className="items-center">
+			<Animated.View
+				style={[
+					pressStyle,
+					{
+						shadowColor: '#000',
+						shadowOpacity: 0.25,
+						shadowRadius: 8,
+						shadowOffset: { width: 0, height: 3 },
+						elevation: 6,
+					},
+				]}
+				className="items-center"
+			>
 				<View className="w-16 h-16 rounded-full items-center justify-center bg-secondary">
 					<Ionicons name="headset" size={28} color="white" />
 				</View>

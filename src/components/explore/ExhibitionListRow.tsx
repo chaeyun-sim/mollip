@@ -2,7 +2,7 @@ import * as Haptics from 'expo-haptics';
 import { useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { ImageFallback } from '@/src/components/common/ImageFallback';
-import type { RecommendableItem } from '@/src/components/explore/RecommendedExhibitions';
+import type { RecommendableItem } from '@/src/components/explore/RecommendableItem.types';
 import { colors } from '@/src/constants/colors';
 import { cn } from '@/src/lib/cn';
 
@@ -40,7 +40,7 @@ export function ExhibitionListRow({
 			accessibilityLabel={`${item.title}, ${item.venue}`}
 			style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
 		>
-			<View className={cn('flex-row gap-4 py-4', showDivider ? 'border-b border-description' : '')}>
+			<View className={cn('flex-row gap-4 py-4', showDivider && 'border-b border-description')}>
 				{imageUnavailable ? (
 					<View
 						className="bg-image-placeholder items-start"

@@ -4,7 +4,6 @@ import * as Haptics from 'expo-haptics';
 import { useRouter } from 'expo-router';
 import { Pressable, ScrollView, Text, View } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
-
 import { ImageFallback } from '@/src/components/common/ImageFallback';
 import type { Exhibition } from '@/src/data/exhibitions';
 import { getDdayLabel } from '@/src/utils/exhibitionSearch';
@@ -21,14 +20,14 @@ export function RelatedExhibitions({ exhibitions }: RelatedExhibitionsProps) {
 	const related = exhibitions.slice(0, 6);
 
 	return (
-		<View className="pt-8 mt-4">
-			<Text className="font-pretendard-semibold text-[18px] text-gray-900 mb-4 px-6">
+		<View className="mt-12">
+			<Text className="font-pretendard-semibold text-lg text-gray-900 mb-4 px-6">
 				관련 전시
 			</Text>
 			<ScrollView
 				horizontal
 				showsHorizontalScrollIndicator={false}
-				contentContainerStyle={{ paddingHorizontal: 24, gap: 14 }}
+				contentContainerClassName='px-6 gap-3.5'
 			>
 				{related.map((ex) => (
 					<RelatedExhibitionCard
@@ -57,11 +56,11 @@ function RelatedExhibitionCard({ exhibition, onPress }: RelatedExhibitionCardPro
 	return (
 		<Pressable
 			onPressIn={() => {
-				scale.value = withSpring(0.96, { damping: 30, stiffness: 300 });
+				scale.set(withSpring(0.96, { damping: 30, stiffness: 300 }));
 				Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
 			}}
 			onPressOut={() => {
-				scale.value = withSpring(1, { damping: 30, stiffness: 300 });
+				scale.set(withSpring(1, { damping: 30, stiffness: 300 }));
 			}}
 			onPress={onPress}
 			style={{ width: POSTER_W }}
@@ -76,13 +75,14 @@ function RelatedExhibitionCard({ exhibition, onPress }: RelatedExhibitionCardPro
 					className="rounded-2xl"
 					iconSize={72}
 					resizeMode="cover"
+					useImageProxy
 				>
 					<LinearGradient
 						colors={['rgba(0,0,0,0.4)', 'transparent']}
-						className="absolute top-0 left-0 right-0 h-14"
+						className="absolute top-0 inset-x-0 h-14"
 						pointerEvents="none"
 					/>
-					{ddayLabel ? (
+					{ddayLabel && (
 						<View
 							className="absolute top-2.5 left-2.5 rounded-full px-2.5 py-1 bg-white/85"
 							style={{
@@ -95,7 +95,7 @@ function RelatedExhibitionCard({ exhibition, onPress }: RelatedExhibitionCardPro
 						>
 							<Text className="text-[10px] font-pretendard-semibold text-gray900">{ddayLabel}</Text>
 						</View>
-					) : null}
+					)}
 				</ImageFallback>
 				<View className="pt-2.5" style={{ width: POSTER_W }}>
 					<Text className="font-pretendard-semibold text-[14px] text-gray-900" numberOfLines={2}>

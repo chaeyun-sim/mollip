@@ -1,15 +1,15 @@
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useEffect, useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 import Animated, {
 	Easing,
-	runOnJS,
 	useAnimatedStyle,
 	useSharedValue,
 	withDelay,
 	withTiming,
 } from 'react-native-reanimated';
+import { scheduleOnRN } from 'react-native-worklets';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 interface ImmersiveOverlayProps {
@@ -21,22 +21,25 @@ interface ImmersiveOverlayProps {
 
 const SCRIM_DURATION = 900; // 테두리 비네트 + 배경 스크림이 천천히 깔리는 시간
 const TITLE_DURATION = 650;
-const EDGE_SIZE = 150;
 
 /** explore 상세 화면 위에 라이트하게 덧입는 모달 — 다른 라우트로 이동하지 않고, 화면
  * 테두리만 서서히 어두워지는 비네트 + 옅은 black/5 스크림을 깐 다음 중앙에 전시 제목이
  * 천천히 fade-in 된다. 닫을 때는 역순(제목 fade-out → 비네트/스크림 fade-out). */
 export function ImmersiveOverlay({ visible, title, onStart, onClose }: ImmersiveOverlayProps) {
 	const insets = useSafeAreaInsets();
+
 	const [mounted, setMounted] = useState(visible);
 	const scrimOpacity = useSharedValue(0);
 	const titleOpacity = useSharedValue(0);
 	const titleY = useSharedValue(10);
 	const blackoutOpacity = useSharedValue(0);
 
+	if (visible && !mounted) {
+		setMounted(true);
+	}
+
 	useEffect(() => {
 		if (visible) {
-			setMounted(true);
 			scrimOpacity.value = withTiming(1, {
 				duration: SCRIM_DURATION,
 				easing: Easing.out(Easing.cubic),
@@ -58,11 +61,11 @@ export function ImmersiveOverlay({ visible, title, onStart, onClose }: Immersive
 			scrimOpacity.value = withDelay(
 				TITLE_DURATION * 0.5,
 				withTiming(0, { duration: SCRIM_DURATION * 0.6 }, (finished) => {
-					if (finished) runOnJS(setMounted)(false);
+					if (finished) scheduleOnRN(setMounted, false);
 				}),
 			);
 		}
-	}, [visible]);
+	}, [visible, scrimOpacity, titleOpacity, titleY]);
 
 	const scrimStyle = useAnimatedStyle(() => ({ opacity: scrimOpacity.value }));
 	const titleStyle = useAnimatedStyle(() => ({
@@ -75,46 +78,58 @@ export function ImmersiveOverlay({ visible, title, onStart, onClose }: Immersive
 
 	// 시작하기 — 제목/버튼 fade out 후 배경 전체가 검은색으로 fade, 다 어두워지면 라우팅.
 	const handleStartPress = () => {
-		titleOpacity.value = withTiming(0, { duration: 250 });
-		blackoutOpacity.value = withTiming(
-			1,
-			{ duration: 480, easing: Easing.inOut(Easing.ease) },
-			(finished) => {
-				if (finished) runOnJS(onStart)();
-			},
+		titleOpacity.set(withTiming(0, { duration: 250 }));
+		blackoutOpacity.set(
+			withTiming(1, { duration: 480, easing: Easing.inOut(Easing.ease) }, (finished) => {
+				if (finished) scheduleOnRN(onStart);
+			}),
 		);
 	};
 
 	if (!mounted) return null;
 
 	return (
-		<View style={StyleSheet.absoluteFill} pointerEvents={visible ? 'auto' : 'none'}>
+		<View className="absolute inset-0" pointerEvents={visible ? 'auto' : 'none'}>
 			{/* 배경 전체 — black/60 스크림, explore 화면이 어둡게 비쳐 보인다 */}
-			<Animated.View
-				style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(0,0,0,0.6)' }, scrimStyle]}
-			/>
+			<Animated.View className="absolute inset-0 bg-black/80" style={scrimStyle} />
 
 			{/* 테두리 비네트 — 네 변만 살짝 더 어둡게 */}
-			<Animated.View style={[styles.edgeTop, scrimStyle]} pointerEvents="none">
-				<LinearGradient colors={['rgba(0,0,0,0.8)', 'transparent']} style={{ flex: 1 }} />
+			<Animated.View
+				style={scrimStyle}
+				pointerEvents="none"
+				className="absolute top-0 inset-x-0 h-[150px]"
+			>
+				<LinearGradient colors={['rgba(0,0,0,0.8)', 'transparent']} className="flex-1" />
 			</Animated.View>
-			<Animated.View style={[styles.edgeBottom, scrimStyle]} pointerEvents="none">
-				<LinearGradient colors={['transparent', 'rgba(0,0,0,0.8)']} style={{ flex: 1 }} />
+			<Animated.View
+				style={[scrimStyle]}
+				pointerEvents="none"
+				className="absolute bottom-0 left-0 right-0 h-[150px]"
+			>
+				<LinearGradient colors={['transparent', 'rgba(0,0,0,0.8)']} className="flex-1" />
 			</Animated.View>
-			<Animated.View style={[styles.edgeLeft, scrimStyle]} pointerEvents="none">
+			<Animated.View
+				style={scrimStyle}
+				pointerEvents="none"
+				className="absolute inset-y-0 left-0 w-[150px]"
+			>
 				<LinearGradient
 					colors={['rgba(0,0,0,0.8)', 'transparent']}
 					start={{ x: 0, y: 0 }}
 					end={{ x: 1, y: 0 }}
-					style={{ flex: 1 }}
+					className="flex-1"
 				/>
 			</Animated.View>
-			<Animated.View style={[styles.edgeRight, scrimStyle]} pointerEvents="none">
+			<Animated.View
+				style={scrimStyle}
+				pointerEvents="none"
+				className="absolute inset-y-0 right-0 w-[150px]"
+			>
 				<LinearGradient
 					colors={['transparent', 'rgba(0,0,0,0.8)']}
 					start={{ x: 0, y: 0 }}
 					end={{ x: 1, y: 0 }}
-					style={{ flex: 1 }}
+					className="flex-1"
 				/>
 			</Animated.View>
 
@@ -146,7 +161,7 @@ export function ImmersiveOverlay({ visible, title, onStart, onClose }: Immersive
 			</View>
 
 			{/* 닫기 버튼 */}
-			<Animated.View style={[{ position: 'absolute', left: 20, top: insets.top + 16 }, titleStyle]}>
+			<Animated.View className="absolute left-5" style={[{ top: insets.top + 16 }, titleStyle]}>
 				<Pressable
 					onPress={onClose}
 					hitSlop={8}
@@ -160,40 +175,10 @@ export function ImmersiveOverlay({ visible, title, onStart, onClose }: Immersive
 
 			{/* 시작하기 전환 — 배경 전체를 검은색으로 fade */}
 			<Animated.View
-				style={[StyleSheet.absoluteFill, { backgroundColor: '#000' }, blackoutStyle]}
+				style={blackoutStyle}
+				className="absolute inset-0 bg-black"
 				pointerEvents="none"
 			/>
 		</View>
 	);
 }
-
-const styles = StyleSheet.create({
-	edgeTop: {
-		position: 'absolute',
-		top: 0,
-		left: 0,
-		right: 0,
-		height: EDGE_SIZE,
-	},
-	edgeBottom: {
-		position: 'absolute',
-		bottom: 0,
-		left: 0,
-		right: 0,
-		height: EDGE_SIZE,
-	},
-	edgeLeft: {
-		position: 'absolute',
-		top: 0,
-		bottom: 0,
-		left: 0,
-		width: EDGE_SIZE,
-	},
-	edgeRight: {
-		position: 'absolute',
-		top: 0,
-		bottom: 0,
-		right: 0,
-		width: EDGE_SIZE,
-	},
-});

@@ -1,8 +1,6 @@
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { View } from 'react-native';
-
-import { FloatingBackButton } from '@/src/components/common/FloatingBackButton';
-import { FloatingIconButton } from '@/src/components/common/FloatingIconButton';
+import { FloatingIconButton } from '@/src/components/explore/FloatingIconButton';
 
 interface ExhibitionDetailFloatingActionsProps {
 	onBack: () => void;
@@ -27,7 +25,11 @@ export function ExhibitionDetailFloatingActions({
 			style={{ top: insetTop + 16 }}
 		>
 			{/* 뒤로가기 버튼 */}
-			<FloatingBackButton onPress={onBack} />
+			<FloatingIconButton
+				onPress={onBack}
+				icon={<Ionicons name="chevron-back" size={22} color="#1a1a1a" />}
+				accessibilityLabel="뒤로가기"
+			/>
 
 			{/* 우측 상단 버튼 그룹 (루트 + 공유 + 북마크) */}
 			<View className="flex-row gap-2">

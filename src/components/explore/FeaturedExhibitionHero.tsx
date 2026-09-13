@@ -1,13 +1,15 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import * as Haptics from 'expo-haptics';
-import { Image, ImageBackground, Pressable, Text, View } from 'react-native';
-import { QUESTION_MARK } from '@/src/components/common/ImageFallback';
+import { ImageBackground, Pressable, Text, View } from 'react-native';
 import { colors } from '@/src/constants/colors';
 import { STATUS_LABELS, type ExhibitionStatus } from '@/src/utils/exhibitionSearch';
 
 export interface FeaturedExhibitionProps {
 	id: string;
+	/** 캐러셀 헤드라인 문구 (카테고리 기반 카피, 전시 원제목이 아님) */
 	title: string;
+	/** 실제 전시명 — 서브텍스트에 노출 */
+	exhibitionTitle: string;
 	venue: string;
 	thumbnail: string | null;
 	status: ExhibitionStatus;
@@ -17,6 +19,7 @@ export interface FeaturedExhibitionProps {
 export function FeaturedExhibitionHero({
 	id,
 	title,
+	exhibitionTitle,
 	venue,
 	thumbnail,
 	status,
@@ -29,7 +32,7 @@ export function FeaturedExhibitionHero({
 				onPress(id);
 			}}
 			accessibilityRole="button"
-			accessibilityLabel={`오늘의 전시, ${title}, ${venue}`}
+			accessibilityLabel={`${exhibitionTitle}, ${venue}, ${STATUS_LABELS[status]}`}
 			style={({ pressed }) => ({ opacity: pressed ? 0.94 : 1 })}
 		>
 			<View
@@ -42,55 +45,28 @@ export function FeaturedExhibitionHero({
 					elevation: 6,
 				}}
 			>
-				{thumbnail ? (
-					<ImageBackground
-						source={{ uri: thumbnail }}
-						className="h-[380px] justify-between"
-						imageStyle={{ resizeMode: 'cover' }}
+				<ImageBackground
+					source={{ uri: thumbnail! }}
+					className="h-[380px] justify-end"
+					imageStyle={{ resizeMode: 'cover' }}
+				>
+					<LinearGradient
+						colors={['transparent', 'rgba(0,0,0,0.75)']}
+						style={{ height: '100%', width: '100%' }}
 					>
-						<View className="self-start mt-4 ml-4 rounded-full bg-black/40 px-3 py-1.5">
+						<View className="h-full w-full justify-end px-6 pb-6">
 							<Text
-								className="text-white text-[10px] font-pretendard-semibold"
-								style={{ letterSpacing: 1 }}
-							>
-								TODAY&apos;S PICK
-							</Text>
-						</View>
-
-						<LinearGradient
-							colors={['transparent', 'rgba(0,0,0,0.75)']}
-							style={{ paddingHorizontal: 20, paddingBottom: 24, paddingTop: 90 }}
-						>
-							<Text
-								className="text-white text-[26px] leading-[32px] mb-2 font-pretendard-bold"
+								className="text-white text-4xl leading-tight mb-2 font-pretendard-bold"
 								numberOfLines={2}
 							>
 								{title}
 							</Text>
-							<Text className="text-white/70 text-[13px] font-pretendard-regular" numberOfLines={1}>
-								{venue} · {STATUS_LABELS[status]}
+							<Text className="text-white/70 text-lg font-pretendard-regular" numberOfLines={2}>
+								{exhibitionTitle.trim()}
 							</Text>
-						</LinearGradient>
-					</ImageBackground>
-				) : (
-					<View className="h-[300px] bg-image-placeholder items-center justify-center px-6">
-						<Image
-							source={QUESTION_MARK}
-							style={{ width: 100, height: 100 }}
-							resizeMode="contain"
-							className="mb-4"
-						/>
-						<Text
-							className="text-gray900 text-[22px] text-center font-hahmlet-bold"
-							numberOfLines={2}
-						>
-							{title}
-						</Text>
-						<Text className="text-gray600 text-[13px] mt-2 text-center font-pretendard-regular">
-							{venue} · {STATUS_LABELS[status]}
-						</Text>
-					</View>
-				)}
+						</View>
+					</LinearGradient>
+				</ImageBackground>
 			</View>
 		</Pressable>
 	);

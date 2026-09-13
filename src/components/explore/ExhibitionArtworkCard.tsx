@@ -22,11 +22,11 @@ export function ExhibitionArtworkCard({ artwork, onPress }: ExhibitionArtworkCar
 	return (
 		<Pressable
 			onPressIn={() => {
-				scale.value = withSpring(0.96, { damping: 15 });
+				scale.set(withSpring(0.96, { damping: 15 }));
 				Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
 			}}
 			onPressOut={() => {
-				scale.value = withSpring(1, { damping: 15 });
+				scale.set(withSpring(1, { damping: 15 }));
 			}}
 			onPress={onPress}
 			style={{ width: cardSize }}
@@ -39,6 +39,7 @@ export function ExhibitionArtworkCard({ artwork, onPress }: ExhibitionArtworkCar
 					style={{ height: cardSize, width: cardSize }}
 					iconSize={cardSize * 0.55}
 					resizeMode="cover"
+					useImageProxy
 				/>
 				<View className="pt-2">
 					<Text className="font-pretendard-medium text-[13px] text-gray-800" numberOfLines={1}>

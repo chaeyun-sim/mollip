@@ -33,8 +33,7 @@ export function ExhibitionMapPreview({ coordinates, venueName }: ExhibitionMapPr
 			style={({ pressed }) => ({ opacity: pressed ? 0.85 : 1 })}
 		>
 			<View
-				className="mx-6 rounded-md overflow-hidden border border-gray-200"
-				style={{ height: 160 }}
+				className="mx-6 rounded-md overflow-hidden border border-gray-200 h-40"
 			>
 				<NaverMapView
 					style={{ flex: 1 }}
@@ -62,8 +61,7 @@ export function ExhibitionMapPreview({ coordinates, venueName }: ExhibitionMapPr
 					>
 						<View
 							collapsable={false}
-							className="w-8 h-8 rounded-full bg-primary items-center justify-center"
-							style={{ borderWidth: 2, borderColor: 'white' }}
+							className="w-8 h-8 rounded-full bg-primary items-center justify-center border-[2px] border-white"
 						>
 							<Ionicons name="location" size={14} color="white" />
 						</View>

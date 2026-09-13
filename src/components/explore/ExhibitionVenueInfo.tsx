@@ -1,8 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import * as Clipboard from 'expo-clipboard';
 import { useCallback, useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
-
+import { Pressable, Text, View } from 'react-native';
 import { cn } from '@/src/lib/cn';
 import { ExhibitionInfoRow } from './ExhibitionInfoRow';
 
@@ -37,13 +36,7 @@ export function ExhibitionVenueInfo({
 			<Text className="font-pretendard-semibold text-[18px] text-gray-900 mb-4">관람 정보</Text>
 			<View className="h-0.5 w-full bg-gray900" />
 			{venueAddress && (
-				<View
-					className="flex-row items-start justify-between gap-28 py-3"
-					style={{
-						borderBottomWidth: StyleSheet.hairlineWidth,
-						borderBottomColor: 'rgba(28,25,23,0.15)',
-					}}
-				>
+				<View className="flex-row items-start justify-between gap-28 py-3 border-b-hairline border-b-gray900/15">
 					<Text className="text-gray-500 text-[12px] font-pretendard-semibold tracking-wider uppercase pt-1">
 						위치
 					</Text>

@@ -22,10 +22,10 @@ export function ExhibitionTicketCTA({ ticketUrl }: ExhibitionTicketCTAProps) {
 	return (
 		<Pressable
 			onPressIn={() => {
-				scale.value = withTiming(0.97, { duration: 100 });
+				scale.set(withTiming(0.97, { duration: 100 }));
 			}}
 			onPressOut={() => {
-				scale.value = withTiming(1, { duration: 150 });
+				scale.set(withTiming(1, { duration: 150 }));
 			}}
 			onPress={handlePress}
 			accessibilityLabel="예매하기"

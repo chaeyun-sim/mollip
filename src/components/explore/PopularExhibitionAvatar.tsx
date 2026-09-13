@@ -7,7 +7,6 @@ import type { ExhibitionSummary } from '@/src/hooks/useExploreScreenData';
 const AVATAR_SIZE = 56;
 const RING_WIDTH = 2;
 const RING_GAP = 3;
-const ITEM_WIDTH = 84;
 
 interface PopularExhibitionAvatarProps {
 	item: ExhibitionSummary;
@@ -23,22 +22,21 @@ export function PopularExhibitionAvatar({ item, onPress }: PopularExhibitionAvat
 			}}
 			accessibilityRole="button"
 			accessibilityLabel={`${item.title}, ${item.venue}`}
-			style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1, width: ITEM_WIDTH })}
+			className="w-[84px]"
+			style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
 		>
 			<View
-				className="items-center justify-center rounded-full self-center"
+				className="items-center justify-center rounded-full self-center border-gray900 overflow-hidden"
 				style={{
 					width: AVATAR_SIZE + RING_WIDTH * 2 + RING_GAP * 2,
 					height: AVATAR_SIZE + RING_WIDTH * 2 + RING_GAP * 2,
 					borderWidth: RING_WIDTH,
-					borderColor: colors.gray900,
-					overflow: 'hidden'
 				}}
 			>
 				<ImageFallback
 					heroImageUri={item.thumbnail}
 					className="rounded-full bg-image-placeholder"
-					style={{ width: AVATAR_SIZE, height: AVATAR_SIZE, borderRadius: AVATAR_SIZE / 2 }}
+					style={{ width: AVATAR_SIZE, height: AVATAR_SIZE }}
 					iconSize={22}
 					resizeMode="cover"
 					useImageProxy

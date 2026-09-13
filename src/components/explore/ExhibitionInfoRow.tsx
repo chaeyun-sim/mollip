@@ -1,5 +1,6 @@
+import { cn } from '@/src/lib/cn';
 import { ReactNode } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 
 interface ExhibitionInfoRowProps {
 	label: string;
@@ -10,15 +11,7 @@ interface ExhibitionInfoRowProps {
 export function ExhibitionInfoRow({ label, isLast, children }: ExhibitionInfoRowProps) {
 	return (
 		<View
-			className="flex-row items-start justify-between gap-28 py-3"
-			style={
-				!isLast
-					? {
-							borderBottomWidth: StyleSheet.hairlineWidth,
-							borderBottomColor: 'rgba(28,25,23,0.15)',
-						}
-					: undefined
-			}
+			className={cn("flex-row items-start justify-between gap-28 py-3", !isLast && "border-b-hairline border-b-gray900/15")}
 		>
 			<Text className="text-gray-500 text-[12px] font-pretendard-semibold tracking-wider uppercase pt-1 whitespace-pre">
 				{label}

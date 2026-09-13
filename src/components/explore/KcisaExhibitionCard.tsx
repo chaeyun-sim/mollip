@@ -1,11 +1,10 @@
 import { Pressable, Text, View } from 'react-native';
 import { ImageFallback } from '@/src/components/common/ImageFallback';
-import { StatusBadge } from '@/src/components/search/StatusBadge';
+import { StatusBadge } from '@/src/components/explore/StatusBadge';
 import type { KcisaExhibitionItem } from '@/src/hooks/useKcisaExhibitions';
 import { colors } from '@/src/constants/colors';
 
-const CARD_WIDTH = 148;
-const CARD_HEIGHT = Math.round((CARD_WIDTH * 4) / 3);
+const CARD_HEIGHT = Math.round((140 * 4) / 3);
 
 interface KcisaExhibitionCardProps {
 	item: KcisaExhibitionItem;
@@ -19,12 +18,12 @@ export function KcisaExhibitionCard({ item, onPress, index }: KcisaExhibitionCar
 			onPress={() => onPress(item.id)}
 			accessibilityLabel={`${item.title}, ${item.venue}`}
 			accessibilityRole="button"
-			style={({ pressed }) => ({ opacity: pressed ? 0.88 : 1, width: CARD_WIDTH })}
+			className="w-[148px]"
+			style={({ pressed }) => ({ opacity: pressed ? 0.88 : 1 })}
 		>
 			<View
-				className="rounded-[8px] overflow-hidden"
+				className="rounded-[8px] overflow-hidden w-[140px]"
 				style={{
-					width: CARD_WIDTH,
 					height: CARD_HEIGHT,
 					shadowColor: colors.gray900,
 					shadowOpacity: 0.1,
@@ -34,10 +33,11 @@ export function KcisaExhibitionCard({ item, onPress, index }: KcisaExhibitionCar
 			>
 				<ImageFallback
 					heroImageUri={item.thumbnail}
-					className="bg-image-placeholder"
-					style={{ width: CARD_WIDTH, height: CARD_HEIGHT }}
+					className="bg-image-placeholder w-[140px]"
+					style={{ height: CARD_HEIGHT }}
 					iconSize={64}
 					resizeMode="cover"
+					useImageProxy
 				/>
 				{index !== undefined && (
 					<Text
@@ -48,22 +48,20 @@ export function KcisaExhibitionCard({ item, onPress, index }: KcisaExhibitionCar
 					</Text>
 				)}
 			</View>
-			<View style={{ width: CARD_WIDTH }} className="mt-2.5">
+			<View className="mt-2.5 w-[148px]">
 				<StatusBadge status={item.status} />
 			</View>
 			<Text
 				numberOfLines={2}
-				style={{ width: CARD_WIDTH }}
-				className="mt-1 text-gray900 text-[13px] leading-[18px] font-pretendard-semibold"
+				className="w-[148px] mt-1 text-gray900 text-[13px] leading-[18px] font-pretendard-semibold"
 			>
-				{item.title}
+				{item.title.trim()}
 			</Text>
 			<Text
 				numberOfLines={1}
-				style={{ width: CARD_WIDTH }}
-				className="text-gray500 text-[11px] mt-0.5 font-pretendard-regular"
+				className="w-[148px] text-gray500 text-[11px] mt-0.5 font-pretendard-regular"
 			>
-				{item.venue}
+				{item.venue.trim()}
 			</Text>
 		</Pressable>
 	);
