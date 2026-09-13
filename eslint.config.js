@@ -9,4 +9,12 @@ module.exports = defineConfig([
 	{
 		ignores: ['dist/*'],
 	},
+	{
+		rules: {
+			// Fetch-on-mount hooks set loading/data after talking to Supabase/external APIs.
+			// The compiler rule treats that as cascading renders; keep the documented
+			// useEffect sync pattern rather than migrating every list/detail hook to React Query.
+			'react-hooks/set-state-in-effect': 'off',
+		},
+	},
 ]);
