@@ -1,5 +1,5 @@
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Animated, Modal, Pressable, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -44,7 +44,7 @@ export function DatePickerModal({
 	confirmLabel = '완료',
 }: DatePickerModalProps) {
 	const insets = useSafeAreaInsets();
-	const slideAnim = useRef(new Animated.Value(400)).current;
+	const [slideAnim] = useState(() => new Animated.Value(400));
 	const [draft, setDraft] = useState(value);
 
 	// 모달 열릴 때마다 현재 적용된 날짜로 draft 초기화

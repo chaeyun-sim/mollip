@@ -2,8 +2,9 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { ReactNode } from 'react';
 import { Pressable, Text, TextStyle, View, ViewStyle } from 'react-native';
-import { cn } from '../../lib/cn';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
+import { cn } from '../../lib/cn';
 
 interface SlotProps {
 	children?: ReactNode;
@@ -17,10 +18,17 @@ interface LogoProps {
 	textStyle?: TextStyle;
 }
 
-function ScreenHeader({ children, className, style }: SlotProps) {
+function ScreenHeader({ children, className, style, topOffset = false }: { topOffset?: boolean } & SlotProps) {
+	const insets = useSafeAreaInsets();
+
 	return (
-		<View className={cn('relative flex-row items-center py-4', className)} style={style}>
-			{children}
+		<View
+			className={cn('pb-4 z-[9999] -ml-6 w-screen', className)}
+			style={[{ marginTop: topOffset ? 0 : -insets.top, paddingTop: insets.top + 16 }, style]}
+		>
+			<View className="relative flex-row items-center px-6">
+				{children}
+			</View>
 		</View>
 	);
 }
@@ -42,7 +50,7 @@ function Logo({ className, fontSize = 24, textStyle }: LogoProps) {
 					style={{
 						transform: [{ translateX: -(fontSize / 8) }],
 						height: fontSize / 4,
-						width: fontSize / 4,
+						width: fontSize,
 						top: fontSize / 4.5,
 					}}
 				>
@@ -78,7 +86,7 @@ function Left({ children, className, style }: SlotProps) {
 function Center({ children, className, style }: SlotProps) {
 	return (
 		<View
-			className={cn('absolute left-1/2 -translate-x-1/2 flex-1 items-center mt-1', className)}
+			className={cn('absolute ml-6 left-1/2 -translate-x-1/2 flex-1 items-center mt-1', className)}
 			style={style}
 		>
 			{typeof children === 'string' ? (

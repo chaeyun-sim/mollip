@@ -30,7 +30,7 @@ function Screen({
 				<View className="flex-1 bg-white">
 					<SafeAreaView
 						edges={edges || ['top', 'left', 'right']}
-						className={cn('px-6 flex-1', className)}
+						className={cn('px-5 flex-1', className)}
 					>
 						{children}
 					</SafeAreaView>
@@ -46,7 +46,7 @@ function Screen({
 				<View className="flex-1 bg-bg-light">
 					<SafeAreaView
 						edges={edges || ['top', 'left', 'right']}
-						className={cn('px-6 flex-1', className)}
+						className={cn('px-5 flex-1', className)}
 					>
 						{children}
 					</SafeAreaView>
@@ -67,7 +67,7 @@ function Screen({
 					/>
 					<SafeAreaView
 						edges={edges || ['top', 'left', 'right']}
-						className={cn('px-6 flex-1', className)}
+						className={cn('px-5 flex-1', className)}
 					>
 						{children}
 					</SafeAreaView>

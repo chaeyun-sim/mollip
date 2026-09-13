@@ -31,7 +31,7 @@ interface ImageFallbackProps {
 	/** 실제 이미지가 보일 때만 살짝 어둡게 (히어로 상단 버튼 대비) */
 	dimOverlay?: boolean;
 	accessibilityLabel?: string;
-	/** true면 원격 URI를 image-proxy 경유로 먼저 시도하고, 실패 시 원본 URL로 재시도한다 */
+	/** true면 원본 URL이 실패할 때 image-proxy로 한 번 더 시도한다 */
 	useImageProxy?: boolean;
 	/** 지정하면 원격 이미지 로딩 중 해당 색상으로 스피너를 겹쳐 보여준다 */
 	loadingIndicatorColor?: string;
@@ -79,7 +79,7 @@ export function ImageFallback({
 	}, [showPlaceholder]);
 
 	const remoteSource =
-		useImageProxy && !proxyFailed && remoteUri ? proxiedImageUrl(remoteUri) : remoteUri;
+		useImageProxy && proxyFailed && remoteUri ? proxiedImageUrl(remoteUri) : remoteUri;
 
 	const handleRemoteError = () => {
 		if (useImageProxy && !proxyFailed) {
@@ -88,6 +88,7 @@ export function ImageFallback({
 			return;
 		}
 		setLoadFailed(true);
+		setLoading(false);
 	};
 
 	return (
@@ -102,6 +103,7 @@ export function ImageFallback({
 					source={{ uri: remoteSource ?? remoteUri }}
 					style={StyleSheet.absoluteFill}
 					contentFit={RESIZE_MODE_TO_CONTENT_FIT[resizeMode]}
+					recyclingKey={remoteSource ?? remoteUri}
 					onLoadEnd={() => setLoading(false)}
 					onError={handleRemoteError}
 				/>
@@ -110,29 +112,30 @@ export function ImageFallback({
 					source={posterImage}
 					style={StyleSheet.absoluteFill}
 					contentFit={RESIZE_MODE_TO_CONTENT_FIT[resizeMode]}
+					onLoadEnd={() => setLoading(false)}
 					onError={() => setLoadFailed(true)}
 				/>
 			) : null}
-			{showImage && loadingIndicatorColor && loading ? (
-				<View style={StyleSheet.absoluteFill} className="items-center justify-center">
+			{showImage && loadingIndicatorColor && loading && (
+				<View className="absolute inset-0 items-center justify-center">
 					<ActivityIndicator color={loadingIndicatorColor} />
 				</View>
-			) : null}
-			{showImage && dimOverlay ? (
+			)}
+			{showImage && dimOverlay && (
 				<View
 					pointerEvents="none"
-					style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(0,0,0,0.15)' }]}
+					className="absolute inset-0 bg-black/15"
 				/>
-			) : null}
-			{showPlaceholder ? (
-				<View style={StyleSheet.absoluteFill} className="items-center justify-center">
+			)}
+			{showPlaceholder && (
+				<View className="absolute inset-0 items-center justify-center">
 					<Image
 						source={QUESTION_MARK}
 						style={{ width: iconSize, height: iconSize }}
 						contentFit="contain"
 					/>
 				</View>
-			) : null}
+			)}
 			{children}
 		</View>
 	);

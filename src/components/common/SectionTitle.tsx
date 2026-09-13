@@ -1,6 +1,8 @@
 import type { ReactNode } from 'react';
 import { Text, View } from 'react-native';
 
+import { cn } from '@/src/lib/cn';
+
 interface SectionTitleProps {
 	title: ReactNode;
 	/** 제목 위 영문 레이블 */
@@ -9,12 +11,13 @@ interface SectionTitleProps {
 	subtitle?: string;
 	/** 제목 우측에 배치할 요소 (예: 더보기 버튼) */
 	right?: ReactNode;
+	className?: string;
 }
 
 /** 섹션 제목. eyebrow(위)·subtitle(아래)은 선택적으로 렌더링한다. */
-export function SectionTitle({ title, eyebrow, subtitle, right }: SectionTitleProps) {
+export function SectionTitle({ title, eyebrow, subtitle, right, className }: SectionTitleProps) {
 	return (
-		<View className="mb-4 px-5">
+		<View className={cn('mb-4 px-5', className)}>
 			<View className="flex-row items-end justify-between">
 				<View className="flex-1 pr-2">
 					{eyebrow && (

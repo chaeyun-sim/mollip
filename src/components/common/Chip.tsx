@@ -1,5 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
-import { Pressable, Text } from 'react-native';
+import { Pressable, type PressableProps, Text } from 'react-native';
+
 import { cn } from '@/src/lib/cn';
 
 export type ChipVariant = 'elevated' | 'tonal';
@@ -9,17 +10,16 @@ const INACTIVE_BACKGROUND: Record<ChipVariant, string> = {
 	tonal: 'bg-bg-tonal',
 };
 
-interface ChipProps {
+interface ChipProps extends Omit<PressableProps, 'children' | 'onPress'> {
 	label: string;
 	active: boolean;
 	onPress: () => void;
 	icon?: keyof typeof Ionicons.glyphMap;
 	/** elevated: 흰 배경+그림자(지도 등 유색 배경 위) / tonal: 웜 뉴트럴 배경(흰 화면 위) */
 	variant?: ChipVariant;
-	accessibilityLabel?: string;
 }
 
-/** 선택 토글 칩. active일 때 배경이 primary로 바뀌고, 아이콘이 없으면 체크마크가 붙는다. */
+/** 선택 토글 칩. 필터·태그 토글만 담당한다. */
 export function Chip({
 	label,
 	active,
@@ -27,9 +27,13 @@ export function Chip({
 	icon,
 	variant = 'tonal',
 	accessibilityLabel,
+	className,
+	style,
+	...rest
 }: ChipProps) {
 	return (
 		<Pressable
+			{...rest}
 			onPress={onPress}
 			accessibilityLabel={accessibilityLabel ?? `${label} 필터`}
 			accessibilityRole="button"
@@ -37,8 +41,9 @@ export function Chip({
 			className={cn(
 				'flex-row items-center gap-1 rounded-full px-3.5 py-2',
 				active ? 'bg-primary-dark' : INACTIVE_BACKGROUND[variant],
+				className,
 			)}
-			style={({ pressed }) => [
+			style={(state) => [
 				variant === 'elevated' && !active
 					? {
 							shadowColor: '#000',
@@ -48,7 +53,8 @@ export function Chip({
 							elevation: 2,
 						}
 					: null,
-				{ opacity: pressed ? 0.7 : 1 },
+				typeof style === 'function' ? style(state) : style,
+				{ opacity: state.pressed ? 0.7 : 1 },
 			]}
 		>
 			{active && !icon && <Ionicons name="checkmark" size={13} color="#FFFFFF" />}

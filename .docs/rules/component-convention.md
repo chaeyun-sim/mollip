@@ -231,7 +231,7 @@ const clusters = useMemo(
 ```
 src/
   components/
-    common/        # 도메인 무관 공통 컴포넌트 (SearchBar, DatePickerModal 등)
+    common/        # 도메인 무관 순수 UI 프리미티브 (Button, Chip, TextField 등). §13 참고
     explore/       # 탐색·전시 상세
     settings/      # 설정 화면 UI 조각
     auth/          # 로그인 등 인증 UI
@@ -274,7 +274,8 @@ app/               # expo-router 화면 — default export 1개(스크린)만
 ### 9.4 분리 신호
 
 - 파일 **100줄 초과** + UI 블록이 2개 이상 → 컴포넌트 추출 검토
-- 같은 UI가 **다른 화면**에서도 쓰일 가능성 → 즉시 `src/components/`로
+- 같은 순수 UI가 **3번 이상** 반복되면 `src/components/common/` 추출을 검토한다 (§13)
+- 1~2화면이고 도메인 맥락이 있으면 `src/components/{도메인}/` 에 둔다. `common/`에 넣지 않는다
 
 ---
 
@@ -463,3 +464,69 @@ import { useMapStore } from '@/src/store/mapStore';
 import { computeClusters } from '@/src/utils/mapUtils';
 import type { VenueGroup } from '@/src/data/venues';
 ```
+
+---
+
+## 13. 공통 UI (`src/components/common/`)
+
+도메인 컴포넌트와 순수 UI를 엄격히 구분한다. `common/`에는 **비즈니스 로직이 없는 프리미티브**만 둔다.
+
+### 13.1 단일 책임
+
+한 파일·한 컴포넌트는 하나의 역할만 갖는다. CTA·아이콘 버튼·설정 행을 한 옴니 컴포넌트에 묶지 않는다.
+
+| 역할 | 위치 |
+|---|---|
+| 라벨 CTA (solid / ghost) | `common/Button` |
+| 원형·아이콘 전용 버튼 | `common/IconButton` |
+| 한 화면의 아이콘+제목+설명 행 | 해당 도메인 (`guide/SourceActionRow` 등). `common/` 금지 |
+
+`Button.Row`, `Button.Icon`처럼 역할이 다른 API를 한 컴포넌트에 붙이지 않는다. 컴파운드(`Screen.Header`)는 **같은 레이아웃 API의 slot**일 때만 허용한다 (§9.2).
+
+### 13.2 추출 기준
+
+아래를 **하나라도** 만족할 때만 `common/` 추출을 검토한다.
+
+1. **3곳 이상**에서 같은 UI가 반복된다
+2. 비즈니스 로직과 분리된 **순수 UI**이고, 도메인 맥락 없이 재사용된다
+
+해당하지 않으면 인라인하거나 `src/components/{도메인}/`에 둔다. 1~2회 사용·한 화면 전용은 `common/`에 올리지 않는다.
+
+```tsx
+// Good — 순수 토글. 선택 상태만 props로 받는다
+<Chip label="무료" active={freeOnly} onPress={onToggleFree} />
+
+// Bad — 관람 확정·위키 검색 등 도메인 로직을 common에 넣음
+export function Chip({ exhibitionId, onConfirmVisit }: ChipProps) { ... }
+```
+
+### 13.3 variant와 확장
+
+프리미티브는 `variant`(필요하면 `tone`)로 허용된 변형만 열고, 나머지는 **rest + `className`** 으로 넘긴다.
+
+- 인터랙션 루트: `PressableProps` / `TextInputProps` 를 `extends` 하고 `...rest`를 루트에 전달한다
+- 스타일 확장: 루트 `className`을 `cn(..., className)`으로 합친다. `style`이 오면 pressed 핸들러와 병합한다
+- 새 화면마다 prop을 늘리기보다 `className`으로 간격을 조정한다
+- 전체 화면 모달처럼 크롬을 컴포넌트가 소유하면 rest는 생략해도 된다 (`DatePickerModal`)
+
+```tsx
+interface ButtonProps extends Omit<PressableProps, 'children' | 'onPress'> {
+  children: ReactNode;
+  onPress: () => void;
+  variant?: 'solid' | 'ghost';
+  className?: string;
+}
+```
+
+허용된 variant 밖에 있는 모양은 새 variant를 추가하기 전에, 그게 정말 같은 역할인지부터 확인한다. 역할이 다르면 파일을 나눈다.
+
+### 13.4 관심사 분리
+
+| | `common/` | `src/components/{도메인}/` |
+|---|---|---|
+| 하는 일 | 그리기·접근성·기본 인터랙션 | 도메인 카피, 스토어, API, 화면 전용 레이아웃 |
+| 알면 안 되는 것 | 전시·관람·해설·설정 스토어 | — |
+| 상태 | `active`, `disabled`, `loading` 등 표시 상태만 | 방문 확정, 위키 검색, 온보딩 스텝 등 |
+
+훅(`useTextField`)은 입력 프리미티브의 표시 상태만 다룬다. 제출·검증 규칙이 도메인에 묶이면 화면이나 도메인 훅에 둔다.
+

@@ -1,4 +1,6 @@
 /** @type {import('tailwindcss').Config} */
+const { hairlineWidth } = require('nativewind/theme');
+
 module.exports = {
 	content: [
 		'./app/**/*.{js,jsx,ts,tsx}',
@@ -44,6 +46,11 @@ module.exports = {
 				hahmlet: ['Hahmlet_400Regular'],
 				'hahmlet-semibold': ['Hahmlet_600SemiBold'],
 				'hahmlet-bold': ['Hahmlet_700Bold'],
+				// SignaturePad 안내 캡션 전용 — 사용 범위를 이 한 곳으로 제한한다 (02-design-brief.md 참고)
+				'nanum-pen': ['NanumPenScript_400Regular'],
+			},
+			borderWidth: {
+				hairline: hairlineWidth(),
 			},
 		},
 	},
