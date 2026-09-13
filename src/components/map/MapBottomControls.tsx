@@ -2,24 +2,17 @@ import type BottomSheet from '@gorhom/bottom-sheet';
 import { Ionicons } from '@expo/vector-icons';
 import { Pressable, Text } from 'react-native';
 import type { RefObject } from 'react';
-
 import type { DirectionsStatus } from '@/src/hooks/useDirections';
 
 interface MapBottomControlsProps {
 	onLocate: () => void;
-	selectedVenueName: string | null;
-	isVenueSheetOpen: boolean;
 	directionsStatus: DirectionsStatus;
-	onOpenVenueSheet: () => void;
 	routeSheetRef: RefObject<BottomSheet | null>;
 }
 
 export function MapBottomControls({
 	onLocate,
-	selectedVenueName,
-	isVenueSheetOpen,
 	directionsStatus,
-	onOpenVenueSheet,
 	routeSheetRef,
 }: MapBottomControlsProps) {
 	return (
@@ -32,7 +25,7 @@ export function MapBottomControls({
 				accessibilityLabel="내 위치로 이동"
 				accessibilityRole="button"
 			>
-				<Ionicons name="locate-outline" size={22} color="white" />
+				<Ionicons name="locate-outline" size={22} className="text-white" />
 			</Pressable>
 
 			{/* 길찾기 패널을 다시 열 수 있는 버튼 */}
@@ -40,11 +33,11 @@ export function MapBottomControls({
 				<Pressable
 					onPress={() => routeSheetRef.current?.snapToIndex(1)}
 					className="absolute left-5 bottom-8 flex-row items-center gap-2 h-12 px-5 rounded-full bg-[rgba(15,14,13,0.92)] border border-white/15"
-					style={({ pressed }) => ({ zIndex: 50, opacity: pressed ? 0.6 : 1 })}
+					style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
 					accessibilityLabel="경로 패널 다시 보기"
 					accessibilityRole="button"
 				>
-					<Ionicons name="navigate" size={16} color="white" />
+					<Ionicons name="navigate" size={16} className="text-white" />
 					<Text className="text-white text-[13px] font-pretendard-bold">경로 보기</Text>
 				</Pressable>
 			)}

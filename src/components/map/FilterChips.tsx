@@ -19,7 +19,7 @@ export function FilterChips({
 	onDatePress,
 }: FilterChipsProps) {
 	return (
-		<View className="absolute left-0 right-0" style={{ top: topOffset, zIndex: 10 }}>
+		<View className="absolute inset-x-0 z-[10]" style={{ top: topOffset }}>
 			<ScrollView
 				horizontal
 				showsHorizontalScrollIndicator={false}

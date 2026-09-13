@@ -1,11 +1,11 @@
-import type { MutableRefObject, RefObject } from 'react';
+import type { RefObject } from 'react';
 import { Pressable, View, type DimensionValue } from 'react-native';
 import type { NaverMapViewRef } from '@mj-studio/react-native-naver-map';
 import { Ionicons } from '@expo/vector-icons';
 
 interface ZoomControlsProps {
 	mapRef: RefObject<NaverMapViewRef | null>;
-	cameraRef: MutableRefObject<{ latitude: number; longitude: number; zoom: number }>;
+	cameraRef: RefObject<{ latitude: number; longitude: number; zoom: number }>;
 	bottomOffset?: DimensionValue;
 }
 
@@ -25,7 +25,7 @@ export function ZoomControls({ mapRef, cameraRef, bottomOffset = 96 }: ZoomContr
 					{i === 1 && <View className="h-px bg-white/15" />}
 					<Pressable
 						className="w-12 h-12 items-center justify-center"
-						style={({ pressed }) => (pressed ? { opacity: 0.6 } : undefined)}
+						style={({ pressed }) => pressed && { opacity: 0.6 }}
 						onPress={() => {
 							const c = cameraRef.current;
 							mapRef.current?.animateCameraTo({

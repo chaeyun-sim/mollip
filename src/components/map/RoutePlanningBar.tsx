@@ -1,17 +1,18 @@
 import { Ionicons } from '@expo/vector-icons';
-import { useEffect, useMemo, useState } from 'react';
+import { memo, useEffect, useMemo, useState } from 'react';
 import {
 	ActivityIndicator,
 	Pressable,
 	ScrollView,
 	Text,
-	TextInput,
 	View,
 	type LayoutChangeEvent,
 } from 'react-native';
+import { TextField } from '@/src/components/common/TextField';
+import { useRecentLocations } from '@/src/hooks/useRecentLocations';
+import { cn } from '@/src/lib/cn';
 import { searchKakaoKeyword, type KakaoLocalItem } from '@/src/api/kakao';
 import type { RouteEndpoint } from '@/src/hooks/useDirections';
-import type { RecentLocation } from '@/src/hooks/useRecentLocations';
 import type { VenueGroup } from '@/src/data/venues';
 
 type EditingField = 'origin' | 'destination' | null;
@@ -27,28 +28,13 @@ interface RoutePlanningBarProps {
 	origin: RouteEndpoint | null;
 	destination: RouteEndpoint | null;
 	venues: VenueGroup[];
-	hasCurrentLocation: boolean;
-	recentLocations: RecentLocation[];
+	currentLocation: RouteEndpoint | null;
 	onSelectOrigin: (endpoint: RouteEndpoint) => void;
 	onSelectDestination: (endpoint: RouteEndpoint) => void;
-	onUseCurrentLocation: () => void;
 	onFocusLocation: (coord: { latitude: number; longitude: number }) => void;
-	onAddRecent: (endpoint: RouteEndpoint, subtitle?: string) => void;
 	onSwap: () => void;
 	onConfirm: () => void;
 	onClose: () => void;
-}
-
-const CARD_SHADOW = {
-	shadowColor: '#000',
-	shadowOpacity: 0.12,
-	shadowRadius: 8,
-	shadowOffset: { width: 0, height: 2 },
-	elevation: 4,
-} as const;
-
-function venueToEndpoint(venue: VenueGroup): RouteEndpoint {
-	return { name: venue.venueName, coord: venue.coordinates };
 }
 
 function buildVenueSuggestions(venues: VenueGroup[], query: string): RouteSearchSuggestion[] {
@@ -58,7 +44,7 @@ function buildVenueSuggestions(venues: VenueGroup[], query: string): RouteSearch
 		key: `venue-${v.venueName}`,
 		label: v.venueName,
 		subtitle: v.venueAddress,
-		endpoint: venueToEndpoint(v),
+		endpoint: { name: v.venueName, coord: v.coordinates },
 	}));
 }
 
@@ -74,45 +60,31 @@ function kakaoToSuggestion(item: KakaoLocalItem, index: number): RouteSearchSugg
 	};
 }
 
-export function RoutePlanningBar({
+export const RoutePlanningBar = memo(function RoutePlanningBar({
 	origin,
 	destination,
 	venues,
-	hasCurrentLocation,
-	recentLocations,
+	currentLocation,
 	onSelectOrigin,
 	onSelectDestination,
-	onUseCurrentLocation,
 	onFocusLocation,
-	onAddRecent,
 	onSwap,
 	onConfirm,
 	onClose,
 }: RoutePlanningBarProps) {
-	// 출발지가 없으면 마운트 시 바로 출발지 검색창을 열어준다
 	const [editing, setEditing] = useState<EditingField>(() => (origin == null ? 'origin' : null));
 	const [query, setQuery] = useState('');
 	const [barHeight, setBarHeight] = useState(0);
 	const [kakaoRows, setKakaoRows] = useState<KakaoLocalItem[]>([]);
 	const [kakaoLoading, setKakaoLoading] = useState(false);
 	const [kakaoError, setKakaoError] = useState(false);
+	const { recents, addRecent } = useRecentLocations();
 
 	useEffect(() => {
-		if (editing == null) {
-			setKakaoRows([]);
-			setKakaoError(false);
-			return;
-		}
 		const q = query.trim();
-		if (q.length < 1) {
-			setKakaoRows([]);
-			setKakaoLoading(false);
-			setKakaoError(false);
-			return;
-		}
+		if (editing == null || q.length < 1) return;
+
 		let cancelled = false;
-		setKakaoLoading(true);
-		setKakaoError(false);
 		const timer = setTimeout(() => {
 			searchKakaoKeyword(q)
 				.then((rows) => {
@@ -146,13 +118,13 @@ export function RoutePlanningBar({
 
 	const recentSuggestions = useMemo((): RouteSearchSuggestion[] => {
 		if (query.trim().length > 0) return [];
-		return recentLocations.map((r, i) => ({
+		return recents.map((r, i) => ({
 			key: `recent-${i}`,
 			label: r.name,
 			subtitle: r.subtitle,
 			endpoint: { name: r.name, coord: r.coord },
 		}));
-	}, [query, recentLocations]);
+	}, [query, recents]);
 
 	const suggestions = useMemo(() => {
 		if (query.trim().length === 0) return recentSuggestions;
@@ -169,26 +141,43 @@ export function RoutePlanningBar({
 
 	const canConfirm = origin != null && destination != null;
 
+	const resetKakao = () => {
+		setKakaoRows([]);
+		setKakaoLoading(false);
+		setKakaoError(false);
+	};
+
+	const handleQueryChange = (text: string) => {
+		setQuery(text);
+		if (text.trim().length < 1) {
+			resetKakao();
+			return;
+		}
+		setKakaoRows([]);
+		setKakaoLoading(true);
+		setKakaoError(false);
+	};
+
 	const openEditor = (field: EditingField) => {
 		setEditing(field);
 		setQuery('');
-		setKakaoRows([]);
+		resetKakao();
 	};
 
 	const pickSuggestion = (item: RouteSearchSuggestion) => {
 		if (editing === 'origin') onSelectOrigin(item.endpoint);
 		else if (editing === 'destination') onSelectDestination(item.endpoint);
 		onFocusLocation(item.endpoint.coord);
-		onAddRecent(item.endpoint, item.subtitle);
+		addRecent(item.endpoint, item.subtitle);
 		setEditing(null);
 		setQuery('');
-		setKakaoRows([]);
+		resetKakao();
 	};
 
 	const closeDropdown = () => {
 		setEditing(null);
 		setQuery('');
-		setKakaoRows([]);
+		resetKakao();
 	};
 
 	const onBarLayout = (e: LayoutChangeEvent) => {
@@ -198,7 +187,16 @@ export function RoutePlanningBar({
 	return (
 		<View>
 			<View className="flex-row items-start gap-2" onLayout={onBarLayout}>
-				<View className="flex-1 rounded-2xl bg-white px-3 py-2.5" style={CARD_SHADOW}>
+				<View
+					className="flex-1 rounded-2xl bg-white px-3 py-2.5"
+					style={{
+						shadowColor: 'black',
+						shadowOpacity: 0.12,
+						shadowRadius: 8,
+						shadowOffset: { width: 0, height: 2 },
+						elevation: 4,
+					}}
+				>
 					<Pressable
 						onPress={() => openEditor('origin')}
 						className="flex-row items-center gap-2.5 min-h-[36px]"
@@ -206,10 +204,7 @@ export function RoutePlanningBar({
 						accessibilityLabel="출발지 선택"
 					>
 						<View className="w-2.5 h-2.5 rounded-full bg-green-500" />
-						<Text
-							className="flex-1 text-[14px] font-pretendard-medium text-gray900"
-							numberOfLines={1}
-						>
+						<Text className="flex-1 text-sm font-pretendard-medium text-gray900" numberOfLines={1}>
 							{origin?.name ?? '출발지를 선택하세요'}
 						</Text>
 					</Pressable>
@@ -218,15 +213,12 @@ export function RoutePlanningBar({
 
 					<Pressable
 						onPress={() => openEditor('destination')}
-						className="flex-row items-center gap-2.5 min-h-[36px]"
+						className="flex-row items-center gap-2.5 min-h-9"
 						accessibilityRole="button"
 						accessibilityLabel="도착지 선택"
 					>
 						<View className="w-2.5 h-2.5 rounded-full bg-error" />
-						<Text
-							className="flex-1 text-[14px] font-pretendard-medium text-gray900"
-							numberOfLines={1}
-						>
+						<Text className="flex-1 text-sm font-pretendard-medium text-gray900" numberOfLines={1}>
 							{destination?.name ?? '도착지를 선택하세요'}
 						</Text>
 					</Pressable>
@@ -236,8 +228,17 @@ export function RoutePlanningBar({
 					<Pressable
 						onPress={onSwap}
 						disabled={!origin || !destination}
-						className="w-10 h-10 rounded-full bg-white items-center justify-center"
-						style={[CARD_SHADOW, !origin || !destination ? { opacity: 0.4 } : undefined]}
+						className={cn(
+							'w-10 h-10 rounded-full bg-white items-center justify-center',
+							(!origin || !destination) && 'opacity-40',
+						)}
+						style={{
+							shadowColor: 'black',
+							shadowOpacity: 0.12,
+							shadowRadius: 8,
+							shadowOffset: { width: 0, height: 2 },
+							elevation: 4,
+						}}
 						accessibilityRole="button"
 						accessibilityLabel="출발지와 도착지 바꾸기"
 					>
@@ -249,7 +250,13 @@ export function RoutePlanningBar({
 							onClose();
 						}}
 						className="w-10 h-10 rounded-full bg-white items-center justify-center"
-						style={CARD_SHADOW}
+						style={{
+							shadowColor: 'black',
+							shadowOpacity: 0.12,
+							shadowRadius: 8,
+							shadowOffset: { width: 0, height: 2 },
+							elevation: 4,
+						}}
 						accessibilityRole="button"
 						accessibilityLabel="길찾기 취소"
 					>
@@ -260,51 +267,51 @@ export function RoutePlanningBar({
 
 			{editing != null && (
 				<View
-					className="absolute left-0 right-12 rounded-2xl bg-white overflow-hidden"
-					style={[
-						CARD_SHADOW,
-						{
-							top: barHeight + 8,
-							zIndex: 50,
-							elevation: 8,
-						},
-					]}
+					className="absolute left-0 right-12 rounded-2xl bg-white overflow-hidden z-[50]"
+					style={{
+						shadowColor: 'black',
+						shadowOpacity: 0.12,
+						shadowRadius: 8,
+						shadowOffset: { width: 0, height: 2 },
+						elevation: 4,
+						top: barHeight + 8,
+					}}
 				>
 					<View className="flex-row items-center px-3 py-2.5 gap-2 border-b border-black/[0.06]">
-						<Ionicons name="search" size={16} color="rgba(0,0,0,0.35)" />
-						<TextInput
-							className="flex-1 text-black text-sm font-pretendard-regular"
+						<Ionicons name="search" size={16} className="text-black/35" />
+						<TextField
+							variant="plain"
+							className="text-black text-sm"
 							placeholder={editing === 'origin' ? '출발지 검색' : '도착지 검색'}
 							placeholderTextColor="rgba(0,0,0,0.3)"
 							value={query}
-							onChangeText={setQuery}
-							style={{ lineHeight: 0 }}
+							onChangeText={handleQueryChange}
 							autoFocus
 							returnKeyType="search"
 						/>
 						<Pressable onPress={closeDropdown} hitSlop={8} accessibilityLabel="검색 닫기">
-							<Ionicons name="close-circle" size={18} color="rgba(0,0,0,0.25)" />
+							<Ionicons name="close-circle" size={18} className="text-black/25" />
 						</Pressable>
 					</View>
 
-					{editing === 'origin' && hasCurrentLocation && (
+					{editing === 'origin' && currentLocation && (
 						<Pressable
 							onPress={() => {
-								onUseCurrentLocation();
+								onSelectOrigin(currentLocation);
 								closeDropdown();
 							}}
-							className="flex-row items-center gap-2 px-4 py-3 border-b border-black/[0.04]"
+							className="flex-row items-center gap-2 px-4 py-3 border-b border-black/4"
 							accessibilityRole="button"
 						>
 							<Ionicons name="locate" size={18} className="text-gray900" />
-							<Text className="text-[14px] font-pretendard-semibold text-gray900">현재 위치</Text>
+							<Text className="text-sm font-pretendard-semibold text-gray900">현재 위치</Text>
 						</Pressable>
 					)}
 
 					{kakaoLoading && (
 						<View className="flex-row items-center gap-2 px-4 py-3">
 							<ActivityIndicator size="small" className="text-gray900" />
-							<Text className="text-[12px] text-black/45 font-pretendard-regular">검색 중…</Text>
+							<Text className="text-xs text-black/45 font-pretendard-regular">검색 중…</Text>
 						</View>
 					)}
 
@@ -318,30 +325,27 @@ export function RoutePlanningBar({
 							<Pressable
 								key={item.key}
 								onPress={() => pickSuggestion(item)}
-								className="px-4 py-3 border-b border-black/[0.04]"
+								className="px-4 py-3 border-b border-black/4"
 								accessibilityRole="button"
 							>
 								<View className="flex-row items-center gap-2.5">
 									{query.trim().length === 0 ? (
-										<Ionicons name="time-outline" size={14} color="rgba(0,0,0,0.3)" />
+										<Ionicons name="time-outline" size={14} className="text-black/30" />
 									) : (
-										<Ionicons name="location-outline" size={14} color="rgba(0,0,0,0.3)" />
+										<Ionicons name="location-outline" size={14} className="text-black/30" />
 									)}
 									<View className="flex-1">
-										<Text
-											className="text-[14px] font-pretendard-medium text-gray900"
-											numberOfLines={1}
-										>
+										<Text className="text-sm font-pretendard-medium text-gray900" numberOfLines={1}>
 											{item.label}
 										</Text>
-										{item.subtitle ? (
+										{item.subtitle && (
 											<Text
-												className="text-[12px] font-pretendard-regular text-black/45 mt-0.5"
+												className="text-xs font-pretendard-regular text-black/45 mt-0.5"
 												numberOfLines={1}
 											>
 												{item.subtitle}
 											</Text>
-										) : null}
+										)}
 									</View>
 								</View>
 							</Pressable>
@@ -367,15 +371,16 @@ export function RoutePlanningBar({
 				<Pressable
 					onPress={() => {
 						if (!canConfirm) {
-							// 출발지/도착지가 없으면 해당 필드를 열어 안내
 							if (!origin) openEditor('origin');
 							else if (!destination) openEditor('destination');
 							return;
 						}
 						onConfirm();
 					}}
-					className="h-12 rounded-2xl bg-secondary items-center justify-center mt-2"
-					style={!canConfirm ? { opacity: 0.45 } : undefined}
+					className={cn(
+						'h-12 rounded-2xl bg-secondary items-center justify-center mt-2',
+						!canConfirm && 'opacity-45',
+					)}
 					accessibilityRole="button"
 					accessibilityLabel="경로 찾기"
 				>
@@ -384,4 +389,4 @@ export function RoutePlanningBar({
 			)}
 		</View>
 	);
-}
+});
