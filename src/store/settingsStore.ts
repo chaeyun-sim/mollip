@@ -4,6 +4,7 @@ import { createJSONStorage, persist } from 'zustand/middleware';
 
 export type FontSize = 'small' | 'medium' | 'large';
 export type VoiceSpeed = 0.7 | 1.0 | 1.25 | 1.5;
+export type DescriptionLength = 0.5 | 1 | 1.5 | 2;
 export type DescriptionFocus =
 	| 'aesthetics' // 미학 / 형식 분석
 	| 'art_history' // 미술사 · 사조
@@ -30,12 +31,14 @@ type SettingsStore = {
 	fontSize: FontSize;
 	pushNotificationsEnabled: boolean;
 	descriptionFocus: DescriptionFocus[];
+	descriptionLength: DescriptionLength;
 	highContrast: boolean;
 	setVoiceId: (id: string) => void;
 	setVoiceSpeed: (speed: VoiceSpeed) => void;
 	setFontSize: (size: FontSize) => void;
 	setPushNotificationsEnabled: (enabled: boolean) => void;
 	toggleDescriptionFocus: (focus: DescriptionFocus) => void;
+	setDescriptionLength: (length: DescriptionLength) => void;
 	setHighContrast: (enabled: boolean) => void;
 };
 
@@ -47,6 +50,7 @@ export const useSettingsStore = create<SettingsStore>()(
 			fontSize: 'medium',
 			pushNotificationsEnabled: true,
 			descriptionFocus: [],
+			descriptionLength: 1,
 			highContrast: false,
 			setVoiceId: (voiceId) => set({ voiceId }),
 			setVoiceSpeed: (voiceSpeed) => set({ voiceSpeed }),
@@ -58,14 +62,16 @@ export const useSettingsStore = create<SettingsStore>()(
 						? s.descriptionFocus.filter((f) => f !== focus)
 						: [...s.descriptionFocus, focus],
 				})),
+			setDescriptionLength: (descriptionLength) => set({ descriptionLength }),
 			setHighContrast: (highContrast) => set({ highContrast }),
 		}),
 		{
 			name: 'settings',
-			version: 2,
+			version: 3,
 			migrate: (persistedState) => ({
 				...(persistedState as SettingsStore),
 				highContrast: (persistedState as SettingsStore).highContrast ?? false,
+				descriptionLength: (persistedState as SettingsStore).descriptionLength ?? 1,
 			}),
 			storage: createJSONStorage(() => AsyncStorage),
 			onRehydrateStorage: () => (_state, error) => {

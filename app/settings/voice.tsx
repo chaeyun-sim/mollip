@@ -26,14 +26,40 @@ const AGE_LABEL: Record<string, string> = {
 	old: '장년',
 };
 
+// ElevenLabs의 영문 descriptive 라벨 → 자연스러운 한국어 형용사
+const DESCRIPTIVE_LABEL_KO: Record<string, string> = {
+	relaxed: '편안한',
+	formal: '신뢰감 있는',
+	neutral: '평온한',
+	soft: '부드러운',
+	calm: '안정적인',
+	gentle: '다정한',
+	meditative: '나지막한',
+	deep: '낮은',
+	upbeat: '활기찬',
+};
+
+// ElevenLabs 라이브러리 메타데이터의 성별 라벨이 실제와 다른 음성을 표시명 기준으로 보정한다.
+const GENDER_OVERRIDE: Record<string, string> = {
+	Soo: 'female',
+};
+
 function avatarColor(name: string) {
 	const idx = name.charCodeAt(0) % AVATAR_COLORS.length;
 	return AVATAR_COLORS[idx];
 }
 
+interface VoiceDescription {
+	/** "목소리" 바로 앞의 강조 키워드 (예: "편안한") */
+	keyword: string;
+	/** 키워드 앞에 붙는 나이/성별 문구 (예: "중년 남성의 ") */
+	prefix: string;
+}
+
 // 나이/성별/특징 키워드를 풀어서 자연스러운 한 문장으로 조합
-function voiceDescription(voice: Voice): string | null {
-	const gender = voice.labels?.gender;
+function voiceDescription(voice: Voice): VoiceDescription | null {
+	const displayName = voice.name.split(' - ')[0];
+	const gender = GENDER_OVERRIDE[displayName] ?? voice.labels?.gender;
 	const age = voice.labels?.age;
 	const descriptive = voice.labels?.descriptive;
 
@@ -41,13 +67,12 @@ function voiceDescription(voice: Voice): string | null {
 		.filter(Boolean)
 		.join(' ');
 	const descriptiveLabel = descriptive
-		? descriptive.charAt(0).toUpperCase() + descriptive.slice(1)
+		? (DESCRIPTIVE_LABEL_KO[descriptive.toLowerCase()] ?? descriptive)
 		: '';
 
-	if (descriptiveLabel && personLabel) return `${descriptiveLabel} 톤의 ${personLabel} 목소리`;
-	if (personLabel) return `${personLabel} 목소리`;
-	if (descriptiveLabel) return `${descriptiveLabel} 톤의 목소리`;
-	return null;
+	if (!personLabel && !descriptiveLabel) return null;
+	if (descriptiveLabel) return { keyword: descriptiveLabel, prefix: personLabel ? `${personLabel}의 ` : '' };
+	return { keyword: personLabel, prefix: '' };
 }
 
 /* ─── 메인 ─── */
@@ -124,14 +149,10 @@ export default function VoiceScreen() {
 							return (
 								<Pressable
 									key={voice.voice_id}
-									className={cn(
-										'rounded-[22px] py-3.5',
-										selected
-											? 'bg-[#F7F3EE]'
-											: 'bg-bg-tonal',
-									)}
+									className={cn('rounded-[22px] py-3.5', selected && 'bg-primary/5')}
 									style={({ pressed }) => ({
 										transform: [{ scale: pressed ? 0.98 : 1 }],
+										backgroundColor: !selected && pressed ? colors.bgTonal : undefined,
 									})}
 									accessibilityRole="radio"
 									accessibilityState={{ checked: selected }}
@@ -174,7 +195,9 @@ export default function VoiceScreen() {
 											</View>
 											{description && (
 												<Text className="text-[12px] font-pretendard-regular text-gray-500 mt-1">
-													{description}
+													{description.prefix}
+													<Text className="text-primary">{description.keyword}</Text>
+													{' 목소리'}
 												</Text>
 											)}
 										</View>

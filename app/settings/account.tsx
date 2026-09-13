@@ -1,14 +1,21 @@
 import * as Haptics from 'expo-haptics';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { Modal, Pressable, Text, View } from 'react-native';
+import { ActivityIndicator, Modal, Pressable, Text, View } from 'react-native';
 import { Screen } from '@/src/components/layout/Screen';
 import { useAuthStore } from '@/src/store/authStore';
+import { Ionicons } from '@expo/vector-icons';
+import { colors } from '@/src/constants/colors';
 
 export default function AccountScreen() {
 	const router = useRouter();
 	const user = useAuthStore((s) => s.user);
 	const [showWithdrawWarning, setShowWithdrawWarning] = useState(false);
+
+	const handleDeleteAccoun = () => {
+		Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+		setShowWithdrawWarning(true);
+	};
 
 	if (!user) return null;
 
@@ -46,20 +53,22 @@ export default function AccountScreen() {
 					</View>
 				)}
 
-				{/* 탈퇴하기 */}
-				<View className="flex-1 items-center justify-end pb-10">
-					<Pressable
-						onPress={() => {
-							Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-							setShowWithdrawWarning(true);
-						}}
-						hitSlop={12}
-						accessibilityRole="button"
-						accessibilityLabel="탈퇴하기"
-						style={({ pressed }) => ({ opacity: pressed ? 0.5 : 1 })}
-					>
-						<Text className="font-pretendard-regular text-[13px] text-gray500">탈퇴하기</Text>
-					</Pressable>
+				<View className="gap-2 border-t border-t-gray500/20 pt-4">
+					<View className="flex-row items-center justify-between px-1 pb-3 mb-6">
+						{showWithdrawWarning ? (
+							<ActivityIndicator size="small" color={colors.gray600} />
+						) : (
+							<Pressable
+								onPress={showWithdrawWarning ? undefined : handleDeleteAccoun}
+								accessibilityRole="button"
+								accessibilityLabel="회원탈퇴"
+								style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
+								className="flex-row items-center gap-2 h-[44px] border-[rgba(28,25,23,0.06)]"
+							>
+								<Text className="font-pretendard-medium text-error text-[14px]">탈퇴하기</Text>
+							</Pressable>
+						)}
+					</View>
 				</View>
 			</View>
 

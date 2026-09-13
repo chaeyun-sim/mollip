@@ -9,17 +9,18 @@ import {
 	Pressable,
 	ScrollView,
 	Text,
-	TextInput,
 	View,
 } from 'react-native';
-import { cn } from '@/src/lib/cn';
+
+import { TextField } from '@/src/components/common/TextField';
 import { Screen } from '@/src/components/layout/Screen';
+import { cn } from '@/src/lib/cn';
 import { useAuthStore } from '@/src/store/authStore';
+import type { AsyncStatus } from '@/src/types/asyncStatus.types';
 import { deleteAccount } from '@/src/utils/api';
 import { supabase } from '@/src/utils/supabase';
 import { colors } from '@/src/constants/colors';
 
-type SubmitStatus = 'idle' | 'submitting' | 'success' | 'error';
 type Reason =
 	'low_usage' | 'too_many_notifications' | 'bad_recommendations' | 'privacy_concern' | 'other';
 
@@ -48,15 +49,15 @@ export default function DeleteAccountScreen() {
 	const signOut = useAuthStore((s) => s.signOut);
 	const [reason, setReason] = useState<Reason | null>(null);
 	const [detail, setDetail] = useState('');
-	const [status, setStatus] = useState<SubmitStatus>('idle');
+	const [status, setStatus] = useState<AsyncStatus>('idle');
 
 	const selectedOption = REASON_OPTIONS.find((o) => o.value === reason);
-	const canSubmit = reason !== null && status !== 'submitting';
+	const canSubmit = reason !== null && status !== 'loading';
 
 	const handleSubmit = async () => {
 		if (!canSubmit || !reason) return;
 		Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-		setStatus('submitting');
+		setStatus('loading');
 
 		await supabase.from('account_deletion_feedback').insert({
 			reason,
@@ -116,7 +117,7 @@ export default function DeleteAccountScreen() {
 						className={cn('rounded-full px-3.5 py-1.5', canSubmit ? 'bg-red-500' : 'bg-black/10')}
 						style={({ pressed }) => ({ opacity: pressed && canSubmit ? 0.8 : 1 })}
 					>
-						{status === 'submitting' ? (
+						{status === 'loading' ? (
 							<ActivityIndicator size="small" color="#fff" />
 						) : (
 							<Text
@@ -200,18 +201,13 @@ export default function DeleteAccountScreen() {
 					) : null}
 
 					{reason === 'other' ? (
-						<TextInput
-							className="rounded-3xl bg-bg-tonal px-4 py-4 text-gray-900 text-[15px]"
-							style={{
-								fontFamily: 'Pretendard-Regular',
-								minHeight: 120,
-								textAlignVertical: 'top',
-							}}
+						<TextField
+							variant="area"
+							className="rounded-3xl bg-bg-tonal border-0"
 							placeholder="어떤 점이 아쉬웠는지 알려주세요 (선택)"
 							placeholderTextColor={colors.gray700}
 							value={detail}
 							onChangeText={setDetail}
-							multiline
 							maxLength={1000}
 						/>
 					) : null}

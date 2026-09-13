@@ -5,7 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Screen } from '@/src/components/layout/Screen';
 import { ImageFallback } from '@/src/components/common/ImageFallback';
 import { Chip } from '@/src/components/common/Chip';
-import { StatusBadge } from '@/src/components/search/StatusBadge';
+import { StatusBadge } from '@/src/components/explore/StatusBadge';
 import { useBookmarkedExhibitions } from '@/src/hooks/useBookmarkedExhibitions';
 import { useBookmarkStore } from '@/src/store/bookmarkStore';
 import { getExhibitionStatus, STATUS_LABELS, getDdayLabel } from '@/src/utils/exhibitionSearch';

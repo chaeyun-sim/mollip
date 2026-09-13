@@ -1,42 +1,34 @@
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { useRouter } from 'expo-router';
+import { useState } from 'react';
 import { ActivityIndicator, Pressable, ScrollView, Switch, Text, View } from 'react-native';
 import { useAuthStore } from '@/src/store/authStore';
 import { Screen } from '@/src/components/layout/Screen';
-import { CardRow, PillSelector, SettingsCard } from '@/src/components/mypage';
-import { APP_VERSION, FONT_SIZE_OPTIONS, SCRAP_TILES, SPEED_OPTIONS } from '@/src/data/mypage';
+import { CardRow, NarrationSettingsFields, SettingsCard } from '@/src/components/mypage';
+import { APP_VERSION, SCRAP_TILES } from '@/src/data/mypage';
 import { colors } from '@/src/constants/colors';
 import { useSettingsStore } from '@/src/store/settingsStore';
-import { LoginRequiredPressable } from '@/src/components/auth/LoginRequiredPressable';
-import { useEffect, useState } from 'react';
-import { fetchVoices } from '@/src/utils/api';
-import type { Voice } from '@/src/hooks/useTTS';
 
 export default function MyPageScreen() {
 	const router = useRouter();
 	const session = useAuthStore((s) => s.session);
 	const authLoading = useAuthStore((s) => s.isLoading);
-	const {
-		voiceId,
-		voiceSpeed,
-		setVoiceSpeed,
-		fontSize,
-		setFontSize,
-		pushNotificationsEnabled,
-		setPushNotificationsEnabled,
-	} = useSettingsStore();
+	const signOut = useAuthStore((s) => s.signOut);
+	const [signingOut, setSigningOut] = useState(false);
+	const { pushNotificationsEnabled, setPushNotificationsEnabled, highContrast, setHighContrast } =
+		useSettingsStore();
 
-	const [currentVoiceName, setCurrentVoiceName] = useState<string>('');
-
-	useEffect(() => {
-		fetchVoices()
-			.then((voices) => {
-				const found = voices.find((v: Voice) => v.voice_id === voiceId);
-				if (found) setCurrentVoiceName(found.name);
-			})
-			.catch(console.error);
-	}, [voiceId]);
+	const handleSignOut = async () => {
+		Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+		setSigningOut(true);
+		try {
+			await signOut();
+			router.replace('/(tabs)');
+		} catch {
+			setSigningOut(false);
+		}
+	};
 
 	if (authLoading) return <ActivityIndicator style={{ flex: 1 }} />;
 
@@ -45,23 +37,26 @@ export default function MyPageScreen() {
 			<Screen.Header>
 				<Screen.Header.Back />
 				<Screen.Header.Center>마이페이지</Screen.Header.Center>
-				<Screen.Header.Right>
-					<LoginRequiredPressable
-						onPress={() => router.push('/settings/general')}
-						hitSlop={8}
-						accessibilityRole="button"
-						accessibilityLabel="설정"
-						style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
-					>
-						<Ionicons name="settings-outline" size={22} className="text-gray900" />
-					</LoginRequiredPressable>
-				</Screen.Header.Right>
+				{session && (
+					<Screen.Header.Right>
+						<Pressable
+							onPress={signingOut ? undefined : handleSignOut}
+							hitSlop={8}
+							accessibilityRole="button"
+							accessibilityLabel="로그아웃"
+							style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
+						>
+							{signingOut ? (
+								<ActivityIndicator size="small" color={colors.gray600} />
+							) : (
+								<Ionicons name="log-out-outline" size={22} className="text-error" />
+							)}
+						</Pressable>
+					</Screen.Header.Right>
+				)}
 			</Screen.Header>
 
-			<ScrollView
-				showsVerticalScrollIndicator={false}
-				contentContainerClassName='pb-[60px]'
-			>
+			<ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-[60px]" scrollEnabled={!!session}>
 				<View className="w-full">
 					{/* 로그인 유도 */}
 					{!session && (
@@ -92,7 +87,34 @@ export default function MyPageScreen() {
 						</View>
 					)}
 
-					<View className={session ? 'mt-4' : 'mt-6'}>
+					{session && (
+						<>
+						<View>
+							<SettingsCard>
+								<CardRow label="내 정보" onPress={() => router.push('/settings/account')} />
+								<CardRow
+									label="내 취향 수정"
+									onPress={() => router.push('/settings/preferences')}
+								/>
+								<CardRow label="고대비 모드">
+									<Switch
+										value={highContrast}
+										onValueChange={setHighContrast}
+										trackColor={{ false: colors.border, true: colors.gray900 }}
+										thumbColor="#FFFFFF"
+										ios_backgroundColor={colors.border}
+										style={{ transform: [{ scaleX: 0.75 }, { scaleY: 0.75 }] }}
+										className="absolute -right-1 top-2"
+									/>
+								</CardRow>
+							</SettingsCard>
+						</View>
+						<View className="h-[1px] w-full bg-gray500/30 my-4" /></>
+					)}
+
+					
+
+					<View className={session ? "mt-0" : 'mt-4'}>
 						<SettingsCard>
 							{(session ? SCRAP_TILES : SCRAP_TILES.slice(0, 1)).map((tile) => (
 								<CardRow
@@ -104,39 +126,15 @@ export default function MyPageScreen() {
 						</SettingsCard>
 					</View>
 
-					<View className="h-[1px] w-full bg-gray500/30 my-3" />
+					<View className="h-[1px] w-full bg-gray500/30 my-4" />
 
 					{session && (
-						<View>
-							<SettingsCard>
-								<CardRow label="재생 속도" className="py-3.5">
-									<PillSelector
-										options={SPEED_OPTIONS}
-										value={voiceSpeed}
-										onChange={setVoiceSpeed}
-									/>
-								</CardRow>
-								<CardRow
-									label="음성 선택"
-									value={currentVoiceName ? currentVoiceName.split(' - ')[0] : undefined}
-									onPress={() => router.push('/settings/voice')}
-								/>
-								<CardRow
-									label="해설 강화 항목"
-									onPress={() => router.push('/settings/description')}
-								/>
-								<CardRow label="텍스트 크기" className="py-3.5">
-									<PillSelector
-										options={FONT_SIZE_OPTIONS}
-										value={fontSize}
-										onChange={setFontSize}
-									/>
-								</CardRow>
-							</SettingsCard>
-						</View>
-					)}
+						<>
+						<NarrationSettingsFields />
 
-					<View className="h-[1px] w-full bg-gray500/30 my-3" />
+							<View className="h-[1px] w-full bg-gray500/30 my-4" />
+						</>
+					)}
 
 					<View className="relative">
 						<SettingsCard>
@@ -154,14 +152,26 @@ export default function MyPageScreen() {
 						</SettingsCard>
 					</View>
 
-					<View className="h-[1px] w-full bg-gray500/30 my-3" />
+					<View className="h-[1px] w-full bg-gray500/30 my-4" />
 
 					<View>
 						<SettingsCard>
+							<CardRow label="공지사항" onPress={() => router.push('/settings/notice')} />
 							<CardRow label="의견 보내기" onPress={() => router.push('/settings/inquiry')} />
+							<CardRow label="별점 남기기" onPress={() => {}} />
+						</SettingsCard>
+					</View>
+
+					<View className="h-[1px] w-full bg-gray500/30 my-4" />
+
+					<View>
+						<SettingsCard>
+							<CardRow label="서비스 이용약관" onPress={() => router.push('/terms')} />
+							<CardRow label="개인정보 처리방침" onPress={() => router.push('/privacy-policy')} />
 							<CardRow label="버전" value={APP_VERSION} />
 						</SettingsCard>
 					</View>
+
 				</View>
 			</ScrollView>
 		</Screen>

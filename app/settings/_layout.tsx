@@ -4,8 +4,6 @@ export default function SettingsLayout() {
 	return (
 		<Stack>
 			<Stack.Screen name="index" options={{ headerShown: false }} />
-			<Stack.Screen name="general" options={{ headerShown: false }} />
-			<Stack.Screen name="narration" options={{ headerShown: false }} />
 			<Stack.Screen name="voice" options={{ headerShown: false }} />
 			<Stack.Screen name="account" options={{ headerShown: false }} />
 			<Stack.Screen name="inquiry" options={{ headerShown: false }} />
@@ -14,6 +12,7 @@ export default function SettingsLayout() {
 			<Stack.Screen name="bookmark/audio" options={{ headerShown: false }} />
 			<Stack.Screen name="description" options={{ headerShown: false }} />
 			<Stack.Screen name="preferences" options={{ headerShown: false }} />
+			<Stack.Screen name="notice" options={{ headerShown: false }} />
 		</Stack>
 	);
 }
