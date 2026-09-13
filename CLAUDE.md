@@ -2,7 +2,7 @@
 
 이 파일은 이 저장소에서 작업할 때 Claude Code(claude.ai/code)를 위한 가이드를 제공한다.
 
-@AGENTS.md @.claude/rules/component-convention.md @.claude/rules/commit-convention.md
+@AGENTS.md @.docs/rules/component-convention.md @.docs/rules/commit-convention.md
 
 ## 프로젝트 개요
 
@@ -30,8 +30,8 @@
 | --------------------------------------- | ----------------------------------------------------------------------------------------------- |
 | `.docs/DESIGN_SYSTEM.md`                | 컬러·타이포 토큰 정본                                                                           |
 | `AGENTS.md`                             | 에이전트 팀 구성·역할·워크플로 티어·검증 체크리스트 정본 (@import로 항상 로드됨)                |
-| `.claude/rules/component-convention.md` | 컴포넌트 작성 규칙: Props 타입, className/style, 파일 구조, import 순서 (@import로 항상 로드됨) |
-| `.claude/rules/commit-convention.md`    | 커밋 메시지 형식 (@import로 항상 로드됨)                                                        |
+| `.docs/rules/component-convention.md` | 컴포넌트 작성 규칙: Props 타입, className/style, 파일 구조, import 순서 (@import로 항상 로드됨) |
+| `.docs/rules/commit-convention.md`    | 커밋 메시지 형식 (@import로 항상 로드됨)                                                        |
 
 ### 작업 전 확인 (현황)
 
@@ -43,18 +43,18 @@
 
 ### 필요 시 참조
 
-| 문서                                | 내용                                        |
-| ----------------------------------- | ------------------------------------------- |
-| `.claude/rules/feature-pipeline.md` | 티어 M/L 파이프라인 세부 게이트(G1~G6) 절차 |
-| `.docs/templates/feature/`          | 기능 산출물 템플릿(01~06)                   |
-| `README.md`                         | 실행/설치 명령                              |
+| 문서                              | 내용                                        |
+| --------------------------------- | ------------------------------------------- |
+| `.docs/rules/feature-pipeline.md` | 티어 M/L 파이프라인 세부 게이트(G1~G6) 절차 |
+| `.docs/templates/feature/`        | 기능 산출물 템플릿(01~06)                   |
+| `README.md`                       | 실행/설치 명령                              |
 
 ## 하네스 변경 이력 (최근 5행)
 
 CLAUDE.md · `.claude/agents/` · `.claude/skills/` · `.claude/rules/` · 훅 변경만 기록한다(기능 코드 변경은 커밋 로그가 정본). 5행을 넘으면 가장 오래된 행부터 `.docs/CHANGELOG.md`로 이관한다(이관 시 내용 수정 금지, append-only). 전체 이력은 그 파일 참고.
 
-| 날짜       | 변경 내용                                                                    | 대상                                              | 사유                                                                     |
-| ---------- | ----------------------------------------------------------------------------- | -------------------------------------------------- | -------------------------------------------------------------------------- |
-| 2026-08-25 | 하네스 파일 변경 자동 감지 → CHANGELOG.md 로깅 hook 추가                     | `.claude/settings.json`, `.claude/hooks/moai/`     | 사용자 요청 — 하네스 변경 시 수동 이관을 잊지 않도록 자동 기록             |
-| 2026-08-25 | chris.md/taylor.md 입력 섹션에 tier S 조건 명시, taylor.md Q4 tier S 분기     | `.claude/agents/chris.md`, `.claude/agents/taylor.md` | harness 드라이런 테스트에서 발견 — tier S 실행 시 dead link 위험         |
-| 2026-08-25 | (이 섹션이 디스크에서 통째로 사라져 재생성됨 — 이전 3행은 `.docs/CHANGELOG.md`에 보존) | CLAUDE.md                                          | 세션 중 외부 변경으로 섹션 소실 발견, 정본은 CHANGELOG.md라 데이터 손실 없음 |
+| 날짜       | 변경 내용                                                                              | 대상                                                  | 사유                                                                         |
+| ---------- | -------------------------------------------------------------------------------------- | ----------------------------------------------------- | ---------------------------------------------------------------------------- |
+| 2026-08-25 | 하네스 파일 변경 자동 감지 → CHANGELOG.md 로깅 hook 추가                               | `.claude/settings.json`, `.claude/hooks/moai/`        | 사용자 요청 — 하네스 변경 시 수동 이관을 잊지 않도록 자동 기록               |
+| 2026-08-25 | chris.md/taylor.md 입력 섹션에 tier S 조건 명시, taylor.md Q4 tier S 분기              | `.claude/agents/chris.md`, `.claude/agents/taylor.md` | harness 드라이런 테스트에서 발견 — tier S 실행 시 dead link 위험             |
+| 2026-08-25 | (이 섹션이 디스크에서 통째로 사라져 재생성됨 — 이전 3행은 `.docs/CHANGELOG.md`에 보존) | CLAUDE.md                                             | 세션 중 외부 변경으로 섹션 소실 발견, 정본은 CHANGELOG.md라 데이터 손실 없음 |

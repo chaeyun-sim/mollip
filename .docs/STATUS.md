@@ -58,16 +58,18 @@ FE 구현 현황의 단일 정본. 코드 탐색 전에 먼저 읽을 것.
 
 ### `onboarding`
 
-| 파일                          | 역할                            |
-| ----------------------------- | ------------------------------- |
-| `app/onboarding/index.tsx`    | 온보딩 시작(취향 선택 스와이프) |
-| `app/onboarding/location.tsx` | 온보딩 — 위치 권한/설정         |
+| 파일                       | 역할                            |
+| -------------------------- | ------------------------------- |
+| `app/onboarding/index.tsx` | 온보딩 — 티켓 소개 → 샘플 청취 → 초대권 → 입장 |
+
+위치 권한 페이지(`app/onboarding/location.tsx`)는 2026-08-30 커밋 `ad6a14f`로 온보딩 플로우에서 제거됨.
 
 ### `diary`
 
 | 파일                   | 역할                    |
 | ---------------------- | ----------------------- |
 | `app/diary/[date].tsx` | 특정 날짜 다이어리 상세 |
+| `app/diary/confirm-visits.tsx` | pending 관람 확정 큐 — 별점 → 감상평(직접 쓰기/생성하기) → 서명 |
 
 ### `settings`
 
@@ -79,7 +81,7 @@ FE 구현 현황의 단일 정본. 코드 탐색 전에 먼저 읽을 것.
 | `app/settings/delete-account.tsx`      | 계정 삭제                     |
 | `app/settings/description.tsx`         | 설명 관련 설정                |
 | `app/settings/inquiry.tsx`             | 문의하기                      |
-| `app/settings/preferences.tsx`         | 취향/선호 설정                |
+| `app/settings/preferences.tsx`         | 내 취향 수정 — 온보딩과 같은 초대권 덱 |
 | `app/settings/voice.tsx`               | TTS 음성 선택 설정            |
 | `app/settings/bookmark/audio.tsx`      | 오디오 북마크(청취 기록) 목록 |
 | `app/settings/bookmark/exhibition.tsx` | 전시 북마크 목록              |
@@ -88,16 +90,16 @@ FE 구현 현황의 단일 정본. 코드 탐색 전에 먼저 읽을 것.
 
 | 도메인        | 파일 수                       | 비고                                                                                                                                                            |
 | ------------- | ----------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `archive/`    | 17                            | 관람 기록/티켓 UI 대부분 — `VisitTicket*`, `DiaryCalendar`, `ArchiveTabBar`, `PlaylistModal` 등. 컬러 팔레트는 `archivePalette.ts` (DESIGN_SYSTEM.md §1.4 참고) |
+| `archive/`    | 21                            | 관람 기록/티켓 UI — `VisitTicket*`, `DiaryCalendar`, `ReceiptSummary`, `EssayInputSection`(확정 큐 감상평) 등. 컬러 팔레트는 `archivePalette.ts` |
 | `auth/`       | 2                             | `SocialPill`, `LoginRequiredPressable`                                                                                                                          |
 | `character/`  | 0                             | **디렉터리는 존재하나 파일 없음** — 미사용/정리 대상 후보                                                                                                       |
-| `common/`     | 14                            | 도메인 무관 공통 UI — `SearchBar`, `Fab`, `Chip`, `DatePickerModal`, `RetryErrorState`, `WarmGradientBackdrop` 등                                               |
-| `explore/`    | 19                            | 전시 탐색/상세 관련 최대 규모 도메인 — 카드, 상세 헤더, 몰입모드 오버레이, 경로 시트(`RouteSheet.tsx`, `map/`에도 동명 파일 존재 — 중복 명칭 주의)              |
+| `common/`     | 7                             | 도메인 무관 프리미티브만 — `Button`, `Chip`, `ImageFallback`, `SearchBar`, `TextField`, `DatePickerModal`, `SectionTitle`                                         |
+| `explore/`    | 24                            | 전시 탐색/상세 — 카드, 상세 헤더, `HorizontalSection`, `StatusBadge`, `FloatingIconButton`, 몰입모드 오버레이. 경로 시트는 `map/`에도 동명 파일 존재            |
 | `guide/`      | 5                             | 오디오 가이드 채팅/입력 필드 UI                                                                                                                                 |
 | `layout/`     | 3 (+ `Loading/` 서브디렉터리) | `Screen.tsx`, `ScreenHeader.tsx` — 모든 화면의 레이아웃 프리미티브 (CLAUDE.md에 명시)                                                                           |
-| `map/`        | 10                            | 지도 마커, 경로 시트, 필터 칩 등. 노선 색상은 `src/utils/routeColors.ts` 참조                                                                                   |
+| `map/`        | 19                            | 지도 마커, 경로 시트, `ExternalMapSheet`, 필터 칩 등. 노선 색상은 `src/utils/routeColors.ts` 참조                                                               |
 | `mypage/`     | 5 (+ `index.ts`)              | 설정 화면 카드/셀렉터 UI                                                                                                                                        |
-| `onboarding/` | 3                             | 온보딩 스와이프 카드 UI                                                                                                                                         |
+| `onboarding/` | 6                             | 티켓 스택 소개, 샘플 청취, 초대권 덱, 입장 확인                                                                                                                  |
 | `search/`     | 4                             | 검색 결과 카드, 필터 바, 상태 배지                                                                                                                              |
 | `settings/`   | 1                             | `VoiceListSkeletonItem` — 설정 화면 UI 조각이 대부분 `mypage/`에 있어 상대적으로 적음                                                                           |
 
@@ -122,9 +124,9 @@ CLAUDE.md에 이미 설명된 대로, 화면 간 전달되는 임시 세션 데�
 
 필드: `imageBase64`, `imageMediaType`, `extractedText`, `artworkDescription`, `artworkImageUrl`, `inputMode`, `manualTitle`, `manualArtist`, `manualYear`.
 
-## 5. `src/hooks/` — 커스텀 훅 (34개)
+## 5. `src/hooks/` — 커스텀 훅 (35개)
 
-데이터 페칭(`useAllExhibitions`, `useCultureExhibitions`, `useKcisaExhibitions`, `useExhibitionDetail`, `useVenueExhibitions` 등), 지도(`useMapCamera`, `useMapFilter`, `useMapMarkers`, `useMapVenues`, `useDirections`), 동기화(`useBookmarkSync`, `useBookmarkAudioSync`, `useHistorySync`, `useVisitSync`), TTS(`useTTS.ts` — CLAUDE.md에 상세 설명됨), 인증(`useRequireAuth`), 기타(`useDescriptionStream`, `usePushNotifications`, `useShareExhibition`, `useUserLocation` 등)로 구성. 전체 목록은 `ls src/hooks`로 확인.
+데이터 페칭(`useAllExhibitions`, `useCultureExhibitions`, `useKcisaExhibitions`, `useExhibitionDetail`, `useVenueExhibitions` 등), 지도(`useMapCamera`, `useMapFilter`, `useMapMarkers`, `useMapVenues`, `useDirections`), 동기화(`useBookmarkSync`, `useBookmarkAudioSync`, `useHistorySync`, `useVisitSync`), TTS(`useTTS.ts` — CLAUDE.md에 상세 설명됨), 인증(`useRequireAuth`), 기타(`useDescriptionStream`, `usePushNotifications`, `useShareExhibition`, `useUserLocation`, `useTextField` 등)로 구성. 전체 목록은 `ls src/hooks`로 확인.
 
 ## 6. `supabase/functions/` — Edge Functions
 
@@ -149,6 +151,13 @@ CLAUDE.md에 이미 설명된 대로, 화면 간 전달되는 임시 세션 데�
 
 `package.json`의 jest 설정(`testMatch: **/__tests__/**/*.test.ts?(x)`) 기준, 현재 존재하는 테스트 파일:
 
-- `src/utils/__tests__/exhibitionSearch.test.ts` — 전시 검색 유틸 테스트 (CLAUDE.md에 "Jest covers exhibition search utils"로 명시된 바로 그 테스트)
+- `src/utils/__tests__/exhibitionSearch.test.ts` — 전시 검색 유틸
+- `src/utils/__tests__/exhibitionClassification.test.ts` — 전시 장르/유형 분류
+- `src/utils/__tests__/migrateEssayIntoMemo.test.ts` — 감상문 memo 이관
+- `src/utils/__tests__/offlineAudio.test.ts` — 오프라인 오디오 경로
+- `src/utils/__tests__/stripHtml.test.ts` — HTML 엔티티 정리
+- `src/utils/__tests__/wikidataImage.test.ts` — 위키 썸네일 매칭
+- `src/constants/__tests__/essayPrompt.test.ts` — 감상 에세이 프롬프트
+- `src/store/__tests__/offlineDownloadStore.test.ts` — 오프라인 다운로드 스토어
 
 그 외 `src/utils/`(27개 파일), `src/hooks/`(34개), `src/store/`(9개), `src/components/`(전체) 등 대부분의 도메인 로직에는 테스트가 없다. 새 도메인 로직 추가 시 CLAUDE.md 지침대로 테스트 확장이 필요하다.

@@ -6,7 +6,7 @@ status: draft
 
 ## 최종 통합 검증 요약 (AC-1~AC-8 전체, spec revision 3 완료 시점)
 
-> `.claude/rules/feature-pipeline.md` §5 "최종 통합 검증" — 전체 AC(1~8)가 개별 통과해 이 checkout(`/Users/chaeyunsim/Documents/mollip`, primary checkout)에서 수행. 커밋 전/G6 핸드오프 전 최종 게이트.
+> `.docs/rules/feature-pipeline.md` §5 "최종 통합 검증" — 전체 AC(1~8)가 개별 통과해 이 checkout(`/Users/chaeyunsim/Documents/mollip`, primary checkout)에서 수행. 커밋 전/G6 핸드오프 전 최종 게이트.
 
 ### 재실행 결과
 
@@ -15,17 +15,17 @@ status: draft
 
 ### AC별 증빙 표
 
-| AC | tsc | 스크린샷 | 인터랙션 | 회귀 |
-|---|---|---|---|---|
-| AC-1 (다운로드 시작) | ✅ 0 errors | `evidence/rev3-ac1-bookmark.png`(빈 상태 — 환경 제약, P1 참고) | 코드 레벨 대체(Row A `handleStartDownload`→`startDownload`, idle만 대상, 단위 테스트) | 인접 화면(playlist.tsx) 정상 |
-| AC-2 (오프라인 재생) | ✅ 0 errors | 해당 없음(코드 변경 없음, 캐시 키 대조로 충족 확인) | `resolveAudioUri` 로컬 우선 조회 — 코드 레벨 확인 | 미다운로드 재생 경로(AC-7) 영향 없음 |
-| AC-3 (상태 배지) | ✅ 0 errors | `evidence/rev3-ac3-badges.png`(빈 상태 — 환경 제약) | 코드 레벨 대체(Zustand 구독 기반 자동 리렌더) | 카드 텍스트·하트 버튼 미변경 확인 |
-| AC-4 (개별 재시도) | ✅ 0 errors | `evidence/rev3-ac4-bookmark-empty-state.png`(빈 상태 — 환경 제약) | 코드 레벨 대체(`retryDownload`는 revision 2에서 실기 검증 이력 있음, batchIds 비영향 확인) | Row A idle 필터링 미훼손 확인 |
-| AC-5 (저장 공간·전체 삭제) | ✅ 0 errors | `evidence/rev3-ac5-6-bookmark-state.png`(빈 상태 — 환경 제약) | 코드 레벨 대체(Alert 확인 후에만 `deleteAllDownloads` 호출, 단위 테스트로 타 항목 비영향 검증) | Row A/카드 렌더링 미훼손 확인 |
-| AC-6 (개별 삭제) | ✅ 0 errors | 위와 동일(빈 상태 — 환경 제약) | 코드 레벨 대체(hitSlop 46pt·위치·Alert 확인 흐름·시트 유지·배지 idle 전환, 단위 테스트) | BottomSheet 기존 헤더 액션(재생/일시정지, 닫기) 미변경 확인(Q8) |
-| AC-7 (미다운로드 항목 기존 동작 유지) | ✅ 0 errors | 해당 없음(신규 구현 없음) | `useTTS.speak` 네트워크 경로 코드 미변경 확인 | 회귀 없음(신규 코드 경로 없음) |
-| AC-8 (북마크 해제 후 파일 보존) | ✅ 0 errors | 해당 없음(신규 구현 없음) | `toggleBookmark`가 `offlineDownloadStore`/`offlineAudio` 어느 것도 호출하지 않음을 코드로 확인 | 회귀 없음 |
-| **playlist.tsx 롤백** | ✅ 0 errors | `evidence/rev3-final-home.png`(앱 정상 구동 확인) | — | `grep`으로 `PredownloadRow`/`offlineDownloadStore`/`DownloadStatusBadge`/`downloadTargets` 참조 0건 확인, `PredownloadRow.tsx` 파일 삭제 확인 — revision-2-이전 상태로 복원됨 |
+| AC                                    | tsc         | 스크린샷                                                          | 인터랙션                                                                                       | 회귀                                                                                                                                                                          |
+| ------------------------------------- | ----------- | ----------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| AC-1 (다운로드 시작)                  | ✅ 0 errors | `evidence/rev3-ac1-bookmark.png`(빈 상태 — 환경 제약, P1 참고)    | 코드 레벨 대체(Row A `handleStartDownload`→`startDownload`, idle만 대상, 단위 테스트)          | 인접 화면(playlist.tsx) 정상                                                                                                                                                  |
+| AC-2 (오프라인 재생)                  | ✅ 0 errors | 해당 없음(코드 변경 없음, 캐시 키 대조로 충족 확인)               | `resolveAudioUri` 로컬 우선 조회 — 코드 레벨 확인                                              | 미다운로드 재생 경로(AC-7) 영향 없음                                                                                                                                          |
+| AC-3 (상태 배지)                      | ✅ 0 errors | `evidence/rev3-ac3-badges.png`(빈 상태 — 환경 제약)               | 코드 레벨 대체(Zustand 구독 기반 자동 리렌더)                                                  | 카드 텍스트·하트 버튼 미변경 확인                                                                                                                                             |
+| AC-4 (개별 재시도)                    | ✅ 0 errors | `evidence/rev3-ac4-bookmark-empty-state.png`(빈 상태 — 환경 제약) | 코드 레벨 대체(`retryDownload`는 revision 2에서 실기 검증 이력 있음, batchIds 비영향 확인)     | Row A idle 필터링 미훼손 확인                                                                                                                                                 |
+| AC-5 (저장 공간·전체 삭제)            | ✅ 0 errors | `evidence/rev3-ac5-6-bookmark-state.png`(빈 상태 — 환경 제약)     | 코드 레벨 대체(Alert 확인 후에만 `deleteAllDownloads` 호출, 단위 테스트로 타 항목 비영향 검증) | Row A/카드 렌더링 미훼손 확인                                                                                                                                                 |
+| AC-6 (개별 삭제)                      | ✅ 0 errors | 위와 동일(빈 상태 — 환경 제약)                                    | 코드 레벨 대체(hitSlop 46pt·위치·Alert 확인 흐름·시트 유지·배지 idle 전환, 단위 테스트)        | BottomSheet 기존 헤더 액션(재생/일시정지, 닫기) 미변경 확인(Q8)                                                                                                               |
+| AC-7 (미다운로드 항목 기존 동작 유지) | ✅ 0 errors | 해당 없음(신규 구현 없음)                                         | `useTTS.speak` 네트워크 경로 코드 미변경 확인                                                  | 회귀 없음(신규 코드 경로 없음)                                                                                                                                                |
+| AC-8 (북마크 해제 후 파일 보존)       | ✅ 0 errors | 해당 없음(신규 구현 없음)                                         | `toggleBookmark`가 `offlineDownloadStore`/`offlineAudio` 어느 것도 호출하지 않음을 코드로 확인 | 회귀 없음                                                                                                                                                                     |
+| **playlist.tsx 롤백**                 | ✅ 0 errors | `evidence/rev3-final-home.png`(앱 정상 구동 확인)                 | —                                                                                              | `grep`으로 `PredownloadRow`/`offlineDownloadStore`/`DownloadStatusBadge`/`downloadTargets` 참조 0건 확인, `PredownloadRow.tsx` 파일 삭제 확인 — revision-2-이전 상태로 복원됨 |
 
 ### 종합 판단
 
@@ -49,18 +49,18 @@ status: draft
 
 ## 체크리스트 결과
 
-| # | 항목 | 결과 | 비고 |
-|---|------|------|------|
-| Q1 | `npx tsc --noEmit` | ✅ Pass | 0 errors |
-| Q2 | `npx jest` | ✅ Pass | 6 suites / 71 tests 전부 통과 |
-| Q3 | 버그/edge 코드 리뷰 | ✅ Pass | 아래 상세 |
-| Q4 | UX (디자인 브리프 일치) | ✅ Pass | 아래 상세 |
-| Q5 | 컨벤션 | ⚠️ Pass (P2 1건) | import 순서 — 아래 상세 |
-| Q6 | 비주얼(시뮬레이터) | ✅ Pass | 스크린샷 확보, 실제 렌더링 확인 |
-| Q7 | 인터랙션(시뮬레이터) | ✅ Pass (환경 제약 1건 기록) | 아래 상세 |
-| Q8 | 회귀 | ✅ Pass | 코드 리뷰 기준 |
-| Q9 | 성능(가벼운 수준) | ✅ Pass | useMemo 의존성 정상 |
-| Q10 | 네이티브 모듈 | 해당 없음 | dev-notes와 일치, `expo-file-system` 이미 설치됨 |
+| #   | 항목                    | 결과                         | 비고                                             |
+| --- | ----------------------- | ---------------------------- | ------------------------------------------------ |
+| Q1  | `npx tsc --noEmit`      | ✅ Pass                      | 0 errors                                         |
+| Q2  | `npx jest`              | ✅ Pass                      | 6 suites / 71 tests 전부 통과                    |
+| Q3  | 버그/edge 코드 리뷰     | ✅ Pass                      | 아래 상세                                        |
+| Q4  | UX (디자인 브리프 일치) | ✅ Pass                      | 아래 상세                                        |
+| Q5  | 컨벤션                  | ⚠️ Pass (P2 1건)             | import 순서 — 아래 상세                          |
+| Q6  | 비주얼(시뮬레이터)      | ✅ Pass                      | 스크린샷 확보, 실제 렌더링 확인                  |
+| Q7  | 인터랙션(시뮬레이터)    | ✅ Pass (환경 제약 1건 기록) | 아래 상세                                        |
+| Q8  | 회귀                    | ✅ Pass                      | 코드 리뷰 기준                                   |
+| Q9  | 성능(가벼운 수준)       | ✅ Pass                      | useMemo 의존성 정상                              |
+| Q10 | 네이티브 모듈           | 해당 없음                    | dev-notes와 일치, `expo-file-system` 이미 설치됨 |
 
 ---
 
@@ -69,6 +69,7 @@ status: draft
 ```
 npx tsc --noEmit
 ```
+
 → 출력 없음(0 errors). 재확인 완료.
 
 ## Q2 — 테스트
@@ -76,6 +77,7 @@ npx tsc --noEmit
 ```
 npx jest
 ```
+
 ```
 PASS src/utils/__tests__/offlineAudio.test.ts
 PASS src/store/__tests__/offlineDownloadStore.test.ts
@@ -160,18 +162,18 @@ Tests:       71 passed, 71 total
 
 ## 체크리스트 결과 (AC-2 대상)
 
-| # | 항목 | 결과 | 비고 |
-|---|------|------|------|
-| Q1 | `npx tsc --noEmit` | ✅ Pass | 0 errors 재확인 |
-| Q2 | `npx jest` | ✅ Pass | 6 suites / **73 tests** 전부 통과 (AC-1 QA 시점 71개 → `resolveAudioUri` 테스트 2개 추가로 73개) |
-| Q3 | 버그/edge 코드 리뷰 | ✅ Pass | 아래 상세 |
-| Q4 | UX | 해당 없음 | 내부 로직 변경, UI 변경 없음 — 스킵 |
-| Q5 | 컨벤션 | ✅ Pass | 아래 상세 |
-| Q6 | 비주얼(시뮬레이터) | ⚠️ 코드 레벨 검증으로 대체 | 아래 상세 — 사유 기록 |
-| Q7 | 인터랙션(시뮬레이터) | ⚠️ 코드 레벨 검증으로 대체 | 아래 상세 — 사유 기록 |
-| Q8 | 회귀 | ✅ Pass | 아래 상세 |
-| Q9 | 성능 | ✅ Pass | 아래 상세 |
-| Q10 | 네이티브 모듈 | 해당 없음 | 신규/제거된 네이티브 모듈 없음 |
+| #   | 항목                 | 결과                       | 비고                                                                                             |
+| --- | -------------------- | -------------------------- | ------------------------------------------------------------------------------------------------ |
+| Q1  | `npx tsc --noEmit`   | ✅ Pass                    | 0 errors 재확인                                                                                  |
+| Q2  | `npx jest`           | ✅ Pass                    | 6 suites / **73 tests** 전부 통과 (AC-1 QA 시점 71개 → `resolveAudioUri` 테스트 2개 추가로 73개) |
+| Q3  | 버그/edge 코드 리뷰  | ✅ Pass                    | 아래 상세                                                                                        |
+| Q4  | UX                   | 해당 없음                  | 내부 로직 변경, UI 변경 없음 — 스킵                                                              |
+| Q5  | 컨벤션               | ✅ Pass                    | 아래 상세                                                                                        |
+| Q6  | 비주얼(시뮬레이터)   | ⚠️ 코드 레벨 검증으로 대체 | 아래 상세 — 사유 기록                                                                            |
+| Q7  | 인터랙션(시뮬레이터) | ⚠️ 코드 레벨 검증으로 대체 | 아래 상세 — 사유 기록                                                                            |
+| Q8  | 회귀                 | ✅ Pass                    | 아래 상세                                                                                        |
+| Q9  | 성능                 | ✅ Pass                    | 아래 상세                                                                                        |
+| Q10 | 네이티브 모듈        | 해당 없음                  | 신규/제거된 네이티브 모듈 없음                                                                   |
 
 ---
 
@@ -180,6 +182,7 @@ Tests:       71 passed, 71 total
 ```
 npx tsc --noEmit
 ```
+
 → 출력 없음(0 errors). 재확인 완료.
 
 ## Q2 — 테스트
@@ -187,6 +190,7 @@ npx tsc --noEmit
 ```
 npx jest
 ```
+
 ```
 PASS src/utils/__tests__/offlineAudio.test.ts
 PASS src/utils/__tests__/exhibitionSearch.test.ts
@@ -206,7 +210,7 @@ Tests:       73 passed, 73 total
 - **로컬 파일 우선 반환, 네트워크 미호출**: `offlineAudio.ts`의 `resolveAudioUri(cacheKey, fetchFromNetwork)`는 `getOfflineAudioUri(cacheKey)`(동기, `File.exists` getter 기반)로 로컬 파일을 먼저 확인하고, 존재하면 `fetchFromNetwork`를 **호출하지 않고** 즉시 로컬 URI를 반환한다(`offlineAudio.ts` L73-80). `offlineAudio.test.ts`의 "로컬 파일이 있으면 네트워크 호출 없이 로컬 URI를 즉시 반환한다" 테스트가 `fetchFromNetwork` mock의 `not.toHaveBeenCalled()`로 이를 직접 검증한다 — 코드와 테스트 모두 확인.
 - **로컬 파일 없으면 기존 네트워크 경로 그대로(AC-6 회귀 방지)**: 로컬 파일이 없으면 `fetchFromNetwork()`를 호출해 그 반환값을 그대로 반환한다. `offlineAudio.test.ts`의 "로컬 파일이 없으면 네트워크 fetcher를 호출하고 그 결과를 반환한다(AC-6 회귀 방지)" 테스트로 커버됨.
 - **`useTTS.ts` 통합 지점**: `speak`(재생)과 `preload`(사전 로드) 양쪽 모두 기존 `audioCache.current.get(cacheKey)`(세션 인메모리 캐시) 확인 이후, 인메모리 캐시 미스 시 `fetchTTSBlob`을 직접 호출하던 것을 `resolveAudioUri(cacheKey, () => fetchTTSBlob(voiceId, cleaned, voiceSpeed))`로 감싸는 변경뿐이다. 즉 캐시 우선순위는 "인메모리 세션 캐시 → 영구 파일 캐시 → 네트워크" 순으로, spec의 Risks & dependencies에 명시된 우선순위 설계와 일치한다.
-- **edge — 캐시 키 통일 확인**: `useTTS.ts`의 `cacheKey = \`${voiceId}\x00${voiceSpeed}\x00${cleaned}\`` 와 dev-notes §"구현 결정 사항 2"가 명시한 `offlineDownloadStore`의 해시 대상 키가 동일 조합(`voiceId\x00speed\x00text`)임을 코드로 재확인 — 다운로드 시 저장한 파일과 재생 시 조회하는 캐시 키가 어긋나 로컬 파일을 못 찾는 edge는 없음.
+- **edge — 캐시 키 통일 확인**: `useTTS.ts`의 `cacheKey = \`${voiceId}\x00${voiceSpeed}\x00${cleaned}\``와 dev-notes §"구현 결정 사항 2"가 명시한`offlineDownloadStore`의 해시 대상 키가 동일 조합(`voiceId\x00speed\x00text`)임을 코드로 재확인 — 다운로드 시 저장한 파일과 재생 시 조회하는 캐시 키가 어긋나 로컬 파일을 못 찾는 edge는 없음.
 
 ## Q4 — UX
 
@@ -227,6 +231,7 @@ Tests:       73 passed, 73 total
 3. **억지로 흉내 내지 않음**: `saveOfflineAudioFromDataUri`를 QA 스크립트로 직접 호출해 가짜 완료 상태를 만드는 방법도 고려했으나, 이는 실제 다운로드 플로우(AC-1)를 우회하는 것이라 "다운로드 완료 항목"이라는 AC-2의 전제를 인위적으로 조작하는 것이며, 실제 사용자 경로를 검증하는 게 아니므로 채택하지 않았다.
 
 **대신 다음을 코드 레벨로 검증했다(Q3 상세 참고)**:
+
 - `resolveAudioUri`의 로컬 우선 반환 + 네트워크 미호출을 `offlineAudio.test.ts`가 실제 `expo-file-system` 인메모리 목(jest-expo 제공)으로 종단 간 검증함 — 파일을 실제로 저장하고(`saveOfflineAudioFromDataUri`) 그 상태에서 `resolveAudioUri`를 호출해 로컬 URI가 반환되고 네트워크 fetcher가 호출되지 않음을 `fetchFromNetwork` mock으로 단언.
 - `useTTS.ts`의 `speak`/`preload`가 `resolveAudioUri`를 올바른 인자(`cacheKey`, `fetchTTSBlob` 클로저)로 호출하는지 `git diff`로 직접 확인.
 
@@ -268,18 +273,18 @@ Tests:       73 passed, 73 total
 
 ## 체크리스트 결과 (AC-3 대상)
 
-| # | 항목 | 결과 | 비고 |
-|---|------|------|------|
-| Q1 | `npx tsc --noEmit` | ✅ Pass | 0 errors 재확인 |
-| Q2 | `npx jest` | ✅ Pass | 6 suites / 73 tests 전부 통과(AC-2 QA 시점과 동일 — `DownloadStatusBadge`는 순수 표시 컴포넌트이며 이 프로젝트엔 `.tsx` 컴포넌트 테스트 관례 자체가 없음, `PredownloadRow`도 동일) |
-| Q3 | 버그/edge 코드 리뷰 | ✅ Pass | 아래 상세 |
-| Q4 | UX (브리프 일치) | ✅ Pass | 아래 상세 |
-| Q5 | 컨벤션 | ✅ Pass | 아래 상세 |
-| Q6 | 비주얼(시뮬레이터) | ✅ Pass | 스크린샷 확보, idle(배지 없음)·failed(빨간 배지) 실기 확인 — 아래 상세 |
-| Q7 | 인터랙션(시뮬레이터) | ✅ Pass (환경 제약 1건 기록) | 아래 상세 |
-| Q8 | 회귀 | ✅ Pass | 아래 상세 |
-| Q9 | 성능(가벼운 수준) | ✅ Pass | 순수 조건부 렌더, 특이사항 없음 |
-| Q10 | 네이티브 모듈 | 해당 없음 | 신규/제거된 네이티브 모듈 없음 |
+| #   | 항목                 | 결과                         | 비고                                                                                                                                                                               |
+| --- | -------------------- | ---------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Q1  | `npx tsc --noEmit`   | ✅ Pass                      | 0 errors 재확인                                                                                                                                                                    |
+| Q2  | `npx jest`           | ✅ Pass                      | 6 suites / 73 tests 전부 통과(AC-2 QA 시점과 동일 — `DownloadStatusBadge`는 순수 표시 컴포넌트이며 이 프로젝트엔 `.tsx` 컴포넌트 테스트 관례 자체가 없음, `PredownloadRow`도 동일) |
+| Q3  | 버그/edge 코드 리뷰  | ✅ Pass                      | 아래 상세                                                                                                                                                                          |
+| Q4  | UX (브리프 일치)     | ✅ Pass                      | 아래 상세                                                                                                                                                                          |
+| Q5  | 컨벤션               | ✅ Pass                      | 아래 상세                                                                                                                                                                          |
+| Q6  | 비주얼(시뮬레이터)   | ✅ Pass                      | 스크린샷 확보, idle(배지 없음)·failed(빨간 배지) 실기 확인 — 아래 상세                                                                                                             |
+| Q7  | 인터랙션(시뮬레이터) | ✅ Pass (환경 제약 1건 기록) | 아래 상세                                                                                                                                                                          |
+| Q8  | 회귀                 | ✅ Pass                      | 아래 상세                                                                                                                                                                          |
+| Q9  | 성능(가벼운 수준)    | ✅ Pass                      | 순수 조건부 렌더, 특이사항 없음                                                                                                                                                    |
+| Q10 | 네이티브 모듈        | 해당 없음                    | 신규/제거된 네이티브 모듈 없음                                                                                                                                                     |
 
 ---
 
@@ -288,6 +293,7 @@ Tests:       73 passed, 73 total
 ```
 npx tsc --noEmit
 ```
+
 → 출력 없음(0 errors). 재확인 완료.
 
 ## Q2 — 테스트
@@ -295,6 +301,7 @@ npx tsc --noEmit
 ```
 npx jest
 ```
+
 ```
 PASS src/utils/__tests__/offlineAudio.test.ts
 PASS src/utils/__tests__/exhibitionSearch.test.ts
@@ -378,18 +385,18 @@ Tests:       73 passed, 73 total
 
 ## 체크리스트 결과 (AC-4 대상)
 
-| # | 항목 | 결과 | 비고 |
-|---|------|------|------|
-| Q1 | `npx tsc --noEmit` | ✅ Pass | 0 errors 재확인 |
-| Q2 | `npx jest` | ✅ Pass | 6 suites / **76 tests** 전부 통과 (AC-3 QA 시점 73개 → `retryDownload` 테스트 3개 추가로 76개) |
-| Q3 | 버그/edge 코드 리뷰 | ✅ Pass | 아래 상세 |
-| Q4 | UX (카피 일관성) | ✅ Pass | 아래 상세 |
-| Q5 | 컨벤션 | ✅ Pass | 아래 상세 |
-| Q6 | 비주얼(시뮬레이터) | ✅ Pass | 스크린샷 확보, 실기 확인 — 아래 상세 |
-| Q7 | 인터랙션(시뮬레이터) | ✅ Pass | **이번 AC에서 처음으로 종단 재시도 인터랙션을 실기로 확인함** — 아래 상세 |
-| Q8 | 회귀 | ✅ Pass | 아래 상세 |
-| Q9 | 성능(가벼운 수준) | 해당 없음/경미 | 특이사항 없음 |
-| Q10 | 네이티브 모듈 | 해당 없음 | 신규/제거된 네이티브 모듈 없음 |
+| #   | 항목                 | 결과           | 비고                                                                                           |
+| --- | -------------------- | -------------- | ---------------------------------------------------------------------------------------------- |
+| Q1  | `npx tsc --noEmit`   | ✅ Pass        | 0 errors 재확인                                                                                |
+| Q2  | `npx jest`           | ✅ Pass        | 6 suites / **76 tests** 전부 통과 (AC-3 QA 시점 73개 → `retryDownload` 테스트 3개 추가로 76개) |
+| Q3  | 버그/edge 코드 리뷰  | ✅ Pass        | 아래 상세                                                                                      |
+| Q4  | UX (카피 일관성)     | ✅ Pass        | 아래 상세                                                                                      |
+| Q5  | 컨벤션               | ✅ Pass        | 아래 상세                                                                                      |
+| Q6  | 비주얼(시뮬레이터)   | ✅ Pass        | 스크린샷 확보, 실기 확인 — 아래 상세                                                           |
+| Q7  | 인터랙션(시뮬레이터) | ✅ Pass        | **이번 AC에서 처음으로 종단 재시도 인터랙션을 실기로 확인함** — 아래 상세                      |
+| Q8  | 회귀                 | ✅ Pass        | 아래 상세                                                                                      |
+| Q9  | 성능(가벼운 수준)    | 해당 없음/경미 | 특이사항 없음                                                                                  |
+| Q10 | 네이티브 모듈        | 해당 없음      | 신규/제거된 네이티브 모듈 없음                                                                 |
 
 ---
 
@@ -398,6 +405,7 @@ Tests:       73 passed, 73 total
 ```
 npx tsc --noEmit
 ```
+
 → 출력 없음(0 errors). 재확인 완료.
 
 ## Q2 — 테스트
@@ -405,6 +413,7 @@ npx tsc --noEmit
 ```
 npx jest
 ```
+
 ```
 PASS src/utils/__tests__/stripHtml.test.ts
 PASS src/utils/__tests__/exhibitionClassification.test.ts
@@ -489,18 +498,18 @@ Tests:       76 passed, 76 total
 
 ## 체크리스트 결과
 
-| # | 항목 | 결과 | 비고 |
-|---|------|------|------|
-| Q1 | `npx tsc --noEmit` | ✅ Pass | 0 errors 재확인 |
-| Q2 | `npx jest` | ✅ Pass | 6 suites / 76 tests 전부 통과 (dev-notes 시점과 동일 — 롤백/신규 구현 모두 기존 테스트 스위트에 영향 없음) |
-| Q3 | 버그/edge 코드 리뷰 | ✅ Pass | 아래 상세 |
-| Q4 | UX (카피 일치) | ✅ Pass | 아래 상세 |
-| Q5 | 컨벤션 | ✅ Pass (P2 1건) | 아래 상세 |
-| Q6 | 비주얼(시뮬레이터) | ⚠️ Pass(가) / P1(나) | (가) 재생목록 회귀 — 실기 확인. (나) 북마크 Row A 렌더링 — 환경 제약으로 코드 레벨 검증으로 대체, 아래 상세 |
-| Q7 | 인터랙션(시뮬레이터) | ⚠️ 코드 레벨 검증으로 대체 | Q6(나)와 동일 제약 |
-| Q8 | 회귀 | ✅ Pass | 아래 상세 |
-| Q9 | 성능 | 해당 없음/경미 | 특이사항 없음 |
-| Q10 | 네이티브 모듈 | 해당 없음 | 신규/제거된 네이티브 모듈 없음, `expo-file-system` 기존 설치 유지 |
+| #   | 항목                 | 결과                       | 비고                                                                                                        |
+| --- | -------------------- | -------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| Q1  | `npx tsc --noEmit`   | ✅ Pass                    | 0 errors 재확인                                                                                             |
+| Q2  | `npx jest`           | ✅ Pass                    | 6 suites / 76 tests 전부 통과 (dev-notes 시점과 동일 — 롤백/신규 구현 모두 기존 테스트 스위트에 영향 없음)  |
+| Q3  | 버그/edge 코드 리뷰  | ✅ Pass                    | 아래 상세                                                                                                   |
+| Q4  | UX (카피 일치)       | ✅ Pass                    | 아래 상세                                                                                                   |
+| Q5  | 컨벤션               | ✅ Pass (P2 1건)           | 아래 상세                                                                                                   |
+| Q6  | 비주얼(시뮬레이터)   | ⚠️ Pass(가) / P1(나)       | (가) 재생목록 회귀 — 실기 확인. (나) 북마크 Row A 렌더링 — 환경 제약으로 코드 레벨 검증으로 대체, 아래 상세 |
+| Q7  | 인터랙션(시뮬레이터) | ⚠️ 코드 레벨 검증으로 대체 | Q6(나)와 동일 제약                                                                                          |
+| Q8  | 회귀                 | ✅ Pass                    | 아래 상세                                                                                                   |
+| Q9  | 성능                 | 해당 없음/경미             | 특이사항 없음                                                                                               |
+| Q10 | 네이티브 모듈        | 해당 없음                  | 신규/제거된 네이티브 모듈 없음, `expo-file-system` 기존 설치 유지                                           |
 
 ---
 
@@ -509,6 +518,7 @@ Tests:       76 passed, 76 total
 ```
 npx tsc --noEmit
 ```
+
 → 출력 없음(0 errors).
 
 ## Q2 — 테스트
@@ -516,6 +526,7 @@ npx tsc --noEmit
 ```
 npx jest
 ```
+
 ```
 PASS src/utils/__tests__/popularExhibitions.test.ts
 PASS src/utils/__tests__/stripHtml.test.ts
@@ -648,11 +659,13 @@ dev-notes가 짚지 않은 잠재적 허점으로 "두 지점에서 `voiceId`/`v
 ```
 npx tsc --noEmit
 ```
+
 → 출력 없음(0 errors).
 
 ```
 npx jest
 ```
+
 ```
 Test Suites: 6 passed, 6 total
 Tests:       76 passed, 76 total
@@ -682,17 +695,17 @@ Chris의 판정("이미 충족됨, 추가 구현 없음")에서 검증 없이 �
 
 ## 체크리스트 결과
 
-| # | 항목 | 결과 | 비고 |
-|---|------|------|------|
-| Q1 | `npx tsc --noEmit` | ✅ Pass | 0 errors 재확인 |
-| Q2 | `npx jest` | ✅ Pass | 6 suites / 76 tests 전부 통과 |
-| Q3 | 버그/edge | ✅ Pass | 아래 상세 |
-| Q4 | UX(대비/토큰 일치) | ✅ Pass | 아래 상세 |
-| Q5 | 컨벤션 | ✅ Pass | 신규 P2 없음(기존 파일 스타일 이슈는 이전 라운드에서 이미 확정, 재론하지 않음) |
-| Q6 | 비주얼(시뮬레이터) | ⚠️ P1(환경 제약 지속) | 아래 상세 |
-| Q7 | 인터랙션 | ⚠️ Q6과 동일 제약으로 미수행 | 아래 상세 |
-| Q8 | 회귀 | ✅ Pass | 아래 상세 |
-| Q9/Q10 | 성능/네이티브 | 해당 없음/경미 | 특이사항 없음 |
+| #      | 항목               | 결과                         | 비고                                                                           |
+| ------ | ------------------ | ---------------------------- | ------------------------------------------------------------------------------ |
+| Q1     | `npx tsc --noEmit` | ✅ Pass                      | 0 errors 재확인                                                                |
+| Q2     | `npx jest`         | ✅ Pass                      | 6 suites / 76 tests 전부 통과                                                  |
+| Q3     | 버그/edge          | ✅ Pass                      | 아래 상세                                                                      |
+| Q4     | UX(대비/토큰 일치) | ✅ Pass                      | 아래 상세                                                                      |
+| Q5     | 컨벤션             | ✅ Pass                      | 신규 P2 없음(기존 파일 스타일 이슈는 이전 라운드에서 이미 확정, 재론하지 않음) |
+| Q6     | 비주얼(시뮬레이터) | ⚠️ P1(환경 제약 지속)        | 아래 상세                                                                      |
+| Q7     | 인터랙션           | ⚠️ Q6과 동일 제약으로 미수행 | 아래 상세                                                                      |
+| Q8     | 회귀               | ✅ Pass                      | 아래 상세                                                                      |
+| Q9/Q10 | 성능/네이티브      | 해당 없음/경미               | 특이사항 없음                                                                  |
 
 ---
 
@@ -701,6 +714,7 @@ Chris의 판정("이미 충족됨, 추가 구현 없음")에서 검증 없이 �
 ```
 npx tsc --noEmit
 ```
+
 → 출력 없음(0 errors).
 
 ## Q2 — 테스트
@@ -708,6 +722,7 @@ npx tsc --noEmit
 ```
 npx jest
 ```
+
 ```
 Test Suites: 6 passed, 6 total
 Tests:       76 passed, 76 total
@@ -782,17 +797,17 @@ Tests:       76 passed, 76 total
 
 ## 체크리스트 결과
 
-| # | 항목 | 결과 | 비고 |
-|---|------|------|------|
-| Q1 | `npx tsc --noEmit` | ✅ Pass | 0 errors 재확인 |
-| Q2 | `npx jest` | ✅ Pass | 6 suites / 76 tests 전부 통과 |
-| Q3 | 버그/edge 코드 리뷰 | ✅ Pass | 아래 상세 |
-| Q4 | UX(재시도 흐름) | ✅ Pass | 코드 레벨 검증 — 아래 상세 |
-| Q5 | 컨벤션 | ✅ Pass | 신규 P2 없음 |
-| Q6 | 비주얼(시뮬레이터) | ⚠️ P1(환경 제약 지속 + 신규 제약) | 아래 상세 |
-| Q7 | 인터랙션(시뮬레이터) | ⚠️ Q6과 동일 제약으로 미수행 | 아래 상세 |
-| Q8 | 회귀(Row A idle 필터링) | ✅ Pass | 아래 상세 |
-| Q9/Q10 | 성능/네이티브 | 해당 없음/경미 | 특이사항 없음 |
+| #      | 항목                    | 결과                              | 비고                          |
+| ------ | ----------------------- | --------------------------------- | ----------------------------- |
+| Q1     | `npx tsc --noEmit`      | ✅ Pass                           | 0 errors 재확인               |
+| Q2     | `npx jest`              | ✅ Pass                           | 6 suites / 76 tests 전부 통과 |
+| Q3     | 버그/edge 코드 리뷰     | ✅ Pass                           | 아래 상세                     |
+| Q4     | UX(재시도 흐름)         | ✅ Pass                           | 코드 레벨 검증 — 아래 상세    |
+| Q5     | 컨벤션                  | ✅ Pass                           | 신규 P2 없음                  |
+| Q6     | 비주얼(시뮬레이터)      | ⚠️ P1(환경 제약 지속 + 신규 제약) | 아래 상세                     |
+| Q7     | 인터랙션(시뮬레이터)    | ⚠️ Q6과 동일 제약으로 미수행      | 아래 상세                     |
+| Q8     | 회귀(Row A idle 필터링) | ✅ Pass                           | 아래 상세                     |
+| Q9/Q10 | 성능/네이티브           | 해당 없음/경미                    | 특이사항 없음                 |
 
 ---
 
@@ -801,6 +816,7 @@ Tests:       76 passed, 76 total
 ```
 npx tsc --noEmit
 ```
+
 → 출력 없음(0 errors).
 
 ## Q2 — 테스트
@@ -808,6 +824,7 @@ npx tsc --noEmit
 ```
 npx jest
 ```
+
 ```
 PASS src/utils/__tests__/offlineAudio.test.ts
 PASS src/utils/__tests__/exhibitionSearch.test.ts
@@ -883,17 +900,17 @@ Tests:       76 passed, 76 total
 
 ## 체크리스트 결과
 
-| # | 항목 | 결과 | 비고 |
-|---|------|------|------|
-| Q1 | `npx tsc --noEmit` | ✅ Pass | 0 errors 재확인 |
-| Q2 | `npx jest` | ✅ Pass | 6 suites / 86 tests 전부 통과 |
-| Q3 | 버그/edge 코드 리뷰 | ✅ Pass | 아래 상세 |
-| Q4 | UX(삭제 확인 카피) | ✅ Pass | 브리프 Copy 표와 문자 단위 대조 — 아래 상세 |
-| Q5 | 컨벤션(hitSlop·위치) | ✅ Pass | 아래 상세 |
-| Q6 | 비주얼(시뮬레이터) | ⚠️ P1(환경 제약 지속) | 코드 레벨 검증으로 대체 — 아래 상세 |
-| Q7 | 인터랙션(시뮬레이터) | ⚠️ Q6과 동일 제약으로 미수행 | 코드 레벨 검증으로 대체 — 아래 상세 |
-| Q8 | 회귀(BottomSheet 기존 헤더 액션) | ✅ Pass | 아래 상세 |
-| Q9/Q10 | 성능/네이티브 | 해당 없음/경미 | 특이사항 없음 |
+| #      | 항목                             | 결과                         | 비고                                        |
+| ------ | -------------------------------- | ---------------------------- | ------------------------------------------- |
+| Q1     | `npx tsc --noEmit`               | ✅ Pass                      | 0 errors 재확인                             |
+| Q2     | `npx jest`                       | ✅ Pass                      | 6 suites / 86 tests 전부 통과               |
+| Q3     | 버그/edge 코드 리뷰              | ✅ Pass                      | 아래 상세                                   |
+| Q4     | UX(삭제 확인 카피)               | ✅ Pass                      | 브리프 Copy 표와 문자 단위 대조 — 아래 상세 |
+| Q5     | 컨벤션(hitSlop·위치)             | ✅ Pass                      | 아래 상세                                   |
+| Q6     | 비주얼(시뮬레이터)               | ⚠️ P1(환경 제약 지속)        | 코드 레벨 검증으로 대체 — 아래 상세         |
+| Q7     | 인터랙션(시뮬레이터)             | ⚠️ Q6과 동일 제약으로 미수행 | 코드 레벨 검증으로 대체 — 아래 상세         |
+| Q8     | 회귀(BottomSheet 기존 헤더 액션) | ✅ Pass                      | 아래 상세                                   |
+| Q9/Q10 | 성능/네이티브                    | 해당 없음/경미               | 특이사항 없음                               |
 
 ---
 
@@ -902,6 +919,7 @@ Tests:       76 passed, 76 total
 ```
 npx tsc --noEmit
 ```
+
 → 출력 없음(0 errors).
 
 ## Q2 — 테스트
@@ -909,6 +927,7 @@ npx tsc --noEmit
 ```
 npx jest
 ```
+
 ```
 PASS src/utils/__tests__/offlineAudio.test.ts
 PASS src/store/__tests__/offlineDownloadStore.test.ts
@@ -920,6 +939,7 @@ PASS src/utils/__tests__/exhibitionSearch.test.ts
 Test Suites: 6 passed, 6 total
 Tests:       86 passed, 86 total
 ```
+
 AC-5/AC-6 신규 유닛 테스트 10개(`offlineAudio.test.ts`의 `deleteOfflineAudio`/`formatOfflineAudioSize` 6개, `offlineDownloadStore.test.ts`의 `computeCacheKey`/`deleteDownload`/`deleteAllDownloads` 4개)가 이전 라운드(76개) 대비 추가되어 전부 통과함을 확인.
 
 ## Q3 — 버그/edge 케이스
@@ -933,16 +953,16 @@ AC-5/AC-6 신규 유닛 테스트 10개(`offlineAudio.test.ts`의 `deleteOffline
 
 브리프 `02-design-brief.md` Copy 표(L47-57)와 `app/settings/bookmark/audio.tsx` 구현을 1:1 대조:
 
-| 항목 | 브리프 | 구현 | 일치 |
-|---|---|---|---|
-| Row B 저장공간 표시 | `다운로드 {size}` | `` `다운로드 ${totalSizeLabel}` ``(L291) | ✅ |
-| Row B 전체 삭제 버튼 | `전체 삭제` | `전체 삭제`(L303) | ✅ |
-| 전체 삭제 확인 제목 | `다운로드한 해설 삭제` | `'다운로드한 해설 삭제'`(L178) | ✅ |
-| 전체 삭제 확인 본문 | `저장된 오디오 {N}개를 모두 삭제해요. 다시 들으려면 네트워크가 필요해요` | `` `저장된 오디오 ${doneIds.length}개를 모두 삭제해요. 다시 들으려면 네트워크가 필요해요`(L179) `` | ✅ |
-| 전체 삭제 확인 - 취소/삭제 | `취소` / `삭제` | `'취소'`(L181) / `'삭제'`(L183) | ✅ |
-| 개별 삭제 확인 제목 | `다운로드 삭제` | `'다운로드 삭제'`(L195) | ✅ |
-| 개별 삭제 확인 본문 | `"{title}" 다운로드 파일을 삭제해요. 다시 들으려면 네트워크가 필요해요` | `` `"${item.title}" 다운로드 파일을 삭제해요. 다시 들으려면 네트워크가 필요해요`(L196) `` | ✅ |
-| 개별 삭제 확인 - 취소/삭제 | `취소` / `삭제` | `'취소'`(L198) / `'삭제'`(L200) | ✅ |
+| 항목                       | 브리프                                                                   | 구현                                                                                               | 일치 |
+| -------------------------- | ------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------- | ---- |
+| Row B 저장공간 표시        | `다운로드 {size}`                                                        | `` `다운로드 ${totalSizeLabel}` ``(L291)                                                           | ✅   |
+| Row B 전체 삭제 버튼       | `전체 삭제`                                                              | `전체 삭제`(L303)                                                                                  | ✅   |
+| 전체 삭제 확인 제목        | `다운로드한 해설 삭제`                                                   | `'다운로드한 해설 삭제'`(L178)                                                                     | ✅   |
+| 전체 삭제 확인 본문        | `저장된 오디오 {N}개를 모두 삭제해요. 다시 들으려면 네트워크가 필요해요` | `` `저장된 오디오 ${doneIds.length}개를 모두 삭제해요. 다시 들으려면 네트워크가 필요해요`(L179) `` | ✅   |
+| 전체 삭제 확인 - 취소/삭제 | `취소` / `삭제`                                                          | `'취소'`(L181) / `'삭제'`(L183)                                                                    | ✅   |
+| 개별 삭제 확인 제목        | `다운로드 삭제`                                                          | `'다운로드 삭제'`(L195)                                                                            | ✅   |
+| 개별 삭제 확인 본문        | `"{title}" 다운로드 파일을 삭제해요. 다시 들으려면 네트워크가 필요해요`  | `` `"${item.title}" 다운로드 파일을 삭제해요. 다시 들으려면 네트워크가 필요해요`(L196) ``          | ✅   |
+| 개별 삭제 확인 - 취소/삭제 | `취소` / `삭제`                                                          | `'취소'`(L198) / `'삭제'`(L200)                                                                    | ✅   |
 
 문자 단위까지 정확히 일치. `formatOfflineAudioSize` 포맷(B/KB/MB, 소수 첫째 자리)도 유닛 테스트로 이미 검증됨(Q2). **Pass**.
 
@@ -954,7 +974,7 @@ AC-5/AC-6 신규 유닛 테스트 10개(`offlineAudio.test.ts`의 `deleteOffline
 
 ## Q6/Q7 — 비주얼/인터랙션(시뮬레이터) — 이전 P1(로그인 세션 제약) 영향 확인
 
-- **재확인 절차**: 이전 라운드(AC-1~AC-4)에서 반복 기록된 P1 — `bookmarkAudioStore`/`historyStore`가 경유하는 `authAwareStorage`에 대한 외부 AsyncStorage 주입이 반영되지 않는 현상 — 이 이번 AC-5/AC-6 검증에도 영향을 주는지 직접 재현해 확인했다. `xcrun simctl terminate` → `launch`로 앱을 완전 재기동한 뒤 `mollip:///settings/bookmark/audio` 딥링크로 진입해 스크린샷을 확보했다(`.docs/wip/offline-download/evidence/rev3-ac5-6-bookmark-state.png`) — 이번 세션에서도 화면은 "저장된 오디오가 없어요"(빈 상태)로 렌더됐다. 즉 `items.length === 0`이라 Row A/Row B(둘 다 `items.length > 0`이 전제)와 카드 자체가 아예 렌더되지 않아, BottomSheet를 여는 것조차 불가능한 상태다 — AC-5/AC-6 실기 검증의 전제(완료 상태 항목 존재)에 AC-1~AC-4보다 한 단계 앞선 지점(북마크 목록 자체가 비어 있음)에서 막힌다.
+- **재확인 절차**: 이전 라운드(AC-1~~AC-4)에서 반복 기록된 P1 — `bookmarkAudioStore`/`historyStore`가 경유하는 `authAwareStorage`에 대한 외부 AsyncStorage 주입이 반영되지 않는 현상 — 이 이번 AC-5/AC-6 검증에도 영향을 주는지 직접 재현해 확인했다. `xcrun simctl terminate` → `launch`로 앱을 완전 재기동한 뒤 `mollip:///settings/bookmark/audio` 딥링크로 진입해 스크린샷을 확보했다(`.docs/wip/offline-download/evidence/rev3-ac5-6-bookmark-state.png`) — 이번 세션에서도 화면은 "저장된 오디오가 없어요"(빈 상태)로 렌더됐다. 즉 `items.length === 0`이라 Row A/Row B(둘 다 `items.length > 0`이 전제)와 카드 자체가 아예 렌더되지 않아, BottomSheet를 여는 것조차 불가능한 상태다 — AC-5/AC-6 실기 검증의 전제(완료 상태 항목 존재)에 AC-1~~AC-4보다 한 단계 앞선 지점(북마크 목록 자체가 비어 있음)에서 막힌다.
 - **판단**: 이 현상은 AC-5/AC-6의 diff(`offlineAudio.ts`/`offlineDownloadStore.ts`/`bookmark/audio.tsx`의 삭제 관련 코드)가 원인이 아니다 — `bookmarkAudioStore.ts`/`historyStore.ts`/`authAwareStorage.ts` 중 어느 것도 이번 diff의 변경 대상이 아니며, AC-1 QA(revision 3 최초 라운드)부터 동일하게 재현되어 온 환경 제약이다. 이번 세션에서 새로운 우회 방법(재기동 + 딥링크)도 시도했으나 근본 원인 해소에는 이르지 못해, 이전 라운드가 남긴 "QA 툴링 한계일 수도, 실제 게스트 데이터 영속성 버그일 수도 있음(미확정)" 판단을 그대로 유지한다.
 - **코드 레벨 검증으로 대체**: Q3(a)~(d), Q4, Q5에서 이미 조건식·카피·hitSlop·위치·다른 항목 비영향(단위 테스트 포함)을 소스 대조로 확정했다. Row B/BottomSheet 삭제 아이콘의 렌더 조건(`hasDownloaded`/`downloadStatuses[selected.id] === 'done'`)과 스토어 액션(`deleteDownload`/`deleteAllDownloads`)은 순수 조건식·상태 갱신 로직이라 실제 UI 트리에 마운트되지 않아도 코드 대조만으로 spec/브리프 일치 여부를 확정할 수 있는 성격이라고 판단했다(AC-3/AC-4 QA에서 동일 근거로 이미 채택한 대체 방식과 동일).
 - Row A(일괄 받기)는 이전 라운드에서 실기 탭까지 수행한 바 있으나(revision 2 시점, playlist.tsx 경로) 이번 화면(`bookmark/audio.tsx`)에서의 실기 확인은 AC-1 QA부터 계속 인계 중인 항목이며, 이번 AC-5/AC-6 범위에서 새로 발생한 결함이 아니므로 별도 P1로 중복 기록하지 않고 기존 P1에 통합해 인계한다.
