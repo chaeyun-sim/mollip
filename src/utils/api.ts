@@ -1,14 +1,36 @@
 import { getAccessTokenForApi } from '@/src/store/authStore';
+import { supabase } from '@/src/utils/supabase';
 
 const SUPABASE_URL = process.env.EXPO_PUBLIC_SUPABASE_URL ?? '';
+const SUPABASE_ANON_KEY = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY ?? '';
 
 function edgeFunctionUrl(name: string): string {
 	return `${SUPABASE_URL}/functions/v1/${name}`;
 }
 
-function authHeaders(): Record<string, string> {
+/** 만료됐을 수 있는 세션을 갱신한 뒤 유저 JWT만 고른다. anon 키는 쓰지 않는다. */
+async function resolveUserAccessToken(): Promise<string | null> {
+	await supabase.auth.getUser();
+	const { data } = await supabase.auth.getSession();
+	let token = data.session?.access_token ?? null;
+	if (!token) {
+		const { data: refreshed } = await supabase.auth.refreshSession();
+		token = refreshed.session?.access_token ?? null;
+	}
+	if (!token) token = getAccessTokenForApi();
+	if (!token || token === SUPABASE_ANON_KEY) return null;
+	return token;
+}
+
+async function authHeaders(options?: { requireUser?: boolean }): Promise<Record<string, string>> {
+	const userToken = await resolveUserAccessToken();
+	if (options?.requireUser && !userToken) {
+		throw new Error('로그인이 필요해요');
+	}
+	const token = userToken ?? SUPABASE_ANON_KEY;
 	return {
-		Authorization: `Bearer ${getAccessTokenForApi()}`,
+		Authorization: `Bearer ${token}`,
+		apikey: SUPABASE_ANON_KEY,
 		'Content-Type': 'application/json',
 	};
 }
@@ -24,7 +46,7 @@ export async function* streamDescriptionFromImage(
 ): AsyncGenerator<string> {
 	const res = await fetch(edgeFunctionUrl('stream-description'), {
 		method: 'POST',
-		headers: authHeaders(),
+		headers: await authHeaders({ requireUser: true }),
 		body: JSON.stringify({ mode: 'image', imageBase64, mediaType, systemPrompt }),
 	});
 	if (!res.ok) throw new Error(`stream-description ${res.status}`);
@@ -35,7 +57,7 @@ export async function* streamDescriptionFromImage(
 export async function* streamDescription(prompt: string): AsyncGenerator<string> {
 	const res = await fetch(edgeFunctionUrl('stream-description'), {
 		method: 'POST',
-		headers: authHeaders(),
+		headers: await authHeaders({ requireUser: true }),
 		body: JSON.stringify({ mode: 'manual', prompt }),
 	});
 	if (!res.ok) throw new Error(`stream-description ${res.status}`);
@@ -47,12 +69,16 @@ export async function* streamChat(
 	systemPrompt: string,
 	messages: AnthropicMessage[],
 ): AsyncGenerator<string> {
+	const headers = await authHeaders({ requireUser: true });
 	const res = await fetch(edgeFunctionUrl('stream-chat'), {
 		method: 'POST',
-		headers: authHeaders(),
+		headers,
 		body: JSON.stringify({ systemPrompt, messages }),
 	});
-	if (!res.ok) throw new Error(`stream-chat ${res.status}`);
+	if (!res.ok) {
+		const body = await res.text().catch(() => '');
+		throw new Error(`stream-chat ${res.status}${body ? `: ${body}` : ''}`);
+	}
 
 	yield* readSSEStream(res);
 }
@@ -60,7 +86,7 @@ export async function* streamChat(
 export async function* streamRoute(systemPrompt: string, prompt: string): AsyncGenerator<string> {
 	const res = await fetch(edgeFunctionUrl('generate-route'), {
 		method: 'POST',
-		headers: authHeaders(),
+		headers: await authHeaders(),
 		body: JSON.stringify({ systemPrompt, prompt }),
 	});
 	if (!res.ok) throw new Error(`generate-route ${res.status}`);
@@ -76,7 +102,7 @@ export async function generateArtistIntro(
 ): Promise<string> {
 	const res = await fetch(edgeFunctionUrl('generate-artist-intro'), {
 		method: 'POST',
-		headers: authHeaders(),
+		headers: await authHeaders({ requireUser: true }),
 		body: JSON.stringify({ artist, exhibitionTitle }),
 	});
 	if (!res.ok) throw new Error(`generate-artist-intro ${res.status}`);
@@ -91,7 +117,7 @@ export async function generateArtistIntro(
 export async function fetchVoices() {
 	const res = await fetch(edgeFunctionUrl('voices'), {
 		method: 'GET',
-		headers: authHeaders(),
+		headers: await authHeaders(),
 	});
 	if (!res.ok) throw new Error(`voices ${res.status}`);
 	const data = await res.json();
@@ -107,7 +133,7 @@ export async function fetchVoices() {
 export async function fetchTTSBlob(voiceId: string, text: string, speed = 1.0): Promise<string> {
 	const res = await fetch(edgeFunctionUrl('tts'), {
 		method: 'POST',
-		headers: authHeaders(),
+		headers: await authHeaders({ requireUser: true }),
 		body: JSON.stringify({ voiceId, text, speed }),
 	});
 	if (!res.ok) {
@@ -124,7 +150,7 @@ export async function fetchTTSBlob(voiceId: string, text: string, speed = 1.0): 
 export async function deleteAccount(): Promise<void> {
 	const res = await fetch(edgeFunctionUrl('delete-account'), {
 		method: 'POST',
-		headers: authHeaders(),
+		headers: await authHeaders({ requireUser: true }),
 	});
 	if (!res.ok) {
 		const err = await res.json().catch(() => ({}));

@@ -19,11 +19,20 @@ Deno.serve(async (req) => {
 		const anonKey = Deno.env.get('SUPABASE_ANON_KEY')!;
 		const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 
+		const jwt = authHeader.replace(/^Bearer\s+/i, '').trim();
+		if (!jwt || jwt === anonKey) {
+			return new Response(JSON.stringify({ error: 'Invalid session' }), {
+				status: 401,
+				headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+			});
+		}
+
 		// 요청자 신원은 anon 클라이언트 + 요청자의 토큰으로 확인한다.
 		const callerClient = createClient(supabaseUrl, anonKey, {
 			global: { headers: { Authorization: authHeader } },
+			auth: { persistSession: false, autoRefreshToken: false },
 		});
-		const { data: userData, error: userError } = await callerClient.auth.getUser();
+		const { data: userData, error: userError } = await callerClient.auth.getUser(jwt);
 		if (userError || !userData?.user) {
 			return new Response(JSON.stringify({ error: 'Invalid session' }), {
 				status: 401,

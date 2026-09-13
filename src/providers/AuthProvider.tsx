@@ -3,6 +3,8 @@ import { useEffect, type ReactNode } from 'react';
 
 import { useAuthStore } from '@/src/store/authStore';
 import { createSessionFromUrl } from '@/src/utils/authOAuth';
+import { getLocalOnboardingCompleted } from '@/src/utils/onboardingLocalStorage';
+import { resyncPendingOnboardingGenres } from '@/src/utils/onboardingSync';
 import { supabase } from '@/src/utils/supabase';
 
 type Props = {
@@ -17,14 +19,21 @@ export function AuthProvider({ children }: Props) {
 	useEffect(() => {
 		let mounted = true;
 
+		// 원격+로컬 완료 기록을 함께 판정한다 (AC-1, AC-5) — 둘 중 하나라도 true면 완료로 본다.
+		// 저장 오류로 로컬에만 완료가 남은 경우, 이 시점에 pending 장르 재동기화도 함께 시도한다.
 		const fetchOnboardingStatus = async (userId: string) => {
-			const { data } = await supabase
-				.from('profiles')
-				.select('onboarding_completed')
-				.eq('id', userId)
-				.single();
-			if (mounted && data) {
-				setOnboardingCompleted(data.onboarding_completed ?? false);
+			const [{ data }, localCompleted] = await Promise.all([
+				supabase.from('profiles').select('onboarding_completed').eq('id', userId).single(),
+				getLocalOnboardingCompleted(userId),
+			]);
+			const remoteCompleted = data?.onboarding_completed ?? false;
+
+			if (mounted) {
+				setOnboardingCompleted(remoteCompleted || localCompleted);
+			}
+
+			if (remoteCompleted || localCompleted) {
+				void resyncPendingOnboardingGenres(userId);
 			}
 		};
 

@@ -44,8 +44,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
 	},
 }));
 
-export function getAccessTokenForApi(): string {
-	const token = useAuthStore.getState().session?.access_token;
-	const anon = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY ?? '';
-	return token ?? anon;
+/** 로그인 유저의 access token만 반환. 없으면 null — anon 키를 유저 토큰처럼 쓰지 않는다. */
+export function getAccessTokenForApi(): string | null {
+	return useAuthStore.getState().session?.access_token ?? null;
 }

@@ -11,6 +11,7 @@ export type Database = {
 			audio_guides: {
 				Row: {
 					artist: string | null;
+					chat_messages: Json | null;
 					created_at: string;
 					full_text: string;
 					id: string;
@@ -20,6 +21,7 @@ export type Database = {
 				};
 				Insert: {
 					artist?: string | null;
+					chat_messages?: Json | null;
 					created_at?: string;
 					full_text?: string;
 					id?: string;
@@ -29,6 +31,7 @@ export type Database = {
 				};
 				Update: {
 					artist?: string | null;
+					chat_messages?: Json | null;
 					created_at?: string;
 					full_text?: string;
 					id?: string;

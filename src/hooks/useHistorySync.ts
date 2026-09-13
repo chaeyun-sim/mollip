@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 
 import { useAuthStore } from '../store/authStore';
 import { useHistoryStore } from '../store/historyStore';
-import type { HistoryItem } from '../store/historyStore';
+import type { HistoryItem, StoredChatMessage } from '../store/historyStore';
 import { supabase } from '../utils/supabase';
 
 /**
@@ -19,7 +19,7 @@ export function useHistorySync() {
 
 		supabase
 			.from('audio_guides')
-			.select('id, title, artist, image_url, full_text, created_at')
+			.select('id, title, artist, image_url, full_text, chat_messages, created_at')
 			.eq('user_id', userId)
 			.order('created_at', { ascending: false })
 			.then(({ data, error }) => {
@@ -36,6 +36,7 @@ export function useHistorySync() {
 						imageUrl: r.image_url ?? undefined,
 						text: r.full_text,
 						savedAt: r.created_at,
+						chatMessages: (r.chat_messages as StoredChatMessage[] | null) ?? undefined,
 					}));
 					loadFromRemote(items);
 				}

@@ -5,6 +5,7 @@ import { createJSONStorage, persist } from 'zustand/middleware';
 import { useAuthStore } from './authStore';
 import { supabase } from '../utils/supabase';
 import { createAuthAwareStorage } from '../utils/authAwareStorage';
+import type { Json } from '../types/database.types';
 
 export interface StoredChatMessage {
 	id: string;
@@ -101,6 +102,17 @@ export const useHistoryStore = create<HistoryStore>()(
 				set((s) => ({
 					items: s.items.map((i) => (i.id === id ? { ...i, chatMessages: messages } : i)),
 				}));
+
+				const userId = useAuthStore.getState().user?.id;
+				if (userId) {
+					supabase
+						.from('audio_guides')
+						.update({ chat_messages: messages as unknown as Json })
+						.match({ id, user_id: userId })
+						.then(({ error }) => {
+							if (error) console.warn('[history] saveChatMessages failed:', error.message);
+						});
+				}
 			},
 			loadFromRemote: (items) => set({ items }),
 			// wikidataImage.ts가 작가명 검증 없이 blind 매칭하던 시절 저장된, 신뢰할 수 없는 위키 이미지 정리
