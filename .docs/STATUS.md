@@ -93,9 +93,9 @@ FE 구현 현황의 단일 정본. 코드 탐색 전에 먼저 읽을 것.
 | `archive/`    | 21                            | 관람 기록/티켓 UI — `VisitTicket*`, `DiaryCalendar`, `ReceiptSummary`, `EssayInputSection`(확정 큐 감상평) 등. 컬러 팔레트는 `archivePalette.ts` |
 | `auth/`       | 2                             | `SocialPill`, `LoginRequiredPressable`                                                                                                                          |
 | `character/`  | 0                             | **디렉터리는 존재하나 파일 없음** — 미사용/정리 대상 후보                                                                                                       |
-| `common/`     | 7                             | 도메인 무관 프리미티브만 — `Button`, `Chip`, `ImageFallback`, `SearchBar`, `TextField`, `DatePickerModal`, `SectionTitle`                                         |
+| `common/`     | 8                             | 도메인 무관 프리미티브만 — `Button`, `IconButton`, `Chip`, `ImageFallback`, `SearchBar`, `TextField`, `DatePickerModal`, `SectionTitle`                           |
 | `explore/`    | 24                            | 전시 탐색/상세 — 카드, 상세 헤더, `HorizontalSection`, `StatusBadge`, `FloatingIconButton`, 몰입모드 오버레이. 경로 시트는 `map/`에도 동명 파일 존재            |
-| `guide/`      | 5                             | 오디오 가이드 채팅/입력 필드 UI                                                                                                                                 |
+| `guide/`      | 8                             | 오디오 가이드 채팅/입력 필드, `SourceActionRow`(작품 입력 카메라·갤러리 행)                                                                                     |
 | `layout/`     | 3 (+ `Loading/` 서브디렉터리) | `Screen.tsx`, `ScreenHeader.tsx` — 모든 화면의 레이아웃 프리미티브 (CLAUDE.md에 명시)                                                                           |
 | `map/`        | 19                            | 지도 마커, 경로 시트, `ExternalMapSheet`, 필터 칩 등. 노선 색상은 `src/utils/routeColors.ts` 참조                                                               |
 | `mypage/`     | 5 (+ `index.ts`)              | 설정 화면 카드/셀렉터 UI                                                                                                                                        |

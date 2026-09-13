@@ -20,6 +20,7 @@ import { updateStore } from '../../src/store';
 import { useImmersiveStore } from '../../src/store/immersiveStore';
 import { Button } from '@/src/components/common/Button';
 import { TextField } from '@/src/components/common/TextField';
+import { SourceActionRow } from '@/src/components/guide/SourceActionRow';
 import { ScreenHeader } from '@/src/components/layout/ScreenHeader';
 import { NarrationSettingsFields } from '@/src/components/mypage';
 import { searchWikiArtworks, type WikiArtwork } from '../../src/api/wikidata';
@@ -323,21 +324,21 @@ export default function IndexScreen() {
 												numberOfLines={1}
 											>
 												{artwork.label}
-												{artwork.year ? (
+												{artwork.year && (
 													<Text className="font-pretendard-regular text-gray600">
 														{'  '}
 														{artwork.year}
 													</Text>
-												) : null}
+												)}
 											</Text>
-											{artwork.description ? (
+											{artwork.description && (
 												<Text
 													className="text-xs mt-0.5 font-pretendard-regular text-gray600"
 													numberOfLines={1}
 												>
 													{artwork.description}
 												</Text>
-											) : null}
+											)}
 										</View>
 										<Ionicons name="chevron-forward" size={16} className="text-gray700" />
 									</Pressable>
@@ -350,14 +351,14 @@ export default function IndexScreen() {
 
 			{/* 버튼 영역 */}
 			<Screen.BottomAbsolute className="gap-3 px-6 bottom-10">
-				<Button.Row
+				<SourceActionRow
 					icon="camera"
 					title="카메라로 촬영"
 					description="지금 바로 작품을 찍어보세요"
 					onPress={() => pickAndGo(true)}
 					disabled={isLoading}
 				/>
-				<Button.Row
+				<SourceActionRow
 					variant="outlined"
 					icon="images"
 					title="갤러리에서 선택"

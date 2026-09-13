@@ -186,7 +186,7 @@ export default function DeleteAccountScreen() {
 						})}
 					</View>
 
-					{selectedOption?.tip ? (
+					{selectedOption?.tip && (
 						<View className="flex-row gap-2 rounded-2xl bg-blue-50 px-4 py-3.5 mb-3">
 							<Ionicons
 								name="bulb-outline"
@@ -198,9 +198,9 @@ export default function DeleteAccountScreen() {
 								{selectedOption.tip}
 							</Text>
 						</View>
-					) : null}
+					)}
 
-					{reason === 'other' ? (
+					{reason === 'other' && (
 						<TextField
 							variant="area"
 							className="rounded-3xl bg-bg-tonal border-0"
@@ -210,13 +210,13 @@ export default function DeleteAccountScreen() {
 							onChangeText={setDetail}
 							maxLength={1000}
 						/>
-					) : null}
+					)}
 
-					{status === 'error' ? (
+					{status === 'error' && (
 						<Text className="mt-4 px-1 text-[13px] font-pretendard-regular text-red-500">
 							탈퇴 처리에 실패했어요. 잠시 후 다시 시도해주세요
 						</Text>
-					) : null}
+					)}
 				</ScrollView>
 			</KeyboardAvoidingView>
 		</Screen>

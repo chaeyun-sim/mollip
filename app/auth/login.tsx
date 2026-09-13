@@ -111,7 +111,7 @@ export default function LoginScreen() {
 						}
 					/>
 
-					{Platform.OS === 'ios' ? (
+					{Platform.OS === 'ios' && (
 						<SocialPill
 							label="Apple로 시작하기"
 							variant="apple"
@@ -120,13 +120,13 @@ export default function LoginScreen() {
 							onPress={() => run('apple')}
 							icon={<Ionicons name="logo-apple" size={22} className="text-gray900" />}
 						/>
-					) : null}
+					)}
 
-					{error ? (
+					{error && (
 						<Text className="text-[13px] text-[#DC2626] text-center mt-1 font-pretendard-regular">
 							{error}
 						</Text>
-					) : null}
+					)}
 
 					<View
 						className="mt-7 px-2 justify-center gap-1"

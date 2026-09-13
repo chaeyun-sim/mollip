@@ -1,5 +1,5 @@
 import { useRouter } from 'expo-router';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import {
 	Keyboard,
 	Pressable,
@@ -15,43 +15,44 @@ import * as Haptics from 'expo-haptics';
 import { TextField } from '@/src/components/common/TextField';
 import { Screen } from '../../src/components/layout/Screen';
 import { ScreenHeader } from '../../src/components/layout/ScreenHeader';
-import { useTextFieldError } from '@/src/hooks/useTextField';
+import { useTextField } from '@/src/hooks/useTextField';
 import { updateStore } from '../../src/store';
 
 export default function ManualScreen() {
 	const router = useRouter();
-	const titleRef = useRef('');
-	const artistRef = useRef('');
-	const yearRef = useRef('');
-	const captionRef = useRef('');
+	const title = useTextField();
+	const artist = useTextField();
+
+	const [year, setYear] = useState('');
+	const [caption, setCaption] = useState('');
+	
 	const artistInputRef = useRef<TextInput>(null);
 	const yearInputRef = useRef<TextInput>(null);
 	const captionInputRef = useRef<TextInput>(null);
-	const titleField = useTextFieldError();
-	const artistField = useTextFieldError();
 
-	const buildManualStorePatch = (title: string, artist: string) => {
-		const year = yearRef.current.trim();
-		const parts = [`작품명: ${title}`, `작가명: ${artist}`];
-		if (year) parts.push(`제작 연도: ${year}`);
+	const buildManualStorePatch = (titleValue: string, artistValue: string) => {
+		const yearValue = year.trim();
+		const parts = [`작품명: ${titleValue}`, `작가명: ${artistValue}`];
+		if (yearValue) parts.push(`제작 연도: ${yearValue}`);
 		return {
 			inputMode: 'manual' as const,
-			manualTitle: title,
-			manualArtist: artist,
+			manualTitle: titleValue,
+			manualArtist: artistValue,
 			extractedText: parts.join('\n'),
 		};
 	};
 
 	const handleSubmit = () => {
-		const titleMissing = !titleRef.current.trim();
-		const artistMissing = !artistRef.current.trim();
-		titleField.setError(titleMissing);
-		artistField.setError(artistMissing);
+		const titleValue = title.value.trim();
+		const artistValue = artist.value.trim();
+		const titleMissing = !titleValue;
+		const artistMissing = !artistValue;
+		title.setError(titleMissing);
+		artist.setError(artistMissing);
 		if (titleMissing || artistMissing) return;
-		const title = titleRef.current.trim();
-		const artist = artistRef.current.trim();
+
 		updateStore({
-			...buildManualStorePatch(title, artist),
+			...buildManualStorePatch(titleValue, artistValue),
 			artworkDescription: '',
 			isArtistIntro: false,
 		});
@@ -60,16 +61,17 @@ export default function ManualScreen() {
 	};
 
 	const handleDirectChat = () => {
-		const titleMissing = !titleRef.current.trim();
-		const artistMissing = !artistRef.current.trim();
-		titleField.setError(titleMissing);
-		artistField.setError(artistMissing);
+		const titleValue = title.value.trim();
+		const artistValue = artist.value.trim();
+		const titleMissing = !titleValue;
+		const artistMissing = !artistValue;
+		title.setError(titleMissing);
+		artist.setError(artistMissing);
 		if (titleMissing || artistMissing) return;
-		const title = titleRef.current.trim();
-		const artist = artistRef.current.trim();
+
 		updateStore({
-			...buildManualStorePatch(title, artist),
-			artworkDescription: captionRef.current.trim(),
+			...buildManualStorePatch(titleValue, artistValue),
+			artworkDescription: caption.trim(),
 		});
 		const sessionId = Date.now().toString();
 		Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
@@ -116,17 +118,16 @@ export default function ManualScreen() {
 								</Text>
 								<TextField
 									tone="dark"
-									error={titleField.error}
+									value={title.value}
+									error={title.error}
 									placeholder="예) 별이 빛나는 밤"
 									accessibilityLabel="작품명"
-									onChangeText={titleField.onChangeText((t) => {
-										titleRef.current = t;
-									})}
+									onChangeText={title.onChangeText}
 									onSubmitEditing={() => artistInputRef.current?.focus()}
 									returnKeyType="next"
 									autoFocus
 								/>
-								{titleField.error && (
+								{title.error && (
 									<Text className="text-xs mt-1.5 font-pretendard-regular text-error">
 										작품명을 입력해 주세요
 									</Text>
@@ -140,16 +141,15 @@ export default function ManualScreen() {
 								<TextField
 									ref={artistInputRef}
 									tone="dark"
-									error={artistField.error}
+									value={artist.value}
+									error={artist.error}
 									placeholder="예) 빈센트 반 고흐"
 									accessibilityLabel="작가명"
-									onChangeText={artistField.onChangeText((t) => {
-										artistRef.current = t;
-									})}
+									onChangeText={artist.onChangeText}
 									returnKeyType="next"
 									onSubmitEditing={() => yearInputRef.current?.focus()}
 								/>
-								{artistField.error && (
+								{artist.error && (
 									<Text className="text-xs mt-1.5 font-pretendard-regular text-error">
 										작가명을 입력해 주세요
 									</Text>
@@ -166,11 +166,10 @@ export default function ManualScreen() {
 								<TextField
 									ref={yearInputRef}
 									tone="dark"
+									value={year}
 									placeholder="예) 1889"
 									accessibilityLabel="제작 연도 (선택)"
-									onChangeText={(t) => {
-										yearRef.current = t;
-									}}
+									onChangeText={setYear}
 									returnKeyType="next"
 									onSubmitEditing={() => captionInputRef.current?.focus()}
 									keyboardType="number-pad"
@@ -188,11 +187,10 @@ export default function ManualScreen() {
 									ref={captionInputRef}
 									variant="area"
 									tone="dark"
+									value={caption}
 									placeholder="전시장 캡션이나 메모를 입력하면 더 정확하게 질문할 수 있어요"
 									accessibilityLabel="캡션 또는 메모 (선택)"
-									onChangeText={(t) => {
-										captionRef.current = t;
-									}}
+									onChangeText={setCaption}
 									numberOfLines={3}
 								/>
 							</View>

@@ -6,7 +6,7 @@ import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-nati
 import { useShallow } from 'zustand/react/shallow';
 import { Screen } from '../../src/components/layout/Screen';
 import { ScreenHeader } from '../../src/components/layout/ScreenHeader';
-import { Button } from '@/src/components/common/Button';
+import { IconButton } from '@/src/components/common/IconButton';
 import { ImageFallback } from '@/src/components/common/ImageFallback';
 import { ArtistIntroTrack } from '@/src/components/guide/ArtistIntroTrack';
 import { updateStore } from '../../src/store';
@@ -244,7 +244,7 @@ export default function PlaylistScreen() {
 
 			{/* 플로팅 버튼 — 위: 전시 채팅으로 이동, 아래: 작품 찾기(create-description)로 이동 */}
 			<Screen.BottomAbsolute className="bottom-10 flex-col items-end gap-5 mr-6">
-				<Button.Icon
+				<IconButton
 					variant="ghost"
 					icon="chatbubble-ellipses-outline"
 					elevated
@@ -260,7 +260,7 @@ export default function PlaylistScreen() {
 						})
 					}
 				/>
-				<Button.Icon
+				<IconButton
 					tone="inverse"
 					icon="add"
 					elevated

@@ -26,7 +26,7 @@ import { useImmersiveStore } from '../../src/store/immersiveStore';
 import { getEffectiveFontSize, useSettingsStore } from '../../src/store/settingsStore';
 import { formatTime } from '../../src/utils/text';
 import { ScreenHeader } from '../../src/components/layout/ScreenHeader';
-import { Button } from '@/src/components/common/Button';
+import { IconButton } from '@/src/components/common/IconButton';
 import { cn } from '@/src/lib/cn';
 import { useHistoryStore } from '@/src/store/historyStore';
 import { useBookmarkAudioStore } from '@/src/store/bookmarkAudioStore';
@@ -249,7 +249,7 @@ export default function DescriptionScreen() {
 								),
 							)}
 						</Text>
-						{!isTyping && artworkImageUrl ? (
+						{!isTyping && artworkImageUrl && (
 							<Pressable
 								onPress={() => setImageModalVisible(true)}
 								accessibilityLabel="작품 이미지 확대"
@@ -262,7 +262,7 @@ export default function DescriptionScreen() {
 									accessibilityLabel="작품 이미지"
 								/>
 							</Pressable>
-						) : null}
+						)}
 					</>
 				)}
 			</ScrollView>
@@ -295,7 +295,7 @@ export default function DescriptionScreen() {
 				<View className="flex-row items-center justify-between py-1 w-full">
 					<View className="w-9 items-center">
 						{isImmersive && !isTyping && (
-							<Button.Icon
+							<IconButton
 								variant="bare"
 								icon="chatbubble"
 								accessibilityLabel="작품에 대해 질문하기"
@@ -304,7 +304,7 @@ export default function DescriptionScreen() {
 						)}
 					</View>
 
-					<Button.Icon
+					<IconButton
 						size="lg"
 						icon={isSpeaking ? 'pause' : 'play'}
 						loading={isTTSLoading}

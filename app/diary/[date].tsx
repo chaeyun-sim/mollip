@@ -89,14 +89,14 @@ function MyReviewSection({ rating, memo }: MyReviewSectionProps) {
 
 	return (
 		<View className="mt-5 px-4">
-			{rating ? (
+			{rating && (
 				<StarRating value={rating} onChange={() => {}} disabled size={20} tone="dark" />
-			) : null}
-			{memo ? (
+			)}
+			{memo && (
 				<Text className="mt-2.5 text-[14px] font-pretendard-regular text-white leading-[20px]">
 					{memo}
 				</Text>
-			) : null}
+			)}
 		</View>
 	);
 }

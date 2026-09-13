@@ -288,7 +288,7 @@ export default function MapScreen() {
 		suppressClearOnDismissRef.current = true;
 		beginPlanning(
 			{ name: selectedVenue.venueName, coord: selectedVenue.coordinates },
-			currentCoord ? { name: '현재 위치', coord: currentCoord } : null,
+			currentCoord && { name: '현재 위치', coord: currentCoord },
 		);
 		bottomSheetRef.current?.dismiss();
 	}, [selectedVenue, currentCoord, beginPlanning]);
@@ -424,7 +424,7 @@ export default function MapScreen() {
 	);
 
 	const currentLocation = useMemo(
-		() => (currentCoord ? { name: '현재 위치', coord: currentCoord } : null),
+		() => currentCoord && { name: '현재 위치', coord: currentCoord },
 		[currentCoord],
 	);
 
