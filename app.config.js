@@ -29,7 +29,7 @@ module.exports = {
 		owner: 'bysimune',
 		version: '1.0.0',
 		orientation: 'portrait',
-		icon: './assets/icon.png',
+		icon: './assets/images/logo/logo.png',
 		userInterfaceStyle: 'light',
 		ios: {
 			supportsTablet: true,
@@ -61,7 +61,7 @@ module.exports = {
 			package: 'com.simune.mollip',
 			adaptiveIcon: {
 				backgroundColor: '#E6F4FE',
-				foregroundImage: './assets/icon.png',
+				foregroundImage: './assets/images/logo/logo.png',
 			},
 			predictiveBackGestureEnabled: false,
 		},
@@ -110,7 +110,7 @@ module.exports = {
 			// [
 			// 	'expo-notifications',
 			// 	{
-			// 		icon: './assets/icon.png',
+			// 		icon: './assets/images/logo/logo.png',
 			// 		color: '#1C1917',
 			// 		sounds: [],
 			// 		mode: 'production',
