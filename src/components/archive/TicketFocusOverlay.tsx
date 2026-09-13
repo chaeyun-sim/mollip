@@ -51,7 +51,6 @@ export function TicketFocusOverlay({ dateKey, onClose }: TicketFocusOverlayProps
 
 	// 데이터 로딩 — dateKey가 없으면 훅은 idle 상태
 	const visit = useVisitStore((s) => (dateKey ? s.visits[dateKey] : undefined));
-	const setVisitMemo = useVisitStore((s) => s.setVisitMemo);
 	const playlist = useImmersiveStore((s) => s.playlist);
 	const { exhibition: visitExhibition } = useExhibitionDetail(visit?.exhibitionId ?? undefined);
 
@@ -132,6 +131,8 @@ export function TicketFocusOverlay({ dateKey, onClose }: TicketFocusOverlayProps
 								listenedItems={listenedItems}
 								dateKey={dateKey}
 								dateLabel={dateLabel}
+								signatureSvg={visit?.signatureSvg}
+								visitedAt={visit?.visitedAt}
 							/>
 						</ScrollView>
 					</Pressable>

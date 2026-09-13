@@ -55,7 +55,7 @@ export function SavedExhibitions({ onPressExhibition }: SavedExhibitionsProps) {
 					.map((row) => ({
 						exhibition: mapExhibitionRowToExhibition(row),
 						status: getExhibitionStatus(mapExhibitionRowToExhibition(row)),
-						distanceKm: null as number | null,
+						distanceKm: null,
 					}))
 					.filter((r) => isExhibitionListed(r.exhibition));
 				const order = new Map(ids.map((id, i) => [id, i]));

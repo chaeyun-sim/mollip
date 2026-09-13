@@ -1,7 +1,7 @@
 import { cn } from '@/src/lib/cn';
 import * as Haptics from 'expo-haptics';
 import { useEffect, useState } from 'react';
-import { LayoutChangeEvent, Pressable, Text, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 import { colors } from '@/src/constants/colors';
 
@@ -27,16 +27,11 @@ export function ArchiveTabBar({ value, onChange }: ArchiveTabBarProps) {
 		slideIndex.value = withSpring(tabIndex, { damping: 40, stiffness: 300 });
 	}, [tabIndex, slideIndex]);
 
-	const onTrackLayout = (e: LayoutChangeEvent) => {
-		setTrackWidth(e.nativeEvent.layout.width);
-	};
-
 	const thumbStyle = useAnimatedStyle(() => {
 		if (trackWidth <= 0) return { opacity: 0 };
 		const inset = 4;
 		const tabW = (trackWidth - inset * 2) / TABS.length;
 		return {
-			opacity: 1,
 			width: tabW,
 			transform: [{ translateX: inset + slideIndex.value * tabW }],
 		};
@@ -44,18 +39,14 @@ export function ArchiveTabBar({ value, onChange }: ArchiveTabBarProps) {
 
 	return (
 		<View
-			onLayout={onTrackLayout}
+			onLayout={(e) => setTrackWidth(e.nativeEvent.layout.width)}
 			className="w-full h-[44px] rounded-[22px] flex-row px-1 bg-bg-light"
 		>
 			<Animated.View
 				pointerEvents="none"
+				className="absolute top-1 bottom-1 rounded-[18px] bg-white"
 				style={[
 					{
-						position: 'absolute',
-						top: 4,
-						bottom: 4,
-						borderRadius: 18,
-						backgroundColor: '#FFFFFF',
 						shadowColor: colors.gray900,
 						shadowOpacity: 0.1,
 						shadowRadius: 8,

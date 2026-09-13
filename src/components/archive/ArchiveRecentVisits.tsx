@@ -2,9 +2,10 @@ import { Ionicons } from '@expo/vector-icons';
 import { Pressable, Text, View } from 'react-native';
 import { ImageFallback } from '@/src/components/common/ImageFallback';
 import { SectionTitle } from '@/src/components/common/SectionTitle';
-import { archiveTintForKey } from '@/src/components/archive/archivePalette';
+import { archiveTintForKey } from '@/src/constants/archivePalette';
 import { useVisitStore } from '@/src/store/visitStore';
 import { WEEKDAYS } from '@/src/constants/week';
+import { formatDate } from '@/src/utils/cultureExhibitionMapper';
 
 interface ArchiveRecentVisitsProps {
 	dateKeys: string[];
@@ -17,11 +18,9 @@ function formatDateLine(dateKey: string): {
 } {
 	const [y, m, d] = dateKey.split('-').map(Number);
 	const date = new Date(y, m - 1, d);
-	const today = new Date();
-	const todayKey = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
-	const yesterday = new Date(today);
-	yesterday.setDate(yesterday.getDate() - 1);
-	const yesterdayKey = `${yesterday.getFullYear()}-${String(yesterday.getMonth() + 1).padStart(2, '0')}-${String(yesterday.getDate()).padStart(2, '0')}`;
+	const todayKey = formatDate(new Date().toISOString());
+	const yesterday = new Date(new Date().setDate(new Date().getDate() - 1));
+	const yesterdayKey = formatDate(yesterday.toISOString());
 
 	if (dateKey === todayKey) return { primary: '오늘', secondary: `${y}년 ${m}월 ${d}일` };
 	if (dateKey === yesterdayKey) return { primary: '어제', secondary: `${y}년 ${m}월 ${d}일` };
@@ -73,6 +72,7 @@ export function ArchiveRecentVisits({ dateKeys, onSelectDate }: ArchiveRecentVis
 									style={{ width: 52, height: 52 }}
 									iconSize={22}
 									resizeMode="cover"
+									useImageProxy
 								/>
 							</View>
 
@@ -91,11 +91,11 @@ export function ArchiveRecentVisits({ dateKeys, onSelectDate }: ArchiveRecentVis
 								>
 									{title}
 								</Text>
-								{listenedCount > 0 ? (
+								{listenedCount > 0 && (
 									<Text className="text-[12px] mt-1 font-pretendard-regular text-gray700">
 										들은 작품 {listenedCount}개
 									</Text>
-								) : null}
+								)}
 							</View>
 
 							<Ionicons name="chevron-forward" size={18} color="#D6D3D1" />

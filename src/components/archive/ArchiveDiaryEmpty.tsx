@@ -18,9 +18,8 @@ export function ArchiveDiaryEmpty({ onExplore, onMap }: ArchiveDiaryEmptyProps) 
 				className="rounded-full py-3.5 items-center mb-3 mt-2 bg-secondary"
 				accessibilityRole="button"
 				accessibilityLabel="전시 둘러보기"
-				style={({ pressed }) => ({
-					opacity: pressed ? 0.9 : 1,
-				})}
+				style={({ pressed }) => ({ opacity: pressed ? 0.9 : 1 })}
+
 			>
 				<Text className="text-white text-[14px] font-pretendard-semibold">전시 둘러보기</Text>
 			</Pressable>

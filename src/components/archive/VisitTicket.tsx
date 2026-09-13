@@ -1,14 +1,14 @@
 import { useCallback, useMemo, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Pressable, ScrollView, Text, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
 	Easing,
 	interpolate,
-	runOnJS,
 	useAnimatedStyle,
 	useSharedValue,
 	withTiming,
 } from 'react-native-reanimated';
+import { scheduleOnRN } from 'react-native-worklets';
 import { ImageFallback } from '@/src/components/common/ImageFallback';
 import {
 	PERFORATION_HEIGHT,
@@ -42,6 +42,13 @@ interface VisitTicketProps {
 	listenedItems: ListenedItem[];
 	dateKey: string;
 	dateLabel: string;
+	/** 확정 큐에서 남긴 서명 — 앞면 관람 완료 도장 뒤에 표시 */
+	signatureSvg?: string;
+	/** 관람 시간 — 뒷면 스텁 아랫부분에 표시 */
+	visitedAt?: { start: string; end: string };
+	/** 해설 텍스트가 있는 작품만 재생 가능 */
+	playableTitles?: string[];
+	onPlayListened?: (item: ListenedItem) => void;
 }
 
 // 관람 기록 입장권. 앞면 탭 → 뒷면(프로그램). 뒷면은 관람 프로그램만 표시.
@@ -51,6 +58,10 @@ export function VisitTicket({
 	listenedItems,
 	dateKey,
 	dateLabel,
+	signatureSvg,
+	visitedAt,
+	playableTitles,
+	onPlayListened,
 }: VisitTicketProps) {
 	const [flipped, setFlipped] = useState(false);
 	const rotation = useSharedValue(0);
@@ -68,35 +79,42 @@ export function VisitTicket({
 		[applyFlipped, rotation],
 	);
 
-	const flipGesture = useMemo(
+	const flipPan = useMemo(
 		() =>
-			Gesture.Race(
-				Gesture.Pan()
-					.activeOffsetX([-14, 14])
-					.failOffsetY([-22, 22])
-					.onBegin(() => {
-						dragStartRotation.set(rotation.value)
-					})
-					.onUpdate((e) => {
-						const next = dragStartRotation.value - e.translationX / FLIP_DRAG_PX;
-						rotation.set(Math.min(1, Math.max(0, next)));
-					})
-					.onEnd((e) => {
-						const projected = rotation.value - e.velocityX / 2800;
-						const toBack = projected > 0.5;
-						rotation.set(withTiming(toBack ? 1 : 0, FLIP_TIMING));
-						runOnJS(applyFlipped)(toBack);
-					}),
-				Gesture.Tap()
-					.maxDuration(280)
-					.onEnd(() => {
-						const toBack = rotation.value <= 0.5;
-						rotation.set(withTiming(toBack ? 1 : 0, FLIP_TIMING));
-						runOnJS(applyFlipped)(toBack);
-					}),
-			),
+			Gesture.Pan()
+				.activeOffsetX([-14, 14])
+				.failOffsetY([-22, 22])
+				.onBegin(() => {
+					dragStartRotation.set(rotation.value);
+				})
+				.onUpdate((e) => {
+					const next = dragStartRotation.value - e.translationX / FLIP_DRAG_PX;
+					rotation.set(Math.min(1, Math.max(0, next)));
+				})
+				.onEnd((e) => {
+					const projected = rotation.value - e.velocityX / 2800;
+					const toBack = projected > 0.5;
+					rotation.set(withTiming(toBack ? 1 : 0, FLIP_TIMING));
+					scheduleOnRN(applyFlipped, toBack);
+				}),
 		[applyFlipped, dragStartRotation, rotation],
 	);
+
+	// 뒷면 프로그램 탭이 티켓 플립 탭과 같이 먹지 않게 — 앞면에서만 탭으로 뒤집는다.
+	const flipTap = useMemo(
+		() =>
+			Gesture.Tap()
+				.enabled(!flipped)
+				.maxDuration(280)
+				.onEnd(() => {
+					const toBack = rotation.value <= 0.5;
+					rotation.set(withTiming(toBack ? 1 : 0, FLIP_TIMING));
+					scheduleOnRN(applyFlipped, toBack);
+				}),
+		[applyFlipped, flipped, rotation],
+	);
+
+	const flipGesture = useMemo(() => Gesture.Race(flipPan, flipTap), [flipPan, flipTap]);
 
 	const frontStyle = useAnimatedStyle(() => ({
 		transform: [
@@ -132,7 +150,7 @@ export function VisitTicket({
 						pointerEvents={flipped ? 'none' : 'box-none'}
 						style={[cardShadow, frontStyle, ticketShellStyle, { zIndex: flipped ? 0 : 2 }]}
 					>
-						<View className="flex flex-col" style={{ height: TICKET_BODY_HEIGHT }}>
+						<View style={{ height: TICKET_BODY_HEIGHT }}>
 							<View className="flex-1 min-h-0 w-full">
 								<ImageFallback
 									heroImageUri={exhibition.heroImageUri}
@@ -140,6 +158,7 @@ export function VisitTicket({
 									className="h-full w-full bg-image-placeholder"
 									iconSize={100}
 									resizeMode="cover"
+									useImageProxy
 								/>
 							</View>
 
@@ -177,22 +196,25 @@ export function VisitTicket({
 							</View>
 						</View>
 
-						<VisitTicketFooter variant="front" bars={bars} ticketNo={ticketNo} />
+						<VisitTicketFooter
+							variant="front"
+							bars={bars}
+							ticketNo={ticketNo}
+							signatureSvg={signatureSvg}
+						/>
 					</Animated.View>
 
-					{/* 뒷면: 프로그램 + 나의 메모 (플립 시 입력 가능) */}
+					{/* 뒷면: 오늘의 프로그램 */}
 					<Animated.View
-						className="overflow-hidden rounded-3xl bg-white"
+						className={cn("overflow-hidden rounded-3xl bg-white absolute inset-0", flipped ? 'z-[2]' : 'z-0')}
 						pointerEvents={flipped ? 'box-none' : 'none'}
 						style={[
 							cardShadow,
 							backStyle,
-							StyleSheet.absoluteFill,
 							ticketShellStyle,
-							{ zIndex: flipped ? 2 : 0 },
 						]}
 					>
-						<View className="flex flex-col" style={{ height: TICKET_BODY_HEIGHT }}>
+						<View style={{ height: TICKET_BODY_HEIGHT }}>
 							<ScrollView
 								className="flex-1 min-h-0"
 								showsVerticalScrollIndicator={false}
@@ -204,11 +226,11 @@ export function VisitTicket({
 										<Text className="text-[15px] font-pretendard-semibold text-gray900">
 											오늘의 프로그램
 										</Text>
-										{listenedItems.length > 0 ? (
+										{listenedItems.length > 0 && (
 											<Text className="text-[12px] font-pretendard-regular text-gray500">
 												{listenedItems.length}작품
 											</Text>
-										) : null}
+										)}	
 									</View>
 									<Text className="text-[11px] mb-3 font-pretendard-medium text-gray500">
 										{dateLabel}
@@ -220,6 +242,12 @@ export function VisitTicket({
 												key={`${item.title}-${index}`}
 												index={index}
 												item={item}
+												blockGestures={[flipPan, flipTap]}
+												onPress={
+													onPlayListened && playableTitles?.includes(item.title)
+														? () => onPlayListened(item)
+														: undefined
+												}
 											/>
 										))
 									) : (
@@ -233,7 +261,12 @@ export function VisitTicket({
 							</ScrollView>
 						</View>
 
-						<VisitTicketFooter variant="back" bars={bars} ticketNo={ticketNo} />
+						<VisitTicketFooter
+							variant="back"
+							bars={bars}
+							ticketNo={ticketNo}
+							visitedAt={visitedAt}
+						/>
 					</Animated.View>
 				</View>
 			</GestureDetector>
