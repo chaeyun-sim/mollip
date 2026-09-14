@@ -1,9 +1,8 @@
-import { ActivityIndicator, Pressable, Text, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 import { cn } from '@/src/lib/cn';
-import { colors } from '@/src/constants/colors';
+import { Indicator } from '../common/Indicator';
 
 const APPLE_PILL_SHADOW = {
-	shadowColor: colors.gray900,
 	shadowOpacity: 0.06,
 	shadowRadius: 12,
 	shadowOffset: { width: 0, height: 4 },
@@ -35,6 +34,7 @@ export function SocialPill({ label, onPress, disabled, loading, variant, icon }:
 				isApple && 'bg-white border border-gray900/8',
 				isGhost && 'bg-white/38 border border-white/65',
 				disabled && !loading && 'opacity-[0.55]',
+				isApple && 'shadow-gray900',
 			)}
 			style={isApple ? APPLE_PILL_SHADOW : undefined}
 		>
@@ -44,7 +44,7 @@ export function SocialPill({ label, onPress, disabled, loading, variant, icon }:
 					style={pressed ? { opacity: 0.88, transform: [{ scale: 0.985 }] } : undefined}
 				>
 					{loading ? (
-						<ActivityIndicator color={isKakao ? '#191919' : colors.gray900} />
+						<Indicator color={isKakao ? '#191919' : 'gray900'} />
 					) : (
 						<>
 							{icon}

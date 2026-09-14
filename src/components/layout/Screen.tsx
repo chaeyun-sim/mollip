@@ -26,7 +26,7 @@ function Screen({
 	if (variant === 'dark' && highContrast) {
 		return (
 			<>
-				<StatusBar style="dark" />
+				<StatusBar style="light" />
 				<View className="flex-1 bg-white">
 					<SafeAreaView
 						edges={edges || ['top', 'left', 'right']}

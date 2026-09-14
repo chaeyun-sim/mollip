@@ -25,7 +25,6 @@ import { useMapStore } from '@/src/store/mapStore';
 import { distanceKm, formatDistance, latOffsetForPixels } from '@/src/utils/mapUtils';
 import type { RouteCoord } from '@/src/api/tmap';
 import { Screen } from '@/src/components/layout/Screen';
-import { colors } from '@/src/constants/colors';
 
 const MARKER_ZOOM = 14;
 const BACKGROUND_COLOR = '#F5F3EF';
@@ -428,7 +427,7 @@ export default function MapScreen() {
 		[currentCoord],
 	);
 
-	function renderTopChrome() {
+	const renderTopChrome = () => {
 		if (directionsStatus === 'idle') {
 			return (
 				<MapTopBar
@@ -480,10 +479,10 @@ export default function MapScreen() {
 				</Pressable>
 			</View>
 		);
-	}
+	};
 
 	return (
-		<Screen variant="dark" className="px-0" edges={[]}>
+		<Screen variant="warm" className="px-0" edges={[]}>
 			{/* 지도 */}
 			<NaverMapView
 				ref={mapRef}
@@ -586,7 +585,7 @@ export default function MapScreen() {
 					/>
 				) : isVenueSheetOpen ? (
 					<View className="flex-1 items-center justify-center py-12">
-						<ActivityIndicator color={colors.gray700} />
+						<ActivityIndicator className="text-gray700" />
 					</View>
 				) : null}
 			</BottomSheetModal>

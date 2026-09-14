@@ -6,6 +6,7 @@ import Animated, { FadeIn, FadeOut, LinearTransition } from 'react-native-reanim
 import { Screen } from '@/src/components/layout/Screen';
 import { SearchBar } from '@/src/components/common/SearchBar';
 import { DatePickerModal } from '@/src/components/common/DatePickerModal';
+import { Result } from '@/src/components/common/Result';
 import { SearchFilterBar } from '@/src/components/search/SearchFilterBar';
 import { ExcludeWordsModal } from '@/src/components/search/ExcludeWordsModal';
 import { ExhibitionResultCard } from '@/src/components/search/ExhibitionResultCard';
@@ -285,14 +286,13 @@ export default function SearchScreen() {
 						</View>
 					}
 					ListEmptyComponent={
-						<View className="items-center py-16 gap-2">
-							<Text className="text-gray700 text-[15px] font-pretendard-semibold">
-								조건에 맞는 전시가 없어요
-							</Text>
-							<Text className="text-gray500 text-[13px] font-pretendard-regular">
-								검색어나 필터를 조정해 보세요
-							</Text>
-						</View>
+						<Result
+							icon="search-outline"
+							iconSize={36}
+							title="조건에 맞는 전시가 없어요"
+							description={'검색어나 필터를 조정해 보세요'}
+							className="flex-none py-16"
+						/>
 					}
 				/>
 			)}

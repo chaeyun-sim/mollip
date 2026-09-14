@@ -194,8 +194,10 @@ export default function ChatScreen() {
 								<Ionicons name="chatbubble-ellipses-outline" size={28} className="text-gray700" />
 							</View>
 							<Text
-								className="text-base text-center font-pretendard-bold"
-								style={{ color: highContrast ? colors.gray900 : colors.onDark }}
+								className={cn(
+									'text-base text-center font-pretendard-bold',
+									highContrast ? 'text-gray900' : 'text-on-dark',
+								)}
 							>
 								{exhibitionTitle ? '전시가 궁금하신가요?' : '작품이 궁금하신가요?'}
 							</Text>

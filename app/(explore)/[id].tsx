@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useCallback, useEffect, useState, type ReactNode } from 'react';
-import { Pressable, ScrollView, Text, View } from 'react-native';
+import { ScrollView, Text, View } from 'react-native';
 import Animated, {
 	useAnimatedStyle,
 	useSharedValue,
@@ -26,6 +26,7 @@ import {
 	RelatedExhibitions,
 } from '@/src/components/explore';
 import { ExhibitionDetailSkeleton } from '@/src/components/layout/Loading';
+import { Result } from '@/src/components/common/Result';
 import { Screen } from '@/src/components/layout/Screen';
 import { useExhibitionData } from '@/src/hooks/useExhibitionData';
 import { useHeroAnimation } from '@/src/hooks/useHeroAnimation';
@@ -91,17 +92,13 @@ export default function ExhibitionDetailScreen() {
 
 	if (!exhibition) {
 		return (
-			<SafeAreaView className="flex-1 items-center justify-center bg-bg-light">
-				<Text className="text-gray-500 text-base font-pretendard-regular mb-4">
-					전시를 찾을 수 없어요
-				</Text>
-				<Pressable
-					onPress={() => router.back()}
-					accessibilityRole="button"
-					accessibilityLabel="돌아가기"
-				>
-					<Text className="text-gray-900 text-sm font-pretendard-medium">돌아가기</Text>
-				</Pressable>
+			<SafeAreaView className="flex-1 bg-bg-light">
+				<Result
+					icon="alert-circle-outline"
+					title="전시를 찾을 수 없어요"
+					actionLabel="돌아가기"
+					onAction={() => router.back()}
+				/>
 			</SafeAreaView>
 		);
 	}

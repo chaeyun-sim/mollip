@@ -1,7 +1,6 @@
 import * as Haptics from 'expo-haptics';
 import { Pressable, View } from 'react-native';
 import { ImageFallback } from '@/src/components/common/ImageFallback';
-import { colors } from '@/src/constants/colors';
 import type { ExhibitionSummary } from '@/src/hooks/useExploreScreenData';
 
 const AVATAR_SIZE = 56;
@@ -40,7 +39,7 @@ export function PopularExhibitionAvatar({ item, onPress }: PopularExhibitionAvat
 					iconSize={22}
 					resizeMode="cover"
 					useImageProxy
-					loadingIndicatorColor={colors.gray500}
+					loadingIndicatorColor="gray500"
 				/>
 			</View>
 		</Pressable>

@@ -1,6 +1,6 @@
 import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { useCallback, useMemo, useState } from 'react';
-import { ActivityIndicator, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import { ModeToggle } from './route-sheet/ModeToggle';
 import { RouteCandidateCard } from './route-sheet/RouteCandidateCard';
@@ -9,10 +9,10 @@ import { RouteTimeline } from './route-sheet/RouteTimeline';
 import { SortChips } from './route-sheet/SortChips';
 import { buildSummary, compareRoutes, type SortCriterion } from './route-sheet/utils';
 import { ExternalMapSheet, type ExternalMapTarget } from '@/src/components/map/ExternalMapSheet';
-import { colors } from '@/src/constants/colors';
 import type { RouteCoord, RouteResult } from '@/src/api/tmap';
 import type { DirectionsMode } from '@/src/hooks/useDirections';
 import type { AsyncStatus } from '@/src/types/asyncStatus.types';
+import { Indicator } from '../common/Indicator';
 
 interface RouteSheetProps {
 	mode: DirectionsMode;
@@ -85,7 +85,7 @@ export function RouteSheet({
 			<Animated.View key={`${mode}-${status}`} entering={FadeIn.duration(240)}>
 				{status === 'loading' && (
 					<View className="flex-row items-center gap-2 py-6">
-						<ActivityIndicator size="small" color={colors.gray900} />
+						<Indicator size="small" color="gray900" />
 						<Text className="text-black/50 text-[13px] font-pretendard-regular">경로 찾는 중…</Text>
 					</View>
 				)}

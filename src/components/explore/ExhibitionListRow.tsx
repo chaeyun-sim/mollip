@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { ImageFallback } from '@/src/components/common/ImageFallback';
 import type { RecommendableItem } from '@/src/components/explore/RecommendableItem.types';
-import { colors } from '@/src/constants/colors';
 import { cn } from '@/src/lib/cn';
 
 const ROW_HEIGHT = 100;
@@ -58,7 +57,7 @@ export function ExhibitionListRow({
 						iconSize={28}
 						resizeMode="cover"
 						useImageProxy
-						loadingIndicatorColor={colors.gray500}
+						loadingIndicatorColor="gray500"
 					/>
 				)}
 				<View className="flex-1" style={{ height: ROW_HEIGHT }}>

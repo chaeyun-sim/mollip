@@ -1,10 +1,8 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Modal, Pressable, Text, View } from 'react-native';
 import { useCallback } from 'react';
-
 import type { RouteCoord } from '@/src/api/tmap';
 import { EXTERNAL_MAP_APPS, openExternalMap } from '@/src/utils/externalMaps';
-import { colors } from '@/src/constants/colors';
 
 export interface ExternalMapTarget {
 	coord: RouteCoord;
@@ -51,7 +49,7 @@ export function ExternalMapSheet({ target, onClose }: ExternalMapSheetProps) {
 							accessibilityLabel={app.label}
 						>
 							<View className="w-9 h-9 rounded-full items-center justify-center bg-black/[0.045]">
-								<Ionicons name="map-outline" size={17} color={colors.gray900} />
+								<Ionicons name="map-outline" size={17} className="text-gray900" />
 							</View>
 							<Text className="text-[15px] font-pretendard-medium text-gray900">{app.label}</Text>
 						</Pressable>

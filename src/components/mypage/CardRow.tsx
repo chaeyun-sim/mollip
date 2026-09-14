@@ -1,22 +1,35 @@
 import type { ReactNode } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { Pressable, Text, View } from 'react-native';
+
 import { cn } from '@/src/lib/cn';
 
 export interface CardRowProps {
 	label: string;
+	description?: string;
 	value?: string;
 	onPress?: () => void;
 	children?: ReactNode;
 	className?: string;
 }
 
-export function CardRow({ label, value, onPress, children, className }: CardRowProps) {
-	const rowClassName = cn('flex-row items-center justify-between h-14', className);
+export function CardRow({ label, description, value, onPress, children, className }: CardRowProps) {
+	const rowClassName = cn(
+		'flex-row items-center justify-between',
+		description ? 'py-3' : 'h-14',
+		className,
+	);
 
 	const content = (
 		<>
-			<Text className="font-pretendard-semibold text-gray900 py-1 text-[16px]">{label}</Text>
+			<View className="flex-1 pr-3">
+				<Text className="font-pretendard-semibold text-gray900 text-[16px]">{label}</Text>
+				{description && (
+					<Text className="font-pretendard-regular text-gray500 text-[12px] mt-0.5 leading-[18px]">
+						{description}
+					</Text>
+				)}
+			</View>
 			{children ?? (
 				<View className="flex-row items-center gap-1">
 					{value && (
@@ -34,7 +47,7 @@ export function CardRow({ label, value, onPress, children, className }: CardRowP
 				onPress={onPress}
 				className={rowClassName}
 				accessibilityRole="button"
-				accessibilityLabel={label}
+				accessibilityLabel={description ? `${label}. ${description}` : label}
 				style={({ pressed }) => (pressed ? { opacity: 0.5 } : undefined)}
 			>
 				{content}

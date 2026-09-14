@@ -11,7 +11,6 @@ import {
 	View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-
 import { LoginRequiredPressable } from '@/src/components/auth/LoginRequiredPressable';
 import { SectionTitle } from '@/src/components/common/SectionTitle';
 import { FeaturedExhibitionHero } from '@/src/components/explore';
@@ -21,7 +20,6 @@ import { KcisaSection } from '@/src/components/explore/KcisaSection';
 import { PopularExhibitionAvatar } from '@/src/components/explore/PopularExhibitionAvatar';
 import { Screen } from '@/src/components/layout/Screen';
 import { ScreenHeader } from '@/src/components/layout/ScreenHeader';
-import { colors } from '@/src/constants/colors';
 import { useExploreScreenData, type ExhibitionSummary } from '@/src/hooks/useExploreScreenData';
 import { FEATURED_TAGLINES, useFeaturedTrio } from '@/src/hooks/useFeaturedTrio';
 import { usePopularExhibitions } from '@/src/hooks/usePopularExhibitions';
@@ -59,6 +57,11 @@ export default function ExploreScreen() {
 		[popularItems, featuredTrioIds],
 	);
 
+	const resolveKcisaCarousel = (): ExhibitionSummary[] => {
+		if (kcisaCarousel.length > 0) return kcisaCarousel;
+		if (featured?.source === 'kcisa') return [];
+		return kcisaItems;
+	};
 	const carousel = resolveKcisaCarousel();
 	const name = useAuthStore((s) => s.user?.user_metadata?.full_name);
 
@@ -81,12 +84,6 @@ export default function ExploreScreen() {
 		return () => clearInterval(timer);
 	}, [featuredTrio.length, cardWidth]);
 
-	function resolveKcisaCarousel(): ExhibitionSummary[] {
-		if (kcisaCarousel.length > 0) return kcisaCarousel;
-		if (featured?.source === 'kcisa') return [];
-		return kcisaItems;
-	}
-
 	return (
 		<Screen variant="warm" className="px-0">
 			<ScreenHeader className="items-end pb-3 px-6 bg-bg-light">
@@ -94,16 +91,27 @@ export default function ExploreScreen() {
 					<ScreenHeader.Logo />
 				</ScreenHeader.Left>
 				<ScreenHeader.Right className="-mr-12">
-					<Pressable
-						// onPress={() => router.push('/settings')}
-						onPress={() => router.push('/onboarding')}
-						hitSlop={8}
-						accessibilityRole="button"
-						accessibilityLabel="마이페이지"
-						style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
-					>
-						<Ionicons name="person-outline" size={24} className="text-gray900" />
-					</Pressable>
+					<View className="flex-row items-center gap-4">
+						<LoginRequiredPressable
+							onPress={() => router.push('/bookmark')}
+							hitSlop={8}
+							accessibilityRole="button"
+							accessibilityLabel="북마크"
+							style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
+							returnTo="/bookmark"
+						>
+							<Ionicons name="bookmark-outline" size={24} className="text-gray900" />
+						</LoginRequiredPressable>
+						<Pressable
+							onPress={() => router.push('/settings')}
+							hitSlop={8}
+							accessibilityRole="button"
+							accessibilityLabel="마이페이지"
+							style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
+						>
+							<Ionicons name="person-outline" size={24} className="text-gray900" />
+						</Pressable>
+					</View>
 				</ScreenHeader.Right>
 			</ScreenHeader>
 			<ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-10 gap-7 pt-4">
@@ -190,18 +198,17 @@ export default function ExploreScreen() {
 
 			{/* FAB 영역 */}
 			<View
-				className="absolute right-6 items-end gap-3"
+				className="absolute right-6 items-end gap-3 shadow-gray900 elevation-lg"
 				style={{
 					bottom: Math.max(insets.bottom, 16),
-					shadowColor: colors.gray900,
 					shadowOpacity: 0.28,
 					shadowRadius: 14,
 					shadowOffset: { width: 0, height: 6 },
-					elevation: 8,
 				}}
 			>
 				<LoginRequiredPressable
 					onPress={() => router.push('/(guide)/create-description')}
+					returnTo="/(guide)/create-description"
 					accessibilityRole="button"
 					accessibilityLabel="작품 해설 만들기"
 					accessibilityHint="카메라로 작품을 촬영하거나 직접 입력하여 AI 해설을 받을 수 있어요"

@@ -2,7 +2,6 @@ import { Pressable, Text, View } from 'react-native';
 import { ImageFallback } from '@/src/components/common/ImageFallback';
 import { StatusBadge } from '@/src/components/explore/StatusBadge';
 import type { KcisaExhibitionItem } from '@/src/hooks/useKcisaExhibitions';
-import { colors } from '@/src/constants/colors';
 
 const CARD_HEIGHT = Math.round((140 * 4) / 3);
 
@@ -22,10 +21,9 @@ export function KcisaExhibitionCard({ item, onPress, index }: KcisaExhibitionCar
 			style={({ pressed }) => ({ opacity: pressed ? 0.88 : 1 })}
 		>
 			<View
-				className="rounded-[8px] overflow-hidden w-[140px]"
+				className="rounded-[8px] overflow-hidden w-[140px] shadow-gray900"
 				style={{
 					height: CARD_HEIGHT,
-					shadowColor: colors.gray900,
 					shadowOpacity: 0.1,
 					shadowRadius: 10,
 					shadowOffset: { width: 0, height: 4 },

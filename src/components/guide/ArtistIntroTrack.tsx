@@ -1,9 +1,9 @@
 import { useEffect, useRef } from 'react';
-import { AccessibilityInfo, ActivityIndicator, Pressable, Text, View } from 'react-native';
+import { AccessibilityInfo, Pressable, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { ImageFallback } from '@/src/components/common/ImageFallback';
-import { colors } from '@/src/constants/colors';
 import { cn } from '@/src/lib/cn';
+import { Indicator } from '../common/Indicator';
 
 export type ArtistIntroTrackStatus = 'loading' | 'ready' | 'failed';
 
@@ -48,7 +48,7 @@ export function ArtistIntroTrack({ artist, imageUrl, status, onPress }: ArtistIn
 	// 세 상태 모두 26×26 슬롯을 유지해 전환 시 레이아웃 시프트가 없다.
 	function renderControl() {
 		if (isLoading) {
-			return <ActivityIndicator size="small" color={colors.gray500} />;
+			return <Indicator size="small" color="gray500" />;
 		}
 
 		return (

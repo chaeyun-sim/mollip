@@ -12,6 +12,7 @@ import {
 	Text,
 	View,
 } from 'react-native';
+import { Divider } from '@/src/components/common/Divider';
 import { cn } from '@/src/lib/cn';
 import type { Message } from '@/src/store/chatStore';
 import { getEffectiveFontSize, useSettingsStore } from '@/src/store/settingsStore';
@@ -179,7 +180,7 @@ export function ChatMessage({ item, onRetry }: ChatMessageProps) {
 							{ label: '선택 복사', onPress: handleSelectCopy },
 						].map((action, i) => (
 							<View key={action.label}>
-								{i > 0 && <View className="bg-black/8 mx-5 h-hairline" />}
+								{i > 0 && <Divider tone="subtle" className="mx-5 bg-black/8" />}
 								<Pressable
 									onPress={action.onPress}
 									className="px-6 py-5"

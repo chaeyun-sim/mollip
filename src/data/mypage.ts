@@ -21,18 +21,3 @@ export const DESCRIPTION_LENGTH_OPTIONS: { value: DescriptionLength; label: stri
 	{ value: 1.5, label: '길게' },
 	{ value: 2, label: '아주 길게' },
 ];
-
-export const SCRAP_TILES = [
-	{
-		key: 'exhibitions',
-		label: '관심 있는 전시',
-		icon: 'bookmark-outline' as const,
-		route: '/settings/bookmark/exhibition' as const,
-	},
-	{
-		key: 'audio',
-		label: '다시 듣고 싶은 오디오',
-		icon: 'headset-outline' as const,
-		route: '/settings/bookmark/audio' as const,
-	},
-] as const;

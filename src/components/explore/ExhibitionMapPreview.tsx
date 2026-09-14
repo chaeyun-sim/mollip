@@ -2,10 +2,10 @@ import { NaverMapMarkerOverlay, NaverMapView } from '@mj-studio/react-native-nav
 import * as Haptics from 'expo-haptics';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { ActivityIndicator, Pressable, Text, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useMapStore } from '@/src/store/mapStore';
-import { colors } from '@/src/constants/colors';
+import { Indicator } from '../common/Indicator';
 
 interface ExhibitionMapPreviewProps {
 	coordinates: { latitude: number; longitude: number };
@@ -77,11 +77,7 @@ export function ExhibitionMapPreview({ coordinates, venueName }: ExhibitionMapPr
 					}}
 				>
 					{isNavigating ? (
-						<ActivityIndicator
-							size="small"
-							color={colors.gray900}
-							style={{ width: 12, height: 12 }}
-						/>
+						<Indicator size="small" color="gray900" style={{ width: 12, height: 12 }} />
 					) : (
 						<Ionicons name="map-outline" size={12} className="text-gray900" />
 					)}

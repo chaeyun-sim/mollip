@@ -1,20 +1,13 @@
-import { useCallback, useRef } from 'react';
+import { useCallback } from 'react';
 import { useRouter } from 'expo-router';
-import {
-	ActivityIndicator,
-	FlatList,
-	Pressable,
-	Text,
-	View,
-	useWindowDimensions,
-} from 'react-native';
+import { ActivityIndicator, FlatList, Text, View, useWindowDimensions } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-
+import { ListFooter } from '@/src/components/common/ListFooter';
+import { Result } from '@/src/components/common/Result';
 import { ExhibitionListRow } from '@/src/components/explore/ExhibitionListRow';
 import type { RecommendableItem } from '@/src/components/explore/RecommendableItem.types';
-import { useAllExhibitions } from '@/src/hooks/useAllExhibitions';
 import { Screen } from '@/src/components/layout/Screen';
-import { colors } from '@/src/constants/colors';
+import { useAllExhibitions } from '@/src/hooks/useAllExhibitions';
 
 const HORIZONTAL_PADDING = 24;
 const ROW_GAP = 16;
@@ -23,7 +16,6 @@ export default function ExhibitionsScreen() {
 	const router = useRouter();
 	const insets = useSafeAreaInsets();
 	const { width: windowWidth } = useWindowDimensions();
-	const endReachedCalledRef = useRef(false);
 
 	const { items, status, isLoadingMore, hasMore, loadMore, refetch } = useAllExhibitions();
 
@@ -36,16 +28,6 @@ export default function ExhibitionsScreen() {
 		},
 		[router],
 	);
-
-	const handleEndReached = useCallback(() => {
-		if (endReachedCalledRef.current) return;
-		endReachedCalledRef.current = true;
-		loadMore();
-	}, [loadMore]);
-
-	const handleScrollBeginDrag = useCallback(() => {
-		endReachedCalledRef.current = false;
-	}, []);
 
 	const renderItem = useCallback(
 		({ item, index }: { item: RecommendableItem; index: number }) => (
@@ -61,7 +43,7 @@ export default function ExhibitionsScreen() {
 
 	function renderFooterContent() {
 		if (isLoadingMore) {
-			return <ActivityIndicator color={colors.gray700} />;
+			return <ListFooter loading accessibilityLabel="전시 목록을 더 불러오는 중" />;
 		}
 
 		if (!hasMore) {
@@ -72,7 +54,7 @@ export default function ExhibitionsScreen() {
 			);
 		}
 
-		return null;
+		return <ListFooter onPress={loadMore} accessibilityLabel="전시 목록 더 보기" />;
 	}
 
 	const renderFooter = useCallback(() => {
@@ -90,26 +72,21 @@ export default function ExhibitionsScreen() {
 		if (status === 'loading') {
 			return (
 				<View className="flex-1 items-center justify-center py-24">
-					<ActivityIndicator color={colors.gray500} />
+					<ActivityIndicator className="text-gray500" />
 				</View>
 			);
 		}
 
 		if (status === 'error') {
 			return (
-				<View className="flex-1 items-center justify-center gap-2 py-24">
-					<Text className="text-gray500 text-[13px] font-pretendard-regular">
-						전시 정보를 불러오지 못했어요
-					</Text>
-					<Pressable
-						onPress={refetch}
-						accessibilityLabel="다시 불러오기"
-						accessibilityRole="button"
-						hitSlop={8}
-					>
-						<Text className="text-gray900 text-[13px] font-pretendard-semibold">다시 시도</Text>
-					</Pressable>
-				</View>
+				<Result
+					icon="cloud-offline-outline"
+					tone="danger"
+					title="전시 정보를 불러오지 못했어요"
+					actionLabel="다시 시도"
+					onAction={refetch}
+					className="py-24"
+				/>
 			);
 		}
 
@@ -133,9 +110,6 @@ export default function ExhibitionsScreen() {
 				}}
 				ListEmptyComponent={renderEmpty}
 				ListFooterComponent={renderFooter}
-				onEndReached={handleEndReached}
-				onEndReachedThreshold={0.8}
-				onScrollBeginDrag={handleScrollBeginDrag}
 				onRefresh={refetch}
 				refreshing={status === 'loading' && items.length === 0}
 				showsVerticalScrollIndicator={false}

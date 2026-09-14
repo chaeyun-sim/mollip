@@ -8,6 +8,7 @@ import { Screen } from '../../src/components/layout/Screen';
 import { ScreenHeader } from '../../src/components/layout/ScreenHeader';
 import { IconButton } from '@/src/components/common/IconButton';
 import { ImageFallback } from '@/src/components/common/ImageFallback';
+import { Result } from '@/src/components/common/Result';
 import { ArtistIntroTrack } from '@/src/components/guide/ArtistIntroTrack';
 import { updateStore } from '../../src/store';
 import { useArtistIntroStore } from '../../src/store/artistIntroStore';
@@ -180,12 +181,12 @@ export default function PlaylistScreen() {
 				<Text className="mb-4 font-pretendard-semibold text-on-dark text-[15px]">재생목록</Text>
 				{renderArtistIntroTrack()}
 				{playlist.length === 0 ? (
-					<View className="flex-1 items-center justify-center gap-3 mb-20">
-						<Ionicons name="musical-notes-outline" size={40} className="text-gray700" />
-						<Text className="font-pretendard-regular text-gray700 text-[15px]">
-							아직 들은 작품이 없어요
-						</Text>
-					</View>
+					<Result
+						icon="musical-notes-outline"
+						title="아직 들은 작품이 없어요"
+						dark
+						className="mb-20"
+					/>
 				) : (
 					<>
 						{[...playlist].reverse().map((item, index) => (

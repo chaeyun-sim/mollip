@@ -290,11 +290,11 @@ export default function RouteScreen() {
 		setNearbyExhibitions([]);
 	};
 
-	function renderWaypointLabel(index: number, total: number) {
+	const renderWaypointLabel = (index: number, total: number) => {
 		if (index === 0) return '출발';
 		if (index === total - 1) return '도착';
 		return `경유 ${index}`;
-	}
+	};
 
 	return (
 		<View className="flex-1">

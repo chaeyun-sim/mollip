@@ -8,6 +8,7 @@ import {
 	View,
 	type LayoutChangeEvent,
 } from 'react-native';
+import { Divider } from '@/src/components/common/Divider';
 import { TextField } from '@/src/components/common/TextField';
 import { useRecentLocations } from '@/src/hooks/useRecentLocations';
 import { cn } from '@/src/lib/cn';
@@ -209,7 +210,7 @@ export const RoutePlanningBar = memo(function RoutePlanningBar({
 						</Text>
 					</Pressable>
 
-					<View className="h-px bg-black/[0.06] my-1.5 ml-5" />
+					<Divider tone="subtle" className="my-1.5 ml-5" />
 
 					<Pressable
 						onPress={() => openEditor('destination')}

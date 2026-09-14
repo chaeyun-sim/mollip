@@ -1,9 +1,8 @@
 import type { ReactNode } from 'react';
-import { ActivityIndicator, Pressable, ScrollView, Text, View } from 'react-native';
-
-import { colors } from '@/src/constants/colors';
+import { Pressable, ScrollView, Text, View } from 'react-native';
 import { cn } from '@/src/lib/cn';
 import { AsyncStatus } from '@/src/types/asyncStatus.types';
+import { Indicator } from '../common/Indicator';
 
 export interface HorizontalSectionProps<T> {
 	items: T[];
@@ -28,7 +27,7 @@ export function HorizontalSection<T>({
 	if (items.length === 0 && status === 'loading') {
 		return (
 			<View className="items-center justify-center py-8">
-				<ActivityIndicator color={colors.gray500} />
+				<Indicator color="gray500" />
 			</View>
 		);
 	}

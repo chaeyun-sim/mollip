@@ -27,6 +27,7 @@ import { getEffectiveFontSize, useSettingsStore } from '../../src/store/settings
 import { formatTime } from '../../src/utils/text';
 import { ScreenHeader } from '../../src/components/layout/ScreenHeader';
 import { IconButton } from '@/src/components/common/IconButton';
+import { Result } from '@/src/components/common/Result';
 import { cn } from '@/src/lib/cn';
 import { useHistoryStore } from '@/src/store/historyStore';
 import { useBookmarkAudioStore } from '@/src/store/bookmarkAudioStore';
@@ -213,14 +214,16 @@ export default function DescriptionScreen() {
 
 			<ScrollView ref={scrollRef} className="flex-1" contentContainerClassName="pb-[150px] pt-3">
 				{hasError ? (
-					<View className="items-center mt-16 gap-3">
-						<Ionicons name="alert-circle-outline" size={40} className="text-gray600" />
-						<Text className="text-gray600 text-[15px]">
-							{retryCount >= MAX_DESCRIPTION_RETRIES
+					<Result
+						icon="alert-circle-outline"
+						tone="danger"
+						title={
+							retryCount >= MAX_DESCRIPTION_RETRIES
 								? '잠시 후 다시 시도해 주세요'
-								: '해설 생성에 실패했어요'}
-						</Text>
-					</View>
+								: '해설 생성에 실패했어요'
+						}
+						className="flex-none mt-16"
+					/>
 				) : isStreaming && displayed === '' ? (
 					<View className="flex-row items-center mt-5 gap-2.5">
 						<ActivityIndicator color="#60A5FA" />

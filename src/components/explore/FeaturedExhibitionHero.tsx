@@ -1,7 +1,6 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import * as Haptics from 'expo-haptics';
 import { ImageBackground, Pressable, Text, View } from 'react-native';
-import { colors } from '@/src/constants/colors';
 import { STATUS_LABELS, type ExhibitionStatus } from '@/src/utils/exhibitionSearch';
 
 export interface FeaturedExhibitionProps {
@@ -36,13 +35,11 @@ export function FeaturedExhibitionHero({
 			style={({ pressed }) => ({ opacity: pressed ? 0.94 : 1 })}
 		>
 			<View
-				className="rounded-2xl overflow-hidden w-full"
+				className="rounded-2xl overflow-hidden w-full shadow-gray900 elevation-md"
 				style={{
-					shadowColor: colors.gray900,
 					shadowOpacity: 0.16,
 					shadowRadius: 18,
 					shadowOffset: { width: 0, height: 8 },
-					elevation: 6,
 				}}
 			>
 				<ImageBackground
