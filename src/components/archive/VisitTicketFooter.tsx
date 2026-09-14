@@ -79,7 +79,7 @@ export function VisitTicketFooter({
 					<View className="relative items-center justify-center">
 						{visitedAt && (
 							<Text className="text-center text-[11px] text-gray500 font-pretendard-medium">
-								{formatClockTime(visitedAt.start)} – {formatClockTime(visitedAt.end)} 관람
+								{formatClockTime(visitedAt.start)} - {formatClockTime(visitedAt.end)} 관람
 							</Text>
 						)}
 					</View>

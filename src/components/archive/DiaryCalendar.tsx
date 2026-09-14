@@ -1,8 +1,7 @@
 import { cn } from '@/src/lib/cn';
 import { Ionicons } from '@expo/vector-icons';
 import { useMemo } from 'react';
-import { Pressable, Text, View, type ImageSourcePropType } from 'react-native';
-import { DiaryStampCell } from '@/src/components/archive/DiaryStampCell';
+import { Image, Pressable, Text, View, type ImageSourcePropType } from 'react-native';
 import { WEEKDAYS } from '@/src/constants/week';
 
 /** 캘린더 셀 날짜 키 — visitStore의 dateKey(YYYY-MM-DD, todayKey())와 동일 포맷으로 맞춘다 */
@@ -38,8 +37,8 @@ export function DiaryCalendar({
 	onSelectDate,
 	onChangeMonth,
 }: DiaryCalendarProps) {
-	const today = new Date().toISOString().slice(0, 10);
 	const now = new Date();
+	const today = now.toISOString().slice(0, 10);
 	const isCurrentMonth = year === now.getFullYear() && month === now.getMonth() + 1;
 
 	const weeks = useMemo(() => {
@@ -66,14 +65,10 @@ export function DiaryCalendar({
 	);
 
 	return (
-		<View className="w-full px-1 pt-2 pb-4">
-			{/* 헤더 — 큰 월 숫자 + 연도 + 이전/다음 달 */}
+		<View className="w-full px-1 pb-4">
 			<View className="flex-row items-start justify-between">
 				<View className="flex-row items-end gap-2">
-					<Text
-						className="font-hahmlet-bold text-gray900 tracking-[-1px]"
-						style={{ fontSize: 56, lineHeight: 58 }}
-					>
+					<Text className="font-hahmlet-bold text-gray900 tracking-[-1px] text-[56px] leading-tight">
 						{String(month).padStart(2, '0')}
 					</Text>
 					<Text className="pb-1.5 text-[13px] text-gray500 font-pretendard-medium">{year}</Text>
@@ -161,7 +156,28 @@ export function DiaryCalendar({
 
 								{(hasImage || hasColor) && (
 									<View className="w-full flex-1 mt-1">
-										<DiaryStampCell source={dayImage?.source} color={dayImage?.color} />
+										<View
+											className="w-full h-full rounded-[2px] bg-white border border-dashed border-gray300 p-[3px]"
+											style={{
+												shadowColor: '#1C1917',
+												shadowOpacity: 0.18,
+												shadowRadius: 3,
+												shadowOffset: { width: 0, height: 2 },
+											}}
+										>
+											{dayImage?.source ? (
+												<Image
+													source={dayImage.source}
+													resizeMode="cover"
+													className="flex-1 rounded-[1px]"
+												/>
+											) : (
+												<View
+													className="flex-1 rounded-[1px]"
+													style={{ backgroundColor: dayImage?.color }}
+												/>
+											)}
+										</View>
 									</View>
 								)}
 							</Pressable>

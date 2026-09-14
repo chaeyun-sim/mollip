@@ -1,14 +1,14 @@
 import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
-import { ActivityIndicator, Pressable, Text, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import BottomSheet, { BottomSheetBackdrop, BottomSheetScrollView } from '@gorhom/bottom-sheet';
-
 import { ImageFallback } from '@/src/components/common/ImageFallback';
 import { colors } from '@/src/constants/colors';
 import { useTTS } from '@/src/hooks/useTTS';
 import { useHistoryStore, type HistoryItem } from '@/src/store/historyStore';
 import { proxiedImageUrl } from '@/src/utils/imageProxy';
 import { fetchWikidataImage } from '@/src/utils/wikidataImage';
+import { Indicator } from '../common/Indicator';
 
 export interface DiaryGuidePlayerHandle {
 	expand: () => void;
@@ -24,10 +24,11 @@ interface DiaryGuidePlayerProps {
 export const DiaryGuidePlayer = forwardRef<DiaryGuidePlayerHandle, DiaryGuidePlayerProps>(
 	function DiaryGuidePlayer({ item, onClose }, ref) {
 		const sheetRef = useRef<BottomSheet>(null);
-		const { isSpeaking, isLoading, speak, pause, stop } = useTTS();
-		const updateHistory = useHistoryStore((s) => s.update);
 		const [wikiImageUrl, setWikiImageUrl] = useState<string | null>(null);
 		const [wikiImageLoading, setWikiImageLoading] = useState(false);
+
+		const { isSpeaking, isLoading, speak, pause, stop } = useTTS();
+		const updateHistory = useHistoryStore((s) => s.update);
 
 		useEffect(() => {
 			setWikiImageUrl(item?.imageUrl ?? null);
@@ -38,7 +39,7 @@ export const DiaryGuidePlayer = forwardRef<DiaryGuidePlayerHandle, DiaryGuidePla
 
 			let cancelled = false;
 			setWikiImageLoading(true);
-			void fetchWikidataImage(item.title, item.artist, item.text)
+			fetchWikidataImage(item.title, item.artist, item.text)
 				.then((url) => {
 					if (cancelled) return;
 					if (url) {
@@ -74,7 +75,7 @@ export const DiaryGuidePlayer = forwardRef<DiaryGuidePlayerHandle, DiaryGuidePla
 				pause();
 				return;
 			}
-			void speak(item.text);
+			speak(item.text);
 		}, [item, isSpeaking, pause, speak]);
 
 		return (
@@ -118,14 +119,15 @@ export const DiaryGuidePlayer = forwardRef<DiaryGuidePlayerHandle, DiaryGuidePla
 									accessibilityLabel={isSpeaking ? '일시정지' : '해설 듣기'}
 									accessibilityRole="button"
 									style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
+									disabled={isLoading}
 								>
 									{isLoading ? (
-										<ActivityIndicator size="small" color={colors.primary} />
+										<Indicator size="small" color="primary" />
 									) : (
 										<Ionicons
 											name={isSpeaking ? 'pause-circle' : 'play-circle'}
 											size={28}
-											color={colors.primary}
+											className="text-primary"
 										/>
 									)}
 								</Pressable>
@@ -135,8 +137,9 @@ export const DiaryGuidePlayer = forwardRef<DiaryGuidePlayerHandle, DiaryGuidePla
 									accessibilityLabel="닫기"
 									accessibilityRole="button"
 									style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
+									disabled={isLoading}
 								>
-									<Ionicons name="close" size={22} color={colors.gray600} />
+									<Ionicons name="close" size={22} className="text-gray600" />
 								</Pressable>
 							</View>
 						</View>
@@ -144,20 +147,21 @@ export const DiaryGuidePlayer = forwardRef<DiaryGuidePlayerHandle, DiaryGuidePla
 						<Text className="text-on-dark font-pretendard-medium leading-[28px] text-[15px]">
 							{item.text}
 						</Text>
-						{wikiImageLoading ? (
+						{wikiImageLoading && (
 							<View className="mt-6 h-[220px] items-center justify-center">
-								<ActivityIndicator color={colors.primary} />
+								<Indicator color="primary" />
 							</View>
-						) : wikiImageUrl ? (
+						)}
+						{!wikiImageLoading && wikiImageUrl && (
 							<ImageFallback
 								heroImageUri={proxiedImageUrl(wikiImageUrl) ?? wikiImageUrl}
 								useImageProxy
 								resizeMode="contain"
 								className="mt-6 w-full h-[220px] rounded-lg bg-gray800"
-								loadingIndicatorColor={colors.primary}
+								loadingIndicatorColor="primary"
 								accessibilityLabel={`${item.title} 작품 이미지`}
 							/>
-						) : null}
+						)}
 					</BottomSheetScrollView>
 				)}
 			</BottomSheet>

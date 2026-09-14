@@ -6,7 +6,6 @@ import Animated, {
 	useSharedValue,
 	withTiming,
 } from 'react-native-reanimated';
-
 import {
 	EssayInputSection,
 	type EssayInputMode,
@@ -15,7 +14,6 @@ import {
 import { Perforation } from '@/src/components/archive/VisitTicketFooter';
 import { SignaturePad, type SignaturePadHandle } from '@/src/components/archive/SignaturePad';
 import { StarRating } from '@/src/components/archive/StarRating';
-import { VisitStamp } from '@/src/components/archive/VisitStamp';
 import type { EssayStage } from '@/src/hooks/useEssayStream';
 import { formatClockTime } from '@/src/utils/formatDate';
 
@@ -232,7 +230,13 @@ export const ReceiptSummary = forwardRef<ReceiptSummaryHandle, ReceiptSummaryPro
 									style={[{ position: 'absolute', bottom: -15, right: 0 }, stampStyle]}
 									pointerEvents="none"
 								>
-									<VisitStamp />
+									<View className="items-center justify-center rounded-full w-[78px] h-[78px] rotate-[-14deg] opacity-85 border-orange-700 border-[2.5px]">
+										<View className="items-center justify-center rounded-full w-[66px] h-[66px] border-orange-700 border">
+											<Text className="text-[13px] font-hahmlet-bold text-orange-700">
+												관람 완료
+											</Text>
+										</View>
+									</View>
 								</Animated.View>
 							)}
 							{hasStrokes && !stamped && (

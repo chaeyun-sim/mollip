@@ -1,10 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Pressable, View } from 'react-native';
 
-import { colors } from '@/src/constants/colors';
-
-const STAR_VALUES = [1, 2, 3, 4, 5] as const;
-
 interface StarRatingProps {
 	value: number;
 	onChange: (value: number) => void;
@@ -22,8 +18,10 @@ export function StarRating({
 	disabled,
 	tone = 'light',
 }: StarRatingProps) {
-	const filled = tone === 'dark' ? colors.primary : colors.primaryDark;
-	const empty = tone === 'dark' ? 'rgba(255,255,255,0.28)' : colors.gray400;
+	const STAR_VALUES = [1, 2, 3, 4, 5] as const;
+
+	const filled = tone === 'dark' ? 'text-primary' : 'text-primary-dark';
+	const empty = tone === 'dark' ? 'text-white/28' : 'text-gray400';
 
 	return (
 		<View className="flex-row gap-2">
@@ -41,7 +39,7 @@ export function StarRating({
 					<Ionicons
 						name={n <= value ? 'star' : 'star-outline'}
 						size={size}
-						color={n <= value ? filled : empty}
+						className={n <= value ? filled : empty}
 					/>
 				</Pressable>
 			))}

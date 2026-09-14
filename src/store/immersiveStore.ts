@@ -1,4 +1,3 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
@@ -6,6 +5,7 @@ import { useArtistIntroStore } from './artistIntroStore';
 import { useChatStore } from './chatStore';
 import { useHistoryStore } from './historyStore';
 import { makeVisitKey, todayKey, useVisitStore } from './visitStore';
+import { createAuthAwareStorage } from '../utils/authAwareStorage';
 
 export interface PlaylistItem {
 	id: string;
@@ -106,9 +106,17 @@ export const useImmersiveStore = create<ImmersiveStore>()(
 		}),
 		{
 			name: 'immersive-store',
-			storage: createJSONStorage(() => AsyncStorage),
-			onRehydrateStorage: () => (state) => {
-				state?.setHasHydrated(true);
+			storage: createJSONStorage(createAuthAwareStorage),
+			partialize: (state) => ({
+				isImmersiveMode: state.isImmersiveMode,
+				exhibitionId: state.exhibitionId,
+				exhibitionTitle: state.exhibitionTitle,
+				enteredAt: state.enteredAt,
+				chatSessionId: state.chatSessionId,
+			}),
+			onRehydrateStorage: () => (state, error) => {
+				if (error) console.warn('[immersive] rehydrate failed:', error);
+				useImmersiveStore.getState().setHasHydrated(true);
 			},
 		},
 	),

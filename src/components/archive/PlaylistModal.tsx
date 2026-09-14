@@ -34,7 +34,7 @@ export function PlaylistModal({ visible, titles, onClose }: PlaylistModalProps) 
 					</View>
 					<View className="flex-row items-center justify-between">
 						<View className="flex-row items-center gap-2">
-							<Ionicons name="musical-notes-outline" size={17} color="#111827" />
+							<Ionicons name="musical-notes-outline" size={17} className="text-gray900" />
 							<Text className="text-gray-900 text-[17px] font-pretendard-semibold">
 								오디오 관람 목록
 							</Text>

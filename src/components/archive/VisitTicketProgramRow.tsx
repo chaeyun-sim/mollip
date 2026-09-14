@@ -3,8 +3,6 @@ import { Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Gesture, GestureDetector, type GestureType } from 'react-native-gesture-handler';
 import { scheduleOnRN } from 'react-native-worklets';
-
-import { colors } from '@/src/constants/colors';
 import type { ListenedItem } from '@/src/store/visitStore';
 
 interface VisitTicketProgramRowProps {
@@ -45,7 +43,7 @@ export function VisitTicketProgramRow({
 			>
 				{item.title}
 			</Text>
-			{onPress && <Ionicons name="play-circle-outline" size={22} color={colors.gray700} />}
+			{onPress && <Ionicons name="play-circle-outline" size={22} className="text-gray700" />}
 		</>
 	);
 

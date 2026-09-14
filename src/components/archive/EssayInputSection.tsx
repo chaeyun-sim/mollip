@@ -1,19 +1,11 @@
 import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
-import {
-	ActivityIndicator,
-	type LayoutChangeEvent,
-	Pressable,
-	Text,
-	TextInput,
-	View,
-} from 'react-native';
+import { type LayoutChangeEvent, Pressable, Text, TextInput, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-
 import { Chip } from '@/src/components/common/Chip';
 import { TextField } from '@/src/components/common/TextField';
-import { colors } from '@/src/constants/colors';
 import { MAX_ESSAY_GENERATES, type EssayStage } from '@/src/hooks/useEssayStream';
 import { cn } from '@/src/lib/cn';
+import { Indicator } from '../common/Indicator';
 
 const ESSAY_INPUT_MIN_HEIGHT = 72;
 const ESSAY_LINE_HEIGHT = 22;
@@ -91,45 +83,13 @@ export const EssayInputSection = forwardRef<EssayInputSectionHandle, EssayInputS
 			onEssayNext();
 		}
 
-		function renderModeToggle() {
-			if (stamped) return null;
-
-			return (
-				<View className="flex-row gap-1.5">
-					<View
-						className={cn(writeDisabled && 'opacity-40')}
-						pointerEvents={writeDisabled ? 'none' : 'auto'}
-					>
-						<Chip
-							label="직접 쓰기"
-							active={essayInputMode === 'write'}
-							onPress={handleWriteMode}
-							accessibilityLabel="직접 쓰기"
-						/>
-					</View>
-					<View
-						className={cn(generateDisabled && 'opacity-40')}
-						pointerEvents={generateDisabled ? 'none' : 'auto'}
-					>
-						<Chip
-							label="생성하기"
-							active={essayInputMode === 'generate'}
-							onPress={handleGenerate}
-							accessibilityLabel="생성하기"
-						/>
-					</View>
-				</View>
-			);
-		}
-
 		function renderStatus() {
-			if (stamped) return null;
-			if (isStreaming) return null;
+			if (stamped || isStreaming) return null;
 
 			if (isError) {
 				return (
 					<View className="flex-row items-center gap-1.5 mt-2">
-						<Ionicons name="warning-outline" size={14} color={colors.error} />
+						<Ionicons name="warning-outline" size={14} className="text-error" />
 						<Text className="flex-1 text-[11px] font-pretendard-regular text-gray700">
 							감상 생성에 실패했어요
 						</Text>
@@ -137,12 +97,12 @@ export const EssayInputSection = forwardRef<EssayInputSectionHandle, EssayInputS
 				);
 			}
 
-			const helperText = generateExhausted
-				? '오늘은 더 생성할 수 없어요'
-				: `${remainingGenerates}회 더 생성할 수 있어요`;
-
 			return (
-				<Text className="mt-2 text-[11px] font-pretendard-regular text-gray500">{helperText}</Text>
+				<Text className="mt-2 text-[11px] font-pretendard-regular text-gray500">
+					{generateExhausted
+						? '오늘은 더 생성할 수 없어요'
+						: `${remainingGenerates}회 더 생성할 수 있어요`}
+				</Text>
 			);
 		}
 
@@ -154,32 +114,39 @@ export const EssayInputSection = forwardRef<EssayInputSectionHandle, EssayInputS
 			setInputHeight((prev) => (prev === next ? prev : next));
 		}
 
-		function renderNextButton() {
-			if (stamped || !showNext) return null;
-
-			return (
-				<Pressable
-					onPress={handleNext}
-					disabled={nextDisabled}
-					accessibilityRole="button"
-					accessibilityLabel="다음"
-					accessibilityState={{ disabled: nextDisabled }}
-					className="rounded-2xl items-center py-3 px-6 mt-3 self-end bg-primary-dark"
-					style={({ pressed }) => ({ opacity: nextDisabled ? 0.4 : pressed ? 0.9 : 1 })}
-				>
-					<Text className="text-white text-[14px] font-pretendard-semibold">다음</Text>
-				</Pressable>
-			);
-		}
-
 		return (
 			<View className="border-t border-dashed border-gray300 mt-3 pt-4">
 				<View className="flex-row items-center justify-between flex-wrap gap-2 mb-1.5">
 					<View className="flex-row items-center gap-1.5">
 						<Text className="text-[13px] text-gray600 font-pretendard-medium">감상평</Text>
-						{isStreaming && <ActivityIndicator size="small" color={colors.primaryDark} />}
+						{isStreaming && <Indicator size="small" color="primaryDark" />}
 					</View>
-					{renderModeToggle()}
+					{!stamped && (
+						<View className="flex-row gap-1.5">
+							<View
+								className={cn(writeDisabled && 'opacity-40')}
+								pointerEvents={writeDisabled ? 'none' : 'auto'}
+							>
+								<Chip
+									label="직접 쓰기"
+									active={essayInputMode === 'write'}
+									onPress={handleWriteMode}
+									accessibilityLabel="직접 쓰기"
+								/>
+							</View>
+							<View
+								className={cn(generateDisabled && 'opacity-40')}
+								pointerEvents={generateDisabled ? 'none' : 'auto'}
+							>
+								<Chip
+									label="생성하기"
+									active={essayInputMode === 'generate'}
+									onPress={handleGenerate}
+									accessibilityLabel="생성하기"
+								/>
+							</View>
+						</View>
+					)}
 				</View>
 				<View
 					className={cn(
@@ -207,7 +174,7 @@ export const EssayInputSection = forwardRef<EssayInputSectionHandle, EssayInputS
 						onChangeText={onEssayTextChange}
 						onFocus={onEssayFocus}
 						onSubmitEditing={handleNext}
-						blurOnSubmit
+						submitBehavior="blurAndSubmit"
 						returnKeyType="next"
 						editable={editable}
 						multiline
@@ -226,7 +193,19 @@ export const EssayInputSection = forwardRef<EssayInputSectionHandle, EssayInputS
 					/>
 				</View>
 				{renderStatus()}
-				{renderNextButton()}
+				{!stamped && showNext && (
+					<Pressable
+						onPress={handleNext}
+						disabled={nextDisabled}
+						accessibilityRole="button"
+						accessibilityLabel="다음"
+						accessibilityState={{ disabled: nextDisabled }}
+						className="rounded-2xl items-center py-3 px-6 mt-3 self-end bg-primary-dark"
+						style={({ pressed }) => ({ opacity: nextDisabled ? 0.4 : pressed ? 0.9 : 1 })}
+					>
+						<Text className="text-white text-[14px] font-pretendard-semibold">다음</Text>
+					</Pressable>
+				)}
 			</View>
 		);
 	},

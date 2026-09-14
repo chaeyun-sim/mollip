@@ -3,10 +3,9 @@ import { BottomSheetBackdrop, BottomSheetModal } from '@gorhom/bottom-sheet';
 import { useRouter } from 'expo-router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Pressable, ScrollView, Text, View } from 'react-native';
-import { ArchiveDiaryEmpty } from '@/src/components/archive/ArchiveDiaryEmpty';
 import { DiaryCalendar } from '@/src/components/archive/DiaryCalendar';
-import { PendingVisitsBanner } from '@/src/components/archive/PendingVisitsBanner';
 import { VisitPickerSheet, type VisitPickerEntry } from '@/src/components/archive/VisitPickerSheet';
+import { LoginRequiredPressable } from '@/src/components/auth/LoginRequiredPressable';
 import { Screen } from '@/src/components/layout/Screen';
 import { useDayImages } from '@/src/hooks/useDayImages';
 import { useExhibitionPosterUrls } from '@/src/hooks/useExhibitionPosterUrls';
@@ -15,17 +14,24 @@ import { dateKeyOf, useVisitStore } from '@/src/store/visitStore';
 import { ARCHIVE_STAT_ACCENTS } from '@/src/constants/archivePalette';
 import { colors } from '@/src/constants/colors';
 import { WEEKDAYS } from '@/src/constants/week';
-import { LoginRequiredPressable } from '@/src/components/auth/LoginRequiredPressable';
 import { cn } from '@/src/lib/cn';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function DiaryScreen() {
 	const router = useRouter();
 	const session = useAuthStore((s) => s.session);
 	const authLoading = useAuthStore((s) => s.isLoading);
 
-	const today = new Date();
-	const [cal, setCal] = useState({ year: today.getFullYear(), month: today.getMonth() + 1 });
-	const { year: calYear, month: calMonth } = cal;
+	const insets = useSafeAreaInsets();
+
+	// 하루에 전시를 여러 개 봤을 때 고를 바텀시트 상태 — dateKey가 세팅되면 present()
+	const pickerSheetRef = useRef<BottomSheetModal>(null);
+	const [pickerDateKey, setPickerDateKey] = useState<string | null>(null);
+
+	const [{ calYear, calMonth }, setCal] = useState({
+		calYear: new Date().getFullYear(),
+		calMonth: new Date().getMonth() + 1,
+	});
 
 	const visits = useVisitStore((s) => s.visits);
 	// visits 키는 "날짜::전시" 복합 키 — 확정된 기록 개수는 날짜 수가 아니라 방문 수다
@@ -47,12 +53,9 @@ export default function DiaryScreen() {
 		const entries = confirmedKeys.map((k) => [k, visits[k]] as const);
 		return Object.fromEntries(entries);
 	}, [confirmedKeys, visits]);
+
 	const dayImages = useDayImages(confirmedVisits);
 	const exhibitionPosterUrls = useExhibitionPosterUrls(confirmedVisits);
-
-	// 하루에 전시를 여러 개 봤을 때 고를 바텀시트 상태 — dateKey가 세팅되면 present()
-	const pickerSheetRef = useRef<BottomSheetModal>(null);
-	const [pickerDateKey, setPickerDateKey] = useState<string | null>(null);
 
 	const pickerEntries = useMemo((): VisitPickerEntry[] => {
 		if (!pickerDateKey) return [];
@@ -62,8 +65,8 @@ export default function DiaryScreen() {
 				visitKey,
 				visit,
 				imageUrl:
-					exhibitionPosterUrls[visitKey] ??
 					visit.thumbnail ??
+					exhibitionPosterUrls[visitKey] ??
 					visit.listened.find((l) => l.imageUrl)?.imageUrl,
 			}));
 	}, [confirmedVisits, pickerDateKey, exhibitionPosterUrls]);
@@ -81,17 +84,17 @@ export default function DiaryScreen() {
 
 	const handleChangeMonth = useCallback((offset: -1 | 1) => {
 		setCal((prev) => {
-			let month = prev.month + offset;
-			let year = prev.year;
-			if (month > 12) {
-				month = 1;
-				year += 1;
+			let calMonth = prev.calMonth + offset;
+			let calYear = prev.calYear;
+			if (calMonth > 12) {
+				calMonth = 1;
+				calYear += 1;
 			}
-			if (month < 1) {
-				month = 12;
-				year -= 1;
+			if (calMonth < 1) {
+				calMonth = 12;
+				calYear -= 1;
 			}
-			return { year, month };
+			return { calYear, calMonth };
 		});
 	}, []);
 
@@ -143,7 +146,7 @@ export default function DiaryScreen() {
 						style={({ pressed }) => ({
 							opacity: pressed ? 0.9 : 1,
 						})}
-						onPress={() => router.push('/auth/login')}
+						onPress={() => router.push('/(tabs)/diary')}
 						returnTo="/(tabs)/diary"
 					>
 						<Text className="text-white text-[15px] font-pretendard-semibold">로그인하기</Text>
@@ -170,35 +173,70 @@ export default function DiaryScreen() {
 				</Screen.Header.Right>
 			</Screen.Header>
 
+			<Text className="font-pretendard-regular text-gray600 text-[14px] leading-[21px] mb-5">
+				{`오디오 가이드로 전시를 관람하거나\n티켓을 인증하면 다이어리에 기록이 생겨요`}
+			</Text>
+
+			{pendingCount > 0 && (
+				<Pressable
+					onPress={() => router.push('/diary/confirm-visits')}
+					accessibilityRole="button"
+					accessibilityLabel={`미확정 관람 기록 ${pendingCount}개, 확인하러 가기`}
+					style={({ pressed }) => ({ opacity: pressed ? 0.85 : 1 })}
+					className="flex-row items-center rounded-2xl border-[1px] border-dashed border-gray300 bg-bg-tonal px-4 mt-4 py-3.5 mb-5 min-h-[56px]"
+				>
+					<View className="w-9 h-9 rounded-full items-center justify-center bg-white mr-3">
+						<Ionicons name="receipt-outline" size={18} className="text-gray700" />
+					</View>
+					<View className="flex-1">
+						<Text className="font-pretendard-semibold text-[13.5px] text-gray900">
+							최근 기록하지 못한 관람이 {pendingCount}개 있어요
+						</Text>
+						<Text className="mt-0.5 font-pretendard-regular text-[11.5px] text-gray600">
+							7일이 지나면 사라져요 · 지금 확인하기
+						</Text>
+					</View>
+					<Ionicons name="chevron-forward" size={16} className="text-gray500" />
+				</Pressable>
+			)}
+
 			<ScrollView
 				showsVerticalScrollIndicator={false}
 				bounces={false}
-				contentContainerClassName="pb-12 items-stretch"
+				contentContainerClassName="pb-28 items-stretch"
 			>
-				{pendingCount > 0 && (
-					<PendingVisitsBanner
-						count={pendingCount}
-						onPress={() => router.push('/diary/confirm-visits')}
+				<View className={cn('px-2', pendingCount > 0 ? 'mt-4' : 'mt-2')}>
+					<DiaryCalendar
+						year={calYear}
+						month={calMonth}
+						markedDates={markedDates}
+						dayImages={dayImages}
+						onSelectDate={handleSelectDate}
+						onChangeMonth={handleChangeMonth}
 					/>
-				)}
-				{confirmedKeys.length > 0 ? (
-					<View className={cn('px-2', pendingCount > 0 ? 'mt-4' : 'mt-5')}>
-						<DiaryCalendar
-							year={calYear}
-							month={calMonth}
-							markedDates={markedDates}
-							dayImages={dayImages}
-							onSelectDate={handleSelectDate}
-							onChangeMonth={handleChangeMonth}
-						/>
-					</View>
-				) : (
-					<ArchiveDiaryEmpty
-						onExplore={() => router.push('/(tabs)/')}
-						onMap={() => router.push('/(tabs)/map')}
-					/>
-				)}
+				</View>
 			</ScrollView>
+
+			<View
+				className="absolute right-6 items-end gap-3 shadow-gray900 elevation-lg"
+				style={{
+					bottom: Math.max(insets.bottom, 16),
+					shadowOpacity: 0.28,
+					shadowRadius: 14,
+					shadowOffset: { width: 0, height: 6 },
+				}}
+			>
+				<Pressable
+					onPress={() => router.push('/diary/verify-ticket')}
+					accessibilityRole="button"
+					accessibilityLabel="티켓 인증"
+					accessibilityHint="관람 티켓을 찍어 다이어리에 기록을 남겨요"
+					className="h-[58px] w-[58px] items-center justify-center rounded-full bg-secondary"
+					style={({ pressed }) => ({ opacity: pressed ? 0.88 : 1 })}
+				>
+					<Ionicons name="ticket" size={26} className="text-bg-tonal" />
+				</Pressable>
+			</View>
 
 			{/* 하루에 전시를 여러 개 봤을 때 캘린더 우표를 탭하면 뜨는 티켓 선택 시트 */}
 			<BottomSheetModal

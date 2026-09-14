@@ -1,9 +1,15 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { create } from 'zustand';
-import { createJSONStorage, persist } from 'zustand/middleware';
 import { useAuthStore } from './authStore';
 import { migrateEssayIntoMemo } from '../utils/migrateEssayIntoMemo';
+import {
+	deleteLocalVisit,
+	loadAllLocalVisits,
+	migrateVisitsFromAsyncStorage,
+	persistAllLocalVisits,
+	upsertLocalVisit,
+} from '../utils/localVisitDb';
 import { supabase } from '../utils/supabase';
+import { deleteManagedVisitPhotos, persistLocalVisitPhoto } from '../utils/visitPhotoFiles';
 
 export interface ListenedItem {
 	title: string;
@@ -12,25 +18,37 @@ export interface ListenedItem {
 	descriptionPreview?: string;
 }
 
+/** 로컬 달력 기준 날짜 키(YYYY-MM-DD) — UTC 자정 밀림을 피한다 */
+export const dateKeyFrom = (date: Date): string => {
+	const year = date.getFullYear();
+	const month = String(date.getMonth() + 1).padStart(2, '0');
+	const day = String(date.getDate()).padStart(2, '0');
+	return `${year}-${month}-${day}`;
+};
+
 /** 관람 기록 오늘 날짜 키(YYYY-MM-DD) — visitStore 소비처 공용 */
-export function todayKey(): string {
-	return new Date().toISOString().slice(0, 10);
-}
+export const todayKey = (): string => {
+	return dateKeyFrom(new Date());
+};
 
 /**
  * visits의 키 = "날짜::전시식별자" — 하루에 전시를 여러 개 봐도 서로 안 겹치게 한다.
  * 같은 전시(id 같음, 또는 id 없이 같은 제목)를 같은 날 또 들으면 같은 키로 합쳐진다.
  * exhibitionId가 있으면 id로, 검색 없이 직접 입력한 경우(id 없음)는 제목으로 식별한다.
  */
-export function makeVisitKey(dateKey: string, exhibitionId: string | null, title?: string): string {
+export const makeVisitKey = (
+	dateKey: string,
+	exhibitionId: string | null,
+	title?: string,
+): string => {
 	const idPart = exhibitionId ? `id:${exhibitionId}` : title ? `t:${title}` : 'manual';
 	return `${dateKey}::${idPart}`;
-}
+};
 
 /** visits 키에서 날짜 부분만 뽑아낸다 — 캘린더/그룹핑용 */
-export function dateKeyOf(visitKey: string): string {
+export const dateKeyOf = (visitKey: string): string => {
 	return visitKey.split('::')[0];
-}
+};
 
 // 관람 기록 한 건: 어떤 전시를 언제 관람했는지 + 들은 해설 목록 + 사용자 메모
 export interface DayVisit {
@@ -38,6 +56,8 @@ export interface DayVisit {
 	exhibitionTitle?: string;
 	venue?: string;
 	thumbnail?: string;
+	/** 티켓 인증 때 올린 전시장·현장 사진 */
+	venuePhotos?: string[];
 	listened: ListenedItem[];
 	/** 사용자가 직접 적는 관람 메모 (티켓 뒷면) */
 	memo?: string;
@@ -65,13 +85,18 @@ export interface DayVisit {
 	essay?: string;
 }
 
+/** 티켓 인증으로 남긴 관람 — 직접 올린 티켓 사진이 있으면 몰입 기록과 구분한다 */
+export const isTicketVisit = (visit: DayVisit): boolean => {
+	return Boolean(visit.thumbnail) || (visit.venuePhotos?.length ?? 0) > 0;
+};
+
 interface VisitStore {
 	// "날짜::전시식별자" 키별 관람 기록 (makeVisitKey 참고)
 	visits: Record<string, DayVisit>;
 	recordExhibition: (
 		dateKey: string,
 		exhibitionId: string | null,
-		meta?: { title?: string; venue?: string; thumbnail?: string },
+		meta?: { title?: string; venue?: string; thumbnail?: string; venuePhotos?: string[] },
 	) => void;
 	recordListened: (
 		dateKey: string,
@@ -98,228 +123,239 @@ interface VisitStore {
 	_migrateEssayToMemo: () => void;
 	/** 로그인 후 원격 visits로 로컬 상태를 교체 */
 	loadFromRemote: (visits: Record<string, DayVisit>) => void;
+	/** 게스트 SQLite에서 관람 기록을 읽어 메모리에 올린다 */
+	hydrateFromLocalDb: () => Promise<void>;
 }
 
 const PENDING_EXPIRY_MS = 7 * 24 * 60 * 60 * 1000;
 
-export const useVisitStore = create<VisitStore>()(
-	persist(
-		(set, get) => ({
-			visits: {},
-			recordExhibition: (dateKey, exhibitionId, meta) => {
-				const key = makeVisitKey(dateKey, exhibitionId, meta?.title);
-				set((state) => {
-					const prev = state.visits[key];
-					return {
-						visits: {
-							...state.visits,
-							[key]: {
-								...prev,
-								exhibitionId,
-								exhibitionTitle: meta?.title ?? prev?.exhibitionTitle,
-								venue: meta?.venue ?? prev?.venue,
-								thumbnail: meta?.thumbnail ?? prev?.thumbnail,
-								listened: prev?.listened ?? [],
-								// 완전히 새 기록일 때만 in_progress로 시작 — 이어듣기(같은 키)면 기존 상태 유지
-								status: prev?.status ?? 'in_progress',
-							},
-						},
-					};
-				});
+const persistVisit = (key: string, visit: DayVisit | undefined): void => {
+	if (!visit) return;
+	upsertLocalVisit(key, visit, Boolean(useAuthStore.getState().session));
+};
 
-				if (!exhibitionId) return;
-
-				const userId = useAuthStore.getState().user?.id;
-				if (userId) {
-					// Supabase `visits`는 아직 (user_id, date) 단일 행 전제라 하루 중 마지막 전시만
-					// 원격에 반영된다 — 로컬은 makeVisitKey로 여러 개를 보존하지만 원격 동기화는
-					// 스키마 마이그레이션 전까지 이 한계가 남는다(01-spec.md Risks 참고).
-					supabase
-						.from('visits')
-						.upsert({
-							user_id: userId,
-							date: dateKey,
-							exhibition_id: Number(exhibitionId) || null,
-							exhibition_title: meta?.title ?? null,
-							venue: meta?.venue ?? null,
-						})
-						.then(({ error }) => {
-							if (error) console.warn('[visit] upsert failed:', error.message);
-						});
-				}
-			},
-			recordListened: (dateKey, exhibitionId, title, item) => {
-				const key = makeVisitKey(dateKey, exhibitionId, title);
-				set((state) => {
-					const prev = state.visits[key] ?? { exhibitionId, exhibitionTitle: title, listened: [] };
-					// 같은 제목은 하루에 한 번만 기록
-					if (prev.listened.some((l) => l.title === item.title)) return state;
-					return {
-						visits: {
-							...state.visits,
-							[key]: { ...prev, listened: [...prev.listened, item] },
-						},
-					};
-				});
-			},
-			setVisitMemo: (visitKey, memo) => {
-				set((state) => {
-					const prev = state.visits[visitKey] ?? { exhibitionId: null, listened: [] };
-					return {
-						visits: {
-							...state.visits,
-							[visitKey]: { ...prev, memo },
-						},
-					};
-				});
-
-				const userId = useAuthStore.getState().user?.id;
-				if (userId) {
-					supabase
-						.from('visits')
-						.upsert({ user_id: userId, date: dateKeyOf(visitKey), memo })
-						.then(({ error }) => {
-							if (error) console.warn('[visit] memo upsert failed:', error.message);
-						});
-				}
-			},
-			setVisitRating: (visitKey, rating) => {
-				set((state) => {
-					const prev = state.visits[visitKey] ?? { exhibitionId: null, listened: [] };
-					return {
-						visits: {
-							...state.visits,
-							[visitKey]: { ...prev, rating },
-						},
-					};
-				});
-			},
-			deleteVisit: async (visitKey) => {
-				set((state) => {
-					const next = { ...state.visits };
-					delete next[visitKey];
-					return { visits: next };
-				});
-
-				const userId = useAuthStore.getState().user?.id;
-				if (userId) {
-					const { error } = await supabase
-						.from('visits')
-						.delete()
-						.eq('user_id', userId)
-						.eq('date', dateKeyOf(visitKey));
-					if (error) console.warn('[visit] delete failed:', error.message);
-				}
-			},
-			markPending: (visitKey, meta) => {
-				set((state) => {
-					const prev = state.visits[visitKey];
-					if (!prev || prev.status === 'confirmed') return state;
-					return {
-						visits: {
-							...state.visits,
-							[visitKey]: {
-								...prev,
-								status: 'pending',
-								pendingSince: new Date().toISOString(),
-								visitedAt: meta,
-							},
-						},
-					};
-				});
-
-				// Supabase `visits` 테이블에 status/visit_started_at/visit_ended_at 컬럼이 아직 없음
-				// (01-spec.md Risks 참고) — 마이그레이션 전까지 로컬 저장만 수행
-			},
-			confirmVisit: (visitKey, meta) => {
-				set((state) => {
-					const prev = state.visits[visitKey];
-					if (!prev) return state;
-					const next = {
+export const useVisitStore = create<VisitStore>()((set, get) => ({
+	visits: {},
+	recordExhibition: (dateKey, exhibitionId, meta) => {
+		const key = makeVisitKey(dateKey, exhibitionId, meta?.title);
+		const thumbnail = meta?.thumbnail
+			? (persistLocalVisitPhoto(meta.thumbnail) ?? undefined)
+			: undefined;
+		const venuePhotos = meta?.venuePhotos
+			?.map((uri) => persistLocalVisitPhoto(uri))
+			.filter((uri): uri is string => Boolean(uri));
+		set((state) => {
+			const prev = state.visits[key];
+			return {
+				visits: {
+					...state.visits,
+					[key]: {
 						...prev,
-						status: 'confirmed' as const,
-						signatureSvg: meta.signatureSvg,
-						rating: meta.rating ?? prev.rating,
-						memo: meta.memo !== undefined ? meta.memo : prev.memo,
-					};
-					delete next.essay;
-					delete next.pendingSince;
-					return { visits: { ...state.visits, [visitKey]: next } };
-				});
+						exhibitionId,
+						exhibitionTitle: meta?.title ?? prev?.exhibitionTitle,
+						venue: meta?.venue ?? prev?.venue,
+						thumbnail: thumbnail ?? prev?.thumbnail,
+						venuePhotos: venuePhotos ?? prev?.venuePhotos,
+						listened: prev?.listened ?? [],
+						// 완전히 새 기록일 때만 in_progress로 시작 — 이어듣기(같은 키)면 기존 상태 유지
+						status: prev?.status ?? 'in_progress',
+					},
+				},
+			};
+		});
 
-				// 위와 동일한 이유로 원격 동기화는 마이그레이션 이후로 보류
-				const memo = meta.memo;
-				if (memo) {
-					const userId = useAuthStore.getState().user?.id;
-					if (userId) {
-						supabase
-							.from('visits')
-							.upsert({ user_id: userId, date: dateKeyOf(visitKey), memo })
-							.then(({ error }) => {
-								if (error) console.warn('[visit] memo upsert failed:', error.message);
-							});
-					}
+		const userId = useAuthStore.getState().user?.id;
+		if (userId) {
+			// Supabase `visits`는 아직 (user_id, date) 단일 행 전제라 하루 중 마지막 전시만
+			// 원격에 반영된다 — 로컬은 makeVisitKey로 여러 개를 보존하지만 원격 동기화는
+			// 스키마 마이그레이션 전까지 이 한계가 남는다(01-spec.md Risks 참고).
+			supabase
+				.from('visits')
+				.upsert({
+					user_id: userId,
+					date: dateKey,
+					exhibition_id: exhibitionId ? Number(exhibitionId) || null : null,
+					exhibition_title: meta?.title ?? null,
+					venue: meta?.venue ?? null,
+					...(meta?.thumbnail ? { ticket_photo_url: meta.thumbnail } : {}),
+					...(meta?.venuePhotos ? { venue_photo_urls: meta.venuePhotos } : {}),
+				})
+				.then(({ error }) => {
+					if (error) console.warn('[visit] upsert failed:', error.message);
+				});
+		}
+		persistVisit(key, get().visits[key]);
+	},
+	recordListened: (dateKey, exhibitionId, title, item) => {
+		const key = makeVisitKey(dateKey, exhibitionId, title);
+		set((state) => {
+			const prev = state.visits[key] ?? { exhibitionId, exhibitionTitle: title, listened: [] };
+			// 같은 제목은 하루에 한 번만 기록
+			if (prev.listened.some((l) => l.title === item.title)) return state;
+			return {
+				visits: {
+					...state.visits,
+					[key]: { ...prev, listened: [...prev.listened, item] },
+				},
+			};
+		});
+		persistVisit(key, get().visits[key]);
+	},
+	setVisitMemo: (visitKey, memo) => {
+		set((state) => {
+			const prev = state.visits[visitKey] ?? { exhibitionId: null, listened: [] };
+			return {
+				visits: {
+					...state.visits,
+					[visitKey]: { ...prev, memo },
+				},
+			};
+		});
+
+		const userId = useAuthStore.getState().user?.id;
+		if (userId) {
+			supabase
+				.from('visits')
+				.upsert({ user_id: userId, date: dateKeyOf(visitKey), memo })
+				.then(({ error }) => {
+					if (error) console.warn('[visit] memo upsert failed:', error.message);
+				});
+		}
+		persistVisit(visitKey, get().visits[visitKey]);
+	},
+	setVisitRating: (visitKey, rating) => {
+		set((state) => {
+			const prev = state.visits[visitKey] ?? { exhibitionId: null, listened: [] };
+			return {
+				visits: {
+					...state.visits,
+					[visitKey]: { ...prev, rating },
+				},
+			};
+		});
+		persistVisit(visitKey, get().visits[visitKey]);
+	},
+	deleteVisit: async (visitKey) => {
+		deleteManagedVisitPhotos(get().visits[visitKey]);
+		deleteLocalVisit(visitKey);
+		set((state) => {
+			const next = { ...state.visits };
+			delete next[visitKey];
+			return { visits: next };
+		});
+
+		const userId = useAuthStore.getState().user?.id;
+		if (userId) {
+			const { error } = await supabase
+				.from('visits')
+				.delete()
+				.eq('user_id', userId)
+				.eq('date', dateKeyOf(visitKey));
+			if (error) console.warn('[visit] delete failed:', error.message);
+		}
+	},
+	markPending: (visitKey, meta) => {
+		set((state) => {
+			const prev = state.visits[visitKey];
+			if (!prev || prev.status === 'confirmed') return state;
+			return {
+				visits: {
+					...state.visits,
+					[visitKey]: {
+						...prev,
+						status: 'pending',
+						pendingSince: new Date().toISOString(),
+						visitedAt: meta,
+					},
+				},
+			};
+		});
+		persistVisit(visitKey, get().visits[visitKey]);
+
+		// Supabase `visits` 테이블에 status/visit_started_at/visit_ended_at 컬럼이 아직 없음
+		// (01-spec.md Risks 참고) — 마이그레이션 전까지 로컬 저장만 수행
+	},
+	confirmVisit: (visitKey, meta) => {
+		set((state) => {
+			const prev = state.visits[visitKey];
+			if (!prev) return state;
+			const next = {
+				...prev,
+				status: 'confirmed' as const,
+				signatureSvg: meta.signatureSvg,
+				rating: meta.rating ?? prev.rating,
+				memo: meta.memo !== undefined ? meta.memo : prev.memo,
+			};
+			delete next.essay;
+			delete next.pendingSince;
+			return { visits: { ...state.visits, [visitKey]: next } };
+		});
+
+		// 위와 동일한 이유로 원격 동기화는 마이그레이션 이후로 보류
+		const memo = meta.memo;
+		if (memo) {
+			const userId = useAuthStore.getState().user?.id;
+			if (userId) {
+				supabase
+					.from('visits')
+					.upsert({ user_id: userId, date: dateKeyOf(visitKey), memo })
+					.then(({ error }) => {
+						if (error) console.warn('[visit] memo upsert failed:', error.message);
+					});
+			}
+		}
+		persistVisit(visitKey, get().visits[visitKey]);
+	},
+	pruneExpiredPending: async () => {
+		const now = Date.now();
+		const expiredKeys = Object.entries(get().visits)
+			.filter(
+				([, v]) =>
+					v.status === 'pending' &&
+					v.pendingSince &&
+					now - new Date(v.pendingSince).getTime() > PENDING_EXPIRY_MS,
+			)
+			.map(([k]) => k);
+		await Promise.all(expiredKeys.map((k) => get().deleteVisit(k)));
+	},
+	_migrateLegacyStatus: () => {
+		set((state) => {
+			let changed = false;
+			const next = { ...state.visits };
+			for (const [k, v] of Object.entries(next)) {
+				// exhibitionTitle 유무로 판단 — exhibitionId는 검색 제안을 선택했을 때만
+				// 채워지므로, 직접 입력한 레거시 기록(exhibitionId: null)도 놓치지 않는다.
+				if (v.exhibitionTitle && !v.status) {
+					next[k] = { ...v, status: 'confirmed' };
+					changed = true;
 				}
-			},
-			pruneExpiredPending: async () => {
-				const now = Date.now();
-				const expiredKeys = Object.entries(get().visits)
-					.filter(
-						([, v]) =>
-							v.status === 'pending' &&
-							v.pendingSince &&
-							now - new Date(v.pendingSince).getTime() > PENDING_EXPIRY_MS,
-					)
-					.map(([k]) => k);
-				await Promise.all(expiredKeys.map((k) => get().deleteVisit(k)));
-			},
-			_migrateLegacyStatus: () => {
-				set((state) => {
-					let changed = false;
-					const next = { ...state.visits };
-					for (const [k, v] of Object.entries(next)) {
-						// exhibitionTitle 유무로 판단 — exhibitionId는 검색 제안을 선택했을 때만
-						// 채워지므로, 직접 입력한 레거시 기록(exhibitionId: null)도 놓치지 않는다.
-						if (v.exhibitionTitle && !v.status) {
-							next[k] = { ...v, status: 'confirmed' };
-							changed = true;
-						}
-					}
-					return changed ? { visits: next } : state;
-				});
-			},
-			_migrateEssayToMemo: () => {
-				set((state) => {
-					let changed = false;
-					const next = { ...state.visits };
-					for (const [k, v] of Object.entries(next)) {
-						if (v.essay === undefined) continue;
-						next[k] = migrateEssayIntoMemo(v);
-						changed = true;
-					}
-					return changed ? { visits: next } : state;
-				});
-			},
-			loadFromRemote: (visits) => {
-				set({ visits });
-				// 원격 데이터에도 status 컬럼이 없으므로 하이드레이션과 동일한 마이그레이션을 적용
-				get()._migrateLegacyStatus();
-				get()._migrateEssayToMemo();
-			},
-		}),
-		{
-			name: 'visits',
-			// authAwareStorage(로그인 시 AsyncStorage read/write 스킵, DB를 단일 소스로 취급)를 쓰지 않는다.
-			// status/pendingSince/signatureSvg/visitedAt은 아직 Supabase 컬럼이 없어서 DB로 대체될 수
-			// 없는데, 로그인 상태에서 로컬 저장까지 건너뛰면 리로드마다 이 필드들이 통째로 사라져서
-			// pending/in_progress가 undefined로 되돌아가고 레거시 마이그레이션이 confirmed로 잘못
-			// 승격시켰다 — 로그인 여부와 무관하게 항상 로컬에 저장해서 막는다. exhibitionId/title/venue/
-			// memo 같은 DB 동기화 필드는 useVisitSync가 매 마운트마다 원격 값으로 덮어써서 계속 맞는다.
-			storage: createJSONStorage(() => AsyncStorage),
-			onRehydrateStorage: () => (state) => {
-				state?._migrateLegacyStatus();
-				state?._migrateEssayToMemo();
-			},
-		},
-	),
-);
+			}
+			return changed ? { visits: next } : state;
+		});
+	},
+	_migrateEssayToMemo: () => {
+		set((state) => {
+			let changed = false;
+			const next = { ...state.visits };
+			for (const [k, v] of Object.entries(next)) {
+				if (v.essay === undefined) continue;
+				next[k] = migrateEssayIntoMemo(v);
+				changed = true;
+			}
+			return changed ? { visits: next } : state;
+		});
+	},
+	loadFromRemote: (visits) => {
+		set({ visits });
+		get()._migrateLegacyStatus();
+		get()._migrateEssayToMemo();
+		persistAllLocalVisits(get().visits, true);
+	},
+	hydrateFromLocalDb: async () => {
+		if (useAuthStore.getState().session) return;
+		await migrateVisitsFromAsyncStorage();
+		set({ visits: loadAllLocalVisits() });
+		get()._migrateLegacyStatus();
+		get()._migrateEssayToMemo();
+	},
+}));
