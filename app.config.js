@@ -23,20 +23,25 @@ console.log('[app.config.js] NAVER_CLIENT_ID:', NAVER_CLIENT_ID ? '✓ 로드됨
 
 module.exports = {
 	expo: {
-		name: '몰립',
+		name: 'mollip',
 		slug: 'mollip',
 		scheme: 'mollip',
 		owner: 'bysimune',
 		version: '1.0.0',
 		orientation: 'portrait',
-		icon: './assets/images/logo/logo.png',
+		icon: './assets/images/logo/icon.png',
 		userInterfaceStyle: 'light',
 		ios: {
 			supportsTablet: true,
 			bundleIdentifier: 'com.simune.mollip',
 			// Personal Team(무료 Apple ID)은 Sign In with Apple capability를 지원하지 않음 — 유료 계정 전환 시 true로 복구
 			usesAppleSignIn: false,
+			config: {
+				usesNonExemptEncryption: false,
+			},
 			infoPlist: {
+				CFBundleDisplayName: '몰립',
+				CFBundleName: '몰립',
 				NSPhotoLibraryUsageDescription: '사진 라이브러리에 접근합니다.',
 				NSCameraUsageDescription: '카메라를 사용합니다.',
 				NSMicrophoneUsageDescription: '마이크를 사용합니다.',
@@ -61,7 +66,7 @@ module.exports = {
 			package: 'com.simune.mollip',
 			adaptiveIcon: {
 				backgroundColor: '#E6F4FE',
-				foregroundImage: './assets/images/logo/logo.png',
+				foregroundImage: './assets/images/logo/icon.png',
 			},
 			predictiveBackGestureEnabled: false,
 		},
@@ -103,7 +108,21 @@ module.exports = {
 			],
 			'expo-font',
 			'expo-image',
-			'expo-splash-screen',
+			[
+				'expo-splash-screen',
+				{
+					backgroundColor: '#F8F6F2',
+					image: './assets/images/logo/logo.png',
+					imageWidth: 180,
+				},
+			],
+			[
+				'expo-secure-store',
+				{
+					configureAndroidBackup: true,
+				},
+			],
+			'expo-sqlite',
 			// Personal Team(무료 Apple ID)은 Sign In with Apple / Push Notifications capability를 지원하지 않아 로컬 빌드에서 임시 비활성화
 			// 유료 개발자 계정 전환 시 복구: 'expo-apple-authentication' 추가, 아래 expo-notifications를 push entitlement 포함 설정으로 복구
 			// 'expo-apple-authentication',

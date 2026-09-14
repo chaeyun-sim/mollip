@@ -10,6 +10,25 @@ module.exports = {
 	presets: [require('nativewind/preset')],
 	theme: {
 		extend: {
+			// NativeWind의 rem 기준 단위(inlineRem)가 기본 14px이라 Tailwind 기본 rem 스케일을 쓰면
+			// text-base가 16px이 아니라 14px로 렌더링된다. inlineRem을 올리면 p-4/rounded-xl 같은
+			// spacing/radius까지 전부 같이 커지므로, fontSize 스케일만 px로 고정해 폰트 크기가
+			// inlineRem 값과 무관하게 항상 웹 표준(1rem=16px) 기준으로 렌더링되게 한다.
+			fontSize: {
+				xs: ['12px', { lineHeight: '16px' }],
+				sm: ['14px', { lineHeight: '20px' }],
+				base: ['16px', { lineHeight: '24px' }],
+				lg: ['18px', { lineHeight: '28px' }],
+				xl: ['20px', { lineHeight: '28px' }],
+				'2xl': ['24px', { lineHeight: '32px' }],
+				'3xl': ['30px', { lineHeight: '36px' }],
+				'4xl': ['36px', { lineHeight: '40px' }],
+				'5xl': ['48px', { lineHeight: '1' }],
+				'6xl': ['60px', { lineHeight: '1' }],
+				'7xl': ['72px', { lineHeight: '1' }],
+				'8xl': ['96px', { lineHeight: '1' }],
+				'9xl': ['128px', { lineHeight: '1' }],
+			},
 			colors: {
 				primary: '#AB77F1',
 				'primary-dark': '#7C3AED',
@@ -51,6 +70,13 @@ module.exports = {
 			},
 			borderWidth: {
 				hairline: hairlineWidth(),
+			},
+			boxShadow: {
+				floating: '0 6px 14px rgba(28, 25, 23, 0.28)',
+				'map-control': '0 2px 8px rgba(0, 0, 0, 0.12)',
+				'onboarding-button': '0 4px 12px rgba(0, 0, 0, 0.08)',
+				'onboarding-card': '0 8px 20px rgba(0, 0, 0, 0.12)',
+				chip: '0 1px 4px rgba(0, 0, 0, 0.12)',
 			},
 		},
 	},
