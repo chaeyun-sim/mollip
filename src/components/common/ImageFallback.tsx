@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import type { ImageResizeMode, ImageSourcePropType, StyleProp, ViewStyle } from 'react-native';
 import { Image, type ImageContentFit } from 'expo-image';
 import { proxiedImageUrl } from '@/src/utils/imageProxy';
 import { cn } from '@/src/lib/cn';
+import { colors } from '@/src/constants/colors';
+import { Indicator } from './Indicator';
 
 const RESIZE_MODE_TO_CONTENT_FIT: Record<ImageResizeMode, ImageContentFit> = {
 	cover: 'cover',
@@ -34,7 +36,7 @@ interface ImageFallbackProps {
 	/** true면 원본 URL이 실패할 때 image-proxy로 한 번 더 시도한다 */
 	useImageProxy?: boolean;
 	/** 지정하면 원격 이미지 로딩 중 해당 색상으로 스피너를 겹쳐 보여준다 */
-	loadingIndicatorColor?: string;
+	loadingIndicatorColor?: keyof typeof colors;
 	/** 이미지가 없거나 로드에 실패해 placeholder(question mark)로 대체될 때 호출됨 */
 	onFallback?: () => void;
 }
@@ -118,7 +120,7 @@ export function ImageFallback({
 			) : null}
 			{showImage && loadingIndicatorColor && loading && (
 				<View className="absolute inset-0 items-center justify-center">
-					<ActivityIndicator color={loadingIndicatorColor} />
+					<Indicator color={loadingIndicatorColor} />
 				</View>
 			)}
 			{showImage && dimOverlay && (

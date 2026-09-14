@@ -32,6 +32,8 @@ interface DatePickerModalProps {
 	 * 확인 버튼 레이블
 	 */
 	confirmLabel?: string;
+	/** 선택 가능한 마지막 날짜. 없으면 제한 없음 */
+	maximumDate?: Date;
 }
 
 export function DatePickerModal({
@@ -42,6 +44,7 @@ export function DatePickerModal({
 	onReset,
 	resetLabel = '오늘로 초기화',
 	confirmLabel = '완료',
+	maximumDate,
 }: DatePickerModalProps) {
 	const insets = useSafeAreaInsets();
 	const [slideAnim] = useState(() => new Animated.Value(400));
@@ -119,6 +122,7 @@ export function DatePickerModal({
 								value={draft}
 								mode="date"
 								display="spinner"
+								maximumDate={maximumDate}
 								onValueChange={(_event: any, date: Date) => setDraft(date)}
 								className="h-full w-full"
 							/>

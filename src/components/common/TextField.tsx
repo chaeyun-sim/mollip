@@ -1,6 +1,5 @@
 import { forwardRef } from 'react';
 import { TextInput, type TextInputProps } from 'react-native';
-
 import { colors } from '@/src/constants/colors';
 import { cn } from '@/src/lib/cn';
 
