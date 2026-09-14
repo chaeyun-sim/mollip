@@ -4,7 +4,7 @@ import { AccessibilityInfo } from 'react-native';
 import { normalizeOnboardingGenres } from '@/src/utils/onboardingWallGenres';
 import { ONBOARDING_WALL_PIECES, type OnboardingWallPiece } from '@/src/data/onboardingWallPieces';
 
-export function useOnboardingWallPlacement() {
+export const useOnboardingWallPlacement = () => {
 	const [placements, setPlacements] = useState<(OnboardingWallPiece | null)[]>(Array(5).fill(null));
 	const [selectedFrame, setSelectedFrame] = useState<number | null>(null);
 	const [announcement, setAnnouncement] = useState('');
@@ -47,26 +47,38 @@ export function useOnboardingWallPlacement() {
 	const selectFrame = useCallback(
 		(index: number) => {
 			if (placements[index]) {
-				setSelectedFrame(index);
+				setSelectedFrame((current) => (current === index ? null : index));
 				setAnnouncement('');
-			} else {
-				announce('아래 작품을 눌러 걸어 주세요');
 			}
 		},
-		[placements, announce],
+		[placements],
 	);
 	const cancel = useCallback(() => {
 		setSelectedFrame(null);
 		setAnnouncement('');
 	}, []);
-	const remove = useCallback(() => {
-		if (selectedFrame === null) return;
-		const next = [...placements];
-		next[selectedFrame] = null;
-		setPlacements(next);
-		setSelectedFrame(null);
-		announce(`작품을 뺐어요. ${next.filter(Boolean).length}/5`);
-	}, [selectedFrame, placements, announce]);
+	const unplace = useCallback(
+		(piece: OnboardingWallPiece) => {
+			const index = placements.findIndex((item) => item?.id === piece.id);
+			if (index < 0) return;
+			const next = [...placements];
+			next[index] = null;
+			setPlacements(next);
+			setSelectedFrame((current) => (current === index ? null : current));
+		},
+		[placements],
+	);
+	const unplaceFrame = useCallback(
+		(index: number) => {
+			if (!placements[index]) return;
+			const next = [...placements];
+			next[index] = null;
+			setPlacements(next);
+			setSelectedFrame((current) => (current === index ? null : current));
+		},
+		[placements],
+	);
+
 	return {
 		placements,
 		selectedFrame,
@@ -77,7 +89,8 @@ export function useOnboardingWallPlacement() {
 		place,
 		selectFrame,
 		cancel,
-		remove,
+		unplace,
+		unplaceFrame,
 		announce,
 	};
-}
+};

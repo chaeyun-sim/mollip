@@ -2,9 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { setAudioModeAsync, useAudioPlayer, useAudioPlayerStatus } from 'expo-audio';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
-
 import type { OnboardingListenClip } from '@/src/data/onboardingListenClips';
-import { colors } from '@/src/constants/colors';
 import { Screen } from '@/src/components/layout/Screen';
 
 interface ListenClipCardProps {
@@ -80,7 +78,7 @@ export function ListenClipCard({ clip, onKeep, onPass }: ListenClipCardProps) {
 							<Ionicons
 								name={muted ? 'volume-mute-outline' : 'volume-high-outline'}
 								size={22}
-								color={colors.gray700}
+								className="text-gray700"
 							/>
 						</Pressable>
 					</View>
@@ -104,7 +102,7 @@ export function ListenClipCard({ clip, onKeep, onPass }: ListenClipCardProps) {
 							className="w-16 h-16 rounded-full bg-primary-dark items-center justify-center"
 							style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
 						>
-							<Ionicons name={status.playing ? 'pause' : 'play'} size={26} color={colors.white} />
+							<Ionicons name={status.playing ? 'pause' : 'play'} size={26} className="text-white" />
 						</Pressable>
 					</View>
 				</View>
@@ -127,7 +125,7 @@ export function ListenClipCard({ clip, onKeep, onPass }: ListenClipCardProps) {
 								elevation: 4,
 							}}
 						>
-							<Ionicons name="close" size={28} color={colors.gray900} />
+							<Ionicons name="close" size={28} className="text-gray900" />
 						</View>
 						<Text className="text-gray600 text-xs font-pretendard-regular">넘기기</Text>
 					</Pressable>
@@ -147,7 +145,7 @@ export function ListenClipCard({ clip, onKeep, onPass }: ListenClipCardProps) {
 								elevation: 4,
 							}}
 						>
-							<Ionicons name="bookmark" size={26} color={colors.gray900} />
+							<Ionicons name="bookmark" size={26} className="text-gray900" />
 						</View>
 						<Text className="text-gray600 text-xs font-pretendard-regular">담기</Text>
 					</Pressable>
