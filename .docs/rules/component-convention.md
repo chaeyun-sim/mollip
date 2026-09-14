@@ -171,21 +171,71 @@ export default function MapScreen() { ... }       // default
 
 ---
 
-## 6. 이벤트 핸들러 Props 네이밍
+## 6. 함수 선언 스타일과 네이밍
 
-이벤트 핸들러 prop은 `on` 접두사를 사용한다.
-컴포넌트 내부 핸들러 변수는 `handle` 접두사를 사용한다.
+### 6.1 컴포넌트는 `function`, 그 외 함수는 화살표 함수
+
+- **컴포넌트**: `function ComponentName() { ... }` 선언식을 그대로 쓴다.
+- **컴포넌트가 아닌 모든 함수**(이벤트 핸들러, 계산 함수, 유틸 등): `const fn = () => { ... }` 화살표 함수로 선언한다. `function fn() { ... }` 선언식을 쓰지 않는다.
 
 ```tsx
-// Props (외부)
+// Good — 컴포넌트는 function
+export function ExhibitionCard({ ex, onPress }: ExhibitionCardProps) {
+	// Good — 컴포넌트가 아닌 함수는 화살표 함수
+	const resolveCarousel = () => { ... };
+	const onPress = useCallback(() => { ... }, []);
+
+	return (...);
+}
+
+// Bad — 일반 함수를 function 선언식으로 작성
+function resolveCarousel() { ... }
+```
+
+### 6.2 이벤트 핸들러 네이밍 — `on~` vs `handle~`
+
+기준은 **소유권**(컴포넌트 내부인가, 외부 인터페이스인가)이다. 내부 로직의 줄 수·분기(`if`)·비동기(`async`/`await`) 유무는 이름 결정에 영향을 주지 않는다.
+
+- **`on~`**: 컴포넌트가 **외부(부모)로부터 전달받는** 이벤트 props에만 쓴다. "이 이벤트가 발생했을 때(on)"라는 타이밍을 뜻한다.
+- **`handle~`**: 컴포넌트 **내부에서 이벤트를 실제로 처리하는** 지역 함수에 쓴다. 내부 로직이 직선 흐름이든 분기·비동기가 있든 상관없이 `handle~`이다. "그 이벤트를 어떻게 처리(handle)하겠다"라는 행동을 뜻한다.
+
+```tsx
+// 1. Props 인터페이스 정의 시에는 무조건 on~
 interface CardProps {
 	onPress: (id: string) => void;
 	onLayout: (height: number) => void;
 }
 
-// 내부 핸들러
-const handlePress = () => onPress(id);
+function Card({ onPress, onLayout }: CardProps) {
+	// 2. 컴포넌트 내부에서 정의하는 핸들러 함수는 무조건 handle~
+	// 내부 로직이 직선 흐름이든, 분기·비동기가 있든 상관없이 handle 접두사를 쓴다.
+	const handlePress = () => {
+		Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+		updateStore({ manualTitle: artwork.label });
+		router.replace('/description');
+	};
+
+	// 3. JSX에 바인딩할 때는 <Component onEvent={handleEvent} /> 형태를 유지한다.
+	return <Pressable onPress={handlePress} />;
+}
 ```
+
+`on이 보이면 props, handle이 보이면 내부 함수`로 코드를 훑을 때 바로 식별된다는 게 핵심이다.
+
+**이름 겹침 처리**: 자식이 던져준 이벤트를 가공 없이 그대로 부모에게 토스하거나 한 문장만 실행하는 경우, 아래 중 하나를 쓴다.
+
+1. **인라인 화살표 함수** (권장) — 불필요한 지역 변수를 만들지 않는다.
+   ```tsx
+   return <Button onPress={() => onDelete(id)} />;
+   ```
+2. **구체적인 행동 동사** — `handle~` 대신 함수가 하는 일 자체를 동사로 표현한다.
+   ```tsx
+   const submitData = () => { ... };
+   return <Button onPress={submitData} />;
+   ```
+3. **prop 이름 그대로 재사용** (지양) — 부모에게 받은 `onDelete`와 내부 변수 `onDelete`가 겹치면 가독성이 떨어지므로, 가급적 내부 함수는 `handleDelete`로 명명한다.
+
+기존 코드는 건드릴 때마다 이 규칙에 맞춰 점진적으로 정리한다 — 이 규칙 하나만으로 전체 코드베이스를 일괄 리네임하지 않는다.
 
 ---
 
@@ -261,21 +311,22 @@ app/               # expo-router 화면 — default export 1개(스크린)만
 </Screen.Header>
 ```
 
-### 9.3 페이지 전용 private 서브컴포넌트 (좁은 예외)
+### 9.3 인라인이 기본 — 미리 빼지 않는다
 
-아래를 **모두** 만족할 때만 `app/` 파일 안에 둘 수 있다.
+한 곳에서만 쓰이는 JSX는 **그 자리에 인라인**한다. 메인 컴포넌트 위에 private 서브컴포넌트를 미리 만들지 않는다.
 
-- 해당 화면에서만 사용
-- **약 50줄 이하**
-- 재사용·테스트 분리 계획 없음
+분리하는 경우:
 
-그 외(전시 상세 `[id].tsx` 수준의 다중 UI)는 **`src/components/{도메인}/`** 로 분리한다.
+- 같은 UI가 **2곳 이상**에서 반복된다
+- 인라인하면 부모가 읽히지 않을 정도로 복잡하다 (대략 80줄 넘는 독립 블록)
 
-### 9.4 분리 신호
+그때는 파일로 빼서 named export 한다. `function Foo()`를 같은 파일 윗줄에 두는 방식은 쓰지 않는다.
 
-- 파일 **100줄 초과** + UI 블록이 2개 이상 → 컴포넌트 추출 검토
-- 같은 순수 UI가 **3번 이상** 반복되면 `src/components/common/` 추출을 검토한다 (§13)
-- 1~2화면이고 도메인 맥락이 있으면 `src/components/{도메인}/` 에 둔다. `common/`에 넣지 않는다
+이미 있는 카드·빈 상태·섹션 컴포넌트를 먼저 찾고, 비슷하면 그걸 쓴다. 페이지 하나 추가한다고 동형 컴포넌트를 새로 만들지 않는다.
+
+### 9.4 `common/` 추출
+
+같은 순수 UI가 **3번 이상** 반복되면 `src/components/common/` 추출을 검토한다 (§13). 1~2화면이고 도메인 맥락이 있으면 `src/components/{도메인}/` 에 둔다.
 
 ---
 
@@ -290,9 +341,10 @@ app/               # expo-router 화면 — default export 1개(스크린)만
    ↕ 빈 줄
 4. 상수             (const foo = ...)
 5. 일반 함수        (순수 계산, 이벤트 핸들러 등)
-6. 렌더 함수        (renderXxx — JSX를 반환하는 함수)
-7. return           (컴포넌트 JSX)
+6. return           (컴포넌트 JSX)
 ```
+
+`renderXxx()`처럼 JSX만 반환하는 함수는 만들지 않는다. 분기는 return 안 삼항/&& 이거나, 컴포넌트 본문의 early return으로 끝낸다.
 
 ```tsx
 export default function ExploreScreen() {
@@ -304,18 +356,18 @@ export default function ExploreScreen() {
   // 3. 커스텀 훅
   const { items, status } = useExploreScreenData();
 
-  // 4. 상수
-  const carousel = resolveCarousel();
-  // 5. 일반 함수
+  // 5. 일반 함수 — function 선언식이 아닌 화살표 함수로 (§6.1)
   const openExhibition = (id: string) => router.push(`/(explore)/${id}`);
-  function resolveCarousel() { ... }
-  // 6. 렌더 함수
-  function renderContent() { ... }
+  const resolveCarousel = () => { ... };
+  // 4. 상수 — 화살표 함수는 호이스팅되지 않으므로, 그 결과를 쓰는 상수는 함수 선언 다음에 온다
+  const carousel = resolveCarousel();
 
-  // 7. return
+  // 6. return
   return (...);
 }
 ```
+
+화살표 함수(`const fn = () => {}`)는 `function` 선언식과 달리 호이스팅되지 않는다. "4. 상수"가 "5. 일반 함수"의 결과를 바로 사용하면, 그 상수는 해당 함수 **다음 줄**에 둔다 — 목록의 4→5 순서를 절대적인 줄 순서로 강제하지 않는다.
 
 ---
 
@@ -355,26 +407,36 @@ JSX 삼항도 동일하게 적용한다.
 }
 ```
 
-### 11.2 삼항 연산자 중첩 금지
+### 11.2 삼항은 2갈래만 — `renderXxx` 금지
 
-삼항 연산자는 **2중 이상 중첩하지 않는다.** 분기가 3개 이상이면 렌더 함수(`renderXxx`)로 분리한다.
+삼항 연산자는 **한 번만** 쓴다. 2중 중첩 금지.
+
+- 갈래가 **2개**면 JSX 안에서 삼항을 그대로 쓴다.
+- 갈래가 **3개 이상**이면 그 컴포넌트에서 `if` early return 한다. `renderContent()` 같은 함수로 JSX를 빼지 않는다.
 
 ```tsx
+// Good — 2갈래는 삼항
+{
+	tab === 'audio' ? <BookmarkedAudioList /> : <BookmarkedExhibitionList />;
+}
+
+// Bad — 2갈래인데 render 함수
+function renderTab() {
+	if (tab === 'audio') return <BookmarkedAudioList />;
+	return <BookmarkedExhibitionList />;
+}
+
 // Bad — 2중 중첩 삼항
 {
 	isLoading ? <Spinner /> : hasError ? <ErrorView /> : <List />;
 }
 
-// Good — 렌더 함수로 분리
-function renderContent() {
-	if (isLoading) return <Spinner />;
-	if (hasError) return <ErrorView />;
-	return <List />;
-}
+// Good — 3갈래 이상은 컴포넌트 early return
+if (isLoading) return <Spinner />;
 
-{
-	renderContent();
-}
+if (hasError) return <ErrorView />;
+
+return <List />;
 ```
 
 ### 11.3 null 분기
@@ -404,35 +466,31 @@ null을 렌더링하는 분기는 `&&` 연산자를 사용한다. 삼항 연산�
 
 ### 11.4 if 블록 간격
 
-함수 내에 `if` 블록이 여러 개면 블록 사이에 빈 줄을 넣는다.
+컴포넌트 본문에 `if` early return이 여러 개면 블록 사이에 빈 줄을 넣는다.
 
 ```tsx
 // Good
-function renderContent() {
-	if (status === 'loading') {
-		return <Spinner />;
-	}
-
-	if (status === 'error') {
-		return <ErrorView />;
-	}
-
-	return <List />;
+if (status === 'loading') {
+	return <Spinner />;
 }
+
+if (status === 'error') {
+	return <ErrorView />;
+}
+
+return <List />;
 
 // Bad — 블록 사이 빈 줄 없음
-function renderContent() {
-	if (status === 'loading') {
-		return <Spinner />;
-	}
-	if (status === 'error') {
-		return <ErrorView />;
-	}
-	return <List />;
+if (status === 'loading') {
+	return <Spinner />;
 }
+if (status === 'error') {
+	return <ErrorView />;
+}
+return <List />;
 ```
 
-JSX 안에서 즉시 실행 함수(IIFE)를 사용하지 않는다. 로직이 필요하면 컴포넌트 내부 렌더 함수(`renderXxx`)나 별도 컴포넌트로 분리한다.
+JSX 안에서 즉시 실행 함수(IIFE)와 `renderXxx()`를 쓰지 않는다. 값은 미리 계산하고, JSX에서는 삼항/`&&`/`.map`만 쓴다.
 
 ```tsx
 // Bad — JSX 안에서 IIFE
@@ -444,16 +502,10 @@ JSX 안에서 즉시 실행 함수(IIFE)를 사용하지 않는다. 로직이 �
 	})();
 }
 
-// Good — 렌더 함수로 분리 (컴포넌트 내부, 섹션 10 선언 순서 6번 위치)
-function renderEntries() {
-	const entries = buildEntries(data);
-	if (entries.length === 0) return null;
-	return entries.map((e) => <Row key={e.label} {...e} />);
-}
+// Good — 계산은 위, 그릴 때는 삼항
+const entries = buildEntries(data);
 
-{
-	renderEntries();
-}
+return entries.length > 0 ? entries.map((e) => <Row key={e.label} {...e} />) : null;
 ```
 
 ---
