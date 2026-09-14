@@ -3,21 +3,21 @@ import * as Haptics from 'expo-haptics';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { ActivityIndicator, Pressable, ScrollView, Switch, Text, View } from 'react-native';
-import { useAuthStore } from '@/src/store/authStore';
 import { Screen } from '@/src/components/layout/Screen';
-import { CardRow, NarrationSettingsFields, SettingsCard } from '@/src/components/mypage';
-import { APP_VERSION, SCRAP_TILES } from '@/src/data/mypage';
+import { CardRow, SettingsCard } from '@/src/components/mypage';
 import { colors } from '@/src/constants/colors';
+import { APP_VERSION } from '@/src/data/mypage';
+import { useAuthStore } from '@/src/store/authStore';
 import { useSettingsStore } from '@/src/store/settingsStore';
 
 export default function MyPageScreen() {
 	const router = useRouter();
 	const session = useAuthStore((s) => s.session);
+	const user = useAuthStore((s) => s.user);
 	const authLoading = useAuthStore((s) => s.isLoading);
 	const signOut = useAuthStore((s) => s.signOut);
 	const [signingOut, setSigningOut] = useState(false);
-	const { pushNotificationsEnabled, setPushNotificationsEnabled, highContrast, setHighContrast } =
-		useSettingsStore();
+	const { pushNotificationsEnabled, setPushNotificationsEnabled } = useSettingsStore();
 
 	const handleSignOut = async () => {
 		Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -47,7 +47,7 @@ export default function MyPageScreen() {
 							style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
 						>
 							{signingOut ? (
-								<ActivityIndicator size="small" color={colors.gray600} />
+								<ActivityIndicator size="small" className="text-gray600" />
 							) : (
 								<Ionicons name="log-out-outline" size={22} className="text-error" />
 							)}
@@ -91,57 +91,44 @@ export default function MyPageScreen() {
 						</View>
 					)}
 
-					{session && (
+					{session && user && (
 						<>
+							<View className="flex-row items-center gap-3.5 mt-3 mb-4 rounded-2xl border border-divider bg-white px-4 py-3.5">
+								<View className="w-12 h-12 rounded-full bg-bg-tonal items-center justify-center">
+									<Text className="font-pretendard-semibold text-gray900 text-[18px]">
+										{user?.email?.charAt(0).toUpperCase()}
+									</Text>
+								</View>
+								<View className="flex-1">
+									<Text className="font-pretendard-semibold text-gray900 text-[17px]">
+										{user?.email?.split('@')[0]}님
+									</Text>
+									<Text className="font-pretendard-regular text-gray500 text-[13px] mt-0.5">
+										{user?.app_metadata?.provider === 'kakao' ? '카카오 계정' : 'Apple 계정'}
+									</Text>
+								</View>
+							</View>
 							<View>
 								<SettingsCard>
-									<CardRow label="내 정보" onPress={() => router.push('/settings/account')} />
 									<CardRow
 										label="내 취향 수정"
+										description="작품을 선택하면 전시를 추천해요"
 										onPress={() => router.push('/settings/preferences')}
 									/>
-									<CardRow label="고대비 모드">
-										<Switch
-											value={highContrast}
-											onValueChange={setHighContrast}
-											trackColor={{ false: colors.border, true: colors.gray900 }}
-											thumbColor="#FFFFFF"
-											ios_backgroundColor={colors.border}
-											style={{ transform: [{ scaleX: 0.75 }, { scaleY: 0.75 }] }}
-											className="absolute -right-1 top-2"
-										/>
-									</CardRow>
+									<CardRow
+										label="해설 설정"
+										description="작품 해설의 다양한 설정을 바꿀 수 있어요"
+										onPress={() => router.push('/settings/narration')}
+									/>
 								</SettingsCard>
 							</View>
 							<View className="h-[1px] w-full bg-gray500/30 my-4" />
 						</>
 					)}
 
-					<View className={session ? 'mt-0' : 'mt-4'}>
-						<SettingsCard>
-							{(session ? SCRAP_TILES : SCRAP_TILES.slice(0, 1)).map((tile) => (
-								<CardRow
-									key={tile.key}
-									label={tile.label}
-									onPress={() => router.push(tile.route)}
-								/>
-							))}
-						</SettingsCard>
-					</View>
-
-					<View className="h-[1px] w-full bg-gray500/30 my-4" />
-
-					{session && (
-						<>
-							<NarrationSettingsFields />
-
-							<View className="h-[1px] w-full bg-gray500/30 my-4" />
-						</>
-					)}
-
 					<View className="relative">
 						<SettingsCard>
-							<CardRow label="푸시 알림" className="py-3">
+							<CardRow label="푸시 알림" description="관심 전시의 소식과 추천을 받아요">
 								<Switch
 									value={pushNotificationsEnabled}
 									onValueChange={setPushNotificationsEnabled}
@@ -149,7 +136,6 @@ export default function MyPageScreen() {
 									thumbColor="#FFFFFF"
 									ios_backgroundColor={colors.border}
 									style={{ transform: [{ scaleX: 0.75 }, { scaleY: 0.75 }] }}
-									className="absolute -right-1 top-2"
 								/>
 							</CardRow>
 						</SettingsCard>
@@ -159,9 +145,21 @@ export default function MyPageScreen() {
 
 					<View>
 						<SettingsCard>
-							<CardRow label="공지사항" onPress={() => router.push('/settings/notice')} />
-							<CardRow label="의견 보내기" onPress={() => router.push('/settings/inquiry')} />
-							<CardRow label="별점 남기기" onPress={() => {}} />
+							<CardRow
+								label="공지사항"
+								description="새 기능 소식을 확인해요"
+								onPress={() => router.push('/settings/notice')}
+							/>
+							<CardRow
+								label="의견 보내기"
+								description="개선할 점을 알려주세요"
+								onPress={() => router.push('/settings/inquiry')}
+							/>
+							<CardRow
+								label="별점 남기기"
+								description="앱스토어에서 몰립을 평가해 주세요"
+								onPress={() => {}}
+							/>
 						</SettingsCard>
 					</View>
 
@@ -174,6 +172,21 @@ export default function MyPageScreen() {
 							<CardRow label="버전" value={APP_VERSION} />
 						</SettingsCard>
 					</View>
+
+					{session && (
+						<Pressable
+							onPress={() => {
+								Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+								router.push('/settings/delete-account');
+							}}
+							accessibilityRole="button"
+							accessibilityLabel="탈퇴하기"
+							className="mt-5"
+							style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
+						>
+							<Text className="font-pretendard-medium text-error text-[14px]">탈퇴하기</Text>
+						</Pressable>
+					)}
 				</View>
 			</ScrollView>
 		</Screen>

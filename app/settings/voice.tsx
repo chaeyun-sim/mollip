@@ -4,6 +4,7 @@ import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { useAudioPlayer } from 'expo-audio';
 import { ActivityIndicator, Alert, Pressable, ScrollView, Text, View } from 'react-native';
+import { Result } from '@/src/components/common/Result';
 import { VoiceListSkeletonItem } from '@/src/components/settings/VoiceListSkeletonItem';
 import { Screen } from '@/src/components/layout/Screen';
 import type { Voice } from '@/src/hooks/useTTS';
@@ -85,6 +86,7 @@ export default function VoiceScreen() {
 	const [voices, setVoices] = useState<Voice[]>([]);
 	const [voicesLoading, setVoicesLoading] = useState(true);
 	const [previewingId, setPreviewingId] = useState<string | null>(null);
+
 	const previewPlayer = useAudioPlayer(null);
 
 	useEffect(() => {
@@ -96,7 +98,9 @@ export default function VoiceScreen() {
 
 	const handlePreview = async (voice: Voice) => {
 		if (previewingId) return;
+
 		setPreviewingId(voice.voice_id);
+
 		try {
 			const uri = await fetchTTSBlob(
 				voice.voice_id,
@@ -130,18 +134,22 @@ export default function VoiceScreen() {
 				<Text className="text-gray-400 text-[13px] font-pretendard-regular mb-5 leading-[19px]">
 					해설을 읽어줄 목소리를 골라보세요. 재생 버튼으로 미리 들을 수 있어요.
 				</Text>
-
-				{voicesLoading ? (
+				{voicesLoading && (
 					<View className="gap-2.5">
 						{[0, 1, 2, 3].map((i) => (
 							<VoiceListSkeletonItem key={i} />
 						))}
 					</View>
-				) : voices.length === 0 ? (
-					<Text className="text-gray-400 text-[13px] font-pretendard-regular">
-						불러올 수 있는 음성이 없어요
-					</Text>
-				) : (
+				)}
+				{!voicesLoading && voices.length === 0 && (
+					<Result
+						icon="mic-off-outline"
+						iconSize={32}
+						title="불러올 수 있는 음성이 없어요"
+						className="flex-none py-10"
+					/>
+				)}
+				{!voicesLoading && voices.length > 0 && (
 					<View className="gap-2.5">
 						{voices.map((voice) => {
 							const selected = voiceId === voice.voice_id;
@@ -175,7 +183,7 @@ export default function VoiceScreen() {
 											</View>
 											{selected && (
 												<View
-													className="absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full bg-primary items-center justify-center"
+													className="absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full bg-primary items-center justify-center shadow-white "
 													style={{
 														shadowColor: '#fff',
 														shadowOffset: { width: 0, height: 0 },

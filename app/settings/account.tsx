@@ -2,9 +2,9 @@ import * as Haptics from 'expo-haptics';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { ActivityIndicator, Modal, Pressable, Text, View } from 'react-native';
+import { Button } from '@/src/components/common/Button';
 import { Screen } from '@/src/components/layout/Screen';
 import { useAuthStore } from '@/src/store/authStore';
-import { colors } from '@/src/constants/colors';
 
 export default function AccountScreen() {
 	const router = useRouter();
@@ -55,7 +55,7 @@ export default function AccountScreen() {
 				<View className="gap-2 border-t border-t-gray500/20 pt-4">
 					<View className="flex-row items-center justify-between px-1 pb-3 mb-6">
 						{showWithdrawWarning ? (
-							<ActivityIndicator size="small" color={colors.gray600} />
+							<ActivityIndicator size="small" className="text-gray600" />
 						) : (
 							<Pressable
 								onPress={showWithdrawWarning ? undefined : handleDeleteAccoun}
@@ -104,21 +104,19 @@ export default function AccountScreen() {
 							>
 								<Text className="font-pretendard-semibold text-[15px] text-secondary">닫기</Text>
 							</Pressable>
-							<Pressable
+							<Button
 								onPress={() => {
-									Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
 									setShowWithdrawWarning(false);
 									router.push('/settings/delete-account');
 								}}
-								className="flex-1 rounded-2xl bg-error items-center justify-center py-[14px]"
-								style={({ pressed }) => ({ opacity: pressed ? 0.85 : 1 })}
-								accessibilityRole="button"
+								tone="danger"
+								haptic="light"
+								block={false}
+								className="flex-1"
 								accessibilityLabel="그래도 탈퇴할래요"
 							>
-								<Text className="font-pretendard-semibold text-[15px] text-white">
-									그래도 탈퇴할래요
-								</Text>
-							</Pressable>
+								그래도 탈퇴할래요
+							</Button>
 						</View>
 					</Pressable>
 				</Pressable>

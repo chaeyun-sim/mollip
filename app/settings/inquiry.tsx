@@ -5,6 +5,7 @@ import { KeyboardAvoidingView, Platform, ScrollView, Text, View } from 'react-na
 
 import { Button } from '@/src/components/common/Button';
 import { Chip } from '@/src/components/common/Chip';
+import { Result } from '@/src/components/common/Result';
 import { TextField } from '@/src/components/common/TextField';
 import { Screen } from '@/src/components/layout/Screen';
 import { useAuthStore } from '@/src/store/authStore';
@@ -61,25 +62,15 @@ export default function InquiryScreen() {
 					<Screen.Header.Center>문의하기</Screen.Header.Center>
 				</Screen.Header>
 
-				<View className="flex-1 items-center justify-center gap-4 px-6">
-					<View className="w-[72px] h-[72px] rounded-full bg-[#E8E3DB] items-center justify-center mb-1">
-						<Text style={{ fontSize: 32 }}>✓</Text>
-					</View>
-					<Text className="text-gray900 text-[17px] font-pretendard-semibold text-center">
-						문의가 접수됐어요
-					</Text>
-					<Text className="text-gray600 text-[13px] font-pretendard-regular text-center leading-[20px]">
-						확인 후 남겨주신 연락처로{'\n'}답변드릴게요
-					</Text>
-					<Button
-						block={false}
-						onPress={() => router.back()}
-						accessibilityLabel="설정으로 돌아가기"
-						className="mt-4 px-8"
-					>
-						확인
-					</Button>
-				</View>
+				<Result
+					icon="checkmark"
+					tone="success"
+					iconBackground
+					title="문의가 접수됐어요"
+					description={'확인 후 남겨주신 연락처로\n답변드릴게요'}
+					actionLabel="확인"
+					onAction={() => router.back()}
+				/>
 			</Screen>
 		);
 	}

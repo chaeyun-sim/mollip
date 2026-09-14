@@ -1,41 +1,32 @@
 import { useRouter } from 'expo-router';
-import { useCallback, useState } from 'react';
-import { Alert, View } from 'react-native';
+import { useCallback, useEffect, useState } from 'react';
+import { ActivityIndicator, Alert, Pressable, Text, View } from 'react-native';
 
 import { Screen } from '@/src/components/layout/Screen';
-import { CardRow, SettingsCard } from '@/src/components/mypage';
-import { OnboardingArtworkTray } from '@/src/components/onboarding/OnboardingArtworkTray';
+import { OnboardingGalleryWall } from '@/src/components/onboarding/OnboardingGalleryWall';
 import { OnboardingSaveErrorBar } from '@/src/components/onboarding/OnboardingSaveErrorBar';
-import { OnboardingWallConfirm } from '@/src/components/onboarding/OnboardingWallConfirm';
-import { OnboardingWallProgress } from '@/src/components/onboarding/OnboardingWallProgress';
-import { useOnboardingWallFlow } from '@/src/hooks/useOnboardingWallFlow';
+import { useOnboardingWallPlacement } from '@/src/hooks/useOnboardingWallPlacement';
+import { useOnboardingWallPreferences } from '@/src/hooks/useOnboardingWallPreferences';
 import { useAuthStore } from '@/src/store/authStore';
 import { toValidGenres } from '@/src/utils/onboardingWallGenres';
 import { supabase } from '@/src/utils/supabase';
 
-type ScreenMode = 'list' | 'curating';
-
 export default function PreferencesScreen() {
 	const router = useRouter();
 	const userId = useAuthStore((s) => s.user?.id);
-	const [mode, setMode] = useState<ScreenMode>('list');
 	const [saving, setSaving] = useState(false);
 	const [errorCount, setErrorCount] = useState(0);
 	const hasError = errorCount > 0;
 
-	const {
-		step,
-		trays,
-		selections,
-		canCompleteEarly,
-		selectedGenres,
-		lastAnnouncement,
-		lastChangedTrayIndex,
-		selectPiece,
-		requestChange,
-		completeEarly,
-		restart,
-	} = useOnboardingWallFlow({ startAtCuration: true });
+	const wall = useOnboardingWallPlacement();
+	const preferences = useOnboardingWallPreferences(userId, wall.initialize);
+	const selectedGenres = wall.genres;
+	const initializeWall = wall.initialize;
+	const loadPreferences = preferences.load;
+
+	useEffect(() => {
+		void loadPreferences();
+	}, [loadPreferences]);
 
 	// AC-6: 다시 꾸미기·지우기 모두 preferred_genres만 교체한다 — onboarding_completed/preferred_artists는 건드리지 않음
 	const handleConfirm = useCallback(async () => {
@@ -60,7 +51,6 @@ export default function PreferencesScreen() {
 	}, [userId, saving, selectedGenres, router]);
 
 	const handleSkipWithoutSave = useCallback(() => {
-		// 설정 재편집에는 사용자별 로컬 pending이 필요 없다 — 이미 온보딩을 마친 사용자이므로 저장 없이 목록으로 돌아간다
 		router.back();
 	}, [router]);
 
@@ -79,91 +69,89 @@ export default function PreferencesScreen() {
 					if (error) {
 						console.error('[preferences] clear failed:', error.message);
 						Alert.alert('지우기 실패', '잠시 후 다시 시도해 주세요.');
+						return;
 					}
+					initializeWall([]);
 				},
 			},
 		]);
-	}, [userId]);
+	}, [userId, initializeWall]);
 
-	function renderList() {
+	if (preferences.status === 'error') {
 		return (
-			<View className="pt-4 gap-3">
-				<SettingsCard>
-					<CardRow
-						label="전시 벽 다시 꾸미기"
-						onPress={() => {
-							restart();
-							setMode('curating');
-						}}
-					/>
-				</SettingsCard>
-				<SettingsCard>
-					<CardRow label="내 취향 지우기" onPress={handleClearPreferences} />
-				</SettingsCard>
-			</View>
+			<Screen variant="warm">
+				<Screen.Header>
+					<Screen.Header.Back />
+					<Screen.Header.Center>내 취향 수정</Screen.Header.Center>
+				</Screen.Header>
+
+				<View className="flex-1 items-center justify-center gap-3">
+					<Text className="font-pretendard-regular text-base text-gray900">
+						취향을 불러오지 못했어요
+					</Text>
+					<Pressable
+						accessibilityRole="button"
+						accessibilityLabel="취향 다시 불러오기"
+						onPress={loadPreferences}
+						className="min-h-11 justify-center px-4"
+					>
+						<Text className="font-pretendard-semibold text-base text-primary-dark">다시 시도</Text>
+					</Pressable>
+				</View>
+			</Screen>
 		);
 	}
 
-	function renderCuration() {
-		if (step.kind === 'confirm') {
-			return (
-				<OnboardingWallConfirm
-					selections={selections}
-					onRequestChange={requestChange}
-					onRestart={restart}
-					onConfirm={handleConfirm}
-					confirmDisabled={saving || hasError}
-					changeAnnouncement={lastChangedTrayIndex !== null ? lastAnnouncement : null}
-					changedTrayIndex={lastChangedTrayIndex}
-					errorSlot={
-						hasError ? (
-							<OnboardingSaveErrorBar
-								key={errorCount}
-								onRetry={handleConfirm}
-								onSkipSave={handleSkipWithoutSave}
-								busy={saving}
-							/>
-						) : undefined
-					}
-				/>
-			);
-		}
-
-		// step.kind === 'tray' — 프롤로그 없이 첫 트레이부터 시작한다 (AC-6)
-		const tray = trays[step.kind === 'tray' ? step.trayIndex : 0];
+	if (preferences.status !== 'ready') {
 		return (
-			<View className="flex-1 pt-2">
-				<View style={{ maxHeight: '45%' }}>
-					<OnboardingWallProgress
-						selections={selections}
-						canCompleteEarly={canCompleteEarly}
-						onCompleteEarly={completeEarly}
-						onRequestChange={requestChange}
-						changeAnnouncement={lastChangedTrayIndex !== null ? lastAnnouncement : null}
-						changedTrayIndex={lastChangedTrayIndex}
-					/>
+			<Screen variant="warm">
+				<Screen.Header>
+					<Screen.Header.Back />
+					<Screen.Header.Center>내 취향 수정</Screen.Header.Center>
+				</Screen.Header>
+
+				<View className="flex-1 items-center justify-center gap-3">
+					<ActivityIndicator accessibilityRole="progressbar" />
+					<Text className="font-pretendard-regular text-base text-gray700">
+						나의 취향을 불러오고 있어요
+					</Text>
 				</View>
-				<View className="flex-1 pt-2">
-					<OnboardingArtworkTray
-						tray={tray}
-						onSelect={(piece) => step.kind === 'tray' && selectPiece(step.trayIndex, piece)}
-						announcement={lastChangedTrayIndex === null ? lastAnnouncement : null}
-					/>
-				</View>
-			</View>
+			</Screen>
 		);
 	}
 
 	return (
 		<Screen variant="warm">
 			<Screen.Header>
-				<Screen.Header.Back
-					onPress={mode === 'list' ? () => router.back() : () => setMode('list')}
-				/>
+				<Screen.Header.Back />
 				<Screen.Header.Center>내 취향 수정</Screen.Header.Center>
+				{preferences.status === 'ready' && (
+					<Screen.Header.Right>
+						<Pressable
+							onPress={handleClearPreferences}
+							hitSlop={8}
+							accessibilityRole="button"
+							accessibilityLabel="내 취향 초기화하기"
+							className="min-h-11 justify-center"
+							style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
+						>
+							<Text className="text-[15px] font-pretendard-regular text-error">초기화</Text>
+						</Pressable>
+					</Screen.Header.Right>
+				)}
 			</Screen.Header>
 
-			{mode === 'list' ? renderList() : renderCuration()}
+			<View className="flex-1">
+				<OnboardingGalleryWall wall={wall} busy={saving || hasError} onConfirm={handleConfirm} />
+				{hasError && (
+					<OnboardingSaveErrorBar
+						key={errorCount}
+						onRetry={handleConfirm}
+						onSkipSave={handleSkipWithoutSave}
+						busy={saving}
+					/>
+				)}
+			</View>
 		</Screen>
 	);
 }

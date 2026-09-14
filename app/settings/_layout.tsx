@@ -5,6 +5,7 @@ export default function SettingsLayout() {
 		<Stack>
 			<Stack.Screen name="index" options={{ headerShown: false }} />
 			<Stack.Screen name="voice" options={{ headerShown: false }} />
+			<Stack.Screen name="narration" options={{ headerShown: false }} />
 			<Stack.Screen name="account" options={{ headerShown: false }} />
 			<Stack.Screen name="inquiry" options={{ headerShown: false }} />
 			<Stack.Screen name="delete-account" options={{ headerShown: false }} />

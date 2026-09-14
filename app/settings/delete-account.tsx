@@ -11,7 +11,6 @@ import {
 	Text,
 	View,
 } from 'react-native';
-
 import { TextField } from '@/src/components/common/TextField';
 import { Screen } from '@/src/components/layout/Screen';
 import { cn } from '@/src/lib/cn';
@@ -147,13 +146,11 @@ export default function DeleteAccountScreen() {
 						탈퇴하시는 이유를 알려주세요
 					</Text>
 					<View
-						className="rounded-3xl overflow-hidden bg-bg-tonal mb-3"
+						className="rounded-3xl overflow-hidden bg-bg-tonal mb-3 shadow-gray900 elevation-[2px]"
 						style={{
-							shadowColor: colors.gray900,
 							shadowOpacity: 0.05,
 							shadowRadius: 12,
 							shadowOffset: { width: 0, height: 4 },
-							elevation: 2,
 						}}
 					>
 						{REASON_OPTIONS.map((opt, i) => {
