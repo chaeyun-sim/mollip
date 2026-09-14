@@ -38,14 +38,19 @@ export function AuthProvider({ children }: Props) {
 		};
 
 		const init = async () => {
-			const { data, error } = await supabase.auth.getSession();
-			if (!mounted) return;
-			if (error) console.warn('[auth] getSession', error.message);
-			setAuth(data.session ?? null);
-			if (data.session?.user) {
-				await fetchOnboardingStatus(data.session.user.id);
+			try {
+				const { data, error } = await supabase.auth.getSession();
+				if (!mounted) return;
+				if (error) console.warn('[auth] getSession', error.message);
+				setAuth(data.session ?? null);
+				if (data.session?.user) {
+					await fetchOnboardingStatus(data.session.user.id);
+				}
+			} catch (error) {
+				console.warn('[auth] init failed:', error);
+			} finally {
+				if (mounted) setLoading(false);
 			}
-			setLoading(false);
 		};
 
 		void init();

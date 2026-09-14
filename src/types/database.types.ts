@@ -408,24 +408,30 @@ export type Database = {
 					exhibition_id: number | null;
 					exhibition_title: string | null;
 					memo: string | null;
+					ticket_photo_url: string | null;
 					user_id: string;
 					venue: string | null;
+					venue_photo_urls: string[];
 				};
 				Insert: {
 					date: string;
 					exhibition_id?: number | null;
 					exhibition_title?: string | null;
 					memo?: string | null;
+					ticket_photo_url?: string | null;
 					user_id: string;
 					venue?: string | null;
+					venue_photo_urls?: string[];
 				};
 				Update: {
 					date?: string;
 					exhibition_id?: number | null;
 					exhibition_title?: string | null;
 					memo?: string | null;
+					ticket_photo_url?: string | null;
 					user_id?: string;
 					venue?: string | null;
+					venue_photo_urls?: string[];
 				};
 				Relationships: [
 					{
