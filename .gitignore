@@ -69,4 +69,4 @@ coverage/
 # Claude Code local settings
 .claude/settings.local.json
 
-.docs/wip/**/*.png
+.docs/wip/**/evidence/
