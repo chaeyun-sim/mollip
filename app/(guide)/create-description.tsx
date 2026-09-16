@@ -23,6 +23,8 @@ import { TextField } from '@/src/components/common/TextField';
 import { SourceActionRow } from '@/src/components/guide/SourceActionRow';
 import { ScreenHeader } from '@/src/components/layout/ScreenHeader';
 import { NarrationSettingsFields } from '@/src/components/mypage';
+import { useRequireAuth } from '@/src/hooks/useRequireAuth';
+import { useSubscription } from '@/src/hooks/useSubscription';
 import { searchWikiArtworks, type WikiArtwork } from '../../src/api/wikidata';
 import { colors } from '@/src/constants/colors';
 
@@ -47,8 +49,19 @@ export default function IndexScreen() {
 	const pendingCameraRef = useRef<boolean>(false);
 	const isImmersive = useImmersiveStore((s) => s.isImmersiveMode);
 	const exhibitionTitle = useImmersiveStore((s) => s.exhibitionTitle);
+	const { ensureAuth } = useRequireAuth();
+	const { isPremium } = useSubscription();
 	const [isLoading, setIsLoading] = useState(false);
 	const [directQuestionSessionId] = useState(() => Date.now().toString());
+
+	const handleStartImmersive = () => {
+		if (!ensureAuth('/(guide)/create-description')) return;
+		if (!isPremium) {
+			Alert.alert('프리미엄 전용 기능', '몰입 모드는 프리미엄 회원만 이용할 수 있어요');
+			return;
+		}
+		router.push('/(guide)/immersive-start');
+	};
 
 	// Wikidata 검색 상태 (몰입 모드 전용)
 	const [searchQuery, setSearchQuery] = useState('');
@@ -236,7 +249,7 @@ export default function IndexScreen() {
 						<ScreenHeader.Right>
 							<Pressable
 								className="flex-row items-center gap-1.5"
-								onPress={() => router.push('/(guide)/immersive-start')}
+								onPress={handleStartImmersive}
 								hitSlop={8}
 								accessibilityLabel="몰입 모드로 시작"
 								accessibilityRole="button"
