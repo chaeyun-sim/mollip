@@ -28,6 +28,7 @@ import { formatTime } from '../../src/utils/text';
 import { ScreenHeader } from '../../src/components/layout/ScreenHeader';
 import { IconButton } from '@/src/components/common/IconButton';
 import { Result } from '@/src/components/common/Result';
+import { useRequireAuth } from '@/src/hooks/useRequireAuth';
 import { cn } from '@/src/lib/cn';
 import { useHistoryStore } from '@/src/store/historyStore';
 import { useBookmarkAudioStore } from '@/src/store/bookmarkAudioStore';
@@ -69,7 +70,15 @@ export default function DescriptionScreen() {
 	const toggleBookmarkAudio = useBookmarkAudioStore((s) => s.toggle);
 	const isAudioBookmarked = useBookmarkAudioStore((s) => s.isBookmarked);
 	const flushChatSession = useChatStore((s) => s.flushSession);
+	const { ensureAuth } = useRequireAuth();
 	const [savedId, setSavedId] = useState<string | null>(null);
+
+	const handleToggleBookmarkAudio = () => {
+		if (!savedId) return;
+		if (!ensureAuth('/(tabs)')) return;
+		Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+		toggleBookmarkAudio(savedId);
+	};
 
 	const {
 		displayed,
@@ -190,11 +199,7 @@ export default function DescriptionScreen() {
 					<ScreenHeader.Back onPress={() => router.dismissTo('/playlist')} color="white-90" />
 					<Screen.Header.Right>
 						<Pressable
-							onPress={() => {
-								if (!savedId) return;
-								Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-								toggleBookmarkAudio(savedId);
-							}}
+							onPress={handleToggleBookmarkAudio}
 							hitSlop={8}
 							accessibilityLabel={savedId && isAudioBookmarked(savedId) ? '북마크 해제' : '북마크'}
 							accessibilityRole="button"

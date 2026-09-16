@@ -1,13 +1,16 @@
 import { Ionicons } from '@expo/vector-icons';
 import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import * as Haptics from 'expo-haptics';
+import { useRouter } from 'expo-router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ActivityIndicator, Alert, FlatList, Image, Pressable, Text, View } from 'react-native';
 import { Divider } from '@/src/components/common/Divider';
 import { Result } from '@/src/components/common/Result';
 import { DownloadStatusBadge } from '@/src/components/guide/DownloadStatusBadge';
 import { colors } from '@/src/constants/colors';
+import { useSubscription } from '@/src/hooks/useSubscription';
 import { useTTS } from '@/src/hooks/useTTS';
+import { useAuthStore } from '@/src/store/authStore';
 import { useBookmarkAudioStore } from '@/src/store/bookmarkAudioStore';
 import { useHistoryStore, type HistoryItem } from '@/src/store/historyStore';
 import {
@@ -24,6 +27,9 @@ import { formatOfflineAudioSize, getOfflineAudioTotalSizeBytes } from '@/src/uti
 import { fetchWikidataImage } from '@/src/utils/wikidataImage';
 
 export function BookmarkedAudioList() {
+	const router = useRouter();
+	const session = useAuthStore((s) => s.session);
+	const { isPremium } = useSubscription();
 	const historyItems = useHistoryStore((s) => s.items);
 	const updateHistory = useHistoryStore((s) => s.update);
 	const bookmarkedIds = useBookmarkAudioStore((s) => s.ids);
@@ -168,6 +174,32 @@ export function BookmarkedAudioList() {
 			void speak(selected.text);
 		}
 	}, [selected, isSpeaking, pause, speak]);
+
+	if (!session) {
+		return (
+			<Result
+				icon="lock-closed-outline"
+				iconSize={36}
+				title="로그인이 필요해요"
+				description={'로그인해야 저장한 오디오가 보관돼요'}
+				actionLabel="로그인하기"
+				onAction={() => router.push({ pathname: '/auth/login', params: { returnTo: '/bookmark' } })}
+				className="mb-20"
+			/>
+		);
+	}
+
+	if (!isPremium) {
+		return (
+			<Result
+				icon="sparkles-outline"
+				iconSize={36}
+				title="프리미엄 전용 기능이에요"
+				description={'프리미엄으로 업그레이드하면 저장한 오디오를 다시 들을 수 있어요'}
+				className="mb-20"
+			/>
+		);
+	}
 
 	return (
 		<View className="flex-1">

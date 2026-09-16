@@ -2,6 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Pressable, Text, View } from 'react-native';
 import { useBookmarkStore } from '@/src/store/bookmarkStore';
 import { ImageFallback } from '@/src/components/common/ImageFallback';
+import { useRequireAuth } from '@/src/hooks/useRequireAuth';
 import { formatDistance } from '@/src/utils/mapUtils';
 import { getDdayLabel, STATUS_LABELS } from '@/src/utils/exhibitionSearch';
 import { StatusBadge } from '@/src/components/explore/StatusBadge';
@@ -18,6 +19,12 @@ export function ExhibitionResultCard({ result, onPress }: ExhibitionResultCardPr
 	const ddayLabel = getDdayLabel(ex);
 	const isBookmarked = useBookmarkStore((s) => s.isBookmarked(ex.id));
 	const toggleBookmark = useBookmarkStore((s) => s.toggle);
+	const { ensureAuth } = useRequireAuth();
+
+	const handleToggleBookmark = () => {
+		if (!ensureAuth(`/(explore)/${ex.id}`)) return;
+		toggleBookmark(ex.id);
+	};
 
 	return (
 		<Pressable
@@ -61,7 +68,7 @@ export function ExhibitionResultCard({ result, onPress }: ExhibitionResultCardPr
 
 			{/* 북마크 토글 */}
 			<Pressable
-				onPress={() => toggleBookmark(ex.id)}
+				onPress={handleToggleBookmark}
 				hitSlop={8}
 				accessibilityLabel={isBookmarked ? '북마크 해제' : '북마크 추가'}
 				accessibilityRole="button"
