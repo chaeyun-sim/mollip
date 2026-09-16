@@ -45,6 +45,7 @@ export function mapCultureItemToExhibition(item: {
 		admission: item.price || '정보 없음',
 		admissionFree: item.price?.includes('무료'),
 		ticketUrl: item.url || undefined,
+		web_site: item.url || undefined,
 		phone: item.phone || undefined,
 		coordinates: latitude != null && longitude != null ? { latitude, longitude } : undefined,
 		artworks: [],

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { getCultureExhibitionList } from '@/src/api/culture';
+import { getCultureDetail, getCultureExhibitionList } from '@/src/api/culture';
 import { inferGenreAndTags } from '@/src/utils/exhibitionClassification';
 import { supabase } from '@/src/utils/supabase';
 import {
@@ -69,6 +69,7 @@ async function syncCultureExhibitionsIfStale(): Promise<void> {
 				legacyGenre: item.realmName,
 			});
 			return {
+				seq: item.seq,
 				source: 'culture' as const,
 				venue_name_fallback: item.place || '장소 정보 없음',
 				title,
@@ -100,7 +101,26 @@ async function syncCultureExhibitionsIfStale(): Promise<void> {
 		await markSynced(CULTURE_SYNC_SOURCE);
 		return;
 	}
-	const { error: insertError } = await supabase.from('exhibitions').upsert(deduped, {
+	// 신규 전시만 detail2를 한 번씩 더 호출해 공식 사이트/설명을 채운다 — 실패한 항목은 null로 둔다.
+	const details = await Promise.all(
+		deduped.map(async ({ seq }) => {
+			try {
+				const detailRes = await getCultureDetail(seq);
+				const item = detailRes.body.items[0]?.item;
+				return {
+					web_site: item?.url || undefined,
+					description: item?.contents1 ? stripHtml(item.contents1) : undefined,
+				};
+			} catch {
+				return { web_site: undefined, description: undefined };
+			}
+		}),
+	);
+	const rowsToInsert = deduped.map(({ seq: _seq, ...row }, index) => ({
+		...row,
+		...details[index],
+	}));
+	const { error: insertError } = await supabase.from('exhibitions').upsert(rowsToInsert, {
 		onConflict: 'title,start_date,end_date',
 		ignoreDuplicates: true,
 	});
