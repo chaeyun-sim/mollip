@@ -26,7 +26,8 @@ import { ScreenHeader } from '@/src/components/layout/ScreenHeader';
 import { NarrationSettingsFields } from '@/src/components/mypage';
 import { useRequireAuth } from '@/src/hooks/useRequireAuth';
 import { useSubscription } from '@/src/hooks/useSubscription';
-import { searchWikiArtworks, type WikiArtwork } from '../../src/api/wikidata';
+import { searchArtworks } from '@/src/api/artworkSearch';
+import type { ArtworkSearchResult } from '@/src/types/artwork';
 import { colors } from '@/src/constants/colors';
 
 const STORAGE_KEY = 'example_modal_hidden';
@@ -65,9 +66,9 @@ export default function IndexScreen() {
 		router.push('/(guide)/immersive-start');
 	};
 
-	// Wikidata 검색 상태 (몰입 모드 전용)
+	// 작품 검색 상태 (몰입 모드 전용) — Wikidata + Met을 합친 결과
 	const [searchQuery, setSearchQuery] = useState('');
-	const [searchResults, setSearchResults] = useState<WikiArtwork[]>([]);
+	const [searchResults, setSearchResults] = useState<ArtworkSearchResult[]>([]);
 	const [isSearching, setIsSearching] = useState(false);
 	const searchTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -90,7 +91,7 @@ export default function IndexScreen() {
 		searchTimerRef.current = setTimeout(async () => {
 			setIsSearching(true);
 			try {
-				const results = await searchWikiArtworks(searchQuery.trim());
+				const results = await searchArtworks(searchQuery.trim());
 				setSearchResults(results);
 			} catch {
 				setSearchResults([]);
@@ -106,7 +107,7 @@ export default function IndexScreen() {
 	// 검색 비활성 상태(짧은 검색어·비몰입모드)에서는 이전 결과를 화면에 노출하지 않는다
 	const displayedSearchResults = isSearchActive ? searchResults : [];
 
-	const handleSelectArtwork = (artwork: WikiArtwork) => {
+	const handleSelectArtwork = (artwork: ArtworkSearchResult) => {
 		Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
 		updateStore({
 			manualTitle: artwork.label,
@@ -314,7 +315,7 @@ export default function IndexScreen() {
 							>
 								{displayedSearchResults.map((artwork, index) => (
 									<Pressable
-										key={artwork.qId}
+										key={artwork.id}
 										className="flex-row items-center gap-3 px-4 py-3 bg-white/6"
 										style={({ pressed }) => ({
 											borderTopWidth: index === 0 ? 0 : StyleSheet.hairlineWidth,
