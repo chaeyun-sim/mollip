@@ -1,4 +1,4 @@
-export type ArtworkSource = 'wikidata' | 'met' | 'aic';
+export type ArtworkSource = 'wikidata' | 'met' | 'aic' | 'europeana';
 
 /** 여러 미술 작품 검색 API(Wikidata, Met 등)를 하나의 화면에서 다루기 위한 공통 결과 형태. */
 export interface ArtworkSearchResult {
