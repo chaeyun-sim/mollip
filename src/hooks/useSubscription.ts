@@ -1,3 +1,5 @@
+import { useShallow } from 'zustand/react/shallow';
+
 import { useSubscriptionStore } from '@/src/store/subscriptionStore';
 
 /**
@@ -7,9 +9,7 @@ import { useSubscriptionStore } from '@/src/store/subscriptionStore';
  * 화면 쪽 호출부(const { isPremium } = useSubscription())는 그대로 유지된다.
  */
 export const useSubscription = () => {
-	const isPremium = useSubscriptionStore((s) => s.isPremium);
-	const isLoading = useSubscriptionStore((s) => s.isLoading);
-	const expiresAt = useSubscriptionStore((s) => s.expiresAt);
-
-	return { isPremium, isLoading, expiresAt };
+	return useSubscriptionStore(
+		useShallow((s) => ({ isPremium: s.isPremium, isLoading: s.isLoading, expiresAt: s.expiresAt })),
+	);
 };

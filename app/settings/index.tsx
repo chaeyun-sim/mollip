@@ -3,6 +3,7 @@ import * as Haptics from 'expo-haptics';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { ActivityIndicator, Pressable, ScrollView, Switch, Text, View } from 'react-native';
+import { useShallow } from 'zustand/react/shallow';
 import { Screen } from '@/src/components/layout/Screen';
 import { CardRow, SettingsCard } from '@/src/components/mypage';
 import { colors } from '@/src/constants/colors';
@@ -12,10 +13,14 @@ import { useSettingsStore } from '@/src/store/settingsStore';
 
 export default function MyPageScreen() {
 	const router = useRouter();
-	const session = useAuthStore((s) => s.session);
-	const user = useAuthStore((s) => s.user);
-	const authLoading = useAuthStore((s) => s.isLoading);
-	const signOut = useAuthStore((s) => s.signOut);
+	const { session, user, authLoading, signOut } = useAuthStore(
+		useShallow((s) => ({
+			session: s.session,
+			user: s.user,
+			authLoading: s.isLoading,
+			signOut: s.signOut,
+		})),
+	);
 	const [signingOut, setSigningOut] = useState(false);
 	const { pushNotificationsEnabled, setPushNotificationsEnabled } = useSettingsStore();
 

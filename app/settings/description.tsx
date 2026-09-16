@@ -1,6 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { Pressable, ScrollView, Text, View } from 'react-native';
+import { useShallow } from 'zustand/react/shallow';
 
 import { Screen } from '@/src/components/layout/Screen';
 import { SettingsCard } from '@/src/components/mypage';
@@ -49,8 +50,12 @@ const FOCUS_OPTIONS: FocusOption[] = [
 
 export default function DescriptionSettingsScreen() {
 	const router = useRouter();
-	const descriptionFocus = useSettingsStore((s) => s.descriptionFocus);
-	const toggleDescriptionFocus = useSettingsStore((s) => s.toggleDescriptionFocus);
+	const { descriptionFocus, toggleDescriptionFocus } = useSettingsStore(
+		useShallow((s) => ({
+			descriptionFocus: s.descriptionFocus,
+			toggleDescriptionFocus: s.toggleDescriptionFocus,
+		})),
+	);
 
 	return (
 		<Screen variant="warm">

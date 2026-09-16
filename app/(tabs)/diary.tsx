@@ -3,6 +3,7 @@ import { BottomSheetBackdrop, BottomSheetModal } from '@gorhom/bottom-sheet';
 import { useRouter } from 'expo-router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Pressable, ScrollView, Text, View } from 'react-native';
+import { useShallow } from 'zustand/react/shallow';
 import { DiaryCalendar } from '@/src/components/archive/DiaryCalendar';
 import { VisitPickerSheet, type VisitPickerEntry } from '@/src/components/archive/VisitPickerSheet';
 import { LoginRequiredPressable } from '@/src/components/auth/LoginRequiredPressable';
@@ -19,8 +20,9 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function DiaryScreen() {
 	const router = useRouter();
-	const session = useAuthStore((s) => s.session);
-	const authLoading = useAuthStore((s) => s.isLoading);
+	const { session, authLoading } = useAuthStore(
+		useShallow((s) => ({ session: s.session, authLoading: s.isLoading })),
+	);
 
 	const insets = useSafeAreaInsets();
 

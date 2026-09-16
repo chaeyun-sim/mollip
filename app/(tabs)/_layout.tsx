@@ -1,12 +1,14 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Tabs, useRouter } from 'expo-router';
+import { useShallow } from 'zustand/react/shallow';
 import { useAuthStore } from '@/src/store/authStore';
 import { colors } from '@/src/constants/colors';
 
 export default function TabsLayout() {
 	const router = useRouter();
-	const session = useAuthStore((s) => s.session);
-	const authLoading = useAuthStore((s) => s.isLoading);
+	const { session, authLoading } = useAuthStore(
+		useShallow((s) => ({ session: s.session, authLoading: s.isLoading })),
+	);
 
 	return (
 		<Tabs

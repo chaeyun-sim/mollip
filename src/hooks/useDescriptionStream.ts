@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { useShallow } from 'zustand/react/shallow';
 import { buildDescriptionPrompt } from '../constants/prompts';
 import { useSettingsStore } from '../store/settingsStore';
 import { store, updateStore } from '../store';
@@ -10,12 +11,21 @@ const CHAR_INTERVAL_MS = 25;
 export const MAX_DESCRIPTION_RETRIES = 3;
 
 export function useDescriptionStream() {
-	const isImmersive = useImmersiveStore((s) => s.isImmersiveMode);
-	const immersiveExhibitionId = useImmersiveStore((s) => s.exhibitionId);
-	const immersiveExhibitionTitle = useImmersiveStore((s) => s.exhibitionTitle);
-	const descriptionFocus = useSettingsStore((s) => s.descriptionFocus);
-	const descriptionLength = useSettingsStore((s) => s.descriptionLength);
-	const addToPlaylist = useImmersiveStore((s) => s.addToPlaylist);
+	const { isImmersive, immersiveExhibitionId, immersiveExhibitionTitle, addToPlaylist } =
+		useImmersiveStore(
+			useShallow((s) => ({
+				isImmersive: s.isImmersiveMode,
+				immersiveExhibitionId: s.exhibitionId,
+				immersiveExhibitionTitle: s.exhibitionTitle,
+				addToPlaylist: s.addToPlaylist,
+			})),
+		);
+	const { descriptionFocus, descriptionLength } = useSettingsStore(
+		useShallow((s) => ({
+			descriptionFocus: s.descriptionFocus,
+			descriptionLength: s.descriptionLength,
+		})),
+	);
 	const recordListened = useVisitStore((s) => s.recordListened);
 
 	const [displayed, setDisplayed] = useState('');

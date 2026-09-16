@@ -10,6 +10,7 @@ import {
 	Text,
 	View,
 } from 'react-native';
+import { useShallow } from 'zustand/react/shallow';
 
 import type { EssayInputMode } from '@/src/components/archive/EssayInputSection';
 import { ReceiptSummary, type ReceiptSummaryHandle } from '@/src/components/archive/ReceiptSummary';
@@ -29,9 +30,13 @@ const STAMP_HOLD_MS = 850;
 // 언제든 뒤로 나가도 되고, 남은 항목은 계속 미확정으로 남아 다음에 배너로 다시 안내된다.
 export default function ConfirmVisitsScreen() {
 	const router = useRouter();
-	const visits = useVisitStore((s) => s.visits);
-	const confirmVisit = useVisitStore((s) => s.confirmVisit);
-	const deleteVisit = useVisitStore((s) => s.deleteVisit);
+	const { visits, confirmVisit, deleteVisit } = useVisitStore(
+		useShallow((s) => ({
+			visits: s.visits,
+			confirmVisit: s.confirmVisit,
+			deleteVisit: s.deleteVisit,
+		})),
+	);
 
 	const pendingKeys = useMemo(
 		() =>

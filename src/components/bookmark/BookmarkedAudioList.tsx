@@ -3,8 +3,10 @@ import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import * as Haptics from 'expo-haptics';
 import { useRouter } from 'expo-router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { ActivityIndicator, Alert, FlatList, Image, Pressable, Text, View } from 'react-native';
+import { ActivityIndicator, Alert, FlatList, Pressable, Text, View } from 'react-native';
+import { useShallow } from 'zustand/react/shallow';
 import { Divider } from '@/src/components/common/Divider';
+import { ImageFallback } from '@/src/components/common/ImageFallback';
 import { Result } from '@/src/components/common/Result';
 import { DownloadStatusBadge } from '@/src/components/guide/DownloadStatusBadge';
 import { colors } from '@/src/constants/colors';
@@ -30,10 +32,12 @@ export function BookmarkedAudioList() {
 	const router = useRouter();
 	const session = useAuthStore((s) => s.session);
 	const { isPremium } = useSubscription();
-	const historyItems = useHistoryStore((s) => s.items);
-	const updateHistory = useHistoryStore((s) => s.update);
-	const bookmarkedIds = useBookmarkAudioStore((s) => s.ids);
-	const toggleBookmark = useBookmarkAudioStore((s) => s.toggle);
+	const { historyItems, updateHistory } = useHistoryStore(
+		useShallow((s) => ({ historyItems: s.items, updateHistory: s.update })),
+	);
+	const { bookmarkedIds, toggleBookmark } = useBookmarkAudioStore(
+		useShallow((s) => ({ bookmarkedIds: s.ids, toggleBookmark: s.toggle })),
+	);
 	const items = useMemo(
 		() => historyItems.filter((item) => bookmarkedIds.includes(item.id)),
 		[historyItems, bookmarkedIds],
@@ -42,14 +46,26 @@ export function BookmarkedAudioList() {
 	const sheetRef = useRef<BottomSheet>(null);
 	const { isSpeaking, isLoading: isTTSLoading, speak, pause, stop } = useTTS();
 
-	const voiceId = useSettingsStore((s) => s.voiceId);
-	const voiceSpeed = useSettingsStore((s) => s.voiceSpeed);
-	const downloadStatuses = useOfflineDownloadStore((s) => s.statuses);
-	const downloadBatchIds = useOfflineDownloadStore((s) => s.batchIds);
-	const startDownload = useOfflineDownloadStore((s) => s.startDownload);
-	const retryDownload = useOfflineDownloadStore((s) => s.retryDownload);
-	const deleteDownload = useOfflineDownloadStore((s) => s.deleteDownload);
-	const deleteAllDownloads = useOfflineDownloadStore((s) => s.deleteAllDownloads);
+	const { voiceId, voiceSpeed } = useSettingsStore(
+		useShallow((s) => ({ voiceId: s.voiceId, voiceSpeed: s.voiceSpeed })),
+	);
+	const {
+		downloadStatuses,
+		downloadBatchIds,
+		startDownload,
+		retryDownload,
+		deleteDownload,
+		deleteAllDownloads,
+	} = useOfflineDownloadStore(
+		useShallow((s) => ({
+			downloadStatuses: s.statuses,
+			downloadBatchIds: s.batchIds,
+			startDownload: s.startDownload,
+			retryDownload: s.retryDownload,
+			deleteDownload: s.deleteDownload,
+			deleteAllDownloads: s.deleteAllDownloads,
+		})),
+	);
 
 	const downloadTargets = useMemo<DownloadTarget[]>(
 		() => items.map((item) => ({ id: item.id, text: item.text })),
@@ -273,17 +289,13 @@ export function BookmarkedAudioList() {
 							style={({ pressed }) => ({ opacity: pressed ? 0.8 : 1 })}
 						>
 							<View className="relative">
-								{item.imageUrl ? (
-									<Image
-										source={{ uri: item.imageUrl }}
-										className="w-[40px] h-[40px] rounded-full"
-										resizeMode="cover"
-									/>
-								) : (
-									<View className="w-[40px] h-[40px] rounded-full bg-[#E8E3DB] items-center justify-center">
-										<Ionicons name="headset-outline" size={18} className="text-gray600" />
-									</View>
-								)}
+								<ImageFallback
+									heroImageUri={item.imageUrl}
+									className="w-[40px] h-[40px] rounded-full bg-[#E8E3DB]"
+									iconSize={18}
+									resizeMode="cover"
+									accessibilityLabel={`${item.title} 이미지`}
+								/>
 								<DownloadStatusBadge
 									status={downloadStatuses[item.id] ?? 'idle'}
 									onRetry={() => handleRetryDownload(item.id)}
@@ -400,10 +412,12 @@ export function BookmarkedAudioList() {
 						</Text>
 						{selected.imageUrl && (
 							<View className="mt-10">
-								<Image
-									source={{ uri: selected.imageUrl }}
+								<ImageFallback
+									heroImageUri={selected.imageUrl}
 									className="w-full h-[200px] rounded-lg"
+									iconSize={64}
 									resizeMode="cover"
+									accessibilityLabel={`${selected.title} 이미지`}
 								/>
 							</View>
 						)}

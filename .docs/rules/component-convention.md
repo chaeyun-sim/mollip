@@ -258,6 +258,42 @@ const handleMarkerPress = useCallback(
 const clusters = useMemo(() => computeClusters(mapVenues, displayZoom), [mapVenues, displayZoom]);
 ```
 
+### 7.1 Zustand selector — 1개면 그대로, 2개 이상이면 useShallow
+
+같은 zustand 스토어에서 selector를 **1개만** 쓸 때는 그대로 쓴다.
+
+```tsx
+// Good — selector 1개
+const session = useAuthStore((s) => s.session);
+```
+
+같은 스토어에서 selector를 **2개 이상** 쓸 때는 `zustand/react/shallow`의 `useShallow`로 한 번에 묶는다. 여러 줄로 나눠 쓰면 코드는 늘어나지만 리렌더 동작은 동일하고, 그렇다고 `useShallow` 없이 객체 하나로 묶으면(`useStore((s) => ({ a: s.a, b: s.b }))`) selector가 매번 새 객체를 반환해 스토어의 무관한 필드가 바뀌어도 리렌더된다. `useShallow`는 얕은 비교로 이 문제를 막으면서 여러 줄을 한 번에 정리한다.
+
+```tsx
+// Bad — selector 2개 이상을 따로따로
+const statuses = useOfflineDownloadStore((s) => s.statuses);
+const startDownload = useOfflineDownloadStore((s) => s.startDownload);
+const deleteDownload = useOfflineDownloadStore((s) => s.deleteDownload);
+
+// Bad — useShallow 없이 객체로 묶기 (무관한 필드 변경에도 리렌더됨)
+const { statuses, startDownload, deleteDownload } = useOfflineDownloadStore((s) => ({
+	statuses: s.statuses,
+	startDownload: s.startDownload,
+	deleteDownload: s.deleteDownload,
+}));
+
+// Good — useShallow로 묶기
+import { useShallow } from 'zustand/react/shallow';
+
+const { statuses, startDownload, deleteDownload } = useOfflineDownloadStore(
+	useShallow((s) => ({
+		statuses: s.statuses,
+		startDownload: s.startDownload,
+		deleteDownload: s.deleteDownload,
+	})),
+);
+```
+
 ---
 
 ## 8. 접근성

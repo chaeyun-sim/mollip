@@ -10,6 +10,7 @@ import Animated, {
 	withTiming,
 } from 'react-native-reanimated';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useShallow } from 'zustand/react/shallow';
 
 import {
 	AccessibilityBadges,
@@ -52,8 +53,9 @@ export default function ExhibitionDetailScreen() {
 	const recordVisit = useVisitStore((s) => s.recordExhibition);
 
 	const { exhibition, isLoading } = useExhibitionData(id);
-	const isBookmarked = useBookmarkStore((s) => s.isBookmarked(id));
-	const toggle = useBookmarkStore((s) => s.toggle);
+	const { isBookmarked, toggle } = useBookmarkStore(
+		useShallow((s) => ({ isBookmarked: s.isBookmarked(id), toggle: s.toggle })),
+	);
 	const pushNotificationsEnabled = useSettingsStore((s) => s.pushNotificationsEnabled);
 	const { ensureAuth } = useRequireAuth();
 	useRecordExhibitionView(id, !!exhibition);

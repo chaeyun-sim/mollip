@@ -1,5 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Pressable, Text, View } from 'react-native';
+import { useShallow } from 'zustand/react/shallow';
 import { useBookmarkStore } from '@/src/store/bookmarkStore';
 import { ImageFallback } from '@/src/components/common/ImageFallback';
 import { useRequireAuth } from '@/src/hooks/useRequireAuth';
@@ -17,8 +18,9 @@ export function ExhibitionResultCard({ result, onPress }: ExhibitionResultCardPr
 	const { exhibition: ex, status, distanceKm } = result;
 
 	const ddayLabel = getDdayLabel(ex);
-	const isBookmarked = useBookmarkStore((s) => s.isBookmarked(ex.id));
-	const toggleBookmark = useBookmarkStore((s) => s.toggle);
+	const { isBookmarked, toggleBookmark } = useBookmarkStore(
+		useShallow((s) => ({ isBookmarked: s.isBookmarked(ex.id), toggleBookmark: s.toggle })),
+	);
 	const { ensureAuth } = useRequireAuth();
 
 	const handleToggleBookmark = () => {

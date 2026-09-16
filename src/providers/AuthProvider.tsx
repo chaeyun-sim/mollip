@@ -1,5 +1,6 @@
 import * as Linking from 'expo-linking';
 import { useEffect, type ReactNode } from 'react';
+import { useShallow } from 'zustand/react/shallow';
 
 import { useAuthStore } from '@/src/store/authStore';
 import { createSessionFromUrl } from '@/src/utils/authOAuth';
@@ -12,9 +13,13 @@ type Props = {
 };
 
 export function AuthProvider({ children }: Props) {
-	const setAuth = useAuthStore((s) => s.setAuth);
-	const setLoading = useAuthStore((s) => s.setLoading);
-	const setOnboardingCompleted = useAuthStore((s) => s.setOnboardingCompleted);
+	const { setAuth, setLoading, setOnboardingCompleted } = useAuthStore(
+		useShallow((s) => ({
+			setAuth: s.setAuth,
+			setLoading: s.setLoading,
+			setOnboardingCompleted: s.setOnboardingCompleted,
+		})),
+	);
 
 	useEffect(() => {
 		let mounted = true;

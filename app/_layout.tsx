@@ -22,6 +22,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import { View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { useShallow } from 'zustand/react/shallow';
 import { Result } from '../src/components/common/Result';
 import { Screen } from '../src/components/layout/Screen';
 import { useImmersiveStore } from '../src/store/immersiveStore';
@@ -82,17 +83,22 @@ export default function RootLayout() {
 		NanumPenScript_400Regular,
 	});
 
-	const hasHydrated = useImmersiveStore((s) => s._hasHydrated);
-	const authLoading = useAuthStore((s) => s.isLoading);
-	const user = useAuthStore((s) => s.user);
-	const onboardingCompleted = useAuthStore((s) => s.onboardingCompleted);
+	const { authLoading, user, onboardingCompleted } = useAuthStore(
+		useShallow((s) => ({
+			authLoading: s.isLoading,
+			user: s.user,
+			onboardingCompleted: s.onboardingCompleted,
+		})),
+	);
 	// usePushNotifications(user?.id); // 네이티브 빌드 후 활성화
 	useBookmarkSync(); // 로그인 시 Supabase 북마크 동기화
 	useHistorySync(); // 로그인 시 Supabase 오디오 가이드 히스토리 동기화
 	useVisitSync(); // 로그인 시 Supabase 관람 기록 동기화
 	useBookmarkAudioSync(); // 로그인 시 Supabase 오디오 북마크 동기화
 
-	const isImmersive = useImmersiveStore((s) => s.isImmersiveMode);
+	const { hasHydrated, isImmersive } = useImmersiveStore(
+		useShallow((s) => ({ hasHydrated: s._hasHydrated, isImmersive: s.isImmersiveMode })),
+	);
 	const router = useRouter();
 
 	// 알림 탭 딥링크 처리

@@ -3,6 +3,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { FlatList, Keyboard, Pressable, ScrollView, Text, View } from 'react-native';
 import Animated, { FadeIn, FadeOut, LinearTransition } from 'react-native-reanimated';
+import { useShallow } from 'zustand/react/shallow';
 import { Screen } from '@/src/components/layout/Screen';
 import { SearchBar } from '@/src/components/common/SearchBar';
 import { DatePickerModal } from '@/src/components/common/DatePickerModal';
@@ -55,10 +56,14 @@ export default function SearchScreen() {
 		results,
 	} = useExhibitionSearch();
 
-	const recentWords = useRecentSearchStore((s) => s.words);
-	const addRecent = useRecentSearchStore((s) => s.add);
-	const removeRecent = useRecentSearchStore((s) => s.remove);
-	const clearRecent = useRecentSearchStore((s) => s.clear);
+	const { recentWords, addRecent, removeRecent, clearRecent } = useRecentSearchStore(
+		useShallow((s) => ({
+			recentWords: s.words,
+			addRecent: s.add,
+			removeRecent: s.remove,
+			clearRecent: s.clear,
+		})),
+	);
 
 	// 상세 화면 태그 탭 등 외부에서 ?q= 파라미터로 들어오면 디바운스 없이 바로 검색 반영
 	useEffect(() => {

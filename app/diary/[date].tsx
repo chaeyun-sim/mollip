@@ -12,6 +12,7 @@ import {
 	View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useShallow } from 'zustand/react/shallow';
 import {
 	DiaryGuidePlayer,
 	type DiaryGuidePlayerHandle,
@@ -44,10 +45,14 @@ export default function DiaryDateScreen() {
 		return `${y}.${m}.${d} ${weekday}요일`;
 	}, [dateKey]);
 
-	const visits = useVisitStore((s) => s.visits);
-	const setVisitMemo = useVisitStore((s) => s.setVisitMemo);
-	const setVisitRating = useVisitStore((s) => s.setVisitRating);
-	const deleteVisit = useVisitStore((s) => s.deleteVisit);
+	const { visits, setVisitMemo, setVisitRating, deleteVisit } = useVisitStore(
+		useShallow((s) => ({
+			visits: s.visits,
+			setVisitMemo: s.setVisitMemo,
+			setVisitRating: s.setVisitRating,
+			deleteVisit: s.deleteVisit,
+		})),
+	);
 	const playlist = useImmersiveStore((s) => s.playlist);
 	const historyItems = useHistoryStore((s) => s.items);
 

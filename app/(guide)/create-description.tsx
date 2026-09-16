@@ -14,6 +14,7 @@ import {
 	View,
 	ActivityIndicator,
 } from 'react-native';
+import { useShallow } from 'zustand/react/shallow';
 import { Screen } from '../../src/components/layout/Screen';
 import * as Haptics from 'expo-haptics';
 import { updateStore } from '../../src/store';
@@ -47,8 +48,9 @@ export default function IndexScreen() {
 	const bottomSheetRef = useRef<BottomSheetModal>(null);
 	const settingsSheetRef = useRef<BottomSheetModal>(null);
 	const pendingCameraRef = useRef<boolean>(false);
-	const isImmersive = useImmersiveStore((s) => s.isImmersiveMode);
-	const exhibitionTitle = useImmersiveStore((s) => s.exhibitionTitle);
+	const { isImmersive, exhibitionTitle } = useImmersiveStore(
+		useShallow((s) => ({ isImmersive: s.isImmersiveMode, exhibitionTitle: s.exhibitionTitle })),
+	);
 	const { ensureAuth } = useRequireAuth();
 	const { isPremium } = useSubscription();
 	const [isLoading, setIsLoading] = useState(false);

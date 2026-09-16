@@ -12,6 +12,7 @@ import {
 	Text,
 	View,
 } from 'react-native';
+import { useShallow } from 'zustand/react/shallow';
 import { Button } from '@/src/components/common/Button';
 import { DatePickerModal } from '@/src/components/common/DatePickerModal';
 import { ProgressBar } from '@/src/components/common/ProgressBar';
@@ -39,8 +40,9 @@ export default function VerifyTicketScreen() {
 	const [photosError, setPhotosError] = useState(false);
 	const [gridWidth, setGridWidth] = useState(0);
 	const [saving, setSaving] = useState(false);
-	const recordExhibition = useVisitStore((s) => s.recordExhibition);
-	const confirmVisit = useVisitStore((s) => s.confirmVisit);
+	const { recordExhibition, confirmVisit } = useVisitStore(
+		useShallow((s) => ({ recordExhibition: s.recordExhibition, confirmVisit: s.confirmVisit })),
+	);
 	const userId = useAuthStore((s) => s.user?.id);
 
 	const dateLabel = formatDate(undefined, {

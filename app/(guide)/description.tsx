@@ -16,6 +16,7 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Easing, useSharedValue, withRepeat, withTiming } from 'react-native-reanimated';
+import { useShallow } from 'zustand/react/shallow';
 import { Screen } from '../../src/components/layout/Screen';
 import { useTTS } from '../../src/hooks/useTTS';
 import {
@@ -64,11 +65,16 @@ export default function DescriptionScreen() {
 	const { fontSize, highContrast } = useSettingsStore();
 	const bodyFontSize = getEffectiveFontSize(fontSize, highContrast);
 
-	const addHistory = useHistoryStore((s) => s.add);
-	const updateHistory = useHistoryStore((s) => s.update);
-	const saveChatMessages = useHistoryStore((s) => s.saveChatMessages);
-	const toggleBookmarkAudio = useBookmarkAudioStore((s) => s.toggle);
-	const isAudioBookmarked = useBookmarkAudioStore((s) => s.isBookmarked);
+	const { addHistory, updateHistory, saveChatMessages } = useHistoryStore(
+		useShallow((s) => ({
+			addHistory: s.add,
+			updateHistory: s.update,
+			saveChatMessages: s.saveChatMessages,
+		})),
+	);
+	const { toggleBookmarkAudio, isAudioBookmarked } = useBookmarkAudioStore(
+		useShallow((s) => ({ toggleBookmarkAudio: s.toggle, isAudioBookmarked: s.isBookmarked })),
+	);
 	const flushChatSession = useChatStore((s) => s.flushSession);
 	const { ensureAuth } = useRequireAuth();
 	const [savedId, setSavedId] = useState<string | null>(null);

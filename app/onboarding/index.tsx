@@ -1,6 +1,7 @@
 import { useRouter } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { View } from 'react-native';
+import { useShallow } from 'zustand/react/shallow';
 
 import { Screen } from '@/src/components/layout/Screen';
 import { OnboardingArtworkTray } from '@/src/components/onboarding/OnboardingArtworkTray';
@@ -16,8 +17,9 @@ import { supabase } from '@/src/utils/supabase';
 
 export default function OnboardingScreen() {
 	const router = useRouter();
-	const userId = useAuthStore((s) => s.user?.id);
-	const setOnboardingCompleted = useAuthStore((s) => s.setOnboardingCompleted);
+	const { userId, setOnboardingCompleted } = useAuthStore(
+		useShallow((s) => ({ userId: s.user?.id, setOnboardingCompleted: s.setOnboardingCompleted })),
+	);
 	const [saving, setSaving] = useState(false);
 	// 오류 바는 실패 이후 재시도가 끝날 때까지(성공 또는 무저장 시작 전까지) 화면에 남는다 (AC-5)
 	// 0 = 오류 없음, 그 외에는 실패 횟수 — key로 써서 재실패마다 알림을 다시 발화한다 (AC-7)
