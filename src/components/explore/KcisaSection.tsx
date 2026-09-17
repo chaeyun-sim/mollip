@@ -2,8 +2,9 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { Pressable, Text, View } from 'react-native';
 import { SectionTitle } from '@/src/components/common/SectionTitle';
-import { HorizontalSection } from '@/src/components/explore/HorizontalSection';
+import { HorizontalSection } from '@/src/components/common/HorizontalSection';
 import { KcisaExhibitionCard } from '@/src/components/explore/KcisaExhibitionCard';
+import { KcisaExhibitionCardSkeleton } from '@/src/components/explore/KcisaExhibitionCardSkeleton';
 import type { ExhibitionSummary, FeaturedExhibition } from '@/src/hooks/useExploreScreenData';
 import { AsyncStatus } from '@/src/types/asyncStatus.types';
 

@@ -14,10 +14,12 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { LoginRequiredPressable } from '@/src/components/auth/LoginRequiredPressable';
 import { SectionTitle } from '@/src/components/common/SectionTitle';
 import { FeaturedExhibitionHero } from '@/src/components/explore';
-import { HorizontalSection } from '@/src/components/explore/HorizontalSection';
+import { HorizontalSection } from '@/src/components/common/HorizontalSection';
 import { KcisaExhibitionCard } from '@/src/components/explore/KcisaExhibitionCard';
+import { KcisaExhibitionCardSkeleton } from '@/src/components/explore/KcisaExhibitionCardSkeleton';
 import { KcisaSection } from '@/src/components/explore/KcisaSection';
 import { PopularExhibitionAvatar } from '@/src/components/explore/PopularExhibitionAvatar';
+import { PopularExhibitionAvatarSkeleton } from '@/src/components/explore/PopularExhibitionAvatarSkeleton';
 import { Screen } from '@/src/components/layout/Screen';
 import { ScreenHeader } from '@/src/components/layout/ScreenHeader';
 import { useExploreScreenData, type ExhibitionSummary } from '@/src/hooks/useExploreScreenData';
@@ -153,6 +155,7 @@ export default function ExploreScreen() {
 					renderItem={(item) => (
 						<PopularExhibitionAvatar key={item.id} item={item} onPress={openExhibition} />
 					)}
+					renderSkeletonItem={(index) => <PopularExhibitionAvatarSkeleton key={index} />}
 					sectionName="인기 전시"
 					placeholder="인기 전시가 없어요"
 					contentContainerClassName="gap-0"
@@ -190,6 +193,7 @@ export default function ExploreScreen() {
 						renderItem={(item) => (
 							<KcisaExhibitionCard key={item.id} item={item} onPress={openExhibition} />
 						)}
+						renderSkeletonItem={(index) => <KcisaExhibitionCardSkeleton key={index} />}
 						sectionName="추천 전시"
 						placeholder="추천할 전시가 없어요"
 					/>

@@ -11,6 +11,7 @@ import { Result } from '@/src/components/common/Result';
 import { SearchFilterBar } from '@/src/components/search/SearchFilterBar';
 import { ExcludeWordsModal } from '@/src/components/search/ExcludeWordsModal';
 import { ExhibitionResultCard } from '@/src/components/search/ExhibitionResultCard';
+import { ExhibitionResultCardSkeleton } from '@/src/components/search/ExhibitionResultCardSkeleton';
 import { useExhibitionSearch, type SearchResult } from '@/src/hooks/useExhibitionSearch';
 import { usePreferences } from '@/src/hooks/usePreferences';
 import { useRecentSearchStore } from '@/src/store/recentSearchStore';
@@ -54,6 +55,7 @@ export default function SearchScreen() {
 		toggleFreeOnly,
 		hasLocation,
 		results,
+		isLoading,
 	} = useExhibitionSearch();
 
 	const { recentWords, addRecent, removeRecent, clearRecent } = useRecentSearchStore(
@@ -270,6 +272,13 @@ export default function SearchScreen() {
 						</View>
 					)}
 				</ScrollView>
+			) : isLoading && listData.length === 0 ? (
+				/* 검색 결과 로딩 중 — 실제 카드와 동일 높이의 스켈레톤 행 */
+				<View className="gap-5">
+					{Array.from({ length: 5 }).map((_, index) => (
+						<ExhibitionResultCardSkeleton key={index} />
+					))}
+				</View>
 			) : (
 				/* 검색 후 — 무한스크롤 결과 */
 				<FlatList

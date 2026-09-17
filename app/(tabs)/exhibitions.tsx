@@ -1,13 +1,16 @@
 import { useCallback } from 'react';
 import { useRouter } from 'expo-router';
-import { ActivityIndicator, FlatList, Text, View, useWindowDimensions } from 'react-native';
+import { FlatList, Text, View, useWindowDimensions } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ListFooter } from '@/src/components/common/ListFooter';
 import { Result } from '@/src/components/common/Result';
 import { ExhibitionListRow } from '@/src/components/explore/ExhibitionListRow';
+import { ExhibitionListRowSkeleton } from '@/src/components/explore/ExhibitionListRowSkeleton';
 import type { RecommendableItem } from '@/src/components/explore/RecommendableItem.types';
 import { Screen } from '@/src/components/layout/Screen';
 import { useAllExhibitions } from '@/src/hooks/useAllExhibitions';
+
+const SKELETON_ROW_COUNT = 5;
 
 const HORIZONTAL_PADDING = 24;
 const ROW_GAP = 16;
@@ -71,8 +74,14 @@ export default function ExhibitionsScreen() {
 	const renderEmpty = useCallback(() => {
 		if (status === 'loading') {
 			return (
-				<View className="flex-1 items-center justify-center py-24">
-					<ActivityIndicator className="text-gray500" />
+				<View>
+					{Array.from({ length: SKELETON_ROW_COUNT }).map((_, index) => (
+						<ExhibitionListRowSkeleton
+							key={index}
+							columnWidth={columnWidth}
+							showDivider={index < SKELETON_ROW_COUNT - 1}
+						/>
+					))}
 				</View>
 			);
 		}
@@ -91,7 +100,7 @@ export default function ExhibitionsScreen() {
 		}
 
 		return null;
-	}, [status, refetch]);
+	}, [status, refetch, columnWidth]);
 
 	return (
 		<Screen variant="warm">

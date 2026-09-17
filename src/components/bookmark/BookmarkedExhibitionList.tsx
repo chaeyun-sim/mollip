@@ -4,9 +4,9 @@ import { FlatList, View } from 'react-native';
 import { Chip } from '@/src/components/common/Chip';
 import { Result } from '@/src/components/common/Result';
 import { ExhibitionResultCard } from '@/src/components/search/ExhibitionResultCard';
+import { ExhibitionResultCardSkeleton } from '@/src/components/search/ExhibitionResultCardSkeleton';
 import { useBookmarkedExhibitions } from '@/src/hooks/useBookmarkedExhibitions';
 import { getExhibitionStatus, type ExhibitionStatus } from '@/src/utils/exhibitionSearch';
-import { Indicator } from '../common/Indicator';
 
 type FilterOption = ExhibitionStatus | 'all';
 
@@ -33,8 +33,10 @@ export function BookmarkedExhibitionList() {
 
 	if (isLoading) {
 		return (
-			<View className="flex-1 items-center justify-center">
-				<Indicator color="gray600" />
+			<View className="flex-1 gap-4 pt-3">
+				{Array.from({ length: 5 }).map((_, index) => (
+					<ExhibitionResultCardSkeleton key={index} />
+				))}
 			</View>
 		);
 	}

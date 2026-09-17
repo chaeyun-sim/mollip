@@ -4,6 +4,7 @@ import { Text, View } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import { ModeToggle } from './route-sheet/ModeToggle';
 import { RouteCandidateCard } from './route-sheet/RouteCandidateCard';
+import { RouteCandidateCardSkeleton } from './route-sheet/RouteCandidateCardSkeleton';
 import { RouteSummaryHeader } from './route-sheet/RouteSummaryHeader';
 import { RouteTimeline } from './route-sheet/RouteTimeline';
 import { SortChips } from './route-sheet/SortChips';
@@ -12,7 +13,6 @@ import { ExternalMapSheet, type ExternalMapTarget } from '@/src/components/map/E
 import type { RouteCoord, RouteResult } from '@/src/api/tmap';
 import type { DirectionsMode } from '@/src/hooks/useDirections';
 import type { AsyncStatus } from '@/src/types/asyncStatus.types';
-import { Indicator } from '../common/Indicator';
 
 interface RouteSheetProps {
 	mode: DirectionsMode;
@@ -84,9 +84,9 @@ export function RouteSheet({
           exiting은 두지 않는다 — 사라지는 뷰가 잠시 자리를 차지해 높이가 튀기 때문. */}
 			<Animated.View key={`${mode}-${status}`} entering={FadeIn.duration(240)}>
 				{status === 'loading' && (
-					<View className="flex-row items-center gap-2 py-6">
-						<Indicator size="small" color="gray900" />
-						<Text className="text-black/50 text-[13px] font-pretendard-regular">경로 찾는 중…</Text>
+					<View className="gap-3 pb-8">
+						<RouteCandidateCardSkeleton expanded />
+						<RouteCandidateCardSkeleton />
 					</View>
 				)}
 
