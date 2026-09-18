@@ -18,8 +18,6 @@ export function DeadlineLabel({ endDate }: DeadlineLabelProps) {
 	const days = getDaysRemaining(endDate);
 	if (days > 14 || days < 0) return null;
 
-	const label = days === 0 ? '오늘 마감' : `D-${days}`;
-
 	return (
 		<View
 			className={cn(
@@ -27,7 +25,9 @@ export function DeadlineLabel({ endDate }: DeadlineLabelProps) {
 				days <= 3 ? 'bg-error' : days <= 7 ? 'bg-orange-500' : 'bg-yellow-500',
 			)}
 		>
-			<Text className="font-pretendard-semibold text-[11px] text-white">{label}</Text>
+			<Text className="font-pretendard-semibold text-[11px] text-white">
+				{days === 0 ? '오늘 마감' : `D-${days}`}
+			</Text>
 		</View>
 	);
 }

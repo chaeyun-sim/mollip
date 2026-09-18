@@ -1,6 +1,6 @@
 import { Pressable, Text, View } from 'react-native';
+import { ExhibitionStatusBadge } from '@/src/components/common/ExhibitionStatusBadge';
 import { ImageFallback } from '@/src/components/common/ImageFallback';
-import { StatusBadge } from '@/src/components/explore/StatusBadge';
 import type { KcisaExhibitionItem } from '@/src/hooks/useKcisaExhibitions';
 
 const CARD_HEIGHT = Math.round((140 * 4) / 3);
@@ -47,7 +47,7 @@ export function KcisaExhibitionCard({ item, onPress, index }: KcisaExhibitionCar
 				)}
 			</View>
 			<View className="mt-2.5 w-[148px]">
-				<StatusBadge status={item.status} />
+				<ExhibitionStatusBadge status={item.status} />
 			</View>
 			<Text
 				numberOfLines={2}

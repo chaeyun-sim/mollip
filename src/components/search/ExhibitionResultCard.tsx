@@ -1,12 +1,12 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Pressable, Text, View } from 'react-native';
 import { useShallow } from 'zustand/react/shallow';
-import { useBookmarkStore } from '@/src/store/bookmarkStore';
+import { ExhibitionStatusBadge } from '@/src/components/common/ExhibitionStatusBadge';
 import { ImageFallback } from '@/src/components/common/ImageFallback';
 import { useRequireAuth } from '@/src/hooks/useRequireAuth';
+import { useBookmarkStore } from '@/src/store/bookmarkStore';
 import { formatDistance } from '@/src/utils/mapUtils';
 import { getDdayLabel, STATUS_LABELS } from '@/src/utils/exhibitionSearch';
-import { StatusBadge } from '@/src/components/explore/StatusBadge';
 import type { SearchResult } from '@/src/hooks/useExhibitionSearch';
 
 interface ExhibitionResultCardProps {
@@ -48,7 +48,7 @@ export function ExhibitionResultCard({ result, onPress }: ExhibitionResultCardPr
 
 			{/* 정보 */}
 			<View className="flex-1 justify-center gap-1">
-				<StatusBadge status={status} />
+				<ExhibitionStatusBadge status={status} />
 				<Text numberOfLines={1} className="text-gray900 text-[15px] font-pretendard-semibold">
 					{ex.title}
 				</Text>

@@ -5,7 +5,7 @@ import { Pressable, Text, View } from 'react-native';
 import { cn } from '@/src/lib/cn';
 import { ExternalMapSheet, type ExternalMapTarget } from '@/src/components/map/ExternalMapSheet';
 import { ExhibitionInfoRow } from './ExhibitionInfoRow';
-import { Exhibition } from '@/src/data/exhibitions';
+import type { Exhibition } from '@/src/data/exhibitions';
 import { getDdayLabel } from '@/src/utils/exhibitionSearch';
 import {
 	buildWeeklyHours,
@@ -143,11 +143,9 @@ export function ExhibitionVenueInfo({ hasTopSpacing, ...exhibition }: Exhibition
 						)}
 					</View>
 				</View>
-				{exhibition.admission !== '없음' && (
-					<ExhibitionInfoRow label="관람료" isLast={!exhibition.museum?.parking}>
-						{exhibition.admission}
-					</ExhibitionInfoRow>
-				)}
+				<ExhibitionInfoRow label="관람료" isLast={!exhibition.museum?.parking}>
+					{exhibition.admission}
+				</ExhibitionInfoRow>
 				{exhibition.museum?.parking && (
 					<View className="py-3.5 w-full">
 						<Text className="text-gray500 text-[11px] font-pretendard-medium tracking-wider uppercase">

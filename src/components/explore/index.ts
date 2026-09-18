@@ -1,17 +1,15 @@
 export { AccessibilityBadges } from './AccessibilityBadges';
+export { CircleActionButton } from './CircleActionButton';
 export { DeadlineLabel } from './DeadlineLabel';
 export { ExhibitionArtworkCard } from './ExhibitionArtworkCard';
 export { ExhibitionDescription } from './ExhibitionDescription';
-export { ExhibitionDetailHeader } from './ExhibitionDetailHeader';
 export { ExhibitionDetailHero } from './ExhibitionDetailHero';
 export { ExhibitionVenueInfo } from './ExhibitionVenueInfo';
-export { ExhibitionDetailFloatingActions } from './ExhibitionDetailFloatingActions';
 export { ExhibitionTicketCTA } from './ExhibitionImmersiveCTA';
 export { ExhibitionImmersiveFab } from './ExhibitionImmersiveFab';
 export { ExhibitionInfoRow } from './ExhibitionInfoRow';
 export { ExhibitionMapPreview } from './ExhibitionMapPreview';
 export { ExhibitionMetaPill } from './ExhibitionMetaPill';
-export { ExhibitionOfficialLink } from './ExhibitionOfficialLink';
 export { FeaturedExhibitionHero } from './FeaturedExhibitionHero';
 export type { FeaturedExhibitionProps } from './FeaturedExhibitionHero';
 export type { RecommendableItem } from './RecommendableItem.types';

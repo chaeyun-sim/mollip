@@ -1,28 +1,48 @@
-import { cn } from '@/src/lib/cn';
 import { ReactNode } from 'react';
-import { Text, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
+
+import { cn } from '@/src/lib/cn';
 
 interface ExhibitionInfoRowProps {
+	icon?: ReactNode;
 	label: string;
 	isLast?: boolean;
 	children: ReactNode;
+	onPress?: () => void;
 }
 
-export function ExhibitionInfoRow({ label, isLast, children }: ExhibitionInfoRowProps) {
+export function ExhibitionInfoRow({
+	icon,
+	label,
+	isLast,
+	children,
+	onPress,
+}: ExhibitionInfoRowProps) {
 	return (
 		<View
-			className={cn(
-				'flex-row items-start justify-between gap-28 py-3',
-				!isLast && 'border-b-hairline border-b-gray900/15',
-			)}
+			className={cn('flex-row items-center gap-3 py-3.5', !isLast && 'border-b border-gray300')}
 		>
-			<Text className="text-gray-500 text-[12px] font-pretendard-semibold tracking-wider uppercase pt-1 whitespace-pre">
-				{label}
-			</Text>
-			<View className="flex-1 items-end">
-				<Text className="text-gray900 text-[14px] font-pretendard-regular text-right leading-5">
-					{children}
+			<View className="flex-1 pt-1">
+				<Text className="text-gray500 text-[11px] font-pretendard-medium tracking-wider uppercase">
+					{label}
 				</Text>
+				<View className="flex-row items-center gap-1.5">
+					<Text className="text-gray900 text-[14px] font-pretendard-regular leading-5 mt-0.5">
+						{children}
+					</Text>
+					{icon && (
+						<Pressable
+							onPress={onPress}
+							hitSlop={8}
+							accessibilityLabel="주소 복사"
+							accessibilityRole="button"
+							style={({ pressed }) => ({ opacity: pressed ? 0.5 : 1 })}
+							className="mt-0.5"
+						>
+							{icon}
+						</Pressable>
+					)}
+				</View>
 			</View>
 		</View>
 	);

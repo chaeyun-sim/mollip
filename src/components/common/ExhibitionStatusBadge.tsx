@@ -1,13 +1,13 @@
 import { Text } from 'react-native';
-import { STATUS_LABELS, type ExhibitionStatus } from '@/src/utils/exhibitionSearch';
 import { cn } from '@/src/lib/cn';
+import { STATUS_LABELS, type ExhibitionStatus } from '@/src/utils/exhibitionSearch';
 
-interface StatusBadgeProps {
+interface ExhibitionStatusBadgeProps {
 	status: ExhibitionStatus;
 	className?: string;
 }
 
-export function StatusBadge({ status, className }: StatusBadgeProps) {
+export function ExhibitionStatusBadge({ status, className }: ExhibitionStatusBadgeProps) {
 	return (
 		<Text
 			className={cn(

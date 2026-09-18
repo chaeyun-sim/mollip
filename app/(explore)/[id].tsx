@@ -33,7 +33,7 @@ import { useBookmarkStore } from '@/src/store/bookmarkStore';
 import { useImmersiveStore } from '@/src/store/immersiveStore';
 import { useSettingsStore } from '@/src/store/settingsStore';
 import { todayKey, useVisitStore } from '@/src/store/visitStore';
-import { getDdayLabel, getExhibitionTypeDisplay } from '@/src/utils/exhibitionSearch';
+import { getExhibitionTypeDisplay } from '@/src/utils/exhibitionSearch';
 import {
 	cancelDeadlineNotifications,
 	scheduleDeadlineNotifications,
@@ -60,7 +60,7 @@ export default function ExhibitionDetailScreen() {
 	useRecordExhibitionView(id, !!exhibition);
 	const { handleShare } = useShareExhibition(exhibition ?? null);
 
-	const fabBottom = insets.bottom + 32;
+	const fabBottom = insets.bottom + 20 + (exhibition?.ticketUrl ? 68 : 0);
 
 	const handleBookmark = useCallback(() => {
 		if (!ensureAuth(`/(explore)/${id}`)) return;
@@ -122,11 +122,10 @@ export default function ExhibitionDetailScreen() {
 		);
 	}
 
-	const ddayLabel = getDdayLabel(exhibition);
 	const webSite = exhibition.web_site ?? exhibition.homepage_url;
 
 	return (
-		<Screen variant="warm" className="px-0 pb-10" edges={[]}>
+		<Screen variant="warm" className="px-0" edges={[]}>
 			<View
 				className="absolute left-0 right-0 z-20 px-6"
 				style={{ top: insets.top + 18 }}
@@ -146,6 +145,7 @@ export default function ExhibitionDetailScreen() {
 			</View>
 
 			<ScrollView
+				style={{ overflow: 'visible' }}
 				contentContainerStyle={{ paddingBottom: fabBottom + 44, paddingTop: insets.top + 88 }}
 			>
 				<View>
@@ -240,28 +240,44 @@ export default function ExhibitionDetailScreen() {
 						</FadeInView>
 					)}
 
-					{exhibition.exhibitionType ||
+					{(exhibition.exhibitionType ||
 						exhibition.genre ||
-						(exhibition.tags?.length! > 0 && (
-							<FadeInView delay={210}>
-								<ScrollView
-									horizontal
-									showsHorizontalScrollIndicator={false}
-									contentContainerClassName="px-6 pt-5 pb-1 gap-2"
-								>
-									{exhibition.exhibitionType && (
-										<ExhibitionMetaPill text={getExhibitionTypeDisplay(exhibition)} />
-									)}
-									{exhibition.genre &&
-										exhibition.genre
-											.split(',')
-											.map((g) => <ExhibitionMetaPill key={g} text={g.trim()} />)}
-									{exhibition.tags?.map((tag) => (
-										<ExhibitionMetaPill key={tag} icon="pricetag-outline" text={tag} />
-									))}
-								</ScrollView>
-							</FadeInView>
-						))}
+						(exhibition.tags?.length ?? 0) > 0) && (
+						<FadeInView delay={210}>
+							<ScrollView
+								horizontal
+								showsHorizontalScrollIndicator={false}
+								contentContainerClassName="px-6 pt-5 pb-1 gap-2"
+							>
+								{exhibition.exhibitionType && (
+									<ExhibitionMetaPill text={getExhibitionTypeDisplay(exhibition)} />
+								)}
+								{exhibition.genre &&
+									exhibition.genre
+										.split(',')
+										.map((g) => <ExhibitionMetaPill key={g} text={g.trim()} />)}
+								{exhibition.tags?.map((tag) => (
+									<ExhibitionMetaPill key={tag} icon="pricetag-outline" text={tag} />
+								))}
+							</ScrollView>
+						</FadeInView>
+					)}
+
+					{exhibition.note && (
+						<FadeInView delay={300}>
+							<View className="mx-6 mt-4 px-4 py-3.5 rounded-2xl bg-[#F0EDE7] flex-row gap-3">
+								<Ionicons
+									name="information-circle-outline"
+									size={17}
+									className="text-gray600"
+									style={{ marginTop: 1 }}
+								/>
+								<Text className="flex-1 text-[13px] leading-[20px] text-gray700 font-pretendard-regular">
+									{exhibition.note}
+								</Text>
+							</View>
+						</FadeInView>
+					)}
 
 					<FadeInView delay={340} style={{ zIndex: 40, elevation: 40 }}>
 						<ExhibitionVenueInfo {...exhibition} hasTopSpacing />
@@ -295,12 +311,6 @@ export default function ExhibitionDetailScreen() {
 							<RelatedExhibitions exhibitions={exhibition.relatedExhibitions} />
 						</FadeInView>
 					)}
-
-					{ddayLabel && (
-						<Text className="px-6 pt-4 text-error text-[13px] font-pretendard-semibold">
-							D-{ddayLabel}
-						</Text>
-					)}
 				</View>
 			</ScrollView>
 
@@ -312,7 +322,10 @@ export default function ExhibitionDetailScreen() {
 				</View>
 			)}
 
-			<View className="absolute right-5" style={{ bottom: fabBottom + 80 }}>
+			<View
+				className="absolute right-5"
+				style={{ bottom: exhibition.ticketUrl ? fabBottom + 80 : fabBottom }}
+			>
 				<ExhibitionImmersiveFab onPress={() => setImmersiveOpen(true)} />
 			</View>
 

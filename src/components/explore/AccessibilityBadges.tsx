@@ -49,12 +49,13 @@ export function AccessibilityBadges({ accessibility }: AccessibilityBadgesProps)
 								className="text-gray700"
 							/>
 						)}
-						{itemText.startsWith('점자') &&
-							(itemText === '점자블록' ? (
-								<MaterialCommunityIcons name="dots-grid" size={13} className="text-gray700" />
-							) : (
-								<MaterialCommunityIcons name="braille" size={13} className="text-gray700" />
-							))}
+						{itemText.startsWith('점자') && (
+							<MaterialCommunityIcons
+								name={itemText === '점자블록' ? 'dots-grid' : 'braille'}
+								size={13}
+								className="text-gray700"
+							/>
+						)}
 						<Text className="text-[12px] font-pretendard-medium text-gray700">{item.trim()}</Text>
 					</View>
 				);

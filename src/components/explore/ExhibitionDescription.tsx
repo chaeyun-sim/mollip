@@ -9,7 +9,7 @@ export function ExhibitionDescription({ description }: ExhibitionDescriptionProp
 	const [expanded, setExpanded] = useState(false);
 
 	return (
-		<View className="px-6 pt-3">
+		<View className="px-6 pt-2">
 			<Text
 				className="font-pretendard-light text-[15px] leading-[26px] text-gray-600"
 				numberOfLines={expanded ? undefined : 3}
