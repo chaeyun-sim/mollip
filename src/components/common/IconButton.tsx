@@ -1,8 +1,10 @@
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
-import type { ReactNode } from 'react';
-import { Pressable, type PressableProps } from 'react-native';
+import { useState, type ReactNode } from 'react';
+import { Pressable, type GestureResponderEvent, type PressableProps } from 'react-native';
+import Animated from 'react-native-reanimated';
 import { cn } from '@/src/lib/cn';
+import { usePressScale } from '@/src/hooks/usePressScale';
 import { Indicator } from './Indicator';
 
 export type IconButtonTone = 'brand' | 'inverse';
@@ -14,6 +16,7 @@ interface IconButtonProps extends Omit<PressableProps, 'children' | 'onPress'> {
 	onPress: () => void;
 	accessibilityLabel: string;
 	icon?: keyof typeof Ionicons.glyphMap;
+	iconSize?: number;
 	children?: ReactNode;
 	variant?: IconButtonVariant;
 	tone?: IconButtonTone;
@@ -21,6 +24,7 @@ interface IconButtonProps extends Omit<PressableProps, 'children' | 'onPress'> {
 	loading?: boolean;
 	elevated?: boolean;
 	haptic?: IconButtonHaptic | false;
+	iconClassName?: string;
 }
 
 const ELEVATED_SHADOW = {
@@ -30,6 +34,8 @@ const ELEVATED_SHADOW = {
 	shadowRadius: 8,
 	elevation: 6,
 } as const;
+
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 function resolveIconSize(variant: IconButtonVariant, size: 'sm' | 'md' | 'lg') {
 	if (variant === 'bare') return 26;
@@ -56,6 +62,7 @@ export function IconButton({
 	onPress,
 	accessibilityLabel,
 	icon,
+	iconSize,
 	children,
 	variant = 'solid',
 	tone = 'brand',
@@ -67,18 +74,39 @@ export function IconButton({
 	className,
 	style,
 	hitSlop,
+	iconClassName,
+	onPressIn,
+	onPressOut,
 	...rest
 }: IconButtonProps) {
 	const isDisabled = disabled || loading;
 	const isBare = variant === 'bare';
 	const isLg = size === 'lg';
 	const isSm = size === 'sm';
-	const iconSize = resolveIconSize(variant, size);
+	const resolvedIconSize = iconSize ?? resolveIconSize(variant, size);
+	const { style: animatedStyle, setPressed: setScalePressed } = usePressScale();
+	const [pressed, setPressed] = useState(false);
 
 	function handlePress() {
 		if (isDisabled) return;
 		triggerHaptic(haptic);
 		onPress();
+	}
+
+	function handlePressControl(nextPressed: boolean) {
+		if (isDisabled) return;
+		setScalePressed(nextPressed);
+		setPressed(nextPressed);
+	}
+
+	function handlePressIn(event: GestureResponderEvent) {
+		handlePressControl(true);
+		onPressIn?.(event);
+	}
+
+	function handlePressOut(event: GestureResponderEvent) {
+		handlePressControl(false);
+		onPressOut?.(event);
 	}
 
 	function renderGlyph() {
@@ -90,7 +118,11 @@ export function IconButton({
 
 		if (icon) {
 			return (
-				<Ionicons name={icon} size={iconSize} className={isBare ? 'text-gray600' : 'text-white'} />
+				<Ionicons
+					name={icon}
+					size={resolvedIconSize}
+					className={cn(isBare ? 'text-gray600' : 'text-white', iconClassName)}
+				/>
 			);
 		}
 
@@ -98,9 +130,11 @@ export function IconButton({
 	}
 
 	return (
-		<Pressable
+		<AnimatedPressable
 			{...rest}
 			onPress={handlePress}
+			onPressIn={handlePressIn}
+			onPressOut={handlePressOut}
 			disabled={isDisabled}
 			hitSlop={hitSlop ?? (isBare ? 8 : undefined)}
 			accessibilityRole="button"
@@ -120,15 +154,13 @@ export function IconButton({
 				},
 				className,
 			)}
-			style={(state) => [
+			style={[
 				elevated && !isBare ? ELEVATED_SHADOW : null,
-				typeof style === 'function' ? style(state) : style,
-				isBare
-					? { opacity: state.pressed && !isDisabled ? 0.7 : 1 }
-					: { transform: [{ scale: state.pressed && !isDisabled ? 0.93 : 1 }] },
+				typeof style === 'function' ? style({ pressed }) : style,
+				animatedStyle,
 			]}
 		>
 			{renderGlyph()}
-		</Pressable>
+		</AnimatedPressable>
 	);
 }

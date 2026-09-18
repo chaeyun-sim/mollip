@@ -1,9 +1,10 @@
 import { Pressable, PressableProps, View, type StyleProp, type ViewStyle } from 'react-native';
 import type { ReactNode } from 'react';
 import * as Haptics from 'expo-haptics';
-import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
+import Animated from 'react-native-reanimated';
 
 import { cn } from '@/src/lib/cn';
+import { usePressScale } from '@/src/hooks/usePressScale';
 
 export type FloatingIconButtonVariant = 'onLight' | 'onImage' | 'onPhoto';
 
@@ -32,10 +33,7 @@ export function FloatingIconButton({
 	style,
 	...props
 }: FloatingIconButtonProps) {
-	const scale = useSharedValue(1);
-	const animatedStyle = useAnimatedStyle(() => ({
-		transform: [{ scale: scale.value }],
-	}));
+	const { style: animatedStyle, setPressed } = usePressScale({ pressedScale: 0.92 });
 
 	const circleClassName = cn(
 		'w-10 h-10 rounded-full items-center justify-center',
@@ -61,14 +59,10 @@ export function FloatingIconButton({
 		);
 	}
 
-	function handlePressControl(pressed: boolean) {
-		scale.set(withTiming(pressed ? 0.92 : 1, { duration: pressed ? 100 : 150 }));
-	}
-
 	return (
 		<Pressable
-			onPressIn={() => handlePressControl(true)}
-			onPressOut={() => handlePressControl(false)}
+			onPressIn={() => setPressed(true)}
+			onPressOut={() => setPressed(false)}
 			onPress={handlePress}
 			style={style}
 			accessibilityRole="button"

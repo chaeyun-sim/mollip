@@ -1,7 +1,9 @@
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { View } from 'react-native';
-import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
+import Animated from 'react-native-reanimated';
+
+import { usePressScale } from '@/src/hooks/usePressScale';
 import { LoginRequiredPressable } from '../auth/LoginRequiredPressable';
 
 interface ExhibitionImmersiveFabProps {
@@ -9,19 +11,15 @@ interface ExhibitionImmersiveFabProps {
 }
 
 export function ExhibitionImmersiveFab({ onPress }: ExhibitionImmersiveFabProps) {
-	const pressScale = useSharedValue(1);
-	const pressStyle = useAnimatedStyle(() => ({
-		transform: [{ scale: pressScale.value }],
-	}));
+	const { style: pressStyle, setPressed } = usePressScale({
+		pressedScale: 0.88,
+		spring: { damping: 12 },
+	});
 
 	return (
 		<LoginRequiredPressable
-			onPressIn={() => {
-				pressScale.set(withSpring(0.88, { damping: 12 }));
-			}}
-			onPressOut={() => {
-				pressScale.set(withSpring(1, { damping: 12 }));
-			}}
+			onPressIn={() => setPressed(true)}
+			onPressOut={() => setPressed(false)}
 			onPress={() => {
 				Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
 				onPress();
@@ -31,17 +29,15 @@ export function ExhibitionImmersiveFab({ onPress }: ExhibitionImmersiveFabProps)
 			hitSlop={8}
 		>
 			<Animated.View
+				className="shadow-black elevation-md items-center"
 				style={[
 					pressStyle,
 					{
-						shadowColor: '#000',
 						shadowOpacity: 0.25,
 						shadowRadius: 8,
 						shadowOffset: { width: 0, height: 3 },
-						elevation: 6,
 					},
 				]}
-				className="items-center"
 			>
 				<View className="w-16 h-16 rounded-full items-center justify-center bg-secondary">
 					<Ionicons name="headset" size={28} color="white" />

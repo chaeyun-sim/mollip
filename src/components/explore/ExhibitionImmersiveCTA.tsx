@@ -2,17 +2,16 @@ import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import * as WebBrowser from 'expo-web-browser';
 import { Pressable, Text } from 'react-native';
-import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
+import Animated from 'react-native-reanimated';
+
+import { usePressScale } from '@/src/hooks/usePressScale';
 
 interface ExhibitionTicketCTAProps {
 	ticketUrl: string;
 }
 
 export function ExhibitionTicketCTA({ ticketUrl }: ExhibitionTicketCTAProps) {
-	const scale = useSharedValue(1);
-	const animatedStyle = useAnimatedStyle(() => ({
-		transform: [{ scale: scale.value }],
-	}));
+	const { style: animatedStyle, setPressed } = usePressScale();
 
 	const handlePress = () => {
 		Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
@@ -21,12 +20,8 @@ export function ExhibitionTicketCTA({ ticketUrl }: ExhibitionTicketCTAProps) {
 
 	return (
 		<Pressable
-			onPressIn={() => {
-				scale.set(withTiming(0.97, { duration: 100 }));
-			}}
-			onPressOut={() => {
-				scale.set(withTiming(1, { duration: 150 }));
-			}}
+			onPressIn={() => setPressed(true)}
+			onPressOut={() => setPressed(false)}
 			onPress={handlePress}
 			accessibilityLabel="예매하기"
 			accessibilityRole="button"
