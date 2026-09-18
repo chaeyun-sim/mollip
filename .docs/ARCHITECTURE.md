@@ -22,22 +22,24 @@
 
 ### 진입점 두 갈래
 
-1. **개별 작품 촬영/입력 플로우**: 탭 홈(`(tabs)/index.tsx`) 또는 전시 상세(`(explore)/[id].tsx`)에서 `(guide)/create-description`으로 진입 → 사진 촬영(OCR) 또는 `manual.tsx`(수동 입력) → `description`(AI 해설 생성 + TTS) → 필요 시 `chat`(도슨트 Q&A).
-2. **몰입모드(전시 전체 관람) 플로우**: 탭 홈 또는 전시 상세에서 `(guide)/immersive-start`로 진입 → 시작하면 `replace`로 `playlist`(재생목록)로 이동 → 재생목록에서 작품을 선택하면 `replace`로 `description`을 재사용해 해당 작품 해설을 보여줌 → 관람 종료 시 `exit-summary`(종료 요약)로 이동.
+1. **개별 작품 촬영/입력 플로우**: 탭 홈(`(tabs)/index.tsx`) 또는 전시 상세(`(explore)/[id].tsx`)에서 `(guide)/create-description`으로 진입 → 사진 촬영(OCR) 또는 `manual.tsx`(수동 입력) → `description`(AI 해설 생성 + TTS) → 필요 시 `chat`(도슨트 Q&A). `create-description`에는 프리미엄 회원 전용으로 몰입모드로 바로 넘어가는 진입점도 있다(`isPremium` 체크, `useSubscription`).
+2. **몰입모드(전시 전체 관람) 플로우**: 탭 홈 또는 전시 상세에서 `(guide)/immersive-start`로 진입 → 시작하면 `replace`로 `playlist`(재생목록)로 이동 → 재생목록에서 작품을 선택하면 `replace`로 `description`을 재사용해 해당 작품 해설을 보여줌 → 재생목록에서 `chat`으로 직접 진입도 가능(작품 선택 없이 전시 전체에 대해 질문) → 관람 종료 시 `exit-summary`(종료 요약)로 이동.
 
 ```
 (tabs)/index, (explore)/[id]
   ├─ push → (guide)/create-description ─┬─ (촬영) replace → description
-  │                                       └─ push → manual → push → description
-  │                                                              └─ push → chat (도슨트 Q&A, sessionId 전달)
+  │                                       ├─ push → manual → push → description
+  │                                       │                       └─ push → chat (도슨트 Q&A, sessionId 전달)
+  │                                       └─ push → (guide)/immersive-start  (프리미엄 전용)
   │
   └─ push → (guide)/immersive-start
               └─ replace → playlist ──┬─ (작품 선택) replace → description
                                        ├─ (재촬영) push → create-description
+                                       ├─ push → chat (전시 전체 Q&A, sessionId 전달)
                                        └─ (관람 종료) replace → exit-summary
 ```
 
-`description` 화면은 두 플로우에서 공유된다 — `store`(§3)에 `manualTitle`/`artworkDescription` 등을 채워 넣는 방식으로 호출부가 다르더라도 동일한 화면을 재사용한다. `chat`은 `description`과 `manual`에서 `sessionId` 파라미터와 함께 진입한다.
+`description` 화면은 두 플로우에서 공유된다 — `store`(§3)에 `manualTitle`/`artworkDescription` 등을 채워 넣는 방식으로 호출부가 다르더라도 동일한 화면을 재사용한다. `chat`은 `description`·`manual`·`playlist`에서 `sessionId` 파라미터와 함께 진입한다.
 
 `playlist`는 몰입모드의 허브 화면으로, `beforeRemove` 리스너로 하드웨어 back/스와이프까지 가로채 "재생목록이 초기화돼요" 확인 없이 이탈하지 못하게 막는다(`app/(guide)/playlist.tsx`).
 
@@ -60,7 +62,7 @@
 
 ### 3.1 `src/store.ts` — 비반응형 mutable 객체
 
-화면 전환 시 리렌더를 트리거할 필요가 없는 "다음 화면에 전달만 하면 되는" 일시 데이터를 담는다. React state가 아니라 평범한 객체(`store.artworkDescription = text`처럼 직접 mutate)이기 때문에, 값이 바뀌어도 이 값을 구독하는 컴포넌트가 자동으로 리렌더되지 않는다 — 오디오 가이드 플로우처럼 "화면 A에서 값을 채우고 화면 B에서 한 번 읽기만 하면 되는" 단방향 전달에 적합하다. 필드: `imageBase64`, `imageMediaType`, `extractedText`, `artworkDescription`, `artworkImageUrl`, `inputMode`, `manualTitle`, `manualArtist`, `manualYear`. 영속화되지 않으며 앱 재시작 시 초기화된다.
+화면 전환 시 리렌더를 트리거할 필요가 없는 "다음 화면에 전달만 하면 되는" 일시 데이터를 담는다. React state가 아니라 평범한 객체(`store.artworkDescription = text`처럼 직접 mutate)이기 때문에, 값이 바뀌어도 이 값을 구독하는 컴포넌트가 자동으로 리렌더되지 않는다 — 오디오 가이드 플로우처럼 "화면 A에서 값을 채우고 화면 B에서 한 번 읽기만 하면 되는" 단방향 전달에 적합하다. 필드: `imageBase64`, `imageMediaType`, `extractedText`, `artworkDescription`, `artworkImageUrl`, `inputMode`, `manualTitle`, `manualArtist`, `manualYear`, `isArtistIntro`(지금 해설이 "작가 소개 인트로"인지 — 재생목록에 일반 작품처럼 다시 쌓이지 않고 최상단 고정 트랙으로만 존재하게 구분하는 플래그). 영속화되지 않으며 앱 재시작 시 초기화된다.
 
 ### 3.2 Zustand 스토어 — 반응형
 

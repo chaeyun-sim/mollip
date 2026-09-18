@@ -631,3 +631,8 @@ interface ButtonProps extends Omit<PressableProps, 'children' | 'onPress'> {
 | 상태            | `active`, `disabled`, `loading` 등 표시 상태만 | 방문 확정, 위키 검색, 온보딩 스텝 등         |
 
 훅(`useTextField`)은 입력 프리미티브의 표시 상태만 다룬다. 제출·검증 규칙이 도메인에 묶이면 화면이나 도메인 훅에 둔다.
+
+14. 공통 컴포넌트 및 유틸 분리된
+
+- 해당 컴포넌트나 유틸을 작업하기 전, 비슷하거나 동일한 컴포넌트가 존재하는지 확인한다
+- 존재한다면 해당 컴포넌트를 확장시켜 싱글 컴포넌트로 분리한 뒤, 적용한다.

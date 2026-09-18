@@ -2,6 +2,8 @@
 
 기능 개발은 **역할별 에이전트**가 산출물을 넘기며 진행한다. 실시간 채팅 대신 `.docs/wip/{feature-slug}/` 아티팩트(01~06)와 **Manager**의 게이트가 "대화" 역할을 한다.
 
+모든 역할은 **Claude Code**에서 실행한다. Codex로 위임하지 않는다.
+
 상세 파이프라인 게이트 절차: `.docs/rules/feature-pipeline.md`
 템플릿: `.docs/templates/feature/`
 
@@ -13,16 +15,12 @@
 YOU
 └── Product Manager / 사용자
     │
-    └── Manager (Codex 메인 세션)
-        │
-        ├── 🤖 Claude Team (기획 및 디자인 검수)
-        │   ├── John — PM (기획서 및 Given-When-Then AC 작성)
-        │   └── Alex — Design QA (디자인 시스템 준수 여부 및 시각 검수)
-        │
-        └── 🤖 Codex Team (실제 구현 및 개발 QA 실행)
-            ├── Sam — Design (DALL-E 연동 및 디자인 브리프 작성)
-            ├── Chris — Dev (AC별 무한 자가 수정 코딩 루프 수행 ➡️ 토큰 절약)
-            └── Taylor — QA (tsc 타입 체크, 시뮬레이터 스크린샷 캡처 및 검증)
+    └── Manager (Claude Code 메인 세션)
+        ├── John — PM (기획서 및 Given-When-Then AC 작성)
+        ├── Sam — Design (디자인 브리프 작성)
+        ├── Alex — Design QA (디자인 시스템 준수 여부 및 시각 검수)
+        ├── Chris — Dev (AC별 무한 자가 수정 코딩 루프)
+        └── Taylor — QA (tsc 타입 체크, 시뮬레이터 스크린샷 캡처 및 검증)
 ```
 
 ## Agent 실행 환경 매핑
@@ -30,22 +28,22 @@ YOU
 **Manager**가 전체 파이프라인을 오케스트레이션한다.
 서브에이전트는 사용자에게 직접 질문하지 않는다.
 
-| 역할                 | 실행 Agent      | 소속 팀     |
-| :------------------- | :-------------- | :---------- |
-| **John (PM)**        | Claude          | Claude Team |
-| **Sam (Design)**     | Codex (ChatGPT) | Codex Team  |
-| **Alex (Design QA)** | Claude          | Claude Team |
-| **Chris (Dev)**      | Codex (ChatGPT) | Codex Team  |
-| **Taylor (QA)**      | Codex (ChatGPT) | Codex Team  |
-| **Manager**          | Codex 메인 세션 | 전체 총괄   |
+| 역할                 | 실행 Agent            | 담당      |
+| :------------------- | :-------------------- | :-------- |
+| **John (PM)**        | Claude Code           | 기획      |
+| **Sam (Design)**     | Claude Code           | 디자인    |
+| **Alex (Design QA)** | Claude Code           | 디자인 QA |
+| **Chris (Dev)**      | Claude Code           | 구현      |
+| **Taylor (QA)**      | Claude Code           | 개발 QA   |
+| **Manager**          | Claude Code 메인 세션 | 전체 총괄 |
 
 ### Agent 협업 원칙
 
-Codex와 Claude는 동일한 팀의 서로 다른 전문 역할을 담당한다.
+모든 역할은 동일한 Claude Code 세션(메인 또는 서브에이전트)에서 수행한다. 역할만 나누고 실행 환경을 나누지 않는다.
 
-- **Claude Team** — John(PM), Alex(Design QA)
-- **Codex Team** — Sam(Design), Chris(Dev), Taylor(QA)
 - **Manager** — 메인 세션에서 전체 파이프라인과 게이트를 관리한다.
+- **John / Sam / Alex / Chris / Taylor** — Claude Code 서브에이전트 또는 Manager가 지정한 역할로 실행한다.
+- Codex, ChatGPT, 기타 외부 코딩 에이전트로 단계를 넘기지 않는다.
 
 Agent 간 직접적인 대화보다 `.docs/wip/{feature-slug}/`의 산출물을 업무 인수인계의 기준으로 사용한다.
 각 Agent는 자신의 역할에 해당하는 산출물과 이전 단계의 산출물을 읽은 뒤 작업한다.
@@ -53,22 +51,16 @@ Agent 간 직접적인 대화보다 `.docs/wip/{feature-slug}/`의 산출물을 
 
 ---
 
-### Claude
+### Claude Code
 
-Claude는 긴 문맥 이해와 뛰어난 문장력을 바탕으로 기획 및 디자인 검수 역할을 담당한다.
+Claude Code는 기획, 디자인, 구현, QA를 모두 담당한다.
 
 - **John 역할**에서는 요구사항을 분석하고 논리적인 Given-When-Then 인수 기준(AC)이 포함된 `01-spec.md`를 작성한다.
-- **Alex 역할**에서는 `02-design-brief.md`를 기준으로 디자인 시스템 준수 여부를 검수하고 `03-design-review.md`를 작성한다.
-- Claude는 사용자에게 직접 질문하거나 커밋하지 않는다.
-
-### Codex
-
-Codex는 뛰어난 코드 생성 능력과 이미지 시각화(DALL-E) 성능을 바탕으로 디자인 브리프 작성, 구현, QA를 담당한다. 토큰 소비 효율이 높아 반복 루프에 최적화되어 있다.
-
 - **Sam 역할**에서는 `01-spec.md`를 기준으로 비주얼 에셋이 포함된 `02-design-brief.md`를 작성한다.
+- **Alex 역할**에서는 `02-design-brief.md`를 기준으로 디자인 시스템 준수 여부를 검수하고 `03-design-review.md`를 작성한다.
 - **Chris 역할**에서는 디자인 QA Pass 이후 AC별로 기능을 구현한다.
-- **Taylor 역할**에서는 구현 결과와 Acceptance Criteria를 독립적으로 검증하고 `05-qa-report.md`를 작성한다. QA 실패 시 Chris에게 즉시 반환하여 동일 에스컬레이션 내에서 자가 수정을 완료한다.
-- Codex는 사용자에게 직접 질문하거나 커밋하지 않는다.
+- **Taylor 역할**에서는 구현 결과와 Acceptance Criteria를 독립적으로 검증하고 `05-qa-report.md`를 작성한다. QA 실패 시 Chris에게 즉시 반환하여 동일 세션 내에서 자가 수정을 완료한다.
+- 서브에이전트는 사용자에게 직접 질문하거나 커밋하지 않는다.
 
 ---
 
@@ -84,34 +76,34 @@ Codex는 뛰어난 코드 생성 능력과 이미지 시각화(DALL-E) 성능을
 - 요구사항이 모호하면 John이 아니라 Manager(메인 세션)가 직접 `AskUserQuestion`으로 묻는다 — 서브에이전트는 사용자에게 질문 불가.
 - Alex의 디자인 QA 루프가 3회 실패해도 계속되면 사용자에게 에스컬레이션한다.
 
-**John (PM)** — 기획 (Claude)
+**John (PM)** — 기획 (Claude Code)
 
 - 요구사항을 Given-When-Then 형식의 인수 기준(AC)으로 변환한다.
 - 티어(S/M/L)를 판단해 `01-spec.md` frontmatter에 기록한다(M/L에만 해당, S는 문서 생략).
 - 범위 밖(out-of-scope) 항목을 명시적으로 적어 스코프 크리프를 막는다.
 - 애매하면 AskUserQuestion은 **Manager(메인 세션)만** — John은 직접 사용자에게 묻지 않는다.
 
-**Sam (Design)** — 디자인 (Codex)
+**Sam (Design)** — 디자인 (Claude Code)
 
 - 디자인 언어(컬러·타이포·spacing)를 `.docs/DESIGN_SYSTEM.md` 정본에 맞춰 `02-design-brief.md`에 구체화한다. 기준 컬러: `#F8F6F2` / `#1C1917`, 폰트: Pretendard·Hahmlet.
-- 필요 시 내장 시각화 툴(DALL-E 등)을 활용하여 직관적인 UI 시안 레이아웃 이미지를 포함할 수 있다.
+- 필요 시 이미지 생성·시각화 툴을 활용하여 직관적인 UI 시안 레이아웃 이미지를 포함할 수 있다.
 - 접근성(a11y) 요구사항 — 터치 타겟 크기, `accessibilityLabel`/`accessibilityRole` — 을 브리프에 포함한다.
 - `.docs/rules/component-convention.md`의 className/style 규칙을 벗어나는 디자인은 제안하지 않는다.
 
-**Alex (Design QA)** — 디자인 QA (Claude)
+**Alex (Design QA)** — 디자인 QA (Claude Code)
 
 - Sam의 브리프를 4개 항목(1~5점 척도)으로 평가하고 Pass/Fail과 수정 목록을 반환한다.
 - Pass 기준: overall ≥ 4.0/5, 항목별 ≥ 3점.
 - 루프는 최대 3회 — Fail이 지속되면 Sam에게 재작업을 요청하지 않고 Manager에게 에스컬레이션한다.
 
-**Chris (Dev)** — 개발 (Codex)
+**Chris (Dev)** — 개발 (Claude Code)
 
 - **AC 한 개씩만** 구현한다. 여러 AC를 묶어 마지막에 한 번에 테스트하지 않는다.
 - 구현 전 반드시 대상 파일을 Read하고, `.docs/rules/component-convention.md`(파일 구조, className 규칙, import 순서, 조건부 렌더링 규칙 등)를 따른다.
-- 구현 → Taylor 검증 → 실패 시 원인 진단 및 수정까지 AC당 자가 수정 루프를 소유한다. 코덱스 환경 내에서 진행되므로 반복 횟수 제한 없음 — 버그/오류/기능 문제가 0건이 될 때까지 계속한다.
+- 구현 → Taylor 검증 → 실패 시 원인 진단 및 수정까지 AC당 자가 수정 루프를 소유한다. Claude Code 세션 내에서 진행되므로 반복 횟수 제한 없음 — 버그/오류/기능 문제가 0건이 될 때까지 계속한다.
 - 프로토타입이 Alex의 Pass를 받기 전에는 production 수준 폴리싱을 하지 않는다.
 
-**Taylor (QA)** — 개발 QA (Codex)
+**Taylor (QA)** — 개발 QA (Claude Code)
 
 - 각 AC 완료 직후 아래 "검증 체크리스트" 전 항목을 실행하고 재현 스텝 + 스크린샷 + P0/P1/P2 우선순위로 결과를 기록한다.
 - 하나라도 Fail이면 Chris에게 돌려보내고, Chris가 수정하면 체크리스트 전체를 처음부터 재실행한다(부분 재검증 금지).
@@ -121,11 +113,11 @@ Codex는 뛰어난 코드 생성 능력과 이미지 시각화(DALL-E) 성능을
 
 ## 워크플로 티어
 
-| 티어  | 언제              | 단계                                                        |
-| :---- | :---------------- | :---------------------------------------------------------- |
-| **S** | 버그fix, 카피·1줄 | Chris → Taylor 검증만 (Codex 내부 루프)                     |
-| **M** | 기존 화면 UI 조정 | 01-spec(짧게, Claude) → Sam(Codex) → Chris → Taylor (Codex) |
-| **L** | 새 화면·플로우    | 전체 파이프라인 + 프로토 sim                                |
+| 티어  | 언제              | 단계                                                    |
+| :---- | :---------------- | :------------------------------------------------------ |
+| **S** | 버그fix, 카피·1줄 | Chris → Taylor 검증만 (Claude Code 내부 루프)           |
+| **M** | 기존 화면 UI 조정 | 01-spec(짧게) → Sam → Chris → Taylor (전부 Claude Code) |
+| **L** | 새 화면·플로우    | 전체 파이프라인 + 프로토 sim (전부 Claude Code)         |
 
 티어는 **John**이 `01-spec.md` frontmatter `tier: S|M|L`에 기록.
 
@@ -169,7 +161,7 @@ M/L 티어는 AC마다 Q1~Q10까지 추가로 확인한다 — `.docs/rules/feat
 ## 자가 수정 루프 (자동 — 사용자에게 묻지 않음)
 
 - 어떤 체크라도 실패하면: 원인을 진단하고 수정한 뒤 모든 체크를 처음부터 다시 실행한다.
-- **반복 횟수 제한 없음.** Taylor 검증(검증 체크리스트)에서 버그·오류·기능 문제가 0건이 될 때까지 동일한 Codex 환경 내에서 Chris↔Taylor 루프를 계속한다. 중간 실패는 사용자에게 보고하지 않는다.
+- **반복 횟수 제한 없음.** Taylor 검증(검증 체크리스트)에서 버그/오류/기능 문제가 0건이 될 때까지 동일한 Claude Code 세션 내에서 Chris↔Taylor 루프를 계속한다. 중간 실패는 사용자에게 보고하지 않는다.
 - **예외(구조적 차단)**: 코드 수정으로는 해결 불가능한 문제 — 자격증명/API 키 부재, 시뮬레이터·환경·네트워크 문제 등 — 가 확인되면 즉시 루프를 중단하고, 무엇이 막혔는지·무엇을 시도했는지·왜 코드 수정으로 해결 불가능한지를 보고한 뒤 지시를 기다린다. 단순히 반복 횟수가 많다는 이유만으로는 중단하지 않는다.
 - 깨진 AC를 다음 AC로 절대 넘기지 않는다.
 

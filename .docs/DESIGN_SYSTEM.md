@@ -28,6 +28,8 @@
 
 2026-08-26: **컬러 시스템 전면 개편(`color-system-overhaul`)으로 두 파일의 전 토큰 값을 대조 완료 — 잔여 드리프트 0건.** 신규 `gray100`~`gray900`, `primary`/`primaryDark`(`primary-dark`)/`secondary`/`accent`/`white`는 추가·교체 시점에 두 파일을 같은 커밋에서 함께 수정했고 hex를 1:1 대조했다. `description`의 tailwind 미등록 상태는 의도적으로 유지(위 표 1행 그대로).
 
+2026-09-17: **브랜드 컬러 재도색 확인 — `primary`/`primary-dark`/`accent` 3개 토큰의 hex 값이 바뀜(더스티 라벤더·코럴 계열 → 비비드 퍼플·민트 계열).** `tailwind.config.js`와 `src/constants/colors.ts` 재대조 결과 두 파일은 여전히 1:1 일치(드리프트 0건) — 값만 함께 갱신됐다. §1.3 표의 hex·설명을 최신 값으로 갱신.
+
 ### 1.2.1 마이그레이션 매핑표 (2026-08-26, `tertiary` / `muted` 제거)
 
 `primary` / `secondary` / `tertiary` / `muted`는 원래 브랜드 컬러 이름인데 무채색 텍스트 명도 사다리로 쓰이고 있었다. 명도는 `gray100~900`이 담당하도록 전량 이관했고, `tertiary`와 `muted`는 **정의에서 제거**했다.
@@ -67,28 +69,30 @@
 
 #### 브랜드 컬러
 
-| 시맨틱 이름  | Hex       | className                               | 용도                                                                                                                      |
-| ------------ | --------- | --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
-| primary      | `#81759B` | `bg-primary` / `text-primary`           | 브랜드 메인(더스티 라벤더). **텍스트를 얹지 않는 브랜드 표면** + **다크 배경 위 브랜드 표면** 전용                        |
-| primary-dark | `#625876` | `bg-primary-dark` / `text-primary-dark` | **흰 텍스트를 얹는 모든 라이트 배경 브랜드 표면** + 탭바 활성 tint + 라이트 배경 위 브랜드 텍스트                         |
-| secondary    | `#302D33` | `border-secondary` / `text-secondary`   | 보조/아웃라인 버튼(취소·닫기·스킵 계열)                                                                                   |
-| accent       | `#D9A0A0` | `bg-accent`                             | 포인트 강조(더스티 코럴). **현재 적용처 없음 — 정의만.** 이 색 위에는 반드시 `text-gray900`(7.90:1), 흰 글씨 금지(2.21:1) |
-| white        | `#FFFFFF` | `bg-white` / `text-white`               | 순백 (정식 토큰화)                                                                                                        |
+| 시맨틱 이름  | Hex       | className                               | 용도                                                                                                                   |
+| ------------ | --------- | --------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| primary      | `#AB77F1` | `bg-primary` / `text-primary`           | 브랜드 메인(비비드 퍼플). **텍스트를 얹지 않는 브랜드 표면** + **다크 배경 위 브랜드 표면** 전용                       |
+| primary-dark | `#7C3AED` | `bg-primary-dark` / `text-primary-dark` | **흰 텍스트를 얹는 모든 라이트 배경 브랜드 표면** + 탭바 활성 tint + 라이트 배경 위 브랜드 텍스트                      |
+| secondary    | `#302D33` | `border-secondary` / `text-secondary`   | 보조/아웃라인 버튼(취소·닫기·스킵 계열)                                                                                |
+| accent       | `#00E9C8` | `bg-accent`                             | 포인트 강조(민트). **적용처(2026-09-17 스캔): 온보딩 진행 dot 2곳**(`OnboardingIntroStack.tsx`, `OnboardingEnter.tsx`) |
+| white        | `#FFFFFF` | `bg-white` / `text-white`               | 순백 (정식 토큰화)                                                                                                     |
 
 **브랜드 컬러 사용 판정 (폰트 크기는 판정에 개입하지 않는다)**
+
+2026-09-17 재도색 후 수치 — WCAG 상대휘도 공식으로 재계산·검증(`#767676` vs `#FFFFFF` = 4.54:1, `#000000` vs `#FFFFFF` = 21:1 기준값으로 계산식 자체를 먼저 검증한 뒤 산출):
 
 ```
 표면 위에 흰색 텍스트가 올라가는가?
   ├─ YES → 배경이 라이트인가?
-  │         ├─ YES → bg-primary-dark  (white 6.61:1 ✅)
-  │         └─ NO(다크 화면) → bg-primary  (표면 3:1 기준 4.32:1 ✅ / 본문 4.5:1 기준은 미달 — 이 표면에 본문 텍스트를 얹지 않는다)
-  └─ NO(아이콘·인디케이터·점·바) → bg-primary  (비텍스트 3:1 기준 3.93:1 ✅)
+  │         ├─ YES → bg-primary-dark  (white 5.70:1 ✅)
+  │         └─ NO(다크 화면) → bg-primary  (표면 3:1 기준 5.80:1 ✅, 본문 4.5:1 기준도 통과 — 재도색 전엔 4.5:1 미달이라 본문 텍스트를 금지했으나, 새 hex(#AB77F1)에서는 이 표면에 본문 텍스트를 얹어도 된다)
+  └─ NO(아이콘·인디케이터·점·바) → bg-primary  (비텍스트 3:1 기준 3.16:1 ✅ — 라이트 배경 위 기준)
 ```
 
-- **다크 배경(`bg-dark` #171412) 위에 `primary-dark`를 쓰지 않는다** — 2.89:1로 배경에 묻힌다.
-- **`primary`를 라이트 배경 위 본문 텍스트/링크 색으로 쓰지 않는다** — 3.93:1(본문 4.5:1 미달). 필요하면 `primary-dark`(6.61:1).
+- **다크 배경(`bg-dark` #171412) 위에 `primary-dark`를 쓰지 않는다** — 3.22:1로 배경에 묻힌다(재도색 전 2.89:1에서 소폭 개선됐으나 여전히 미달).
+- **`primary`를 라이트 배경 위 본문 텍스트/링크 색으로 쓰지 않는다** — 3.16:1(본문 4.5:1 미달, 비텍스트 3:1은 통과). 필요하면 `primary-dark`(5.70:1, 본문 기준도 통과).
 - disabled는 `bg-gray400` + `text-white`(fill) 또는 `text-gray400`(배경 없는 버튼)으로 통일하고 `accessibilityState={{ disabled }}`를 함께 둔다. 외부 브랜드 고정색(카카오/Apple)은 예외로 배경을 바꾸지 않는다.
-- focus 시각 상태는 현재 코드베이스에 0건이다. 새로 만들 때는 라이트/다크 모두 `border-primary`(#81759B)를 쓰고, 캐럿(`selectionColor`) 또는 보더 두께 변화 같은 비색상 신호를 함께 둔다.
+- focus 시각 상태는 현재 코드베이스에 0건이다. 새로 만들 때는 라이트/다크 모두 `border-primary`(#AB77F1)를 쓰고, 캐럿(`selectionColor`) 또는 보더 두께 변화 같은 비색상 신호를 함께 둔다.
 
 #### 기타 (이번 개편에서 변경 없음)
 
@@ -122,33 +126,49 @@ className 조합 예: `bg-[rgba(28,25,23,0.06)]`처럼 위 hex를 rgba 임의값
 
 `tailwind.config.js`의 `theme.extend.fontFamily`가 정본. `component-convention.md` §2 규칙에 따라 폰트는 항상 className으로만 지정한다 (`style={{ fontFamily }}` 금지).
 
-| 폰트 패밀리         | className                                       | 실제 폰트 파일/패키지                               | 사용 여부 |
-| ------------------- | ----------------------------------------------- | --------------------------------------------------- | --------- |
-| Pretendard Regular  | `font-pretendard-regular` / `font-sans`(기본값) | `Pretendard-Regular` (커스텀 폰트 파일)             | 사용 중   |
-| Pretendard Light    | `font-pretendard-light`                         | `Pretendard-Light`                                  | 사용 중   |
-| Pretendard Medium   | `font-pretendard-medium`                        | `Pretendard-Medium`                                 | 사용 중   |
-| Pretendard SemiBold | `font-pretendard-semibold`                      | `Pretendard-SemiBold`                               | 사용 중   |
-| Pretendard Bold     | `font-pretendard-bold`                          | `Pretendard-Bold`                                   | 사용 중   |
-| Hahmlet Regular     | `font-hahmlet`                                  | `Hahmlet_400Regular` (`@expo-google-fonts/hahmlet`) | 사용 중   |
-| Hahmlet SemiBold    | `font-hahmlet-semibold`                         | `Hahmlet_600SemiBold`                               | 사용 중   |
-| Hahmlet Bold        | `font-hahmlet-bold`                             | `Hahmlet_700Bold`                                   | 사용 중   |
+| 폰트 패밀리         | className                                       | 실제 폰트 파일/패키지                                               | 사용 여부                                                                                                                                    |
+| ------------------- | ----------------------------------------------- | ------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| Pretendard Regular  | `font-pretendard-regular` / `font-sans`(기본값) | `Pretendard-Regular` (커스텀 폰트 파일)                             | 사용 중                                                                                                                                      |
+| Pretendard Light    | `font-pretendard-light`                         | `Pretendard-Light`                                                  | 사용 중                                                                                                                                      |
+| Pretendard Medium   | `font-pretendard-medium`                        | `Pretendard-Medium`                                                 | 사용 중                                                                                                                                      |
+| Pretendard SemiBold | `font-pretendard-semibold`                      | `Pretendard-SemiBold`                                               | 사용 중                                                                                                                                      |
+| Pretendard Bold     | `font-pretendard-bold`                          | `Pretendard-Bold`                                                   | 사용 중                                                                                                                                      |
+| Hahmlet Regular     | `font-hahmlet`                                  | `Hahmlet_400Regular` (`@expo-google-fonts/hahmlet`)                 | 사용 중                                                                                                                                      |
+| Hahmlet SemiBold    | `font-hahmlet-semibold`                         | `Hahmlet_600SemiBold`                                               | 사용 중                                                                                                                                      |
+| Hahmlet Bold        | `font-hahmlet-bold`                             | `Hahmlet_700Bold`                                                   | 사용 중                                                                                                                                      |
+| Nanum Pen Script    | `font-nanum-pen`                                | `NanumPenScript_400Regular` (`@expo-google-fonts/nanum-pen-script`) | 사용 중 — `src/components/archive/SignaturePad.tsx` 서명 안내 캡션 전용. **사용 범위를 이 한 곳으로 제한한다**(tailwind.config.js 주석 참고) |
 
-### 설치되었지만 tailwind.config.js에 등록되지 않은 폰트
+2026-09-17 재확인: `nanum-pen`은 tailwind.config.js `fontFamily`에 정식 등록되고 `SignaturePad.tsx`에서 `font-nanum-pen` className으로 쓰이는 상태로 확정됐다 — 위 "미등록" 절에서 이 표로 이동.
+
+### 설치됐지만 tailwind.config.js에 등록되지 않은 폰트
 
 `package.json`에 설치되어 있고 `app/_layout.tsx`에서 `useFonts`로 로드는 되지만, `tailwind.config.js`의 `fontFamily`에는 등록되어 있지 않다 — 즉 className으로 쓸 수 없고 `style={{ fontFamily }}`로만 접근 가능한 상태(component-convention.md 규칙 위반 소지가 있는 예외 상태).
 
-| 패키지                                  | 로드 위치                                            | tailwind 등록 | 상태                                                                                     |
-| --------------------------------------- | ---------------------------------------------------- | ------------- | ---------------------------------------------------------------------------------------- |
-| `@expo-google-fonts/cormorant-garamond` | `app/_layout.tsx` (import만 확인됨)                  | 미등록        | 사용처 재확인 필요 — 실제 렌더링에 쓰이는지, 쓴다면 tailwind에 등록해야 하는지 검토 대상 |
-| `@expo-google-fonts/nanum-pen-script`   | `app/_layout.tsx` (`NanumPenScript_400Regular` 로드) | 미등록        | 사용처 재확인 필요 — 동일                                                                |
+| 패키지                                  | 로드 위치                                                                                               | tailwind 등록 | 상태                                                                                                                  |
+| --------------------------------------- | ------------------------------------------------------------------------------------------------------- | ------------- | --------------------------------------------------------------------------------------------------------------------- |
+| `@expo-google-fonts/cormorant-garamond` | `app/_layout.tsx` (4종 `useFonts` 로드: Regular/Regular_Italic/SemiBold/Bold 확인됨, 2026-09-17 재스캔) | 미등록        | **실제 사용처 0건 확인(2026-09-17, className·style 전수 grep)** — 미사용 폰트 4종을 로드만 하고 있음. 정리(제거) 후보 |
 
-두 폰트 모두 `useFonts` 로드 확인 외에 실제 컴포넌트에서의 사용처는 이번 스캔 범위에서 확인되지 않았다. 사용 중이면 tailwind.config.js에 `font-cormorant` / `font-nanum-pen` 형태로 정식 등록하고, 미사용이면 정리(제거) 후보로 표시한다.
+2026-09-17: `nanum-pen-script`는 위 표에서 빠지고 정식 등록 표로 이동. `cormorant-garamond`는 여전히 미등록·미사용 상태를 유지 — 번들 크기만 차지하는 죽은 로드이므로 제거를 적극 검토할 것.
 
-## 3. Spacing / Radius
+## 3. Shadow
+
+`tailwind.config.js`의 `theme.extend.boxShadow`에 정의된 시맨틱 그림자 토큰(2026-09-17 스캔 시점 신규 확인 — 이전 버전 문서에 누락돼 있었다).
+
+| 시맨틱 이름       | className                  | 값                                  | 용도                       |
+| ----------------- | -------------------------- | ----------------------------------- | -------------------------- |
+| floating          | `shadow-floating`          | `0 6px 14px rgba(28, 25, 23, 0.28)` | 떠있는 카드/버튼 일반      |
+| map-control       | `shadow-map-control`       | `0 2px 8px rgba(0, 0, 0, 0.12)`     | 지도 위 컨트롤(줌 버튼 등) |
+| onboarding-button | `shadow-onboarding-button` | `0 4px 12px rgba(0, 0, 0, 0.08)`    | 온보딩 화면 버튼           |
+| onboarding-card   | `shadow-onboarding-card`   | `0 8px 20px rgba(0, 0, 0, 0.12)`    | 온보딩 화면 카드           |
+| chip              | `shadow-chip`              | `0 1px 4px rgba(0, 0, 0, 0.12)`     | 칩/뱃지류 소형 요소        |
+
+이 토큰들은 `hex 값이 아니라 CSS box-shadow 문자열`이라 §1의 컬러 정본 절차(§5 참고)와는 별개다 — 새 그림자 토큰을 추가할 때도 `tailwind.config.js`가 정본이며, 이 문서에 표만 갱신하면 된다(colors.ts처럼 JS 값 미러가 필요 없다 — `style={{ shadowColor, shadowOpacity, ... }}` RN 네이티브 그림자 prop은 컴포넌트별로 개별 지정되고 있어 이 토큰과는 아직 통합돼 있지 않음, component-convention.md §2의 그림자 style 예외 규칙 참고).
+
+## 4. Spacing / Radius
 
 별도의 시맨틱 spacing/radius 토큰 파일은 **존재하지 않는다**. Tailwind 기본 숫자 스케일(`p-4`, `gap-2`, `rounded-xl` 등)을 그대로 사용하며, 값이 필요할 때는 [`component-convention.md`](../.claude/rules/component-convention.md) §2 표에 따라 `px-[11px]`, `rounded-tl-[14px]` 같은 임의값 className으로 표현한다. 프로젝트 전용 spacing 스케일을 도입하려면 이 문서와 `tailwind.config.js`에 함께 추가해야 한다(현재는 없음을 있는 그대로 기록).
 
-## 4. 새 토큰 추가 절차
+## 5. 새 토큰 추가 절차
 
 컬러 토큰을 추가/변경할 때:
 
