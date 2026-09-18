@@ -6,6 +6,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ActivityIndicator, Alert, FlatList, Pressable, Text, View } from 'react-native';
 import { useShallow } from 'zustand/react/shallow';
 import { Divider } from '@/src/components/common/Divider';
+import { IconButton } from '@/src/components/common/IconButton';
 import { ImageFallback } from '@/src/components/common/ImageFallback';
 import { Result } from '@/src/components/common/Result';
 import { DownloadStatusBadge } from '@/src/components/guide/DownloadStatusBadge';
@@ -30,6 +31,12 @@ import { fetchWikidataImage } from '@/src/utils/wikidataImage';
 
 export function BookmarkedAudioList() {
 	const router = useRouter();
+
+	// 상태 관리
+	const sheetRef = useRef<BottomSheet>(null);
+	const [selected, setSelected] = useState<HistoryItem | null>(null);
+
+	// Zustand 상태 관리
 	const session = useAuthStore((s) => s.session);
 	const { isPremium } = useSubscription();
 	const { historyItems, updateHistory } = useHistoryStore(
@@ -38,14 +45,6 @@ export function BookmarkedAudioList() {
 	const { bookmarkedIds, toggleBookmark } = useBookmarkAudioStore(
 		useShallow((s) => ({ bookmarkedIds: s.ids, toggleBookmark: s.toggle })),
 	);
-	const items = useMemo(
-		() => historyItems.filter((item) => bookmarkedIds.includes(item.id)),
-		[historyItems, bookmarkedIds],
-	);
-	const [selected, setSelected] = useState<HistoryItem | null>(null);
-	const sheetRef = useRef<BottomSheet>(null);
-	const { isSpeaking, isLoading: isTTSLoading, speak, pause, stop } = useTTS();
-
 	const { voiceId, voiceSpeed } = useSettingsStore(
 		useShallow((s) => ({ voiceId: s.voiceId, voiceSpeed: s.voiceSpeed })),
 	);
@@ -67,16 +66,20 @@ export function BookmarkedAudioList() {
 		})),
 	);
 
+	// 텍스트 읽어주기 훅
+	const { isSpeaking, isLoading: isTTSLoading, speak, pause, stop } = useTTS();
+
+	// 메모이제이션
+	const items = useMemo(
+		() => historyItems.filter((item) => bookmarkedIds.includes(item.id)),
+		[historyItems, bookmarkedIds],
+	);
+
 	const downloadTargets = useMemo<DownloadTarget[]>(
 		() => items.map((item) => ({ id: item.id, text: item.text })),
 		[items],
 	);
 	const downloadTargetIds = useMemo(() => downloadTargets.map((t) => t.id), [downloadTargets]);
-
-	const canStartDownload = hasIdle(downloadTargetIds, downloadStatuses);
-	const isDownloading = isAnyLoading(downloadTargetIds, downloadStatuses);
-	const downloadProgress = getBatchProgress(downloadBatchIds, downloadStatuses);
-
 	const downloadTargetTextById = useMemo(
 		() => new Map(downloadTargets.map((t) => [t.id, t.text])),
 		[downloadTargets],
@@ -86,11 +89,15 @@ export function BookmarkedAudioList() {
 		() => downloadTargetIds.filter((id) => downloadStatuses[id] === 'done'),
 		[downloadTargetIds, downloadStatuses],
 	);
-	const hasDownloaded = doneIds.length > 0;
 	const totalSizeLabel = useMemo(
-		() => (hasDownloaded ? formatOfflineAudioSize(getOfflineAudioTotalSizeBytes()) : ''),
-		[hasDownloaded],
+		() => (doneIds.length > 0 ? formatOfflineAudioSize(getOfflineAudioTotalSizeBytes()) : ''),
+		[doneIds.length],
 	);
+
+	// 다운로드 가능 여부 계산 (유틸)
+	const canStartDownload = hasIdle(downloadTargetIds, downloadStatuses);
+	const isDownloading = isAnyLoading(downloadTargetIds, downloadStatuses);
+	const downloadProgress = getBatchProgress(downloadBatchIds, downloadStatuses);
 
 	useEffect(() => {
 		items.forEach((item) => {
@@ -101,6 +108,9 @@ export function BookmarkedAudioList() {
 		});
 	}, [items, updateHistory]);
 
+	/**
+	 * 이벤트 핸들러 (콜백)
+	 */
 	const handleStartDownload = useCallback(() => {
 		Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
 		startDownload(downloadTargets, voiceId, voiceSpeed);
@@ -254,7 +264,7 @@ export function BookmarkedAudioList() {
 				</View>
 			)}
 
-			{hasDownloaded && (
+			{doneIds.length > 0 && (
 				<View className="px-4 pb-3">
 					<View className="flex-row items-center justify-between rounded-2xl bg-[rgba(28,25,23,0.04)] px-4 py-3">
 						<Text className="font-pretendard-regular text-gray600 text-[13px]">
@@ -319,15 +329,15 @@ export function BookmarkedAudioList() {
 								</Text>
 							</View>
 
-							<Pressable
+							<IconButton
 								onPress={() => handleUnbookmark(item)}
-								hitSlop={8}
 								accessibilityLabel="저장 취소"
-								accessibilityRole="button"
+								variant="bare"
 								className="p-1"
-							>
-								<Ionicons name="heart" size={18} className="text-red-400" />
-							</Pressable>
+								iconClassName="text-red-400"
+								icon="heart"
+								iconSize={18}
+							/>
 						</Pressable>
 					)}
 					ItemSeparatorComponent={() => <Divider className="my-2.5" />}
@@ -385,25 +395,23 @@ export function BookmarkedAudioList() {
 									)}
 								</Pressable>
 								{downloadStatuses[selected.id] === 'done' && (
-									<Pressable
+									<IconButton
 										onPress={() => handleDeleteSingleDownload(selected)}
 										hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
-										accessibilityRole="button"
 										accessibilityLabel="다운로드 삭제"
-										style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
-									>
-										<Ionicons name="trash-outline" size={22} className="text-error" />
-									</Pressable>
+										variant="bare"
+										icon="trash-outline"
+										iconSize={22}
+										iconClassName="text-error"
+									/>
 								)}
-								<Pressable
+								<IconButton
 									onPress={handleSheetClose}
-									hitSlop={8}
 									accessibilityLabel="닫기"
-									accessibilityRole="button"
-									style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
-								>
-									<Ionicons name="close" size={22} className="text-gray600" />
-								</Pressable>
+									variant="bare"
+									icon="close"
+									iconSize={22}
+								/>
 							</View>
 						</View>
 

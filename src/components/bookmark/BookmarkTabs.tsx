@@ -2,7 +2,6 @@ import * as Haptics from 'expo-haptics';
 import { useEffect, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
-
 import { cn } from '@/src/lib/cn';
 
 export type BookmarkTab = 'exhibition' | 'audio';
@@ -43,7 +42,7 @@ export function BookmarkTabs({ tab, onChangeTab, className }: BookmarkTabsProps)
 	return (
 		<View
 			onLayout={(e) => setTrackWidth(e.nativeEvent.layout.width)}
-			className={cn('w-full flex-row border-b border-gray300', className)}
+			className={cn('w-full flex-row border-b border-gray300 mt-1 mb-4', className)}
 			accessibilityRole="tablist"
 		>
 			{TABS.map(({ key, label }) => {

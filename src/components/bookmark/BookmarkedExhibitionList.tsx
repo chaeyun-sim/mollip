@@ -22,9 +22,7 @@ export function BookmarkedExhibitionList() {
 	const [activeFilter, setActiveFilter] = useState<FilterOption>('all');
 	const { data, isLoading, error } = useBookmarkedExhibitions();
 
-	const handlePress = (id: string) => {
-		router.push(`/(explore)/${id}`);
-	};
+	const handlePress = (id: string) => router.push(`/(explore)/${id}`);
 
 	const filteredData = data.filter((ex) => {
 		if (activeFilter === 'all') return true;

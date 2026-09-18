@@ -24,7 +24,7 @@ export default function BookmarkScreen() {
 				<Screen.Header.Back color="muted" />
 				<Screen.Header.Center>북마크</Screen.Header.Center>
 			</Screen.Header>
-			<BookmarkTabs tab={tab} onChangeTab={handleChangeTab} className="mt-1 mb-4" />
+			<BookmarkTabs tab={tab} onChangeTab={handleChangeTab} />
 			{tab === 'audio' ? <BookmarkedAudioList /> : <BookmarkedExhibitionList />}
 		</Screen>
 	);
