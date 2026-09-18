@@ -213,7 +213,9 @@ export function OnboardingGalleryWall({ wall, busy, onConfirm }: OnboardingGalle
 				</ScrollView>
 			</View>
 			<Text className="pt-8 pb-2 text-gray700 text-sm font-pretendard-regular">
-				그림을 누르거나, 드래그로 걸어보세요.
+				{wall.count < 3
+					? `그림을 누르거나 드래그로 걸어보세요 · 최소 3개 중 ${3 - wall.count}개 더`
+					: `${wall.count}/5개를 걸었어요 · 이대로 시작해도 좋아요`}
 			</Text>
 			<View className="rounded-xl bg-gray200 py-2">
 				<ScrollView
@@ -246,7 +248,7 @@ export function OnboardingGalleryWall({ wall, busy, onConfirm }: OnboardingGalle
 				<Pressable
 					testID="wall-continue"
 					accessibilityRole="button"
-					accessibilityLabel="이 전시로 시작하기"
+					accessibilityLabel="이 취향으로 시작하기"
 					accessibilityState={{ disabled: wall.count < 3 || busy || drag !== null, busy }}
 					disabled={wall.count < 3 || busy || drag !== null}
 					onPress={handleConfirm}
@@ -256,7 +258,7 @@ export function OnboardingGalleryWall({ wall, busy, onConfirm }: OnboardingGalle
 					)}
 				>
 					<Text className="font-pretendard-semibold text-base text-white">
-						{busy ? '취향 저장 중…' : '이 전시로 시작하기'}
+						{busy ? '취향 저장 중…' : '이 취향으로 시작하기'}
 					</Text>
 				</Pressable>
 			</View>

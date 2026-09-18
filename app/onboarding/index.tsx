@@ -1,15 +1,14 @@
 import { useRouter } from 'expo-router';
 import { useCallback, useState } from 'react';
-import { View } from 'react-native';
+import { Alert, View } from 'react-native';
 import { useShallow } from 'zustand/react/shallow';
 
 import { Screen } from '@/src/components/layout/Screen';
-import { OnboardingArtworkTray } from '@/src/components/onboarding/OnboardingArtworkTray';
+import { OnboardingGalleryWall } from '@/src/components/onboarding/OnboardingGalleryWall';
 import { OnboardingSaveErrorBar } from '@/src/components/onboarding/OnboardingSaveErrorBar';
-import { OnboardingWallConfirm } from '@/src/components/onboarding/OnboardingWallConfirm';
+import { OnboardingSkipAction } from '@/src/components/onboarding/OnboardingSkipAction';
 import { OnboardingWallPrologue } from '@/src/components/onboarding/OnboardingWallPrologue';
-import { OnboardingWallProgress } from '@/src/components/onboarding/OnboardingWallProgress';
-import { useOnboardingWallFlow } from '@/src/hooks/useOnboardingWallFlow';
+import { useOnboardingWallPlacement } from '@/src/hooks/useOnboardingWallPlacement';
 import { useAuthStore } from '@/src/store/authStore';
 import { setLocalOnboardingCompleted, setPendingGenres } from '@/src/utils/onboardingLocalStorage';
 import { toValidGenres } from '@/src/utils/onboardingWallGenres';
@@ -20,29 +19,18 @@ export default function OnboardingScreen() {
 	const { userId, setOnboardingCompleted } = useAuthStore(
 		useShallow((s) => ({ userId: s.user?.id, setOnboardingCompleted: s.setOnboardingCompleted })),
 	);
+	const [step, setStep] = useState<'prologue' | 'wall'>('prologue');
 	const [saving, setSaving] = useState(false);
 	// 오류 바는 실패 이후 재시도가 끝날 때까지(성공 또는 무저장 시작 전까지) 화면에 남는다 (AC-5)
 	// 0 = 오류 없음, 그 외에는 실패 횟수 — key로 써서 재실패마다 알림을 다시 발화한다 (AC-7)
 	const [errorCount, setErrorCount] = useState(0);
 	const hasError = errorCount > 0;
 
-	const {
-		step,
-		trays,
-		selections,
-		canCompleteEarly,
-		selectedGenres,
-		lastAnnouncement,
-		lastChangedTrayIndex,
-		startCuration,
-		selectPiece,
-		requestChange,
-		completeEarly,
-		restart,
-	} = useOnboardingWallFlow();
+	const wall = useOnboardingWallPlacement();
+	const selectedGenres = wall.genres;
 
-	const handleSkip = useCallback(() => {
-		// 스킵은 preferred_genres를 바꾸지 않고 완료 상태만 남긴다 (AC-1, AC-5)
+	// 스킵은 preferred_genres를 바꾸지 않고 완료 상태만 남긴다 (AC-1, AC-5)
+	const performSkip = useCallback(() => {
 		if (userId) {
 			void setLocalOnboardingCompleted(userId, true);
 			void supabase.from('profiles').update({ onboarding_completed: true }).eq('id', userId);
@@ -50,6 +38,17 @@ export default function OnboardingScreen() {
 		setOnboardingCompleted(true);
 		router.replace('/(tabs)');
 	}, [userId, router, setOnboardingCompleted]);
+
+	const handleSkip = useCallback(() => {
+		Alert.alert(
+			'지금 건너뛸까요?',
+			'취향을 고르지 않으면 취향에 맞는 전시를 추천해드리기 어려워요.',
+			[
+				{ text: '취소', style: 'cancel' },
+				{ text: '건너뛰기', style: 'destructive', onPress: performSkip },
+			],
+		);
+	}, [performSkip]);
 
 	// AC-4: taxonomy 검증 후 preferred_genres만 명시적으로 저장한다 (preferred_artists는 건드리지 않음)
 	// AC-5: 실패 시 선택 결과를 화면과 사용자별 로컬 pending 레코드에 남기고 재시도/무저장 시작을 제공한다
@@ -84,60 +83,35 @@ export default function OnboardingScreen() {
 		router.replace('/(tabs)');
 	}, [userId, setOnboardingCompleted, router]);
 
-	function renderContent() {
-		if (step.kind === 'prologue') {
-			return <OnboardingWallPrologue onStart={startCuration} onSkip={handleSkip} />;
-		}
-
-		if (step.kind === 'tray') {
-			const tray = trays[step.trayIndex];
-			return (
-				<View className="flex-1 pt-2">
-					<View style={{ maxHeight: '45%' }}>
-						<OnboardingWallProgress
-							selections={selections}
-							canCompleteEarly={canCompleteEarly}
-							onCompleteEarly={completeEarly}
-							onRequestChange={requestChange}
-							onSkip={handleSkip}
-							changeAnnouncement={lastChangedTrayIndex !== null ? lastAnnouncement : null}
-							changedTrayIndex={lastChangedTrayIndex}
-						/>
-					</View>
-					<View className="flex-1 pt-2">
-						<OnboardingArtworkTray
-							tray={tray}
-							onSelect={(piece) => selectPiece(step.trayIndex, piece)}
-							announcement={lastChangedTrayIndex === null ? lastAnnouncement : null}
-						/>
-					</View>
-				</View>
-			);
-		}
-
-		// step.kind === 'confirm'
+	if (step === 'prologue') {
 		return (
-			<OnboardingWallConfirm
-				selections={selections}
-				onRequestChange={requestChange}
-				onRestart={restart}
-				onConfirm={handleConfirm}
-				confirmDisabled={saving || hasError}
-				changeAnnouncement={lastChangedTrayIndex !== null ? lastAnnouncement : null}
-				changedTrayIndex={lastChangedTrayIndex}
-				errorSlot={
-					hasError ? (
-						<OnboardingSaveErrorBar
-							key={errorCount}
-							onRetry={handleConfirm}
-							onSkipSave={handleSkipWithoutSave}
-							busy={saving}
-						/>
-					) : undefined
-				}
-			/>
+			<Screen variant="warm">
+				<OnboardingWallPrologue onStart={() => setStep('wall')} onSkip={handleSkip} />
+			</Screen>
 		);
 	}
 
-	return <Screen variant="warm">{renderContent()}</Screen>;
+	return (
+		<Screen variant="warm">
+			<Screen.Header>
+				<Screen.Header.Back onPress={() => setStep('prologue')} />
+				<Screen.Header.Center>내 전시 벽 만들기</Screen.Header.Center>
+				<Screen.Header.Right className="-mr-2">
+					<OnboardingSkipAction onPress={handleSkip} />
+				</Screen.Header.Right>
+			</Screen.Header>
+
+			<View className="flex-1">
+				<OnboardingGalleryWall wall={wall} busy={saving || hasError} onConfirm={handleConfirm} />
+				{hasError && (
+					<OnboardingSaveErrorBar
+						key={errorCount}
+						onRetry={handleConfirm}
+						onSkipSave={handleSkipWithoutSave}
+						busy={saving}
+					/>
+				)}
+			</View>
+		</Screen>
+	);
 }

@@ -1,5 +1,6 @@
 import { useCallback, useMemo, useState } from 'react';
 import { AccessibilityInfo } from 'react-native';
+import * as Haptics from 'expo-haptics';
 
 import { normalizeOnboardingGenres } from '@/src/utils/onboardingWallGenres';
 import { ONBOARDING_WALL_PIECES, type OnboardingWallPiece } from '@/src/data/onboardingWallPieces';
@@ -38,6 +39,7 @@ export const useOnboardingWallPlacement = () => {
 			next[target] = piece;
 			setPlacements(next);
 			setSelectedFrame(null);
+			void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
 			announce(
 				`${piece.genre === '현대미술' ? '현대 미술' : piece.genre} 작품을 걸었어요. ${next.filter(Boolean).length}/5`,
 			);
