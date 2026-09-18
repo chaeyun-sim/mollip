@@ -146,7 +146,10 @@ export default function ExhibitionDetailScreen() {
 
 			<ScrollView
 				style={{ overflow: 'visible' }}
-				contentContainerStyle={{ paddingBottom: fabBottom + 44, paddingTop: insets.top + 88 }}
+				contentContainerStyle={{
+					paddingBottom: exhibition.ticketUrl ? fabBottom + 44 : fabBottom - 20,
+					paddingTop: insets.top + 88,
+				}}
 			>
 				<View>
 					<View className="px-6">
