@@ -1,46 +1,10 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useCallback, useEffect, useState } from 'react';
+import { useRecentEndpoints, type RecentLocation } from '@/src/hooks/useRecentEndpoints';
 
-import type { RouteEndpoint } from '@/src/hooks/useDirections';
-
-export interface RecentLocation {
-	name: string;
-	subtitle?: string;
-	coord: { latitude: number; longitude: number };
-}
+export type { RecentLocation };
 
 const STORAGE_KEY = 'recent_locations_v1';
-const MAX_COUNT = 6;
 
-function toKey(loc: RecentLocation) {
-	return `${loc.coord.latitude.toFixed(5)},${loc.coord.longitude.toFixed(5)}`;
-}
-
+/** 지도 검색바("최근 방문한 곳") 전용 — 길찾기 출발지/도착지 기록과는 별개의 목록이다. */
 export function useRecentLocations() {
-	const [recents, setRecents] = useState<RecentLocation[]>([]);
-
-	useEffect(() => {
-		AsyncStorage.getItem(STORAGE_KEY)
-			.then((raw) => {
-				if (raw) setRecents(JSON.parse(raw));
-			})
-			.catch(() => {});
-	}, []);
-
-	const addRecent = useCallback((endpoint: RouteEndpoint, subtitle?: string) => {
-		const next: RecentLocation = {
-			name: endpoint.name,
-			subtitle,
-			coord: endpoint.coord,
-		};
-		setRecents((prev) => {
-			const key = toKey(next);
-			const filtered = prev.filter((r) => toKey(r) !== key);
-			const updated = [next, ...filtered].slice(0, MAX_COUNT);
-			AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updated)).catch(() => {});
-			return updated;
-		});
-	}, []);
-
-	return { recents, addRecent };
+	return useRecentEndpoints(STORAGE_KEY);
 }

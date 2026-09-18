@@ -15,8 +15,12 @@ export function useUserLocation() {
 				({ status } = await Location.requestForegroundPermissionsAsync());
 			}
 			if (status !== 'granted') return;
-			const loc = await Location.getCurrentPositionAsync({});
-			setCurrentCoord({ latitude: loc.coords.latitude, longitude: loc.coords.longitude });
+			try {
+				const loc = await Location.getCurrentPositionAsync({});
+				setCurrentCoord({ latitude: loc.coords.latitude, longitude: loc.coords.longitude });
+			} catch {
+				// 시뮬레이터·실내 등 위치를 못 가져오는 환경 — 조용히 무시하고 currentCoord는 null 유지
+			}
 		})();
 	}, []);
 

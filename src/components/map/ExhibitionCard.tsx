@@ -52,12 +52,6 @@ export function ExhibitionCard({ ex, status, onPress }: ExhibitionCardProps) {
 				/>
 				<View className="flex-1 justify-center gap-1.5">
 					<View className="flex-row items-center gap-1.5">
-						<View
-							className="w-[5px] h-[5px] rounded-full"
-							style={{
-								backgroundColor: status === 'active' ? ex.posterColor : 'rgba(0,0,0,0.35)',
-							}}
-						/>
 						<Text
 							className={cn(
 								'text-[10px] font-pretendard-bold tracking-[1.5px] uppercase',

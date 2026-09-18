@@ -5,7 +5,7 @@ import type { RouteCoord } from '@/src/api/tmap';
 import { EXTERNAL_MAP_APPS, openExternalMap } from '@/src/utils/externalMaps';
 
 export interface ExternalMapTarget {
-	coord: RouteCoord;
+	coord?: RouteCoord;
 	label: string;
 }
 

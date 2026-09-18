@@ -72,7 +72,7 @@ export function RouteSheet({
 
 	return (
 		<BottomSheetScrollView
-			className="px-5 pt-3"
+			className="px-6 pt-3"
 			showsVerticalScrollIndicator={false}
 			contentContainerStyle={{ paddingBottom: bottomInset + 24 }}
 		>

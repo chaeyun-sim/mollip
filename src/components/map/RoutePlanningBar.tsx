@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { Divider } from '@/src/components/common/Divider';
 import { TextField } from '@/src/components/common/TextField';
-import { useRecentLocations } from '@/src/hooks/useRecentLocations';
+import { useRecentEndpoints } from '@/src/hooks/useRecentEndpoints';
 import { cn } from '@/src/lib/cn';
 import { searchKakaoKeyword, type KakaoLocalItem } from '@/src/api/kakao';
 import type { RouteEndpoint } from '@/src/hooks/useDirections';
@@ -79,7 +79,13 @@ export const RoutePlanningBar = memo(function RoutePlanningBar({
 	const [kakaoRows, setKakaoRows] = useState<KakaoLocalItem[]>([]);
 	const [kakaoLoading, setKakaoLoading] = useState(false);
 	const [kakaoError, setKakaoError] = useState(false);
-	const { recents, addRecent } = useRecentLocations();
+	// 출발지·도착지는 서로 다른 "최근" 목록을 쓴다 — 검색어 입력값 자체와도, 서로와도 섞이지 않는다
+	const { recents: originRecents, addRecent: addOriginRecent } =
+		useRecentEndpoints('recent_route_origin_v1');
+	const { recents: destinationRecents, addRecent: addDestinationRecent } = useRecentEndpoints(
+		'recent_route_destination_v1',
+	);
+	const recents = editing === 'destination' ? destinationRecents : originRecents;
 
 	useEffect(() => {
 		const q = query.trim();
@@ -166,10 +172,14 @@ export const RoutePlanningBar = memo(function RoutePlanningBar({
 	};
 
 	const pickSuggestion = (item: RouteSearchSuggestion) => {
-		if (editing === 'origin') onSelectOrigin(item.endpoint);
-		else if (editing === 'destination') onSelectDestination(item.endpoint);
+		if (editing === 'origin') {
+			onSelectOrigin(item.endpoint);
+			addOriginRecent(item.endpoint, item.subtitle);
+		} else if (editing === 'destination') {
+			onSelectDestination(item.endpoint);
+			addDestinationRecent(item.endpoint, item.subtitle);
+		}
 		onFocusLocation(item.endpoint.coord);
-		addRecent(item.endpoint, item.subtitle);
 		setEditing(null);
 		setQuery('');
 		resetKakao();

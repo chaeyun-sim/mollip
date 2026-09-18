@@ -23,9 +23,13 @@ export function useMapCamera() {
 				({ status } = await Location.requestForegroundPermissionsAsync());
 			}
 			if (status !== 'granted') return;
-			const loc = await Location.getCurrentPositionAsync({});
-			const coord = { latitude: loc.coords.latitude, longitude: loc.coords.longitude };
-			setCurrentCoord(coord);
+			try {
+				const loc = await Location.getCurrentPositionAsync({});
+				const coord = { latitude: loc.coords.latitude, longitude: loc.coords.longitude };
+				setCurrentCoord(coord);
+			} catch {
+				// 시뮬레이터·실내 등 위치를 못 가져오는 환경 — 조용히 무시하고 기본 카메라 위치 유지
+			}
 		})();
 	}, []);
 
