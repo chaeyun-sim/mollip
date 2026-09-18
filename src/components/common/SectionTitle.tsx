@@ -17,7 +17,7 @@ interface SectionTitleProps {
 /** 섹션 제목. eyebrow(위)·subtitle(아래)은 선택적으로 렌더링한다. */
 export function SectionTitle({ title, eyebrow, subtitle, right, className }: SectionTitleProps) {
 	return (
-		<View className={cn('mb-4 px-5', className)}>
+		<View className={cn('mb-4 px-6', className)}>
 			<View className="flex-row items-end justify-between">
 				<View className="flex-1 pr-2">
 					{eyebrow && (
