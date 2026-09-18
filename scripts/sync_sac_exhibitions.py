@@ -10,6 +10,8 @@ import urllib.parse
 import urllib.request
 
 from exhibition_sync_filters import END_DATE_MIN, clean_exhibition_text, end_date_eligible, venue_sync_allowed
+from ensure_museums import ensure_museums_from_exhibitions
+from fill_museum_details import fill_empty_museum_fields
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ENV = os.path.join(REPO, ".env")
@@ -168,6 +170,10 @@ def main() -> None:
                     print(row_err.read().decode(errors="replace"), file=sys.stderr)
                     raise
     print(f"insert attempted {inserted} rows, skipped (duplicate with other source) {skipped_conflict}")
+    created, linked = ensure_museums_from_exhibitions(sb_url, sb_key, env)
+    print(f"museums created {created}, exhibitions linked {linked}")
+    stats = fill_empty_museum_fields(sb_url, sb_key, env)
+    print(f"museum details filled {stats['updated']}")
 
     meta = {
         "source": "sac",

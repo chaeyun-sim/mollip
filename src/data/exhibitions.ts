@@ -33,6 +33,7 @@ export interface Exhibition {
 
 	// — 장소
 	venue: string;
+	museum?: ExhibitionMuseum | null;
 	eventSite?: string;
 	venueAddress?: string;
 	venueGroupName?: string;
@@ -87,6 +88,23 @@ export interface Exhibition {
 	// — 관계
 	artworks: Artwork[];
 	relatedExhibitions?: Exhibition[];
+}
+
+export interface ExhibitionMuseum {
+	id: number;
+	name: string;
+	address?: string;
+	phone?: string;
+	homepageUrl?: string;
+	openHours?: string;
+	closedDays?: string;
+	description?: string;
+	amenities?: string;
+	parking?: string;
+	notes?: string;
+	venueGroupName?: string;
+	coordinates?: { latitude: number; longitude: number };
+	accessibility?: Exhibition['accessibility'];
 }
 
 // 전시 본문은 Supabase exhibitions(kcisa/culture/manual)에서 조회한다.

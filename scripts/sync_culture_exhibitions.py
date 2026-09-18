@@ -319,7 +319,7 @@ def main() -> None:
     print(f"insert attempted {inserted} rows, skipped (duplicate with manual/kcisa) {skipped_conflict}")
     pruned = prune_duplicate_titles(sb_url, sb_key)
     print(f"pruned duplicate titles {pruned}")
-    created, linked = ensure_museums_from_exhibitions(sb_url, sb_key)
+    created, linked = ensure_museums_from_exhibitions(sb_url, sb_key, env)
     print(f"museums created {created}, exhibitions linked {linked}")
     stats = fill_empty_museum_fields(sb_url, sb_key, env)
     print(f"museum details filled {stats['updated']}")

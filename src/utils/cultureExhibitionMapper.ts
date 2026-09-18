@@ -43,7 +43,7 @@ export function mapCultureItemToExhibition(item: {
 		heroImageUri: item.imgUrl || undefined,
 		openHours: '운영시간 정보 없음',
 		admission: item.price || '정보 없음',
-		admissionFree: item.price?.includes('무료'),
+		admissionFree: item.price?.trim() === '무료',
 		ticketUrl: item.url || undefined,
 		web_site: item.url || undefined,
 		phone: item.phone || undefined,

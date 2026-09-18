@@ -46,8 +46,31 @@ def clean_exhibition_text(text: str) -> str:
     return re.sub(r"\s+", " ", cleaned).strip()
 
 
+_TITLE_PREFIX_RE = re.compile(
+    r"^\s*(?:"
+    r"\[[^\]]*(?:온라인|특별|기획|상설|전시)[^\]]*\]"
+    r"|【[^】]*(?:온라인|특별|기획|상설|전시)[^】]*】"
+    r"|\([^)]*(?:온라인|특별|기획|상설|전시)[^)]*\)"
+    r"|<[^>]*(?:온라인|특별|기획|상설|전시)[^>]*>"
+    r"|(?:온라인\s*)?(?:특별|기획|상설)\s*전\s*[:：\-–—]?"
+    r"|온라인\s*전시\s*[:：\-–—]?"
+    r")\s*",
+)
+
+
+def canonical_exhibition_title(title: str) -> str:
+    """동일 전시 비교용 제목. API 홍보 접두사만 제거하고 작품명은 보존한다."""
+    cleaned = clean_exhibition_text(title)
+    prev = None
+    while prev != cleaned:
+        prev = cleaned
+        cleaned = _TITLE_PREFIX_RE.sub("", cleaned).strip()
+    return cleaned.strip(" -–—:：")
+
+
 def title_key(title: str) -> str:
-    return _normalize(clean_exhibition_text(title))
+    canonical = canonical_exhibition_title(title).lower()
+    return re.sub(r"[^0-9a-z가-힣]+", "", canonical)
 
 
 VENUE_EXACT_NORM: frozenset[str] = frozenset(_normalize(v) for v in VENUE_EXACT_BLOCKLIST)
