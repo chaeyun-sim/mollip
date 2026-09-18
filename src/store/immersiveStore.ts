@@ -44,7 +44,7 @@ export const useImmersiveStore = create<ImmersiveStore>()(
 			enteredAt: null,
 			chatSessionId: null,
 			playlist: [],
-			enter: (exhibitionId, exhibitionTitle) =>
+			enter: (exhibitionId, exhibitionTitle) => {
 				set({
 					isImmersiveMode: true,
 					exhibitionId,
@@ -52,7 +52,11 @@ export const useImmersiveStore = create<ImmersiveStore>()(
 					enteredAt: Date.now(),
 					chatSessionId: `exhibition-chat-${Date.now()}`,
 					playlist: [],
-				}),
+				});
+				// 몰입 시작은 항상 작가 소개 준비를 함께 트리거한다. artist가 없거나 id가 없으면
+				// artistIntroStore.prepare가 내부에서 조용히 스킵한다.
+				useArtistIntroStore.getState().prepare(exhibitionId, exhibitionTitle);
+			},
 			exit: () => {
 				// 관람 종료 시 오늘 기록을 미확정(pending) 상태로 전환 — 다이어리 탭에서 모아서 확정한다.
 				const { enteredAt, exhibitionId, exhibitionTitle, chatSessionId } = get();
