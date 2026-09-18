@@ -1,6 +1,7 @@
-import { ActivityIndicator, Pressable, View } from 'react-native';
+import { ActivityIndicator, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
+import { IconButton } from '@/src/components/common/IconButton';
 import type { DownloadStatus } from '@/src/store/offlineDownloadStore';
 
 interface DownloadStatusBadgeProps {
@@ -37,16 +38,29 @@ export function DownloadStatusBadge({ status, onRetry }: DownloadStatusBadgeProp
 	}
 
 	if (status === 'failed') {
+		if (!onRetry) {
+			return (
+				<View
+					className="absolute -top-1 -right-1 w-[22px] h-[22px] rounded-full bg-gray900 items-center justify-center"
+					accessibilityLabel={ACCESSIBILITY_LABEL.failed}
+					accessibilityRole="image"
+				>
+					<Ionicons name="alert-circle" size={12} className="text-error" />
+				</View>
+			);
+		}
+
 		return (
-			<Pressable
-				className="absolute -top-1 -right-1 w-[22px] h-[22px] rounded-full bg-gray900 items-center justify-center"
+			<IconButton
 				onPress={onRetry}
 				hitSlop={{ top: 16, bottom: 16, left: 16, right: 16 }}
-				accessibilityRole="button"
 				accessibilityLabel={ACCESSIBILITY_LABEL.failed}
-			>
-				<Ionicons name="alert-circle" size={12} className="text-error" />
-			</Pressable>
+				variant="bare"
+				icon="alert-circle"
+				iconSize={12}
+				iconClassName="text-error"
+				className="absolute -top-1 -right-1 w-[22px] h-[22px] rounded-full bg-gray900"
+			/>
 		);
 	}
 

@@ -119,9 +119,9 @@ export default function PlaylistScreen() {
 		router.push('/description');
 	};
 
-	// artist가 없거나 전시를 검색으로 선택하지 않은 경우 트랙 자체를 렌더하지 않는다.
+	// artist가 없으면 트랙 자체를 렌더하지 않는다.
 	function renderArtistIntroTrack() {
-		if (!exhibitionId || !introArtist || introStatus === 'idle') return null;
+		if (!introArtist || introStatus === 'idle') return null;
 
 		return (
 			<ArtistIntroTrack

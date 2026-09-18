@@ -43,12 +43,10 @@ export const useArtistIntroStore = create<ArtistIntroStore>()((set, get) => ({
 	prepare: (exhibitionId, exhibitionTitle) => {
 		const token = ++sessionToken;
 		set({ ...INITIAL });
-		// 전시를 검색 결과에서 고르지 않아 id가 없으면 artist를 조회할 수 없다 → 완전 스킵(AC-6)
-		if (!exhibitionId) return;
 
 		void (async () => {
-			const info = await fetchExhibitionArtist(exhibitionId);
-			// 단체전 등 artist가 없는 전시도 완전 스킵 — 생성 API를 호출하지 않는다(AC-6)
+			const info = await fetchExhibitionArtist(exhibitionId, exhibitionTitle);
+			// 단체전 등 artist가 없는 전시는 생성 API를 호출하지 않는다.
 			if (!info) return;
 
 			if (token !== sessionToken) return;

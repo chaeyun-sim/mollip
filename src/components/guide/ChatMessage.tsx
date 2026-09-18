@@ -93,6 +93,7 @@ export function ChatMessage({ item, onRetry }: ChatMessageProps) {
 	function renderMessageText() {
 		const textClass = cn(isUser ? 'text-white' : highContrast ? 'text-black' : 'text-on-dark');
 
+		// 사용자가 설정에서 조절하는 글자 크기에 비례해야 하므로 className이 아닌 style로 계산한다.
 		const textStyle = { fontSize: bodyFontSize - 1, lineHeight: (bodyFontSize - 1) * 1.6 };
 
 		if (!hasArtwork) {

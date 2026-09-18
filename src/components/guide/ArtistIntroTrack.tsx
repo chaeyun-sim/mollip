@@ -35,29 +35,13 @@ export function ArtistIntroTrack({ artist, imageUrl, status, onPress }: ArtistIn
 
 	const isLoading = status === 'loading';
 	const isFailed = status === 'failed';
-	const accessibilityLabel = resolveAccessibilityLabel();
 
 	function resolveAccessibilityLabel() {
 		if (isLoading) return '작가 소개 해설 준비 중';
 
-		if (isFailed) return '작가 소개 해설 다시 생성';
+		if (isFailed) return '작가 소개 해설 다시 생성하기';
 
 		return `작가 소개 재생, ${artist}`;
-	}
-
-	// 세 상태 모두 26×26 슬롯을 유지해 전환 시 레이아웃 시프트가 없다.
-	function renderControl() {
-		if (isLoading) {
-			return <Indicator size="small" color="gray500" />;
-		}
-
-		return (
-			<Ionicons
-				name={isFailed ? 'refresh-outline' : 'play-circle-outline'}
-				size={26}
-				className={cn(isFailed ? 'text-gray600' : 'text-primary')}
-			/>
-		);
 	}
 
 	return (
@@ -67,7 +51,7 @@ export function ArtistIntroTrack({ artist, imageUrl, status, onPress }: ArtistIn
 				onPress={onPress}
 				disabled={isLoading}
 				accessibilityRole="button"
-				accessibilityLabel={accessibilityLabel}
+				accessibilityLabel={resolveAccessibilityLabel()}
 				accessibilityHint={status === 'ready' ? '작가 소개 해설 화면으로 이동해요' : undefined}
 				accessibilityState={{ disabled: isLoading, busy: isLoading }}
 				style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
@@ -105,7 +89,17 @@ export function ArtistIntroTrack({ artist, imageUrl, status, onPress }: ArtistIn
 						{SUBTITLE[status]}
 					</Text>
 				</View>
-				<View className="w-[26px] h-[26px] items-center justify-center">{renderControl()}</View>
+				<View className="w-[26px] h-[26px] items-center justify-center">
+					{isLoading ? (
+						<Indicator size="small" color="gray500" />
+					) : (
+						<Ionicons
+							name={isFailed ? 'refresh-outline' : 'play-circle-outline'}
+							size={26}
+							className={cn(isFailed ? 'text-gray600' : 'text-primary')}
+						/>
+					)}
+				</View>
 			</Pressable>
 			<View className="mt-3 border-b-white/6 border-b-hairline" />
 		</View>

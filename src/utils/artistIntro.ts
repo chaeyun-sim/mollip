@@ -7,17 +7,24 @@ export interface ExhibitionArtistInfo {
 
 /**
  * 몰입 대상 전시의 작가명·대표 이미지를 조회한다.
- * artist가 비어 있는 전시(단체전)나 조회 실패는 모두 null로 취급해 기능을 완전히 스킵한다.
+ * id가 있으면 id로 정확 조회하고, id가 없으면 제목으로 한 번 더 찾는다.
+ * artist가 비어 있는 전시(단체전)나 조회 실패는 모두 null로 취급해 기능을 스킵한다.
  */
 export async function fetchExhibitionArtist(
-	exhibitionId: string,
+	exhibitionId: string | null,
+	exhibitionTitle?: string,
 ): Promise<ExhibitionArtistInfo | null> {
 	try {
-		const { data } = await supabase
-			.from('exhibitions')
-			.select('artist, image_url')
-			.eq('id', Number(exhibitionId))
-			.maybeSingle();
+		let query = supabase.from('exhibitions').select('artist, image_url');
+		if (exhibitionId) {
+			query = query.eq('id', Number(exhibitionId));
+		} else {
+			const title = exhibitionTitle?.trim();
+			if (!title) return null;
+			query = query.eq('title', title);
+		}
+
+		const { data } = await query.limit(1).maybeSingle();
 		const artist = data?.artist?.trim();
 		if (!artist) return null;
 		return { artist, imageUrl: data?.image_url ?? undefined };
