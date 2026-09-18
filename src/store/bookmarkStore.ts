@@ -35,6 +35,7 @@ export const useBookmarkStore = create<BookmarkStore>()(
 						.then(({ error }) => {
 							if (error) {
 								console.warn('[bookmark] upsert failed:', error.message);
+								set({ ids: current });
 								onError?.();
 							}
 						});
@@ -46,6 +47,7 @@ export const useBookmarkStore = create<BookmarkStore>()(
 						.then(({ error }) => {
 							if (error) {
 								console.warn('[bookmark] delete failed:', error.message);
+								set({ ids: current });
 								onError?.();
 							}
 						});

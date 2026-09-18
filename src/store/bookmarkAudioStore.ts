@@ -34,6 +34,7 @@ export const useBookmarkAudioStore = create<BookmarkAudioStore>()(
 						.then(({ error }) => {
 							if (error) {
 								console.warn('[bookmark_audio] upsert failed:', error.message);
+								set({ ids: current });
 								onError?.();
 							}
 						});
@@ -45,6 +46,7 @@ export const useBookmarkAudioStore = create<BookmarkAudioStore>()(
 						.then(({ error }) => {
 							if (error) {
 								console.warn('[bookmark_audio] delete failed:', error.message);
+								set({ ids: current });
 								onError?.();
 							}
 						});
