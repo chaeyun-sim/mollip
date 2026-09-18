@@ -12,6 +12,7 @@ export default function TabsLayout() {
 
 	return (
 		<Tabs
+			initialRouteName="index"
 			screenOptions={{
 				headerShown: false,
 				tabBarActiveTintColor: colors.primaryDark,
@@ -24,6 +25,7 @@ export default function TabsLayout() {
 					backgroundColor: '#FFFFFF',
 					borderTopColor: '#F3F4F6',
 					borderTopWidth: 1,
+					paddingTop: 4,
 				},
 				tabBarShowLabel: true,
 			}}

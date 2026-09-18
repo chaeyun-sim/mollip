@@ -10,6 +10,7 @@ import { colors } from '@/src/constants/colors';
 import { APP_VERSION } from '@/src/data/mypage';
 import { useAuthStore } from '@/src/store/authStore';
 import { useSettingsStore } from '@/src/store/settingsStore';
+import { cn } from '@/src/lib/cn';
 
 export default function MyPageScreen() {
 	const router = useRouter();
@@ -38,7 +39,7 @@ export default function MyPageScreen() {
 	if (authLoading) return <ActivityIndicator style={{ flex: 1 }} />;
 
 	return (
-		<Screen variant="warm">
+		<Screen variant="warm" className={session ? 'px-6' : 'px-0'}>
 			<Screen.Header>
 				<Screen.Header.Back />
 				<Screen.Header.Center>마이페이지</Screen.Header.Center>
@@ -63,37 +64,37 @@ export default function MyPageScreen() {
 
 			<ScrollView
 				showsVerticalScrollIndicator={false}
-				contentContainerClassName="pb-[60px]"
+				contentContainerClassName={cn('pb-[60px]', session ? 'px-0' : 'px-6')}
 				scrollEnabled={!!session}
 			>
 				<View className="w-full">
 					{/* 로그인 유도 */}
 					{!session && (
-						<View>
-							<Pressable
-								onPress={() => {
-									Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-									router.push({ pathname: '/auth/login', params: { returnTo: '/settings' } });
-								}}
-								accessibilityRole="button"
-								accessibilityLabel="로그인하기"
-								className="mt-4"
-								style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
-							>
+						<>
+							<View className="mt-4">
 								<Text className="font-pretendard-bold text-gray900 text-[18px] mb-1.5">
 									로그인하고 더 많은 기능을 만나보세요
 								</Text>
 								<Text className="font-pretendard-regular text-gray600 text-[13px] leading-[19px] mb-4">
 									{`몰입모드, 나만의 해설 생성, 취향 기반 추천까지\n로그인하면 모두 이용할 수 있어요`}
 								</Text>
-								<View className="self-start rounded-full bg-secondary px-5 py-2.5">
+								<Pressable
+									onPress={() => {
+										Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+										router.push({ pathname: '/auth/login', params: { returnTo: '/settings' } });
+									}}
+									accessibilityRole="button"
+									accessibilityLabel="로그인하기"
+									style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
+									className="self-start rounded-full bg-secondary px-5 py-2.5"
+								>
 									<Text className="font-pretendard-semibold text-white text-[13px]">
 										로그인하기
 									</Text>
-								</View>
-							</Pressable>
+								</Pressable>
+							</View>
 							<View className="h-2.5 bg-bg-tonal mt-8" style={{ marginHorizontal: -24 }} />
-						</View>
+						</>
 					)}
 
 					{session && user && (
@@ -131,7 +132,7 @@ export default function MyPageScreen() {
 						</>
 					)}
 
-					<View className="relative">
+					<View className={cn('relative', session ? 'mt-0' : 'mt-4')}>
 						<SettingsCard>
 							<CardRow label="푸시 알림" description="관심 전시의 소식과 추천을 받아요">
 								<Switch

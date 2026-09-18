@@ -308,7 +308,7 @@ export default function ConfirmVisitsScreen() {
 				</ScrollView>
 			</KeyboardAvoidingView>
 			{signatureStageReady && (
-				<Screen.BottomAbsolute className="bottom-10 px-5">
+				<Screen.BottomAbsolute className="bottom-10 px-6">
 					<Button
 						onPress={handleConfirm}
 						disabled={!hasSignature}

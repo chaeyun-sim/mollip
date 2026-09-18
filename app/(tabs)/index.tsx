@@ -158,7 +158,7 @@ export default function ExploreScreen() {
 					renderSkeletonItem={(index) => <PopularExhibitionAvatarSkeleton key={index} />}
 					sectionName="인기 전시"
 					placeholder="인기 전시가 없어요"
-					contentContainerClassName="gap-0"
+					contentContainerClassName="gap-0 -ml-3"
 				/>
 
 				<KcisaSection
