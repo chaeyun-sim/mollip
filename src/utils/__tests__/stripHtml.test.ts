@@ -23,4 +23,9 @@ describe('stripHtml — 이중 인코딩 엔티티', () => {
 			normalizeExhibitionTitle('MMCA 해외 명작: 수련'),
 		);
 	});
+	it('홍보 접두사를 제외하고 제목 키를 맞춘다', () => {
+		expect(normalizeExhibitionTitle('[온라인 특별전] 막걸리, 거친 일상의 벗')).toBe(
+			normalizeExhibitionTitle('막걸리, 거친 일상의 벗'),
+		);
+	});
 });

@@ -22,7 +22,22 @@ export function stripHtml(html: string): string {
 	);
 }
 
-/** 공백·대소문자 차이를 무시하고 전시 제목을 비교하기 위한 키를 만든다 */
+const TITLE_PREFIX_RE =
+	/^\s*(?:\[[^\]]*(?:온라인|특별|기획|상설|전시)[^\]]*\]|【[^】]*(?:온라인|특별|기획|상설|전시)[^】]*】|\([^)]*(?:온라인|특별|기획|상설|전시)[^)]*\)|<[^>]*(?:온라인|특별|기획|상설|전시)[^>]*>|(?:온라인\s*)?(?:특별|기획|상설)\s*전\s*[:：\-–—]?|온라인\s*전시\s*[:：\-–—]?)\s*/;
+
+export function canonicalExhibitionTitle(title: string): string {
+	let cleaned = stripHtml(title);
+	let prev: string | null = null;
+	while (prev !== cleaned) {
+		prev = cleaned;
+		cleaned = cleaned.replace(TITLE_PREFIX_RE, '').trim();
+	}
+	return cleaned.replace(/^[\s\-–—:：]+|[\s\-–—:：]+$/g, '');
+}
+
+/** 홍보 접두사·공백·기호·대소문자 차이를 무시하고 전시 제목을 비교하기 위한 키를 만든다 */
 export function normalizeExhibitionTitle(title: string): string {
-	return title.replace(/\s+/g, '').toLowerCase();
+	return canonicalExhibitionTitle(title)
+		.toLowerCase()
+		.replace(/[^0-9a-z가-힣]+/g, '');
 }
