@@ -1,4 +1,5 @@
 import { corsHeaders } from '../_shared/cors.ts';
+import { requireUser } from '../_shared/requireUser.ts';
 
 // ODsay Lab 멀티모달 길찾기(maasRP) 프록시.
 // API 키는 Supabase Dashboard > Edge Functions > odsay-route > Secrets > ODSAY_API_KEY에 설정.
@@ -13,6 +14,9 @@ Deno.serve(async (req) => {
 	if (req.method === 'OPTIONS') {
 		return new Response('ok', { headers: corsHeaders });
 	}
+
+	const authError = await requireUser(req);
+	if (authError) return authError;
 
 	try {
 		const apiKey = Deno.env.get('ODSAY_API_KEY');
