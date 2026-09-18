@@ -3,7 +3,7 @@ import BottomSheet, { BottomSheetBackdrop, BottomSheetModal } from '@gorhom/bott
 import { NaverMapView } from '@mj-studio/react-native-naver-map';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { ActivityIndicator, Pressable, useWindowDimensions, View } from 'react-native';
+import { ActivityIndicator, Keyboard, Pressable, useWindowDimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { DatePickerModal } from '@/src/components/common/DatePickerModal';
 import { FilterChips } from '@/src/components/map/FilterChips';
@@ -20,7 +20,10 @@ import { useMapCamera, DEFAULT_CAMERA } from '@/src/hooks/useMapCamera';
 import { useMapFilter } from '@/src/hooks/useMapFilter';
 import { useMapMarkers } from '@/src/hooks/useMapMarkers';
 import { useMapVenues } from '@/src/hooks/useMapVenues';
+import { useRecentLocations } from '@/src/hooks/useRecentLocations';
+import { useRecentRoutes, type RecentRoute } from '@/src/hooks/useRecentRoutes';
 import { useVenueExhibitions } from '@/src/hooks/useVenueExhibitions';
+import { useAuthStore } from '@/src/store/authStore';
 import { useMapStore } from '@/src/store/mapStore';
 import { distanceKm, formatDistance, latOffsetForPixels } from '@/src/utils/mapUtils';
 import type { RouteCoord } from '@/src/api/tmap';
@@ -89,6 +92,11 @@ export default function MapScreen() {
 		matchesFilters,
 		toggleFilter,
 	} = useMapFilter(dbVenues, filterDate, setFilterDate);
+	const { recents: recentLocations, addRecent: addRecentLocation } = useRecentLocations();
+	// 최근 길찾기는 로그인한 사용자에게만 보인다 — 비로그인 상태에서는 기록도 남기지 않는다
+	const isLoggedIn = useAuthStore((s) => !!s.user);
+	const { recentRoutes: storedRecentRoutes, addRecentRoute } = useRecentRoutes();
+	const recentRoutes = isLoggedIn ? storedRecentRoutes : [];
 
 	// 고정된 스냅 지점만 사용 — 탭 전환이나 로딩/성공/에러 등 콘텐츠 길이가 바뀌어도
 	// 시트 높이가 콘텐츠에 맞춰 흔들리면 안 된다. 항상 고정된 snapPoints로만 크기를 정하고,
@@ -233,6 +241,7 @@ export default function MapScreen() {
 			}
 			selectVenue(venueName);
 			bottomSheetRef.current?.present();
+			addRecentLocation({ name: venueName, coord: { latitude: lat, longitude: lon } });
 			const offset = latOffsetForPixels(MARKER_ZOOM, -25);
 			mapRef.current?.animateCameraTo({
 				latitude: lat + offset,
@@ -241,7 +250,7 @@ export default function MapScreen() {
 				duration: CAMERA_ANIM_DURATION,
 			});
 		},
-		[selectVenue, mapRef, clearRoute, selectedVenueName],
+		[selectVenue, mapRef, clearRoute, selectedVenueName, addRecentLocation],
 	);
 
 	// 경로 모드: 점 탭은 선택 대신 그 위치로만 zoom. idle이면 일반 마커와 같다.
@@ -294,8 +303,16 @@ export default function MapScreen() {
 
 	const handleConfirmRoutePlan = useCallback(async () => {
 		await confirmRoute('walk');
+		if (isLoggedIn && routeOrigin && destination) addRecentRoute(routeOrigin, destination);
 		routeSheetRef.current?.snapToIndex(1);
-	}, [confirmRoute]);
+	}, [confirmRoute, isLoggedIn, routeOrigin, destination, addRecentRoute]);
+
+	const handleSelectRecentRoute = useCallback(
+		(recent: RecentRoute) => {
+			beginPlanning(recent.destination, recent.origin);
+		},
+		[beginPlanning],
+	);
 
 	const handleRequestDirections = useCallback(
 		(mode: DirectionsMode = 'walk') => {
@@ -436,6 +453,9 @@ export default function MapScreen() {
 					onChangeSearchText={setSearchText}
 					mapVenues={mapVenues}
 					onMarkerPress={handleMarkerPress}
+					recentLocations={recentLocations}
+					recentRoutes={recentRoutes}
+					onSelectRecentRoute={handleSelectRecentRoute}
 				/>
 			);
 		}
@@ -493,6 +513,7 @@ export default function MapScreen() {
 				isShowZoomControls={false}
 				locationOverlay={currentCoord ? { isVisible: true, position: currentCoord } : undefined}
 				onCameraChanged={handleCameraChanged}
+				onTapMap={() => Keyboard.dismiss()}
 			>
 				<MapMarkersLayer
 					dotVenues={dotVenues}

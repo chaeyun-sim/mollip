@@ -8,6 +8,39 @@ export type Database = {
 	};
 	public: {
 		Tables: {
+			venue_follows: {
+				Row: {
+					created_at: string;
+					museum_id: number;
+					user_id: string;
+				};
+				Insert: {
+					created_at?: string;
+					museum_id: number;
+					user_id: string;
+				};
+				Update: {
+					created_at?: string;
+					museum_id?: number;
+					user_id?: string;
+				};
+				Relationships: [
+					{
+						foreignKeyName: 'venue_follows_museum_id_fkey';
+						columns: ['museum_id'];
+						isOneToOne: false;
+						referencedRelation: 'museums';
+						referencedColumns: ['id'];
+					},
+					{
+						foreignKeyName: 'venue_follows_user_id_fkey';
+						columns: ['user_id'];
+						isOneToOne: false;
+						referencedRelation: 'users';
+						referencedColumns: ['id'];
+					},
+				];
+			};
 			audio_guides: {
 				Row: {
 					artist: string | null;

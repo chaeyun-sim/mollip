@@ -1,18 +1,19 @@
 import { useMemo, useState } from 'react';
-import { Pressable, Text, View, ScrollView } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { Ionicons } from '@expo/vector-icons';
 import { ExhibitionCard } from '@/src/components/map/ExhibitionCard';
 import { VenueHeader } from '@/src/components/map/venue-sheet/VenueHeader';
-import { VenueDetails } from '@/src/components/map/venue-sheet/VenueDetails';
 import {
 	VenueExhibitionTabs,
 	type VenueExhibitionTab,
 } from '@/src/components/map/venue-sheet/VenueExhibitionTabs';
 import { parseDate } from '@/src/utils/mapUtils';
 import type { VenueGroup } from '@/src/data/venues';
-import { colors } from '@/src/constants/colors';
-import { cn } from '@/src/lib/cn';
+import { useAuthStore } from '@/src/store/authStore';
+import { useVenueFollowStatus } from '@/src/hooks/useVenueFollowStatus';
+import { VenueFollowButton } from './venue-sheet/VenueFollowButton';
+import * as WebBrowser from 'expo-web-browser';
 
 interface VenueSheetProps {
 	venue: VenueGroup;
@@ -30,11 +31,15 @@ export function VenueSheet({
 	onRequestDirections,
 }: VenueSheetProps) {
 	const [tab, setTab] = useState<VenueExhibitionTab>('active');
-	const [subVenueIdx, setSubVenueIdx] = useState(0);
 
-	// 부모 venue(예술의전당 등)면 선택된 하위 미술관, 아니면 venue 자체를 사용
-	const isGrouped = Boolean(venue.subVenues?.length);
-	const activeVenue: VenueGroup = isGrouped ? venue.subVenues![subVenueIdx] : venue;
+	// 부모 venue(예술의전당 등)면 첫 번째 하위 미술관, 아니면 venue 자체를 사용
+	const activeVenue: VenueGroup = venue.subVenues?.[0] ?? venue;
+	const userId = useAuthStore((state) => state.user?.id);
+	const {
+		isFollowed: isVenueFollowed,
+		isLoading: isVenueFollowLoading,
+		toggle: toggleVenueFollow,
+	} = useVenueFollowStatus(userId, activeVenue.museumId);
 
 	const activeExhibitions = useMemo(() => {
 		const d = new Date(filterDate);
@@ -53,72 +58,81 @@ export function VenueSheet({
 		return activeVenue.exhibitions.filter((ex) => parseDate(ex.startDate) > d);
 	}, [activeVenue, filterDate]);
 
-	const heroExhibition = activeExhibitions[0] ?? upcomingExhibitions[0];
 	const listExhibitions = tab === 'active' ? activeExhibitions : upcomingExhibitions;
-	const accentColor = heroExhibition?.posterColor ?? colors.gray900;
-
-	// 하위 미술관 변경 시 전시 탭을 '진행 중'으로 초기화
-	const handleSubVenueChange = (idx: number) => {
-		setSubVenueIdx(idx);
-		setTab('active');
-	};
 
 	return (
 		<BottomSheetScrollView className="px-5 pt-3" showsVerticalScrollIndicator={false}>
 			<View>
+				<View className="flex-row items-center gap-3 mb-3">
+					<Text
+						className="flex-1 text-[26px] leading-[30px] font-hahmlet-bold text-gray900"
+						numberOfLines={2}
+					>
+						{venue.venueName}
+					</Text>
+					<View className="flex-row items-start gap-2">
+						<VenueFollowButton
+							venueName={venue.venueName}
+							isFollowed={isVenueFollowed}
+							isLoading={isVenueFollowLoading}
+							isSupported={activeVenue.museumId != null}
+							onPress={toggleVenueFollow}
+						/>
+						<View className="items-center">
+							<Pressable
+								onPress={onRequestDirections}
+								style={({ pressed }) => (pressed ? { opacity: 0.7 } : undefined)}
+								className="h-11 w-11 items-center justify-center rounded-full bg-primary-dark"
+								accessibilityRole="button"
+								accessibilityLabel={`${activeVenue.venueName}까지 길찾기`}
+							>
+								<Ionicons name="navigate-outline" size={20} className="text-white" />
+							</Pressable>
+							{distanceText && (
+								<Text className="mt-1 text-[11px] font-pretendard-medium text-gray500">
+									{distanceText}
+								</Text>
+							)}
+						</View>
+					</View>
+				</View>
+
 				<VenueHeader
-					venueName={venue.venueName}
+					key={activeVenue.museumId ?? activeVenue.venueName}
 					activeVenue={activeVenue}
 					filterDate={filterDate}
-					distanceText={distanceText}
-					onRequestDirections={onRequestDirections}
 				/>
 
-				<VenueDetails activeVenue={activeVenue} />
-
-				{/* 하위 미술관 선택 — 예술의전당처럼 같은 주소에 여러 관이 있을 때 */}
-				{isGrouped && (
-					<ScrollView
-						horizontal
-						showsHorizontalScrollIndicator={false}
-						className="mb-4 -mx-5"
-						contentContainerClassName="px-5 gap-2"
+				{activeVenue.homepageUrl && (
+					<Pressable
+						onPress={() => WebBrowser.openBrowserAsync(activeVenue.homepageUrl!)}
+						style={({ pressed }) => (pressed ? { opacity: 0.55 } : undefined)}
+						className="flex-row items-center gap-2 mt-3"
+						accessibilityLabel={`${activeVenue.venueName} 홈페이지로 이동`}
+						accessibilityRole="link"
 					>
-						{venue.subVenues?.map((sv, idx) => (
-							<Pressable
-								key={sv.venueName}
-								onPress={() => handleSubVenueChange(idx)}
-								hitSlop={4}
-								style={({ pressed }) => (pressed ? { opacity: 0.7 } : undefined)}
-								className={cn(
-									'px-3.5 py-2 rounded-full border',
-									subVenueIdx === idx
-										? 'bg-primary-dark border-primary-dark'
-										: 'bg-transparent border-black/15',
-								)}
-								accessibilityRole="tab"
-								accessibilityState={{ selected: subVenueIdx === idx }}
-								accessibilityLabel={sv.venueName}
-							>
-								<Text
-									className={cn(
-										'text-[13px] font-pretendard-semibold',
-										subVenueIdx === idx ? 'text-white' : 'text-black/60',
-									)}
-								>
-									{sv.venueName.split(' ').slice(1)}
-								</Text>
-							</Pressable>
-						))}
-					</ScrollView>
+						<Ionicons name="globe-outline" size={16} className="text-gray600" />
+						<Text className="text-[13px] font-pretendard-semibold text-gray900">홈페이지</Text>
+						<Ionicons name="arrow-up-outline" size={13} className="rotate-45 text-gray700 -ml-1" />
+					</Pressable>
 				)}
+
+				{activeVenue.note && (
+					<View className="flex-row items-center gap-2 mt-3">
+						<Ionicons name="information-circle-outline" size={16} className=" text-error mt-0.5" />
+						<Text className="flex-1 text-[13px] leading-[19px] font-pretendard-medium text-error">
+							{activeVenue.note}
+						</Text>
+					</View>
+				)}
+
+				<View className="h-8" />
 
 				<VenueExhibitionTabs
 					tab={tab}
 					onChangeTab={setTab}
 					activeCount={activeExhibitions.length}
 					upcomingCount={upcomingExhibitions.length}
-					accentColor={accentColor}
 				/>
 			</View>
 
