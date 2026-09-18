@@ -27,6 +27,7 @@ import { Result } from '../src/components/common/Result';
 import { Screen } from '../src/components/layout/Screen';
 import { useImmersiveStore } from '../src/store/immersiveStore';
 import { AuthProvider } from '../src/providers/AuthProvider';
+import { ToastProvider } from '../src/providers/ToastProvider';
 import { useAuthStore } from '../src/store/authStore';
 // import { usePushNotifications } from '../src/hooks/usePushNotifications';
 import { useBookmarkSync } from '../src/hooks/useBookmarkSync';
@@ -156,24 +157,26 @@ export default function RootLayout() {
 			<AuthProvider>
 				<QueryClientProvider client={queryClient}>
 					<BottomSheetModalProvider>
-						<Stack screenOptions={{ headerShown: false }}>
-							<Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-							<Stack.Screen
-								name="(guide)"
-								options={{ headerShown: false, gestureEnabled: !isImmersive }}
-							/>
-							<Stack.Screen name="(explore)" options={{ headerShown: false }} />
-							<Stack.Screen name="auth" options={{ headerShown: false }} />
-							<Stack.Screen name="diary/[date]" options={{ headerShown: false }} />
-							<Stack.Screen name="diary/verify-ticket" options={{ headerShown: false }} />
-							<Stack.Screen name="diary/confirm-visits" options={{ headerShown: false }} />
-							<Stack.Screen
-								name="onboarding"
-								options={{ headerShown: false, gestureEnabled: false }}
-							/>
-							<Stack.Screen name="settings" options={{ headerShown: false }} />
-							<Stack.Screen name="bookmark" options={{ headerShown: false }} />
-						</Stack>
+						<ToastProvider>
+							<Stack screenOptions={{ headerShown: false }}>
+								<Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+								<Stack.Screen
+									name="(guide)"
+									options={{ headerShown: false, gestureEnabled: !isImmersive }}
+								/>
+								<Stack.Screen name="(explore)" options={{ headerShown: false }} />
+								<Stack.Screen name="auth" options={{ headerShown: false }} />
+								<Stack.Screen name="diary/[date]" options={{ headerShown: false }} />
+								<Stack.Screen name="diary/verify-ticket" options={{ headerShown: false }} />
+								<Stack.Screen name="diary/confirm-visits" options={{ headerShown: false }} />
+								<Stack.Screen
+									name="onboarding"
+									options={{ headerShown: false, gestureEnabled: false }}
+								/>
+								<Stack.Screen name="settings" options={{ headerShown: false }} />
+								<Stack.Screen name="bookmark" options={{ headerShown: false }} />
+							</Stack>
+						</ToastProvider>
 					</BottomSheetModalProvider>
 				</QueryClientProvider>
 			</AuthProvider>
