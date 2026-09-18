@@ -7,7 +7,7 @@ import { createAuthAwareStorage } from '../utils/authAwareStorage';
 
 interface BookmarkAudioStore {
 	ids: string[];
-	toggle: (audioGuideId: string) => void;
+	toggle: (audioGuideId: string, onError?: () => void) => void;
 	isBookmarked: (audioGuideId: string) => boolean;
 	/** 로그인 후 원격 bookmark_audio로 로컬 상태를 교체 */
 	loadFromRemote: (ids: string[]) => void;
@@ -17,7 +17,7 @@ export const useBookmarkAudioStore = create<BookmarkAudioStore>()(
 	persist(
 		(set, get) => ({
 			ids: [],
-			toggle: (audioGuideId) => {
+			toggle: (audioGuideId, onError) => {
 				const current = get().ids;
 				const willAdd = !current.includes(audioGuideId);
 				set({
@@ -32,7 +32,10 @@ export const useBookmarkAudioStore = create<BookmarkAudioStore>()(
 						.from('bookmark_audio')
 						.upsert({ user_id: userId, audio_guide_id: audioGuideId })
 						.then(({ error }) => {
-							if (error) console.warn('[bookmark_audio] upsert failed:', error.message);
+							if (error) {
+								console.warn('[bookmark_audio] upsert failed:', error.message);
+								onError?.();
+							}
 						});
 				} else {
 					supabase
@@ -40,7 +43,10 @@ export const useBookmarkAudioStore = create<BookmarkAudioStore>()(
 						.delete()
 						.match({ user_id: userId, audio_guide_id: audioGuideId })
 						.then(({ error }) => {
-							if (error) console.warn('[bookmark_audio] delete failed:', error.message);
+							if (error) {
+								console.warn('[bookmark_audio] delete failed:', error.message);
+								onError?.();
+							}
 						});
 				}
 			},

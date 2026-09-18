@@ -5,17 +5,18 @@ import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-na
 
 import { cn } from '@/src/lib/cn';
 
-export type FloatingIconButtonVariant = 'onLight' | 'onImage';
+export type FloatingIconButtonVariant = 'onLight' | 'onImage' | 'onPhoto';
 
 const VARIANT_BACKGROUND: Record<FloatingIconButtonVariant, string> = {
 	onLight: 'bg-white/90',
 	onImage: 'bg-white/80',
+	onPhoto: 'bg-black/40',
 };
 
 interface FloatingIconButtonProps extends PressableProps {
 	onPress: () => void;
 	icon: ReactNode;
-	/** onLight: 다른 반투명 바 위(불투명도 높음, opacity press) / onImage: 사진 위 단독 배치(scale press) */
+	/** onLight: 다른 반투명 바 위(불투명도 높음, opacity press) / onImage: 사진 위 단독 배치(scale press) / onPhoto: 밝기를 예측할 수 없는 포스터·작품 이미지 위(어두운 배경 고정, scale press) — 아이콘은 흰색으로 전달 */
 	variant?: FloatingIconButtonVariant;
 	/** true면 onPress 전에 가벼운 haptic을 준다 */
 	haptic?: boolean;
@@ -60,14 +61,14 @@ export function FloatingIconButton({
 		);
 	}
 
+	function handlePressControl(pressed: boolean) {
+		scale.set(withTiming(pressed ? 0.92 : 1, { duration: pressed ? 100 : 150 }));
+	}
+
 	return (
 		<Pressable
-			onPressIn={() => {
-				scale.set(withTiming(0.92, { duration: 100 }));
-			}}
-			onPressOut={() => {
-				scale.set(withTiming(1, { duration: 150 }));
-			}}
+			onPressIn={() => handlePressControl(true)}
+			onPressOut={() => handlePressControl(false)}
 			onPress={handlePress}
 			style={style}
 			accessibilityRole="button"

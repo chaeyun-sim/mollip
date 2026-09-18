@@ -7,7 +7,7 @@ import { createAuthAwareStorage } from '../utils/authAwareStorage';
 
 interface BookmarkStore {
 	ids: string[];
-	toggle: (id: string) => void;
+	toggle: (id: string, onError?: () => void) => void;
 	isBookmarked: (id: string) => boolean;
 	/** 로그인 후 원격 북마크로 로컬 상태를 교체 */
 	loadFromRemote: (ids: string[]) => void;
@@ -17,7 +17,7 @@ export const useBookmarkStore = create<BookmarkStore>()(
 	persist(
 		(set, get) => ({
 			ids: [],
-			toggle: (id) => {
+			toggle: (id, onError) => {
 				const current = get().ids;
 				const willAdd = !current.includes(id);
 				set({
@@ -33,7 +33,10 @@ export const useBookmarkStore = create<BookmarkStore>()(
 						.from('bookmark_exhibitions')
 						.upsert({ user_id: userId, exhibition_id: id })
 						.then(({ error }) => {
-							if (error) console.warn('[bookmark] upsert failed:', error.message);
+							if (error) {
+								console.warn('[bookmark] upsert failed:', error.message);
+								onError?.();
+							}
 						});
 				} else {
 					supabase
@@ -41,7 +44,10 @@ export const useBookmarkStore = create<BookmarkStore>()(
 						.delete()
 						.match({ user_id: userId, exhibition_id: id })
 						.then(({ error }) => {
-							if (error) console.warn('[bookmark] delete failed:', error.message);
+							if (error) {
+								console.warn('[bookmark] delete failed:', error.message);
+								onError?.();
+							}
 						});
 				}
 			},

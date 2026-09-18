@@ -31,6 +31,7 @@ import { IconButton } from '@/src/components/common/IconButton';
 import { Result } from '@/src/components/common/Result';
 import { useRequireAuth } from '@/src/hooks/useRequireAuth';
 import { cn } from '@/src/lib/cn';
+import { useToast } from '@/src/providers/ToastProvider';
 import { useHistoryStore } from '@/src/store/historyStore';
 import { useBookmarkAudioStore } from '@/src/store/bookmarkAudioStore';
 import { useChatStore } from '@/src/store/chatStore';
@@ -77,13 +78,16 @@ export default function DescriptionScreen() {
 	);
 	const flushChatSession = useChatStore((s) => s.flushSession);
 	const { ensureAuth } = useRequireAuth();
+	const { showToast } = useToast();
 	const [savedId, setSavedId] = useState<string | null>(null);
 
 	const handleToggleBookmarkAudio = () => {
 		if (!savedId) return;
 		if (!ensureAuth('/(tabs)')) return;
 		Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-		toggleBookmarkAudio(savedId);
+		const willAdd = !isAudioBookmarked(savedId);
+		toggleBookmarkAudio(savedId, () => showToast('저장에 실패했어요. 다시 시도해 주세요'));
+		showToast(willAdd ? '오디오 가이드를 저장했어요' : '오디오 가이드에서 삭제했어요');
 	};
 
 	const {
