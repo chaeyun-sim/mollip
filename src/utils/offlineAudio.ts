@@ -93,7 +93,7 @@ export function formatOfflineAudioSize(bytes: number): string {
 /**
  * 재생 시 오디오 URI 조회 우선순위(AC-2) — 로컬 다운로드 파일이 있으면 네트워크 요청 없이
  * 그 URI를 즉시 반환한다. 없으면 `fetchFromNetwork`를 호출해 그 결과를 반환한다(AC-6 회귀 방지).
- * useTTS.ts의 speak/preload가 재생·프리로드 시 이 함수로 로컬 우선 조회를 수행한다.
+ * useTTS.ts의 speak가 재생 시 이 함수로 로컬 우선 조회를 수행한다.
  */
 export async function resolveAudioUri(
 	cacheKey: string,

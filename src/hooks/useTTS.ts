@@ -2,7 +2,7 @@ import { setAudioModeAsync, useAudioPlayer, useAudioPlayerStatus } from 'expo-au
 import { useEffect, useRef, useState } from 'react';
 import { useSettingsStore } from '../store/settingsStore';
 import { fetchTTSBlob, fetchVoices } from '../utils/api';
-import { resolveAudioUri } from '../utils/offlineAudio';
+import { getOfflineAudioUri, saveOfflineAudioFromDataUri } from '../utils/offlineAudio';
 import { cleanTextForTTS } from '../utils/text';
 
 export type Voice = {
@@ -19,7 +19,6 @@ export function useTTS() {
 	const { voiceId, voiceSpeed } = useSettingsStore();
 
 	const audioCache = useRef<Map<string, string>>(new Map());
-	const preloadAbortRef = useRef<AbortController | null>(null);
 	const player = useAudioPlayer(null);
 	const status = useAudioPlayerStatus(player);
 
@@ -53,8 +52,19 @@ export function useTTS() {
 			let uri = audioCache.current.get(cacheKey);
 
 			if (!uri) {
-				// 로컬 다운로드 파일이 있으면 네트워크 요청 없이 즉시 재생(AC-2), 없으면 기존처럼 네트워크 요청(AC-6).
-				uri = await resolveAudioUri(cacheKey, () => fetchTTSBlob(voiceId, cleaned, voiceSpeed));
+				// 앱 재실행 후에도 자동 저장된 음성을 우선 재생한다.
+				uri = getOfflineAudioUri(cacheKey) ?? undefined;
+				if (!uri) {
+					const dataUri = await fetchTTSBlob(voiceId, cleaned, voiceSpeed);
+					// 실제로 재생을 요청한 음성만 파일로 저장해 다음 재생부터 재사용한다.
+					try {
+						uri = saveOfflineAudioFromDataUri(cacheKey, dataUri);
+					} catch (cacheError) {
+						// 저장 공간 등의 이유로 캐시하지 못해도 이번 재생은 계속한다.
+						console.warn('오디오 캐시 저장에 실패했어요', cacheError);
+						uri = dataUri;
+					}
+				}
 				audioCache.current.set(cacheKey, uri);
 			}
 
@@ -66,35 +76,6 @@ export function useTTS() {
 			setIsLoading(false);
 			throw err;
 		}
-	};
-
-	const preload = async (text: string) => {
-		// 이전 프리로드 취소 후 새 컨트롤러 등록
-		preloadAbortRef.current?.abort();
-		const ac = new AbortController();
-		preloadAbortRef.current = ac;
-
-		const cleaned = cleanTextForTTS(text);
-		const cacheKey = `${voiceId}\x00${voiceSpeed}\x00${cleaned}`;
-		try {
-			if (!audioCache.current.has(cacheKey)) {
-				// 로컬 다운로드 파일이 있으면 네트워크 요청 없이 즉시 사용(AC-2), 없으면 기존처럼 네트워크 요청(AC-6).
-				const uri = await resolveAudioUri(cacheKey, () =>
-					fetchTTSBlob(voiceId, cleaned, voiceSpeed),
-				);
-				// 이탈 후 응답이 돌아온 경우 캐시하지 않음
-				if (!ac.signal.aborted) {
-					audioCache.current.set(cacheKey, uri);
-				}
-			}
-		} catch {
-			/* silent fail */
-		}
-	};
-
-	const cancelPreload = () => {
-		preloadAbortRef.current?.abort();
-		preloadAbortRef.current = null;
 	};
 
 	const pause = () => player.pause();
@@ -113,8 +94,6 @@ export function useTTS() {
 		duration,
 		voices,
 		speak,
-		preload,
-		cancelPreload,
 		pause,
 		resume,
 		stop,
