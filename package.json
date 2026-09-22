@@ -2,14 +2,6 @@
 	"name": "mollip",
 	"version": "1.0.0",
 	"main": "expo-router/entry",
-	"expo": {
-		"autolinking": {
-			"exclude": [
-				"expo-apple-authentication",
-				"expo-notifications"
-			]
-		}
-	},
 	"dependencies": {
 		"@expo-google-fonts/cormorant-garamond": "^0.4.1",
 		"@expo-google-fonts/hahmlet": "^0.4.1",
@@ -62,8 +54,8 @@
 		"react-dom": "19.2.3",
 		"react-native": "0.85.3",
 		"react-native-gesture-handler": "~2.31.1",
-		"react-native-purchases": "^10.7.1",
-		"react-native-purchases-ui": "^10.7.1",
+		"react-native-purchases": "^10.10.0",
+		"react-native-purchases-ui": "^10.10.0",
 		"react-native-reanimated": "4.3.1",
 		"react-native-safe-area-context": "~5.7.0",
 		"react-native-screens": "~4.26.0",
@@ -98,8 +90,7 @@
 		"lint": "expo lint",
 		"lint:fix": "expo lint --fix",
 		"format": "prettier --write .",
-		"format:check": "prettier --check .",
-		"orchestrator": "./scripts/mollip-orchestrator.sh"
+		"format:check": "prettier --check ."
 	},
 	"jest": {
 		"preset": "jest-expo",
