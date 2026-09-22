@@ -10,6 +10,16 @@ import {
 } from '../utils/localVisitDb';
 import { supabase } from '../utils/supabase';
 import { deleteManagedVisitPhotos, persistLocalVisitPhoto } from '../utils/visitPhotoFiles';
+import {
+	dateKeyFrom,
+	dateKeyOf,
+	localVisitKeyFromRemote,
+	makeVisitKey,
+	todayKey,
+	visitIdentityOf,
+} from '../utils/visitKey';
+
+export { dateKeyFrom, dateKeyOf, localVisitKeyFromRemote, makeVisitKey, todayKey, visitIdentityOf };
 
 export interface ListenedItem {
 	title: string;
@@ -17,38 +27,6 @@ export interface ListenedItem {
 	/** 생성된 해설 앞부분 — 아카이브에서 다시 읽기용 */
 	descriptionPreview?: string;
 }
-
-/** 로컬 달력 기준 날짜 키(YYYY-MM-DD) — UTC 자정 밀림을 피한다 */
-export const dateKeyFrom = (date: Date): string => {
-	const year = date.getFullYear();
-	const month = String(date.getMonth() + 1).padStart(2, '0');
-	const day = String(date.getDate()).padStart(2, '0');
-	return `${year}-${month}-${day}`;
-};
-
-/** 관람 기록 오늘 날짜 키(YYYY-MM-DD) — visitStore 소비처 공용 */
-export const todayKey = (): string => {
-	return dateKeyFrom(new Date());
-};
-
-/**
- * visits의 키 = "날짜::전시식별자" — 하루에 전시를 여러 개 봐도 서로 안 겹치게 한다.
- * 같은 전시(id 같음, 또는 id 없이 같은 제목)를 같은 날 또 들으면 같은 키로 합쳐진다.
- * exhibitionId가 있으면 id로, 검색 없이 직접 입력한 경우(id 없음)는 제목으로 식별한다.
- */
-export const makeVisitKey = (
-	dateKey: string,
-	exhibitionId: string | null,
-	title?: string,
-): string => {
-	const idPart = exhibitionId ? `id:${exhibitionId}` : title ? `t:${title}` : 'manual';
-	return `${dateKey}::${idPart}`;
-};
-
-/** visits 키에서 날짜 부분만 뽑아낸다 — 캘린더/그룹핑용 */
-export const dateKeyOf = (visitKey: string): string => {
-	return visitKey.split('::')[0];
-};
 
 // 관람 기록 한 건: 어떤 전시를 언제 관람했는지 + 들은 해설 목록 + 사용자 메모
 export interface DayVisit {
@@ -107,6 +85,11 @@ interface VisitStore {
 	setVisitMemo: (visitKey: string, memo: string) => void;
 	/** 별점(1~5) 수정 — Supabase에 컬럼이 없어 로컬 전용 */
 	setVisitRating: (visitKey: string, rating: number) => void;
+	/** 티켓 인증 후 티켓/현장 사진을 다시 올려 교체 */
+	updateVisitPhotos: (
+		visitKey: string,
+		patch: { thumbnail?: string; venuePhotos?: string[] },
+	) => void;
 	deleteVisit: (visitKey: string) => Promise<void>;
 	/** 오디오가이드 종료 시 해당 기록을 미확정(pending) 상태로 전환 */
 	markPending: (visitKey: string, meta: { start: string; end: string }) => void;
@@ -128,10 +111,44 @@ interface VisitStore {
 }
 
 const PENDING_EXPIRY_MS = 7 * 24 * 60 * 60 * 1000;
+const VISIT_CONFLICT = 'user_id,visit_key,date';
 
 const persistVisit = (key: string, visit: DayVisit | undefined): void => {
 	if (!visit) return;
 	upsertLocalVisit(key, visit, Boolean(useAuthStore.getState().session));
+};
+
+const remoteExhibitionId = (exhibitionId: string | null | undefined): number | null => {
+	return exhibitionId ? Number(exhibitionId) || null : null;
+};
+
+/** 관람일(date) + 전시 식별(visit_key)로 upsert — 티켓은 고른 관람일, 몰입은 가이드 당일 */
+export const upsertRemoteVisit = (
+	userId: string,
+	visitKey: string,
+	patch: {
+		exhibition_id?: number | null;
+		exhibition_title?: string | null;
+		venue?: string | null;
+		memo?: string | null;
+		ticket_photo_url?: string | null;
+		venue_photo_urls?: string[];
+	},
+): void => {
+	void supabase
+		.from('visits')
+		.upsert(
+			{
+				user_id: userId,
+				visit_key: visitIdentityOf(visitKey),
+				date: dateKeyOf(visitKey),
+				...patch,
+			},
+			{ onConflict: VISIT_CONFLICT },
+		)
+		.then(({ error }) => {
+			if (error) console.warn('[visit] upsert failed:', error.message);
+		});
 };
 
 export const useVisitStore = create<VisitStore>()((set, get) => ({
@@ -166,23 +183,13 @@ export const useVisitStore = create<VisitStore>()((set, get) => ({
 
 		const userId = useAuthStore.getState().user?.id;
 		if (userId) {
-			// Supabase `visits`는 아직 (user_id, date) 단일 행 전제라 하루 중 마지막 전시만
-			// 원격에 반영된다 — 로컬은 makeVisitKey로 여러 개를 보존하지만 원격 동기화는
-			// 스키마 마이그레이션 전까지 이 한계가 남는다(01-spec.md Risks 참고).
-			supabase
-				.from('visits')
-				.upsert({
-					user_id: userId,
-					date: dateKey,
-					exhibition_id: exhibitionId ? Number(exhibitionId) || null : null,
-					exhibition_title: meta?.title ?? null,
-					venue: meta?.venue ?? null,
-					...(meta?.thumbnail ? { ticket_photo_url: meta.thumbnail } : {}),
-					...(meta?.venuePhotos ? { venue_photo_urls: meta.venuePhotos } : {}),
-				})
-				.then(({ error }) => {
-					if (error) console.warn('[visit] upsert failed:', error.message);
-				});
+			upsertRemoteVisit(userId, key, {
+				exhibition_id: remoteExhibitionId(exhibitionId),
+				exhibition_title: meta?.title ?? null,
+				venue: meta?.venue ?? null,
+				...(meta?.thumbnail ? { ticket_photo_url: meta.thumbnail } : {}),
+				...(meta?.venuePhotos ? { venue_photo_urls: meta.venuePhotos } : {}),
+			});
 		}
 		persistVisit(key, get().visits[key]);
 	},
@@ -214,12 +221,7 @@ export const useVisitStore = create<VisitStore>()((set, get) => ({
 
 		const userId = useAuthStore.getState().user?.id;
 		if (userId) {
-			supabase
-				.from('visits')
-				.upsert({ user_id: userId, date: dateKeyOf(visitKey), memo })
-				.then(({ error }) => {
-					if (error) console.warn('[visit] memo upsert failed:', error.message);
-				});
+			upsertRemoteVisit(userId, visitKey, { memo });
 		}
 		persistVisit(visitKey, get().visits[visitKey]);
 	},
@@ -233,6 +235,39 @@ export const useVisitStore = create<VisitStore>()((set, get) => ({
 				},
 			};
 		});
+		persistVisit(visitKey, get().visits[visitKey]);
+	},
+	updateVisitPhotos: (visitKey, patch) => {
+		const thumbnail =
+			patch.thumbnail !== undefined
+				? (persistLocalVisitPhoto(patch.thumbnail) ?? undefined)
+				: undefined;
+		const venuePhotos = patch.venuePhotos
+			?.map((uri) => persistLocalVisitPhoto(uri))
+			.filter((uri): uri is string => Boolean(uri));
+
+		set((state) => {
+			const prev = state.visits[visitKey];
+			if (!prev) return state;
+			return {
+				visits: {
+					...state.visits,
+					[visitKey]: {
+						...prev,
+						thumbnail: thumbnail ?? prev.thumbnail,
+						venuePhotos: venuePhotos ?? prev.venuePhotos,
+					},
+				},
+			};
+		});
+
+		const userId = useAuthStore.getState().user?.id;
+		if (userId) {
+			upsertRemoteVisit(userId, visitKey, {
+				...(thumbnail ? { ticket_photo_url: thumbnail } : {}),
+				...(venuePhotos ? { venue_photo_urls: venuePhotos } : {}),
+			});
+		}
 		persistVisit(visitKey, get().visits[visitKey]);
 	},
 	deleteVisit: async (visitKey) => {
@@ -250,6 +285,7 @@ export const useVisitStore = create<VisitStore>()((set, get) => ({
 				.from('visits')
 				.delete()
 				.eq('user_id', userId)
+				.eq('visit_key', visitIdentityOf(visitKey))
 				.eq('date', dateKeyOf(visitKey));
 			if (error) console.warn('[visit] delete failed:', error.message);
 		}
@@ -295,14 +331,7 @@ export const useVisitStore = create<VisitStore>()((set, get) => ({
 		const memo = meta.memo;
 		if (memo) {
 			const userId = useAuthStore.getState().user?.id;
-			if (userId) {
-				supabase
-					.from('visits')
-					.upsert({ user_id: userId, date: dateKeyOf(visitKey), memo })
-					.then(({ error }) => {
-						if (error) console.warn('[visit] memo upsert failed:', error.message);
-					});
-			}
+			if (userId) upsertRemoteVisit(userId, visitKey, { memo });
 		}
 		persistVisit(visitKey, get().visits[visitKey]);
 	},

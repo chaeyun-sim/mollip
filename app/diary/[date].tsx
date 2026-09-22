@@ -1,8 +1,11 @@
 import { Ionicons } from '@expo/vector-icons';
+import * as ImagePicker from 'expo-image-picker';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import {
+	ActivityIndicator,
 	Alert,
+	Image,
 	KeyboardAvoidingView,
 	Platform,
 	Pressable,
@@ -20,13 +23,17 @@ import {
 import { StarRating } from '@/src/components/archive/StarRating';
 import { VisitBlock } from '@/src/components/archive/VisitBlock';
 import { TextField } from '@/src/components/common/TextField';
-import { dateKeyOf, useVisitStore } from '@/src/store/visitStore';
+import { dateKeyOf, isTicketVisit, useVisitStore } from '@/src/store/visitStore';
+import { useAuthStore } from '@/src/store/authStore';
 import { useImmersiveStore } from '@/src/store/immersiveStore';
 import { useHistoryStore } from '@/src/store/historyStore';
 import type { HistoryItem } from '@/src/store/historyStore';
 import { Screen } from '@/src/components/layout/Screen';
 import { ScreenHeader } from '@/src/components/layout/ScreenHeader';
 import { WEEKDAYS } from '@/src/constants/week';
+import { uploadTicketVisitPhotos } from '@/src/utils/visitPhotos';
+
+const MAX_VENUE_PHOTOS = 9;
 
 export default function DiaryDateScreen() {
 	const router = useRouter();
@@ -45,16 +52,18 @@ export default function DiaryDateScreen() {
 		return `${y}.${m}.${d} ${weekday}요일`;
 	}, [dateKey]);
 
-	const { visits, setVisitMemo, setVisitRating, deleteVisit } = useVisitStore(
+	const { visits, setVisitMemo, setVisitRating, deleteVisit, updateVisitPhotos } = useVisitStore(
 		useShallow((s) => ({
 			visits: s.visits,
 			setVisitMemo: s.setVisitMemo,
 			setVisitRating: s.setVisitRating,
 			deleteVisit: s.deleteVisit,
+			updateVisitPhotos: s.updateVisitPhotos,
 		})),
 	);
 	const playlist = useImmersiveStore((s) => s.playlist);
 	const historyItems = useHistoryStore((s) => s.items);
+	const userId = useAuthStore((s) => s.user?.id);
 
 	// visits 키는 "날짜::전시" — 이 날짜에 해당하는 확정 기록을 전부 모은다(여러 개일 수 있음)
 	// visit 쿼리 파라미터가 있으면(캘린더에서 여러 개 중 하나를 골라 들어온 경우) 그 방문 하나로 좁힌다
@@ -70,14 +79,109 @@ export default function DiaryDateScreen() {
 	const playerRef = useRef<DiaryGuidePlayerHandle>(null);
 	const [activeMemoKey, setActiveMemoKey] = useState<string | null>(null);
 	const memoInputRef = useRef<TextInput>(null);
-	const activeMemo = (activeMemoKey && visits[activeMemoKey]?.memo) || '';
-	const activeRating = (activeMemoKey && visits[activeMemoKey]?.rating) || 0;
+	const activeVisit = activeMemoKey ? visits[activeMemoKey] : null;
+	const activeMemo = activeVisit?.memo || '';
+	const activeRating = activeVisit?.rating || 0;
+	const activeIsTicketVisit = activeVisit ? isTicketVisit(activeVisit) : false;
+
+	const [editTicketUri, setEditTicketUri] = useState<string | null>(null);
+	const [editVenuePhotos, setEditVenuePhotos] = useState<string[]>([]);
+	const [photosDirty, setPhotosDirty] = useState(false);
+	const [savingPhotos, setSavingPhotos] = useState(false);
 
 	useEffect(() => {
 		if (!activeMemoKey) return;
 		const timer = setTimeout(() => memoInputRef.current?.focus(), 80);
 		return () => clearTimeout(timer);
 	}, [activeMemoKey]);
+
+	useEffect(() => {
+		if (!activeMemoKey) return;
+		const visit = visits[activeMemoKey];
+		setEditTicketUri(visit?.thumbnail ?? null);
+		setEditVenuePhotos(visit?.venuePhotos ?? []);
+		setPhotosDirty(false);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [activeMemoKey]);
+
+	const pickVisitPhotos = async (useCamera: boolean, multiple: boolean, selectionLimit: number) => {
+		const permission = useCamera
+			? await ImagePicker.requestCameraPermissionsAsync()
+			: await ImagePicker.requestMediaLibraryPermissionsAsync();
+		if (!permission.granted) {
+			Alert.alert(
+				'권한 필요',
+				useCamera
+					? '카메라를 사용하려면 설정에서 카메라 권한을 허용해 주세요.'
+					: '사진을 선택하려면 설정에서 사진 접근을 허용해 주세요.',
+			);
+			return [];
+		}
+		const result = useCamera
+			? await ImagePicker.launchCameraAsync({ quality: 0.8 })
+			: await ImagePicker.launchImageLibraryAsync({
+					quality: 0.8,
+					mediaTypes: ['images'],
+					allowsMultipleSelection: multiple,
+					selectionLimit: multiple ? selectionLimit : 1,
+				});
+		if (result.canceled) return [];
+		return result.assets.map((asset) => asset.uri);
+	};
+
+	const handlePickTicketPhoto = async () => {
+		const [uri] = await pickVisitPhotos(false, false, 1);
+		if (!uri) return;
+		setEditTicketUri(uri);
+		setPhotosDirty(true);
+	};
+
+	const handleAddVenuePhoto = async () => {
+		if (editVenuePhotos.length >= MAX_VENUE_PHOTOS) return;
+		const uris = await pickVisitPhotos(false, true, MAX_VENUE_PHOTOS - editVenuePhotos.length);
+		if (uris.length === 0) return;
+		setEditVenuePhotos((prev) => [...prev, ...uris].slice(0, MAX_VENUE_PHOTOS));
+		setPhotosDirty(true);
+	};
+
+	const handleRemoveVenuePhoto = (uri: string) => {
+		setEditVenuePhotos((prev) => prev.filter((item) => item !== uri));
+		setPhotosDirty(true);
+	};
+
+	const handleCloseEditor = async () => {
+		if (savingPhotos) return;
+		if (!photosDirty || !activeMemoKey) {
+			setActiveMemoKey(null);
+			return;
+		}
+		if (!editTicketUri) {
+			Alert.alert('티켓 사진 필요', '티켓 사진은 반드시 있어야 해요.');
+			return;
+		}
+		if (!userId) {
+			Alert.alert('로그인 필요', '사진 수정은 로그인 후 저장돼요.');
+			setActiveMemoKey(null);
+			return;
+		}
+		setSavingPhotos(true);
+		try {
+			const { ticketUrl, venueUrls } = await uploadTicketVisitPhotos(
+				userId,
+				dateKeyOf(activeMemoKey),
+				editTicketUri,
+				editVenuePhotos,
+			);
+			updateVisitPhotos(activeMemoKey, { thumbnail: ticketUrl, venuePhotos: venueUrls });
+		} catch (error) {
+			console.warn('[visit] photo update failed:', error);
+			Alert.alert('저장 실패', '사진을 서버에 올리지 못했어요. 잠시 후 다시 시도해 주세요.');
+			setSavingPhotos(false);
+			return;
+		}
+		setSavingPhotos(false);
+		setActiveMemoKey(null);
+	};
 
 	const dayChatItems = useMemo(
 		() =>
@@ -153,7 +257,7 @@ export default function DiaryDateScreen() {
 					>
 						<Pressable
 							className="flex-1 bg-black/50"
-							onPress={() => setActiveMemoKey(null)}
+							onPress={handleCloseEditor}
 							accessibilityRole="button"
 							accessibilityLabel="감상 편집 닫기"
 						/>
@@ -166,13 +270,18 @@ export default function DiaryDateScreen() {
 									나의 감상 편집
 								</Text>
 								<Pressable
-									onPress={() => setActiveMemoKey(null)}
+									onPress={handleCloseEditor}
 									hitSlop={8}
+									disabled={savingPhotos}
 									accessibilityLabel="닫기"
 									accessibilityRole="button"
 									style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
 								>
-									<Ionicons name="checkmark" size={22} color="white" />
+									{savingPhotos ? (
+										<ActivityIndicator size="small" color="#fff" />
+									) : (
+										<Ionicons name="checkmark" size={22} color="white" />
+									)}
 								</Pressable>
 							</View>
 							<View className="mb-4">
@@ -183,6 +292,65 @@ export default function DiaryDateScreen() {
 									tone="dark"
 								/>
 							</View>
+							{activeIsTicketVisit && (
+								<View className="mb-5">
+									<Text className="text-white/70 text-[13px] font-pretendard-medium mb-2">
+										티켓 사진
+									</Text>
+									<Pressable
+										onPress={handlePickTicketPhoto}
+										disabled={savingPhotos}
+										accessibilityRole="button"
+										accessibilityLabel="티켓 사진 변경"
+										className="mb-4 overflow-hidden rounded-2xl"
+										style={({ pressed }) => ({ opacity: pressed ? 0.85 : 1 })}
+									>
+										{editTicketUri ? (
+											<Image
+												source={{ uri: editTicketUri }}
+												className="w-full h-[140px] bg-gray800"
+											/>
+										) : (
+											<View className="w-full h-[140px] bg-gray800 items-center justify-center">
+												<Ionicons name="camera-outline" size={28} color="rgba(255,255,255,0.4)" />
+											</View>
+										)}
+									</Pressable>
+
+									<Text className="text-white/70 text-[13px] font-pretendard-medium mb-2">
+										현장 사진
+									</Text>
+									<View className="flex-row flex-wrap gap-2">
+										{editVenuePhotos.map((uri) => (
+											<View key={uri} className="w-[72px] h-[72px]">
+												<Image source={{ uri }} className="h-full w-full rounded-xl bg-gray800" />
+												<Pressable
+													onPress={() => handleRemoveVenuePhoto(uri)}
+													disabled={savingPhotos}
+													accessibilityRole="button"
+													accessibilityLabel="현장 사진 삭제"
+													hitSlop={6}
+													className="absolute top-1 right-1 h-5 w-5 items-center justify-center rounded-full bg-black/60"
+												>
+													<Ionicons name="close" size={12} color="#fff" />
+												</Pressable>
+											</View>
+										))}
+										{editVenuePhotos.length < MAX_VENUE_PHOTOS && (
+											<Pressable
+												onPress={handleAddVenuePhoto}
+												disabled={savingPhotos}
+												accessibilityRole="button"
+												accessibilityLabel="현장 사진 추가"
+												className="w-[72px] h-[72px] items-center justify-center rounded-xl bg-gray800"
+												style={({ pressed }) => ({ opacity: pressed ? 0.75 : 1 })}
+											>
+												<Ionicons name="add" size={22} color="rgba(255,255,255,0.5)" />
+											</Pressable>
+										)}
+									</View>
+								</View>
+							)}
 							<ScrollView
 								ref={memoScrollRef}
 								keyboardShouldPersistTaps="handled"

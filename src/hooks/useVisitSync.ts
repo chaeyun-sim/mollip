@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 
 import { useAuthStore } from '../store/authStore';
-import { makeVisitKey, useVisitStore } from '../store/visitStore';
+import { localVisitKeyFromRemote, upsertRemoteVisit, useVisitStore } from '../store/visitStore';
 import type { DayVisit } from '../store/visitStore';
 import { loadAllLocalVisits } from '../utils/localVisitDb';
 import { supabase } from '../utils/supabase';
@@ -21,7 +21,7 @@ export const useVisitSync = () => {
 		supabase
 			.from('visits')
 			.select(
-				'date, exhibition_id, memo, exhibition_title, venue, ticket_photo_url, venue_photo_urls',
+				'visit_key, date, exhibition_id, memo, exhibition_title, venue, ticket_photo_url, venue_photo_urls',
 			)
 			.eq('user_id', userId)
 			.then(({ data, error }) => {
@@ -37,7 +37,7 @@ export const useVisitSync = () => {
 					for (const r of data) {
 						const exhibitionId = r.exhibition_id ? String(r.exhibition_id) : null;
 						const exhibitionTitle = r.exhibition_title ?? undefined;
-						const key = makeVisitKey(r.date, exhibitionId, exhibitionTitle);
+						const key = localVisitKeyFromRemote(r.date, r.visit_key);
 						const local = localVisits[key];
 						visits[key] = {
 							exhibitionId,
@@ -57,16 +57,29 @@ export const useVisitSync = () => {
 							rating: local?.rating,
 						};
 					}
-					// 진행 중·미확정만 로컬 키로 유지한다. 확정 기록의 로컬 잔여 사진·메모는 버린다.
+					// 진행 중·미확정은 로컬 키로 유지. 같은 날 덮여서 원격에 없는 확정 기록은 다시 올린다.
 					for (const [key, local] of Object.entries(localVisits)) {
 						if (visits[key]) continue;
-						if (local.status !== 'pending' && local.status !== 'in_progress') continue;
-						visits[key] = {
-							...local,
-							thumbnail: undefined,
-							venuePhotos: undefined,
-							memo: undefined,
-						};
+						if (local.status === 'pending' || local.status === 'in_progress') {
+							visits[key] = {
+								...local,
+								thumbnail: undefined,
+								venuePhotos: undefined,
+								memo: undefined,
+							};
+							continue;
+						}
+						if (local.status !== 'confirmed') continue;
+						if (!local.exhibitionId && !local.exhibitionTitle) continue;
+						visits[key] = local;
+						upsertRemoteVisit(userId, key, {
+							exhibition_id: local.exhibitionId ? Number(local.exhibitionId) || null : null,
+							exhibition_title: local.exhibitionTitle ?? null,
+							venue: local.venue ?? null,
+							...(local.thumbnail ? { ticket_photo_url: local.thumbnail } : {}),
+							...(local.venuePhotos ? { venue_photo_urls: local.venuePhotos } : {}),
+							...(local.memo ? { memo: local.memo } : {}),
+						});
 					}
 					loadFromRemote(visits);
 				}

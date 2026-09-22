@@ -308,6 +308,7 @@ export default function VerifyTicketScreen() {
 											height: tileSize,
 											opacity: pressed ? 0.75 : 1,
 										})}
+										disabled={saving || venuePhotos.length >= MAX_VENUE_PHOTOS}
 									>
 										<Ionicons name="add" size={28} className="text-gray500" />
 										<Text className="font-pretendard-regular text-gray500 text-[12px] mt-1">

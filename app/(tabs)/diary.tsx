@@ -10,6 +10,7 @@ import { LoginRequiredPressable } from '@/src/components/auth/LoginRequiredPress
 import { Screen } from '@/src/components/layout/Screen';
 import { useDayImages } from '@/src/hooks/useDayImages';
 import { useExhibitionPosterUrls } from '@/src/hooks/useExhibitionPosterUrls';
+import { useSubscription } from '@/src/hooks/useSubscription';
 import { useAuthStore } from '@/src/store/authStore';
 import { dateKeyOf, useVisitStore } from '@/src/store/visitStore';
 import { ARCHIVE_STAT_ACCENTS } from '@/src/constants/archivePalette';
@@ -17,12 +18,14 @@ import { colors } from '@/src/constants/colors';
 import { WEEKDAYS } from '@/src/constants/week';
 import { cn } from '@/src/lib/cn';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { ScreenHeader } from '@/src/components/layout/ScreenHeader';
 
 export default function DiaryScreen() {
 	const router = useRouter();
 	const { session, authLoading } = useAuthStore(
 		useShallow((s) => ({ session: s.session, authLoading: s.isLoading })),
 	);
+	const { isPremium, isLoading: subscriptionLoading } = useSubscription();
 
 	const insets = useSafeAreaInsets();
 
@@ -84,6 +87,11 @@ export default function DiaryScreen() {
 		useVisitStore.getState().pruneExpiredPending();
 	}, []);
 
+	useEffect(() => {
+		if (!session || subscriptionLoading || isPremium) return;
+		router.replace('/settings/premium');
+	}, [session, subscriptionLoading, isPremium, router]);
+
 	const handleChangeMonth = useCallback((offset: -1 | 1) => {
 		setCal((prev) => {
 			let calMonth = prev.calMonth + offset;
@@ -129,7 +137,33 @@ export default function DiaryScreen() {
 		return (
 			<Screen variant="warm">
 				<Screen.Header>
-					<Screen.Header.Logo />
+					<Screen.Header.Left>
+						<Screen.Header.Logo />
+					</Screen.Header.Left>
+					<Screen.Header.Right>
+						<View className="flex-row items-center gap-4">
+							<LoginRequiredPressable
+								onPress={() => router.push('/bookmark')}
+								hitSlop={8}
+								accessibilityRole="button"
+								accessibilityLabel="북마크"
+								style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
+								returnTo="/bookmark"
+							>
+								<Ionicons name="bookmark-outline" size={24} className="text-gray900" />
+							</LoginRequiredPressable>
+							<LoginRequiredPressable
+								onPress={() => router.push('/notifications')}
+								hitSlop={8}
+								accessibilityRole="button"
+								accessibilityLabel="알림"
+								style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
+								returnTo="/notifications"
+							>
+								<Ionicons name="notifications-outline" size={24} className="text-gray900" />
+							</LoginRequiredPressable>
+						</View>
+					</Screen.Header.Right>
 				</Screen.Header>
 				<View className="flex-1 items-center justify-center px-8 py-16">
 					<View className="rounded-full bg-bg-light p-5 mb-5">
@@ -158,22 +192,39 @@ export default function DiaryScreen() {
 		);
 	}
 
+	if (subscriptionLoading || !isPremium) return null;
+
 	return (
 		<Screen variant="warm">
-			<Screen.Header>
-				<Screen.Header.Logo />
-				<Screen.Header.Right>
-					<Pressable
-						onPress={() => router.push('/settings')}
-						hitSlop={8}
-						accessibilityRole="button"
-						accessibilityLabel="마이페이지"
-						style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
-					>
-						<Ionicons name="person-outline" size={24} className="text-gray900" />
-					</Pressable>
-				</Screen.Header.Right>
-			</Screen.Header>
+			<ScreenHeader>
+				<ScreenHeader.Left>
+					<ScreenHeader.Logo />
+				</ScreenHeader.Left>
+				<ScreenHeader.Right>
+					<View className="flex-row items-center gap-4">
+						<LoginRequiredPressable
+							onPress={() => router.push('/bookmark')}
+							hitSlop={8}
+							accessibilityRole="button"
+							accessibilityLabel="북마크"
+							style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
+							returnTo="/bookmark"
+						>
+							<Ionicons name="bookmark-outline" size={24} className="text-gray900" />
+						</LoginRequiredPressable>
+						<LoginRequiredPressable
+							onPress={() => router.push('/notifications')}
+							hitSlop={8}
+							accessibilityRole="button"
+							accessibilityLabel="알림"
+							style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
+							returnTo="/notifications"
+						>
+							<Ionicons name="notifications-outline" size={24} className="text-gray900" />
+						</LoginRequiredPressable>
+					</View>
+				</ScreenHeader.Right>
+			</ScreenHeader>
 
 			<Text className="font-pretendard-regular text-gray600 text-[14px] leading-[21px] mb-5">
 				{`오디오 가이드로 전시를 관람하거나\n티켓을 인증하면 다이어리에 기록이 생겨요`}
