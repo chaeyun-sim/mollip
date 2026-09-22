@@ -18,7 +18,7 @@ import type { Message } from '@/src/store/chatStore';
 import { getEffectiveFontSize, useSettingsStore } from '@/src/store/settingsStore';
 import { fetchWikidataImage } from '@/src/utils/wikidataImage';
 
-const DOCENT_AVATAR = require('../../../assets/images/logo/logo.png');
+const DOCENT_AVATAR = require('../../../assets/images/marker/gogh.png');
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 interface Segment {
@@ -51,9 +51,9 @@ interface ChatMessageProps {
 
 export function ChatMessage({ item, onRetry }: ChatMessageProps) {
 	const isUser = item.role === 'user';
-	const { fontSize, highContrast } = useSettingsStore();
+	const { fontSize } = useSettingsStore();
 
-	const bodyFontSize = getEffectiveFontSize(fontSize, highContrast);
+	const bodyFontSize = getEffectiveFontSize(fontSize);
 
 	const [copyMenuVisible, setCopyMenuVisible] = useState(false);
 	const [selectCopyVisible, setSelectCopyVisible] = useState(false);
@@ -91,7 +91,7 @@ export function ChatMessage({ item, onRetry }: ChatMessageProps) {
 	const hasArtwork = segments.some((s) => s.type === 'artwork');
 
 	function renderMessageText() {
-		const textClass = cn(isUser ? 'text-white' : highContrast ? 'text-black' : 'text-on-dark');
+		const textClass = isUser ? 'text-white' : 'text-on-dark';
 
 		// 사용자가 설정에서 조절하는 글자 크기에 비례해야 하므로 className이 아닌 style로 계산한다.
 		const textStyle = { fontSize: bodyFontSize - 1, lineHeight: (bodyFontSize - 1) * 1.6 };
@@ -127,7 +127,7 @@ export function ChatMessage({ item, onRetry }: ChatMessageProps) {
 
 	return (
 		<View className={cn('mb-4', isUser ? 'items-end' : 'items-start')}>
-			{!isUser && <Image source={DOCENT_AVATAR} className="w-7 h-7 mb-1" />}
+			{!isUser && <Image source={DOCENT_AVATAR} className="w-8 h-8 mb-1" />}
 			{item.isError ? (
 				<Pressable
 					className="flex-row items-center gap-1.5"
@@ -147,11 +147,9 @@ export function ChatMessage({ item, onRetry }: ChatMessageProps) {
 						'rounded-2xl px-4 py-3 max-w-[80%]',
 						isUser
 							? 'rounded-tr-sm bg-primary'
-							: highContrast
-								? 'bg-[#F0EFED rounded-tl-sm'
-								: 'bg-primary border-white/[0.08] rounded-tl-sm',
+							: 'bg-primary-dark border-white/[0.08] rounded-tl-sm',
 					)}
-					style={{ borderWidth: isUser ? 0 : highContrast ? 0 : StyleSheet.hairlineWidth }}
+					style={{ borderWidth: isUser ? 0 : StyleSheet.hairlineWidth }}
 					onLongPress={!isUser ? () => setCopyMenuVisible(true) : undefined}
 					delayLongPress={450}
 				>

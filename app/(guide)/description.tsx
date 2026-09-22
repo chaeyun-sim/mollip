@@ -63,8 +63,8 @@ export default function DescriptionScreen() {
 	const insets = useSafeAreaInsets();
 	const [sessionId] = useState(() => Date.now().toString());
 	const isImmersive = useImmersiveStore((s) => s.isImmersiveMode);
-	const { fontSize, highContrast } = useSettingsStore();
-	const bodyFontSize = getEffectiveFontSize(fontSize, highContrast);
+	const { fontSize } = useSettingsStore();
+	const bodyFontSize = getEffectiveFontSize(fontSize);
 
 	const { addHistory, updateHistory, saveChatMessages } = useHistoryStore(
 		useShallow((s) => ({
@@ -113,8 +113,6 @@ export default function DescriptionScreen() {
 		pause,
 		resume,
 		stop,
-		preload,
-		cancelPreload,
 		seekTo,
 	} = useTTS();
 
@@ -122,7 +120,6 @@ export default function DescriptionScreen() {
 	useEffect(() => {
 		const unsubscribe = navigation.addListener('beforeRemove', () => {
 			stop();
-			cancelPreload();
 			if (savedId) {
 				const msgs = useChatStore.getState().getMessages(sessionId);
 				const chatMsgs = msgs
@@ -135,7 +132,7 @@ export default function DescriptionScreen() {
 			flushChatSession(sessionId);
 		});
 		return unsubscribe;
-	}, [navigation, stop, cancelPreload, flushChatSession, sessionId, savedId, saveChatMessages]);
+	}, [navigation, stop, flushChatSession, sessionId, savedId, saveChatMessages]);
 
 	// 인디케이터 progress bar 애니메이션
 	const barTranslate = useSharedValue(-SCREEN_WIDTH);
@@ -156,13 +153,6 @@ export default function DescriptionScreen() {
 			barTranslate.value = -SCREEN_WIDTH;
 		}
 	}, [isTyping, barTranslate]);
-
-	// 스트리밍 완료 시 TTS 프리로드
-	useEffect(() => {
-		if (!isTyping && fullTextRef.current) {
-			preload(fullTextRef.current);
-		}
-	}, [isTyping, fullTextRef, preload]);
 
 	// 스트리밍 완료 시 audio_guides에 자동 저장 (들은 것 전체 기록)
 	useEffect(() => {
@@ -203,7 +193,7 @@ export default function DescriptionScreen() {
 	const progress = duration > 0 ? elapsed / duration : 0;
 
 	return (
-		<Screen edges={['top', 'bottom']} highContrast={highContrast}>
+		<Screen edges={['top', 'bottom']}>
 			{!isTyping && (
 				<Screen.Header>
 					<ScreenHeader.Back onPress={() => router.dismissTo('/playlist')} color="white-90" />
@@ -255,7 +245,7 @@ export default function DescriptionScreen() {
 								fontSize: bodyFontSize,
 								lineHeight: bodyFontSize * 1.9,
 							}}
-							className={cn('font-pretendard-medium', highContrast ? 'text-black' : 'text-on-dark')}
+							className="font-pretendard-medium text-on-dark"
 						>
 							{displayed.split(/\*\*(.+?)\*\*/g).map((part, i) =>
 								i % 2 === 1 ? (
@@ -286,9 +276,7 @@ export default function DescriptionScreen() {
 			</ScrollView>
 
 			{/* 플레이어 항상 표시, 타이핑 중엔 비활성 */}
-			<Screen.BottomAbsolute
-				className={cn('bottom-9 pt-6 px-6', highContrast ? 'bg-white' : 'bg-bg-dark')}
-			>
+			<Screen.BottomAbsolute className="bottom-9 pt-6 px-6 bg-bg-dark">
 				<Pressable
 					className="h-1 rounded-sm overflow-hidden bg-divider-dark"
 					hitSlop={{ top: 16, bottom: 16 }}

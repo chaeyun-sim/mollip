@@ -21,8 +21,8 @@ export const FONT_SIZE_VALUE: Record<FontSize, number> = {
 	large: 20,
 };
 
-export function getEffectiveFontSize(fontSize: FontSize, highContrast: boolean): number {
-	return FONT_SIZE_VALUE[fontSize] + (highContrast ? 2 : 0);
+export function getEffectiveFontSize(fontSize: FontSize): number {
+	return FONT_SIZE_VALUE[fontSize];
 }
 
 type SettingsStore = {
@@ -32,14 +32,12 @@ type SettingsStore = {
 	pushNotificationsEnabled: boolean;
 	descriptionFocus: DescriptionFocus[];
 	descriptionLength: DescriptionLength;
-	highContrast: boolean;
 	setVoiceId: (id: string) => void;
 	setVoiceSpeed: (speed: VoiceSpeed) => void;
 	setFontSize: (size: FontSize) => void;
 	setPushNotificationsEnabled: (enabled: boolean) => void;
 	toggleDescriptionFocus: (focus: DescriptionFocus) => void;
 	setDescriptionLength: (length: DescriptionLength) => void;
-	setHighContrast: (enabled: boolean) => void;
 };
 
 export const useSettingsStore = create<SettingsStore>()(
@@ -51,7 +49,6 @@ export const useSettingsStore = create<SettingsStore>()(
 			pushNotificationsEnabled: true,
 			descriptionFocus: [],
 			descriptionLength: 1,
-			highContrast: false,
 			setVoiceId: (voiceId) => set({ voiceId }),
 			setVoiceSpeed: (voiceSpeed) => set({ voiceSpeed }),
 			setFontSize: (fontSize) => set({ fontSize }),
@@ -63,14 +60,12 @@ export const useSettingsStore = create<SettingsStore>()(
 						: [...s.descriptionFocus, focus],
 				})),
 			setDescriptionLength: (descriptionLength) => set({ descriptionLength }),
-			setHighContrast: (highContrast) => set({ highContrast }),
 		}),
 		{
 			name: 'settings',
 			version: 3,
 			migrate: (persistedState) => ({
 				...(persistedState as SettingsStore),
-				highContrast: (persistedState as SettingsStore).highContrast ?? false,
 				descriptionLength: (persistedState as SettingsStore).descriptionLength ?? 1,
 			}),
 			storage: createJSONStorage(() => AsyncStorage),

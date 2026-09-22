@@ -19,13 +19,11 @@ import { useSubmitOnNewline } from '@/src/hooks/useTextField';
 import { CHAT_SYSTEM_PROMPT, CHAT_SYSTEM_PROMPT_FOR_EXHIBITION } from '../../src/constants/prompts';
 import { store } from '../../src/store';
 import { useChatStore } from '../../src/store/chatStore';
-import { useSettingsStore } from '@/src/store/settingsStore';
 import { streamChat } from '../../src/utils/api';
 import { cn } from '@/src/lib/cn';
 import { colors } from '@/src/constants/colors';
 
 const MAX_EXCHANGES = 6;
-const HIGH_CONTRAST_COLOR = '#F0EFED';
 
 export default function ChatScreen() {
 	const router = useRouter();
@@ -46,7 +44,6 @@ export default function ChatScreen() {
 		popHistory,
 	} = useChatStore();
 
-	const highContrast = useSettingsStore((s) => s.highContrast);
 	const messages = getMessages(sid);
 
 	const openArtworkSearch = () => {
@@ -137,22 +134,13 @@ export default function ChatScreen() {
 	);
 
 	return (
-		<Screen highContrast={highContrast}>
+		<Screen>
 			<ScreenHeader>
 				<ScreenHeader.Left>
-					<ScreenHeader.Back
-						onPress={() => router.back()}
-						color={highContrast ? 'default' : 'muted'}
-					/>
+					<ScreenHeader.Back onPress={() => router.back()} color="muted" />
 				</ScreenHeader.Left>
 				<ScreenHeader.Center>
-					<Text
-						className={cn(
-							'text-base font-pretendard-semibold',
-							highContrast ? 'text-gray900' : 'text-white',
-						)}
-						numberOfLines={1}
-					>
+					<Text className="text-base font-pretendard-semibold text-white" numberOfLines={1}>
 						{exhibitionTitle ? `${exhibitionTitle}에 대해 물어보기` : '작품에 대해 물어보기'}
 					</Text>
 				</ScreenHeader.Center>
@@ -164,11 +152,7 @@ export default function ChatScreen() {
 						accessibilityRole="button"
 						style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
 					>
-						<Ionicons
-							name="globe-outline"
-							size={22}
-							className={cn(highContrast ? 'text-gray900' : 'text-white/90')}
-						/>
+						<Ionicons name="globe-outline" size={22} className="text-white/90" />
 					</Pressable>
 				</ScreenHeader.Right>
 			</ScreenHeader>
@@ -189,16 +173,11 @@ export default function ChatScreen() {
 						<View className="flex-1 items-center justify-center gap-3">
 							<View
 								className="w-16 h-16 rounded-full items-center justify-center"
-								style={{ backgroundColor: highContrast ? HIGH_CONTRAST_COLOR : colors.gray900 }}
+								style={{ backgroundColor: colors.gray900 }}
 							>
 								<Ionicons name="chatbubble-ellipses-outline" size={28} className="text-gray700" />
 							</View>
-							<Text
-								className={cn(
-									'text-base text-center font-pretendard-bold',
-									highContrast ? 'text-gray900' : 'text-on-dark',
-								)}
-							>
+							<Text className="text-base text-center font-pretendard-bold text-on-dark">
 								{exhibitionTitle ? '전시가 궁금하신가요?' : '작품이 궁금하신가요?'}
 							</Text>
 							<Text className="text-sm text-center text-gray600 leading-5">
@@ -212,12 +191,7 @@ export default function ChatScreen() {
 
 				{/* 입력창 */}
 				{isAtLimit ? (
-					<View
-						className={cn(
-							'mb-10 py-4 border-t-[1px] items-center',
-							highContrast ? 'border-t-divider' : 'border-t-gray900',
-						)}
-					>
+					<View className="mb-10 py-4 border-t-[1px] border-t-gray900 items-center">
 						<Text className="text-gray700 text-[13px] font-pretendard-regular">
 							대화는 최대 {MAX_EXCHANGES}번까지 가능해요
 						</Text>
@@ -225,28 +199,24 @@ export default function ChatScreen() {
 				) : (
 					<View
 						className={cn(
-							'flex-row items-end gap-2 pt-3 border-t-[1px]',
-							highContrast ? 'border-t-divider' : 'border-t-gray900',
+							'flex-row items-end gap-2 pt-3 border-t-[1px] border-t-gray900',
 							isFocusing ? 'mb-5' : 'mb-10',
 						)}
 					>
 						<TextField
 							variant="plain"
-							tone={highContrast ? 'light' : 'dark'}
+							tone="dark"
 							multiline
-							className={cn(
-								'flex-1 rounded-2xl px-4 py-[15px] text-[14px] min-h-[48px] max-h-[120px]',
-								highContrast ? 'text-gray900' : 'text-on-dark',
-							)}
+							className="flex-1 rounded-2xl px-4 py-[15px] text-[14px] min-h-[48px] max-h-[120px] text-on-dark"
 							style={{
-								backgroundColor: highContrast ? HIGH_CONTRAST_COLOR : colors.gray900,
+								backgroundColor: colors.gray900,
 								lineHeight: 0,
 							}}
 							returnKeyType="send"
 							value={input}
 							onChangeText={bindComposer(setInput)}
 							placeholder="질문을 입력하세요..."
-							keyboardAppearance={highContrast ? 'light' : 'dark'}
+							keyboardAppearance="dark"
 							onFocus={() => setIsFocusing(true)}
 							onBlur={() => setIsFocusing(false)}
 							onEndEditing={() => setIsFocusing(false)}
@@ -259,12 +229,7 @@ export default function ChatScreen() {
 							accessibilityRole="button"
 							style={({ pressed }) => ({
 								opacity: pressed ? 0.7 : 1,
-								backgroundColor:
-									input.trim() && !isLoading
-										? colors.primary
-										: highContrast
-											? HIGH_CONTRAST_COLOR
-											: colors.gray900,
+								backgroundColor: input.trim() && !isLoading ? colors.primary : colors.gray900,
 							})}
 						>
 							<Ionicons
