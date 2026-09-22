@@ -1,9 +1,11 @@
+import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { ActivityIndicator, Modal, Pressable, Text, View } from 'react-native';
 import { Button } from '@/src/components/common/Button';
 import { Screen } from '@/src/components/layout/Screen';
+import { CardRow, SettingsCard } from '@/src/components/mypage';
 import { useAuthStore } from '@/src/store/authStore';
 
 export default function AccountScreen() {
@@ -25,50 +27,37 @@ export default function AccountScreen() {
 				<Screen.Header.Center>계정 정보</Screen.Header.Center>
 			</Screen.Header>
 
-			<View className="flex-1 mt-5">
-				{/* 이메일 행 */}
+			<View className="flex-1 mt-5 gap-4">
 				{user.email && (
-					<View className="flex-row items-center justify-between px-1 py-3 mb-6">
-						<Text className="font-pretendard-medium text-[14px] text-gray900">이메일</Text>
-						<Text
-							className="font-pretendard-regular text-[13px] text-gray500 max-w-[60%]"
-							numberOfLines={1}
-						>
-							{user.email}
-						</Text>
-					</View>
-				)}
-				{user.email && (
-					<View className="flex-row items-center justify-between px-1 pb-3 mb-6">
-						<Text className="font-pretendard-medium text-[14px] text-gray900">로그인 방법</Text>
-						<Text
-							className="font-pretendard-regular text-[13px] text-gray500 max-w-[60%]"
-							numberOfLines={1}
-						>
-							{user.app_metadata.provider?.toUpperCase() === 'KAKAO'
-								? '카카오 로그인'
-								: '애플 로그인'}
-						</Text>
-					</View>
+					<SettingsCard>
+						<CardRow icon="mail-outline" label="이메일" value={user.email} />
+						<CardRow
+							icon="log-in-outline"
+							label="로그인 방법"
+							value={
+								user.app_metadata.provider?.toUpperCase() === 'KAKAO'
+									? '카카오 로그인'
+									: '애플 로그인'
+							}
+						/>
+					</SettingsCard>
 				)}
 
-				<View className="gap-2 border-t border-t-gray500/20 pt-4">
-					<View className="flex-row items-center justify-between px-1 pb-3 mb-6">
-						{showWithdrawWarning ? (
-							<ActivityIndicator size="small" className="text-gray600" />
-						) : (
-							<Pressable
-								onPress={showWithdrawWarning ? undefined : handleDeleteAccoun}
-								accessibilityRole="button"
-								accessibilityLabel="회원탈퇴"
-								style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
-								className="flex-row items-center gap-2 h-[44px] border-[rgba(28,25,23,0.06)]"
-							>
-								<Text className="font-pretendard-medium text-error text-[14px]">탈퇴하기</Text>
-							</Pressable>
-						)}
-					</View>
-				</View>
+				<SettingsCard>
+					<Pressable
+						onPress={showWithdrawWarning ? undefined : handleDeleteAccoun}
+						accessibilityRole="button"
+						accessibilityLabel="회원탈퇴"
+						style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
+						className="flex-row items-center h-16"
+					>
+						<View className="w-8 h-8 rounded-full bg-error/10 items-center justify-center mr-3">
+							<Ionicons name="person-remove-outline" size={16} className="text-error" />
+						</View>
+						<Text className="flex-1 font-pretendard-medium text-error text-base">탈퇴하기</Text>
+						{showWithdrawWarning && <ActivityIndicator size="small" className="text-gray600" />}
+					</Pressable>
+				</SettingsCard>
 			</View>
 
 			<Modal

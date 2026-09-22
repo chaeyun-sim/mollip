@@ -1,5 +1,5 @@
 import * as Haptics from 'expo-haptics';
-import { useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { KeyboardAvoidingView, Platform, ScrollView, Text, View } from 'react-native';
 
@@ -12,19 +12,22 @@ import { useAuthStore } from '@/src/store/authStore';
 import type { AsyncStatus } from '@/src/types/asyncStatus.types';
 import { supabase } from '@/src/utils/supabase';
 
-type Category = 'suggestion' | 'bug' | 'account' | 'other';
+type Category = 'suggestion' | 'bug' | 'account' | 'subscription' | 'other';
 
 const CATEGORY_OPTIONS: { value: Category; label: string; emoji: string }[] = [
 	{ value: 'suggestion', label: '기능 제안', emoji: '💡' },
 	{ value: 'bug', label: '버그 제보', emoji: '🐛' },
 	{ value: 'account', label: '계정', emoji: '👤' },
+	{ value: 'subscription', label: '구독', emoji: '💰' },
 	{ value: 'other', label: '기타', emoji: '✉️' },
 ];
 
 export default function InquiryScreen() {
 	const router = useRouter();
+	const { category: initialCategory } = useLocalSearchParams();
+
 	const userEmail = useAuthStore((s) => s.user?.email);
-	const [category, setCategory] = useState<Category>('bug');
+	const [category, setCategory] = useState<Category>((initialCategory as Category) || 'bug');
 	const [content, setContent] = useState('');
 	const [contact, setContact] = useState<string | null>(null);
 	const [status, setStatus] = useState<AsyncStatus>('idle');

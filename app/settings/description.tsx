@@ -71,9 +71,8 @@ export default function DescriptionSettingsScreen() {
 
 				<View className="mt-2">
 					<SettingsCard>
-						{FOCUS_OPTIONS.map((option, idx) => {
+						{FOCUS_OPTIONS.map((option) => {
 							const isSelected = descriptionFocus.includes(option.key);
-							const isLast = idx === FOCUS_OPTIONS.length - 1;
 
 							return (
 								<Pressable
@@ -84,12 +83,7 @@ export default function DescriptionSettingsScreen() {
 									accessibilityState={{ checked: isSelected }}
 									style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
 								>
-									<View
-										className={cn(
-											'flex-row items-center px-4 py-4 gap-3',
-											!isLast && 'border-b border-divider',
-										)}
-									>
+									<View className="flex-row items-center py-4 gap-3">
 										<View
 											className={cn(
 												'w-5 h-5 rounded items-center justify-center',
