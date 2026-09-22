@@ -85,21 +85,25 @@ export default function IndexScreen() {
 	const isSearchActive = isImmersive && searchQuery.trim().length >= 2;
 
 	useEffect(() => {
+		setSearchResults([]);
+		setIsSearching(false);
 		if (!isSearchActive) return;
 
+		let cancelled = false;
 		if (searchTimerRef.current) clearTimeout(searchTimerRef.current);
 		searchTimerRef.current = setTimeout(async () => {
 			setIsSearching(true);
 			try {
 				const results = await searchArtworks(searchQuery.trim());
-				setSearchResults(results);
+				if (!cancelled) setSearchResults(results);
 			} catch {
-				setSearchResults([]);
+				if (!cancelled) setSearchResults([]);
 			} finally {
-				setIsSearching(false);
+				if (!cancelled) setIsSearching(false);
 			}
 		}, 500);
 		return () => {
+			cancelled = true;
 			if (searchTimerRef.current) clearTimeout(searchTimerRef.current);
 		};
 	}, [isSearchActive, searchQuery]);
@@ -388,6 +392,7 @@ export default function IndexScreen() {
 					onPress={() => router.push('/manual')}
 					disabled={isLoading}
 					accessibilityLabel="작품명 직접 입력"
+					tone="white"
 				>
 					작품명 직접 입력
 				</Button>

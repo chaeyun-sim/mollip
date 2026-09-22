@@ -137,6 +137,16 @@ export default function PlaylistScreen() {
 		<Screen>
 			<Stack.Screen options={{ gestureEnabled: !isImmersive }} />
 			<Screen.Header className="py-1">
+				<ScreenHeader.Left>
+					<View className="flex-row items-center gap-2">
+						<View className="w-9 h-9 rounded-full items-center justify-center bg-primary/20">
+							<Ionicons name="headset" size={18} color="#60A5FA" />
+						</View>
+						<Text className="text-sm font-pretendard-semibold text-[#60A5FA] tracking-wider">
+							몰입 모드 진행 중
+						</Text>
+					</View>
+				</ScreenHeader.Left>
 				<ScreenHeader.Right>
 					<Pressable
 						onPress={() => {
@@ -154,16 +164,11 @@ export default function PlaylistScreen() {
 			</Screen.Header>
 
 			{/* 몰입 모드 홈 히어로 — 기능의 일부가 아니라 별도 서비스 진입점처럼 보이도록 구성 */}
-			<View className="mb-7 pb-6 rounded-[28px] gap-4 bg-white/6">
-				<View className="flex-row items-center gap-2">
-					<View className="w-9 h-9 rounded-full items-center justify-center bg-primary/20">
-						<Ionicons name="headset" size={18} color="#60A5FA" />
-					</View>
-					<Text className="text-sm font-pretendard-semibold text-[#60A5FA] tracking-wider">
-						몰입 모드 진행 중
-					</Text>
-				</View>
-				<Text className="text-[26px] leading-8 font-pretendard-bold text-white" numberOfLines={2}>
+			<View className="mt-2 pb-6 rounded-[28px] gap-3 bg-white/6">
+				<Text
+					className="text-[26px] leading-normal font-pretendard-bold text-white"
+					numberOfLines={2}
+				>
 					{exhibitionTitle || '전시 관람'}
 				</Text>
 				<Text className="text-md font-pretendard-regular text-gray500">
@@ -175,7 +180,7 @@ export default function PlaylistScreen() {
 
 			<ScrollView
 				className="flex-1"
-				contentContainerClassName="pb-8 flex-grow"
+				contentContainerClassName="pb-8 flex-grow mt-3"
 				scrollEnabled={playlist.length > 0}
 			>
 				<Text className="mb-4 font-pretendard-semibold text-on-dark text-[15px]">재생목록</Text>
@@ -190,12 +195,17 @@ export default function PlaylistScreen() {
 				) : (
 					<>
 						{[...playlist].reverse().map((item, index) => (
-							<View
+							<Pressable
 								key={item.id}
 								className="flex-row items-center gap-4 py-4 border-t-white/6"
-								style={{
+								style={({ pressed }) => ({
+									opacity: pressed ? 0.7 : 1,
 									borderTopWidth: index === 0 ? 0 : StyleSheet.hairlineWidth,
-								}}
+								})}
+								onPress={() => handlePlay(item)}
+								hitSlop={8}
+								accessibilityLabel={`${item.title} 재생`}
+								accessibilityRole="button"
 							>
 								{/* 썸네일 */}
 								<ImageFallback
@@ -221,23 +231,19 @@ export default function PlaylistScreen() {
 											: item.description}
 									</Text>
 								</View>
-								<Pressable
-									onPress={() => handlePlay(item)}
-									style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
-								>
-									<Ionicons
-										name={
-											item.description === FAILED_DESCRIPTION
-												? 'refresh-outline'
-												: 'play-circle-outline'
-										}
-										size={26}
-										className={cn(
-											item.description === FAILED_DESCRIPTION ? 'text-gray600' : 'text-primary',
-										)}
-									/>
-								</Pressable>
-							</View>
+
+								<Ionicons
+									name={
+										item.description === FAILED_DESCRIPTION
+											? 'refresh-outline'
+											: 'play-circle-outline'
+									}
+									size={26}
+									className={cn(
+										item.description === FAILED_DESCRIPTION ? 'text-gray600' : 'text-primary',
+									)}
+								/>
+							</Pressable>
 						))}
 					</>
 				)}
