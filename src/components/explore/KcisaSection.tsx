@@ -41,7 +41,7 @@ export function KcisaSection({
 				title="국립 기관 전시"
 				right={
 					<Pressable
-						onPress={() => router.push({ pathname: '/(tabs)/search', params: { q: '국립' } })}
+						onPress={() => router.push({ pathname: '/search', params: { q: '국립' } })}
 						hitSlop={8}
 						accessibilityRole="button"
 						accessibilityLabel="국립 기관 전시 더보기"

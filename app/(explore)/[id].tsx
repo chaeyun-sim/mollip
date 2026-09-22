@@ -6,7 +6,6 @@ import { useCallback, useState } from 'react';
 import { Pressable, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useShallow } from 'zustand/react/shallow';
-
 import { FadeInView } from '@/src/components/common/FadeInView';
 import { ImageFallback } from '@/src/components/common/ImageFallback';
 import { Result } from '@/src/components/common/Result';
@@ -129,7 +128,7 @@ export default function ExhibitionDetailScreen() {
 			<View
 				className="absolute left-0 right-0 z-20 px-6"
 				style={{ top: insets.top + 18 }}
-				pointerEvents="box-none"
+				pointerEvents={immersiveOpen ? 'none' : 'box-none'}
 			>
 				<View className="flex-row items-center justify-between">
 					<CircleActionButton icon="chevron-back" label="뒤로가기" onPress={() => router.back()} />
@@ -155,27 +154,37 @@ export default function ExhibitionDetailScreen() {
 					<View className="px-6">
 						<FadeInView>
 							<View className="flex-row items-center justify-between">
-								<Text className="text-gray900 text-2xl leading-[38px] font-pretendard-bold">
+								<Text className="flex-1 text-gray900 text-2xl leading-[38px] font-pretendard-bold">
 									{exhibition.title.trim()}
-								</Text>
-							</View>
-							<View className="flex-row items-center mt-1 gap-2.5">
-								<Text className="text-gray600 text-[14px] font-pretendard-medium">
-									{exhibition.eventSite
-										? `${exhibition.venue} ${exhibition.eventSite}`
-										: exhibition.venue}
 								</Text>
 								{webSite && (
 									<Pressable
 										onPress={handleOpenWebsite}
-										hitSlop={6}
-										className="flex-row items-center gap-0.5"
+										className="h-11 w-11 shrink-0 items-center justify-center"
 										accessibilityRole="link"
 										accessibilityLabel="공식 웹사이트 외부 브라우저에서 열기"
 									>
 										<Ionicons name="open-outline" size={18} color="#1C1917" />
 									</Pressable>
 								)}
+							</View>
+							<View className="flex-row items-start mt-1 gap-2.5">
+								<View className="flex-1 min-w-0">
+									<Text
+										className="text-gray600 text-[15px] font-pretendard-medium"
+										numberOfLines={2}
+									>
+										{exhibition.venue}
+									</Text>
+									{exhibition.eventSite && (
+										<Text
+											className="mt-1 text-gray600 text-[13px] font-pretendard-regular"
+											numberOfLines={2}
+										>
+											{exhibition.eventSite}
+										</Text>
+									)}
+								</View>
 							</View>
 						</FadeInView>
 
@@ -327,7 +336,7 @@ export default function ExhibitionDetailScreen() {
 
 			<View
 				className="absolute right-5"
-				style={{ bottom: exhibition.ticketUrl ? fabBottom + 80 : fabBottom }}
+				style={{ bottom: exhibition.ticketUrl ? fabBottom + 30 : fabBottom + 100 }}
 			>
 				<ExhibitionImmersiveFab onPress={() => setImmersiveOpen(true)} />
 			</View>

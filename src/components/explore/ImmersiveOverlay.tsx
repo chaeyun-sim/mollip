@@ -89,7 +89,11 @@ export function ImmersiveOverlay({ visible, title, onStart, onClose }: Immersive
 	if (!mounted) return null;
 
 	return (
-		<View className="absolute inset-0" pointerEvents={visible ? 'auto' : 'none'}>
+		<View
+			className="absolute inset-0 z-[1000]"
+			style={{ elevation: 1000 }}
+			pointerEvents={visible ? 'auto' : 'none'}
+		>
 			{/* 배경 전체 — black/60 스크림, explore 화면이 어둡게 비쳐 보인다 */}
 			<Animated.View className="absolute inset-0 bg-black/80" style={scrimStyle} />
 

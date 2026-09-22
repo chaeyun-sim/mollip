@@ -16,7 +16,7 @@ export function ExhibitionMetaPill({ icon, text, searchable = true }: Exhibition
 		if (!searchable) return;
 
 		Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-		router.push({ pathname: '/(tabs)/search', params: { q: text } });
+		router.push({ pathname: '/search', params: { q: text } });
 	};
 
 	return (
