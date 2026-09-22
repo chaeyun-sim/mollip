@@ -4,18 +4,17 @@
  *
  * 1. push_token 있는 프로필 + preferred_genres 조회
  * 2. 진행 중 전시에서 장르 매칭 top 3 선정
- * 3. Expo Push API 배치 전송
+ * 3. Expo Push API 배치 전송 + 로그 기록
  */
 
 import { createClient } from 'npm:@supabase/supabase-js@2';
-
-const EXPO_PUSH_URL = 'https://exp.host/--/api/v2/push/send';
-const BATCH_SIZE = 100;
+import { sendAndLog, type NotificationRecord } from '../_shared/pushNotify.ts';
 
 interface ProfileRow {
 	id: string;
 	push_token: string;
 	preferred_genres: string[];
+	notification_prefs: { weekly_recommendation?: boolean };
 }
 
 interface ExhibitionRow {
@@ -25,15 +24,9 @@ interface ExhibitionRow {
 	genre: string | null;
 }
 
-interface ExpoPushMessage {
-	to: string;
-	title: string;
-	body: string;
-	data?: Record<string, unknown>;
-}
-
-function buildMessages(profiles: ProfileRow[], exhibitions: ExhibitionRow[]): ExpoPushMessage[] {
+function buildRecords(profiles: ProfileRow[], exhibitions: ExhibitionRow[]): NotificationRecord[] {
 	return profiles.flatMap((profile) => {
+		if (profile.notification_prefs?.weekly_recommendation === false) return [];
 		if (!profile.push_token.startsWith('ExponentPushToken')) return [];
 
 		const genres = profile.preferred_genres;
@@ -58,19 +51,17 @@ function buildMessages(profiles: ProfileRow[], exhibitions: ExhibitionRow[]): Ex
 				? `「${picks[0].title}」 — 지금 관람하기 좋아요`
 				: `「${picks[0].title}」 외 ${picks.length - 1}개의 전시가 기다려요`;
 
-		return [{ to: profile.push_token, title: '이번 주 추천 전시', body }];
+		return [
+			{
+				userId: profile.id,
+				token: profile.push_token,
+				type: 'weekly_recommendation',
+				title: '이번 주 추천 전시',
+				body,
+				data: { type: 'weekly_recommendation' },
+			},
+		];
 	});
-}
-
-async function sendBatch(messages: ExpoPushMessage[]): Promise<void> {
-	for (let i = 0; i < messages.length; i += BATCH_SIZE) {
-		const batch = messages.slice(i, i + BATCH_SIZE);
-		await fetch(EXPO_PUSH_URL, {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-			body: JSON.stringify(batch),
-		});
-	}
 }
 
 Deno.serve(async (req) => {
@@ -89,7 +80,7 @@ Deno.serve(async (req) => {
 	// push_token 있는 프로필
 	const { data: profiles, error: profileErr } = await supabase
 		.from('profiles')
-		.select('id, push_token, preferred_genres')
+		.select('id, push_token, preferred_genres, notification_prefs')
 		.not('push_token', 'is', null);
 
 	if (profileErr || !profiles?.length) {
@@ -108,10 +99,10 @@ Deno.serve(async (req) => {
 		return new Response(JSON.stringify({ sent: 0, reason: exErr?.message ?? 'no exhibitions' }));
 	}
 
-	const messages = buildMessages(profiles as ProfileRow[], exhibitions as ExhibitionRow[]);
-	if (messages.length > 0) await sendBatch(messages);
+	const records = buildRecords(profiles as ProfileRow[], exhibitions as ExhibitionRow[]);
+	const sent = await sendAndLog(supabase, records);
 
-	return new Response(JSON.stringify({ sent: messages.length }), {
+	return new Response(JSON.stringify({ sent }), {
 		headers: { 'Content-Type': 'application/json' },
 	});
 });

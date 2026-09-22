@@ -369,9 +369,11 @@ export type Database = {
 					created_at: string;
 					display_name: string | null;
 					id: string;
+					notification_prefs: Json;
 					onboarding_completed: boolean;
 					preferred_artists: string[];
 					preferred_genres: string[];
+					preferred_wall_piece_ids: string[];
 					push_token: string | null;
 					updated_at: string;
 				};
@@ -380,9 +382,11 @@ export type Database = {
 					created_at?: string;
 					display_name?: string | null;
 					id: string;
+					notification_prefs?: Json;
 					onboarding_completed?: boolean;
 					preferred_artists?: string[];
 					preferred_genres?: string[];
+					preferred_wall_piece_ids?: string[];
 					push_token?: string | null;
 					updated_at?: string;
 				};
@@ -391,11 +395,70 @@ export type Database = {
 					created_at?: string;
 					display_name?: string | null;
 					id?: string;
+					notification_prefs?: Json;
 					onboarding_completed?: boolean;
 					preferred_artists?: string[];
 					preferred_genres?: string[];
+					preferred_wall_piece_ids?: string[];
 					push_token?: string | null;
 					updated_at?: string;
+				};
+				Relationships: [];
+			};
+			notices: {
+				Row: {
+					id: string;
+					title: string;
+					body: string;
+					category: string;
+					created_at: string;
+				};
+				Insert: {
+					id?: string;
+					title: string;
+					body: string;
+					category?: string;
+					created_at?: string;
+				};
+				Update: {
+					id?: string;
+					title?: string;
+					body?: string;
+					category?: string;
+					created_at?: string;
+				};
+				Relationships: [];
+			};
+			notification_logs: {
+				Row: {
+					id: string;
+					user_id: string;
+					type: string;
+					title: string;
+					body: string;
+					data: Json | null;
+					read_at: string | null;
+					created_at: string;
+				};
+				Insert: {
+					id?: string;
+					user_id: string;
+					type: string;
+					title?: string;
+					body: string;
+					data?: Json | null;
+					read_at?: string | null;
+					created_at?: string;
+				};
+				Update: {
+					id?: string;
+					user_id?: string;
+					type?: string;
+					title?: string;
+					body?: string;
+					data?: Json | null;
+					read_at?: string | null;
+					created_at?: string;
 				};
 				Relationships: [];
 			};
@@ -445,6 +508,7 @@ export type Database = {
 					user_id: string;
 					venue: string | null;
 					venue_photo_urls: string[];
+					visit_key: string;
 				};
 				Insert: {
 					date: string;
@@ -455,6 +519,7 @@ export type Database = {
 					user_id: string;
 					venue?: string | null;
 					venue_photo_urls?: string[];
+					visit_key: string;
 				};
 				Update: {
 					date?: string;
@@ -465,6 +530,7 @@ export type Database = {
 					user_id?: string;
 					venue?: string | null;
 					venue_photo_urls?: string[];
+					visit_key?: string;
 				};
 				Relationships: [
 					{
