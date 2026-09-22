@@ -7,6 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface PendingGenresRecord {
 	genres: string[];
+	pieceIds?: string[];
 	savedAt: string;
 }
 
@@ -37,8 +38,12 @@ export async function getPendingGenres(userId: string): Promise<PendingGenresRec
 	}
 }
 
-export async function setPendingGenres(userId: string, genres: string[]): Promise<void> {
-	const record: PendingGenresRecord = { genres, savedAt: new Date().toISOString() };
+export async function setPendingGenres(
+	userId: string,
+	genres: string[],
+	pieceIds: string[] = [],
+): Promise<void> {
+	const record: PendingGenresRecord = { genres, pieceIds, savedAt: new Date().toISOString() };
 	await AsyncStorage.setItem(pendingKey(userId), JSON.stringify(record));
 }
 

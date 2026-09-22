@@ -36,7 +36,7 @@ export default function PreferencesScreen() {
 		const genres = toValidGenres(selectedGenres);
 		const { error } = await supabase
 			.from('profiles')
-			.update({ preferred_genres: genres })
+			.update({ preferred_genres: genres, preferred_wall_piece_ids: wall.pieceIds })
 			.eq('id', userId);
 
 		if (error) {
@@ -48,7 +48,7 @@ export default function PreferencesScreen() {
 
 		setSaving(false);
 		router.back();
-	}, [userId, saving, selectedGenres, router]);
+	}, [userId, saving, selectedGenres, wall.pieceIds, router]);
 
 	const handleSkipWithoutSave = useCallback(() => {
 		router.back();
@@ -64,7 +64,7 @@ export default function PreferencesScreen() {
 					if (!userId) return;
 					const { error } = await supabase
 						.from('profiles')
-						.update({ preferred_genres: [] })
+						.update({ preferred_genres: [], preferred_wall_piece_ids: [] })
 						.eq('id', userId);
 					if (error) {
 						console.error('[preferences] clear failed:', error.message);

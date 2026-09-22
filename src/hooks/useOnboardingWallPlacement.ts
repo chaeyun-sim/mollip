@@ -13,19 +13,31 @@ export const useOnboardingWallPlacement = () => {
 		() => normalizeOnboardingGenres(placements.flatMap((piece) => (piece ? [piece.genre] : []))),
 		[placements],
 	);
+	// 액자 슬롯 위치를 보존해야 하므로 빈 슬롯도 ''로 채워 길이 5 고정 배열을 유지한다 —
+	// flatMap으로 압축하면 중간이 빈 배치(예: 3·5번 슬롯만 채움)가 저장 후 앞으로 당겨져 복원된다.
+	const pieceIds = useMemo(() => placements.map((piece) => piece?.id ?? ''), [placements]);
 	const count = placements.filter(Boolean).length;
 	const announce = useCallback((message: string) => {
 		setAnnouncement(message);
 		AccessibilityInfo.announceForAccessibility(message);
 	}, []);
-	const initialize = useCallback((stored: string[]) => {
-		const pieces = normalizeOnboardingGenres(stored)
-			.slice(0, 5)
-			.map(
-				(genre) =>
-					ONBOARDING_WALL_PIECES.find((piece) => piece.genre === genre && piece.representative) ??
-					null,
-			);
+	const initialize = useCallback((storedGenres: string[], storedPieceIds: string[] = []) => {
+		// 빈 슬롯은 '' — 인덱스를 그대로 유지해 원래 걸었던 액자 위치에 복원한다(압축 금지).
+		const hasStoredPlacement = storedPieceIds.some((id) => id);
+		const pieces = hasStoredPlacement
+			? storedPieceIds
+					.slice(0, 5)
+					.map((id) =>
+						id ? (ONBOARDING_WALL_PIECES.find((piece) => piece.id === id) ?? null) : null,
+					)
+			: normalizeOnboardingGenres(storedGenres)
+					.slice(0, 5)
+					.map(
+						(genre) =>
+							ONBOARDING_WALL_PIECES.find(
+								(piece) => piece.genre === genre && piece.representative,
+							) ?? null,
+					);
 		setPlacements(Array.from({ length: 5 }, (_, index) => pieces[index] ?? null));
 		setSelectedFrame(null);
 		setAnnouncement('');
@@ -87,6 +99,7 @@ export const useOnboardingWallPlacement = () => {
 		announcement,
 		count,
 		genres,
+		pieceIds,
 		initialize,
 		place,
 		selectFrame,

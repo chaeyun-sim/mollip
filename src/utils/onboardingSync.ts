@@ -11,7 +11,11 @@ export async function resyncPendingOnboardingGenres(userId: string): Promise<voi
 
 	const { error } = await supabase
 		.from('profiles')
-		.update({ preferred_genres: pending.genres, onboarding_completed: true })
+		.update({
+			preferred_genres: pending.genres,
+			preferred_wall_piece_ids: pending.pieceIds ?? [],
+			onboarding_completed: true,
+		})
 		.eq('id', userId);
 
 	if (error) {

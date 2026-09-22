@@ -28,6 +28,7 @@ export default function OnboardingScreen() {
 
 	const wall = useOnboardingWallPlacement();
 	const selectedGenres = wall.genres;
+	const selectedPieceIds = wall.pieceIds;
 
 	// 스킵은 preferred_genres를 바꾸지 않고 완료 상태만 남긴다 (AC-1, AC-5)
 	const performSkip = useCallback(() => {
@@ -59,12 +60,16 @@ export default function OnboardingScreen() {
 		const genres = toValidGenres(selectedGenres);
 		const { error } = await supabase
 			.from('profiles')
-			.update({ preferred_genres: genres, onboarding_completed: true })
+			.update({
+				preferred_genres: genres,
+				preferred_wall_piece_ids: selectedPieceIds,
+				onboarding_completed: true,
+			})
 			.eq('id', userId);
 
 		if (error) {
 			console.error('[onboarding] save failed:', error.message);
-			await setPendingGenres(userId, genres);
+			await setPendingGenres(userId, genres, selectedPieceIds);
 			setSaving(false);
 			setErrorCount((n) => n + 1);
 			return;
@@ -73,7 +78,7 @@ export default function OnboardingScreen() {
 		await setLocalOnboardingCompleted(userId, true);
 		setOnboardingCompleted(true);
 		router.replace('/(tabs)');
-	}, [userId, saving, selectedGenres, setOnboardingCompleted, router]);
+	}, [userId, saving, selectedGenres, selectedPieceIds, setOnboardingCompleted, router]);
 
 	// AC-5: 취향 저장 없이 시작 — pending 레코드는 남겨 다음 인증 가능 시점에 재동기화된다
 	const handleSkipWithoutSave = useCallback(async () => {

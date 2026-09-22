@@ -4,7 +4,7 @@ import { supabase } from '@/src/utils/supabase';
 
 export const useOnboardingWallPreferences = (
 	userId: string | undefined,
-	onLoad: (genres: string[]) => void,
+	onLoad: (genres: string[], pieceIds?: string[]) => void,
 ) => {
 	const [status, setStatus] = useState<'idle' | 'loading' | 'ready' | 'error'>('idle');
 	const request = useRef(0);
@@ -25,7 +25,7 @@ export const useOnboardingWallPreferences = (
 		try {
 			const { data, error } = await supabase
 				.from('profiles')
-				.select('preferred_genres')
+				.select('preferred_genres, preferred_wall_piece_ids')
 				.eq('id', userId)
 				.single();
 			if (current !== request.current) return;
@@ -33,7 +33,7 @@ export const useOnboardingWallPreferences = (
 				setStatus('error');
 				return;
 			}
-			onLoad(data?.preferred_genres ?? []);
+			onLoad(data?.preferred_genres ?? [], data?.preferred_wall_piece_ids ?? []);
 			setStatus('ready');
 		} catch {
 			if (current === request.current) setStatus('error');
