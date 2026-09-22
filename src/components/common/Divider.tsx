@@ -19,7 +19,7 @@ const VARIANT_CLASS_NAMES: Record<DividerVariant, string> = {
 const TONE_CLASS_NAMES: Record<DividerTone, string> = {
 	default: 'bg-divider',
 	dark: 'bg-divider-dark',
-	subtle: 'bg-[rgba(0,0,0,0.06)]',
+	subtle: 'bg-[rgba(0,0,0,0.04)]',
 	inverse: 'bg-white/10',
 };
 

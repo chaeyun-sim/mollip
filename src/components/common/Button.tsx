@@ -5,7 +5,7 @@ import { Pressable, type PressableProps, Text } from 'react-native';
 import { cn } from '@/src/lib/cn';
 import { Indicator } from './Indicator';
 
-export type ButtonTone = 'brand' | 'inverse' | 'danger' | 'gray';
+export type ButtonTone = 'brand' | 'inverse' | 'danger' | 'gray' | 'white';
 export type ButtonVariant = 'solid' | 'ghost';
 export type ButtonSize = 'small' | 'medium' | 'large';
 export type ButtonHaptic = 'light' | 'medium';
@@ -87,6 +87,7 @@ const GHOST_TEXT_COLORS: Record<ButtonTone, string> = {
 	inverse: 'secondary',
 	danger: 'error',
 	gray: 'gray600',
+	white: 'white',
 };
 
 const GHOST_TEXT_COLOR_CLASS_NAMES: Record<ButtonTone, string> = {
@@ -94,6 +95,7 @@ const GHOST_TEXT_COLOR_CLASS_NAMES: Record<ButtonTone, string> = {
 	inverse: 'text-secondary',
 	danger: 'text-error',
 	gray: 'text-gray600',
+	white: 'text-white',
 };
 
 /** 라벨 CTA. 행·원형 아이콘은 IconButton / 도메인 행 컴포넌트를 쓴다. */
