@@ -12,33 +12,9 @@ interface ScreenProps {
 	edges?: Edges;
 	/** dark: 가이드·몰입 / warm: 아카이브·탐색 본문 / gradient: 로그인·온보딩 톤 웜 그라데이션 (설정류) */
 	variant?: 'dark' | 'warm' | 'gradient';
-	/** dark variant 전용: true이면 흰 배경 + 다크 StatusBar */
-	highContrast?: boolean;
 }
 
-function Screen({
-	className,
-	children,
-	edges,
-	variant = 'dark',
-	highContrast = false,
-}: PropsWithChildren<ScreenProps>) {
-	if (variant === 'dark' && highContrast) {
-		return (
-			<>
-				<StatusBar style="light" />
-				<View className="flex-1 bg-white">
-					<SafeAreaView
-						edges={edges || ['top', 'left', 'right']}
-						className={cn('px-6 flex-1', className)}
-					>
-						{children}
-					</SafeAreaView>
-				</View>
-			</>
-		);
-	}
-
+function Screen({ className, children, edges, variant = 'dark' }: PropsWithChildren<ScreenProps>) {
 	if (variant === 'warm') {
 		return (
 			<>

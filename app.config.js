@@ -26,7 +26,7 @@ module.exports = {
 		name: 'mollip',
 		slug: 'mollip',
 		scheme: 'mollip',
-		owner: 'bysimune',
+		owner: 'simune',
 		version: '1.0.0',
 		orientation: 'portrait',
 		icon: './assets/images/logo/icon.png',
@@ -34,8 +34,7 @@ module.exports = {
 		ios: {
 			supportsTablet: true,
 			bundleIdentifier: 'com.simune.mollip',
-			// Personal Team(무료 Apple ID)은 Sign In with Apple capability를 지원하지 않음 — 유료 계정 전환 시 true로 복구
-			usesAppleSignIn: false,
+			usesAppleSignIn: true,
 			config: {
 				usesNonExemptEncryption: false,
 			},
@@ -123,18 +122,16 @@ module.exports = {
 				},
 			],
 			'expo-sqlite',
-			// Personal Team(무료 Apple ID)은 Sign In with Apple / Push Notifications capability를 지원하지 않아 로컬 빌드에서 임시 비활성화
-			// 유료 개발자 계정 전환 시 복구: 'expo-apple-authentication' 추가, 아래 expo-notifications를 push entitlement 포함 설정으로 복구
-			// 'expo-apple-authentication',
-			// [
-			// 	'expo-notifications',
-			// 	{
-			// 		icon: './assets/images/logo/logo.png',
-			// 		color: '#1C1917',
-			// 		sounds: [],
-			// 		mode: 'production',
-			// 	},
-			// ],
+			'expo-apple-authentication',
+			[
+				'expo-notifications',
+				{
+					icon: './assets/images/logo/logo.png',
+					color: '#1C1917',
+					sounds: [],
+					mode: 'production',
+				},
+			],
 			// NMFClientId를 마지막에 강제 주입 (다른 플러그인이 덮어쓰는 것 방지)
 			(config) =>
 				withInfoPlist(config, (c) => {
@@ -144,7 +141,7 @@ module.exports = {
 		],
 		extra: {
 			eas: {
-				projectId: '1d491184-25a6-4d90-aa1e-fe92374c6962',
+				projectId: '9673e3b0-68ac-4c39-8517-0296ed8f9733',
 			},
 		},
 	},

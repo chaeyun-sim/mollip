@@ -29,12 +29,16 @@ import { useImmersiveStore } from '../src/store/immersiveStore';
 import { AuthProvider } from '../src/providers/AuthProvider';
 import { ToastProvider } from '../src/providers/ToastProvider';
 import { useAuthStore } from '../src/store/authStore';
-// import { usePushNotifications } from '../src/hooks/usePushNotifications';
+import { usePushNotifications } from '../src/hooks/usePushNotifications';
 import { useBookmarkSync } from '../src/hooks/useBookmarkSync';
 import { useHistorySync } from '../src/hooks/useHistorySync';
 import { useVisitSync } from '../src/hooks/useVisitSync';
 import { useBookmarkAudioSync } from '../src/hooks/useBookmarkAudioSync';
-// import * as Notifications from 'expo-notifications';
+import { navigateToNotification } from '../src/utils/notificationDeepLink';
+import * as Notifications from 'expo-notifications';
+import Purchases from 'react-native-purchases';
+import { useSubscriptionStore } from '@/src/store/subscriptionStore';
+import { syncSubscription } from '@/src/lib/subscription';
 
 // 렌더링 중 처리되지 않은 예외를 흰 화면/크래시 대신 이 화면으로 잡는다 (웹의 500 페이지에 해당).
 export function ErrorBoundary({ retry }: ErrorBoundaryProps) {
@@ -84,6 +88,32 @@ export default function RootLayout() {
 		NanumPenScript_400Regular,
 	});
 
+	useEffect(() => {
+		const initializePurchases = async () => {
+			try {
+				Purchases.configure({
+					apiKey: process.env.EXPO_PUBLIC_REVENUECAT_IOS_API_KEY!,
+				});
+
+				const customerInfo = await Purchases.getCustomerInfo();
+
+				syncSubscription(customerInfo);
+			} catch (error) {
+				console.error('RevenueCat 초기화 실패:', error);
+			} finally {
+				useSubscriptionStore.getState().setSubscriptionLoading(false);
+			}
+		};
+
+		void initializePurchases();
+
+		Purchases.addCustomerInfoUpdateListener(syncSubscription);
+
+		return () => {
+			Purchases.removeCustomerInfoUpdateListener(syncSubscription);
+		};
+	}, []);
+
 	const { authLoading, user, onboardingCompleted } = useAuthStore(
 		useShallow((s) => ({
 			authLoading: s.isLoading,
@@ -91,7 +121,7 @@ export default function RootLayout() {
 			onboardingCompleted: s.onboardingCompleted,
 		})),
 	);
-	// usePushNotifications(user?.id); // 네이티브 빌드 후 활성화
+	usePushNotifications(user?.id);
 	useBookmarkSync(); // 로그인 시 Supabase 북마크 동기화
 	useHistorySync(); // 로그인 시 Supabase 오디오 가이드 히스토리 동기화
 	useVisitSync(); // 로그인 시 Supabase 관람 기록 동기화
@@ -103,23 +133,18 @@ export default function RootLayout() {
 	const router = useRouter();
 
 	// 알림 탭 딥링크 처리
-	// useEffect(() => {
-	// 	let sub: ReturnType<typeof Notifications.addNotificationResponseReceivedListener>;
-	// 	try {
-	// 		sub = Notifications.addNotificationResponseReceivedListener((response) => {
-	// 			const data = response.notification.request.content.data as Record<string, unknown>;
-	// 			const id = data?.exhibitionId;
-	// 			if (typeof id === 'string' && id) {
-	// 				router.push(`/(explore)/${id}`);
-	// 			} else {
-	// 				router.push('/(tabs)/');
-	// 			}
-	// 		});
-	// 	} catch {
-	// 		// 네이티브 모듈 미빌드 환경에서 무시
-	// 	}
-	// 	return () => sub?.remove();
-	// }, [router]);
+	useEffect(() => {
+		let sub: ReturnType<typeof Notifications.addNotificationResponseReceivedListener>;
+		try {
+			sub = Notifications.addNotificationResponseReceivedListener((response) => {
+				const data = response.notification.request.content.data as Record<string, unknown>;
+				void navigateToNotification(router, data);
+			});
+		} catch {
+			// 네이티브 모듈 미빌드 환경에서 무시
+		}
+		return () => sub?.remove();
+	}, [router]);
 
 	// 지도 탭 마커 이미지를 앱 시작 시점에 미리 캐싱 — 미리 로드하지 않으면 지도 진입 직후
 	// 첫 마커가 잠깐 네이버 지도 SDK 기본(초록) 핀으로 보였다가 커스텀 이미지로 바뀐다.
@@ -175,6 +200,11 @@ export default function RootLayout() {
 								/>
 								<Stack.Screen name="settings" options={{ headerShown: false }} />
 								<Stack.Screen name="bookmark" options={{ headerShown: false }} />
+								<Stack.Screen name="notifications" options={{ headerShown: false }} />
+								<Stack.Screen
+									name="search"
+									options={{ headerShown: false, animation: 'fade', animationDuration: 130 }}
+								/>
 							</Stack>
 						</ToastProvider>
 					</BottomSheetModalProvider>

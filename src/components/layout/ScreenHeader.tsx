@@ -23,15 +23,21 @@ function ScreenHeader({
 	className,
 	style,
 	topOffset = false,
-}: { topOffset?: boolean } & SlotProps) {
+	fullBleed = false,
+}: { topOffset?: boolean; fullBleed?: boolean } & SlotProps) {
 	const insets = useSafeAreaInsets();
 
+	// -ml-6/w-screen는 부모 Screen이 기본 px-6일 때만 좌우가 정확히 상쇄된다.
+	// Screen이 px-0(콘텐츠를 화면 끝까지 채우는 경우)이면 이미 폭이 화면 그대로라
+	// 같은 트릭을 쓰면 오른쪽만 안쪽으로 밀린다 — fullBleed로 그 경우를 분기한다.
 	return (
 		<View
-			className={cn('pb-4 z-[9999] -ml-6 w-screen', className)}
+			className={cn('pb-4 z-[9999]', fullBleed ? 'w-full' : '-ml-6 w-screen', className)}
 			style={[{ marginTop: topOffset ? 0 : -insets.top, paddingTop: insets.top + 16 }, style]}
 		>
-			<View className="relative flex-row items-center px-6">{children}</View>
+			<View className="relative flex-row items-center px-6" style={{ height: 32 }}>
+				{children}
+			</View>
 		</View>
 	);
 }
@@ -80,7 +86,7 @@ function Logo({ className, fontSize = 24, textStyle }: LogoProps) {
 
 function Left({ children, className, style }: SlotProps) {
 	return (
-		<View className={cn('flex-1 items-start', className)} style={style}>
+		<View className={cn('absolute left-6', className)} style={style}>
 			{children}
 		</View>
 	);
@@ -89,8 +95,9 @@ function Left({ children, className, style }: SlotProps) {
 function Center({ children, className, style }: SlotProps) {
 	return (
 		<View
-			className={cn('absolute ml-6 left-1/2 -translate-x-1/2 flex-1 items-center mt-1', className)}
+			className={cn('absolute inset-0 items-center justify-center mt-1', className)}
 			style={style}
+			pointerEvents="none"
 		>
 			{typeof children === 'string' ? (
 				<Text className="text-[17px] text-gray900 font-pretendard-semibold">{children}</Text>
@@ -103,7 +110,7 @@ function Center({ children, className, style }: SlotProps) {
 
 function Right({ children, className, style }: SlotProps) {
 	return (
-		<View className={cn('flex-1 items-end', className)} style={style}>
+		<View className={cn('absolute right-6', className)} style={style}>
 			{children}
 		</View>
 	);
