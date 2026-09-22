@@ -2,7 +2,7 @@
 
 기능 개발은 **역할별 에이전트**가 산출물을 넘기며 진행한다. 실시간 채팅 대신 `.docs/wip/{feature-slug}/` 아티팩트(01~06)와 **Manager**의 게이트가 "대화" 역할을 한다.
 
-모든 역할은 **Claude Code**에서 실행한다. Codex로 위임하지 않는다.
+모든 역할은 **Claude Code**에서 실행한다.
 
 상세 파이프라인 게이트 절차: `.docs/rules/feature-pipeline.md`
 템플릿: `.docs/templates/feature/`
