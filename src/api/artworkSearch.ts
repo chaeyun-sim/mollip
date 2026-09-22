@@ -8,6 +8,13 @@ import type { ArtworkSearchResult } from '@/src/types/artwork';
 const dedupeKey = (label: string, artist?: string): string =>
 	`${label.trim().toLowerCase()}::${(artist ?? '').trim().toLowerCase()}`;
 
+const matchesQuery = (artwork: ArtworkSearchResult, query: string): boolean => {
+	const normalizedQuery = query.trim().toLocaleLowerCase();
+	return [artwork.label, artwork.artist].some((value) =>
+		value?.toLocaleLowerCase().includes(normalizedQuery),
+	);
+};
+
 /**
  * Wikidata + Met + AIC + Europeana를 동시에 검색해 하나의 결과 리스트로 합친다.
  * 한쪽 소스가 실패하거나 느려도 나머지 결과는 그대로 보여준다(Promise.allSettled).
@@ -41,6 +48,7 @@ export async function searchArtworks(query: string): Promise<ArtworkSearchResult
 
 	const seen = new Set<string>();
 	return combined.filter((artwork) => {
+		if (!matchesQuery(artwork, query)) return false;
 		const key = dedupeKey(artwork.label, artwork.artist);
 		if (seen.has(key)) return false;
 		seen.add(key);
