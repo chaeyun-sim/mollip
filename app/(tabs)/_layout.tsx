@@ -31,15 +31,6 @@ export default function TabsLayout() {
 			}}
 		>
 			<Tabs.Screen
-				name="search"
-				options={{
-					title: '검색',
-					tabBarIcon: ({ focused, color, size }) => (
-						<Ionicons name={focused ? 'search' : 'search-outline'} size={size} color={color} />
-					),
-				}}
-			/>
-			<Tabs.Screen
 				name="exhibitions"
 				options={{
 					title: '전시',
@@ -49,20 +40,20 @@ export default function TabsLayout() {
 				}}
 			/>
 			<Tabs.Screen
-				name="index"
-				options={{
-					title: '둘러보기',
-					tabBarIcon: ({ focused, color, size }) => (
-						<Ionicons name={focused ? 'compass' : 'compass-outline'} size={size} color={color} />
-					),
-				}}
-			/>
-			<Tabs.Screen
 				name="map"
 				options={{
 					title: '지도',
 					tabBarIcon: ({ focused, color, size }) => (
 						<Ionicons name={focused ? 'map' : 'map-outline'} size={size} color={color} />
+					),
+				}}
+			/>
+			<Tabs.Screen
+				name="index"
+				options={{
+					title: '둘러보기',
+					tabBarIcon: ({ focused, color, size }) => (
+						<Ionicons name={focused ? 'compass' : 'compass-outline'} size={size} color={color} />
 					),
 				}}
 			/>
@@ -82,6 +73,15 @@ export default function TabsLayout() {
 					title: '다이어리',
 					tabBarIcon: ({ focused, color, size }) => (
 						<Ionicons name={focused ? 'calendar' : 'calendar-outline'} size={size} color={color} />
+					),
+				}}
+			/>
+			<Tabs.Screen
+				name="settings"
+				options={{
+					title: '마이페이지',
+					tabBarIcon: ({ focused, color, size }) => (
+						<Ionicons name={focused ? 'person' : 'person-outline'} size={size} color={color} />
 					),
 				}}
 			/>

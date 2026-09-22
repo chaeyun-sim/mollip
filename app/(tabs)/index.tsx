@@ -10,8 +10,10 @@ import {
 	useWindowDimensions,
 	View,
 } from 'react-native';
+import Animated from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { LoginRequiredPressable } from '@/src/components/auth/LoginRequiredPressable';
+import { SearchBar } from '@/src/components/common/SearchBar';
 import { SectionTitle } from '@/src/components/common/SectionTitle';
 import { FeaturedExhibitionHero } from '@/src/components/explore';
 import { HorizontalSection } from '@/src/components/common/HorizontalSection';
@@ -71,6 +73,7 @@ export default function ExploreScreen() {
 	const [, setFeaturedIndex] = useState(0);
 
 	const openExhibition = (id: string) => router.push(`/(explore)/${id}`);
+	const openSearch = () => router.push('/search');
 
 	useEffect(() => {
 		if (featuredTrio.length <= 1) return;
@@ -88,7 +91,7 @@ export default function ExploreScreen() {
 
 	return (
 		<Screen variant="warm" className="px-0">
-			<ScreenHeader className="items-end pb-3 px-6 bg-bg-light">
+			<ScreenHeader className="px-6">
 				<ScreenHeader.Left>
 					<ScreenHeader.Logo />
 				</ScreenHeader.Left>
@@ -104,19 +107,37 @@ export default function ExploreScreen() {
 						>
 							<Ionicons name="bookmark-outline" size={24} className="text-gray900" />
 						</LoginRequiredPressable>
-						<Pressable
-							onPress={() => router.push('/settings')}
+						<LoginRequiredPressable
+							onPress={() => router.push('/notifications')}
 							hitSlop={8}
 							accessibilityRole="button"
-							accessibilityLabel="마이페이지"
+							accessibilityLabel="알림"
 							style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
+							returnTo="/notifications"
 						>
-							<Ionicons name="person-outline" size={24} className="text-gray900" />
-						</Pressable>
+							<Ionicons name="notifications-outline" size={24} className="text-gray900" />
+						</LoginRequiredPressable>
 					</View>
 				</ScreenHeader.Right>
 			</ScreenHeader>
-			<ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-10 gap-7 pt-4">
+			<Pressable
+				onPress={openSearch}
+				accessibilityRole="button"
+				accessibilityLabel="전시·미술관·작가 검색"
+				className="px-6 pt-1 pb-3"
+				style={({ pressed }) => ({ opacity: pressed ? 0.85 : 1 })}
+			>
+				{/* 검색 화면의 실제 검색바와 동일한 sharedTransitionTag — 탭 위치에서 자연스럽게 이어짐 */}
+				<Animated.View sharedTransitionTag="home-search-bar">
+					<SearchBar
+						variant="tonal"
+						editable={false}
+						pointerEvents="none"
+						placeholder="전시·미술관·작가 검색"
+					/>
+				</Animated.View>
+			</Pressable>
+			<ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-10 gap-7 pt-1">
 				<FlatList
 					ref={featuredListRef}
 					data={featuredTrio.map((item) => ({
@@ -158,7 +179,7 @@ export default function ExploreScreen() {
 					renderSkeletonItem={(index) => <PopularExhibitionAvatarSkeleton key={index} />}
 					sectionName="인기 전시"
 					placeholder="인기 전시가 없어요"
-					contentContainerClassName="gap-0 -ml-3"
+					contentContainerClassName="gap-0 ml-0"
 				/>
 
 				<KcisaSection

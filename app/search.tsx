@@ -16,6 +16,7 @@ import { useExhibitionSearch, type SearchResult } from '@/src/hooks/useExhibitio
 import { usePreferences } from '@/src/hooks/usePreferences';
 import { useRecentSearchStore } from '@/src/store/recentSearchStore';
 import { useAuthStore } from '@/src/store/authStore';
+import { ScreenHeader } from '@/src/components/layout/ScreenHeader';
 
 const FIXED_TAGS = ['문화유산', '소장품전', '사유', '과학', '현대미술', '사진', '조각', '드로잉'];
 
@@ -176,140 +177,145 @@ export default function SearchScreen() {
 
 	return (
 		<Screen variant="warm">
-			<Screen.Header>
-				<Screen.Header.Logo />
-			</Screen.Header>
+			<ScreenHeader className="pb-3">
+				<ScreenHeader.Back onPress={() => router.back()} />
+			</ScreenHeader>
 
-			{/* 검색바 */}
-			<SearchBar
-				value={searchText}
-				onChangeText={setSearchText}
-				onSubmitEditing={handleSubmitSearch}
-				placeholder="전시·미술관·작가 검색"
-				variant="tonal"
-			/>
-
-			{/* 필터 칩 */}
-			{debouncedSearchText && (
-				<View className="mt-3 mb-6">
-					<SearchFilterBar
-						statusFilters={statusFilters}
-						onToggleStatus={toggleStatusFilter}
-						freeOnly={freeOnly}
-						onToggleFree={toggleFreeOnly}
-						filterDate={filterDate}
-						onPressDate={() => setShowDatePicker(true)}
-						excludedCount={excludedWords.length}
-						onPressExclude={() => setShowExcludeModal(true)}
+			<View className="flex-1">
+				{/* 검색바 — 홈 검색바와 동일한 상단 여백(pt-1)으로 위치를 맞춰야 sharedTransitionTag가 자연스럽게 이어짐 */}
+				<Animated.View sharedTransitionTag="home-search-bar" className="pt-1">
+					<SearchBar
+						value={searchText}
+						onChangeText={setSearchText}
+						onSubmitEditing={handleSubmitSearch}
+						placeholder="전시·미술관·작가 검색"
+						variant="tonal"
+						autoFocus
 					/>
-				</View>
-			)}
+				</Animated.View>
 
-			{!debouncedSearchText ? (
-				/* 검색 전 — 추천 태그 + 최근 검색어 */
-				<ScrollView
-					showsVerticalScrollIndicator={false}
-					contentContainerClassName="pb-12"
-					keyboardShouldPersistTaps="handled"
-					keyboardDismissMode="on-drag"
-				>
-					<View className="mt-7">
-						<Text className="text-gray900 text-[16px] mb-3 font-pretendard-bold">추천 태그</Text>
-						<View className="flex-row flex-wrap gap-2">
-							{FIXED_TAGS.map((tag) => (
-								<Pressable
-									key={tag}
-									onPress={() => handlePressTag(tag)}
-									accessibilityLabel={`${tag} 태그로 검색`}
-									accessibilityRole="button"
-									className="rounded-full border border-secondary/25 bg-transparent px-3.5 py-2"
-									style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
-								>
-									<Text className="text-secondary text-[13px] font-pretendard-medium">{tag}</Text>
-								</Pressable>
-							))}
-						</View>
+				{/* 필터 칩 */}
+				{debouncedSearchText && (
+					<View className="mt-3 mb-6">
+						<SearchFilterBar
+							statusFilters={statusFilters}
+							onToggleStatus={toggleStatusFilter}
+							freeOnly={freeOnly}
+							onToggleFree={toggleFreeOnly}
+							filterDate={filterDate}
+							onPressDate={() => setShowDatePicker(true)}
+							excludedCount={excludedWords.length}
+							onPressExclude={() => setShowExcludeModal(true)}
+						/>
 					</View>
+				)}
 
-					{recentWords.length > 0 && (
+				{!debouncedSearchText ? (
+					/* 검색 전 — 추천 태그 + 최근 검색어 */
+					<ScrollView
+						showsVerticalScrollIndicator={false}
+						contentContainerClassName="pb-12"
+						keyboardShouldPersistTaps="handled"
+						keyboardDismissMode="on-drag"
+					>
 						<View className="mt-7">
-							<View className="flex-row items-center justify-between mb-2">
-								<Text className="text-gray900 text-[16px] font-pretendard-bold">최근 검색</Text>
-								<Pressable
-									onPress={clearRecent}
-									hitSlop={8}
-									accessibilityLabel="최근 검색어 전체 삭제"
-									accessibilityRole="button"
-								>
-									<Text className="text-gray500 text-[13px] font-pretendard-regular">
-										전체 삭제
-									</Text>
-								</Pressable>
-							</View>
-							{recentWords.slice(0, 5).map((word) => (
-								<View key={word} className="flex-row items-center gap-2.5 py-3">
-									<Ionicons name="time-outline" size={15} className="text-gray500" />
+							<Text className="text-gray900 text-[16px] mb-3 font-pretendard-bold">추천 태그</Text>
+							<View className="flex-row flex-wrap gap-2">
+								{FIXED_TAGS.map((tag) => (
 									<Pressable
-										onPress={() => handlePressRecent(word)}
-										accessibilityLabel={`${word} 검색`}
+										key={tag}
+										onPress={() => handlePressTag(tag)}
+										accessibilityLabel={`${tag} 태그로 검색`}
 										accessibilityRole="button"
-										className="flex-1"
+										className="rounded-full border border-secondary/25 bg-transparent px-3.5 py-2"
+										style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
 									>
-										<Text className="text-[#44403C] text-[15px] font-pretendard-regular">
-											{word}
+										<Text className="text-secondary text-[13px] font-pretendard-medium">{tag}</Text>
+									</Pressable>
+								))}
+							</View>
+						</View>
+
+						{recentWords.length > 0 && (
+							<View className="mt-7">
+								<View className="flex-row items-center justify-between mb-2">
+									<Text className="text-gray900 text-[16px] font-pretendard-bold">최근 검색</Text>
+									<Pressable
+										onPress={clearRecent}
+										hitSlop={8}
+										accessibilityLabel="최근 검색어 전체 삭제"
+										accessibilityRole="button"
+									>
+										<Text className="text-gray500 text-[13px] font-pretendard-regular">
+											전체 삭제
 										</Text>
 									</Pressable>
-									<Pressable
-										onPress={() => removeRecent(word)}
-										hitSlop={8}
-										accessibilityLabel={`최근 검색어 ${word} 삭제`}
-										accessibilityRole="button"
-									>
-										<Ionicons name="close" size={15} color="#D6D3D1" />
-									</Pressable>
 								</View>
-							))}
-						</View>
-					)}
-				</ScrollView>
-			) : isLoading && listData.length === 0 ? (
-				/* 검색 결과 로딩 중 — 실제 카드와 동일 높이의 스켈레톤 행 */
-				<View className="gap-5">
-					{Array.from({ length: 5 }).map((_, index) => (
-						<ExhibitionResultCardSkeleton key={index} />
-					))}
-				</View>
-			) : (
-				/* 검색 후 — 무한스크롤 결과 */
-				<FlatList
-					data={listData}
-					keyExtractor={keyExtractor}
-					renderItem={renderItem}
-					onEndReached={hasMore ? handleLoadMore : undefined}
-					onEndReachedThreshold={0.3}
-					showsVerticalScrollIndicator={false}
-					contentContainerClassName="pb-12"
-					keyboardShouldPersistTaps="handled"
-					keyboardDismissMode="on-drag"
-					ItemSeparatorComponent={() => <View className="h-5" />}
-					ListHeaderComponent={
-						<View className="flex-row items-end justify-between mb-4">
-							<Text className="text-gray500 text-[13px] font-pretendard-regular">
-								{results.length}건{hasLocation ? ' · 가까운 순' : ''}
-							</Text>
-						</View>
-					}
-					ListEmptyComponent={
-						<Result
-							icon="search-outline"
-							iconSize={36}
-							title="조건에 맞는 전시가 없어요"
-							description={'검색어나 필터를 조정해 보세요'}
-							className="flex-none py-16"
-						/>
-					}
-				/>
-			)}
+								{recentWords.slice(0, 5).map((word) => (
+									<View key={word} className="flex-row items-center gap-2.5 py-3">
+										<Ionicons name="time-outline" size={15} className="text-gray500" />
+										<Pressable
+											onPress={() => handlePressRecent(word)}
+											accessibilityLabel={`${word} 검색`}
+											accessibilityRole="button"
+											className="flex-1"
+										>
+											<Text className="text-[#44403C] text-[15px] font-pretendard-regular">
+												{word}
+											</Text>
+										</Pressable>
+										<Pressable
+											onPress={() => removeRecent(word)}
+											hitSlop={8}
+											accessibilityLabel={`최근 검색어 ${word} 삭제`}
+											accessibilityRole="button"
+										>
+											<Ionicons name="close" size={15} color="#D6D3D1" />
+										</Pressable>
+									</View>
+								))}
+							</View>
+						)}
+					</ScrollView>
+				) : isLoading && listData.length === 0 ? (
+					/* 검색 결과 로딩 중 — 실제 카드와 동일 높이의 스켈레톤 행 */
+					<View className="gap-5">
+						{Array.from({ length: 5 }).map((_, index) => (
+							<ExhibitionResultCardSkeleton key={index} />
+						))}
+					</View>
+				) : (
+					/* 검색 후 — 무한스크롤 결과 */
+					<FlatList
+						data={listData}
+						keyExtractor={keyExtractor}
+						renderItem={renderItem}
+						onEndReached={hasMore ? handleLoadMore : undefined}
+						onEndReachedThreshold={0.3}
+						showsVerticalScrollIndicator={false}
+						contentContainerClassName="pb-12"
+						keyboardShouldPersistTaps="handled"
+						keyboardDismissMode="on-drag"
+						ItemSeparatorComponent={() => <View className="h-5" />}
+						ListHeaderComponent={
+							<View className="flex-row items-end justify-between mb-4">
+								<Text className="text-gray500 text-[13px] font-pretendard-regular">
+									{results.length}건{hasLocation ? ' · 가까운 순' : ''}
+								</Text>
+							</View>
+						}
+						ListEmptyComponent={
+							<Result
+								icon="search-outline"
+								iconSize={36}
+								title="조건에 맞는 전시가 없어요"
+								description={'검색어나 필터를 조정해 보세요'}
+								className="flex-none py-16"
+							/>
+						}
+					/>
+				)}
+			</View>
 
 			<DatePickerModal
 				visible={showDatePicker}
