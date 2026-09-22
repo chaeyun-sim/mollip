@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-// import * as Notifications from 'expo-notifications';
+import * as Notifications from 'expo-notifications';
 
 const STORAGE_KEY = 'deadline_notification_ids';
 
@@ -18,7 +18,7 @@ async function saveMap(map: NotificationIdMap): Promise<void> {
 	await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(map));
 }
 
-/** 북마크 추가 시 D-7, D-3 로컬 알림 예약 */
+/** 북마크 추가 시 D-7 · D-3 · D-1 로컬 알림 예약 */
 export async function scheduleDeadlineNotifications(
 	exhibitionId: string,
 	title: string,
@@ -30,29 +30,34 @@ export async function scheduleDeadlineNotifications(
 
 	const triggers: { daysLeft: number; body: string }[] = [
 		{ daysLeft: 7, body: '북마크한 전시가 7일 후 마감이에요' },
-		{ daysLeft: 2, body: '북마크한 전시가 이틀 후 마감이에요' },
+		{ daysLeft: 3, body: '북마크한 전시가 3일 후 마감이에요' },
+		{ daysLeft: 1, body: '북마크한 전시가 오늘 마지막이에요' },
 	];
 
-	for (const { daysLeft } of triggers) {
+	for (const { daysLeft, body } of triggers) {
 		const triggerDate = new Date(endDate);
 		triggerDate.setDate(triggerDate.getDate() - daysLeft);
 		triggerDate.setHours(10, 0, 0, 0);
 
 		if (triggerDate <= now) continue;
 
-		// const id = await Notifications.scheduleNotificationAsync({
-		// 	content: {
-		// 		title,
-		// 		body,
-		// 		data: { exhibitionId },
-		// 	},
-		// 	trigger: {
-		// 		type: Notifications.SchedulableTriggerInputTypes.DATE,
-		// 		date: triggerDate,
-		// 	},
-		// });
+		try {
+			const id = await Notifications.scheduleNotificationAsync({
+				content: {
+					title,
+					body,
+					data: { exhibitionId },
+				},
+				trigger: {
+					type: Notifications.SchedulableTriggerInputTypes.DATE,
+					date: triggerDate,
+				},
+			});
 
-		// ids.push(id);
+			ids.push(id);
+		} catch {
+			// 네이티브 모듈 미빌드 환경(무료 개발자 계정)에서 무시
+		}
 	}
 
 	if (ids.length > 0) {
@@ -68,7 +73,11 @@ export async function cancelDeadlineNotifications(exhibitionId: string): Promise
 	const ids = map[exhibitionId];
 	if (!ids) return;
 
-	// await Promise.all(ids.map((id) => Notifications.cancelScheduledNotificationAsync(id)));
+	try {
+		await Promise.all(ids.map((id) => Notifications.cancelScheduledNotificationAsync(id)));
+	} catch {
+		// 네이티브 모듈 미빌드 환경(무료 개발자 계정)에서 무시
+	}
 	delete map[exhibitionId];
 	await saveMap(map);
 }
