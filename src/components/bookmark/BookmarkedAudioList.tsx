@@ -38,7 +38,7 @@ export function BookmarkedAudioList() {
 
 	// Zustand 상태 관리
 	const session = useAuthStore((s) => s.session);
-	const { isPremium } = useSubscription();
+	const { isPremium, isLoading: subscriptionLoading } = useSubscription();
 	const { historyItems, updateHistory } = useHistoryStore(
 		useShallow((s) => ({ historyItems: s.items, updateHistory: s.update })),
 	);
@@ -214,6 +214,8 @@ export function BookmarkedAudioList() {
 			/>
 		);
 	}
+
+	if (subscriptionLoading) return null;
 
 	if (!isPremium) {
 		return (

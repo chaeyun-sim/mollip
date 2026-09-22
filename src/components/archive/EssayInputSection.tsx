@@ -193,7 +193,7 @@ export const EssayInputSection = forwardRef<EssayInputSectionHandle, EssayInputS
 					/>
 				</View>
 				{renderStatus()}
-				{!stamped && showNext && (
+				{!stamped && showNext && essayInputMode !== 'write' && (
 					<Pressable
 						onPress={handleNext}
 						disabled={nextDisabled}
