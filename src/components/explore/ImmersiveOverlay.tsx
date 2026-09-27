@@ -103,14 +103,14 @@ export function ImmersiveOverlay({ visible, title, onStart, onClose }: Immersive
 				pointerEvents="none"
 				className="absolute top-0 inset-x-0 h-[150px]"
 			>
-				<LinearGradient colors={['rgba(0,0,0,0.8)', 'transparent']} className="flex-1" />
+				<LinearGradient colors={['rgba(0,0,0,0.8)', 'transparent']} style={{ flex: 1 }} />
 			</Animated.View>
 			<Animated.View
 				style={[scrimStyle]}
 				pointerEvents="none"
 				className="absolute bottom-0 left-0 right-0 h-[150px]"
 			>
-				<LinearGradient colors={['transparent', 'rgba(0,0,0,0.8)']} className="flex-1" />
+				<LinearGradient colors={['transparent', 'rgba(0,0,0,0.8)']} style={{ flex: 1 }} />
 			</Animated.View>
 			<Animated.View
 				style={scrimStyle}
@@ -121,7 +121,7 @@ export function ImmersiveOverlay({ visible, title, onStart, onClose }: Immersive
 					colors={['rgba(0,0,0,0.8)', 'transparent']}
 					start={{ x: 0, y: 0 }}
 					end={{ x: 1, y: 0 }}
-					className="flex-1"
+					style={{ flex: 1 }}
 				/>
 			</Animated.View>
 			<Animated.View
@@ -133,7 +133,7 @@ export function ImmersiveOverlay({ visible, title, onStart, onClose }: Immersive
 					colors={['transparent', 'rgba(0,0,0,0.8)']}
 					start={{ x: 0, y: 0 }}
 					end={{ x: 1, y: 0 }}
-					className="flex-1"
+					style={{ flex: 1 }}
 				/>
 			</Animated.View>
 

@@ -38,7 +38,15 @@ export function ExhibitionDetailHero({
 
 			<LinearGradient
 				colors={['transparent', 'rgba(0,0,0,0.7)']}
-				className="absolute bottom-0 left-0 right-0 h-[292px] justify-end pb-6"
+				style={{
+					position: 'absolute',
+					bottom: 0,
+					left: 0,
+					right: 0,
+					height: 292,
+					justifyContent: 'flex-end',
+					paddingBottom: 24,
+				}}
 			/>
 		</View>
 	);

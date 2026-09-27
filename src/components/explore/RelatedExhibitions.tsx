@@ -77,7 +77,7 @@ function RelatedExhibitionCard({ exhibition, onPress }: RelatedExhibitionCardPro
 				>
 					<LinearGradient
 						colors={['rgba(0,0,0,0.4)', 'transparent']}
-						className="absolute top-0 inset-x-0 h-14"
+						style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 56 }}
 						pointerEvents="none"
 					/>
 					{ddayLabel && (
