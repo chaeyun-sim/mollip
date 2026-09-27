@@ -3,7 +3,7 @@ import {
 	sortPopularEntries,
 	type PopularEntry,
 } from '../popularExhibitions';
-import type { ExhibitionSummary } from '../../hooks/useExploreScreenData';
+import type { ExhibitionSummary } from '../../hooks/queries/useExploreScreenData';
 
 function makeDisplay(id: string): ExhibitionSummary {
 	return {

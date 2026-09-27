@@ -4,8 +4,10 @@ import { Pressable, Text, View } from 'react-native';
 import { SectionTitle } from '@/src/components/common/SectionTitle';
 import { HorizontalSection } from '@/src/components/common/HorizontalSection';
 import { KcisaExhibitionCard } from '@/src/components/explore/KcisaExhibitionCard';
-import { KcisaExhibitionCardSkeleton } from '@/src/components/explore/KcisaExhibitionCardSkeleton';
-import type { ExhibitionSummary, FeaturedExhibition } from '@/src/hooks/useExploreScreenData';
+import type {
+	ExhibitionSummary,
+	FeaturedExhibition,
+} from '@/src/hooks/queries/useExploreScreenData';
 import { AsyncStatus } from '@/src/types/asyncStatus.types';
 
 export interface KcisaSectionProps {

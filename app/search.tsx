@@ -13,7 +13,7 @@ import { ExcludeWordsModal } from '@/src/components/search/ExcludeWordsModal';
 import { ExhibitionResultCard } from '@/src/components/search/ExhibitionResultCard';
 import { ExhibitionResultCardSkeleton } from '@/src/components/search/ExhibitionResultCardSkeleton';
 import { useExhibitionSearch, type SearchResult } from '@/src/hooks/useExhibitionSearch';
-import { usePreferences } from '@/src/hooks/usePreferences';
+import { usePreferences } from '@/src/hooks/queries/usePreferences';
 import { useRecentSearchStore } from '@/src/store/recentSearchStore';
 import { useAuthStore } from '@/src/store/authStore';
 import { ScreenHeader } from '@/src/components/layout/ScreenHeader';

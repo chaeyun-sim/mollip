@@ -4,7 +4,7 @@ import { Dimensions, Modal, Pressable, Text, View } from 'react-native';
 
 import { StarRating } from '@/src/components/archive/StarRating';
 import { VisitTicket } from '@/src/components/archive/VisitTicket';
-import { useExhibitionDetail } from '@/src/hooks/useExhibitionDetail';
+import { useExhibitionDetail } from '@/src/hooks/queries/useExhibitionDetail';
 import { cn } from '@/src/lib/cn';
 import type { HistoryItem } from '@/src/store/historyStore';
 import { isTicketVisit } from '@/src/store/visitStore';
@@ -42,7 +42,7 @@ export function VisitBlock({
 
 	const ticketVerified = isTicketVisit(visit);
 
-	const { exhibition: visitExhibition } = useExhibitionDetail(visit.exhibitionId ?? undefined);
+	const { data: visitExhibition } = useExhibitionDetail(visit.exhibitionId ?? undefined);
 
 	const exhibition = useMemo(
 		() =>

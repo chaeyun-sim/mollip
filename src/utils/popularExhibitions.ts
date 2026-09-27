@@ -1,4 +1,4 @@
-import type { ExhibitionSummary } from '@/src/hooks/useExploreScreenData';
+import type { ExhibitionSummary } from '@/src/hooks/queries/useExploreScreenData';
 
 export interface PopularEntry {
 	exhibitionId: string;

@@ -1,7 +1,7 @@
 import { Pressable, Text, View } from 'react-native';
 import { ExhibitionStatusBadge } from '@/src/components/common/ExhibitionStatusBadge';
 import { ImageFallback } from '@/src/components/common/ImageFallback';
-import type { KcisaExhibitionItem } from '@/src/hooks/useKcisaExhibitions';
+import type { KcisaExhibitionItem } from '@/src/hooks/queries/useKcisaExhibitions';
 
 const CARD_HEIGHT = Math.round((140 * 4) / 3);
 

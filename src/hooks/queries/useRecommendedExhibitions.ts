@@ -1,15 +1,16 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo } from 'react';
+import { useQuery } from '@tanstack/react-query';
 
 import type { RecommendableItem } from '@/src/components/explore/RecommendableItem.types';
+import { useBookmarkStore } from '@/src/store/bookmarkStore';
+import { useVisitStore } from '@/src/store/visitStore';
 import { getExhibitionStatus, todayExhibitionDateString } from '@/src/utils/exhibitionSearch';
 import { supabase } from '@/src/utils/supabase';
-
-// @MX:NOTE: 온보딩 취향 기반 가중치 스코어링 알고리즘 (SPEC-UI-002 REQ-UI002-011)
-// @MX:SPEC: SPEC-UI-002
 
 const MAX_RECOMMENDED = 5;
 const FETCH_LIMIT = 100;
 const FRESHNESS_DAYS = 7;
+const RECOMMENDED_STALE_MS = 5 * 60 * 1000;
 
 interface ExhibitionRow {
 	id: string | number;
@@ -23,11 +24,8 @@ interface ExhibitionRow {
 	end_date: string;
 }
 
-// @MX:ANCHOR: RecommendableItem을 반환하는 공개 훅 — index.tsx에서 직접 소비
-// @MX:REASON: 홈 화면 추천 섹션의 단일 데이터 소스
-export interface UseRecommendedExhibitionsResult {
-	items: RecommendableItem[];
-	isPersonalized: boolean;
+export function recommendedExhibitionsQueryKey(preferredGenres: string[]) {
+	return ['exhibitions', 'recommended', [...preferredGenres].sort()] as const;
 }
 
 function scoreExhibition(
@@ -37,28 +35,19 @@ function scoreExhibition(
 	bookmarkedSet: Set<string>,
 ): number {
 	let score = 0;
-
-	// 장르 매칭 +40pt (REQ-UI002-011)
 	if (row.genre && preferredGenres.includes(row.genre)) score += 40;
-
-	// 태그 교집합 +20pt: genre 컬럼이 없는 전시도 tags로 커버
 	if (Array.isArray(row.tags) && row.tags.some((t) => preferredGenres.includes(t))) score += 20;
-
-	// 신선도 +20pt: synced_at 기준 최근 7일 이내 (REQ-UI002-011)
 	if (row.synced_at) {
 		const freshCutoff = new Date();
 		freshCutoff.setDate(freshCutoff.getDate() - FRESHNESS_DAYS);
 		if (new Date(row.synced_at) >= freshCutoff) score += 20;
 	}
-
-	// 방문/저장 페널티 -10pt (REQ-UI002-007, REQ-UI002-011)
 	const id = String(row.id);
 	if (visitedSet.has(id) || bookmarkedSet.has(id)) score -= 10;
-
 	return score;
 }
 
-function buildExhibitionQuery(preferredGenres: string[]) {
+async function fetchExhibitionRows(preferredGenres: string[]): Promise<ExhibitionRow[]> {
 	let query = supabase
 		.from('exhibitions')
 		.select(
@@ -72,16 +61,17 @@ function buildExhibitionQuery(preferredGenres: string[]) {
 		query = query.in('genre', preferredGenres);
 	}
 
-	return query;
+	const { data, error } = await query;
+	if (error) throw error;
+	return (data ?? []) as ExhibitionRow[];
 }
 
-async function fetchExhibitionRows(preferredGenres: string[]): Promise<ExhibitionRow[]> {
-	const { data, error } = await buildExhibitionQuery(preferredGenres);
-	if (error) {
-		console.error('[useRecommendedExhibitions] fetch failed:', error.message);
-		return [];
+async function fetchRecommendedRows(preferredGenres: string[]): Promise<ExhibitionRow[]> {
+	const filtered = await fetchExhibitionRows(preferredGenres);
+	if (preferredGenres.length > 0 && filtered.length === 0) {
+		return fetchExhibitionRows([]);
 	}
-	return (data ?? []) as ExhibitionRow[];
+	return filtered;
 }
 
 function toRecommendableItem(row: ExhibitionRow): RecommendableItem {
@@ -96,48 +86,29 @@ function toRecommendableItem(row: ExhibitionRow): RecommendableItem {
 	};
 }
 
-export function useRecommendedExhibitions(
-	preferredGenres: string[],
-	preferredArtists: string[],
-	visitedIds: string[],
-	bookmarkedIds: string[],
-): UseRecommendedExhibitionsResult {
-	const [rows, setRows] = useState<ExhibitionRow[]>([]);
+export function useRecommendedExhibitions(preferredGenres: string[], isPersonalized: boolean) {
+	const visits = useVisitStore((s) => s.visits);
+	const bookmarkedIds = useBookmarkStore((s) => s.ids);
 
-	// 선호 데이터 존재 여부 (REQ-UI002-008, REQ-UI002-009, REQ-UI002-010)
-	const isPersonalized = preferredGenres.length > 0 || preferredArtists.length > 0;
+	const query = useQuery({
+		queryKey: recommendedExhibitionsQueryKey(preferredGenres),
+		queryFn: () => fetchRecommendedRows(preferredGenres),
+		staleTime: RECOMMENDED_STALE_MS,
+		retry: 1,
+	});
 
-	useEffect(() => {
-		let cancelled = false;
-
-		async function load() {
-			const filtered = await fetchExhibitionRows(preferredGenres);
-			if (cancelled) return;
-			if (preferredGenres.length > 0 && filtered.length === 0) {
-				const fallback = await fetchExhibitionRows([]);
-				if (!cancelled) setRows(fallback);
-				return;
-			}
-			setRows(filtered);
-		}
-
-		void load();
-		return () => {
-			cancelled = true;
-		};
-	}, [preferredGenres]);
-
-	const items = useMemo((): RecommendableItem[] => {
+	const data = useMemo((): RecommendableItem[] => {
+		const rows = query.data ?? [];
 		if (rows.length === 0) return [];
-
-		// 선호 데이터 없으면 기존 소스 순서 유지 (REQ-UI002-008)
 		if (!isPersonalized) {
 			return rows.slice(0, MAX_RECOMMENDED).map(toRecommendableItem);
 		}
 
+		const visitedIds = Object.values(visits)
+			.map((visit) => visit.exhibitionId)
+			.filter((id): id is string => id !== null);
 		const visitedSet = new Set(visitedIds);
 		const bookmarkedSet = new Set(bookmarkedIds);
-
 		return [...rows]
 			.map((row) => ({
 				row,
@@ -146,7 +117,7 @@ export function useRecommendedExhibitions(
 			.sort((a, b) => b.score - a.score)
 			.slice(0, MAX_RECOMMENDED)
 			.map(({ row }) => toRecommendableItem(row));
-	}, [rows, preferredGenres, visitedIds, bookmarkedIds, isPersonalized]);
+	}, [query.data, preferredGenres, visits, bookmarkedIds, isPersonalized]);
 
-	return { items, isPersonalized };
+	return { data };
 }

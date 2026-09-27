@@ -10,7 +10,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ActivityIndicator, Alert, Modal, Pressable, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { getWalkingRoute, type RouteCoord, type RouteResult } from '@/src/api/tmap';
-import { useExhibitionData } from '@/src/hooks/useExhibitionData';
+import { useExhibitionData } from '@/src/hooks/queries/useExhibitionData';
 import { useMuseums } from '@/src/hooks/useMuseums';
 import { useUserLocation } from '@/src/hooks/useUserLocation';
 import { supabase } from '@/src/utils/supabase';
@@ -40,7 +40,7 @@ export default function RouteScreen() {
 	const router = useRouter();
 	const insets = useSafeAreaInsets();
 	const { id } = useLocalSearchParams<{ id: string }>();
-	const { exhibition } = useExhibitionData(id ?? '');
+	const { data: exhibition } = useExhibitionData(id ?? '');
 	const { currentCoord } = useUserLocation();
 	const allVenues = useMuseums();
 	const mapRef = useRef<NaverMapViewRef>(null);

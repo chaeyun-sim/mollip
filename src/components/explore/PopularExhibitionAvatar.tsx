@@ -1,7 +1,7 @@
 import * as Haptics from 'expo-haptics';
 import { Pressable, View } from 'react-native';
 import { ImageFallback } from '@/src/components/common/ImageFallback';
-import type { ExhibitionSummary } from '@/src/hooks/useExploreScreenData';
+import type { ExhibitionSummary } from '@/src/hooks/queries/useExploreScreenData';
 
 const AVATAR_SIZE = 56;
 const RING_WIDTH = 2;
