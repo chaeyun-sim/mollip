@@ -14,6 +14,8 @@ import { useAuthStore } from '@/src/store/authStore';
 import { useVenueFollowStatus } from '@/src/hooks/useVenueFollowStatus';
 import { VenueFollowButton } from './venue-sheet/VenueFollowButton';
 import * as WebBrowser from 'expo-web-browser';
+import { useToast } from '@/src/providers/ToastProvider';
+import { useShallow } from 'zustand/react/shallow';
 
 interface VenueSheetProps {
 	venue: VenueGroup;
@@ -32,9 +34,16 @@ export function VenueSheet({
 }: VenueSheetProps) {
 	const [tab, setTab] = useState<VenueExhibitionTab>('active');
 
+	const { showToast } = useToast();
+
 	// 부모 venue(예술의전당 등)면 첫 번째 하위 미술관, 아니면 venue 자체를 사용
 	const activeVenue: VenueGroup = venue.subVenues?.[0] ?? venue;
-	const userId = useAuthStore((state) => state.user?.id);
+	const { userId, session } = useAuthStore(
+		useShallow((state) => ({
+			userId: state.user?.id,
+			session: state.session,
+		})),
+	);
 	const {
 		isFollowed: isVenueFollowed,
 		isLoading: isVenueFollowLoading,
@@ -61,23 +70,31 @@ export function VenueSheet({
 	const listExhibitions = tab === 'active' ? activeExhibitions : upcomingExhibitions;
 
 	return (
-		<BottomSheetScrollView className="px-5 pt-3" showsVerticalScrollIndicator={false}>
+		<BottomSheetScrollView className="px-5" showsVerticalScrollIndicator={false}>
 			<View>
-				<View className="flex-row items-center gap-3 mb-3">
-					<Text
-						className="flex-1 text-[26px] leading-[30px] font-hahmlet-bold text-gray900"
-						numberOfLines={2}
-					>
-						{venue.venueName}
-					</Text>
-					<View className="flex-row items-start gap-2">
+				<View className="flex-1 flex-row items-center gap-3 mb-3">
+					<View className="flex-1 flex-row items-center">
+						<Text
+							className="text-[26px] leading-[30px] font-hahmlet-bold text-gray900"
+							numberOfLines={2}
+						>
+							{venue.venueName}{' '}
+						</Text>
 						<VenueFollowButton
 							venueName={venue.venueName}
 							isFollowed={isVenueFollowed}
 							isLoading={isVenueFollowLoading}
 							isSupported={activeVenue.museumId != null}
-							onPress={toggleVenueFollow}
+							onPress={() => {
+								if (session) {
+									toggleVenueFollow();
+								} else {
+									showToast('로그인 후 이용해주세요');
+								}
+							}}
 						/>
+					</View>
+					<View className="flex-row items-center gap-2">
 						<View className="items-center">
 							<Pressable
 								onPress={onRequestDirections}

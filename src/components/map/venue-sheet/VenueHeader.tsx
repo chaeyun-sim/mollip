@@ -34,17 +34,15 @@ export function VenueHeader({ activeVenue, filterDate }: VenueHeaderProps) {
 					accessibilityLabel="요일별 운영시간 보기"
 					accessibilityState={{ expanded: showWeeklyHours }}
 				>
-					<View className="flex-1">
-						<HoursSection
-							openHours={activeVenue.openHours}
-							closedDays={activeVenue.closedDays}
-							filterDate={filterDate}
-						/>
-					</View>
+					<HoursSection
+						openHours={activeVenue.openHours}
+						closedDays={activeVenue.closedDays}
+						filterDate={filterDate}
+					/>
 					<Ionicons
 						name={showWeeklyHours ? 'chevron-up' : 'chevron-down'}
 						size={12}
-						className="text-gray400"
+						className="text-gray600"
 					/>
 				</Pressable>
 				{showWeeklyHours && (
@@ -101,15 +99,6 @@ export function VenueHeader({ activeVenue, filterDate }: VenueHeaderProps) {
 					<Ionicons name="heart-half-outline" size={16} className="mt-0.5 text-gray600" />
 					<Text className="flex-1 text-[13px] leading-[19px] font-pretendard-medium text-gray700">
 						{activeVenue.amenities.join(', ')}
-					</Text>
-				</View>
-			)}
-
-			{activeVenue.parking && (
-				<View className="flex-row items-start gap-2">
-					<Ionicons name="car-outline" size={16} className="mt-0.5 text-gray600" />
-					<Text className="flex-1 text-[13px] leading-[19px] font-pretendard-medium text-gray700">
-						{activeVenue.parking}
 					</Text>
 				</View>
 			)}
