@@ -43,6 +43,8 @@ export default function MapScreen() {
 	const routeSheetRef = useRef<BottomSheet>(null);
 	// 경로 시트 snap index 추적 — 카메라 세로 중심 보정용
 	const routeSheetIndexRef = useRef(-1);
+	const routeSheetTargetIndexRef = useRef(-1);
+	const reopenRouteSheetAfterAnimationRef = useRef(false);
 	// 전시 상세로 이동하기 위해 프로그램적으로 시트를 닫을 때는 선택 상태를 지우지 않도록 하는 플래그.
 	const suppressClearOnDismissRef = useRef(false);
 	// 바텀시트 현재 index — onChange 콜백 기반 상태 추적
@@ -321,6 +323,15 @@ export default function MapScreen() {
 		[confirmRoute],
 	);
 
+	const handleShowRouteSheet = useCallback(() => {
+		const sheet = routeSheetRef.current;
+		if (!sheet) return;
+		if (routeSheetIndexRef.current === 1 && routeSheetTargetIndexRef.current === 1) return;
+
+		reopenRouteSheetAfterAnimationRef.current = true;
+		sheet.snapToIndex(1);
+	}, []);
+
 	const handleCloseRoute = useCallback(() => {
 		routeSheetRef.current?.close();
 		clearRoute();
@@ -567,7 +578,7 @@ export default function MapScreen() {
 			<MapBottomControls
 				onLocate={handleLocate}
 				directionsStatus={directionsStatus}
-				routeSheetRef={routeSheetRef}
+				onShowRoute={handleShowRouteSheet}
 			/>
 
 			{/* 바텀시트 — 장소 정보 (길찾기 모드에서는 닫혀 있고, 하단 경로 패널이 대신 보인다) */}
@@ -619,8 +630,16 @@ export default function MapScreen() {
 				snapPoints={routeSnapPoints}
 				enableDynamicSizing={false}
 				enablePanDownToClose
+				onAnimate={(_fromIndex, toIndex) => {
+					routeSheetTargetIndexRef.current = toIndex;
+				}}
 				onChange={(index) => {
 					routeSheetIndexRef.current = index;
+					routeSheetTargetIndexRef.current = index;
+					if (!reopenRouteSheetAfterAnimationRef.current) return;
+
+					reopenRouteSheetAfterAnimationRef.current = false;
+					if (index !== 1) routeSheetRef.current?.expand();
 				}}
 				containerStyle={{ zIndex: 60 }}
 				backgroundStyle={{ backgroundColor: BACKGROUND_COLOR }}

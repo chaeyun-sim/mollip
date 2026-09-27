@@ -1,19 +1,17 @@
-import type BottomSheet from '@gorhom/bottom-sheet';
 import { Ionicons } from '@expo/vector-icons';
 import { Pressable, Text } from 'react-native';
-import type { RefObject } from 'react';
 import type { DirectionsStatus } from '@/src/hooks/useDirections';
 
 interface MapBottomControlsProps {
 	onLocate: () => void;
 	directionsStatus: DirectionsStatus;
-	routeSheetRef: RefObject<BottomSheet | null>;
+	onShowRoute: () => void;
 }
 
 export function MapBottomControls({
 	onLocate,
 	directionsStatus,
-	routeSheetRef,
+	onShowRoute,
 }: MapBottomControlsProps) {
 	return (
 		<>
@@ -31,7 +29,7 @@ export function MapBottomControls({
 			{/* 길찾기 패널을 다시 열 수 있는 버튼 */}
 			{directionsStatus !== 'idle' && directionsStatus !== 'planning' && (
 				<Pressable
-					onPress={() => routeSheetRef.current?.snapToIndex(1)}
+					onPress={onShowRoute}
 					className="absolute left-5 bottom-8 flex-row items-center gap-2 h-12 px-5 rounded-full bg-[rgba(15,14,13,0.92)] border border-white/15"
 					style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
 					accessibilityLabel="경로 패널 다시 보기"
