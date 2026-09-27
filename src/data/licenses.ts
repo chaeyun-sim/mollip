@@ -109,6 +109,72 @@ FROM, OUT OF THE USE OR INABILITY TO USE THE FONT SOFTWARE OR FROM
 OTHER DEALINGS IN THE FONT SOFTWARE.
 `;
 
+/** Supabase JavaScript client 원본 LICENSE(MIT) 전문. */
+export const SUPABASE_JS_LICENSE = `MIT License
+
+Copyright (c) 2020 Supabase
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+`;
+
+const EXPO_GOOGLE_FONTS_MIT_LICENSE = `MIT License
+
+Copyright (c) 2020 Expo
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+`;
+
+const SIL_OFL_1_1_BODY = PRETENDARD_LICENSE.slice(
+	PRETENDARD_LICENSE.indexOf('\n-----------------------------------------------------------'),
+);
+const fontLicenseText = (copyright: string, oflUrl: string) =>
+	`${EXPO_GOOGLE_FONTS_MIT_LICENSE}\n${copyright}\n\nThis Font Software is licensed under the SIL Open Font License, Version 1.1.\nThis license is copied below, and is also available with a FAQ at:\n${oflUrl}\n\n${SIL_OFL_1_1_BODY}`;
+
+const CORMORANT_GARAMOND_LICENSE = fontLicenseText(
+	'Copyright 2015 the Cormorant Project Authors (github.com/CatharsisFonts/Cormorant)',
+	'https://scripts.sil.org/OFL',
+);
+const HAHMLET_LICENSE = fontLicenseText(
+	'Copyright 2020 The Hahmlet Project Authors (https://github.com/hyper-type/hahmlet)',
+	'http://scripts.sil.org/OFL',
+);
+const NANUM_PEN_SCRIPT_LICENSE = fontLicenseText(
+	'Copyright (c) 2010, NHN Corporation (http://www.nhncorp.com),\nwith Reserved Font Name Nanum, Naver Nanum, NanumGothic, Naver \nNanumGothic, NanumMyeongjo, Naver NanumMyeongjo, NanumBrush, Naver\nNanumBrush, NanumPen, Naver NanumPen.',
+	'http://scripts.sil.org/OFL',
+);
+
 export interface OpenSourceLicense {
 	name: string;
 	licenseName: string;
@@ -125,5 +191,35 @@ export const OPEN_SOURCE_LICENSES: OpenSourceLicense[] = [
 		sourceUrl: 'https://github.com/orioncactus/pretendard',
 		licenseUrl: 'https://github.com/orioncactus/pretendard/blob/main/LICENSE',
 		licenseText: PRETENDARD_LICENSE,
+	},
+	{
+		name: 'Supabase JS',
+		licenseName: 'MIT License',
+		sourceUrl: 'https://github.com/supabase/supabase-js',
+		licenseUrl: 'https://github.com/supabase/supabase-js/blob/master/LICENSE',
+		licenseText: SUPABASE_JS_LICENSE,
+	},
+	{
+		name: 'Cormorant Garamond',
+		licenseName: 'MIT License (Expo) + SIL Open Font License 1.1',
+		sourceUrl: 'https://github.com/expo/google-fonts/tree/master/packages/cormorant-garamond',
+		licenseUrl:
+			'https://github.com/expo/google-fonts/blob/master/packages/cormorant-garamond/LICENSE_FONT',
+		licenseText: CORMORANT_GARAMOND_LICENSE,
+	},
+	{
+		name: 'Hahmlet',
+		licenseName: 'MIT License (Expo) + SIL Open Font License 1.1',
+		sourceUrl: 'https://github.com/expo/google-fonts/tree/master/packages/hahmlet',
+		licenseUrl: 'https://github.com/expo/google-fonts/blob/master/packages/hahmlet/LICENSE_FONT',
+		licenseText: HAHMLET_LICENSE,
+	},
+	{
+		name: 'Nanum Pen Script',
+		licenseName: 'MIT License (Expo) + SIL Open Font License 1.1',
+		sourceUrl: 'https://github.com/expo/google-fonts/tree/master/packages/nanum-pen-script',
+		licenseUrl:
+			'https://github.com/expo/google-fonts/blob/master/packages/nanum-pen-script/LICENSE_FONT',
+		licenseText: NANUM_PEN_SCRIPT_LICENSE,
 	},
 ];

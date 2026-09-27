@@ -33,9 +33,7 @@ export function LicenseAccordionRow({ license }: LicenseAccordionRowProps) {
 				}
 				accessibilityState={{ expanded }}
 			>
-				<Text className="font-pretendard-semibold text-gray900 text-[16px]">
-					[폰트] {license.name}
-				</Text>
+				<Text className="font-pretendard-semibold text-gray900 text-[16px]">{license.name}</Text>
 				<Ionicons
 					name={expanded ? 'chevron-up' : 'chevron-down'}
 					size={18}
