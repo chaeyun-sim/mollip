@@ -29,7 +29,10 @@ export function RouteCandidateCardSkeleton({ expanded = false }: RouteCandidateC
 									className="h-[13px] rounded-md bg-[#E0DCD5]"
 									style={{ width: row === 1 ? '75%' : '55%' }}
 								/>
-								<SkeletonBox className="h-[11px] rounded-md bg-[#E0DCD5]" style={{ width: '40%' }} />
+								<SkeletonBox
+									className="h-[11px] rounded-md bg-[#E0DCD5]"
+									style={{ width: '40%' }}
+								/>
 							</View>
 						</View>
 					))}

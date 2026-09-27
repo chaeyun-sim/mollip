@@ -8,7 +8,6 @@ import {
 	View,
 	type LayoutChangeEvent,
 } from 'react-native';
-import { Divider } from '@/src/components/common/Divider';
 import { TextField } from '@/src/components/common/TextField';
 import { useRecentEndpoints } from '@/src/hooks/useRecentEndpoints';
 import { cn } from '@/src/lib/cn';
@@ -220,7 +219,7 @@ export const RoutePlanningBar = memo(function RoutePlanningBar({
 						</Text>
 					</Pressable>
 
-					<Divider tone="subtle" className="my-1.5 ml-5" />
+					<View className="h-px bg-divider/50 my-1.5" />
 
 					<Pressable
 						onPress={() => openEditor('destination')}
@@ -288,7 +287,12 @@ export const RoutePlanningBar = memo(function RoutePlanningBar({
 						top: barHeight + 8,
 					}}
 				>
-					<View className="flex-row items-center px-3 py-2.5 gap-2 border-b border-black/[0.06]">
+					<View
+						className={cn(
+							'flex-row items-center px-3 py-2.5 gap-2',
+							editing === 'origin' && 'border-b border-divider',
+						)}
+					>
 						<Ionicons name="search" size={16} className="text-black/35" />
 						<TextField
 							variant="plain"
@@ -311,7 +315,7 @@ export const RoutePlanningBar = memo(function RoutePlanningBar({
 								onSelectOrigin(currentLocation);
 								closeDropdown();
 							}}
-							className="flex-row items-center gap-2 px-4 py-3 border-b border-black/4"
+							className="flex-row items-center gap-2 px-3 py-2.5"
 							accessibilityRole="button"
 						>
 							<Ionicons name="locate" size={18} className="text-gray900" />
