@@ -405,6 +405,27 @@ export type Database = {
 				};
 				Relationships: [];
 			};
+			app_min_version: {
+				Row: {
+					platform: string;
+					min_version: string;
+					store_url: string | null;
+					updated_at: string;
+				};
+				Insert: {
+					platform: string;
+					min_version: string;
+					store_url?: string | null;
+					updated_at?: string;
+				};
+				Update: {
+					platform?: string;
+					min_version?: string;
+					store_url?: string | null;
+					updated_at?: string;
+				};
+				Relationships: [];
+			};
 			notices: {
 				Row: {
 					id: string;

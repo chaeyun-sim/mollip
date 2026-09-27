@@ -8,6 +8,7 @@ import { OnboardingGalleryWall } from '@/src/components/onboarding/OnboardingGal
 import { OnboardingSaveErrorBar } from '@/src/components/onboarding/OnboardingSaveErrorBar';
 import { OnboardingSkipAction } from '@/src/components/onboarding/OnboardingSkipAction';
 import { OnboardingWallPrologue } from '@/src/components/onboarding/OnboardingWallPrologue';
+import { useMarkInteractive } from '@/src/hooks/useMarkInteractive';
 import { useOnboardingWallPlacement } from '@/src/hooks/useOnboardingWallPlacement';
 import { useAuthStore } from '@/src/store/authStore';
 import { setLocalOnboardingCompleted, setPendingGenres } from '@/src/utils/onboardingLocalStorage';
@@ -15,6 +16,7 @@ import { toValidGenres } from '@/src/utils/onboardingWallGenres';
 import { supabase } from '@/src/utils/supabase';
 
 export default function OnboardingScreen() {
+	useMarkInteractive();
 	const router = useRouter();
 	const { userId, setOnboardingCompleted } = useAuthStore(
 		useShallow((s) => ({ userId: s.user?.id, setOnboardingCompleted: s.setOnboardingCompleted })),
