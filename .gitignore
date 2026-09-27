@@ -70,3 +70,5 @@ coverage/
 .claude/settings.local.json
 
 .docs/wip/**/evidence/
+
+.env.local
