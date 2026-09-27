@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet';
 import { Ionicons } from '@expo/vector-icons';
+import { ImageManipulator, SaveFormat } from 'expo-image-manipulator';
 import * as ImagePicker from 'expo-image-picker';
 import { Stack, useNavigation, useRouter } from 'expo-router';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -31,6 +32,10 @@ import type { ArtworkSearchResult } from '@/src/types/artwork';
 import { colors } from '@/src/constants/colors';
 
 const STORAGE_KEY = 'example_modal_hidden';
+// Claude가 이미지를 처리할 때 긴 변 기준 이 값 이상은 자동으로 다운스케일한다(모델 standard tier
+// 기준). 그보다 큰 원본을 그대로 올리면 토큰 비용엔 차이가 없고 업로드 전송량·지연시간만 늘어나므로,
+// 업로드 전에 미리 이 크기로 줄인다.
+const MAX_UPLOAD_LONG_EDGE = 1568;
 
 const EXAMPLES = [
 	{
@@ -163,6 +168,33 @@ export default function IndexScreen() {
 				setIsLoading(false);
 				return;
 			}
+
+			let uploadBase64 = asset.base64;
+			let uploadMediaType: 'image/jpeg' | 'image/png' | 'image/webp' =
+				(asset.mimeType as 'image/jpeg' | 'image/png' | 'image/webp') ?? 'image/jpeg';
+			const longEdge = Math.max(asset.width, asset.height);
+			if (longEdge > MAX_UPLOAD_LONG_EDGE) {
+				try {
+					const isLandscape = asset.width >= asset.height;
+					const context = ImageManipulator.manipulate(asset.uri);
+					context.resize(
+						isLandscape ? { width: MAX_UPLOAD_LONG_EDGE } : { height: MAX_UPLOAD_LONG_EDGE },
+					);
+					const rendered = await context.renderAsync();
+					const resized = await rendered.saveAsync({
+						base64: true,
+						compress: 0.8,
+						format: SaveFormat.JPEG,
+					});
+					if (resized.base64) {
+						uploadBase64 = resized.base64;
+						uploadMediaType = 'image/jpeg';
+					}
+				} catch {
+					// 리사이즈 실패 시 원본 base64로 계속 진행 — 업로드 전송량 최적화일 뿐 해설 생성 자체를 막을 이유는 없다.
+				}
+			}
+
 			// inputMode를 'image'로 되돌리지 않으면, 이전에 검색/직접입력(manual) 흐름을 한 번이라도
 			// 거친 세션에서는 useDescriptionStream이 여전히 manual 분기를 타서 방금 찍은 사진 대신
 			// 이전 manualTitle/manualArtist로 해설을 생성해버린다 — 그 스테일 필드도 함께 비운다.
@@ -171,9 +203,8 @@ export default function IndexScreen() {
 				manualTitle: '',
 				manualArtist: '',
 				manualYear: '',
-				imageBase64: asset.base64,
-				imageMediaType:
-					(asset.mimeType as 'image/jpeg' | 'image/png' | 'image/webp') ?? 'image/jpeg',
+				imageBase64: uploadBase64,
+				imageMediaType: uploadMediaType,
 				extractedText: '',
 				artworkDescription: '',
 				isArtistIntro: false,
@@ -446,6 +477,7 @@ export default function IndexScreen() {
 					</Button>
 					<Button
 						variant="ghost"
+						tone="white"
 						onPress={handleDismissForever}
 						accessibilityLabel="다시 보지 않기"
 					>
