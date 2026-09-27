@@ -1,11 +1,11 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
 import { useArtistIntroStore } from './artistIntroStore';
 import { useChatStore } from './chatStore';
-import { useHistoryStore } from './historyStore';
+import { useHistoryStore, type StoredChatMessage } from './historyStore';
 import { makeVisitKey, todayKey, useVisitStore } from './visitStore';
-import { createAuthAwareStorage } from '../utils/authAwareStorage';
 
 export interface PlaylistItem {
 	id: string;
@@ -15,6 +15,8 @@ export interface PlaylistItem {
 	imageUrl?: string;
 	description: string;
 	addedAt: number;
+	/** 이 작품에 대해 나눈 채팅 — 재생목록에서 작품을 다시 눌러 들어갈 때 복원용 */
+	chatMessages?: StoredChatMessage[];
 }
 
 interface ImmersiveStore {
@@ -31,6 +33,8 @@ interface ImmersiveStore {
 	enter: (exhibitionId: string | null, exhibitionTitle?: string) => void;
 	exit: () => void;
 	addToPlaylist: (item: Omit<PlaylistItem, 'id' | 'addedAt'>) => void;
+	/** title이 일치하는 재생목록 항목에 채팅 기록을 붙인다 */
+	updatePlaylistChatMessages: (title: string, messages: StoredChatMessage[]) => void;
 }
 
 export const useImmersiveStore = create<ImmersiveStore>()(
@@ -45,6 +49,7 @@ export const useImmersiveStore = create<ImmersiveStore>()(
 			chatSessionId: null,
 			playlist: [],
 			enter: (exhibitionId, exhibitionTitle) => {
+				useChatStore.getState().flushExhibitionSessions();
 				set({
 					isImmersiveMode: true,
 					exhibitionId,
@@ -83,6 +88,7 @@ export const useImmersiveStore = create<ImmersiveStore>()(
 							chatMessages: chatMsgs,
 						});
 					}
+					useChatStore.getState().flushSession(chatSessionId);
 				}
 
 				// 관람 종료 시 작가 소개 세션 상태도 함께 비운다 — 다음 전시에 이전 트랙이 남지 않도록.
@@ -107,16 +113,26 @@ export const useImmersiveStore = create<ImmersiveStore>()(
 					],
 				}));
 			},
+			updatePlaylistChatMessages: (title, messages) =>
+				set((state) => ({
+					playlist: state.playlist.map((p) =>
+						p.title === title ? { ...p, chatMessages: messages } : p,
+					),
+				})),
 		}),
 		{
 			name: 'immersive-store',
-			storage: createJSONStorage(createAuthAwareStorage),
+			// 몰입 세션은 서버에 없고 기기 로컬 상태다. authAwareStorage를 쓰면
+			// 로그인 유저(실제 사용 대상)의 persist가 저장 대신 삭제되어,
+			// 앱을 껐다 켰을 때 메인으로 떨어진다.
+			storage: createJSONStorage(() => AsyncStorage),
 			partialize: (state) => ({
 				isImmersiveMode: state.isImmersiveMode,
 				exhibitionId: state.exhibitionId,
 				exhibitionTitle: state.exhibitionTitle,
 				enteredAt: state.enteredAt,
 				chatSessionId: state.chatSessionId,
+				playlist: state.playlist,
 			}),
 			onRehydrateStorage: () => (state, error) => {
 				if (error) console.warn('[immersive] rehydrate failed:', error);

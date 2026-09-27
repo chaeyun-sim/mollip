@@ -6,6 +6,7 @@ import { purgeAccountLocalCaches } from '@/src/utils/purgeAccountLocalCaches';
 import { useBookmarkStore } from './bookmarkStore';
 import { useBookmarkAudioStore } from './bookmarkAudioStore';
 import { useHistoryStore } from './historyStore';
+import { useChatStore } from './chatStore';
 import { useImmersiveStore } from './immersiveStore';
 import { useVisitStore } from './visitStore';
 
@@ -57,6 +58,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
 			chatSessionId: null,
 			playlist: [],
 		});
+		useChatStore.setState({ sessions: {}, drafts: {} });
 		void purgeAccountLocalCaches('logout');
 		void useHistoryStore.getState().hydrateFromGuestDb();
 		void useVisitStore.getState().hydrateFromLocalDb();

@@ -14,8 +14,10 @@ import { updateStore } from '../../src/store';
 import { useArtistIntroStore } from '../../src/store/artistIntroStore';
 import { useImmersiveStore } from '../../src/store/immersiveStore';
 import { cn } from '@/src/lib/cn';
+import { useMarkInteractive } from '@/src/hooks/useMarkInteractive';
 
 export default function PlaylistScreen() {
+	useMarkInteractive();
 	const router = useRouter();
 	const navigation = useNavigation();
 	const { playlist, exhibitionTitle, isImmersive, exhibitionId, chatSessionId, exitImmersive } =
@@ -35,15 +37,7 @@ export default function PlaylistScreen() {
 		status: introStatus,
 		text: introText,
 		retry: retryArtistIntro,
-	} = useArtistIntroStore(
-		useShallow((s) => ({
-			artist: s.artist,
-			imageUrl: s.imageUrl,
-			status: s.status,
-			text: s.text,
-			retry: s.retry,
-		})),
-	);
+	} = useArtistIntroStore(useShallow((s) => s));
 	const FAILED_DESCRIPTION = '해설 생성에 실패했어요.';
 
 	const confirmExit = useCallback(() => {
@@ -89,6 +83,9 @@ export default function PlaylistScreen() {
 			inputMode: 'manual',
 			manualArtist: '',
 			isArtistIntro: false,
+			// 이 작품과 나눈 이전 채팅이 있으면 다음 description 화면에 전달 — 없으면
+			// 이전에 다른 작품에서 남아있을 수 있는 값을 지운다.
+			pendingChatSeed: item.chatMessages && item.chatMessages.length > 0 ? item.chatMessages : null,
 		});
 		// push — replace를 쓰면 재생목록(몰입모드 기본 화면)이 스택에서 사라져서,
 		// 해설 화면에서 뒤로 가면 재생목록이 아니라 그 이전 화면으로 튀는 버그가 있었다.

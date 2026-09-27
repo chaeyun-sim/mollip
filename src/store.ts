@@ -1,3 +1,5 @@
+import type { StoredChatMessage } from './store/historyStore';
+
 export type InputMode = 'image' | 'manual';
 
 export const store = {
@@ -13,6 +15,9 @@ export const store = {
 	// 지금 해설 화면이 "작가 소개 인트로"인지 여부. 인트로는 작품이 아니므로 재생목록에
 	// 다시 쌓이면 안 된다(재생목록 최상단 고정 트랙으로만 존재한다).
 	isArtistIntro: false,
+	// 재생목록에서 작품을 재진입할 때, 그 작품의 이전 채팅 기록을 다음 description 화면에
+	// 전달하기 위한 1회성 필드. description 화면이 마운트 시 읽고 즉시 비운다.
+	pendingChatSeed: null as StoredChatMessage[] | null,
 };
 
 /**

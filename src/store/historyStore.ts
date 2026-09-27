@@ -12,6 +12,7 @@ import {
 	saveGuestHistoryChat,
 	updateGuestHistory,
 } from '../utils/guestHistoryDb';
+import { buildAudioGuideInsert } from './historyInsert';
 
 export interface StoredChatMessage {
 	id: string;
@@ -60,15 +61,7 @@ export const useHistoryStore = create<HistoryStore>()((set, get) => ({
 		if (userId) {
 			supabase
 				.from('audio_guides')
-				.insert({
-					id,
-					user_id: userId,
-					title: item.title,
-					artist: item.artist ?? null,
-					image_url: item.imageUrl ?? null,
-					full_text: item.text,
-					created_at: savedAt,
-				})
+				.insert(buildAudioGuideInsert(id, userId, next))
 				.then(({ error }) => {
 					if (error) console.warn('[history] insert failed:', error.message);
 				});

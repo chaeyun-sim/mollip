@@ -1,9 +1,10 @@
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
-import { useNavigation, useRouter } from 'expo-router';
+import { Stack, useNavigation, useRouter } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 import {
 	ActivityIndicator,
+	BackHandler,
 	Dimensions,
 	GestureResponderEvent,
 	Image,
@@ -35,7 +36,7 @@ import { useToast } from '@/src/providers/ToastProvider';
 import { useHistoryStore } from '@/src/store/historyStore';
 import { useBookmarkAudioStore } from '@/src/store/bookmarkAudioStore';
 import { useChatStore } from '@/src/store/chatStore';
-import { store } from '@/src/store';
+import { store, updateStore } from '@/src/store';
 import { fetchWikidataImage } from '@/src/utils/wikidataImage';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -80,6 +81,15 @@ export default function DescriptionScreen() {
 	const { ensureAuth } = useRequireAuth();
 	const { showToast } = useToast();
 	const [savedId, setSavedId] = useState<string | null>(null);
+
+	// 재생목록에서 작품을 재진입한 경우, playlist.tsx가 store에 남겨둔 이전 채팅을
+	// 이번 sessionId에 한 번만 채워넣는다.
+	useEffect(() => {
+		if (!store.pendingChatSeed) return;
+		useChatStore.getState().seedMessages(sessionId, store.pendingChatSeed);
+		updateStore({ pendingChatSeed: null });
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	const handleToggleBookmarkAudio = () => {
 		if (!savedId) return;
@@ -127,12 +137,25 @@ export default function DescriptionScreen() {
 					.map(({ id, role, text }) => ({ id, role, text }));
 				if (chatMsgs.length > 0) {
 					saveChatMessages(savedId, chatMsgs);
+					// 재생목록에서 이 작품을 다시 눌러 들어왔을 때 채팅이 복원되도록,
+					// 해당 재생목록 항목에도 같은 기록을 남긴다.
+					if (isImmersive && !store.isArtistIntro) {
+						const playlistTitle = store.inputMode === 'manual' ? store.manualTitle : '촬영한 작품';
+						useImmersiveStore.getState().updatePlaylistChatMessages(playlistTitle, chatMsgs);
+					}
 				}
 			}
 			flushChatSession(sessionId);
 		});
 		return unsubscribe;
-	}, [navigation, stop, flushChatSession, sessionId, savedId, saveChatMessages]);
+	}, [navigation, stop, flushChatSession, sessionId, savedId, saveChatMessages, isImmersive]);
+
+	// Android 하드웨어 뒤로가기는 BackHandler로 흡수, 스와이프 제스처는 Stack.Screen의 gestureEnabled로 막는다.
+	useEffect(() => {
+		if (!isTyping) return;
+		const subscription = BackHandler.addEventListener('hardwareBackPress', () => true);
+		return () => subscription.remove();
+	}, [isTyping]);
 
 	// 인디케이터 progress bar 애니메이션
 	const barTranslate = useSharedValue(-SCREEN_WIDTH);
@@ -179,9 +202,19 @@ export default function DescriptionScreen() {
 
 	const handlePlayPause = () => {
 		if (isTTSLoading) return;
-		if (isSpeaking) pause();
-		else if (elapsed > 0) resume();
-		else speak(fullTextRef.current);
+		if (isSpeaking) {
+			pause();
+			return;
+		}
+		if (elapsed > 0) {
+			resume();
+			return;
+		}
+		speak(fullTextRef.current).catch(() => {
+			// 기본 위치는 하단 플레이어 컨트롤(진행바+재생버튼)과 겹쳐서 다크 배경 위에
+			// 다크 토스트가 거의 안 보인다 — 플레이어 위로 띄운다.
+			showToast('음성 재생에 실패했어요. 다시 시도해 주세요', { bottomOffset: 100 });
+		});
 	};
 
 	const handleProgressTap = (e: GestureResponderEvent) => {
@@ -194,9 +227,14 @@ export default function DescriptionScreen() {
 
 	return (
 		<Screen edges={['top', 'bottom']}>
+			{/* 해설 생성 중엔 스와이프 뒤로가기로 화면을 이탈해도 스트리밍 요청이 계속 진행되므로 막는다 */}
+			<Stack.Screen options={{ gestureEnabled: !isTyping }} />
 			{!isTyping && (
 				<Screen.Header>
-					<ScreenHeader.Back onPress={() => router.dismissTo('/playlist')} color="white-90" />
+					<ScreenHeader.Back
+						onPress={() => (isImmersive ? router.dismissTo('/playlist') : router.back())}
+						color="white-90"
+					/>
 					<Screen.Header.Right>
 						<Pressable
 							onPress={handleToggleBookmarkAudio}

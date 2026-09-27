@@ -42,9 +42,16 @@ export default function ChatScreen() {
 		pushHistory,
 		removeMessage,
 		popHistory,
+		setDraft,
+		clearDraft,
 	} = useChatStore();
 
 	const messages = getMessages(sid);
+	const persistedDraft = useChatStore((s) => {
+		const draft = s.drafts[sid];
+		if (!draft || draft.expiresAt <= Date.now()) return '';
+		return draft.text;
+	});
 
 	const openArtworkSearch = () => {
 		const title =
@@ -56,7 +63,7 @@ export default function ChatScreen() {
 		const query = encodeURIComponent([title, artist].filter(Boolean).join(' '));
 		WebBrowser.openBrowserAsync(`https://www.google.com/search?q=${query}&tbm=isch`);
 	};
-	const [input, setInput] = useState('');
+	const [input, setInput] = useState(persistedDraft);
 	const [isLoading, setIsLoading] = useState(false);
 	const flatListRef = useRef<FlatList>(null);
 	const [isFocusing, setIsFocusing] = useState(false);
@@ -76,6 +83,7 @@ export default function ChatScreen() {
 		if (!overrideText) {
 			addMessage(sid, userMsg);
 			setInput('');
+			clearDraft(sid);
 		}
 		setIsLoading(true);
 
@@ -114,6 +122,15 @@ export default function ChatScreen() {
 		removeMessage(sid, item.id);
 		popHistory(sid);
 		sendMessage(userMsg.text);
+	};
+
+	useEffect(() => {
+		setInput(persistedDraft);
+	}, [persistedDraft]);
+
+	const handleInputChange = (text: string) => {
+		setInput(text);
+		setDraft(sid, text);
 	};
 
 	useEffect(() => {
@@ -214,7 +231,7 @@ export default function ChatScreen() {
 							}}
 							returnKeyType="send"
 							value={input}
-							onChangeText={bindComposer(setInput)}
+							onChangeText={bindComposer(handleInputChange)}
 							placeholder="질문을 입력하세요..."
 							keyboardAppearance="dark"
 							onFocus={() => setIsFocusing(true)}
