@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useSettingsStore } from '../store/settingsStore';
 import { fetchTTSBlob, fetchVoices } from '../utils/api';
 import { getOfflineAudioUri, saveOfflineAudioFromDataUri } from '../utils/offlineAudio';
+import { resolveTtsAudioUri } from '../utils/resolveTtsAudioUri';
 import { cleanTextForTTS } from '../utils/text';
 
 export type Voice = {
@@ -49,24 +50,13 @@ export function useTTS() {
 		try {
 			const cleaned = cleanTextForTTS(text);
 			const cacheKey = `${voiceId}\x00${voiceSpeed}\x00${cleaned}`;
-			let uri = audioCache.current.get(cacheKey);
-
-			if (!uri) {
-				// 앱 재실행 후에도 자동 저장된 음성을 우선 재생한다.
-				uri = getOfflineAudioUri(cacheKey) ?? undefined;
-				if (!uri) {
-					const dataUri = await fetchTTSBlob(voiceId, cleaned, voiceSpeed);
-					// 실제로 재생을 요청한 음성만 파일로 저장해 다음 재생부터 재사용한다.
-					try {
-						uri = saveOfflineAudioFromDataUri(cacheKey, dataUri);
-					} catch (cacheError) {
-						// 저장 공간 등의 이유로 캐시하지 못해도 이번 재생은 계속한다.
-						console.warn('오디오 캐시 저장에 실패했어요', cacheError);
-						uri = dataUri;
-					}
-				}
-				audioCache.current.set(cacheKey, uri);
-			}
+			const uri = await resolveTtsAudioUri({
+				cacheKey,
+				memoryCache: audioCache.current,
+				getDiskUri: getOfflineAudioUri,
+				fetchFromNetwork: () => fetchTTSBlob(voiceId, cleaned, voiceSpeed),
+				saveToDisk: saveOfflineAudioFromDataUri,
+			});
 
 			setIsLoading(false);
 			player.replace(uri);
