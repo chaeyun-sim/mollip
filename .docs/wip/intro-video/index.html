@@ -1,0 +1,744 @@
+<!doctype html>
+<html lang="ko">
+	<head>
+		<meta charset="utf-8" />
+		<title>mollip intro</title>
+		<!-- 에셋(a/)은 render.js가 주입하는 base 경로 기준으로 로드 -->
+		<base href="__ASSET_BASE__" />
+		<style>
+			@font-face {
+				font-family: 'Pretendard';
+				font-weight: 400;
+				src: url(a/Pretendard-Regular.otf);
+			}
+			@font-face {
+				font-family: 'Pretendard';
+				font-weight: 500;
+				src: url(a/Pretendard-Medium.otf);
+			}
+			@font-face {
+				font-family: 'Pretendard';
+				font-weight: 600;
+				src: url(a/Pretendard-SemiBold.otf);
+			}
+			@font-face {
+				font-family: 'Pretendard';
+				font-weight: 700;
+				src: url(a/Pretendard-Bold.otf);
+			}
+			@font-face {
+				font-family: 'Hahmlet';
+				font-weight: 500;
+				src: url(a/Hahmlet_500Medium.ttf);
+			}
+			@font-face {
+				font-family: 'Hahmlet';
+				font-weight: 700;
+				src: url(a/Hahmlet_700Bold.ttf);
+			}
+			* {
+				margin: 0;
+				padding: 0;
+				box-sizing: border-box;
+			}
+			html,
+			body {
+				width: 1080px;
+				height: 1920px;
+				overflow: hidden;
+				background: #f8f6f2;
+			}
+			body {
+				font-family: 'Pretendard', sans-serif;
+				position: relative;
+				-webkit-font-smoothing: antialiased;
+			}
+			.layer {
+				position: absolute;
+				inset: 0;
+			}
+			#light {
+				background: #f8f6f2;
+			}
+			#dark {
+				background: radial-gradient(120% 80% at 50% 30%, #2a2530 0%, #1c1917 60%, #141211 100%);
+			}
+			#brand {
+				background: linear-gradient(160deg, #7c3aed 0%, #ab77f1 55%, #f2a7c3 100%);
+			}
+			.blob {
+				position: absolute;
+				border-radius: 50%;
+				filter: blur(140px);
+			}
+			.scene {
+				position: absolute;
+				inset: 0;
+				opacity: 0;
+			}
+			.kicker {
+				position: absolute;
+				left: 96px;
+				top: 250px;
+				font-weight: 600;
+				font-size: 34px;
+				letter-spacing: 2px;
+				display: flex;
+				align-items: center;
+				gap: 16px;
+			}
+			.kicker .dot {
+				width: 14px;
+				height: 14px;
+				border-radius: 50%;
+				background: #00e9c8;
+			}
+			.headline {
+				position: absolute;
+				left: 96px;
+				right: 96px;
+				top: 320px;
+				font-family: 'Hahmlet';
+				font-weight: 700;
+				font-size: 84px;
+				line-height: 1.22;
+				letter-spacing: -2px;
+			}
+			.line {
+				display: block;
+			}
+			.dark-text {
+				color: #ffffff;
+			}
+			.dark-text .kicker {
+				color: #cdb4f7;
+			}
+			.light-text {
+				color: #1c1917;
+			}
+			.light-text .kicker {
+				color: #7c3aed;
+			}
+			/* 카메라 뷰포트 — 헤드라인 아래 영역에서만 줌/팬 */
+			.camview {
+				position: absolute;
+				left: 0;
+				top: 600px;
+				width: 1080px;
+				height: 1320px;
+				overflow: hidden;
+				-webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 70px);
+			}
+			.cam {
+				position: absolute;
+				inset: 0;
+				transform-origin: 0 0;
+			}
+			.phone {
+				position: absolute;
+				left: 270px;
+				top: 40px;
+				width: 540px;
+				height: 1150px;
+				border-radius: 76px;
+				background: #0e0d0d;
+				padding: 16px;
+				box-shadow:
+					0 60px 120px rgba(20, 10, 40, 0.35),
+					0 0 0 3px rgba(255, 255, 255, 0.08) inset;
+			}
+			.screen {
+				position: relative;
+				width: 100%;
+				height: 100%;
+				border-radius: 62px;
+				overflow: hidden;
+				background: #000;
+			}
+			.screen img {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+				object-position: top;
+				display: block;
+			}
+			.center {
+				position: absolute;
+				left: 0;
+				right: 0;
+				text-align: center;
+			}
+			.label {
+				position: absolute;
+				left: 0;
+				right: 0;
+				top: 1690px;
+				text-align: center;
+			}
+			.label span {
+				display: inline-block;
+				padding: 20px 38px;
+				border-radius: 999px;
+				background: rgba(28, 25, 23, 0.92);
+				color: #fff;
+				font-size: 36px;
+				font-weight: 600;
+				box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+			}
+			.label b {
+				color: #00e9c8;
+				font-weight: 700;
+				margin-right: 12px;
+			}
+			.wave {
+				position: absolute;
+				display: flex;
+				align-items: center;
+				gap: 18px;
+				color: #fff;
+				font-size: 30px;
+				font-weight: 500;
+			}
+			.bars {
+				display: flex;
+				align-items: center;
+				gap: 7px;
+				height: 48px;
+			}
+			.bars i {
+				display: block;
+				width: 8px;
+				border-radius: 4px;
+				background: #00e9c8;
+			}
+			.ring {
+				position: absolute;
+				width: 60px;
+				height: 60px;
+				margin: -30px 0 0 -30px;
+				border-radius: 50%;
+				border: 5px solid #7c3aed;
+			}
+			.chip {
+				display: inline-block;
+				padding: 18px 34px;
+				border-radius: 999px;
+				font-size: 32px;
+				font-weight: 600;
+			}
+			/* 채팅 플러드 */
+			.flood {
+				position: absolute;
+				inset: 0;
+			}
+			.bub {
+				position: absolute;
+				max-width: 780px;
+				font-size: 36px;
+				line-height: 1.4;
+				font-weight: 500;
+				padding: 26px 34px;
+				box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+			}
+			.bub.u {
+				right: 64px;
+				background: #ab77f1;
+				color: #fff;
+				border-radius: 40px 40px 10px 40px;
+				transform-origin: 100% 100%;
+			}
+			.bub.d {
+				left: 64px;
+				background: #ffffff;
+				color: #1c1917;
+				border-radius: 40px 40px 40px 10px;
+				transform-origin: 0 100%;
+			}
+			.bub.d::before {
+				content: 'AI 도슨트';
+				display: block;
+				font-size: 24px;
+				font-weight: 700;
+				color: #7c3aed;
+				margin-bottom: 6px;
+			}
+			#scrim {
+				position: absolute;
+				inset: 0;
+				background: #141211;
+				opacity: 0;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="light" class="layer"></div>
+		<div id="dark" class="layer"></div>
+		<div id="brand" class="layer"></div>
+		<div class="blob" id="b1" style="width: 760px; height: 760px; background: #f2a7c3"></div>
+		<div class="blob" id="b2" style="width: 820px; height: 820px; background: #ab77f1"></div>
+		<div class="blob" id="b3" style="width: 560px; height: 560px; background: #00e9c8"></div>
+
+		<!-- 1. 훅 -->
+		<div class="scene dark-text" id="s-hook">
+			<div class="headline" style="top: 700px; font-size: 96px">
+				<span class="line">작품 앞에 섰는데</span>
+				<span class="line" style="color: #cdb4f7">무슨 이야기인지</span>
+				<span class="line" style="color: #cdb4f7">모르겠다면?</span>
+			</div>
+		</div>
+
+		<!-- 2. 로고 -->
+		<div class="scene light-text" id="s-logo">
+			<img
+				id="logo1"
+				src="a/logo.png"
+				style="position: absolute; left: 50%; top: 560px; width: 460px; margin-left: -230px"
+			/>
+			<div
+				class="center line"
+				style="
+					top: 1060px;
+					font-family: 'Hahmlet';
+					font-weight: 700;
+					font-size: 120px;
+					letter-spacing: -3px;
+				"
+			>
+				mollip
+			</div>
+			<div
+				class="center line"
+				style="top: 1230px; font-size: 46px; font-weight: 500; color: #57534e"
+			>
+				내 손안의 AI 도슨트
+			</div>
+		</div>
+
+		<!-- 3. 취향 — 액자 펀치 줌 -->
+		<div class="scene light-text" id="s-taste">
+			<div class="kicker"><span class="dot"></span>01 · 취향 설정</div>
+			<div class="headline">
+				<span class="line">좋아하는 작품을</span><span class="line">벽에 걸어두면</span>
+			</div>
+			<div class="camview">
+				<div class="cam">
+					<div class="phone">
+						<div class="screen"><img src="a/taste-selection.png" /></div>
+					</div>
+				</div>
+			</div>
+			<div class="label" data-k="1">
+				<span><b>회화</b>진주 귀걸이를 한 소녀</span>
+			</div>
+			<div class="label" data-k="2">
+				<span><b>회화</b>별이 빛나는 밤</span>
+			</div>
+			<div class="label" data-k="3">
+				<span><b>5/5</b>취향 완성!</span>
+			</div>
+		</div>
+
+		<!-- 4. AI 해설 + 음성 — 읽어 내려가는 팬 -->
+		<div class="scene dark-text" id="s-audio">
+			<div class="kicker"><span class="dot"></span>02 · AI 해설 + 음성</div>
+			<div class="headline">
+				<span class="line">작품을 찍으면</span><span class="line">해설을 읽어줘요</span>
+			</div>
+			<div class="camview">
+				<div class="cam">
+					<div class="phone">
+						<div class="screen"><img src="a/audio-description.png" /></div>
+					</div>
+				</div>
+			</div>
+			<div
+				class="wave"
+				id="wave"
+				style="
+					left: 50%;
+					margin-left: -170px;
+					top: 1690px;
+					background: rgba(28, 25, 23, 0.92);
+					padding: 22px 34px;
+					border-radius: 999px;
+					box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+				"
+			>
+				<div class="bars"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+				<span>해설 재생 중</span>
+			</div>
+		</div>
+
+		<!-- 5. 채팅 — 말풍선 폭주 -->
+		<div class="scene dark-text" id="s-chat">
+			<div class="kicker"><span class="dot"></span>03 · AI 도슨트</div>
+			<div class="headline">
+				<span class="line">궁금한 건</span><span class="line">바로 물어보세요</span>
+			</div>
+			<div class="camview">
+				<div class="cam">
+					<div class="phone">
+						<div class="screen"><img src="a/artwork-chat.png" /></div>
+					</div>
+				</div>
+			</div>
+			<div id="scrim"></div>
+			<div class="flood" id="flood">
+				<div class="bub u">하늘이 왜 소용돌이쳐요?</div>
+				<div class="bub d">고흐의 불안과 경이로움이 붓질로 드러난 거예요.</div>
+				<div class="bub u">언제 그린 작품이에요?</div>
+				<div class="bub d">1889년, 생레미 요양원에 머물던 때예요.</div>
+				<div class="bub u">왼쪽 나무는 뭐예요?</div>
+				<div class="bub d">사이프러스예요. 삶과 죽음을 잇는 상징으로 자주 읽혀요.</div>
+				<div class="bub u">비슷한 작품 추천해줘요</div>
+				<div class="bub d">〈밤의 카페 테라스〉도 꼭 보세요.</div>
+				<div class="bub u">진주 귀걸이 소녀는 실존 인물이에요?</div>
+				<div class="bub d">특정 인물이 아닌 ‘트로니’, 인물 습작이에요.</div>
+				<div class="bub u">더 알려줘요!</div>
+				<div class="bub u">또 궁금한 게 있어요</div>
+			</div>
+		</div>
+
+		<!-- 6. 몰입 모드 -->
+		<div class="scene dark-text" id="s-playlist">
+			<div class="kicker"><span class="dot"></span>04 · 몰입 모드</div>
+			<div class="headline">
+				<span class="line">전시 한 편을</span><span class="line">플레이리스트처럼</span>
+			</div>
+			<div class="camview">
+				<div class="cam">
+					<div class="phone">
+						<div class="screen"><img src="a/playlist.png" /></div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- 7. 지도 -->
+		<div class="scene light-text" id="s-map">
+			<div class="kicker"><span class="dot"></span>05 · 전시 지도</div>
+			<div class="headline">
+				<span class="line">지금 열린 전시를</span><span class="line">지도에서 찾고</span>
+			</div>
+			<div class="camview">
+				<div class="cam">
+					<div class="phone">
+						<div class="screen">
+							<img src="a/map.png" />
+							<div class="ring" style="left: 63.5%; top: 46.4%"></div>
+							<div class="ring" style="left: 41%; top: 47.9%"></div>
+							<div class="ring" style="left: 50%; top: 37.5%"></div>
+							<div class="ring" style="left: 77%; top: 61.4%"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- 8. 다이어리 -->
+		<div class="scene light-text" id="s-diary">
+			<div class="kicker"><span class="dot"></span>06 · 다이어리</div>
+			<div class="headline">
+				<span class="line">다녀온 전시는</span><span class="line">차곡차곡 기록해요</span>
+			</div>
+			<div class="camview">
+				<div class="cam">
+					<div class="phone">
+						<div class="screen"><img src="a/diary-current.png" /></div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- 9. 아웃트로 -->
+		<div class="scene dark-text" id="s-outro">
+			<div
+				id="outroCard"
+				style="
+					position: absolute;
+					left: 50%;
+					top: 520px;
+					width: 420px;
+					height: 420px;
+					margin-left: -210px;
+					border-radius: 96px;
+					overflow: hidden;
+					background: #f8f6f2;
+					box-shadow: 0 40px 100px rgba(60, 20, 120, 0.35);
+				"
+			>
+				<img src="a/logo.png" style="width: 100%; height: 100%" />
+			</div>
+			<div
+				class="center line"
+				style="
+					top: 1010px;
+					font-family: 'Hahmlet';
+					font-weight: 700;
+					font-size: 132px;
+					letter-spacing: -3px;
+				"
+			>
+				mollip
+			</div>
+			<div
+				class="center line"
+				style="top: 1190px; font-family: 'Hahmlet'; font-weight: 500; font-size: 56px"
+			>
+				작품 앞에서, 더 깊이
+			</div>
+			<div class="center line" style="top: 1340px">
+				<span class="chip" style="background: rgba(255, 255, 255, 0.95); color: #7c3aed"
+					>App Store · Google Play</span
+				>
+			</div>
+		</div>
+
+		<script>
+			// 씬 타임라인 (초) — theme: 0 light, 1 dark, 2 brand
+			// cam: 씬 로컬 시각 t부터 d초 동안 해당 줌/초점으로 스냅 이동 (fx·fy = 스크린 비율, z=1은 원위치)
+			const scenes = [
+				{ id: 's-hook', s: 0, e: 3.2, theme: 1 },
+				{ id: 's-logo', s: 3.2, e: 5.8, theme: 0 },
+				{
+					id: 's-taste',
+					s: 5.8,
+					e: 10.4,
+					theme: 0,
+					cam: [
+						{ t: 0.9, z: 3.3, fx: 0.48, fy: 0.305, label: 1 },
+						{ t: 1.9, z: 3.3, fx: 0.78, fy: 0.27, label: 2 },
+						{ t: 2.9, z: 2.2, fx: 0.5, fy: 0.75, label: 3 },
+						{ t: 3.8, z: 1 },
+					],
+				},
+				{
+					id: 's-audio',
+					s: 10.4,
+					e: 14.2,
+					theme: 1,
+					cam: [
+						{ t: 0.8, z: 1.9, fx: 0.5, fy: 0.2 },
+						{ t: 1.5, z: 1.9, fx: 0.5, fy: 0.62, d: 1.5 },
+						{ t: 3.1, z: 1 },
+					],
+				},
+				{ id: 's-chat', s: 14.2, e: 18.8, theme: 1 },
+				{
+					id: 's-playlist',
+					s: 18.8,
+					e: 22.2,
+					theme: 1,
+					cam: [
+						{ t: 0.7, z: 2.1, fx: 0.5, fy: 0.3 },
+						{ t: 1.4, z: 2.1, fx: 0.5, fy: 0.66, d: 1.0 },
+						{ t: 2.5, z: 1 },
+					],
+				},
+				{
+					id: 's-map',
+					s: 22.2,
+					e: 25.8,
+					theme: 0,
+					cam: [
+						{ t: 0.7, z: 2.6, fx: 0.55, fy: 0.46 },
+						{ t: 2.4, z: 1 },
+					],
+				},
+				{
+					id: 's-diary',
+					s: 25.8,
+					e: 29.4,
+					theme: 0,
+					cam: [
+						{ t: 0.7, z: 2.9, fx: 0.737, fy: 0.521 },
+						{ t: 1.4, z: 2.9, fx: 0.495, fy: 0.629 },
+						{ t: 2.1, z: 2.9, fx: 0.139, fy: 0.736 },
+						{ t: 2.8, z: 1 },
+					],
+				},
+				{ id: 's-outro', s: 29.4, e: 34, theme: 2, last: true },
+			];
+			window.DURATION = 34;
+
+			const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+			const lerp = (a, b, p) => a + (b - a) * p;
+			const easeOut = (p) => 1 - Math.pow(1 - p, 3);
+			const snap = (p) => 1 - Math.pow(1 - p, 5);
+			const easeInOut = (p) => (p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2);
+			const els = scenes.map((sc) => document.getElementById(sc.id));
+
+			// 카메라 좌표계 — camview 기준, 폰 스크린 좌상단 (286, 56), 크기 508×1118
+			const C = { x: 540, y: 640 };
+			const toFocus = (k) =>
+				k.z === 1 ? { x: C.x, y: C.y } : { x: 286 + k.fx * 508, y: 56 + k.fy * 1118 };
+
+			const camState = (keys, local) => {
+				let st = { z: 1, x: C.x, y: C.y, label: 0, moving: 0 };
+				keys.forEach((k) => {
+					const p = clamp((local - k.t) / (k.d || 0.4));
+					if (p <= 0) return;
+					const f = toFocus(k);
+					const e = k.d ? easeInOut(p) : snap(p);
+					st = {
+						z: lerp(st.z, k.z, e),
+						x: lerp(st.x, f.x, e),
+						y: lerp(st.y, f.y, e),
+						label: p > 0.3 ? k.label || 0 : st.label,
+						moving: p < 1 && !k.d ? 1 : 0,
+					};
+				});
+				return st;
+			};
+
+			// 테마 가중치 — 씬 경계 ±0.25초 구간에서 크로스페이드
+			const themeWeights = (t) => {
+				const w = [0, 0, 0];
+				const X = 0.25;
+				scenes.forEach((sc, i) => {
+					const inP = i === 0 ? 1 : easeInOut(clamp((t - (sc.s - X)) / (2 * X)));
+					const outP = sc.last ? 0 : easeInOut(clamp((t - (sc.e - X)) / (2 * X)));
+					w[sc.theme] += Math.max(0, inP - outP);
+				});
+				return w;
+			};
+
+			// 채팅 플러드 — 점점 빨라지는 등장 간격
+			const bubbles = [...document.querySelectorAll('#flood .bub')];
+			const bubTimes = (() => {
+				const out = [];
+				let t = 0.8;
+				let gap = 0.5;
+				bubbles.forEach(() => {
+					out.push(t);
+					t += gap;
+					gap = Math.max(0.12, gap * 0.8);
+				});
+				return out;
+			})();
+
+			const renderFlood = (local, dur) => {
+				const ps = bubTimes.map((bt) => easeOut(clamp((local - bt) / 0.28)));
+				const shown = ps.reduce((a, b) => a + b, 0);
+				document.getElementById('scrim').style.opacity = clamp(shown / 4) * 0.75;
+				// 마지막에 전체가 위로 날아감
+				const fly = Math.pow(clamp((local - (dur - 0.6)) / 0.6), 2);
+				const base = 1760 - fly * 2200;
+				bubbles.forEach((b, i) => {
+					let y = base - b.offsetHeight;
+					for (let j = i + 1; j < bubbles.length; j++) y -= ps[j] * (bubbles[j].offsetHeight + 24);
+					const p = ps[i];
+					b.style.top = `${y}px`;
+					b.style.opacity = p;
+					b.style.transform = `scale(${0.4 + 0.6 * p}) translateY(${(1 - p) * 40}px)`;
+				});
+				return shown;
+			};
+
+			window.render = (t) => {
+				const [, wd, wb] = themeWeights(t);
+				document.getElementById('dark').style.opacity = wd;
+				document.getElementById('brand').style.opacity = wb;
+
+				// 배경 블롭 — 천천히 떠다님
+				const blobA = 0.18 + 0.2 * wd + 0.1 * wb;
+				[
+					['b1', -180 + 80 * Math.sin(t * 0.5), 120 + 90 * Math.cos(t * 0.4), blobA],
+					['b2', 520 + 90 * Math.cos(t * 0.45), 1180 + 110 * Math.sin(t * 0.35), blobA],
+					['b3', 640 + 60 * Math.sin(t * 0.6), -120 + 70 * Math.cos(t * 0.5), blobA * 0.6],
+				].forEach(([id, x, y, o]) => {
+					const el = document.getElementById(id);
+					el.style.transform = `translate(${x}px, ${y}px)`;
+					el.style.opacity = o;
+				});
+
+				scenes.forEach((sc, i) => {
+					const el = els[i];
+					const local = t - sc.s;
+					const dur = sc.e - sc.s;
+					if (t < sc.s || t > sc.e) {
+						el.style.opacity = 0;
+						return;
+					}
+					// 휩 전환 — 위로 빠르게 빠지며 모션 블러
+					const exit = sc.last ? 0 : Math.pow(clamp((t - (sc.e - 0.3)) / 0.3), 2);
+					const enter = i === 0 ? 1 : easeOut(clamp(local / 0.3));
+					el.style.opacity = Math.min(enter, 1 - exit * 0.9);
+					el.style.transform = `translateY(${(1 - enter) * 160 - exit * 260}px)`;
+					el.style.filter =
+						exit > 0 || enter < 1 ? `blur(${exit * 14 + (1 - enter) * 10}px)` : 'none';
+
+					// 텍스트 라인 순차 등장 (살짝 튀는 스케일)
+					el.querySelectorAll('.line').forEach((ln, j) => {
+						const p = easeOut(clamp((local - 0.05 - j * 0.18) / 0.4));
+						const pop = 1 + 0.08 * Math.sin(Math.PI * p);
+						ln.style.opacity = p;
+						ln.style.transform = `translateY(${(1 - p) * 60}px) scale(${pop})`;
+						ln.style.transformOrigin = '0 50%';
+					});
+					const kicker = el.querySelector('.kicker');
+					if (kicker) {
+						const p = easeOut(clamp(local / 0.35));
+						kicker.style.opacity = p;
+						kicker.style.transform = `translateX(${(1 - p) * -40}px)`;
+					}
+
+					// 폰 등장 + 카메라
+					const phone = el.querySelector('.phone');
+					if (phone) {
+						const p = easeOut(clamp((local - 0.05) / 0.5));
+						phone.style.transform = `translateY(${(1 - p) * 360}px) scale(${0.92 + 0.08 * p})`;
+						const st = sc.cam
+							? camState(sc.cam, local)
+							: { z: 1, x: C.x, y: C.y, label: 0, moving: 0 };
+						const cam = el.querySelector('.cam');
+						cam.style.transform = `translate(${C.x}px, ${C.y}px) scale(${st.z}) translate(${-st.x}px, ${-st.y}px)`;
+						cam.style.filter = st.moving && st.z > 1.2 ? 'blur(1.5px)' : 'none';
+						el.querySelectorAll('.label').forEach((lb) => {
+							const on = Number(lb.dataset.k) === st.label;
+							lb.style.opacity = on ? 1 : 0;
+							lb.style.transform = on ? 'scale(1)' : 'scale(0.8)';
+						});
+					}
+
+					if (sc.id === 's-logo') {
+						const p = easeOut(clamp(local / 0.6));
+						const logo = document.getElementById('logo1');
+						logo.style.opacity = p;
+						logo.style.transform = `scale(${0.5 + 0.5 * p + 0.12 * Math.sin(Math.PI * p)}) rotate(${(1 - p) * -12}deg)`;
+					}
+					if (sc.id === 's-audio') {
+						const wave = document.getElementById('wave');
+						const p = easeOut(clamp((local - 0.6) / 0.4));
+						wave.style.opacity = p;
+						wave.style.transform = `translateY(${(1 - p) * 40}px)`;
+						wave.querySelectorAll('i').forEach((bar, k) => {
+							bar.style.height = `${12 + 36 * Math.abs(Math.sin(t * (6 + k * 1.1) + k * 1.3))}px`;
+						});
+					}
+					if (sc.id === 's-chat') {
+						const shown = renderFlood(local, dur);
+						const hide = clamp((shown - 2) / 2);
+						el.querySelector('.headline').style.opacity = 1 - hide;
+						el.querySelector('.kicker').style.opacity = 1 - hide;
+						el.querySelector('.camview').style.transform = `scale(${1 - 0.08 * clamp(shown / 6)})`;
+					}
+					if (sc.id === 's-map') {
+						el.querySelectorAll('.ring').forEach((r, k) => {
+							const ph = (local * 1.4 + k * 0.3) % 1;
+							r.style.opacity = local > 0.6 ? 1 - ph : 0;
+							r.style.transform = `scale(${0.4 + ph * 1.8})`;
+						});
+					}
+					if (sc.id === 's-outro') {
+						const card = document.getElementById('outroCard');
+						const p = easeOut(clamp(local / 0.6));
+						card.style.opacity = p;
+						card.style.transform = `translateY(${(1 - p) * 80}px) scale(${0.7 + 0.3 * p + 0.08 * Math.sin(Math.PI * p)})`;
+					}
+				});
+			};
+			window.render(0);
+		</script>
+	</body>
+</html>

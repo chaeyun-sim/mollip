@@ -45,11 +45,11 @@ status: approved
 
 ## 파일
 
-| 파일                                   | 변경                                          |
-| -------------------------------------- | --------------------------------------------- |
-| `src/store/settingsStore.ts`           | `getEffectiveFontSize` 추가                   |
-| `src/data/mypage.ts`                   | `FONT_SIZE_OPTIONS` 추가                      |
+| 파일                                                | 변경                                        |
+| --------------------------------------------------- | ------------------------------------------- |
+| `src/store/settingsStore.ts`                        | `getEffectiveFontSize` 추가                 |
+| `src/data/mypage.ts`                                | `FONT_SIZE_OPTIONS` 추가                    |
 | `src/components/mypage/NarrationSettingsFields.tsx` | 텍스트 크기 토글 UI (`/settings/narration`) |
-| `app/(guide)/description.tsx`          | fontSize 적용                                 |
-| `app/(guide)/chat.tsx`                 | fontSize 적용                                 |
-| `src/components/guide/ChatMessage.tsx` | fontSize 동적 적용                            |
+| `app/(guide)/description.tsx`                       | fontSize 적용                               |
+| `app/(guide)/chat.tsx`                              | fontSize 적용                               |
+| `src/components/guide/ChatMessage.tsx`              | fontSize 동적 적용                          |

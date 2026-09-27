@@ -19,13 +19,13 @@ supersedes: AC-3 고대비 모드 토글, AC-4 고대비 — description 화면,
 
 ## 제거 내용
 
-| 파일 | 변경 |
-| ---- | ---- |
-| `src/store/settingsStore.ts` | `highContrast`, `setHighContrast` 제거, `getEffectiveFontSize(fontSize, highContrast)` → `getEffectiveFontSize(fontSize)` |
-| `src/components/layout/Screen.tsx` | `highContrast` prop 및 분기 제거 |
-| `app/(guide)/description.tsx` | highContrast 배경·텍스트 분기 제거 (기본 dark 스타일만 유지) |
-| `app/(guide)/chat.tsx` | highContrast 배경·텍스트·키보드 분기 제거, `HIGH_CONTRAST_COLOR` 상수 제거 |
-| `src/components/guide/ChatMessage.tsx` | highContrast 버블·텍스트 분기 제거 (제거 과정에서 `bg-[#F0EFED` 괄호 누락 버그도 함께 해소) |
+| 파일                                   | 변경                                                                                                                      |
+| -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| `src/store/settingsStore.ts`           | `highContrast`, `setHighContrast` 제거, `getEffectiveFontSize(fontSize, highContrast)` → `getEffectiveFontSize(fontSize)` |
+| `src/components/layout/Screen.tsx`     | `highContrast` prop 및 분기 제거                                                                                          |
+| `app/(guide)/description.tsx`          | highContrast 배경·텍스트 분기 제거 (기본 dark 스타일만 유지)                                                              |
+| `app/(guide)/chat.tsx`                 | highContrast 배경·텍스트·키보드 분기 제거, `HIGH_CONTRAST_COLOR` 상수 제거                                                |
+| `src/components/guide/ChatMessage.tsx` | highContrast 버블·텍스트 분기 제거 (제거 과정에서 `bg-[#F0EFED` 괄호 누락 버그도 함께 해소)                               |
 
 ## 검증
 
