@@ -161,7 +161,7 @@ export default function VoiceScreen() {
 									className={cn('rounded-[22px] py-3.5', selected && 'bg-primary/5')}
 									style={({ pressed }) => ({
 										transform: [{ scale: pressed ? 0.98 : 1 }],
-										backgroundColor: !selected && pressed ? colors.bgTonal : undefined,
+										backgroundColor: !selected && pressed ? colors['bg-tonal'] : undefined,
 									})}
 									accessibilityRole="radio"
 									accessibilityState={{ checked: selected }}
@@ -223,7 +223,7 @@ export default function VoiceScreen() {
 											disabled={!!previewingId}
 										>
 											{previewingId === voice.voice_id ? (
-												<ActivityIndicator size="small" color={colors.primaryDark} />
+												<ActivityIndicator size="small" color={colors['primary-dark']} />
 											) : (
 												<Ionicons name="play" size={15} className="text-primary-dark" />
 											)}

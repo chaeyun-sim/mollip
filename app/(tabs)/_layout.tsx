@@ -15,7 +15,7 @@ export default function TabsLayout() {
 			initialRouteName="index"
 			screenOptions={{
 				headerShown: false,
-				tabBarActiveTintColor: colors.primaryDark,
+				tabBarActiveTintColor: colors['primary-dark'],
 				tabBarInactiveTintColor: '#9CA3AF',
 				tabBarLabelStyle: {
 					fontFamily: 'Pretendard-Medium',

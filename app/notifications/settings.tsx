@@ -73,9 +73,9 @@ export default function NotificationSettingsScreen() {
 			value={value}
 			onValueChange={onValueChange}
 			disabled={disabled}
-			trackColor={{ false: colors.border, true: colors.gray900 }}
+			trackColor={{ false: colors.divider, true: colors.gray900 }}
 			thumbColor="#FFFFFF"
-			ios_backgroundColor={colors.border}
+			ios_backgroundColor={colors.divider}
 			style={{ transform: [{ scaleX: 0.75 }, { scaleY: 0.75 }] }}
 		/>
 	);

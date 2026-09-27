@@ -1,3 +1,5 @@
+import { colors } from './src/constants/colors';
+
 /** @type {import('tailwindcss').Config} */
 const { hairlineWidth } = require('nativewind/theme');
 
@@ -29,32 +31,7 @@ module.exports = {
 				'8xl': ['96px', { lineHeight: '1' }],
 				'9xl': ['128px', { lineHeight: '1' }],
 			},
-			colors: {
-				primary: '#AB77F1',
-				'primary-dark': '#7C3AED',
-				secondary: '#302D33',
-				gray100: '#F8F6F2',
-				gray200: '#F2EFE9',
-				gray300: '#E7E5E4',
-				gray400: '#C7C3BD',
-				gray500: '#A8A29E',
-				gray600: '#78716C',
-				gray700: '#57534E',
-				gray800: '#292524',
-				gray900: '#1C1917',
-				white: '#FFFFFF',
-				'bg-light': '#F8F6F2',
-				'bg-dark': '#171412',
-				'bg-tonal': '#F2EFE9',
-				'on-dark': '#E8E8E8',
-				'image-placeholder': '#E5E1D8',
-				divider: '#E7E5E4',
-				'divider-dark': '#292524',
-				accent: '#00E9C8',
-				error: '#EF4444',
-				'error-alt': '#F43F5E',
-				success: '#00BC7D',
-			},
+			colors: colors,
 			fontFamily: {
 				sans: ['Pretendard-Regular'],
 				'pretendard-regular': ['Pretendard-Regular'],
