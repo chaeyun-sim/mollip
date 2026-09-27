@@ -76,6 +76,10 @@ module.exports = {
 			[
 				'expo-build-properties',
 				{
+					ios: {
+						usePrecompiledModules: false,
+						buildReactNativeFromSource: true,
+					},
 					android: {
 						extraMavenRepos: [
 							'https://devrepo.kakao.com/nexus/content/groups/public/',
