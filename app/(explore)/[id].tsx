@@ -23,7 +23,7 @@ import {
 import { FloatingIconButton } from '@/src/components/explore/FloatingIconButton';
 import { ExhibitionDetailSkeleton } from '@/src/components/layout/Loading';
 import { Screen } from '@/src/components/layout/Screen';
-import { useExhibitionData } from '@/src/hooks/useExhibitionData';
+import { useExhibitionData } from '@/src/hooks/queries/useExhibitionData';
 import { useRecordExhibitionView } from '@/src/hooks/useRecordExhibitionView';
 import { useRequireAuth } from '@/src/hooks/useRequireAuth';
 import { useShareExhibition } from '@/src/hooks/useShareExhibition';
@@ -37,6 +37,7 @@ import {
 	cancelDeadlineNotifications,
 	scheduleDeadlineNotifications,
 } from '@/src/utils/notificationScheduler';
+import { useSubscriptionStore } from '@/src/store/subscriptionStore';
 
 export default function ExhibitionDetailScreen() {
 	const { id } = useLocalSearchParams<{ id: string }>();
@@ -46,10 +47,12 @@ export default function ExhibitionDetailScreen() {
 	const enterImmersive = useImmersiveStore((s) => s.enter);
 	const recordVisit = useVisitStore((s) => s.recordExhibition);
 
+	const { isPremium } = useSubscriptionStore();
+
 	const [expanded, setExpanded] = useState(false);
 	const [isDescriptionLong, setIsDescriptionLong] = useState(false);
 
-	const { exhibition, isLoading } = useExhibitionData(id);
+	const { data: exhibition, isLoading } = useExhibitionData(id);
 	const { isBookmarked, toggle } = useBookmarkStore(
 		useShallow((s) => ({ isBookmarked: s.isBookmarked(id), toggle: s.toggle })),
 	);
@@ -338,7 +341,9 @@ export default function ExhibitionDetailScreen() {
 				className="absolute right-5"
 				style={{ bottom: exhibition.ticketUrl ? fabBottom + 30 : fabBottom + 100 }}
 			>
-				<ExhibitionImmersiveFab onPress={() => setImmersiveOpen(true)} />
+				<ExhibitionImmersiveFab
+					onPress={() => (isPremium ? setImmersiveOpen(true) : router.push('/settings/premium'))}
+				/>
 			</View>
 
 			<ImmersiveOverlay

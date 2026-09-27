@@ -23,7 +23,8 @@ export default function MyPageScreen() {
 		})),
 	);
 	const [signingOut, setSigningOut] = useState(false);
-	const { isPremium, expirationDate, isSubscriptionLoading } = useSubscriptionStore();
+	const { isPremium, expirationDate, billingIssueDetectedAt, isSubscriptionLoading } =
+		useSubscriptionStore();
 
 	const handleSignOut = async () => {
 		Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -44,23 +45,6 @@ export default function MyPageScreen() {
 				<Screen.Header.Left>
 					<Screen.Header.Logo />
 				</Screen.Header.Left>
-				{session && (
-					<Screen.Header.Right>
-						<Pressable
-							onPress={signingOut ? undefined : handleSignOut}
-							hitSlop={8}
-							accessibilityRole="button"
-							accessibilityLabel="로그아웃"
-							style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
-						>
-							{signingOut ? (
-								<ActivityIndicator size="small" className="text-gray600" />
-							) : (
-								<Ionicons name="log-out-outline" size={22} className="text-error" />
-							)}
-						</Pressable>
-					</Screen.Header.Right>
-				)}
 			</Screen.Header>
 
 			<ScrollView
@@ -126,6 +110,7 @@ export default function MyPageScreen() {
 							) : isPremium ? (
 								<PremiumStatusBanner
 									expiresAt={formatSubscriptionDate(expirationDate)}
+									billingIssueDetectedAt={billingIssueDetectedAt}
 									onPress={() => router.push('/settings/subscribe')}
 								/>
 							) : (
@@ -209,6 +194,22 @@ export default function MyPageScreen() {
 							<CardRow icon="information-circle-outline" label="버전" value={APP_VERSION} />
 						</SettingsCard>
 					</View>
+
+					{session && (
+						<Pressable
+							onPress={signingOut ? undefined : handleSignOut}
+							accessibilityRole="button"
+							accessibilityLabel="로그아웃"
+							style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
+							className="h-14 items-center justify-center"
+						>
+							{signingOut ? (
+								<ActivityIndicator size="small" className="text-gray600" />
+							) : (
+								<Text className="font-pretendard-medium text-error text-[15px]">로그아웃</Text>
+							)}
+						</Pressable>
+					)}
 				</View>
 			</ScrollView>
 		</Screen>

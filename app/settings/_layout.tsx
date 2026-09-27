@@ -1,8 +1,11 @@
 import { Stack } from 'expo-router';
+import { usePurchaseLockStore } from '@/src/store/purchaseLockStore';
 
 export default function SettingsLayout() {
+	const isPurchaseLocked = usePurchaseLockStore((s) => s.isLocked);
+
 	return (
-		<Stack>
+		<Stack screenOptions={{ gestureEnabled: !isPurchaseLocked }}>
 			<Stack.Screen name="voice" options={{ headerShown: false }} />
 			<Stack.Screen name="narration" options={{ headerShown: false }} />
 			<Stack.Screen name="account" options={{ headerShown: false }} />

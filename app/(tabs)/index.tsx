@@ -24,56 +24,53 @@ import { PopularExhibitionAvatar } from '@/src/components/explore/PopularExhibit
 import { PopularExhibitionAvatarSkeleton } from '@/src/components/explore/PopularExhibitionAvatarSkeleton';
 import { Screen } from '@/src/components/layout/Screen';
 import { ScreenHeader } from '@/src/components/layout/ScreenHeader';
-import { useExploreScreenData, type ExhibitionSummary } from '@/src/hooks/useExploreScreenData';
-import { FEATURED_TAGLINES, useFeaturedTrio } from '@/src/hooks/useFeaturedTrio';
-import { usePopularExhibitions } from '@/src/hooks/usePopularExhibitions';
+import { useMarkInteractive } from '@/src/hooks/useMarkInteractive';
+import { usePopularExhibitions } from '@/src/hooks/queries/usePopularExhibitions';
+import { useExploreScreenData } from '@/src/hooks/queries/useExploreScreenData';
+import { FEATURED_TAGLINES, useFeaturedTrio } from '@/src/hooks/queries/useFeaturedTrio';
 import { useAuthStore } from '@/src/store/authStore';
+import { toAsyncStatus } from '@/src/types/asyncStatus.types';
+import { useSubscriptionStore } from '@/src/store/subscriptionStore';
 
 export default function ExploreScreen() {
+	useMarkInteractive();
 	const router = useRouter();
 	const insets = useSafeAreaInsets();
 	const { width: cardWidth } = useWindowDimensions();
 
+	const name = useAuthStore((s) => s.user?.user_metadata?.full_name);
+	const { isPremium } = useSubscriptionStore();
+
 	const {
-		cultureStatus,
-		refetch,
-		kcisaItems,
-		kcisaStatus,
-		kcisaRefetch,
+		kcisaQuery,
+		cultureQuery,
 		featured,
 		featuredCarousel,
 		kcisaCarousel,
 		displayedRecommended,
 		isPersonalized,
 	} = useExploreScreenData();
-	// FeaturedCarousel에 이미 노출 중인 전시는 인기 섹션에서 제외해 중복 노출을 막는다
+
 	const {
-		items: popularItems,
-		status: popularStatus,
+		data: popularItems = [],
+		isLoading: popularLoading,
+		isError: popularError,
 		refetch: popularRefetch,
 	} = usePopularExhibitions(featuredCarousel.map((item) => item.id));
+	const popularStatus = toAsyncStatus(popularLoading, popularError);
 
 	// 메인 캐러셀: 특별전 · 인기 · 곧 개봉 3장
 	const { picks: featuredTrio } = useFeaturedTrio(popularItems);
+
 	const featuredTrioIds = useMemo(() => new Set(featuredTrio.map((p) => p.id)), [featuredTrio]);
 	const displayedPopularItems = useMemo(
 		() => popularItems.filter((item) => !featuredTrioIds.has(item.id)),
 		[popularItems, featuredTrioIds],
 	);
-
-	const resolveKcisaCarousel = (): ExhibitionSummary[] => {
-		if (kcisaCarousel.length > 0) return kcisaCarousel;
-		if (featured?.source === 'kcisa') return [];
-		return kcisaItems;
-	};
-	const carousel = resolveKcisaCarousel();
-	const name = useAuthStore((s) => s.user?.user_metadata?.full_name);
-
 	const featuredListRef = useRef<FlatList>(null);
 	const [, setFeaturedIndex] = useState(0);
 
 	const openExhibition = (id: string) => router.push(`/(explore)/${id}`);
-	const openSearch = () => router.push('/search');
 
 	useEffect(() => {
 		if (featuredTrio.length <= 1) return;
@@ -121,7 +118,7 @@ export default function ExploreScreen() {
 				</ScreenHeader.Right>
 			</ScreenHeader>
 			<Pressable
-				onPress={openSearch}
+				onPress={() => router.push('/search')}
 				accessibilityRole="button"
 				accessibilityLabel="전시·미술관·작가 검색"
 				className="px-6 pt-1 pb-3"
@@ -183,12 +180,12 @@ export default function ExploreScreen() {
 				/>
 
 				<KcisaSection
-					kcisaStatus={kcisaStatus}
-					kcisaItems={kcisaItems}
-					carousel={carousel}
+					kcisaStatus={kcisaQuery.status}
+					kcisaItems={kcisaQuery.items}
+					carousel={kcisaCarousel}
 					featured={featured}
 					onPress={openExhibition}
-					onRefetch={kcisaRefetch}
+					onRefetch={kcisaQuery.refetch}
 				/>
 
 				<View>
@@ -209,8 +206,8 @@ export default function ExploreScreen() {
 					/>
 					<HorizontalSection
 						items={displayedRecommended}
-						status={cultureStatus}
-						onRefetch={refetch}
+						status={cultureQuery.status}
+						onRefetch={cultureQuery.refetch}
 						renderItem={(item) => (
 							<KcisaExhibitionCard key={item.id} item={item} onPress={openExhibition} />
 						)}
@@ -232,7 +229,11 @@ export default function ExploreScreen() {
 				}}
 			>
 				<LoginRequiredPressable
-					onPress={() => router.push('/(guide)/create-description')}
+					onPress={() =>
+						isPremium
+							? router.push('/(guide)/create-description')
+							: router.push('/settings/premium')
+					}
 					returnTo="/(guide)/create-description"
 					accessibilityRole="button"
 					accessibilityLabel="작품 해설 만들기"

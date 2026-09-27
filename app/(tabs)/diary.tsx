@@ -89,6 +89,9 @@ export default function DiaryScreen() {
 
 	useEffect(() => {
 		if (!session || subscriptionLoading || isPremium) return;
+		// push로 바꾸면 뒤로가기는 되지만, 다이어리는 !isPremium일 때 null을 리턴하는 화면이라
+		// 뒤로 돌아왔을 때 그대로 흰 화면이 된다 — replace로 다이어리 자체를 스택에서 치워야 한다.
+		// 뒤로가기가 없다는 문제는 premium.tsx 쪽에서 canGoBack()을 보고 게이트한다.
 		router.replace('/settings/premium');
 	}, [session, subscriptionLoading, isPremium, router]);
 
