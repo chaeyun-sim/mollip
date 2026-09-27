@@ -1,5 +1,5 @@
-import { useRouter } from 'expo-router';
-import { useRef, useState } from 'react';
+import { useNavigation, useRouter } from 'expo-router';
+import { useEffect, useRef, useState } from 'react';
 import {
 	Keyboard,
 	Pressable,
@@ -20,11 +20,22 @@ import { updateStore } from '../../src/store';
 
 export default function ManualScreen() {
 	const router = useRouter();
+	const navigation = useNavigation();
 	const title = useTextField();
 	const artist = useTextField();
 
 	const [year, setYear] = useState('');
 	const [caption, setCaption] = useState('');
+	const [isSubmitting, setIsSubmitting] = useState(false);
+
+	// 해설 생성 후 스와이프/뒤로가기로 이 화면에 돌아왔을 때, 언마운트되지 않고
+	// 스택에 남아있던 isSubmitting=true가 그대로 유지돼 버튼이 죽어있는 문제 방지.
+	useEffect(() => {
+		const unsubscribe = navigation.addListener('focus', () => {
+			setIsSubmitting(false);
+		});
+		return unsubscribe;
+	}, [navigation]);
 
 	const artistInputRef = useRef<TextInput>(null);
 	const yearInputRef = useRef<TextInput>(null);
@@ -43,6 +54,8 @@ export default function ManualScreen() {
 	};
 
 	const handleSubmit = () => {
+		if (isSubmitting) return;
+
 		const titleValue = title.value.trim();
 		const artistValue = artist.value.trim();
 		const titleMissing = !titleValue;
@@ -51,6 +64,7 @@ export default function ManualScreen() {
 		artist.setError(artistMissing);
 		if (titleMissing || artistMissing) return;
 
+		setIsSubmitting(true);
 		updateStore({
 			...buildManualStorePatch(titleValue, artistValue),
 			artworkDescription: '',
@@ -93,11 +107,12 @@ export default function ManualScreen() {
 							<ScreenHeader.Right>
 								<Pressable
 									onPress={handleSubmit}
+									disabled={isSubmitting}
 									hitSlop={8}
 									accessibilityLabel="AI 해설 생성"
 									accessibilityRole="button"
 									className="rounded-full px-3.5 py-1.5 bg-secondary"
-									style={({ pressed }) => ({ opacity: pressed ? 0.8 : 1 })}
+									style={({ pressed }) => ({ opacity: pressed || isSubmitting ? 0.8 : 1 })}
 								>
 									<Text className="text-[14px] font-pretendard-semibold text-white">해설 생성</Text>
 								</Pressable>
