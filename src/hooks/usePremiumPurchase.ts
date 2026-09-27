@@ -95,6 +95,8 @@ export function usePremiumPurchase({ navigateAway, showToast }: UsePremiumPurcha
 	useEffect(
 		() => () => {
 			isMountedRef.current = false;
+			clearTimeout(offeringsTimeoutRef.current);
+			clearTimeout(purchaseTimeoutRef.current);
 		},
 		[],
 	);
@@ -103,12 +105,14 @@ export function usePremiumPurchase({ navigateAway, showToast }: UsePremiumPurcha
 	const requestIdRef = useRef(0);
 	// getOfferings가 아직 진행 중이면 재시도 탭을 무시해 중복 네트워크 호출을 만들지 않는다.
 	const loadInFlightRef = useRef(false);
+	const offeringsTimeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 	// 동일 틱(await 이전)에 두 번 눌려도 구매 SDK가 두 번 호출되지 않게 막는 동기 가드.
 	const purchaseOpRef = useRef(false);
 	const restoreOpRef = useRef(false);
 	const statusCheckOpRef = useRef(false);
 	// 연결 전환 중 늦게 도착한 응답이 현재 구매 시도를 덮어쓰지 않도록 시도 세대를 기록한다.
 	const purchaseAttemptIdRef = useRef(0);
+	const purchaseTimeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 	// 구매 결과 확인 경로(purchasePackage/status check)가 겹쳐도 성공 후 이동·토스트는 한 번만 실행한다.
 	const completionStartedRef = useRef(false);
 	const purchaseResultHandledRef = useRef(false);
@@ -130,6 +134,7 @@ export function usePremiumPurchase({ navigateAway, showToast }: UsePremiumPurcha
 						() => reject(new Error('offerings_timeout')),
 						OFFERINGS_TIMEOUT_MS,
 					);
+					offeringsTimeoutRef.current = timeoutId;
 				}),
 			]);
 
@@ -163,6 +168,7 @@ export function usePremiumPurchase({ navigateAway, showToast }: UsePremiumPurcha
 			setLoadState('error');
 		} finally {
 			clearTimeout(timeoutId);
+			if (offeringsTimeoutRef.current === timeoutId) offeringsTimeoutRef.current = undefined;
 			loadInFlightRef.current = false;
 		}
 	}, []);
@@ -342,6 +348,7 @@ export function usePremiumPurchase({ navigateAway, showToast }: UsePremiumPurcha
 
 			const timeout = new Promise<'timedOut'>((resolve) => {
 				timeoutId = setTimeout(() => resolve('timedOut'), PURCHASE_WAIT_TIMEOUT_MS);
+				purchaseTimeoutRef.current = timeoutId;
 			});
 			const outcome = await Promise.race([
 				purchasePromise.then(() => 'resolved' as const),
@@ -358,6 +365,7 @@ export function usePremiumPurchase({ navigateAway, showToast }: UsePremiumPurcha
 			handlePurchaseFailure(error);
 		} finally {
 			if (typeof timeoutId !== 'undefined') clearTimeout(timeoutId);
+			if (purchaseTimeoutRef.current === timeoutId) purchaseTimeoutRef.current = undefined;
 			releaseOperation('purchase');
 			purchaseOpRef.current = false;
 			if (isMountedRef.current) setIsPurchasing(false);

@@ -87,6 +87,7 @@ const flush = async () => {
 };
 
 type HookResult = ReturnType<typeof usePremiumPurchase>;
+const mountedRoots: Array<() => void> = [];
 
 const renderReadyHook = async () => {
 	mockGetOfferings.mockResolvedValueOnce({ current: { availablePackages: [SIX_MONTHS] } });
@@ -104,7 +105,14 @@ const renderReadyHook = async () => {
 		root.render(<Harness />);
 	});
 	await flush();
-	return { hookRef, navigateAway, showToast, unmount: () => act(() => root.unmount()) };
+	let isUnmounted = false;
+	const unmount = () => {
+		if (isUnmounted) return;
+		isUnmounted = true;
+		act(() => root.unmount());
+	};
+	mountedRoots.push(unmount);
+	return { hookRef, navigateAway, showToast, unmount };
 };
 
 const transaction = () => usePurchaseTransactionStore.getState();
@@ -129,6 +137,9 @@ beforeEach(() => {
 });
 
 afterEach(() => {
+	act(() => {
+		for (const unmount of mountedRoots.splice(0)) unmount();
+	});
 	jest.useRealTimers();
 	jest.restoreAllMocks();
 });

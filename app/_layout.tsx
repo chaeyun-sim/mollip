@@ -22,7 +22,7 @@ import { Image } from 'expo-image';
 import { useRouter, useSegments, Stack, type ErrorBoundaryProps } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect, useRef, useState } from 'react';
-import { AppState, View } from 'react-native';
+import { AppState, Platform, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useShallow } from 'zustand/react/shallow';
 import { Result } from '../src/components/common/Result';
@@ -128,9 +128,18 @@ function RootLayout() {
 			try {
 				const lastOnlineVerifiedAt = await loadLastOnlineVerifiedAt();
 				useSubscriptionStore.getState().setLastOnlineVerifiedAt(lastOnlineVerifiedAt);
-				Purchases.configure({
-					apiKey: process.env.EXPO_PUBLIC_REVENUECAT_IOS_API_KEY!,
-				});
+
+				const revenueCatApiKey = __DEV__
+					? process.env.EXPO_PUBLIC_REVENUECAT_TEST_API_KEY
+					: Platform.OS === 'ios'
+						? process.env.EXPO_PUBLIC_REVENUECAT_IOS_API_KEY
+						: process.env.EXPO_PUBLIC_REVENUECAT_ANDROID_API_KEY;
+
+				if (!revenueCatApiKey) {
+					throw new Error(`RevenueCat API key is missing for ${Platform.OS}`);
+				}
+
+				Purchases.configure({ apiKey: revenueCatApiKey });
 
 				await Purchases.invalidateCustomerInfoCache();
 				const customerInfo = await Purchases.getCustomerInfo();

@@ -77,7 +77,10 @@ module.exports = {
 				'expo-build-properties',
 				{
 					android: {
-						extraMavenRepos: ['https://devrepo.kakao.com/nexus/content/groups/public/'],
+						extraMavenRepos: [
+							'https://devrepo.kakao.com/nexus/content/groups/public/',
+							'https://repository.map.naver.com/archive/maven',
+						],
 					},
 				},
 			],

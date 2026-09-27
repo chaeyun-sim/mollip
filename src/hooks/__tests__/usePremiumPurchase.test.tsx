@@ -61,6 +61,7 @@ function inactiveCustomerInfo() {
 }
 
 type HookResult = ReturnType<typeof usePremiumPurchase>;
+const mountedRoots: Array<() => void> = [];
 
 function renderPremiumPurchase(
 	overrides: { navigateAway?: jest.Mock; showToast?: jest.Mock } = {},
@@ -75,17 +76,22 @@ function renderPremiumPurchase(
 	}
 
 	const root = createRoot();
+	let isUnmounted = false;
 	act(() => {
 		root.render(<Harness />);
 	});
+	const unmount = () => {
+		if (isUnmounted) return;
+		isUnmounted = true;
+		root.unmount();
+	};
+	mountedRoots.push(unmount);
 
 	return {
 		hookRef,
 		navigateAway,
 		showToast,
-		unmount: () => {
-			root.unmount();
-		},
+		unmount,
 	};
 }
 
@@ -122,6 +128,10 @@ beforeEach(() => {
 });
 
 afterEach(() => {
+	act(() => {
+		for (const unmount of mountedRoots.splice(0)) unmount();
+	});
+	jest.useRealTimers();
 	jest.restoreAllMocks();
 });
 
