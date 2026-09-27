@@ -8,6 +8,24 @@ function edgeFunctionUrl(name: string): string {
 	return `${SUPABASE_URL}/functions/v1/${name}`;
 }
 
+// 네트워크가 끊기거나 서버가 무응답 상태로 멈추면 fetch가 영영 안 끝날 수 있다 —
+// 연결/첫 응답까지 이 시간을 넘기면 포기하고 에러로 처리한다.
+const CONNECT_TIMEOUT_MS = 15000;
+
+async function fetchWithTimeout(
+	url: string,
+	init: RequestInit,
+	timeoutMs = CONNECT_TIMEOUT_MS,
+): Promise<Response> {
+	const controller = new AbortController();
+	const timer = setTimeout(() => controller.abort(), timeoutMs);
+	try {
+		return await fetch(url, { ...init, signal: controller.signal });
+	} finally {
+		clearTimeout(timer);
+	}
+}
+
 /** 만료됐을 수 있는 세션을 갱신한 뒤 유저 JWT만 고른다. anon 키는 쓰지 않는다. */
 async function resolveUserAccessToken(): Promise<string | null> {
 	await supabase.auth.getUser();
@@ -44,7 +62,7 @@ export async function* streamDescriptionFromImage(
 	mediaType: 'image/jpeg' | 'image/png' | 'image/webp',
 	systemPrompt: string,
 ): AsyncGenerator<string> {
-	const res = await fetch(edgeFunctionUrl('stream-description'), {
+	const res = await fetchWithTimeout(edgeFunctionUrl('stream-description'), {
 		method: 'POST',
 		headers: await authHeaders({ requireUser: true }),
 		body: JSON.stringify({ mode: 'image', imageBase64, mediaType, systemPrompt }),
@@ -55,7 +73,7 @@ export async function* streamDescriptionFromImage(
 }
 
 export async function* streamDescription(prompt: string): AsyncGenerator<string> {
-	const res = await fetch(edgeFunctionUrl('stream-description'), {
+	const res = await fetchWithTimeout(edgeFunctionUrl('stream-description'), {
 		method: 'POST',
 		headers: await authHeaders({ requireUser: true }),
 		body: JSON.stringify({ mode: 'manual', prompt }),
@@ -131,7 +149,7 @@ export async function fetchVoices() {
 }
 
 export async function fetchTTSBlob(voiceId: string, text: string, speed = 1.0): Promise<string> {
-	const res = await fetch(edgeFunctionUrl('tts'), {
+	const res = await fetchWithTimeout(edgeFunctionUrl('tts'), {
 		method: 'POST',
 		headers: await authHeaders({ requireUser: true }),
 		body: JSON.stringify({ voiceId, text, speed }),
@@ -160,13 +178,40 @@ export async function deleteAccount(): Promise<void> {
 
 // -- Helpers ------------------------------------------------------------------
 
+// 스트림 연결은 됐는데 중간에 응답이 뚝 끊기는 경우(네트워크 끊김 등) — 마지막 청크를
+// 받은 뒤 이 시간 동안 다음 청크가 안 오면 포기한다. 정상적으로 길게 스트리밍되는
+// 해설은 청크가 계속 들어오는 한 끊기지 않는다(전체 요청 시간이 아닌 idle 시간 기준).
+const STREAM_IDLE_TIMEOUT_MS = 20000;
+
+function readWithIdleTimeout(
+	reader: ReadableStreamDefaultReader<Uint8Array>,
+	timeoutMs: number,
+): Promise<ReadableStreamReadResult<Uint8Array>> {
+	return new Promise((resolve, reject) => {
+		const timer = setTimeout(() => {
+			reader.cancel().catch(() => {});
+			reject(new Error('stream idle timeout'));
+		}, timeoutMs);
+		reader
+			.read()
+			.then((result) => {
+				clearTimeout(timer);
+				resolve(result);
+			})
+			.catch((err) => {
+				clearTimeout(timer);
+				reject(err);
+			});
+	});
+}
+
 async function* readSSEStream(res: Response): AsyncGenerator<string> {
 	const reader = res.body!.getReader();
 	const decoder = new TextDecoder();
 	let buf = '';
 
 	while (true) {
-		const { done, value } = await reader.read();
+		const { done, value } = await readWithIdleTimeout(reader, STREAM_IDLE_TIMEOUT_MS);
 		if (done) break;
 		buf += decoder.decode(value, { stream: true });
 		const lines = buf.split('\n');
