@@ -132,6 +132,14 @@ module.exports = {
 					mode: 'production',
 				},
 			],
+			[
+				'@sentry/react-native/expo',
+				{
+					url: 'https://sentry.io/',
+					organization: process.env.EXPO_PUBLIC_SENTRY_ORG_SLUG,
+					project: process.env.EXPO_PUBLIC_SENTRY_PROJECT_SLUG,
+				},
+			],
 			// NMFClientId를 마지막에 강제 주입 (다른 플러그인이 덮어쓰는 것 방지)
 			(config) =>
 				withInfoPlist(config, (c) => {
