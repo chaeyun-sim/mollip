@@ -96,7 +96,9 @@ export default function MyPageScreen() {
 								</View>
 								<View className="flex-1">
 									<Text className="font-pretendard-semibold text-gray900 text-[17px]">
-										{isPremium ? '✨ ' : ''} {user?.email?.split('@')[0]}님{isPremium ? ' ✨' : ''}
+										{isPremium
+											? `✨${user?.email?.split('@')[0]}님✨`
+											: `${user?.email?.split('@')[0]}님`}
 									</Text>
 									<Text className="font-pretendard-regular text-gray500 text-[13px] mt-0.5">
 										{user?.app_metadata?.provider === 'kakao' ? '카카오 계정' : 'Apple 계정'}

@@ -117,9 +117,7 @@ export default function SubscribeScreen() {
 						accessibilityRole="button"
 						accessibilityLabel="구독 관련 문의하기"
 					>
-						<Text className="underline text-[11px] text-secondary text-center">
-							고객센터 문의하기
-						</Text>
+						<Text className="underline text-[11px] text-secondary text-center">문의하기</Text>
 					</Pressable>
 				</View>
 			</View>
