@@ -369,6 +369,7 @@ export type Database = {
 					created_at: string;
 					display_name: string | null;
 					id: string;
+					is_premium: boolean;
 					notification_prefs: Json;
 					onboarding_completed: boolean;
 					preferred_artists: string[];
@@ -382,6 +383,7 @@ export type Database = {
 					created_at?: string;
 					display_name?: string | null;
 					id: string;
+					is_premium?: boolean;
 					notification_prefs?: Json;
 					onboarding_completed?: boolean;
 					preferred_artists?: string[];
@@ -395,6 +397,7 @@ export type Database = {
 					created_at?: string;
 					display_name?: string | null;
 					id?: string;
+					is_premium?: boolean;
 					notification_prefs?: Json;
 					onboarding_completed?: boolean;
 					preferred_artists?: string[];

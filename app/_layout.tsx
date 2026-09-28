@@ -55,6 +55,7 @@ import { PurchaseLockOverlay } from '@/src/components/settings/PurchaseLockOverl
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { TTS_CACHE_PROBE_RUN_KEY, runTtsCacheProbe } from '../src/utils/runTtsCacheProbe';
 import { Observe, ObserveRoot } from 'expo-observe';
+import { supabase } from '@/src/utils/supabase';
 
 // 렌더링 중 처리되지 않은 예외를 흰 화면/크래시 대신 이 화면으로 잡는다 (웹의 500 페이지에 해당).
 export function ErrorBoundary({ error, retry }: ErrorBoundaryProps) {
@@ -208,6 +209,33 @@ function RootLayout() {
 			onboardingCompleted: s.onboardingCompleted,
 		})),
 	);
+
+	// RevenueCat entitlement와 별도로, 운영자가 profiles에서 부여한 premium flag도 동기화한다.
+	// 조회 실패 시 기존 RevenueCat 상태를 유지해 네트워크 오류가 권한을 갑자기 회수하지 않게 한다.
+	useEffect(() => {
+		let cancelled = false;
+		const loadProfilePremium = async () => {
+			useSubscriptionStore.getState().setProfilePremium(false);
+			if (!user?.id) return;
+
+			const { data, error } = await supabase
+				.from('profiles')
+				.select('is_premium')
+				.eq('id', user.id)
+				.maybeSingle();
+
+			if (cancelled || error) {
+				if (error) console.error('프로필 premium 상태 조회 실패:', error);
+				return;
+			}
+			useSubscriptionStore.getState().setProfilePremium(data?.is_premium === true);
+		};
+
+		void loadProfilePremium();
+		return () => {
+			cancelled = true;
+		};
+	}, [user?.id]);
 	const { blocked: forceUpdateBlocked, storeUrl: forceUpdateStoreUrl } = useForceUpdate();
 	usePushNotifications(user?.id);
 	useBookmarkSync(); // 로그인 시 Supabase 북마크 동기화
