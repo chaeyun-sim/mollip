@@ -58,12 +58,14 @@ export default function IndexScreen() {
 		useShallow((s) => ({ isImmersive: s.isImmersiveMode, exhibitionTitle: s.exhibitionTitle })),
 	);
 	const { ensureAuth } = useRequireAuth();
-	const { isPremium } = useSubscription();
+	const { isPremium, isLoading: isSubscriptionLoading } = useSubscription();
 	const [isLoading, setIsLoading] = useState(false);
 	const [directQuestionSessionId] = useState(() => Date.now().toString());
 
 	const handleStartImmersive = () => {
 		if (!ensureAuth('/(guide)/create-description')) return;
+		// 프리미엄 여부를 아직 모르는 동안에는 구독자에게 "프리미엄 전용" 안내를 띄우지 않는다.
+		if (isSubscriptionLoading) return;
 		if (!isPremium) {
 			Alert.alert('프리미엄 전용 기능', '몰입 모드는 프리미엄 회원만 이용할 수 있어요');
 			return;

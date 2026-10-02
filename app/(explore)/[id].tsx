@@ -37,7 +37,7 @@ import {
 	cancelDeadlineNotifications,
 	scheduleDeadlineNotifications,
 } from '@/src/utils/notificationScheduler';
-import { useSubscriptionStore } from '@/src/store/subscriptionStore';
+import { useSubscription } from '@/src/hooks/useSubscription';
 
 export default function ExhibitionDetailScreen() {
 	const { id } = useLocalSearchParams<{ id: string }>();
@@ -47,7 +47,7 @@ export default function ExhibitionDetailScreen() {
 	const enterImmersive = useImmersiveStore((s) => s.enter);
 	const recordVisit = useVisitStore((s) => s.recordExhibition);
 
-	const { isPremium } = useSubscriptionStore();
+	const { isPremium, isLoading: isSubscriptionLoading } = useSubscription();
 
 	const [expanded, setExpanded] = useState(false);
 	const [isDescriptionLong, setIsDescriptionLong] = useState(false);
@@ -342,7 +342,12 @@ export default function ExhibitionDetailScreen() {
 				style={{ bottom: exhibition.ticketUrl ? fabBottom + 30 : fabBottom + 100 }}
 			>
 				<ExhibitionImmersiveFab
-					onPress={() => (isPremium ? setImmersiveOpen(true) : router.push('/settings/premium'))}
+					onPress={() => {
+						// 프리미엄 여부를 아직 모르는 동안에는 구독자를 결제 화면으로 보내지 않는다.
+						if (isSubscriptionLoading) return;
+						if (isPremium) setImmersiveOpen(true);
+						else router.push('/settings/premium');
+					}}
 				/>
 			</View>
 

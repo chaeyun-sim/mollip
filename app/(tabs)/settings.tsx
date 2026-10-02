@@ -7,6 +7,7 @@ import { useShallow } from 'zustand/react/shallow';
 import { Screen } from '@/src/components/layout/Screen';
 import { CardRow, PremiumStatusBanner, SettingsCard } from '@/src/components/mypage';
 import { APP_VERSION } from '@/src/data/mypage';
+import { useSubscription } from '@/src/hooks/useSubscription';
 import { useAuthStore } from '@/src/store/authStore';
 import { cn } from '@/src/lib/cn';
 import { formatSubscriptionDate } from '@/src/lib/subscription';
@@ -23,8 +24,13 @@ export default function MyPageScreen() {
 		})),
 	);
 	const [signingOut, setSigningOut] = useState(false);
-	const { isPremium, expirationDate, billingIssueDetectedAt, isSubscriptionLoading } =
-		useSubscriptionStore();
+	const { isPremium, isLoading: isSubscriptionLoading } = useSubscription();
+	const { expirationDate, billingIssueDetectedAt } = useSubscriptionStore(
+		useShallow((s) => ({
+			expirationDate: s.expirationDate,
+			billingIssueDetectedAt: s.billingIssueDetectedAt,
+		})),
+	);
 
 	const handleSignOut = async () => {
 		Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);

@@ -28,9 +28,9 @@ import { useMarkInteractive } from '@/src/hooks/useMarkInteractive';
 import { usePopularExhibitions } from '@/src/hooks/queries/usePopularExhibitions';
 import { useExploreScreenData } from '@/src/hooks/queries/useExploreScreenData';
 import { FEATURED_TAGLINES, useFeaturedTrio } from '@/src/hooks/queries/useFeaturedTrio';
+import { useSubscription } from '@/src/hooks/useSubscription';
 import { useAuthStore } from '@/src/store/authStore';
 import { toAsyncStatus } from '@/src/types/asyncStatus.types';
-import { useSubscriptionStore } from '@/src/store/subscriptionStore';
 
 export default function ExploreScreen() {
 	useMarkInteractive();
@@ -39,7 +39,7 @@ export default function ExploreScreen() {
 	const { width: cardWidth } = useWindowDimensions();
 
 	const name = useAuthStore((s) => s.user?.user_metadata?.full_name);
-	const { isPremium } = useSubscriptionStore();
+	const { isPremium, isLoading: isSubscriptionLoading } = useSubscription();
 
 	const {
 		kcisaQuery,
@@ -229,11 +229,11 @@ export default function ExploreScreen() {
 				}}
 			>
 				<LoginRequiredPressable
-					onPress={() =>
-						isPremium
-							? router.push('/(guide)/create-description')
-							: router.push('/settings/premium')
-					}
+					onPress={() => {
+						// 프리미엄 여부를 아직 모르는 동안에는 구독자를 결제 화면으로 보내지 않는다.
+						if (isSubscriptionLoading) return;
+						router.push(isPremium ? '/(guide)/create-description' : '/settings/premium');
+					}}
 					returnTo="/(guide)/create-description"
 					accessibilityRole="button"
 					accessibilityLabel="작품 해설 만들기"

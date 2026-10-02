@@ -49,6 +49,11 @@ import {
 	settlePendingIfConfirmed,
 } from '@/src/lib/purchaseReconciliation';
 import { loadLastOnlineVerifiedAt, markOnlineVerifiedAt } from '@/src/lib/subscriptionVerification';
+import {
+	markPurchasesConfigured,
+	retryFailedPurchasesLogIn,
+	syncPurchasesIdentity,
+} from '@/src/lib/purchasesIdentity';
 import { usePurchaseTransactionStore } from '@/src/store/purchaseTransactionStore';
 import { usePurchaseLockStore } from '@/src/store/purchaseLockStore';
 import { PurchaseLockOverlay } from '@/src/components/settings/PurchaseLockOverlay';
@@ -141,6 +146,7 @@ function RootLayout() {
 				}
 
 				Purchases.configure({ apiKey: revenueCatApiKey });
+				markPurchasesConfigured(true);
 
 				await Purchases.invalidateCustomerInfoCache();
 				const customerInfo = await Purchases.getCustomerInfo();
@@ -153,6 +159,8 @@ function RootLayout() {
 				}
 			} catch (error) {
 				console.error('RevenueCat 초기화 실패:', error);
+				// configure 이후의 실패라면 이미 true로 확정돼 있어 이 호출은 무시된다.
+				markPurchasesConfigured(false);
 			} finally {
 				useSubscriptionStore.getState().setSubscriptionLoading(false);
 			}
@@ -179,6 +187,8 @@ function RootLayout() {
 			const expectedGeneration = usePurchaseTransactionStore.getState().generation;
 			void (async () => {
 				try {
+					// 네트워크 문제로 계정 연결에 실패했다면 조회 전에 먼저 다시 연결한다.
+					await retryFailedPurchasesLogIn();
 					await Purchases.invalidateCustomerInfoCache();
 					const customerInfo = await Purchases.getCustomerInfo();
 					const verifiedAt = await markOnlineVerifiedAt();
@@ -215,6 +225,7 @@ function RootLayout() {
 	useEffect(() => {
 		let cancelled = false;
 		const loadProfilePremium = async () => {
+			// 이전 사용자의 값을 비우고, 이 사용자의 조회가 끝나기 전까지는 "아직 모름"(profileSyncedUserId 불일치)이다.
 			useSubscriptionStore.getState().setProfilePremium(false);
 			if (!user?.id) return;
 
@@ -224,11 +235,12 @@ function RootLayout() {
 				.eq('id', user.id)
 				.maybeSingle();
 
-			if (cancelled || error) {
-				if (error) console.error('프로필 premium 상태 조회 실패:', error);
-				return;
-			}
-			useSubscriptionStore.getState().setProfilePremium(data?.is_premium === true);
+			if (cancelled) return;
+			if (error) console.error('프로필 premium 상태 조회 실패:', error);
+			// 조회 실패도 "끝남"으로 기록해 무한 로딩을 막는다. 값은 false이고 RevenueCat 권한은 그대로다.
+			useSubscriptionStore
+				.getState()
+				.setProfilePremium(!error && data?.is_premium === true, user.id);
 		};
 
 		void loadProfilePremium();
@@ -236,6 +248,16 @@ function RootLayout() {
 			cancelled = true;
 		};
 	}, [user?.id]);
+
+	// 로그인 계정과 RevenueCat 고객 id를 일치시킨다. 세션 복원이 끝나기 전의 null은 로그아웃이 아니다.
+	useEffect(() => {
+		if (authLoading) return;
+		let cancelled = false;
+		void syncPurchasesIdentity(user?.id ?? null, () => cancelled);
+		return () => {
+			cancelled = true;
+		};
+	}, [authLoading, user?.id]);
 	const { blocked: forceUpdateBlocked, storeUrl: forceUpdateStoreUrl } = useForceUpdate();
 	usePushNotifications(user?.id);
 	useBookmarkSync(); // 로그인 시 Supabase 북마크 동기화
