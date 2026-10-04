@@ -220,13 +220,17 @@ async function* readSSEStream(res: Response): AsyncGenerator<string> {
 			if (!line.startsWith('data: ')) continue;
 			const json = line.slice(6).trim();
 			if (json === '[DONE]') return;
+			let evt;
 			try {
-				const evt = JSON.parse(json);
-				if (evt.type === 'content_block_delta' && evt.delta?.type === 'text_delta') {
-					yield evt.delta.text as string;
-				}
+				evt = JSON.parse(json);
 			} catch {
-				/* skip malformed */
+				continue; // 해석할 수 없는 줄은 건너뛴다
+			}
+			if (evt === null || typeof evt !== 'object') continue; // null·숫자 같은 비객체 줄도 건너뛴다
+			// 스트림 도중 Anthropic이 보내는 오류(과부하 등)를 정상 종료로 착각하면 잘린 해설이 완성본처럼 저장된다.
+			if (evt.type === 'error') throw new Error(`stream error: ${evt.error?.type ?? 'unknown'}`);
+			if (evt.type === 'content_block_delta' && evt.delta?.type === 'text_delta') {
+				yield evt.delta.text as string;
 			}
 		}
 	}

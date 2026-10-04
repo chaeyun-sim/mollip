@@ -107,7 +107,13 @@ export function useDescriptionStream() {
 					fullTextRef.current += chunk;
 				}
 			} catch {
-				if (!cancelled && mountedRef.current) setHasError(true);
+				if (!cancelled && mountedRef.current) {
+					// 받은 만큼만 남기면 잘린 해설이 TTS·기록에 완성본처럼 들어가고, 재시도 때도 그대로 복원된다.
+					bufferRef.current = '';
+					fullTextRef.current = '';
+					setDisplayed('');
+					setHasError(true);
+				}
 			} finally {
 				if (!cancelled && mountedRef.current) {
 					updateStore({ artworkDescription: fullTextRef.current });
