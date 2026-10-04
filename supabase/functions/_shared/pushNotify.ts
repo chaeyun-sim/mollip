@@ -26,13 +26,23 @@ export async function sendAndLog(
 
 	for (let i = 0; i < records.length; i += BATCH_SIZE) {
 		const batch = records.slice(i, i + BATCH_SIZE);
-		await fetch(EXPO_PUSH_URL, {
+		const response = await fetch(EXPO_PUSH_URL, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
 			body: JSON.stringify(
 				batch.map((r) => ({ to: r.token, title: r.title, body: r.body, data: r.data })),
 			),
 		});
+		const result = (await response.json().catch(() => null)) as {
+			data?: Array<{ status?: string; message?: string; details?: { error?: string } }>;
+		} | null;
+		if (!response.ok) {
+			throw new Error(`Expo Push API ${response.status}: ${JSON.stringify(result)}`);
+		}
+		const ticketErrors = result?.data?.filter((ticket) => ticket.status === 'error') ?? [];
+		if (ticketErrors.length > 0) {
+			console.warn('[expo-push] ticket errors:', JSON.stringify(ticketErrors));
+		}
 	}
 
 	const { error } = await supabase.from('notification_logs').insert(

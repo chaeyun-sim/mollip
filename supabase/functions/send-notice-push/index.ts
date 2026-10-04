@@ -5,12 +5,12 @@
  *  type=Supabase Edge Functions, function=send-notice-push,
  *  Authorization 헤더에 SERVICE_ROLE_KEY 입력)
  *
- * category별로 유저 notification_prefs를 확인해서 발송 + 로그 기록.
- * category='general'인 공지는 선호 체크 없이 push_token 있는 모두에게 발송.
+ * 직접 발송하지 않고 notification_jobs 큐에 1분 뒤 작업으로 넣는다.
+ * 실제 발송(category별 notification_prefs 확인 포함)은 process-notification-jobs가 처리한다.
+ * DB 트리거(enqueue_notice_notification)와 dedupe_key가 같아 중복 작업은 생기지 않는다.
  */
 
 import { createClient } from 'npm:@supabase/supabase-js@2';
-import { sendAndLog, type NotificationRecord } from '../_shared/pushNotify.ts';
 
 interface NoticeRecord {
 	id: string;
@@ -25,47 +25,10 @@ interface WebhookPayload {
 	record: NoticeRecord;
 }
 
-interface ProfileRow {
-	id: string;
-	push_token: string;
-	notification_prefs: { version_update?: boolean; terms_update?: boolean };
-}
-
-const PREF_KEY_BY_CATEGORY: Record<
-	NoticeRecord['category'],
-	'version_update' | 'terms_update' | null
-> = {
-	version_update: 'version_update',
-	terms_update: 'terms_update',
-	general: null,
-};
-
-function buildRecords(notice: NoticeRecord, profiles: ProfileRow[]): NotificationRecord[] {
-	const prefKey = PREF_KEY_BY_CATEGORY[notice.category];
-
-	return profiles.flatMap((profile) => {
-		if (prefKey && profile.notification_prefs?.[prefKey] === false) return [];
-
-		const token = profile.push_token;
-		if (!token || !token.startsWith('ExponentPushToken')) return [];
-
-		return [
-			{
-				userId: profile.id,
-				token,
-				type: `notice_${notice.category}`,
-				title: '',
-				body: notice.title,
-				data: { type: 'notice', noticeId: notice.id, category: notice.category },
-			},
-		];
-	});
-}
-
 Deno.serve(async (req) => {
 	const authHeader = req.headers.get('Authorization') ?? '';
 	const serviceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';
-	if (!authHeader.includes(serviceKey)) {
+	if (!serviceKey || !authHeader.includes(serviceKey)) {
 		return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
 	}
 
@@ -76,24 +39,19 @@ Deno.serve(async (req) => {
 
 	const notice = payload.record;
 
-	const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
-	const supabase = createClient(supabaseUrl, serviceKey);
+	const supabase = createClient(Deno.env.get('SUPABASE_URL')!, serviceKey);
+	const { error } = await supabase.from('notification_jobs').upsert(
+		{
+			kind: 'notice',
+			dedupe_key: `notice:${notice.id}`,
+			payload: notice,
+			send_at: new Date(Date.now() + 60 * 1000).toISOString(),
+		},
+		{ onConflict: 'dedupe_key', ignoreDuplicates: true },
+	);
+	if (error) return new Response(JSON.stringify({ error: error.message }), { status: 500 });
 
-	const { data: profiles, error: profileErr } = await supabase
-		.from('profiles')
-		.select('id, push_token, notification_prefs')
-		.not('push_token', 'is', null);
-
-	if (profileErr || !profiles?.length) {
-		return new Response(
-			JSON.stringify({ sent: 0, reason: profileErr?.message ?? 'no push tokens' }),
-		);
-	}
-
-	const records = buildRecords(notice, profiles as ProfileRow[]);
-	const sent = await sendAndLog(supabase, records);
-
-	return new Response(JSON.stringify({ sent }), {
+	return new Response(JSON.stringify({ queued: true, delaySeconds: 60 }), {
 		headers: { 'Content-Type': 'application/json' },
 	});
 });

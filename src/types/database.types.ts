@@ -533,6 +533,9 @@ export type Database = {
 					venue: string | null;
 					venue_photo_urls: string[];
 					visit_key: string;
+					visit_started_at: string | null;
+					visit_ended_at: string | null;
+					visit_status: 'recorded' | 'ended' | 'confirmed';
 				};
 				Insert: {
 					date: string;
@@ -544,6 +547,9 @@ export type Database = {
 					venue?: string | null;
 					venue_photo_urls?: string[];
 					visit_key: string;
+					visit_started_at?: string | null;
+					visit_ended_at?: string | null;
+					visit_status?: 'recorded' | 'ended' | 'confirmed';
 				};
 				Update: {
 					date?: string;
@@ -555,6 +561,9 @@ export type Database = {
 					venue?: string | null;
 					venue_photo_urls?: string[];
 					visit_key?: string;
+					visit_started_at?: string | null;
+					visit_ended_at?: string | null;
+					visit_status?: 'recorded' | 'ended' | 'confirmed';
 				};
 				Relationships: [
 					{

@@ -40,6 +40,7 @@ import { useBookmarkAudioSync } from '../src/hooks/useBookmarkAudioSync';
 import { useForceUpdate } from '../src/hooks/useForceUpdate';
 import { ForceUpdateGate } from '../src/components/common/ForceUpdateGate';
 import { navigateToNotification } from '../src/utils/notificationDeepLink';
+import { cancelAllDeadlineNotifications } from '../src/utils/notificationScheduler';
 import * as Notifications from 'expo-notifications';
 import Purchases, { type CustomerInfo } from 'react-native-purchases';
 import { useSubscriptionStore } from '@/src/store/subscriptionStore';
@@ -260,6 +261,9 @@ function RootLayout() {
 	}, [authLoading, user?.id]);
 	const { blocked: forceUpdateBlocked, storeUrl: forceUpdateStoreUrl } = useForceUpdate();
 	usePushNotifications(user?.id);
+	useEffect(() => {
+		void cancelAllDeadlineNotifications();
+	}, []);
 	useBookmarkSync(); // 로그인 시 Supabase 북마크 동기화
 	useHistorySync(); // 로그인 시 Supabase 오디오 가이드 히스토리 동기화
 	useVisitSync(); // 로그인 시 Supabase 관람 기록 동기화

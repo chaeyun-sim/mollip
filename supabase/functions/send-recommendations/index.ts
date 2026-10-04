@@ -65,13 +65,14 @@ function buildRecords(profiles: ProfileRow[], exhibitions: ExhibitionRow[]): Not
 }
 
 Deno.serve(async (req) => {
-	// cron 호출 또는 service_role 수동 트리거만 허용
+	// cron 전용 비밀값으로 인증한다 (게이트웨이 JWT 검증은 --no-verify-jwt로 끈다)
 	const authHeader = req.headers.get('Authorization') ?? '';
-	const serviceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';
-	if (!authHeader.includes(serviceKey)) {
+	const cronSecret = Deno.env.get('CRON_SECRET') ?? '';
+	if (!cronSecret || authHeader !== `Bearer ${cronSecret}`) {
 		return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
 	}
 
+	const serviceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';
 	const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
 	const supabase = createClient(supabaseUrl, serviceKey);
 

@@ -45,13 +45,13 @@ Supabase Edge Functions 인벤토리 및 클라이언트-백엔드 연동 방식
 
 ### 2.5 프록시 · 검색
 
-| 함수                   | 입력                                                                                 | 처리                                                                                                                                                                                                                                              | 출력                    |
-| ---------------------- | ------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------- |
-| `image-proxy`          | 쿼리 파라미터 `?url=`                                                                | 대상 URL이 사설 IP 대역(`10.*`, `192.168.*`, `172.16-31.*`, localhost 등)이면 차단(SSRF 방지). 브라우저 User-Agent를 위장해 핫링크 방지가 걸린 이미지 호스트(예: `myartmuseum.co.kr`)를 우회하고, iOS ATS가 막는 평문 HTTP 이미지를 HTTPS로 relay | 이미지 스트림           |
-| `kakao-local-search`   | `{ query, size? }`                                                                   | Kakao 키워드 장소 검색 API 프록시 (`KAKAO_API_KEY`는 서버 전용)                                                                                                                                                                                   | Kakao 응답 relay        |
-| `naver-local-search`   | `{ query, display? }`                                                                | NAVER API HUB(NCP) 지역 검색 프록시. 2026-07-31부로 구 openapi.naver.com에서 이관되어 엔드포인트·인증 헤더가 다름(주석에 명시). 좌표 기반 정렬 미지원이라 거리순 정렬은 클라이언트에서 처리                                                       | `{ items: [...] }`      |
-| `send-recommendations` | 없음 (cron 전용, `pg_cron '0 1 * * 1'` = 매주 월요일 09:00 KST)                      | `push_token`·`preferred_genres` 있는 프로필 조회 → 진행 중 전시에서 장르 매칭 top 3 선정 → Expo Push API로 배치(100건 단위) 발송                                                                                                                  | 없음 (side-effect only) |
-| `odsay-route`          | `{ start: {latitude,longitude}, end: {latitude,longitude}, searchMethod: '1'\|'2' }` | ODsay Lab 멀티모달 길찾기(`maasRP`) 프록시. `ODSAY_API_KEY` 미설정 시 500                                                                                                                                                                         | ODsay 원본 응답 relay   |
+| 함수                   | 입력                                                                                                         | 처리                                                                                                                                                                                                                                              | 출력                    |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------- |
+| `image-proxy`          | 쿼리 파라미터 `?url=`                                                                                        | 대상 URL이 사설 IP 대역(`10.*`, `192.168.*`, `172.16-31.*`, localhost 등)이면 차단(SSRF 방지). 브라우저 User-Agent를 위장해 핫링크 방지가 걸린 이미지 호스트(예: `myartmuseum.co.kr`)를 우회하고, iOS ATS가 막는 평문 HTTP 이미지를 HTTPS로 relay | 이미지 스트림           |
+| `kakao-local-search`   | `{ query, size? }`                                                                                           | Kakao 키워드 장소 검색 API 프록시 (`KAKAO_API_KEY`는 서버 전용)                                                                                                                                                                                   | Kakao 응답 relay        |
+| `naver-local-search`   | `{ query, display? }`                                                                                        | NAVER API HUB(NCP) 지역 검색 프록시. 2026-07-31부로 구 openapi.naver.com에서 이관되어 엔드포인트·인증 헤더가 다름(주석에 명시). 좌표 기반 정렬 미지원이라 거리순 정렬은 클라이언트에서 처리                                                       | `{ items: [...] }`      |
+| `send-recommendations` | 없음 (cron 전용, `pg_cron '30 2 * * *'` = 매일 11:30 KST, 최근 3일 내 발송 기록이 있으면 호출 자체를 건너뜀) | `push_token`·`preferred_genres` 있는 프로필 조회 → 진행 중 전시에서 장르 매칭 top 3 선정 → Expo Push API로 배치(100건 단위) 발송. 인증은 `CRON_SECRET`(§2.8)                                                                                      | 없음 (side-effect only) |
+| `odsay-route`          | `{ start: {latitude,longitude}, end: {latitude,longitude}, searchMethod: '1'\|'2' }`                         | ODsay Lab 멀티모달 길찾기(`maasRP`) 프록시. `ODSAY_API_KEY` 미설정 시 500                                                                                                                                                                         | ODsay 원본 응답 relay   |
 
 `image-proxy`는 `src/utils/imageProxy.ts`의 `proxiedImageUrl()`이 감싸며, 위키 이미지 등 외부 이미지 URL을 화면에 표시하기 전에 항상 이 프록시를 거치도록 강제한다. `kakao-local-search`/`naver-local-search`는 각각 `src/api/kakao.ts`/`src/api/naver.ts`에서 호출되고, `generate-route`(`streamRoute`)는 `src/components/explore/RouteSheet.tsx`에서 호출된다. `odsay-route`는 `src/api/tmap.ts`(이름은 tmap이지만 실제 구현은 ODsay로 교체됨)가 `supabase.functions.invoke('odsay-route', ...)`로 호출하고, `src/hooks/useDirections.ts`가 이를 감싼다.
 
@@ -73,6 +73,35 @@ Supabase Edge Functions 인벤토리 및 클라이언트-백엔드 연동 방식
 
 `supabase/functions/_shared/cors.ts` — 모든 함수가 공통으로 import하는 CORS 헤더 정의. 함수가 아니라 헬퍼 코드이므로 배포 대상이 아니다. `_shared/requireUser.ts` — 요청자 세션 검증 헬퍼(`generate-artist-intro`가 사용).
 
+### 2.8 푸시 알림 큐 · cron 인증
+
+지연 푸시는 `notification_jobs` 테이블(DB 큐)에 넣고, `process-notification-jobs`가 매분 `send_at`이 지난 `pending` 작업을 처리한다. 발송은 `_shared/pushNotify.ts`의 `sendAndLog`(Expo Push API + `notification_logs` 기록)를 쓴다.
+
+| 종류           | 큐에 들어가는 시점                                         | 발송 시각        |
+| -------------- | ---------------------------------------------------------- | ---------------- |
+| `notice`       | `notices` INSERT (DB 트리거 `enqueue_notice_notification`) | 1분 뒤           |
+| `venue_follow` | `exhibitions` INSERT, `museum_id`가 있을 때                | 10분 뒤          |
+| `visit_review` | `visits.visit_ended_at` 저장 (앱이 관람 종료 순간 저장)    | `visit_ended_at` |
+
+`dedupe_key`가 unique라 같은 이벤트가 재시도돼도 작업은 하나다. cron이 매분 돌기 때문에 실제 도착은 지연 시간 + 최대 1분이다. 한 번 `failed`가 된 작업은 자동 재시도되지 않는다(`status`를 `pending`으로 되돌려야 함).
+
+**cron 인증 — `CRON_SECRET`.** cron으로 호출하는 함수(`process-notification-jobs`, `send-bookmark-deadline-reminders`, `send-recommendations`)는 `Authorization: Bearer <CRON_SECRET>`와 정확히 일치할 때만 실행된다. service role 키는 cron에 쓰지 않는다.
+
+- 함수 쪽: `supabase secrets set CRON_SECRET=<값>`
+- cron 쪽: Vault에 같은 값을 `cron_secret`으로 저장하고, `net.http_post` 헤더가 `vault.decrypted_secrets`의 `cron_secret`을 읽는다. 값은 `openssl rand -hex 32`로 만든다.
+- 두 값이 한 글자라도 다르면 함수가 `{"error":"Unauthorized"}`(401)를 반환한다.
+- **배포는 반드시 `--no-verify-jwt`로 한다.** 빼면 `cron_secret`이 JWT 형식이 아니라서 게이트웨이가 함수 실행 전에 `Invalid JWT`(401)로 거절한다.
+
+  ```bash
+  supabase functions deploy process-notification-jobs --no-verify-jwt
+  supabase functions deploy send-bookmark-deadline-reminders --no-verify-jwt
+  supabase functions deploy send-recommendations --no-verify-jwt
+  ```
+
+cron의 `succeeded`는 요청을 던졌다는 뜻일 뿐이다. 실제 응답은 `net._http_response`의 `status_code`와 `content`로 확인한다.
+
+**푸시 토큰 주의.** Expo 푸시 토큰은 계정이 아니라 기기+앱에 묶인다. 한 요청에 서로 다른 Expo 프로젝트(`owner`/`slug`)의 토큰이 섞이면 Expo가 `PUSH_TOO_MANY_EXPERIENCE_IDS`(400)로 배치 전체를 거절한다. 예전 빌드(`@bysimune/aaa`)가 저장한 오래된 토큰이 원인이 된 적이 있다. 한 기기에서 계정을 바꾸면 두 계정이 같은 토큰을 갖게 되어 알림이 중복으로 가므로, `profiles.push_token`은 마지막으로 저장한 계정만 갖도록 DB에서 정리한다.
+
 ## 3. 환경 변수
 
 | 변수                                                           | 위치                                                  | 용도                                                                                                          |
@@ -81,6 +110,7 @@ Supabase Edge Functions 인벤토리 및 클라이언트-백엔드 연동 방식
 | `EXPO_PUBLIC_SUPABASE_ANON_KEY`                                | 클라이언트(`.env`)                                    | Supabase 클라이언트 초기화(인증 등)                                                                           |
 | `ANTHROPIC_KEY`                                                | Supabase Edge Function Secrets                        | `extract-text`/`stream-description`/`stream-chat`/`generate-route`/`generate-artist-intro`에서 Anthropic 호출 |
 | `ELEVENLABS_KEY`                                               | Supabase Edge Function Secrets                        | `voices`/`tts`에서 ElevenLabs 호출                                                                            |
+| `CRON_SECRET`                                                  | Supabase Edge Function Secrets + Vault(`cron_secret`) | cron 호출 함수의 인증값 — §2.8. 두 곳의 값이 같아야 함                                                        |
 | `KAKAO_API_KEY` (REST API 키)                                  | Supabase Edge Function Secrets — `kakao-local-search` | 서버 전용, `EXPO_PUBLIC_` 접두사 금지                                                                         |
 | `NAVER_CLIENT_ID` / `NAVER_CLIENT_SECRET`                      | Supabase Edge Function Secrets — `naver-local-search` | 서버 전용, `EXPO_PUBLIC_` 접두사 금지                                                                         |
 | `ODSAY_API_KEY`                                                | Supabase Edge Function Secrets — `odsay-route`        | 도보/대중교통 길찾기. 예전엔 `EXPO_PUBLIC_ODSAY_API_KEY`로 클라이언트에 있었으나 Edge Function으로 이전됨     |

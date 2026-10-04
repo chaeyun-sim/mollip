@@ -81,3 +81,18 @@ export async function cancelDeadlineNotifications(exhibitionId: string): Promise
 	delete map[exhibitionId];
 	await saveMap(map);
 }
+
+/** 서버 D-1 알림으로 통일하면서 기존 기기에 남아 있는 로컬 예약을 정리한다. */
+export async function cancelAllDeadlineNotifications(): Promise<void> {
+	const map = await loadMap();
+	try {
+		await Promise.all(
+			Object.values(map)
+				.flat()
+				.map((id) => Notifications.cancelScheduledNotificationAsync(id)),
+		);
+	} catch {
+		// 네이티브 모듈 미빌드 환경(무료 개발자 계정)에서 무시
+	}
+	await AsyncStorage.removeItem(STORAGE_KEY);
+}

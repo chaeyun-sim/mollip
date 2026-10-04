@@ -30,13 +30,9 @@ import { useShareExhibition } from '@/src/hooks/useShareExhibition';
 import { useToast } from '@/src/providers/ToastProvider';
 import { useBookmarkStore } from '@/src/store/bookmarkStore';
 import { useImmersiveStore } from '@/src/store/immersiveStore';
-import { useSettingsStore } from '@/src/store/settingsStore';
 import { todayKey, useVisitStore } from '@/src/store/visitStore';
 import { getExhibitionTypeDisplay } from '@/src/utils/exhibitionSearch';
-import {
-	cancelDeadlineNotifications,
-	scheduleDeadlineNotifications,
-} from '@/src/utils/notificationScheduler';
+import { cancelDeadlineNotifications } from '@/src/utils/notificationScheduler';
 import { useSubscription } from '@/src/hooks/useSubscription';
 
 export default function ExhibitionDetailScreen() {
@@ -56,7 +52,6 @@ export default function ExhibitionDetailScreen() {
 	const { isBookmarked, toggle } = useBookmarkStore(
 		useShallow((s) => ({ isBookmarked: s.isBookmarked(id), toggle: s.toggle })),
 	);
-	const pushNotificationsEnabled = useSettingsStore((s) => s.pushNotificationsEnabled);
 	const { ensureAuth } = useRequireAuth();
 	const { showToast } = useToast();
 	useRecordExhibitionView(id, !!exhibition);
@@ -71,24 +66,10 @@ export default function ExhibitionDetailScreen() {
 		const toastOptions = { bottomOffset: fabBottom };
 		toggle(id, () => showToast('저장에 실패했어요. 다시 시도해 주세요', toastOptions));
 		showToast(willAdd ? '보관함에 저장했어요' : '보관함에서 삭제했어요', toastOptions);
-		if (!exhibition?.endDate) return;
-		if (willAdd && pushNotificationsEnabled) {
-			void scheduleDeadlineNotifications(id, exhibition.title, exhibition.endDate);
-			return;
-		}
 		if (!willAdd) {
 			void cancelDeadlineNotifications(id);
 		}
-	}, [
-		ensureAuth,
-		exhibition,
-		fabBottom,
-		id,
-		isBookmarked,
-		pushNotificationsEnabled,
-		showToast,
-		toggle,
-	]);
+	}, [ensureAuth, fabBottom, id, isBookmarked, showToast, toggle]);
 
 	const handleOpenWebsite = useCallback(() => {
 		const webSite = exhibition?.web_site ?? exhibition?.homepage_url;

@@ -133,6 +133,9 @@ export const upsertRemoteVisit = (
 		memo?: string | null;
 		ticket_photo_url?: string | null;
 		venue_photo_urls?: string[];
+		visit_started_at?: string | null;
+		visit_ended_at?: string | null;
+		visit_status?: 'recorded' | 'ended' | 'confirmed';
 	},
 ): void => {
 	void supabase
@@ -308,8 +311,15 @@ export const useVisitStore = create<VisitStore>()((set, get) => ({
 		});
 		persistVisit(visitKey, get().visits[visitKey]);
 
-		// Supabase `visits` 테이블에 status/visit_started_at/visit_ended_at 컬럼이 아직 없음
-		// (01-spec.md Risks 참고) — 마이그레이션 전까지 로컬 저장만 수행
+		// 위 로컬 가드를 통과해 실제로 pending이 된 방문만 원격에 반영한다 (확정·미기록 방문은 건드리지 않음)
+		const userId = useAuthStore.getState().user?.id;
+		if (userId && get().visits[visitKey]?.status === 'pending') {
+			upsertRemoteVisit(userId, visitKey, {
+				visit_started_at: meta.start,
+				visit_ended_at: meta.end,
+				visit_status: 'ended',
+			});
+		}
 	},
 	confirmVisit: (visitKey, meta) => {
 		set((state) => {
@@ -327,7 +337,6 @@ export const useVisitStore = create<VisitStore>()((set, get) => ({
 			return { visits: { ...state.visits, [visitKey]: next } };
 		});
 
-		// 위와 동일한 이유로 원격 동기화는 마이그레이션 이후로 보류
 		const memo = meta.memo;
 		if (memo) {
 			const userId = useAuthStore.getState().user?.id;
