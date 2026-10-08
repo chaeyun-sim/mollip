@@ -1,6 +1,7 @@
 import type { ArtworkSearchResult } from '@/src/types/artwork';
 
-const SEARCH_URL = 'https://collectionapi.metmuseum.org/public/collection/v1/search';
+// v1/search는 2026-10-01 폐기(410 Gone) — 페이지네이션(offset/limit)을 받는 v1.1을 쓴다
+const SEARCH_URL = 'https://collectionapi.metmuseum.org/public/collection/v1.1/search';
 const OBJECT_URL = 'https://collectionapi.metmuseum.org/public/collection/v1/objects';
 
 // 상세 조회는 검색 1건보다 훨씬 무겁다 — 검색당 이 개수만큼만 조회해 응답 시간과
@@ -37,7 +38,12 @@ function parseObject(o: MetObject): ArtworkSearchResult | null {
 }
 
 export async function searchMetArtworks(query: string): Promise<ArtworkSearchResult[]> {
-	const searchParams = new URLSearchParams({ q: query, hasImages: 'true' });
+	// 상세 조회할 개수만큼만 받는다 (v1.1 기본 limit은 100)
+	const searchParams = new URLSearchParams({
+		q: query,
+		hasImages: 'true',
+		limit: String(MAX_DETAIL_FETCH),
+	});
 	const searchResponse = await fetch(`${SEARCH_URL}?${searchParams}`);
 	if (!searchResponse.ok) throw new Error(`met-search ${searchResponse.status}`);
 
