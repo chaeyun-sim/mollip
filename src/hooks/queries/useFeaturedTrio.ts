@@ -16,9 +16,9 @@ export interface FeaturedPick extends ExhibitionSummary {
 }
 
 export const FEATURED_TAGLINES: Record<FeaturedBadge, string> = {
-	special: '지금 아니면 못 봐요!',
-	popular: '요즘 가장 핫한 전시',
-	upcoming: '곧 오픈하는 신규 전시',
+	special: '특별전',
+	popular: '인기 전시',
+	upcoming: '곧 시작하는 전시',
 };
 
 const CANDIDATE_LIMIT = 5;
@@ -150,5 +150,5 @@ export function useFeaturedTrio(popularItems: ExhibitionSummary[]) {
 		[query.data, popularItems],
 	);
 
-	return { picks };
+	return { picks, isLoading: query.isLoading };
 }

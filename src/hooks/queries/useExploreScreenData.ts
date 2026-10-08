@@ -13,6 +13,9 @@ export type ExhibitionSummary = {
 	venue: string;
 	thumbnail: string | null;
 	status: ExhibitionStatus;
+	/** YYYY.MM.DD — 홈 카드의 D-day·기간 라벨용 (소스에 없으면 생략) */
+	startDate?: string | null;
+	endDate?: string | null;
 };
 
 export type FeaturedExhibition = ExhibitionSummary & {

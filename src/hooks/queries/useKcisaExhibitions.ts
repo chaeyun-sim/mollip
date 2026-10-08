@@ -14,6 +14,8 @@ export interface KcisaExhibitionItem {
 	venue: string;
 	thumbnail: string | null;
 	status: ExhibitionStatus;
+	startDate?: string | null;
+	endDate?: string | null;
 }
 
 const LIST_LIMIT = 10;
@@ -57,6 +59,8 @@ const fetchKcisaExhibitions = async (): Promise<KcisaExhibitionItem[]> => {
 					startDate: row.start_date ?? '',
 					endDate: row.end_date ?? '',
 				}),
+				startDate: row.start_date ?? null,
+				endDate: row.end_date ?? null,
 				rank: rankVenue(venue, row.type),
 			};
 		})

@@ -37,6 +37,14 @@ function parseObject(o: MetObject): ArtworkSearchResult | null {
 	};
 }
 
+/** 단일 작품의 대표 이미지 URL (작은 버전 우선). 이미지가 없으면 null */
+export async function getMetObjectImage(objectId: number): Promise<string | null> {
+	const response = await fetch(`${OBJECT_URL}/${objectId}`);
+	if (!response.ok) throw new Error(`met-object ${response.status}`);
+	const object = (await response.json()) as MetObject;
+	return object.primaryImageSmall || object.primaryImage || null;
+}
+
 export async function searchMetArtworks(query: string): Promise<ArtworkSearchResult[]> {
 	// 상세 조회할 개수만큼만 받는다 (v1.1 기본 limit은 100)
 	const searchParams = new URLSearchParams({

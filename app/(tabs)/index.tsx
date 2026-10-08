@@ -1,98 +1,196 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
-	Dimensions,
 	FlatList,
 	Pressable,
 	ScrollView,
 	Text,
 	useWindowDimensions,
 	View,
+	type NativeScrollEvent,
+	type NativeSyntheticEvent,
 } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { LoginRequiredPressable } from '@/src/components/auth/LoginRequiredPressable';
+import { IconButton } from '@/src/components/common/IconButton';
 import { SearchBar } from '@/src/components/common/SearchBar';
-import { SectionTitle } from '@/src/components/common/SectionTitle';
 import { FeaturedExhibitionHero } from '@/src/components/explore';
-import { HorizontalSection } from '@/src/components/common/HorizontalSection';
-import { KcisaExhibitionCard } from '@/src/components/explore/KcisaExhibitionCard';
-import { KcisaExhibitionCardSkeleton } from '@/src/components/explore/KcisaExhibitionCardSkeleton';
-import { KcisaSection } from '@/src/components/explore/KcisaSection';
-import { PopularExhibitionAvatar } from '@/src/components/explore/PopularExhibitionAvatar';
-import { PopularExhibitionAvatarSkeleton } from '@/src/components/explore/PopularExhibitionAvatarSkeleton';
+import type { FeaturedExhibitionProps } from '@/src/components/explore/FeaturedExhibitionHero';
+import { ClosingSoonRail } from '@/src/components/home/ClosingSoonRail';
+import { DailyArtworkBand } from '@/src/components/home/DailyArtworkBand';
+import { RecommendedGrid } from '@/src/components/home/RecommendedGrid';
 import { Screen } from '@/src/components/layout/Screen';
 import { ScreenHeader } from '@/src/components/layout/ScreenHeader';
 import { useMarkInteractive } from '@/src/hooks/useMarkInteractive';
+import { useDailyArtwork } from '@/src/hooks/queries/useDailyArtwork';
 import { usePopularExhibitions } from '@/src/hooks/queries/usePopularExhibitions';
 import { useExploreScreenData } from '@/src/hooks/queries/useExploreScreenData';
 import { FEATURED_TAGLINES, useFeaturedTrio } from '@/src/hooks/queries/useFeaturedTrio';
 import { useSubscription } from '@/src/hooks/useSubscription';
+import { updateStore } from '@/src/store';
 import { useAuthStore } from '@/src/store/authStore';
 import { toAsyncStatus } from '@/src/types/asyncStatus.types';
+import { cn } from '@/src/lib/cn';
+import { getFeaturedPageIndex, getFeaturedPageMetrics } from '@/src/utils/featuredPaging';
+import {
+	CLOSING_SOON_DAYS,
+	CLOSING_SOON_MIN_DAYS,
+	pickClosingSoon,
+} from '@/src/utils/homeExhibitionMeta';
+
+const FEATURED_SIDE_PADDING = 24;
+const FEATURED_GAP = 12;
+type FeaturedItem = Pick<
+	FeaturedExhibitionProps,
+	'id' | 'tagline' | 'exhibitionTitle' | 'venue' | 'thumbnail' | 'status'
+>;
+
+const WEEKDAYS = ['일', '월', '화', '수', '목', '금', '토'];
 
 export default function ExploreScreen() {
 	useMarkInteractive();
 	const router = useRouter();
 	const insets = useSafeAreaInsets();
-	const { width: cardWidth } = useWindowDimensions();
+	const { width: windowWidth } = useWindowDimensions();
 
 	const name = useAuthStore((s) => s.user?.user_metadata?.full_name);
 	const { isPremium, isLoading: isSubscriptionLoading } = useSubscription();
 
-	const {
-		kcisaQuery,
-		cultureQuery,
-		featured,
-		featuredCarousel,
-		kcisaCarousel,
-		displayedRecommended,
-		isPersonalized,
-	} = useExploreScreenData();
+	const { kcisaQuery, cultureQuery, featuredCarousel, displayedRecommended, isPersonalized } =
+		useExploreScreenData();
 
-	const {
-		data: popularItems = [],
-		isLoading: popularLoading,
-		isError: popularError,
-		refetch: popularRefetch,
-	} = usePopularExhibitions(featuredCarousel.map((item) => item.id));
-	const popularStatus = toAsyncStatus(popularLoading, popularError);
+	// 인기 데이터는 캐러셀의 '인기 전시' 자리를 고르는 데만 쓴다
+	const { data: popularItems = [], isLoading: popularLoading } = usePopularExhibitions(
+		featuredCarousel.map((item) => item.id),
+	);
 
 	// 메인 캐러셀: 특별전 · 인기 · 곧 개봉 3장
-	const { picks: featuredTrio } = useFeaturedTrio(popularItems);
+	const { picks: featuredTrio, isLoading: featuredLoading } = useFeaturedTrio(popularItems);
+	const {
+		artwork: dailyArtwork,
+		imageUrl: dailyArtworkImageUrl,
+		isImageLoading: isDailyArtworkLoading,
+		markListened: markDailyArtworkListened,
+	} = useDailyArtwork();
+	const [featuredIndex, setFeaturedIndex] = useState(0);
+	const featuredListRef = useRef<FlatList<FeaturedItem>>(null);
 
 	const featuredTrioIds = useMemo(() => new Set(featuredTrio.map((p) => p.id)), [featuredTrio]);
-	const displayedPopularItems = useMemo(
-		() => popularItems.filter((item) => !featuredTrioIds.has(item.id)),
-		[popularItems, featuredTrioIds],
+	const featuredItems = useMemo(
+		() =>
+			featuredTrio.map((item) => ({
+				id: item.id,
+				tagline: FEATURED_TAGLINES[item.badge],
+				exhibitionTitle: item.title,
+				venue: item.venue,
+				thumbnail: item.thumbnail,
+				status: item.status,
+			})),
+		[featuredTrio],
 	);
-	const featuredListRef = useRef<FlatList>(null);
-	const [, setFeaturedIndex] = useState(0);
+	// 위 섹션에 이미 보인 전시는 아래 섹션에서 다시 보여주지 않는다 (캐러셀 → 마감 임박 → 추천 순)
+	const carouselIds = useMemo(() => [...featuredTrioIds], [featuredTrioIds]);
+	const closingSoonItems = useMemo(
+		() =>
+			pickClosingSoon([cultureQuery.items, kcisaQuery.items, popularItems], {
+				excludeIds: carouselIds,
+				// 검색 "마감 임박" 필터와 같은 기준 (1~14일, 마감일 당일은 철수 중일 수 있어 제외)
+				maxDays: CLOSING_SOON_DAYS,
+				minDays: CLOSING_SOON_MIN_DAYS,
+			}),
+		[cultureQuery.items, kcisaQuery.items, popularItems, carouselIds],
+	);
+	const shownAboveIds = useMemo(
+		() => new Set([...carouselIds, ...closingSoonItems.map((item) => item.id)]),
+		[carouselIds, closingSoonItems],
+	);
+	const homeRecommended = useMemo(
+		() => displayedRecommended.filter((item) => !shownAboveIds.has(item.id)),
+		[displayedRecommended, shownAboveIds],
+	);
+	const closingSoonStatus = toAsyncStatus(cultureQuery.isLoading || kcisaQuery.isLoading, false);
 
-	const openExhibition = (id: string) => router.push(`/(explore)/${id}`);
+	const { cardWidth, interval } = getFeaturedPageMetrics(
+		windowWidth,
+		FEATURED_SIDE_PADDING,
+		FEATURED_GAP,
+	);
+	const today = new Date();
+	const todayLabel = `${today.getMonth() + 1}월 ${today.getDate()}일 ${WEEKDAYS[today.getDay()]}요일`;
+	const hasMultipleFeatured = featuredItems.length > 1;
+	const hasFeatured = featuredItems.length > 0;
+	const isFeaturedLoading = !hasFeatured && (featuredLoading || popularLoading);
+	const isFeaturedEmpty = !hasFeatured && !isFeaturedLoading;
+	const currentFeaturedPage = Math.min(featuredIndex, Math.max(featuredItems.length - 1, 0));
 
+	const openExhibition = useCallback((id: string) => router.push(`/(explore)/${id}`), [router]);
+
+	const handleFeaturedScroll = useCallback(
+		(e: NativeSyntheticEvent<NativeScrollEvent>) => {
+			setFeaturedIndex(
+				getFeaturedPageIndex(e.nativeEvent.contentOffset.x, interval, featuredItems.length),
+			);
+		},
+		[interval, featuredItems.length],
+	);
+
+	const renderFeaturedItem = useCallback(
+		({ item }: { item: FeaturedItem }) => (
+			<FeaturedExhibitionHero {...item} width={cardWidth} onPress={openExhibition} />
+		),
+		[cardWidth, openExhibition],
+	);
+
+	const renderFeaturedSeparator = useCallback(() => <View style={{ width: FEATURED_GAP }} />, []);
+
+	// 폭(회전)·데이터 수가 바뀌면 실제 스크롤 오프셋을 현재 페이지에 다시 맞춘다
 	useEffect(() => {
-		if (featuredTrio.length <= 1) return;
+		if (featuredItems.length === 0) return;
+		featuredListRef.current?.scrollToOffset({
+			offset: currentFeaturedPage * interval,
+			animated: false,
+		});
+		if (currentFeaturedPage !== featuredIndex) setFeaturedIndex(currentFeaturedPage);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [interval, featuredItems.length]);
 
-		const timer = setInterval(() => {
-			setFeaturedIndex((prev) => {
-				const next = (prev + 1) % featuredTrio.length;
-				featuredListRef.current?.scrollToOffset({ offset: next * cardWidth, animated: true });
-				return next;
+	const handleDocentPress = () => {
+		// 프리미엄 여부를 아직 모르는 동안에는 구독자를 결제 화면으로 보내지 않는다.
+		if (isSubscriptionLoading) return;
+		router.push(isPremium ? '/(guide)/create-description' : '/settings/premium');
+	};
+
+	const handleListenDailyArtwork = () => {
+		if (isSubscriptionLoading || dailyArtwork === null) return;
+
+		if (isPremium) {
+			updateStore({
+				manualTitle: dailyArtwork.title,
+				manualArtist: dailyArtwork.artist,
+				manualYear: dailyArtwork.year,
+				artworkImageUrl: dailyArtworkImageUrl ?? '',
+				artworkDescription: '',
+				isArtistIntro: false,
+				inputMode: 'manual',
+				pendingChatSeed: null,
 			});
-		}, 3500);
-
-		return () => clearInterval(timer);
-	}, [featuredTrio.length, cardWidth]);
+			// 해설 화면으로 넘어간 날을 기록 — 그림은 다음 날 바뀐다
+			markDailyArtworkListened();
+			router.push('/(guide)/description');
+		} else {
+			router.push('/settings/premium');
+		}
+	};
 
 	return (
 		<Screen variant="warm" className="px-0">
-			<ScreenHeader className="px-6">
+			<ScreenHeader fullBleed>
 				<ScreenHeader.Left>
 					<ScreenHeader.Logo />
 				</ScreenHeader.Left>
-				<ScreenHeader.Right className="-mr-12">
+				<ScreenHeader.Right>
 					<View className="flex-row items-center gap-4">
 						<LoginRequiredPressable
 							onPress={() => router.push('/bookmark')}
@@ -117,110 +215,145 @@ export default function ExploreScreen() {
 					</View>
 				</ScreenHeader.Right>
 			</ScreenHeader>
-			<Pressable
-				onPress={() => router.push('/search')}
-				accessibilityRole="button"
-				accessibilityLabel="전시·미술관·작가 검색"
-				className="px-6 pt-1 pb-3"
-				style={({ pressed }) => ({ opacity: pressed ? 0.85 : 1 })}
+
+			<View className="flex-row items-center gap-2 px-6 pt-1 pb-3">
+				<Pressable
+					onPress={() => router.push('/search')}
+					accessibilityRole="button"
+					accessibilityLabel="전시·미술관·작가 검색"
+					className="flex-1"
+					style={({ pressed }) => ({ opacity: pressed ? 0.85 : 1 })}
+				>
+					{/* 검색 화면의 실제 검색바와 동일한 sharedTransitionTag — 탭 위치에서 자연스럽게 이어짐 */}
+					<Animated.View sharedTransitionTag="home-search-bar">
+						<SearchBar
+							variant="tonal"
+							editable={false}
+							pointerEvents="none"
+							placeholder="전시·미술관·작가 검색"
+						/>
+					</Animated.View>
+				</Pressable>
+				<IconButton
+					onPress={() => router.push('/(tabs)/map')}
+					accessibilityLabel="지도에서 전시 찾기"
+					icon="map-outline"
+					iconSize={22}
+					variant="solid"
+					tone="inverse"
+					haptic="light"
+					className="w-11 h-11 rounded-2xl"
+				/>
+			</View>
+
+			<ScrollView
+				showsVerticalScrollIndicator={false}
+				contentContainerClassName={cn('gap-10 pt-2', dailyArtwork ? 'pb-0' : 'pb-28')}
 			>
-				{/* 검색 화면의 실제 검색바와 동일한 sharedTransitionTag — 탭 위치에서 자연스럽게 이어짐 */}
-				<Animated.View sharedTransitionTag="home-search-bar">
-					<SearchBar
-						variant="tonal"
-						editable={false}
-						pointerEvents="none"
-						placeholder="전시·미술관·작가 검색"
-					/>
-				</Animated.View>
-			</Pressable>
-			<ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-10 gap-7 pt-1">
-				<FlatList
-					ref={featuredListRef}
-					data={featuredTrio.map((item) => ({
-						id: item.id,
-						title: FEATURED_TAGLINES[item.badge],
-						exhibitionTitle: item.title,
-						venue: item.venue,
-						thumbnail: item.thumbnail,
-						status: item.status,
-					}))}
-					keyExtractor={(item) => item.id}
-					horizontal
-					showsHorizontalScrollIndicator={false}
-					snapToInterval={cardWidth}
-					decelerationRate="fast"
-					onMomentumScrollEnd={(e) => {
-						setFeaturedIndex(Math.round(e.nativeEvent.contentOffset.x / cardWidth));
-					}}
-					renderItem={({ item, index }) => (
-						<View
-							style={{
-								width: Dimensions.get('window').width - 40,
-								marginLeft: index > 0 ? 40 : 20,
-								marginRight: index === featuredTrio.length - 1 ? 20 : 0,
-							}}
-						>
-							<FeaturedExhibitionHero {...item} onPress={openExhibition} />
+				<View>
+					<View className="px-6 mb-4">
+						<Text className="text-gray600 text-[12px] font-pretendard-semibold tracking-[0.4px] mb-1">
+							{todayLabel}
+						</Text>
+						<Text className="text-gray900 text-[26px] leading-[34px] font-hahmlet-bold">
+							지금 가볼 만한 전시
+						</Text>
+					</View>
+
+					{isFeaturedLoading && (
+						<View className="px-6">
+							<View
+								className="rounded-[20px] bg-image-placeholder"
+								style={{ width: cardWidth, height: Math.round(cardWidth * 1.18) }}
+							/>
 						</View>
 					)}
-				/>
-
-				<HorizontalSection
-					items={displayedPopularItems.slice(0, 7)}
-					status={popularStatus}
-					onRefetch={popularRefetch}
-					renderItem={(item) => (
-						<PopularExhibitionAvatar key={item.id} item={item} onPress={openExhibition} />
+					{hasFeatured && (
+						<>
+							<FlatList
+								ref={featuredListRef}
+								data={featuredItems}
+								keyExtractor={(item) => item.id}
+								horizontal
+								showsHorizontalScrollIndicator={false}
+								snapToInterval={interval}
+								snapToAlignment="start"
+								decelerationRate="fast"
+								disableIntervalMomentum
+								scrollEventThrottle={16}
+								onScroll={handleFeaturedScroll}
+								contentContainerStyle={{ paddingHorizontal: FEATURED_SIDE_PADDING }}
+								ItemSeparatorComponent={renderFeaturedSeparator}
+								renderItem={renderFeaturedItem}
+							/>
+							{hasMultipleFeatured && (
+								<View
+									className="flex-row items-center justify-between px-6 mt-4"
+									accessible
+									accessibilityRole="text"
+									accessibilityLabel={`대표 전시 ${currentFeaturedPage + 1}번째, 총 ${featuredItems.length}개`}
+								>
+									<Text className="text-gray900 text-[13px] font-pretendard-semibold">
+										{String(currentFeaturedPage + 1).padStart(2, '0')}
+										<Text className="text-gray500">
+											{` / ${String(featuredItems.length).padStart(2, '0')}`}
+										</Text>
+									</Text>
+									<View className="flex-row items-center gap-1.5">
+										{featuredItems.map((item, index) => (
+											<View
+												key={item.id}
+												className={cn('h-1.5 rounded-full', {
+													'w-5 bg-gray900': index === currentFeaturedPage,
+													'w-1.5 bg-gray400': index !== currentFeaturedPage,
+												})}
+											/>
+										))}
+									</View>
+								</View>
+							)}
+						</>
 					)}
-					renderSkeletonItem={(index) => <PopularExhibitionAvatarSkeleton key={index} />}
-					sectionName="인기 전시"
-					placeholder="인기 전시가 없어요"
-					contentContainerClassName="gap-0 ml-0"
-				/>
-
-				<KcisaSection
-					kcisaStatus={kcisaQuery.status}
-					kcisaItems={kcisaQuery.items}
-					carousel={kcisaCarousel}
-					featured={featured}
-					onPress={openExhibition}
-					onRefetch={kcisaQuery.refetch}
-				/>
-
-				<View>
-					{/* 레이블: 선호 데이터 있으면 "당신의 취향" (REQ-UI002-009, REQ-UI002-010) */}
-					<SectionTitle
-						eyebrow="FOR YOU"
-						title={
-							isPersonalized && name ? (
-								<Text className="text-gray900 text-[18px] leading-normal font-pretendard-semibold tracking-[-0.5px]">
-									{`몰립이 엄선한\n${name}님에게 `}
-									<Text className="text-[#B8623D] font-pretendard-bold">딱 맞는 전시를 추천</Text>
-									해드릴게요!
-								</Text>
-							) : (
-								'추천 전시'
-							)
-						}
-					/>
-					<HorizontalSection
-						items={displayedRecommended}
-						status={cultureQuery.status}
-						onRefetch={cultureQuery.refetch}
-						renderItem={(item) => (
-							<KcisaExhibitionCard key={item.id} item={item} onPress={openExhibition} />
-						)}
-						renderSkeletonItem={(index) => <KcisaExhibitionCardSkeleton key={index} />}
-						sectionName="추천 전시"
-						placeholder="추천할 전시가 없어요"
-					/>
+					{isFeaturedEmpty && (
+						<Text className="px-6 text-gray600 text-[14px] font-pretendard-regular">
+							지금 소개할 전시가 없어요
+						</Text>
+					)}
 				</View>
+
+				<ClosingSoonRail
+					items={closingSoonItems}
+					status={closingSoonStatus}
+					onPress={openExhibition}
+				/>
+
+				{/* 추천은 선호 장르가 있는 사용자에게만 — 비개인화 대체 목록은 홈에서 보여주지 않는다 */}
+				{isPersonalized && homeRecommended.length > 0 && (
+					<RecommendedGrid
+						title={name ? `${name}님을 위한 추천` : '취향 맞춤 추천'}
+						subtitle="선호 장르를 바탕으로 골랐어요"
+						items={homeRecommended}
+						status={cultureQuery.status}
+						onPress={openExhibition}
+						onRefetch={cultureQuery.refetch}
+					/>
+				)}
+
+				{/* 시간에 쫓기지 않는 오늘의 한 점으로 홈을 마무리한다 */}
+				{dailyArtwork && (
+					<DailyArtworkBand
+						artwork={dailyArtwork}
+						imageUrl={dailyArtworkImageUrl}
+						isImageLoading={isDailyArtworkLoading}
+						onListen={handleListenDailyArtwork}
+						className="pb-32"
+					/>
+				)}
 			</ScrollView>
 
-			{/* FAB 영역 */}
+			{/* AI 도슨트 진입 — 라벨이 있는 확장형 FAB */}
 			<View
-				className="absolute right-6 items-end gap-3 shadow-gray900 elevation-lg"
+				className="absolute right-6 items-end shadow-gray900 elevation-lg"
 				style={{
 					bottom: Math.max(insets.bottom, 16),
 					shadowOpacity: 0.28,
@@ -229,19 +362,16 @@ export default function ExploreScreen() {
 				}}
 			>
 				<LoginRequiredPressable
-					onPress={() => {
-						// 프리미엄 여부를 아직 모르는 동안에는 구독자를 결제 화면으로 보내지 않는다.
-						if (isSubscriptionLoading) return;
-						router.push(isPremium ? '/(guide)/create-description' : '/settings/premium');
-					}}
+					onPress={handleDocentPress}
 					returnTo="/(guide)/create-description"
 					accessibilityRole="button"
-					accessibilityLabel="작품 해설 만들기"
+					accessibilityLabel="AI 도슨트로 작품 해설 만들기"
 					accessibilityHint="카메라로 작품을 촬영하거나 직접 입력하여 AI 해설을 받을 수 있어요"
-					className="h-[58px] w-[58px] items-center justify-center rounded-full bg-secondary"
+					className="h-[52px] flex-row items-center gap-2 rounded-full bg-secondary px-5"
 					style={({ pressed }) => ({ opacity: pressed ? 0.88 : 1 })}
 				>
-					<Ionicons name="camera" size={26} className="text-bg-tonal" />
+					<Ionicons name="camera" size={22} className="text-bg-tonal" />
+					<Text className="text-bg-tonal text-[15px] font-pretendard-semibold">AI 도슨트</Text>
 				</LoginRequiredPressable>
 			</View>
 		</Screen>

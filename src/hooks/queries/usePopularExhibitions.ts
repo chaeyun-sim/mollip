@@ -66,6 +66,8 @@ async function fetchPopularExhibitions(): Promise<PopularQueryData> {
 					startDate: row.start_date ?? '',
 					endDate: row.end_date ?? '',
 				}),
+				startDate: row.start_date ?? null,
+				endDate: row.end_date ?? null,
 			},
 		]),
 	);
