@@ -31,7 +31,7 @@ type ResultListItem = { kind: 'section'; label: string } | { kind: 'result'; res
 
 export default function SearchScreen() {
 	const router = useRouter();
-	const { q } = useLocalSearchParams<{ q?: string }>();
+	const { q, closing } = useLocalSearchParams<{ q?: string; closing?: string }>();
 	const [showDatePicker, setShowDatePicker] = useState(false);
 	const [showExcludeModal, setShowExcludeModal] = useState(false);
 	const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
@@ -54,6 +54,9 @@ export default function SearchScreen() {
 		clearExcludedWords,
 		freeOnly,
 		toggleFreeOnly,
+		closingSoonOnly,
+		setClosingSoonOnly,
+		toggleClosingSoonOnly,
 		hasLocation,
 		results,
 		isLoading,
@@ -73,12 +76,28 @@ export default function SearchScreen() {
 		if (q) commitSearchText(q);
 	}, [q, commitSearchText]);
 
+	// 홈 "곧 막을 내려요" 전체 보기(?closing=1)로 들어오면 마감 임박 필터를 켠 채 시작
+	useEffect(() => {
+		if (closing === '1') setClosingSoonOnly(true);
+	}, [closing, setClosingSoonOnly]);
+
+	// 검색어가 없어도 마감 임박 필터가 켜져 있으면 결과 목록을 보여준다
+	const isBrowsing = Boolean(debouncedSearchText) || closingSoonOnly;
+	const resolveSortLabel = () => {
+		if (closingSoonOnly) return ' · 마감 빠른 순';
+
+		if (hasLocation) return ' · 가까운 순';
+
+		return '';
+	};
+	const sortLabel = resolveSortLabel();
+
 	// 필터 변경 시 무한스크롤 위치 초기화
 	useEffect(() => {
 		requestAnimationFrame(() => {
 			setVisibleCount(PAGE_SIZE);
 		});
-	}, [debouncedSearchText, statusFilters, filterDate, freeOnly]);
+	}, [debouncedSearchText, statusFilters, filterDate, freeOnly, closingSoonOnly]);
 
 	const handlePressExhibition = useCallback(
 		(id: string) => router.push(`/(explore)/${id}`),
@@ -170,7 +189,11 @@ export default function SearchScreen() {
 		}
 		return (
 			<Animated.View entering={ITEM_ENTERING} exiting={ITEM_EXITING} layout={ITEM_LAYOUT}>
-				<ExhibitionResultCard result={item.result} onPress={handlePressExhibition} />
+				<ExhibitionResultCard
+					result={item.result}
+					onPress={handlePressExhibition}
+					closingSoon={closingSoonOnly}
+				/>
 			</Animated.View>
 		);
 	}
@@ -195,13 +218,15 @@ export default function SearchScreen() {
 				</Animated.View>
 
 				{/* 필터 칩 */}
-				{debouncedSearchText && (
+				{isBrowsing && (
 					<View className="mt-3 mb-6">
 						<SearchFilterBar
 							statusFilters={statusFilters}
 							onToggleStatus={toggleStatusFilter}
 							freeOnly={freeOnly}
 							onToggleFree={toggleFreeOnly}
+							closingSoonOnly={closingSoonOnly}
+							onToggleClosingSoon={toggleClosingSoonOnly}
 							filterDate={filterDate}
 							onPressDate={() => setShowDatePicker(true)}
 							excludedCount={excludedWords.length}
@@ -210,7 +235,7 @@ export default function SearchScreen() {
 					</View>
 				)}
 
-				{!debouncedSearchText ? (
+				{!isBrowsing ? (
 					/* 검색 전 — 추천 태그 + 최근 검색어 */
 					<ScrollView
 						showsVerticalScrollIndicator={false}
@@ -300,7 +325,7 @@ export default function SearchScreen() {
 						ListHeaderComponent={
 							<View className="flex-row items-end justify-between mb-4">
 								<Text className="text-gray500 text-[13px] font-pretendard-regular">
-									{results.length}건{hasLocation ? ' · 가까운 순' : ''}
+									{results.length}건{sortLabel}
 								</Text>
 							</View>
 						}

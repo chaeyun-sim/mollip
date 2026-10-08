@@ -17,6 +17,7 @@ import {
 	todayExhibitionDateString,
 	type ExhibitionStatus,
 } from '../utils/exhibitionSearch';
+import { getClosingSoonDaysLeft } from '../utils/homeExhibitionMeta';
 import { distanceKm } from '../utils/mapUtils';
 import { useUserLocation } from './useUserLocation';
 
@@ -39,6 +40,8 @@ export function useExhibitionSearch() {
 	const [filterDate, setFilterDate] = useState<Date | null>(null);
 	const [excludedWords, setExcludedWords] = useState<string[]>([]);
 	const [freeOnly, setFreeOnly] = useState(false);
+	// 마감 임박(1~14일 남음) — 홈 "곧 막을 내려요" 전체 보기와 같은 기준
+	const [closingSoonOnly, setClosingSoonOnly] = useState(false);
 	const { currentCoord } = useUserLocation();
 	const [remoteExhibitions, setRemoteExhibitions] = useState<Exhibition[]>([]);
 	const [remoteLoading, setRemoteLoading] = useState(false);
@@ -115,6 +118,13 @@ export function useExhibitionSearch() {
 		});
 	}, []);
 
+	// 마감 임박은 전부 진행 중이라 예정·진행 중 칩을 숨긴다 — 켜는 순간 숨겨질 상태 필터도 비워
+	// '예정'이 켜진 채로 결과 0건인데 칩이 안 보여 끌 수 없는 상황을 막는다
+	const applyClosingSoonOnly = useCallback((value: boolean) => {
+		if (value) setStatusFilters(new Set());
+		setClosingSoonOnly(value);
+	}, []);
+
 	const addExcludedWord = useCallback((word: string) => {
 		const trimmed = word.trim();
 		if (!trimmed) return;
@@ -140,6 +150,7 @@ export function useExhibitionSearch() {
 				if (statusFilters.size > 0 && !statusFilters.has(getExhibitionStatus(ex))) return false;
 				if (filterDate && !isViewableOn(ex, filterDate)) return false;
 				if (freeOnly && !ex.admissionFree) return false;
+				if (closingSoonOnly && getClosingSoonDaysLeft(ex) === null) return false;
 				return true;
 			})
 			.map((ex) => ({
@@ -155,8 +166,23 @@ export function useExhibitionSearch() {
 							)
 						: null,
 			}))
-			.sort((a, b) => (a.distanceKm ?? Infinity) - (b.distanceKm ?? Infinity));
-	}, [catalog, searchText, excludedWords, statusFilters, filterDate, freeOnly, currentCoord]);
+			.sort((a, b) =>
+				closingSoonOnly
+					? // 마감 임박 필터일 때는 마감 빠른 순
+						(getClosingSoonDaysLeft(a.exhibition) ?? Infinity) -
+						(getClosingSoonDaysLeft(b.exhibition) ?? Infinity)
+					: (a.distanceKm ?? Infinity) - (b.distanceKm ?? Infinity),
+			);
+	}, [
+		catalog,
+		searchText,
+		excludedWords,
+		statusFilters,
+		filterDate,
+		freeOnly,
+		closingSoonOnly,
+		currentCoord,
+	]);
 
 	return {
 		searchText: inputText,
@@ -173,6 +199,9 @@ export function useExhibitionSearch() {
 		clearExcludedWords,
 		freeOnly,
 		toggleFreeOnly: () => setFreeOnly((prev) => !prev),
+		closingSoonOnly,
+		setClosingSoonOnly: applyClosingSoonOnly,
+		toggleClosingSoonOnly: () => applyClosingSoonOnly(!closingSoonOnly),
 		hasLocation: currentCoord !== null,
 		results,
 		isLoading: remoteLoading,

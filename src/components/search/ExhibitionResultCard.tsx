@@ -7,17 +7,26 @@ import { useRequireAuth } from '@/src/hooks/useRequireAuth';
 import { useBookmarkStore } from '@/src/store/bookmarkStore';
 import { formatDistance } from '@/src/utils/mapUtils';
 import { getDdayLabel, STATUS_LABELS } from '@/src/utils/exhibitionSearch';
+import { CLOSING_SOON_DAYS } from '@/src/utils/homeExhibitionMeta';
 import type { SearchResult } from '@/src/hooks/useExhibitionSearch';
 
 interface ExhibitionResultCardProps {
 	result: SearchResult;
 	onPress: (id: string) => void;
+	/** 마감 임박 목록 — 전부 진행 중이라 상태 배지를 숨기고, D-day를 14일까지 보여준다 */
+	closingSoon?: boolean;
 }
 
-export function ExhibitionResultCard({ result, onPress }: ExhibitionResultCardProps) {
+export function ExhibitionResultCard({
+	result,
+	onPress,
+	closingSoon = false,
+}: ExhibitionResultCardProps) {
 	const { exhibition: ex, status, distanceKm } = result;
 
-	const ddayLabel = getDdayLabel(ex);
+	const ddayLabel = closingSoon
+		? getDdayLabel(ex, new Date(), CLOSING_SOON_DAYS)
+		: getDdayLabel(ex);
 	const { isBookmarked, toggleBookmark } = useBookmarkStore(
 		useShallow((s) => ({ isBookmarked: s.isBookmarked(ex.id), toggleBookmark: s.toggle })),
 	);
@@ -31,7 +40,7 @@ export function ExhibitionResultCard({ result, onPress }: ExhibitionResultCardPr
 	return (
 		<Pressable
 			onPress={() => onPress(ex.id)}
-			accessibilityLabel={`${ex.title}, ${ex.venue}, ${STATUS_LABELS[status]}`}
+			accessibilityLabel={`${ex.title}, ${ex.venue}, ${closingSoon && ddayLabel ? ddayLabel : STATUS_LABELS[status]}`}
 			accessibilityRole="button"
 			className="flex-row gap-3.5"
 			style={({ pressed }) => ({ opacity: pressed ? 0.85 : 1 })}
@@ -48,7 +57,7 @@ export function ExhibitionResultCard({ result, onPress }: ExhibitionResultCardPr
 
 			{/* 정보 */}
 			<View className="flex-1 justify-center gap-1">
-				<ExhibitionStatusBadge status={status} />
+				{!closingSoon && <ExhibitionStatusBadge status={status} />}
 				<Text numberOfLines={1} className="text-gray900 text-[15px] font-pretendard-semibold">
 					{ex.title}
 				</Text>

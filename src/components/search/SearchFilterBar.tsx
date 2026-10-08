@@ -9,6 +9,8 @@ interface SearchFilterBarProps {
 	onToggleStatus: (key: ExhibitionStatus) => void;
 	freeOnly: boolean;
 	onToggleFree: () => void;
+	closingSoonOnly: boolean;
+	onToggleClosingSoon: () => void;
 	filterDate: Date | null;
 	onPressDate: () => void;
 	excludedCount: number;
@@ -20,6 +22,8 @@ export function SearchFilterBar({
 	onToggleStatus,
 	freeOnly,
 	onToggleFree,
+	closingSoonOnly,
+	onToggleClosingSoon,
 	filterDate,
 	onPressDate,
 	excludedCount,
@@ -35,14 +39,22 @@ export function SearchFilterBar({
 			showsHorizontalScrollIndicator={false}
 			contentContainerClassName="gap-2 pr-6"
 		>
-			{STATUS_KEYS.map((key) => (
-				<Chip
-					key={key}
-					label={STATUS_LABELS[key]}
-					active={statusFilters.has(key)}
-					onPress={() => onToggleStatus(key)}
-				/>
-			))}
+			{/* 마감 임박은 전부 진행 중이라 예정·진행 중 칩이 의미 없다 */}
+			{!closingSoonOnly &&
+				STATUS_KEYS.map((key) => (
+					<Chip
+						key={key}
+						label={STATUS_LABELS[key]}
+						active={statusFilters.has(key)}
+						onPress={() => onToggleStatus(key)}
+					/>
+				))}
+			<Chip
+				label="마감 임박"
+				active={closingSoonOnly}
+				onPress={onToggleClosingSoon}
+				accessibilityLabel="2주 안에 끝나는 전시만 보기"
+			/>
 			<Chip label="무료" active={freeOnly} onPress={onToggleFree} />
 			<Chip
 				label={filterDate ? formatChipDate(filterDate) : '날짜'}
