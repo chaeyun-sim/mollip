@@ -64,7 +64,8 @@ export function ExhibitionVenueInfo({ hasTopSpacing, ...exhibition }: Exhibition
 			<View className="bg-gray100 rounded-2xl" style={{ zIndex: 100, elevation: 100 }}>
 				<ExhibitionInfoRow label="기간">
 					{exhibition.startDate} ~ {exhibition.endDate}{' '}
-					{ddayLabel && <Text className="text-error">D-{ddayLabel}</Text>}
+					{/* getDdayLabel이 이미 'D-n' / '오늘 마감' 형태로 돌려준다 — 접두사를 다시 붙이지 않는다 */}
+					{ddayLabel && <Text className="text-error">{ddayLabel}</Text>}
 				</ExhibitionInfoRow>
 				{exhibition.venueAddress && (
 					<ExhibitionInfoRow
