@@ -1,7 +1,8 @@
 // ODsay Lab API — 도보/대중교통(버스/지하철) 길찾기.
 // SK Tmap 대중교통 API는 무료 요금제가 월 10건뿐이라 개발/운영이 불가능해 ODsay로 교체했다.
 // API 키는 클라이언트에 두지 않고 Supabase Edge Function('odsay-route')이 보관한다.
-import { supabase } from '@/src/utils/supabase';
+const SUPABASE_URL = process.env.EXPO_PUBLIC_SUPABASE_URL ?? '';
+const SUPABASE_ANON_KEY = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY ?? '';
 
 // ODsay API 응답 내부 타입 — 공개 문서 기준으로 실제 접근하는 필드만 정의한다.
 interface OdsayXyInfo {
@@ -94,14 +95,28 @@ async function searchMaasPaths(
 	end: RouteCoord,
 	searchMethod: '1' | '2',
 ): Promise<OdsayPath[]> {
-	const { data, error } = await supabase.functions.invoke<{ paths?: OdsayPath[] }>('odsay-route', {
-		body: { start, end, searchMethod },
-	});
-	if (error) {
-		console.warn('[ODsay] 경로 조회 오류:', error.message);
+	// 위치정보법 — 좌표와 사용자 식별정보가 함께 서버에 가지 않도록 유저 JWT 대신 anon 키로만 호출한다.
+	// supabase.functions.invoke는 로그인 세션 토큰(user_id 포함)을 자동으로 붙이므로 쓰지 않는다.
+	try {
+		const res = await fetch(`${SUPABASE_URL}/functions/v1/odsay-route`, {
+			method: 'POST',
+			headers: {
+				apikey: SUPABASE_ANON_KEY,
+				Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({ start, end, searchMethod }),
+		});
+		if (!res.ok) {
+			console.warn('[ODsay] 경로 조회 오류:', res.status);
+			return [];
+		}
+		const data = (await res.json()) as { paths?: OdsayPath[] };
+		return data.paths ?? [];
+	} catch (err) {
+		console.warn('[ODsay] 경로 조회 오류:', err instanceof Error ? err.message : err);
 		return [];
 	}
-	return data?.paths ?? [];
 }
 
 function buildRouteResult(path: OdsayPath): RouteResult {

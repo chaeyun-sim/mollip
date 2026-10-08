@@ -80,10 +80,9 @@ export function useNearbyPlaces(location: { latitude: number; longitude: number 
 		setIsLoading(true);
 		setError(null);
 
-		const loc = { latitude, longitude };
 		// Naver 지역검색 display 최대 5
 		// allSettled: 한 쿼리가 실패해도 나머지 결과는 살림
-		Promise.allSettled([searchNaverLocal('카페', 5, loc), searchNaverLocal('관광명소', 5, loc)])
+		Promise.allSettled([searchNaverLocal('카페', 5), searchNaverLocal('관광명소', 5)])
 			.then(([cafeResult, attrResult]) => {
 				if (cancelled) return;
 				const cafeItems = cafeResult.status === 'fulfilled' ? cafeResult.value : [];
