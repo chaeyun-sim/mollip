@@ -275,6 +275,9 @@ export default function ExploreScreen() {
 								data={featuredItems}
 								keyExtractor={(item) => item.id}
 								horizontal
+								// 대각선으로 세게 끌어도 가로로만 움직이고 세로로 튕기지 않게 한다
+								directionalLockEnabled
+								alwaysBounceVertical={false}
 								showsHorizontalScrollIndicator={false}
 								snapToInterval={interval}
 								snapToAlignment="start"
