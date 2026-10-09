@@ -175,7 +175,10 @@ const NANUM_PEN_SCRIPT_LICENSE = fontLicenseText(
 	'http://scripts.sil.org/OFL',
 );
 
+export type LicenseCategory = '폰트' | '라이브러리';
+
 export interface OpenSourceLicense {
+	category: LicenseCategory;
 	name: string;
 	licenseName: string;
 	sourceUrl: string;
@@ -186,6 +189,7 @@ export interface OpenSourceLicense {
 
 export const OPEN_SOURCE_LICENSES: OpenSourceLicense[] = [
 	{
+		category: '폰트',
 		name: 'Pretendard',
 		licenseName: 'SIL Open Font License 1.1',
 		sourceUrl: 'https://github.com/orioncactus/pretendard',
@@ -193,6 +197,7 @@ export const OPEN_SOURCE_LICENSES: OpenSourceLicense[] = [
 		licenseText: PRETENDARD_LICENSE,
 	},
 	{
+		category: '라이브러리',
 		name: 'Supabase JS',
 		licenseName: 'MIT License',
 		sourceUrl: 'https://github.com/supabase/supabase-js',
@@ -200,6 +205,7 @@ export const OPEN_SOURCE_LICENSES: OpenSourceLicense[] = [
 		licenseText: SUPABASE_JS_LICENSE,
 	},
 	{
+		category: '폰트',
 		name: 'Cormorant Garamond',
 		licenseName: 'MIT License (Expo) + SIL Open Font License 1.1',
 		sourceUrl: 'https://github.com/expo/google-fonts/tree/master/packages/cormorant-garamond',
@@ -208,6 +214,7 @@ export const OPEN_SOURCE_LICENSES: OpenSourceLicense[] = [
 		licenseText: CORMORANT_GARAMOND_LICENSE,
 	},
 	{
+		category: '폰트',
 		name: 'Hahmlet',
 		licenseName: 'MIT License (Expo) + SIL Open Font License 1.1',
 		sourceUrl: 'https://github.com/expo/google-fonts/tree/master/packages/hahmlet',
@@ -215,6 +222,7 @@ export const OPEN_SOURCE_LICENSES: OpenSourceLicense[] = [
 		licenseText: HAHMLET_LICENSE,
 	},
 	{
+		category: '폰트',
 		name: 'Nanum Pen Script',
 		licenseName: 'MIT License (Expo) + SIL Open Font License 1.1',
 		sourceUrl: 'https://github.com/expo/google-fonts/tree/master/packages/nanum-pen-script',
