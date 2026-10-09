@@ -25,8 +25,7 @@ export function ClosingSoonRail({ items, status, onPress }: ClosingSoonRailProps
 
 	const header = (
 		<HomeSectionHeader
-			title="곧 막을 내려요"
-			subtitle="2주 안에 끝나는 전시"
+			title="2주 안에 끝나요"
 			right={
 				<Pressable
 					onPress={() => router.push({ pathname: '/search', params: { closing: '1' } })}

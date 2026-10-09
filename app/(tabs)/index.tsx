@@ -47,8 +47,6 @@ type FeaturedItem = Pick<
 	'id' | 'tagline' | 'exhibitionTitle' | 'venue' | 'thumbnail' | 'status'
 >;
 
-const WEEKDAYS = ['일', '월', '화', '수', '목', '금', '토'];
-
 export default function ExploreScreen() {
 	useMarkInteractive();
 	const router = useRouter();
@@ -117,8 +115,6 @@ export default function ExploreScreen() {
 		FEATURED_SIDE_PADDING,
 		FEATURED_GAP,
 	);
-	const today = new Date();
-	const todayLabel = `${today.getMonth() + 1}월 ${today.getDate()}일 ${WEEKDAYS[today.getDay()]}요일`;
 	const hasMultipleFeatured = featuredItems.length > 1;
 	const hasFeatured = featuredItems.length > 0;
 	const isFeaturedLoading = !hasFeatured && (featuredLoading || popularLoading);
@@ -251,15 +247,6 @@ export default function ExploreScreen() {
 				contentContainerClassName={cn('gap-10 pt-2', dailyArtwork ? 'pb-0' : 'pb-28')}
 			>
 				<View>
-					<View className="px-6 mb-4">
-						<Text className="text-gray600 text-[12px] font-pretendard-semibold tracking-[0.4px] mb-1">
-							{todayLabel}
-						</Text>
-						<Text className="text-gray900 text-[26px] leading-[34px] font-hahmlet-bold">
-							지금 가볼 만한 전시
-						</Text>
-					</View>
-
 					{isFeaturedLoading && (
 						<View className="px-6">
 							<View
@@ -333,7 +320,7 @@ export default function ExploreScreen() {
 				{/* 추천은 선호 장르가 있는 사용자에게만 — 비개인화 대체 목록은 홈에서 보여주지 않는다 */}
 				{isPersonalized && homeRecommended.length > 0 && (
 					<RecommendedGrid
-						title={name ? `${name}님을 위한 추천` : '취향 맞춤 추천'}
+						title={name ? `${name}님을 위한` : '취향 맞춤 추천'}
 						subtitle="선호 장르를 바탕으로 골랐어요"
 						items={homeRecommended}
 						status={cultureQuery.status}

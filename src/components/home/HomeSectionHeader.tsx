@@ -23,7 +23,9 @@ export function HomeSectionHeader({ title, subtitle, right, className }: HomeSec
 			style={{ paddingHorizontal: HOME_SIDE_PADDING }}
 		>
 			<View className="flex-1 pr-3">
-				<Text className="text-gray900 text-[22px] leading-[30px] font-hahmlet-bold">{title}</Text>
+				<Text className="text-gray900 text-[22px] leading-[30px] font-hahmlet-semibold">
+					{title}
+				</Text>
 				{subtitle && (
 					<Text className="mt-0.5 text-gray600 text-[13px] font-pretendard-regular">
 						{subtitle}
