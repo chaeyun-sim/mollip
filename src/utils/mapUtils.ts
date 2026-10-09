@@ -1,9 +1,10 @@
 import type { Exhibition } from '../data/exhibitions';
 import type { VenueGroup } from '../data/venues';
 
-/** "10:00 – 20:00" 형태 파싱 후 지정 날짜 영업 중 여부 */
+/** "10:00 – 20:00" / "09:00~18:00" 형태 파싱 후 지정 날짜 영업 중 여부 */
 export function isOpenOn(openHours: string, date: Date): boolean {
-	const match = openHours.match(/(\d{1,2}):(\d{2})\s*[–-]\s*(\d{1,2}):(\d{2})/);
+	// 상세 시트(HoursSection)와 같은 구분자(~ – -)를 인식해야 필터와 상세 표시가 어긋나지 않는다
+	const match = openHours.match(/(\d{1,2}):(\d{2})\s*[~–-]\s*(\d{1,2}):(\d{2})/);
 	if (!match) return false;
 	// 오늘이 아닌 날짜는 영업시간만 있으면 "영업 중"으로 처리
 	if (new Date().toDateString() !== date.toDateString()) return true;
