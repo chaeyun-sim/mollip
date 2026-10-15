@@ -29,27 +29,27 @@ export function ExhibitionDetailSkeleton() {
 			<View style={{ paddingTop: insets.top + 88 }}>
 				{/* 제목 + 장소 */}
 				<View className="px-6">
-					<SkeletonBox className="h-[30px] rounded-lg bg-[#E0DCD5]" style={{ width: '85%' }} />
-					<SkeletonBox className="h-[14px] rounded-md bg-[#E0DCD5] mt-2" style={{ width: '45%' }} />
+					<SkeletonBox className="h-[30px] rounded-lg bg-gray300" style={{ width: '85%' }} />
+					<SkeletonBox className="h-[14px] rounded-md bg-gray300 mt-2" style={{ width: '45%' }} />
 				</View>
 
 				{/* 포스터 카드 */}
 				<SkeletonBox
-					className="mt-7 rounded-[8px] bg-[#E0DCD5] w-[90%] mx-auto"
+					className="mt-7 rounded-[8px] bg-gray300 w-[90%] mx-auto"
 					style={{ height: 430 }}
 				/>
 
 				{/* 설명 줄 */}
 				<View className="px-6 mt-6 gap-2">
-					<SkeletonBox className="h-3 rounded-md bg-[#E0DCD5]" style={{ width: '100%' }} />
-					<SkeletonBox className="h-3 rounded-md bg-[#E0DCD5]" style={{ width: '100%' }} />
-					<SkeletonBox className="h-3 rounded-md bg-[#E0DCD5]" style={{ width: '60%' }} />
+					<SkeletonBox className="h-3 rounded-md bg-gray300" style={{ width: '100%' }} />
+					<SkeletonBox className="h-3 rounded-md bg-gray300" style={{ width: '100%' }} />
+					<SkeletonBox className="h-3 rounded-md bg-gray300" style={{ width: '60%' }} />
 				</View>
 
 				{/* MetaPills */}
 				<View className="flex-row gap-2 px-6 pt-5">
 					{[72, 56, 64].map((w, i) => (
-						<SkeletonBox key={i} className="h-6 rounded-full bg-[#E0DCD5]" style={{ width: w }} />
+						<SkeletonBox key={i} className="h-6 rounded-full bg-gray300" style={{ width: w }} />
 					))}
 				</View>
 
@@ -57,8 +57,8 @@ export function ExhibitionDetailSkeleton() {
 				<View className="px-6 mt-8 gap-4">
 					{[100, 140, 90].map((w, i) => (
 						<View key={i} className="flex-row items-center gap-3">
-							<SkeletonBox className="w-5 h-5 rounded bg-[#E0DCD5]" />
-							<SkeletonBox className="h-[14px] rounded-md bg-[#E0DCD5]" style={{ width: w }} />
+							<SkeletonBox className="w-5 h-5 rounded bg-gray300" />
+							<SkeletonBox className="h-[14px] rounded-md bg-gray300" style={{ width: w }} />
 						</View>
 					))}
 				</View>

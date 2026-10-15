@@ -11,7 +11,7 @@ export function PopularExhibitionAvatarSkeleton() {
 	return (
 		<View className="w-[84px] items-center justify-center">
 			<SkeletonBox
-				className="rounded-full bg-[#E0DCD5]"
+				className="rounded-full bg-gray300"
 				style={{ width: CIRCLE_SIZE, height: CIRCLE_SIZE }}
 			/>
 		</View>

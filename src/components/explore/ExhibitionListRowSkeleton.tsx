@@ -17,13 +17,13 @@ export function ExhibitionListRowSkeleton({
 	return (
 		<View className={cn('flex-row gap-4 py-4', showDivider && 'border-b border-description')}>
 			<SkeletonBox
-				className="rounded-none bg-[#E0DCD5]"
+				className="rounded-none bg-gray300"
 				style={{ width: columnWidth, height: ROW_HEIGHT }}
 			/>
 			<View className="flex-1 justify-center gap-2" style={{ height: ROW_HEIGHT }}>
-				<SkeletonBox className="h-[9px] rounded-md bg-[#E0DCD5]" style={{ width: '70%' }} />
-				<SkeletonBox className="h-[15px] rounded-md bg-[#E0DCD5]" style={{ width: '85%' }} />
-				<SkeletonBox className="h-[9px] rounded-md bg-[#E0DCD5]" style={{ width: '55%' }} />
+				<SkeletonBox className="h-[9px] rounded-md bg-gray300" style={{ width: '70%' }} />
+				<SkeletonBox className="h-[15px] rounded-md bg-gray300" style={{ width: '85%' }} />
+				<SkeletonBox className="h-[9px] rounded-md bg-gray300" style={{ width: '55%' }} />
 			</View>
 		</View>
 	);
