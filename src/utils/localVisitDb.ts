@@ -2,6 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as SQLite from 'expo-sqlite';
 
 import type { DayVisit, ListenedItem } from '@/src/store/visitStore';
+import { COMPANION_LABELS, type Companion } from '@/src/utils/visitRecord';
 import { persistVisitPhotoFields } from '@/src/utils/visitPhotoFiles';
 
 export const VISITS_ASYNC_KEY = 'visits';
@@ -20,6 +21,11 @@ interface VisitRow {
 	visited_start: string | null;
 	visited_end: string | null;
 	rating: number | null;
+	companion: string | null;
+	/** 감각 키워드 JSON 배열 문자열 */
+	keywords: string | null;
+	/** 재방문 여부 0/1 — 컬럼 추가 전 행은 NULL */
+	is_revisit: number | null;
 }
 
 interface PhotoRow {
@@ -43,6 +49,40 @@ interface PersistedVisits {
 let db: SQLite.SQLiteDatabase | null = null;
 let migrated = false;
 
+/** 기록 플로우 이전에 만들어진 DB에는 동행·키워드·재방문 컬럼이 없어 한 번 덧붙인다 */
+const ensureRecordColumns = (database: SQLite.SQLiteDatabase): void => {
+	const columns = database
+		.getAllSync<{ name: string }>('PRAGMA table_info(local_visits)')
+		.map((c) => c.name);
+	if (!columns.includes('companion')) {
+		database.execSync('ALTER TABLE local_visits ADD COLUMN companion TEXT');
+	}
+	if (!columns.includes('keywords')) {
+		database.execSync('ALTER TABLE local_visits ADD COLUMN keywords TEXT');
+	}
+	if (!columns.includes('is_revisit')) {
+		database.execSync('ALTER TABLE local_visits ADD COLUMN is_revisit INTEGER');
+	}
+};
+
+const parseKeywords = (raw: string | null): string[] | undefined => {
+	if (!raw) return undefined;
+	try {
+		const parsed: unknown = JSON.parse(raw);
+		return Array.isArray(parsed)
+			? parsed.filter((k): k is string => typeof k === 'string')
+			: undefined;
+	} catch {
+		return undefined;
+	}
+};
+
+const toCompanion = (raw: string | null): Companion | undefined =>
+	raw && raw in COMPANION_LABELS ? (raw as Companion) : undefined;
+
+const toIsRevisit = (raw: number | null | undefined): boolean | undefined =>
+	raw === null || raw === undefined ? undefined : raw === 1;
+
 const getDb = (): SQLite.SQLiteDatabase | null => {
 	if (db) return db;
 	try {
@@ -62,7 +102,10 @@ const getDb = (): SQLite.SQLiteDatabase | null => {
 				signature_svg TEXT,
 				visited_start TEXT,
 				visited_end TEXT,
-				rating INTEGER
+				rating INTEGER,
+				companion TEXT,
+				keywords TEXT,
+				is_revisit INTEGER
 			);
 			CREATE TABLE IF NOT EXISTS local_visit_photos (
 				visit_key TEXT NOT NULL,
@@ -79,6 +122,7 @@ const getDb = (): SQLite.SQLiteDatabase | null => {
 				PRIMARY KEY (visit_key, title)
 			);
 		`);
+		ensureRecordColumns(db);
 		return db;
 	} catch (error) {
 		console.warn('[visit] sqlite unavailable:', error);
@@ -100,6 +144,10 @@ export const slimLocalVisit = (visit: DayVisit): DayVisit => {
 		signatureSvg: visit.signatureSvg,
 		visitedAt: visit.visitedAt,
 		rating: visit.rating,
+		// 동행·키워드·재방문은 서버 컬럼이 없어 로그인 상태에서도 로컬에 남겨야 한다
+		companion: visit.companion,
+		keywords: visit.keywords,
+		isRevisit: visit.isRevisit,
 	};
 };
 
@@ -135,8 +183,8 @@ const upsertVisit = (database: SQLite.SQLiteDatabase, key: string, visit: DayVis
 		`INSERT OR REPLACE INTO local_visits (
 			visit_key, date_key, exhibition_id, exhibition_title, venue,
 			thumbnail_uri, memo, status, pending_since, signature_svg,
-			visited_start, visited_end, rating
-		) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+			visited_start, visited_end, rating, companion, keywords, is_revisit
+		) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
 		key,
 		key.split('::')[0],
 		visit.exhibitionId,
@@ -150,6 +198,9 @@ const upsertVisit = (database: SQLite.SQLiteDatabase, key: string, visit: DayVis
 		visit.visitedAt?.start ?? null,
 		visit.visitedAt?.end ?? null,
 		visit.rating ?? null,
+		visit.companion ?? null,
+		visit.keywords?.length ? JSON.stringify(visit.keywords) : null,
+		visit.isRevisit === undefined ? null : visit.isRevisit ? 1 : 0,
 	);
 	replaceChildren(database, key, visit);
 };
@@ -246,6 +297,9 @@ export const loadAllLocalVisits = (): Record<string, DayVisit> => {
 					? { start: row.visited_start, end: row.visited_end }
 					: undefined,
 			rating: row.rating ?? undefined,
+			companion: toCompanion(row.companion),
+			keywords: parseKeywords(row.keywords),
+			isRevisit: toIsRevisit(row.is_revisit),
 		};
 	}
 	return visits;

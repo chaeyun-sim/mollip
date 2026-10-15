@@ -1,6 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import { useLocalSearchParams, useRouter } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import {
 	ActivityIndicator,
@@ -13,6 +14,9 @@ import {
 	Text,
 	TextInput,
 	View,
+	useWindowDimensions,
+	type NativeScrollEvent,
+	type NativeSyntheticEvent,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useShallow } from 'zustand/react/shallow';
@@ -22,6 +26,7 @@ import {
 } from '@/src/components/archive/DiaryGuidePlayer';
 import { StarRating } from '@/src/components/archive/StarRating';
 import { VisitBlock } from '@/src/components/archive/VisitBlock';
+import { Result } from '@/src/components/common/Result';
 import { TextField } from '@/src/components/common/TextField';
 import { dateKeyOf, isTicketVisit, useVisitStore } from '@/src/store/visitStore';
 import { useAuthStore } from '@/src/store/authStore';
@@ -29,17 +34,22 @@ import { useImmersiveStore } from '@/src/store/immersiveStore';
 import { useHistoryStore } from '@/src/store/historyStore';
 import type { HistoryItem } from '@/src/store/historyStore';
 import { Screen } from '@/src/components/layout/Screen';
-import { ScreenHeader } from '@/src/components/layout/ScreenHeader';
+import { cn } from '@/src/lib/cn';
+import { colors } from '@/src/constants/colors';
 import { WEEKDAYS } from '@/src/constants/week';
+import { buildMockVisits, getQaFixtureVisit } from '@/src/utils/devMockVisits';
+import { galleryStageHeight } from '@/src/utils/visitGallery';
 import { uploadTicketVisitPhotos } from '@/src/utils/visitPhotos';
 
 const MAX_VENUE_PHOTOS = 9;
+// TODO(임시): 다이어리 목록(diary.tsx)의 가짜 기록과 같은 개수 — 목록에서 누른 가짜 액자가 상세에서도 열리게 한다. 확인이 끝나면 함께 지운다
+const MOCK_VISIT_COUNT = __DEV__ ? 60 : 0;
 
 export default function DiaryDateScreen() {
 	const router = useRouter();
 	const params = useLocalSearchParams<{ date?: string; visit?: string }>();
 	const insets = useSafeAreaInsets();
-	const memoScrollRef = useRef<ScrollView>(null);
+	const { width: windowWidth, height: windowHeight } = useWindowDimensions();
 
 	const dateKey = useMemo(() => {
 		const raw = typeof params.date === 'string' ? params.date : '';
@@ -52,7 +62,13 @@ export default function DiaryDateScreen() {
 		return `${y}.${m}.${d} ${weekday}요일`;
 	}, [dateKey]);
 
-	const { visits, setVisitMemo, setVisitRating, deleteVisit, updateVisitPhotos } = useVisitStore(
+	const {
+		visits: storeVisits,
+		setVisitMemo,
+		setVisitRating,
+		deleteVisit,
+		updateVisitPhotos,
+	} = useVisitStore(
 		useShallow((s) => ({
 			visits: s.visits,
 			setVisitMemo: s.setVisitMemo,
@@ -61,6 +77,16 @@ export default function DiaryDateScreen() {
 			updateVisitPhotos: s.updateVisitPhotos,
 		})),
 	);
+	// 개발용 가짜 기록은 읽기 전용 미리보기다 — 스토어에 없는 키라 아래 handle*에서 쓰기 경로를 모두 막는다.
+	// 같은 키의 실제 기록이 스토어에 있으면 그쪽이 덮어쓰므로 정상 동작한다
+	const visits = useMemo(() => {
+		const qaVisit = __DEV__ && params.visit ? getQaFixtureVisit(params.visit) : undefined;
+		return {
+			...buildMockVisits(MOCK_VISIT_COUNT),
+			...(qaVisit && params.visit ? { [params.visit]: qaVisit } : {}),
+			...storeVisits,
+		};
+	}, [storeVisits, params.visit]);
 	const playlist = useImmersiveStore((s) => s.playlist);
 	const historyItems = useHistoryStore((s) => s.items);
 	const userId = useAuthStore((s) => s.user?.id);
@@ -75,6 +101,9 @@ export default function DiaryDateScreen() {
 		return all;
 	}, [visits, dateKey, params.visit]);
 
+	const isStoredKey = (key: string | null): key is string =>
+		key !== null && storeVisits[key] !== undefined;
+
 	const [playingGuide, setPlayingGuide] = useState<HistoryItem | null>(null);
 	const playerRef = useRef<DiaryGuidePlayerHandle>(null);
 	const [activeMemoKey, setActiveMemoKey] = useState<string | null>(null);
@@ -83,6 +112,11 @@ export default function DiaryDateScreen() {
 	const activeMemo = activeVisit?.memo || '';
 	const activeRating = activeVisit?.rating || 0;
 	const activeIsTicketVisit = activeVisit ? isTicketVisit(activeVisit) : false;
+
+	const [showPreviewNotice, setShowPreviewNotice] = useState(false);
+	// 사진이 상태바 뒤까지 이어지는 상단 구간인지, 첫 블록 히어로에 실제 사진이 있는지 — 상태바 글자색·버튼 면을 고른다
+	const [isOverHero, setIsOverHero] = useState(true);
+	const [heroHasPhoto, setHeroHasPhoto] = useState(false);
 
 	const [editTicketUri, setEditTicketUri] = useState<string | null>(null);
 	const [editVenuePhotos, setEditVenuePhotos] = useState<string[]>([]);
@@ -94,6 +128,18 @@ export default function DiaryDateScreen() {
 		const timer = setTimeout(() => memoInputRef.current?.focus(), 80);
 		return () => clearTimeout(timer);
 	}, [activeMemoKey]);
+
+	useEffect(() => {
+		if (!showPreviewNotice) return;
+		const timer = setTimeout(() => setShowPreviewNotice(false), 2600);
+		return () => clearTimeout(timer);
+	}, [showPreviewNotice]);
+
+	// 편집 중인 기록이 스토어에서 사라지면(다른 곳에서 삭제·동기화) 시트를 닫아 유령 레코드를 만들지 않는다
+	useEffect(() => {
+		if (activeMemoKey !== null && !isStoredKey(activeMemoKey)) setActiveMemoKey(null);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [activeMemoKey, storeVisits]);
 
 	useEffect(() => {
 		if (!activeMemoKey) return;
@@ -151,7 +197,7 @@ export default function DiaryDateScreen() {
 
 	const handleCloseEditor = async () => {
 		if (savingPhotos) return;
-		if (!photosDirty || !activeMemoKey) {
+		if (!photosDirty || !isStoredKey(activeMemoKey)) {
 			setActiveMemoKey(null);
 			return;
 		}
@@ -200,60 +246,154 @@ export default function DiaryDateScreen() {
 		[historyItems, dateKey],
 	);
 
+	// 뒤로가기 버튼(안전 영역 아래 8 + 44pt)까지 사진이 보이는 동안만 "히어로 위"로 본다
+	const heroOverThreshold = galleryStageHeight(windowWidth, windowHeight) - insets.top - 56;
+	const hasHeroPhoto = dayVisitEntries.length > 0 && heroHasPhoto;
+	const isLightOverPhoto = hasHeroPhoto && isOverHero;
+
+	const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+		const over = event.nativeEvent.contentOffset.y < heroOverThreshold;
+		setIsOverHero((prev) => (prev === over ? prev : over));
+	};
+
+	const handleBack = () => {
+		if (router.canGoBack()) router.back();
+		else router.replace('/(tabs)/diary');
+	};
+
+	const handleEditPress = (visitKey: string) => {
+		if (!isStoredKey(visitKey)) {
+			setShowPreviewNotice(true);
+			return;
+		}
+		setActiveMemoKey(visitKey);
+	};
+
 	const handleDeletePress = (visitKey: string) => {
-		Alert.alert('티켓 삭제', '이 티켓을 삭제할까요?', [
+		if (!isStoredKey(visitKey)) {
+			setShowPreviewNotice(true);
+			return;
+		}
+		Alert.alert('기록 삭제', '이 기록을 삭제할까요?', [
 			{ text: '닫기', style: 'cancel' },
 			{
 				text: '삭제',
 				style: 'destructive',
 				onPress: async () => {
 					await deleteVisit(visitKey);
-					if (dayVisitEntries.length <= 1) router.back();
+					if (dayVisitEntries.length <= 1) handleBack();
 				},
 			},
 		]);
 	};
 
 	return (
-		<Screen>
-			<ScreenHeader>
-				<ScreenHeader.Back color="white" onPress={() => router.back()} />
-				<ScreenHeader.Center>
-					<Text className="text-[16px] text-white font-pretendard-semibold">{dateLabel}</Text>
-				</ScreenHeader.Center>
-			</ScreenHeader>
+		<Screen variant="warm" className="px-0" edges={['left', 'right']}>
+			{/* 사진 위로 올라가는 상태바 — 사진 위에서는 흰 글자, 스크롤로 사진이 지나가면 어두운 글자 */}
+			<StatusBar style={isLightOverPhoto ? 'light' : 'dark'} />
 
-			<ScrollView
-				className="flex-1"
-				showsVerticalScrollIndicator={false}
-				contentContainerClassName="pb-10"
-			>
-				{dayVisitEntries.map(([visitKey, visit]) => (
-					<VisitBlock
-						key={visitKey}
-						visit={visit}
-						dateKey={dateKey}
-						dateLabel={dateLabel}
-						playlistTitles={playlist.map((p) => p.title)}
-						onEditMemo={() => setActiveMemoKey(visitKey)}
-						onDelete={() => handleDeletePress(visitKey)}
-						dayChatItems={dayChatItems}
-						dayHistoryItems={dayHistoryItems}
-						onPlayGuide={(item) => {
-							setPlayingGuide(item);
-							playerRef.current?.expand();
-						}}
+			{/* 사진이 지나간 뒤 상태바 뒤에 본문이 비치지 않게 덮는 띠 */}
+			{!isOverHero && (
+				<View
+					pointerEvents="none"
+					className="absolute inset-x-0 top-0 z-10 bg-bg-light"
+					style={{ height: insets.top }}
+				/>
+			)}
+
+			{/* 투명 absolute 헤더 — 콘텐츠를 밀지 않고 사진 위에 뜬다. 편집 시트(z 10000)보다 아래 */}
+			<View className="absolute left-4 z-20" style={{ top: insets.top + 8 }}>
+				<Pressable
+					onPress={handleBack}
+					hitSlop={4}
+					accessibilityRole="button"
+					accessibilityLabel="뒤로 가기"
+					className={cn(
+						'h-11 w-11 items-center justify-center rounded-full',
+						isLightOverPhoto ? 'bg-black/50' : 'border-[0.5px] border-divider bg-white/90',
+					)}
+					style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
+				>
+					<Ionicons
+						name="arrow-back"
+						size={22}
+						color={isLightOverPhoto ? colors.white : colors.ink}
 					/>
-				))}
-			</ScrollView>
+				</Pressable>
+			</View>
+
+			{dayVisitEntries.length > 0 ? (
+				<ScrollView
+					className="flex-1"
+					showsVerticalScrollIndicator={false}
+					scrollEventThrottle={16}
+					onScroll={handleScroll}
+					// 사진이 기기 최상단까지 닿도록 시스템이 상단 인셋을 자동으로 더하지 못하게 한다
+					contentInsetAdjustmentBehavior="never"
+					automaticallyAdjustContentInsets={false}
+					contentContainerStyle={{ paddingBottom: insets.bottom + 40 }}
+				>
+					{dayVisitEntries.map(([visitKey, visit], index) => (
+						<View
+							key={visitKey}
+							className={index > 0 ? 'mt-10 border-t-[0.5px] border-divider pt-10' : undefined}
+						>
+							<VisitBlock
+								visit={visit}
+								dateKey={dateKey}
+								dateLabel={dateLabel}
+								playlistTitles={playlist.map((p) => p.title)}
+								onEditMemo={() => handleEditPress(visitKey)}
+								onDelete={() => handleDeletePress(visitKey)}
+								heroTopInset={index === 0 ? insets.top : 0}
+								onHeroPhotoChange={index === 0 ? setHeroHasPhoto : undefined}
+								dayChatItems={dayChatItems}
+								dayHistoryItems={dayHistoryItems}
+								onPlayGuide={(item) => {
+									setPlayingGuide(item);
+									playerRef.current?.expand();
+								}}
+							/>
+						</View>
+					))}
+				</ScrollView>
+			) : (
+				<Result
+					icon="images-outline"
+					title="기록을 찾을 수 없어요"
+					description="삭제되었거나 아직 불러오지 못한 기록이에요."
+					actionLabel="돌아가기"
+					onAction={handleBack}
+				/>
+			)}
+
+			{showPreviewNotice && (
+				<View
+					pointerEvents="none"
+					className="absolute inset-x-6 items-center"
+					style={{ bottom: insets.bottom + 24 }}
+				>
+					<View
+						accessible
+						accessibilityLiveRegion="polite"
+						className="rounded-full bg-gray800 px-4 py-2.5"
+					>
+						<Text className="font-pretendard-medium text-[13px] text-white">
+							미리보기용 샘플이라 수정·삭제할 수 없어요
+						</Text>
+					</View>
+				</View>
+			)}
 
 			<DiaryGuidePlayer ref={playerRef} item={playingGuide} onClose={() => setPlayingGuide(null)} />
 
+			{/* 뒤로가기 헤더(z 20)·상태바 띠(z 10)보다 위에 둬야 시트 뒤로 비치지 않는다 */}
 			{activeMemoKey !== null && (
-				<View className="absolute inset-0 z-50">
+				<View className="absolute inset-0 z-[10000]">
 					<KeyboardAvoidingView
 						behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
 						className="flex-1 justify-end"
+						style={{ paddingTop: insets.top }}
 					>
 						<Pressable
 							className="flex-1 bg-black/50"
@@ -262,11 +402,11 @@ export default function DiaryDateScreen() {
 							accessibilityLabel="감상 편집 닫기"
 						/>
 						<View
-							className="bg-gray900 rounded-t-3xl px-6 pt-5"
+							className="max-h-full bg-white rounded-t-3xl px-6 pt-5"
 							style={{ paddingBottom: insets.bottom + 40 }}
 						>
 							<View className="flex-row items-center justify-between mb-4">
-								<Text className="text-white font-pretendard-semibold text-[17px]">
+								<Text className="text-ink font-pretendard-semibold text-[17px]">
 									나의 감상 편집
 								</Text>
 								<Pressable
@@ -278,100 +418,104 @@ export default function DiaryDateScreen() {
 									style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
 								>
 									{savingPhotos ? (
-										<ActivityIndicator size="small" color="#fff" />
+										<ActivityIndicator size="small" color={colors.brand} />
 									) : (
-										<Ionicons name="checkmark" size={22} color="white" />
+										<Ionicons name="checkmark" size={22} color={colors.brand} />
 									)}
 								</Pressable>
 							</View>
-							<View className="mb-4">
-								<StarRating
-									value={activeRating}
-									onChange={(n) => activeMemoKey && setVisitRating(activeMemoKey, n)}
-									size={26}
-									tone="dark"
-								/>
-							</View>
-							{activeIsTicketVisit && (
-								<View className="mb-5">
-									<Text className="text-white/70 text-[13px] font-pretendard-medium mb-2">
-										티켓 사진
-									</Text>
-									<Pressable
-										onPress={handlePickTicketPhoto}
-										disabled={savingPhotos}
-										accessibilityRole="button"
-										accessibilityLabel="티켓 사진 변경"
-										className="mb-4 overflow-hidden rounded-2xl"
-										style={({ pressed }) => ({ opacity: pressed ? 0.85 : 1 })}
-									>
-										{editTicketUri ? (
-											<Image
-												source={{ uri: editTicketUri }}
-												className="w-full h-[140px] bg-gray800"
-											/>
-										) : (
-											<View className="w-full h-[140px] bg-gray800 items-center justify-center">
-												<Ionicons name="camera-outline" size={28} color="rgba(255,255,255,0.4)" />
-											</View>
-										)}
-									</Pressable>
-
-									<Text className="text-white/70 text-[13px] font-pretendard-medium mb-2">
-										현장 사진
-									</Text>
-									<View className="flex-row flex-wrap gap-2">
-										{editVenuePhotos.map((uri) => (
-											<View key={uri} className="w-[72px] h-[72px]">
-												<Image source={{ uri }} className="h-full w-full rounded-xl bg-gray800" />
-												<Pressable
-													onPress={() => handleRemoveVenuePhoto(uri)}
-													disabled={savingPhotos}
-													accessibilityRole="button"
-													accessibilityLabel="현장 사진 삭제"
-													hitSlop={6}
-													className="absolute top-1 right-1 h-5 w-5 items-center justify-center rounded-full bg-black/60"
-												>
-													<Ionicons name="close" size={12} color="#fff" />
-												</Pressable>
-											</View>
-										))}
-										{editVenuePhotos.length < MAX_VENUE_PHOTOS && (
-											<Pressable
-												onPress={handleAddVenuePhoto}
-												disabled={savingPhotos}
-												accessibilityRole="button"
-												accessibilityLabel="현장 사진 추가"
-												className="w-[72px] h-[72px] items-center justify-center rounded-xl bg-gray800"
-												style={({ pressed }) => ({ opacity: pressed ? 0.75 : 1 })}
-											>
-												<Ionicons name="add" size={22} color="rgba(255,255,255,0.5)" />
-											</Pressable>
-										)}
-									</View>
-								</View>
-							)}
+							{/* 키보드가 올라와 시트가 화면보다 커져도 제목 줄(닫기)은 고정하고 본문만 스크롤한다 */}
 							<ScrollView
-								ref={memoScrollRef}
 								keyboardShouldPersistTaps="handled"
 								showsVerticalScrollIndicator={false}
-								className="max-h-[200px]"
-								onContentSizeChange={() => memoScrollRef.current?.scrollToEnd({ animated: false })}
+								className="shrink"
 							>
-								<TextField
-									ref={memoInputRef}
-									variant="plain"
-									tone="dark"
-									value={activeMemo}
-									onChangeText={(text) => activeMemoKey && setVisitMemo(activeMemoKey, text)}
-									placeholder="오늘 기억하고 싶은 것을 적어보세요"
-									placeholderTextColor="rgba(255,255,255,0.3)"
-									multiline
-									scrollEnabled={false}
-									maxLength={400}
-									accessibilityLabel="관람 메모 입력"
-									className="text-white text-[15px] leading-[24px] min-h-[120px]"
-								/>
+								<View className="mb-4">
+									<StarRating
+										value={activeRating}
+										onChange={(n) => isStoredKey(activeMemoKey) && setVisitRating(activeMemoKey, n)}
+										size={26}
+									/>
+								</View>
+								{activeIsTicketVisit && (
+									<View className="mb-5">
+										<Text className="text-gray600 text-[13px] font-pretendard-medium mb-2">
+											티켓 사진
+										</Text>
+										<Pressable
+											onPress={handlePickTicketPhoto}
+											disabled={savingPhotos}
+											accessibilityRole="button"
+											accessibilityLabel="티켓 사진 변경"
+											className="mb-4 overflow-hidden rounded-2xl"
+											style={({ pressed }) => ({ opacity: pressed ? 0.85 : 1 })}
+										>
+											{editTicketUri ? (
+												<Image
+													source={{ uri: editTicketUri }}
+													className="w-full h-[140px] bg-surface-neutral"
+												/>
+											) : (
+												<View className="w-full h-[140px] bg-surface-neutral items-center justify-center">
+													<Ionicons name="camera-outline" size={28} color={colors.gray500} />
+												</View>
+											)}
+										</Pressable>
+
+										<Text className="text-gray600 text-[13px] font-pretendard-medium mb-2">
+											현장 사진
+										</Text>
+										<View className="flex-row flex-wrap gap-2">
+											{editVenuePhotos.map((uri) => (
+												<View key={uri} className="w-[72px] h-[72px]">
+													<Image
+														source={{ uri }}
+														className="h-full w-full rounded-xl bg-surface-neutral"
+													/>
+													<Pressable
+														onPress={() => handleRemoveVenuePhoto(uri)}
+														disabled={savingPhotos}
+														accessibilityRole="button"
+														accessibilityLabel="현장 사진 삭제"
+														hitSlop={6}
+														className="absolute top-1 right-1 h-5 w-5 items-center justify-center rounded-full bg-black/60"
+													>
+														<Ionicons name="close" size={12} color="#fff" />
+													</Pressable>
+												</View>
+											))}
+											{editVenuePhotos.length < MAX_VENUE_PHOTOS && (
+												<Pressable
+													onPress={handleAddVenuePhoto}
+													disabled={savingPhotos}
+													accessibilityRole="button"
+													accessibilityLabel="현장 사진 추가"
+													className="w-[72px] h-[72px] items-center justify-center rounded-xl bg-surface-neutral"
+													style={({ pressed }) => ({ opacity: pressed ? 0.75 : 1 })}
+												>
+													<Ionicons name="add" size={22} color={colors.gray600} />
+												</Pressable>
+											)}
+										</View>
+									</View>
+								)}
+								<View>
+									<TextField
+										ref={memoInputRef}
+										variant="plain"
+										value={activeMemo}
+										onChangeText={(text) =>
+											isStoredKey(activeMemoKey) && setVisitMemo(activeMemoKey, text)
+										}
+										placeholder="오늘 기억하고 싶은 것을 적어보세요"
+										placeholderTextColor={colors.gray500}
+										multiline
+										scrollEnabled={false}
+										maxLength={400}
+										accessibilityLabel="관람 메모 입력"
+										className="text-ink text-[15px] leading-[24px] min-h-[120px]"
+									/>
+								</View>
 							</ScrollView>
 						</View>
 					</KeyboardAvoidingView>

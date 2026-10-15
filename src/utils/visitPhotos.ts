@@ -21,6 +21,30 @@ const uploadOne = async (
 	return data.publicUrl;
 };
 
+/** 기록마다 다른 파일 이름 — 같은 날 여러 전시를 기록해도 서로 덮어쓰지 않게 식별자를 해시한다 */
+const recordSlug = (identity: string): string => {
+	let hash = 5381;
+	for (let i = 0; i < identity.length; i += 1) {
+		hash = ((hash << 5) + hash + identity.charCodeAt(i)) >>> 0;
+	}
+	return hash.toString(36);
+};
+
+/** 기록하기 플로우 사진 업로드 — 포스터(선택)와 작품·공간·나 사진 */
+export const uploadVisitRecordPhotos = async (
+	userId: string,
+	dateKey: string,
+	identity: string,
+	{ poster, photos }: { poster?: string; photos: string[] },
+): Promise<{ posterUrl?: string; photoUrls: string[] }> => {
+	const slug = recordSlug(identity);
+	const posterUrl = poster ? await uploadOne(userId, dateKey, `${slug}-poster`, poster) : undefined;
+	const photoUrls = await Promise.all(
+		photos.map((uri, index) => uploadOne(userId, dateKey, `${slug}-photo-${index}`, uri)),
+	);
+	return { posterUrl, photoUrls };
+};
+
 export const uploadTicketVisitPhotos = async (
 	userId: string,
 	dateKey: string,

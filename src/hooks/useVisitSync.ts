@@ -55,6 +55,10 @@ export const useVisitSync = () => {
 							signatureSvg: local?.signatureSvg,
 							visitedAt: local?.visitedAt,
 							rating: local?.rating,
+							// 동행·키워드·재방문은 서버 컬럼이 없어 로컬 값을 그대로 지킨다
+							companion: local?.companion,
+							keywords: local?.keywords,
+							isRevisit: local?.isRevisit,
 						};
 					}
 					// 진행 중·미확정은 로컬 키로 유지. 같은 날 덮여서 원격에 없는 확정 기록은 다시 올린다.

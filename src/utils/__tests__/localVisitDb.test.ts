@@ -25,7 +25,19 @@ const visit: DayVisit = {
 	signatureSvg: '<svg />',
 	visitedAt: { start: 'a', end: 'b' },
 	rating: 4,
+	companion: 'friend',
+	keywords: ['고요한', '선명한'],
+	isRevisit: true,
 };
+
+describe('slimLocalVisit — 로컬 전용 기록 필드', () => {
+	it('동행·키워드는 서버에 없어 로그인 오버레이에도 남긴다', () => {
+		const slim = slimLocalVisit(visit);
+		expect(slim.companion).toBe('friend');
+		expect(slim.keywords).toEqual(['고요한', '선명한']);
+		expect(slim.isRevisit).toBe(true);
+	});
+});
 
 describe('slimLocalVisit', () => {
 	it('로그인 오버레이만 남기고 사진·메모·해설을 뺀다', () => {

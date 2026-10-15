@@ -9,12 +9,14 @@ import {
 	upsertLocalVisit,
 } from '../utils/localVisitDb';
 import { supabase } from '../utils/supabase';
+import type { Companion } from '../utils/visitRecord';
 import { deleteManagedVisitPhotos, persistLocalVisitPhoto } from '../utils/visitPhotoFiles';
 import {
 	dateKeyFrom,
 	dateKeyOf,
 	localVisitKeyFromRemote,
 	makeVisitKey,
+	PENDING_EXPIRY_MS,
 	todayKey,
 	visitIdentityOf,
 } from '../utils/visitKey';
@@ -56,6 +58,12 @@ export interface DayVisit {
 	visitedAt?: { start: string; end: string };
 	/** 확정 큐에서 매긴 별점(1~5) — Supabase에 컬럼이 없어 로컬 전용 */
 	rating?: number;
+	/** 기록 체크인에서 고른 동행 — 로컬 전용 */
+	companion?: Companion;
+	/** 기록에 남긴 감각 키워드(최대 5) — 로컬 전용 */
+	keywords?: string[];
+	/** 재방문 여부 — 기록 감상 단계에서 고른 값, 로컬 전용 */
+	isRevisit?: boolean;
 	/**
 	 * rev1에서 한줄평과 분리 저장하던 감상문. rev2부터는 `memo`로 이관하고 이 필드는 쓰지 않는다.
 	 * persist된 옛 기록을 읽은 뒤에만 잠시 존재하며, `migrateEssayIntoMemo`가 제거한다.
@@ -67,6 +75,22 @@ export interface DayVisit {
 export const isTicketVisit = (visit: DayVisit): boolean => {
 	return Boolean(visit.thumbnail) || (visit.venuePhotos?.length ?? 0) > 0;
 };
+
+export interface SaveRecordInput {
+	dateKey: string;
+	exhibitionId: string | null;
+	title: string;
+	venue?: string;
+	/** 직접 기록에서 올린 포스터 — 티켓 자리(thumbnail)에 둔다 */
+	poster?: string;
+	/** 작품·공간·나 사진 */
+	photos?: string[];
+	rating: number;
+	memo?: string;
+	companion?: Companion;
+	keywords?: string[];
+	isRevisit?: boolean;
+}
 
 interface VisitStore {
 	// "날짜::전시식별자" 키별 관람 기록 (makeVisitKey 참고)
@@ -98,6 +122,11 @@ interface VisitStore {
 		visitKey: string,
 		meta: { signatureSvg: string; rating?: number; memo?: string },
 	) => void;
+	/**
+	 * 기록하기 플로우 저장 — 새 관람이든 도슨트로 남은 미확정 관람이든 같은 키에 합쳐 확정한다.
+	 * 반환값은 저장된 visitKey.
+	 */
+	saveRecord: (input: SaveRecordInput) => string;
 	/** pending 상태로 7일이 지난 기록을 자동 삭제 */
 	pruneExpiredPending: () => Promise<void>;
 	/** 레거시(status 필드 없는) 기록을 confirmed로 일괄 마이그레이션 — 하이드레이션 1회용 */
@@ -110,7 +139,6 @@ interface VisitStore {
 	hydrateFromLocalDb: () => Promise<void>;
 }
 
-const PENDING_EXPIRY_MS = 7 * 24 * 60 * 60 * 1000;
 const VISIT_CONFLICT = 'user_id,visit_key,date';
 
 const persistVisit = (key: string, visit: DayVisit | undefined): void => {
@@ -343,6 +371,55 @@ export const useVisitStore = create<VisitStore>()((set, get) => ({
 			if (userId) upsertRemoteVisit(userId, visitKey, { memo });
 		}
 		persistVisit(visitKey, get().visits[visitKey]);
+	},
+	saveRecord: (input) => {
+		const key = makeVisitKey(input.dateKey, input.exhibitionId, input.title);
+		const thumbnail = input.poster
+			? (persistLocalVisitPhoto(input.poster) ?? undefined)
+			: undefined;
+		const photos = input.photos
+			?.map((uri) => persistLocalVisitPhoto(uri))
+			.filter((uri): uri is string => Boolean(uri));
+		const memo = input.memo?.trim() || undefined;
+
+		set((state) => {
+			const prev = state.visits[key];
+			const next: DayVisit = {
+				...prev,
+				exhibitionId: input.exhibitionId,
+				exhibitionTitle: input.title,
+				venue: input.venue ?? prev?.venue,
+				thumbnail: thumbnail ?? prev?.thumbnail,
+				venuePhotos: photos?.length ? photos : prev?.venuePhotos,
+				// 도슨트로 들은 작품 목록은 그대로 이어받는다
+				listened: prev?.listened ?? [],
+				status: 'confirmed',
+				signatureSvg: prev?.signatureSvg ?? '',
+				rating: input.rating,
+				memo: memo ?? prev?.memo,
+				companion: input.companion ?? prev?.companion,
+				keywords: input.keywords?.length ? input.keywords : prev?.keywords,
+				isRevisit: input.isRevisit ?? prev?.isRevisit,
+			};
+			delete next.pendingSince;
+			delete next.essay;
+			return { visits: { ...state.visits, [key]: next } };
+		});
+
+		const userId = useAuthStore.getState().user?.id;
+		if (userId) {
+			upsertRemoteVisit(userId, key, {
+				exhibition_id: remoteExhibitionId(input.exhibitionId),
+				exhibition_title: input.title,
+				venue: input.venue ?? null,
+				...(memo ? { memo } : {}),
+				...(input.poster ? { ticket_photo_url: input.poster } : {}),
+				...(input.photos?.length ? { venue_photo_urls: input.photos } : {}),
+				visit_status: 'confirmed',
+			});
+		}
+		persistVisit(key, get().visits[key]);
+		return key;
 	},
 	pruneExpiredPending: async () => {
 		const now = Date.now();

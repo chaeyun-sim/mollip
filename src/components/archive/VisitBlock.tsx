@@ -1,30 +1,38 @@
 import { Ionicons } from '@expo/vector-icons';
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Dimensions, Modal, Pressable, Text, View } from 'react-native';
 
+import { PhotoGallery } from '@/src/components/archive/PhotoGallery';
 import { StarRating } from '@/src/components/archive/StarRating';
-import { VisitTicket } from '@/src/components/archive/VisitTicket';
+import { colors } from '@/src/constants/colors';
 import { useExhibitionDetail } from '@/src/hooks/queries/useExhibitionDetail';
 import { cn } from '@/src/lib/cn';
 import type { HistoryItem } from '@/src/store/historyStore';
 import { isTicketVisit } from '@/src/store/visitStore';
 import type { DayVisit, ListenedItem } from '@/src/store/visitStore';
+import { cleanText } from '@/src/utils/museumWall';
+import { buildCreditLine } from '@/src/utils/visitCredit';
+import { buildVisitPhotos } from '@/src/utils/visitGallery';
 
 interface VisitBlockProps {
 	visit: DayVisit;
 	dateKey: string;
 	dateLabel: string;
 	playlistTitles: string[];
-	/** 그날 저장된 채팅 기록 전부 — 이 방문에서 들은 작품과 제목이 겹치는 것만 골라 이 티켓 아래에 붙인다 */
+	/** 그날 저장된 채팅 기록 전부 — 이 방문에서 들은 작품과 제목이 겹치는 것만 골라 사진 아래에 붙인다 */
 	dayChatItems: HistoryItem[];
-	/** 그날 해설 텍스트가 있는 기록 — 티켓 프로그램 탭 재생에 쓴다 */
+	/** 그날 해설 텍스트가 있는 기록 — 들은 작품 탭 재생에 쓴다 */
 	dayHistoryItems: HistoryItem[];
 	onPlayGuide: (item: HistoryItem) => void;
 	onEditMemo: () => void;
 	onDelete: () => void;
+	/** 사진이 상태바 뒤까지 이어질 때 그 안전 영역 높이 — 첫 블록만 값을 주고 나머지는 0 */
+	heroTopInset?: number;
+	/** 히어로에 실제 사진이 있는지 알린다 — 화면이 상태바 글자색과 버튼 면을 고르는 데 쓴다 */
+	onHeroPhotoChange?: (hasPhoto: boolean) => void;
 }
 
-// 하루에 확정된 관람이 여러 개면 이 블록이 그만큼 반복된다 — 티켓 하나 + 그 관람의 서명/메모/채팅/삭제
+// 하루에 확정된 관람이 여러 개면 이 블록이 그만큼 반복된다 — 사진 갤러리 + 그 관람의 제목/메타/감상/채팅/메뉴
 export function VisitBlock({
 	visit,
 	dateKey,
@@ -35,65 +43,61 @@ export function VisitBlock({
 	onPlayGuide,
 	onEditMemo,
 	onDelete,
+	heroTopInset = 0,
+	onHeroPhotoChange,
 }: VisitBlockProps) {
 	const dotsRef = useRef<View>(null);
 	const [menuOpen, setMenuOpen] = useState(false);
 	const [menuAnchor, setMenuAnchor] = useState({ top: 0, right: 0 });
 
-	const ticketVerified = isTicketVisit(visit);
+	const hasOwnPhotos = isTicketVisit(visit);
 
 	const { data: visitExhibition } = useExhibitionDetail(visit.exhibitionId ?? undefined);
 
-	const exhibition = useMemo(
-		() =>
-			visitExhibition ?? {
-				id: visit.exhibitionId ?? 'placeholder',
-				title: visit.exhibitionTitle ?? '오늘의 전시',
-				venue: visit.venue ?? '',
-				startDate: '',
-				endDate: '',
-				description: '',
-				posterColor: '#E8E4DC',
-				genre: '전시',
-				openHours: '',
-				admission: '',
-				artworks: [],
-				relatedExhibitionIds: [],
-			},
-		[visitExhibition, visit],
+	const title = cleanText(visit.exhibitionTitle) ?? visitExhibition?.title ?? '제목 없는 전시';
+	const venue = cleanText(visit.venue) ?? cleanText(visitExhibition?.venue);
+	const memo = cleanText(visit.memo);
+	// 작가는 전시 상세(Exhibition.artist)에 있을 때만 쓴다 — DayVisit에는 없고 작품 작가로 대신 채우지 않는다
+	const creditLine = buildCreditLine(visitExhibition?.artist, venue);
+	const rating = visit.rating ?? 0;
+	const hasRating = rating > 0;
+	const ratingText = rating.toFixed(1);
+	const hasReview = hasRating || Boolean(memo);
+
+	const photos = useMemo(
+		() => buildVisitPhotos(visit, visitExhibition?.heroImageUri),
+		[visit, visitExhibition?.heroImageUri],
 	);
 
-	const listenedTitles = useMemo(() => {
-		if (ticketVerified) return [];
-		if (visit.listened.length > 0) return visit.listened.map((l) => l.title);
-		if (playlistTitles.length > 0) return playlistTitles;
-		return exhibition.artworks.slice(0, 3).map((a) => a.title);
-	}, [ticketVerified, visit, playlistTitles, exhibition]);
+	const hasHeroPhoto = photos.length > 0;
+	useEffect(() => {
+		onHeroPhotoChange?.(hasHeroPhoto);
+	}, [hasHeroPhoto, onHeroPhotoChange]);
 
 	const listenedItems = useMemo((): ListenedItem[] => {
-		if (ticketVerified) return [];
 		if (visit.listened.length > 0) return visit.listened;
-		return listenedTitles.map((title) => ({ title }));
-	}, [ticketVerified, visit, listenedTitles]);
+		// 사진을 직접 올린 기록은 추정 목록을 만들지 않는다
+		if (hasOwnPhotos) return [];
+		if (playlistTitles.length > 0) return playlistTitles.map((t) => ({ title: t }));
+		return (visitExhibition?.artworks ?? []).slice(0, 3).map((a) => ({ title: a.title }));
+	}, [visit, hasOwnPhotos, playlistTitles, visitExhibition]);
+
+	const listenedTitles = useMemo(() => listenedItems.map((l) => l.title), [listenedItems]);
 
 	const visitChatItems = useMemo(
 		() =>
-			dayChatItems.filter(
-				(item) => listenedTitles.includes(item.title) || item.title === exhibition.title,
-			),
-		[dayChatItems, listenedTitles, exhibition.title],
+			dayChatItems.filter((item) => listenedTitles.includes(item.title) || item.title === title),
+		[dayChatItems, listenedTitles, title],
 	);
 
 	const playableByTitle = useMemo(() => {
 		const map = new Map<string, HistoryItem>();
 		for (const item of dayHistoryItems) {
-			if (!listenedTitles.includes(item.title) && item.title !== exhibition.title) continue;
+			if (!listenedTitles.includes(item.title) && item.title !== title) continue;
 			if (!map.has(item.title)) map.set(item.title, item);
 		}
 		return map;
-	}, [dayHistoryItems, listenedTitles, exhibition.title]);
-
-	const playableTitles = useMemo(() => [...playableByTitle.keys()], [playableByTitle]);
+	}, [dayHistoryItems, listenedTitles, title]);
 
 	const handleOpenMenu = useCallback(() => {
 		dotsRef.current?.measureInWindow((x, y, width, height) => {
@@ -105,73 +109,162 @@ export function VisitBlock({
 		});
 	}, []);
 	const handleClose = useCallback(() => setMenuOpen(false), []);
-	const handlePlayListened = useCallback(
-		(item: ListenedItem) => {
-			const guide = playableByTitle.get(item.title);
-			if (guide) onPlayGuide({ ...guide, imageUrl: guide.imageUrl ?? item.imageUrl });
-		},
-		[playableByTitle, onPlayGuide],
-	);
+	const handlePlayListened = (item: ListenedItem) => {
+		const guide = playableByTitle.get(item.title);
+		if (guide) onPlayGuide({ ...guide, imageUrl: guide.imageUrl ?? item.imageUrl });
+	};
 	const handleEditMemo = useCallback(() => {
 		setMenuOpen(false);
 		onEditMemo();
 	}, [onEditMemo]);
-
 	const handleDelete = useCallback(() => {
 		setMenuOpen(false);
 		onDelete();
 	}, [onDelete]);
 
 	return (
-		<View className="pt-4">
-			<View className="relative">
-				<VisitTicket
-					exhibition={exhibition}
-					listenedTitles={listenedTitles}
-					listenedItems={listenedItems}
-					dateKey={dateKey}
-					dateLabel={dateLabel}
-					signatureSvg={visit.signatureSvg}
-					visitedAt={visit.visitedAt}
-					playableTitles={playableTitles}
-					ticketPhotoUri={visit.thumbnail}
-					venuePhotos={visit.venuePhotos}
-					onPlayListened={handlePlayListened}
+		<View testID={`visit-block-${dateKey}`}>
+			<View>
+				<PhotoGallery
+					photos={photos}
+					title={title}
+					scrimHeight={hasHeroPhoto && heroTopInset > 0 ? heroTopInset + 72 : 0}
 				/>
-				{/* 티켓 이미지 위 점 세 개 — 눌러야 수정/삭제 메뉴가 바로 아래에 나타난다 */}
-				<Pressable
-					ref={dotsRef}
-					onPress={handleOpenMenu}
-					hitSlop={8}
-					accessibilityLabel="티켓 옵션 더보기"
-					accessibilityRole="button"
-					className="absolute top-4 right-4 z-10 w-8 h-8 rounded-full items-center justify-center bg-black/35"
-					style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
-				>
-					<Ionicons name="ellipsis-horizontal" size={18} color="#fff" />
-				</Pressable>
+				{/* 사진 우상단 오버레이 — 제목 중앙 정렬을 밀지 않는다. 사진 위에서도 읽히게 반투명 면을 깐다 */}
+				<View className="absolute right-4" style={{ top: heroTopInset + 8 }}>
+					<Pressable
+						ref={dotsRef}
+						onPress={handleOpenMenu}
+						hitSlop={4}
+						accessibilityLabel="기록 옵션 더보기"
+						accessibilityRole="button"
+						className={cn(
+							'h-11 w-11 items-center justify-center rounded-full',
+							hasHeroPhoto ? 'bg-black/50' : 'bg-white/90',
+						)}
+						style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
+					>
+						<Ionicons
+							name="ellipsis-horizontal"
+							size={20}
+							color={hasHeroPhoto ? colors.white : colors.ink}
+						/>
+					</Pressable>
+				</View>
 			</View>
 
-			{(visit.rating || visit.memo) && (
-				<View className="mt-5 px-4">
-					{visit.rating && (
-						<StarRating value={visit.rating} onChange={() => {}} disabled size={20} tone="dark" />
-					)}
-					{visit.memo && (
-						<Text className="mt-2.5 text-[14px] font-pretendard-regular text-white leading-[20px]">
-							{visit.memo}
-						</Text>
+			<View className="mt-6 items-center px-8">
+				<Text
+					numberOfLines={3}
+					accessibilityRole="header"
+					className="text-center font-pretendard-semibold text-[24px] leading-[32px] text-ink"
+				>
+					{title}
+				</Text>
+
+				{creditLine ? (
+					<Text
+						numberOfLines={2}
+						className="mt-2 text-center font-pretendard-regular text-[14px] leading-[20px] text-gray600"
+					>
+						{creditLine} · {dateLabel.split(' ')[0]}
+					</Text>
+				) : (
+					<Text
+						numberOfLines={2}
+						className="mt-2 text-center font-pretendard-regular text-[14px] leading-[20px] text-gray600"
+					>
+						{dateLabel.split(' ')[0]}
+					</Text>
+				)}
+			</View>
+
+			{hasReview && (
+				<View className="mt-10 px-6">
+					{/* 관람 노트 — 잡지 기사 머리말처럼 가는 선 위에 작은 제목과 별점을 한 줄로 둔다 */}
+					<View className="flex-row items-center justify-between border-b-[0.5px] border-divider pb-3">
+						<View className="flex-row items-center gap-2">
+							<View className="h-[2px] w-4 bg-editorial" />
+							<Text className="font-pretendard-semibold text-[11px] tracking-[1.5px] text-gray600">
+								관람 노트
+							</Text>
+						</View>
+						{hasRating && (
+							// 읽기 전용 별 5개가 버튼으로 따로 읽히지 않게 별점 + 점수를 하나의 요소로 묶는다
+							<View
+								accessible
+								accessibilityRole="text"
+								accessibilityLabel={`별점 ${ratingText}점, 5점 만점`}
+								className="flex-row items-center gap-2"
+							>
+								<StarRating value={rating} onChange={() => {}} disabled size={18} tone="light" />
+								<Text className="font-pretendard-medium text-[12px] text-gray600">
+									{`${ratingText} / 5`}
+								</Text>
+							</View>
+						)}
+					</View>
+
+					{memo && (
+						<View className="pt-6">
+							{/* 장식용 여는 따옴표 — 스크린리더에는 읽히지 않는다 */}
+							<Text
+								accessibilityElementsHidden
+								importantForAccessibility="no"
+								className="-mb-5 font-hahmlet-bold text-[56px] leading-[56px] text-editorial/40"
+							>
+								“
+							</Text>
+							<Text
+								lineBreakStrategyIOS="hangul-word"
+								className="font-pretendard-regular text-[16px] leading-[30px] text-gray800"
+							>
+								{memo}
+							</Text>
+						</View>
 					)}
 				</View>
 			)}
 
+			{listenedItems.length > 0 && (
+				<View className="mx-6 mt-8 border-t-[0.5px] border-divider pt-6">
+					<Text
+						accessibilityRole="header"
+						className="mb-2 font-pretendard-semibold text-[13px] text-gray600"
+					>
+						들은 작품
+					</Text>
+					{listenedItems.map((item) => {
+						const playable = playableByTitle.has(item.title);
+						return (
+							<Pressable
+								key={item.title}
+								onPress={() => handlePlayListened(item)}
+								disabled={!playable}
+								accessibilityRole={playable ? 'button' : 'text'}
+								accessibilityLabel={playable ? `${item.title} 해설 듣기` : item.title}
+								className="min-h-11 flex-row items-center justify-between gap-3 py-2"
+								style={({ pressed }) => ({ opacity: pressed && playable ? 0.6 : 1 })}
+							>
+								<Text
+									numberOfLines={2}
+									className="flex-1 font-pretendard-medium text-[15px] leading-[21px] text-ink"
+								>
+									{item.title}
+								</Text>
+								{playable && <Ionicons name="play-circle" size={28} color={colors.brand} />}
+							</Pressable>
+						);
+					})}
+				</View>
+			)}
+
 			{visitChatItems.length > 0 && (
-				<>
-					<View className="h-px mx-4 mt-8 mb-8 bg-gray800" />
+				<View className="mx-6 mt-8 border-t-[0.5px] border-divider pt-6">
 					{visitChatItems.map((item, index) => (
-						<View key={item.id} className={cn('px-4', index > 0 && 'mt-8')}>
+						<View key={item.id} className={cn(index > 0 && 'mt-8')}>
 							<Text
-								className="text-[15px] font-pretendard-semibold text-white/75 mb-3"
+								className="mb-3 font-pretendard-semibold text-[15px] text-ink"
 								numberOfLines={1}
 								accessibilityRole="header"
 							>
@@ -188,13 +281,19 @@ export function VisitBlock({
 										}
 									>
 										<View
-											className={
+											className={cn(
+												'max-w-[80%] rounded-2xl px-4 py-2.5',
 												msg.role === 'user'
-													? 'bg-primary rounded-2xl rounded-tr-sm px-4 py-2.5 max-w-[80%]'
-													: 'bg-divider-dark rounded-2xl rounded-tl-sm px-4 py-2.5 max-w-[80%]'
-											}
+													? 'rounded-tr-sm bg-brand'
+													: 'rounded-tl-sm bg-surface-neutral',
+											)}
 										>
-											<Text className="font-pretendard-regular text-[14px] leading-[20px] text-white">
+											<Text
+												className={cn(
+													'font-pretendard-regular text-[14px] leading-[20px]',
+													msg.role === 'user' ? 'text-white' : 'text-ink',
+												)}
+											>
 												{msg.text}
 											</Text>
 										</View>
@@ -203,39 +302,46 @@ export function VisitBlock({
 							</View>
 						</View>
 					))}
-				</>
+				</View>
 			)}
 
-			{/* 수정/삭제 메뉴 — 점 세 개 바로 아래에 뜬다 */}
+			{/* 수정/삭제 메뉴 — 점 세 개 바로 아래에 뜬다. 배경 터치 영역은 메뉴의 부모가 아니라 형제로 둔다:
+			    Pressable이 메뉴를 감싸면 iOS가 하나의 접근성 요소로 묶어 수정/삭제 항목이 보조기기에 안 잡힌다 */}
 			<Modal visible={menuOpen} transparent animationType="fade" onRequestClose={handleClose}>
-				<Pressable className="flex-1" onPress={handleClose} accessibilityLabel="메뉴 닫기">
+				<View className="flex-1">
+					<Pressable
+						className="absolute inset-0"
+						onPress={handleClose}
+						accessibilityRole="button"
+						accessibilityLabel="메뉴 닫기"
+					/>
 					<View
-						className="absolute rounded-2xl overflow-hidden bg-gray900 border border-white/10"
+						className="absolute overflow-hidden rounded-2xl border-[0.5px] border-divider bg-white shadow-chip"
 						style={{ top: menuAnchor.top, right: menuAnchor.right }}
 					>
 						<Pressable
 							onPress={handleEditMemo}
-							className="flex-row items-center gap-2 px-4 py-3"
+							className="min-h-11 flex-row items-center gap-2 px-4 py-3"
 							accessibilityRole="button"
 							accessibilityLabel="나의 감상 편집"
 							style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
 						>
-							<Ionicons name="pencil-outline" size={16} color="#fff" />
-							<Text className="text-white text-[14px] font-pretendard-medium">수정</Text>
+							<Ionicons name="pencil-outline" size={16} color={colors.ink} />
+							<Text className="font-pretendard-medium text-[14px] text-ink">수정</Text>
 						</Pressable>
-						<View className="h-hairline bg-white/10" />
+						<View className="h-hairline bg-divider" />
 						<Pressable
 							onPress={handleDelete}
-							className="flex-row items-center gap-2 px-4 py-3"
+							className="min-h-11 flex-row items-center gap-2 px-4 py-3"
 							accessibilityRole="button"
-							accessibilityLabel="티켓 삭제"
+							accessibilityLabel="기록 삭제"
 							style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
 						>
-							<Ionicons name="trash-outline" size={16} color="#F43F5E" />
-							<Text className="text-[#F43F5E] text-[14px] font-pretendard-medium">삭제</Text>
+							<Ionicons name="trash-outline" size={16} color={colors.error} />
+							<Text className="font-pretendard-medium text-[14px] text-error">삭제</Text>
 						</Pressable>
 					</View>
-				</Pressable>
+				</View>
 			</Modal>
 		</View>
 	);

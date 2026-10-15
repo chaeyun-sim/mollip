@@ -40,3 +40,6 @@ export const visitIdentityOf = (visitKey: string): string => {
 export const localVisitKeyFromRemote = (date: string, visitKey: string): string => {
 	return visitKey.includes('::') ? visitKey : `${date}::${visitKey}`;
 };
+
+/** pending 관람이 기록되지 않고 남아 있을 수 있는 기간(7일) — 지나면 자동 삭제 */
+export const PENDING_EXPIRY_MS = 7 * 24 * 60 * 60 * 1000;
