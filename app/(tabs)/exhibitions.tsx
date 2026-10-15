@@ -1,9 +1,7 @@
-import { Ionicons } from '@expo/vector-icons';
 import { useCallback } from 'react';
 import { useRouter } from 'expo-router';
 import { FlatList, Text, View, useWindowDimensions } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { LoginRequiredPressable } from '@/src/components/auth/LoginRequiredPressable';
 import { ListFooter } from '@/src/components/common/ListFooter';
 import { Result } from '@/src/components/common/Result';
 import { ExhibitionListRow } from '@/src/components/explore/ExhibitionListRow';

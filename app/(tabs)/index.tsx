@@ -12,7 +12,6 @@ import { DepartureBoard } from '@/src/components/home/DepartureBoard';
 import { HomeRecommendedGrid } from '@/src/components/home/HomeRecommendedGrid';
 import { RecommendedIndex } from '@/src/components/home/RecommendedIndex';
 import { Screen } from '@/src/components/layout/Screen';
-import { ScreenHeader } from '@/src/components/layout/ScreenHeader';
 import { useMarkInteractive } from '@/src/hooks/useMarkInteractive';
 import { usePopularExhibitions } from '@/src/hooks/queries/usePopularExhibitions';
 import { useExploreScreenData } from '@/src/hooks/queries/useExploreScreenData';
