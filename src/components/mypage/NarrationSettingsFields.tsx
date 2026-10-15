@@ -157,9 +157,7 @@ function SettingPills<T extends string | number>({
 						})}
 						className={cn(
 							'px-3 py-1.5 rounded-full',
-							selected
-								? 'bg-primary-dark border-2 border-primary-dark'
-								: 'border border-[rgba(28,25,23,0.15)]',
+							selected ? 'bg-brand border-2 border-brand' : 'border border-[rgba(28,25,23,0.15)]',
 						)}
 					>
 						<Text

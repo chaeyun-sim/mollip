@@ -31,7 +31,8 @@ module.exports = {
 				'8xl': ['96px', { lineHeight: '1' }],
 				'9xl': ['128px', { lineHeight: '1' }],
 			},
-			colors: colors,
+			// 컬러 값 정본은 src/constants/colors.ts. NativeWind와 JS color prop이 공유한다.
+			colors,
 			fontFamily: {
 				sans: ['Pretendard-Regular'],
 				'pretendard-regular': ['Pretendard-Regular'],
@@ -49,7 +50,7 @@ module.exports = {
 				hairline: hairlineWidth(),
 			},
 			boxShadow: {
-				floating: '0 6px 14px rgba(28, 25, 23, 0.28)',
+				floating: '0 6px 14px rgba(45, 45, 35, 0.28)',
 				'map-control': '0 2px 8px rgba(0, 0, 0, 0.12)',
 				'onboarding-button': '0 4px 12px rgba(0, 0, 0, 0.08)',
 				'onboarding-card': '0 8px 20px rgba(0, 0, 0, 0.12)',

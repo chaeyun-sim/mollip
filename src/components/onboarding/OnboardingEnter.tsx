@@ -24,7 +24,7 @@ export function OnboardingEnter({
 	return (
 		<>
 			<View className="flex-1 items-center justify-center gap-4 px-4">
-				<View className="w-2 h-2 rounded-full bg-accent" />
+				<View className="w-2 h-2 rounded-full bg-brand" />
 				<Text className="text-gray900 text-[22px] leading-[30px] font-hahmlet-bold text-center">
 					{title}
 				</Text>
@@ -34,7 +34,7 @@ export function OnboardingEnter({
 			</View>
 			<Screen.Bottom className="pb-12">
 				<Pressable
-					className="w-full bg-primary-dark flex-row items-center justify-center rounded-[18px] py-[18px]"
+					className="w-full bg-brand flex-row items-center justify-center rounded-[18px] py-[18px]"
 					style={({ pressed }) => ({ opacity: pressed || disabled ? 0.6 : 1 })}
 					onPress={onPress}
 					disabled={disabled}

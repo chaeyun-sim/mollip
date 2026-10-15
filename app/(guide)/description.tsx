@@ -18,6 +18,7 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Easing, useSharedValue, withRepeat, withTiming } from 'react-native-reanimated';
 import { useShallow } from 'zustand/react/shallow';
+import { colors } from '@/src/constants/colors';
 import { Screen } from '../../src/components/layout/Screen';
 import { useTTS } from '../../src/hooks/useTTS';
 import {
@@ -269,7 +270,7 @@ export default function DescriptionScreen() {
 					/>
 				) : isStreaming && displayed === '' ? (
 					<View className="flex-row items-center mt-5 gap-2.5">
-						<ActivityIndicator color="#60A5FA" />
+						<ActivityIndicator color={colors['brand-on-dark']} />
 						<Text className="text-[15px] text-gray500">
 							{loadingStep === 0 && '그림 찾는 중...'}
 							{loadingStep === 1 && '그림 분석 중...'}
@@ -324,7 +325,7 @@ export default function DescriptionScreen() {
 					onPress={handleProgressTap}
 				>
 					<View
-						className="h-full rounded-sm bg-[#60A5FA]"
+						className="h-full rounded-sm bg-brand-on-dark"
 						style={{ width: `${progress * 100}%` }}
 					/>
 				</Pressable>
@@ -376,8 +377,8 @@ export default function DescriptionScreen() {
 						accessibilityRole="button"
 						style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
 					>
-						<View className="w-12 h-12 rounded-full bg-primary border border-white/10 items-center justify-center">
-							<Ionicons name="refresh" size={20} color="#60A5FA" />
+						<View className="w-12 h-12 rounded-full bg-brand-on-dark border border-white/10 items-center justify-center">
+							<Ionicons name="refresh" size={20} className="text-ink" />
 						</View>
 						<Text className="text-[11px] text-gray600 font-pretendard-regular">
 							{retryCount + 1}/{MAX_DESCRIPTION_RETRIES}

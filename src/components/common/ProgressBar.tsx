@@ -30,7 +30,7 @@ const SIZE_HEIGHT: Record<ProgressBarSize, string> = {
 export function ProgressBar({
 	progress,
 	size = 'normal',
-	colorClassName = 'bg-primary-dark',
+	colorClassName = 'bg-brand',
 	trackClassName = 'bg-gray200',
 	animate = true,
 	className,

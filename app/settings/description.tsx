@@ -87,7 +87,7 @@ export default function DescriptionSettingsScreen() {
 										<View
 											className={cn(
 												'w-5 h-5 rounded items-center justify-center',
-												isSelected ? 'bg-primary' : 'border border-[#D6D3D1] bg-white',
+												isSelected ? 'bg-brand' : 'border border-[#D6D3D1] bg-white',
 											)}
 										>
 											{isSelected && <Ionicons name="checkmark" size={13} color="white" />}

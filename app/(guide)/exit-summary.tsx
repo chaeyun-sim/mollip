@@ -102,7 +102,7 @@ export default function ExitSummaryScreen() {
 			>
 				<View className="items-center mb-10">
 					<View className="w-16 h-16 rounded-full items-center justify-center mb-5 bg-bg-tonal">
-						<Ionicons name="checkmark" size={28} className="text-primary" />
+						<Ionicons name="checkmark" size={28} className="text-brand" />
 					</View>
 					<Text className="text-gray900 font-pretendard-bold text-[22px] text-center mb-2">
 						오디오 가이드가 종료되었습니다.

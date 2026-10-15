@@ -254,10 +254,15 @@ export function OnboardingGalleryWall({ wall, busy, onConfirm }: OnboardingGalle
 					onPress={handleConfirm}
 					className={cn(
 						'min-h-[52px] items-center justify-center rounded-[18px] px-4',
-						wall.count >= 3 && !busy && drag === null ? 'bg-primary-dark' : 'bg-gray400',
+						wall.count >= 3 && !busy && drag === null ? 'bg-brand' : 'bg-gray400',
 					)}
 				>
-					<Text className="font-pretendard-semibold text-base text-white">
+					<Text
+						className={cn(
+							'font-pretendard-semibold text-base',
+							wall.count >= 3 && !busy && drag === null ? 'text-white' : 'text-ink',
+						)}
+					>
 						{busy ? '취향 저장 중…' : '이 취향으로 시작하기'}
 					</Text>
 				</Pressable>

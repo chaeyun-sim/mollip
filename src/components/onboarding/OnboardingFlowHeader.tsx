@@ -34,7 +34,7 @@ export function OnboardingFlowHeader({
 						key={index}
 						className={cn(
 							'h-1.5 w-1.5 rounded-full',
-							index === stepIndex ? 'bg-primary-dark' : 'bg-gray300',
+							index === stepIndex ? 'bg-brand' : 'bg-gray300',
 						)}
 					/>
 				))}

@@ -40,10 +40,14 @@ export function OnboardingSaveErrorBar({ onRetry, onSkipSave, busy }: Onboarding
 					accessibilityState={{ busy, disabled: busy }}
 					className={cn(
 						'flex-1 min-h-11 items-center justify-center rounded-full',
-						busy ? 'bg-gray400' : 'bg-primary-dark',
+						busy ? 'bg-gray400' : 'bg-brand',
 					)}
 				>
-					<Text className="text-white text-[14px] font-pretendard-semibold">다시 시도</Text>
+					<Text
+						className={cn('text-[14px] font-pretendard-semibold', busy ? 'text-ink' : 'text-white')}
+					>
+						다시 시도
+					</Text>
 				</Pressable>
 				<Pressable
 					onPress={onSkipSave}

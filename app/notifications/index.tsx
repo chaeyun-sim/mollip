@@ -170,10 +170,7 @@ export default function NotificationsScreen() {
 							accessibilityRole="button"
 							accessibilityLabel={`${log.title || log.body}. ${formatRelativeTime(log.created_at)}`}
 							style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
-							className={cn(
-								'flex-row items-start gap-2.5 py-5 px-6',
-								!log.read_at && 'bg-primary/10',
-							)}
+							className={cn('flex-row items-start gap-2.5 py-5 px-6', !log.read_at && 'bg-brand/5')}
 						>
 							<View>
 								<Ionicons

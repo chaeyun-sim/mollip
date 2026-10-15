@@ -6,5 +6,6 @@ interface IndicatorProps extends ActivityIndicatorProps {
 }
 
 export function Indicator({ color = 'gray500', ...rest }: IndicatorProps) {
-	return <ActivityIndicator color={typeof color === 'string' ? color : colors[color]} {...rest} />;
+	const resolvedColor = color in colors ? colors[color as keyof typeof colors] : color;
+	return <ActivityIndicator color={resolvedColor} {...rest} />;
 }

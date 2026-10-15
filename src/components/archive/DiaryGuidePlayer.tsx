@@ -122,12 +122,12 @@ export const DiaryGuidePlayer = forwardRef<DiaryGuidePlayerHandle, DiaryGuidePla
 									disabled={isLoading}
 								>
 									{isLoading ? (
-										<Indicator size="small" color="primary" />
+										<Indicator size="small" color="brand-on-dark" />
 									) : (
 										<Ionicons
 											name={isSpeaking ? 'pause-circle' : 'play-circle'}
 											size={28}
-											className="text-primary"
+											className="text-brand-on-dark"
 										/>
 									)}
 								</Pressable>
@@ -149,7 +149,7 @@ export const DiaryGuidePlayer = forwardRef<DiaryGuidePlayerHandle, DiaryGuidePla
 						</Text>
 						{wikiImageLoading && (
 							<View className="mt-6 h-[220px] items-center justify-center">
-								<Indicator color="primary" />
+								<Indicator color="brand-on-dark" />
 							</View>
 						)}
 						{!wikiImageLoading && wikiImageUrl && (
@@ -158,7 +158,7 @@ export const DiaryGuidePlayer = forwardRef<DiaryGuidePlayerHandle, DiaryGuidePla
 								useImageProxy
 								resizeMode="contain"
 								className="mt-6 w-full h-[220px] rounded-lg bg-gray800"
-								loadingIndicatorColor="primary"
+								loadingIndicatorColor="brand-on-dark"
 								accessibilityLabel={`${item.title} 작품 이미지`}
 							/>
 						)}

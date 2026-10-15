@@ -136,10 +136,10 @@ export default function PlaylistScreen() {
 			<Screen.Header className="py-1">
 				<ScreenHeader.Left>
 					<View className="flex-row items-center gap-2">
-						<View className="w-9 h-9 rounded-full items-center justify-center bg-primary/20">
-							<Ionicons name="headset" size={18} color="#60A5FA" />
+						<View className="w-9 h-9 rounded-full items-center justify-center bg-brand-on-dark/20">
+							<Ionicons name="headset" size={18} className="text-brand-on-dark" />
 						</View>
-						<Text className="text-sm font-pretendard-semibold text-[#60A5FA] tracking-wider">
+						<Text className="text-sm font-pretendard-semibold text-brand-on-dark tracking-wider">
 							몰입 모드 진행 중
 						</Text>
 					</View>
@@ -237,7 +237,7 @@ export default function PlaylistScreen() {
 									}
 									size={26}
 									className={cn(
-										item.description === FAILED_DESCRIPTION ? 'text-gray600' : 'text-primary',
+										item.description === FAILED_DESCRIPTION ? 'text-gray600' : 'text-brand-on-dark',
 									)}
 								/>
 							</Pressable>

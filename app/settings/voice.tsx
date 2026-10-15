@@ -158,7 +158,7 @@ export default function VoiceScreen() {
 							return (
 								<Pressable
 									key={voice.voice_id}
-									className={cn('rounded-[22px] py-3.5', selected && 'bg-primary/5')}
+									className={cn('rounded-[22px] py-3.5', selected && 'bg-brand/5')}
 									style={({ pressed }) => ({
 										transform: [{ scale: pressed ? 0.98 : 1 }],
 										backgroundColor: !selected && pressed ? colors['bg-tonal'] : undefined,
@@ -183,7 +183,7 @@ export default function VoiceScreen() {
 											</View>
 											{selected && (
 												<View
-													className="absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full bg-primary items-center justify-center shadow-white "
+													className="absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full bg-brand items-center justify-center shadow-white "
 													style={{
 														shadowColor: '#fff',
 														shadowOffset: { width: 0, height: 0 },
@@ -205,7 +205,7 @@ export default function VoiceScreen() {
 											{description && (
 												<Text className="text-[12px] font-pretendard-regular text-gray-500 mt-1">
 													{description.prefix}
-													<Text className="text-primary">{description.keyword}</Text>
+													<Text className="text-brand">{description.keyword}</Text>
 													{' 목소리'}
 												</Text>
 											)}
@@ -223,9 +223,9 @@ export default function VoiceScreen() {
 											disabled={!!previewingId}
 										>
 											{previewingId === voice.voice_id ? (
-												<ActivityIndicator size="small" color={colors['primary-dark']} />
+												<ActivityIndicator size="small" color={colors.brand} />
 											) : (
-												<Ionicons name="play" size={15} className="text-primary-dark" />
+												<Ionicons name="play" size={15} className="text-brand" />
 											)}
 										</Pressable>
 									</View>

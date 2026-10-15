@@ -10,7 +10,7 @@ import { colors } from '@/src/constants/colors';
 interface ScreenProps {
 	className?: string;
 	edges?: Edges;
-	/** dark: 가이드·몰입 / warm: 아카이브·탐색 본문 / gradient: 로그인·온보딩 톤 웜 그라데이션 (설정류) */
+	/** dark: 가이드·몰입 / warm: 아카이브·탐색 본문 / gradient: 로그인·온보딩의 은은한 뉴트럴 그라데이션 */
 	variant?: 'dark' | 'warm' | 'gradient';
 }
 
@@ -37,7 +37,7 @@ function Screen({ className, children, edges, variant = 'dark' }: PropsWithChild
 				<StatusBar style="dark" />
 				<View className="flex-1">
 					<LinearGradient
-						colors={['#FFF3E6', '#F7DFCE', colors['bg-light']]}
+						colors={[colors.canvas, colors['surface-neutral'], colors.canvas]}
 						locations={[0, 0.3, 0.75]}
 						style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
 					/>

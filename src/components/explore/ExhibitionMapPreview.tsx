@@ -59,7 +59,7 @@ export function ExhibitionMapPreview({ coordinates, venueName }: ExhibitionMapPr
 					>
 						<View
 							collapsable={false}
-							className="w-8 h-8 rounded-full bg-primary items-center justify-center border-[2px] border-white"
+							className="w-8 h-8 rounded-full bg-brand items-center justify-center border-[2px] border-white"
 						>
 							<Ionicons name="location" size={14} color="white" />
 						</View>

@@ -86,7 +86,7 @@ export function ExcludeWordsModal({
 											onPress={() => onRemove(word)}
 											accessibilityLabel={`제외어 ${word} 삭제`}
 											accessibilityRole="button"
-											className="flex-row items-center gap-1 rounded-full bg-primary-dark px-3 py-1.5"
+											className="flex-row items-center gap-1 rounded-full bg-brand px-3 py-1.5"
 											style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
 										>
 											<Text className="text-white text-[13px] font-pretendard-medium">{word}</Text>

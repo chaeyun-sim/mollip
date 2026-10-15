@@ -99,7 +99,7 @@ export function ListenClipCard({ clip, onKeep, onPass }: ListenClipCardProps) {
 							accessibilityRole="button"
 							accessibilityLabel={status.playing ? '일시정지' : '재생'}
 							accessibilityState={{ selected: status.playing }}
-							className="w-16 h-16 rounded-full bg-primary-dark items-center justify-center"
+							className="w-16 h-16 rounded-full bg-brand items-center justify-center"
 							style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
 						>
 							<Ionicons name={status.playing ? 'pause' : 'play'} size={26} className="text-white" />

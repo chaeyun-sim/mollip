@@ -95,7 +95,7 @@ export default function PreferencesScreen() {
 						onPress={loadPreferences}
 						className="min-h-11 justify-center px-4"
 					>
-						<Text className="font-pretendard-semibold text-base text-primary-dark">다시 시도</Text>
+						<Text className="font-pretendard-semibold text-base text-brand">다시 시도</Text>
 					</Pressable>
 				</View>
 			</Screen>

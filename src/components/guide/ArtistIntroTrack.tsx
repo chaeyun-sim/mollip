@@ -65,9 +65,11 @@ export function ArtistIntroTrack({ artist, imageUrl, status, onPress }: ArtistIn
 				/>
 				<View className="flex-1 gap-1">
 					<View className="flex-row">
-						<View className="flex-row items-center gap-1 rounded-full bg-primary/15 px-2 py-0.5">
-							<Ionicons name="person-outline" size={12} className="text-primary" />
-							<Text className="text-[11px] font-pretendard-semibold text-primary">작가 소개</Text>
+						<View className="flex-row items-center gap-1 rounded-full bg-brand-on-dark/15 px-2 py-0.5">
+							<Ionicons name="person-outline" size={12} className="text-brand-on-dark" />
+							<Text className="text-[11px] font-pretendard-semibold text-brand-on-dark">
+								작가 소개
+							</Text>
 						</View>
 					</View>
 					<Text
@@ -96,7 +98,7 @@ export function ArtistIntroTrack({ artist, imageUrl, status, onPress }: ArtistIn
 						<Ionicons
 							name={isFailed ? 'refresh-outline' : 'play-circle-outline'}
 							size={26}
-							className={cn(isFailed ? 'text-gray600' : 'text-primary')}
+							className={cn(isFailed ? 'text-gray600' : 'text-brand-on-dark')}
 						/>
 					)}
 				</View>

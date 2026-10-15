@@ -3,6 +3,7 @@ import { Stack, useRouter } from 'expo-router';
 import { ImageBackground, Pressable, Text, View } from 'react-native';
 import { Screen } from '@/src/components/layout/Screen';
 import { Indicator } from '@/src/components/common/Indicator';
+import { colors } from '@/src/constants/colors';
 import { useToast } from '@/src/providers/ToastProvider';
 import {
 	computeDiscountPercent,
@@ -160,8 +161,8 @@ export default function PremiumScreen() {
 						<View className="mt-3 gap-3 rounded-2xl bg-white/[0.06] p-4">
 							{BENEFITS.map((benefit) => (
 								<View key={benefit} className="flex-row items-center gap-3">
-									<View className="h-4 w-4 items-center justify-center rounded-full bg-primary">
-										<Ionicons name="checkmark" size={11} color="#241A32" />
+									<View className="h-4 w-4 items-center justify-center rounded-full bg-brand-on-dark">
+										<Ionicons name="checkmark" size={11} color="#2D2D23" />
 									</View>
 									<Text className="font-pretendard-medium text-[13px] text-white/90">
 										{benefit}
@@ -225,7 +226,7 @@ export default function PremiumScreen() {
 											className={cn(
 												'relative min-h-[64px] justify-center rounded-[17px] border px-4 py-3',
 												selected
-													? 'border-[#C9B1FF] bg-[#30233D]'
+													? 'border-brand-on-dark bg-brand/25'
 													: 'border-transparent bg-white/[0.07]',
 												isPlanDisabled && !selected && 'opacity-40',
 											)}
@@ -235,7 +236,7 @@ export default function PremiumScreen() {
 													<Ionicons
 														name={selected ? 'checkmark-circle' : 'ellipse-outline'}
 														size={19}
-														color={selected ? '#D38BFF' : '#6F6878'}
+														color={selected ? colors['brand-on-dark'] : '#6F6878'}
 													/>
 													<View className="gap-1">
 														<Text className="font-pretendard-bold text-[15px] text-white">
@@ -256,8 +257,8 @@ export default function PremiumScreen() {
 												</Text>
 											</View>
 											{discountPercent !== null && discountPercent > 0 && selected && (
-												<View className="absolute -top-3 right-4 rounded-[9px] bg-[#E985FF] px-2.5 py-1">
-													<Text className="font-pretendard-bold text-[11px] text-[#24132C]">
+												<View className="absolute -top-3 right-4 rounded-[9px] bg-brand-on-dark px-2.5 py-1">
+													<Text className="font-pretendard-bold text-[11px] text-ink">
 														{`${discountPercent}% 할인`}
 													</Text>
 												</View>
@@ -270,7 +271,7 @@ export default function PremiumScreen() {
 					</View>
 				</View>
 
-				<View className="border-t border-white/10 bg-[#171412] px-6 pt-2.5 pb-3">
+				<View className="border-t border-white/10 bg-bg-dark px-6 pt-2.5 pb-3">
 					{showReconciliationBanner && (
 						<View className="mb-3 gap-2 rounded-2xl bg-white/[0.08] p-3.5">
 							<Text className="font-pretendard-medium text-[12px] text-white/85">
@@ -305,7 +306,7 @@ export default function PremiumScreen() {
 						}
 						accessibilityState={{ disabled: isPurchaseDisabled, busy: isPurchasing }}
 						className={cn(
-							'h-[50px] items-center justify-center rounded-[12px] bg-primary-dark',
+							'h-[50px] items-center justify-center rounded-[12px] bg-brand-on-dark',
 							isPurchaseDisabled && 'opacity-50',
 						)}
 						style={({ pressed }) => ({
@@ -313,9 +314,9 @@ export default function PremiumScreen() {
 						})}
 					>
 						{isPurchasing ? (
-							<Indicator color="white" />
+							<Indicator color="ink" />
 						) : (
-							<Text className="font-pretendard-bold text-[14px] text-white">결제하기</Text>
+							<Text className="font-pretendard-bold text-[14px] text-ink">결제하기</Text>
 						)}
 					</Pressable>
 					{isReady && selectedPackage && (

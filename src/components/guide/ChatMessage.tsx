@@ -13,6 +13,7 @@ import {
 	View,
 } from 'react-native';
 import { Divider } from '@/src/components/common/Divider';
+import { colors } from '@/src/constants/colors';
 import { cn } from '@/src/lib/cn';
 import type { Message } from '@/src/store/chatStore';
 import { getEffectiveFontSize, useSettingsStore } from '@/src/store/settingsStore';
@@ -91,7 +92,7 @@ export function ChatMessage({ item, onRetry }: ChatMessageProps) {
 	const hasArtwork = segments.some((s) => s.type === 'artwork');
 
 	function renderMessageText() {
-		const textClass = isUser ? 'text-white' : 'text-on-dark';
+		const textClass = isUser ? 'text-ink' : 'text-on-dark';
 
 		// 사용자가 설정에서 조절하는 글자 크기에 비례해야 하므로 className이 아닌 style로 계산한다.
 		const textStyle = { fontSize: bodyFontSize - 1, lineHeight: (bodyFontSize - 1) * 1.6 };
@@ -110,7 +111,10 @@ export function ChatMessage({ item, onRetry }: ChatMessageProps) {
 					seg.type === 'artwork' ? (
 						<Text
 							key={i}
-							className="text-blue-400 font-pretendard-semibold"
+							className={cn(
+								'font-pretendard-semibold',
+								isUser ? 'text-brand' : 'text-brand-on-dark',
+							)}
 							onPress={() => handleArtworkTap(seg.content)}
 							accessibilityLabel={`${seg.content} 이미지 보기`}
 							accessibilityRole="button"
@@ -146,15 +150,15 @@ export function ChatMessage({ item, onRetry }: ChatMessageProps) {
 					className={cn(
 						'rounded-2xl px-4 py-3 max-w-[80%]',
 						isUser
-							? 'rounded-tr-sm bg-primary'
-							: 'bg-primary-dark border-white/[0.08] rounded-tl-sm',
+							? 'rounded-tr-sm bg-brand-on-dark'
+							: 'bg-divider-dark border-white/[0.08] rounded-tl-sm',
 					)}
 					style={{ borderWidth: isUser ? 0 : StyleSheet.hairlineWidth }}
 					onLongPress={!isUser ? () => setCopyMenuVisible(true) : undefined}
 					delayLongPress={450}
 				>
 					{item.text === '' && !isUser ? (
-						<ActivityIndicator size="small" color="#60A5FA" />
+						<ActivityIndicator size="small" color={colors['brand-on-dark']} />
 					) : (
 						renderMessageText()
 					)}

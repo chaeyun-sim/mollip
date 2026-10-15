@@ -78,7 +78,7 @@ export function BookmarkTabs({ tab, onChangeTab, className }: BookmarkTabsProps)
 
 			<Animated.View
 				pointerEvents="none"
-				className="absolute bottom-0 left-0 rounded-full bg-primary-dark"
+				className="absolute bottom-0 left-0 rounded-full bg-brand"
 				style={[{ height: INDICATOR_HEIGHT }, indicatorStyle]}
 			/>
 		</View>

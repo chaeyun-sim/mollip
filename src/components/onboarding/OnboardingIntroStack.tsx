@@ -121,7 +121,7 @@ function IntroTicketCard({ ticket, index, isTop, reduceMotion }: IntroTicketCard
 					<Text className="text-[22px] leading-[30px] text-gray900 font-hahmlet-bold">
 						{ticket.back}
 					</Text>
-					<View className="w-2 h-2 rounded-full bg-accent" />
+					<View className="w-2 h-2 rounded-full bg-brand" />
 				</Animated.View>
 			</View>
 		</Pressable>
@@ -165,10 +165,7 @@ export function OnboardingIntroStack({ onFinished }: OnboardingIntroStackProps) 
 					onPress={handleNext}
 					accessibilityRole="button"
 					accessibilityLabel={isLast ? '계속하기' : '다음 티켓'}
-					className={cn(
-						'w-full items-center justify-center rounded-[18px] py-[18px]',
-						'bg-primary-dark',
-					)}
+					className={cn('w-full items-center justify-center rounded-[18px] py-[18px]', 'bg-brand')}
 					style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
 				>
 					<Text className="text-white text-base font-pretendard-semibold">

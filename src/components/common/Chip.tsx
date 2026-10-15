@@ -40,7 +40,7 @@ export function Chip({
 			accessibilityState={{ selected: active }}
 			className={cn(
 				'flex-row items-center gap-1 rounded-full px-3.5 py-2',
-				active ? 'bg-primary-dark' : INACTIVE_BACKGROUND[variant],
+				active ? 'bg-brand' : INACTIVE_BACKGROUND[variant],
 				className,
 			)}
 			style={(state) => [

@@ -43,9 +43,7 @@ export function VenueFollowButton({
 				<Ionicons
 					name={isFollowed ? 'heart' : 'heart-outline'}
 					size={22}
-					className={
-						isSupported ? (isFollowed ? 'text-primary-dark' : 'text-gray700') : 'text-gray400'
-					}
+					className={isSupported ? (isFollowed ? 'text-brand' : 'text-gray700') : 'text-gray400'}
 				/>
 			)}
 		</Pressable>

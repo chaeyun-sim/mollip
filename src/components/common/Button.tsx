@@ -2,6 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import type { ReactNode } from 'react';
 import { Pressable, type PressableProps, Text } from 'react-native';
+import { colors } from '@/src/constants/colors';
 import { cn } from '@/src/lib/cn';
 import { Indicator } from './Indicator';
 
@@ -83,15 +84,15 @@ const pressOpacity = (pressed: boolean, isDisabled: boolean, ghost: boolean) => 
 };
 
 const GHOST_TEXT_COLORS: Record<ButtonTone, string> = {
-	brand: 'primaryDark',
-	inverse: 'secondary',
-	danger: 'error',
-	gray: 'gray600',
-	white: 'white',
+	brand: colors.brand,
+	inverse: colors.secondary,
+	danger: colors.error,
+	gray: colors.gray600,
+	white: colors.white,
 };
 
 const GHOST_TEXT_COLOR_CLASS_NAMES: Record<ButtonTone, string> = {
-	brand: 'text-primary-dark',
+	brand: 'text-brand',
 	inverse: 'text-secondary',
 	danger: 'text-error',
 	gray: 'text-gray600',
@@ -143,7 +144,7 @@ export function Button({
 		);
 	} else {
 		// gray 톤은 밝은 배경(bg-gray300)이라 흰 글자가 아니라 어두운 텍스트여야 읽힌다
-		const solidTextColorClassName = tone === 'gray' ? 'text-secondary' : 'text-white';
+		const solidTextColorClassName = tone === 'gray' || isDisabled ? 'text-secondary' : 'text-white';
 		label = (
 			<>
 				{icon && (
@@ -173,11 +174,12 @@ export function Button({
 				isGhost ? cn('gap-2', sizeStyle.ghostClassName) : sizeStyle.solidClassName,
 				{
 					'w-full': isBlock,
-					'bg-primary-dark': !isGhost && tone === 'brand' && !isDisabled,
+					'bg-brand': !isGhost && tone === 'brand' && !isDisabled,
 					'bg-secondary': !isGhost && tone === 'inverse' && !isDisabled,
 					'bg-error': !isGhost && tone === 'danger' && !isDisabled,
-					'bg-gray300': (!isGhost && isDisabled) || (!isGhost && tone === 'gray'),
-					'text-primary-dark': isGhost && tone === 'brand',
+					'bg-surface-disabled': !isGhost && isDisabled,
+					'bg-gray300': !isGhost && !isDisabled && tone === 'gray',
+					'text-brand': isGhost && tone === 'brand',
 				},
 				className,
 			)}

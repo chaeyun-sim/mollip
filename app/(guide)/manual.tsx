@@ -211,13 +211,13 @@ export default function ManualScreen() {
 							</View>
 
 							<Pressable
-								className="w-full rounded-lg items-center border border-primary py-3.5 mb-6"
+								className="w-full rounded-lg items-center border border-brand-on-dark py-3.5 mb-6"
 								onPress={handleDirectChat}
 								accessibilityLabel="해설 없이 채팅으로 바로 이동"
 								accessibilityRole="button"
 								style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
 							>
-								<Text className="text-base font-pretendard-semibold text-primary">
+								<Text className="text-base font-pretendard-semibold text-brand-on-dark">
 									바로 질문하기
 								</Text>
 							</Pressable>

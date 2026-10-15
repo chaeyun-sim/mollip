@@ -70,7 +70,7 @@ export function VenueExhibitionTabs({
 							className={cn(
 								'text-[15px] px-1.5',
 								tab === key
-									? 'font-pretendard-semibold text-primary-dark'
+									? 'font-pretendard-semibold text-brand'
 									: 'font-pretendard-regular text-gray600',
 							)}
 						>
@@ -80,7 +80,7 @@ export function VenueExhibitionTabs({
 				))}
 				<Animated.View
 					pointerEvents="none"
-					className="absolute bottom-0 mt-1 left-0 h-0.5 rounded-full bg-primary-dark z-10"
+					className="absolute bottom-0 mt-1 left-0 h-0.5 rounded-full bg-brand z-10"
 					style={indicatorStyle}
 				/>
 			</View>

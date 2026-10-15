@@ -146,7 +146,7 @@ export function IconButton({
 					'w-16 h-16 rounded-full': !isBare && isLg,
 					'w-14 h-14 rounded-full': !isBare && !isLg && !isSm,
 					'w-10 h-10 rounded-full': !isBare && isSm,
-					'bg-primary': !isBare && variant === 'solid' && tone === 'brand' && !isDisabled,
+					'bg-brand': !isBare && variant === 'solid' && tone === 'brand' && !isDisabled,
 					'bg-secondary': !isBare && variant === 'solid' && tone === 'inverse' && !isDisabled,
 					'bg-divider-dark': !isBare && variant === 'solid' && isDisabled,
 					'bg-white/10 border border-white/15': !isBare && variant === 'ghost',

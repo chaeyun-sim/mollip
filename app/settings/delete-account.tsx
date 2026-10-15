@@ -184,14 +184,14 @@ export default function DeleteAccountScreen() {
 					</View>
 
 					{selectedOption?.tip && (
-						<View className="flex-row gap-2 rounded-2xl bg-blue-50 px-4 py-3.5 mb-3">
+						<View className="flex-row gap-2 rounded-2xl bg-surface-neutral px-4 py-3.5 mb-3">
 							<Ionicons
 								name="bulb-outline"
 								size={16}
-								className="text-primary-dark"
+								className="text-brand"
 								style={{ marginTop: 1 }}
 							/>
-							<Text className="flex-1 text-[13px] leading-[19px] font-pretendard-regular text-blue-700">
+							<Text className="flex-1 text-[13px] leading-[19px] font-pretendard-regular text-ink">
 								{selectedOption.tip}
 							</Text>
 						</View>

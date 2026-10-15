@@ -387,12 +387,12 @@ export function BookmarkedAudioList() {
 									style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
 								>
 									{isTTSLoading ? (
-										<ActivityIndicator size="small" color="#60A5FA" />
+										<ActivityIndicator size="small" color={colors['brand-on-dark']} />
 									) : (
 										<Ionicons
 											name={isSpeaking ? 'pause-circle' : 'play-circle'}
 											size={28}
-											className="text-blue-400"
+											className="text-brand-on-dark"
 										/>
 									)}
 								</Pressable>

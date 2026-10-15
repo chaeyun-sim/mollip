@@ -318,7 +318,7 @@ export default function RouteScreen() {
 						anchor={{ x: 0.5, y: 0.5 }}
 						zIndex={1}
 					>
-						<View collapsable={false} className="w-2 h-2 rounded-full bg-primary/25" />
+						<View collapsable={false} className="w-2 h-2 rounded-full bg-brand/25" />
 					</NaverMapMarkerOverlay>
 				))}
 
@@ -360,7 +360,7 @@ export default function RouteScreen() {
 							className={cn(
 								'w-[34px] h-[34px] rounded-full items-center justify-center',
 								i === 0
-									? 'bg-primary-dark'
+									? 'bg-brand'
 									: i === waypoints.length - 1
 										? 'bg-[#FF2D78]'
 										: 'bg-orange-600',
@@ -450,7 +450,7 @@ export default function RouteScreen() {
 									className={cn(
 										'w-5 h-5 rounded-full items-center justify-center',
 										i === 0
-											? 'bg-primary-dark'
+											? 'bg-brand'
 											: i === waypoints.length - 1
 												? 'bg-[#FF2D78]'
 												: 'bg-amber-600',
@@ -487,7 +487,12 @@ export default function RouteScreen() {
 							accessibilityLabel="근처 전시 보기"
 							accessibilityRole="button"
 						>
-							<Text className="font-pretendard-semibold text-[15px] text-white">
+							<Text
+								className={cn(
+									'font-pretendard-semibold text-[15px]',
+									waypoints.length < 2 ? 'text-ink' : 'text-white',
+								)}
+							>
 								근처 전시 {nearbyExhibitions.length}개
 							</Text>
 						</Pressable>

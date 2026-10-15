@@ -99,7 +99,7 @@ export function VenueSheet({
 							<Pressable
 								onPress={onRequestDirections}
 								style={({ pressed }) => (pressed ? { opacity: 0.7 } : undefined)}
-								className="h-11 w-11 items-center justify-center rounded-full bg-primary-dark"
+								className="h-11 w-11 items-center justify-center rounded-full bg-brand"
 								accessibilityRole="button"
 								accessibilityLabel={`${activeVenue.venueName}까지 길찾기`}
 							>

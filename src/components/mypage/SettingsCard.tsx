@@ -13,7 +13,7 @@ export function SettingsCard({ children, locked }: SettingsCardProps) {
 
 	return (
 		<View
-			className="relative overflow-hidden rounded-2xl bg-white px-4 shadow-gray900 elevation-[2px]"
+			className="relative overflow-hidden rounded-2xl border border-ink/10 bg-white px-4 shadow-gray900 elevation-[2px]"
 			style={{
 				shadowOpacity: 0.06,
 				shadowRadius: 10,
@@ -24,7 +24,7 @@ export function SettingsCard({ children, locked }: SettingsCardProps) {
 				{items.map((child, index) => (
 					<Fragment key={index}>
 						{child}
-						{index < items.length - 1 && <View className="h-[1px] bg-gray500/15" />}
+						{index < items.length - 1 && <View className="h-[1px] bg-ink/10" />}
 					</Fragment>
 				))}
 			</View>

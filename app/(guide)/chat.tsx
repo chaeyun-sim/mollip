@@ -246,13 +246,14 @@ export default function ChatScreen() {
 							accessibilityRole="button"
 							style={({ pressed }) => ({
 								opacity: pressed ? 0.7 : 1,
-								backgroundColor: input.trim() && !isLoading ? colors.primary : colors.gray900,
+								backgroundColor:
+									input.trim() && !isLoading ? colors['brand-on-dark'] : colors.gray900,
 							})}
 						>
 							<Ionicons
 								name="arrow-up"
 								size={20}
-								className={input.trim() && !isLoading ? 'text-white' : 'text-gray400'}
+								className={input.trim() && !isLoading ? 'text-ink' : 'text-gray400'}
 							/>
 						</Pressable>
 					</View>

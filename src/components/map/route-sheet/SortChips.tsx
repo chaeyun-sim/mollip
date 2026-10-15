@@ -28,7 +28,7 @@ export function SortChips({ criterion, onChangeCriterion }: SortChipsProps) {
 						}}
 						className={cn(
 							'px-3 h-8 rounded-full items-center justify-center border',
-							active ? 'bg-primary-dark border-transparent' : 'bg-transparent border-black/10',
+							active ? 'bg-brand border-transparent' : 'bg-transparent border-black/10',
 						)}
 						hitSlop={4}
 						accessibilityRole="button"

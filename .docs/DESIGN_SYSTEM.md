@@ -1,184 +1,149 @@
 # mollip Design System
 
-컬러·타이포 등 디자인 토큰의 정본(source of truth)을 정의하는 문서. 컴포넌트 작성 규칙(className vs style 예외, cn() 사용법, import 순서 등)은 다루지 않는다 — 그건 [`.claude/rules/component-convention.md`](../.claude/rules/component-convention.md)를 참고할 것.
+몰립의 색, 글꼴, 그림자, 간격을 정하는 문서. 컴포넌트 작성 방식은 [component-convention.md](rules/component-convention.md)를 따른다.
 
-## 1. 컬러 토큰
+> **적용 상태 — 2026-10-10:** 새 팔레트를 `src/constants/colors.ts`와 `tailwind.config.js`에 반영하고 기존 퍼플·민트 브랜드 토큰 사용처를 이관했다. 사용자 시각 피드백에 따라 기본 배경과 톤 표면은 참고 이미지보다 더 밝고 중립적인 색으로 조정했다. 외부 브랜드색, 작품 이미지, 도메인 전용 색은 별도로 관리한다.
 
-### 1.1 정본 지정: `tailwind.config.js`
+## 1. Color
 
-`tailwind.config.js`의 `theme.extend.colors`를 **정본**으로 지정한다.
+### 1.1 방향
 
-근거 (2026-08-25 기준 코드 스캔):
+몰립은 작품과 전시 포스터가 화면의 가장 풍부한 색이 되도록 한다. 흰색에 가까운 중립 배경과 진한 글자로 읽는 영역을 안정시키고, **Deep Plum 한 색으로 핵심 행동과 선택 상태에 초점을 준다.** 파스텔은 정보 위계가 아닌 작은 장식에 사용한다.
 
-- `app/`, `src/` 전체에서 `bg-*` / `text-*` / `border-*` 형태의 tailwind 색상 className 사용이 **427건**
-- `src/constants/colors.ts`의 `colors.xxx` 직접 참조는 **55건** — 대부분 `shadowColor`, `ActivityIndicator`의 `color` prop, `LinearGradient`의 `colors` 배열처럼 className으로 표현 불가능한 런타임 JS 값이 필요한 지점([`component-convention.md`](../.claude/rules/component-convention.md) §2의 style 예외 규칙과 일치)
+1. 한 화면에서 가장 강한 UI 강조색은 Deep Plum 하나다. 여러 색의 버튼을 나란히 두지 않는다.
+2. 작품 이미지 주변에는 넓은 밝은 여백을 둔다. 색 면적을 늘리고 싶을 때는 먼저 카드나 섹션의 연한 배경을 쓴다.
+3. 색만으로 선택·성공·오류를 전달하지 않는다. 아이콘, 글자, 테두리 또는 상태 문구를 함께 둔다.
+4. 외부 브랜드 고유색, 작품 이미지, 지도 노선색은 이 팔레트로 재도색하지 않는다.
 
-즉 className 경로가 절대다수이므로 `tailwind.config.js`가 실질적 정본이고, `src/constants/colors.ts`는 "className으로 쓸 수 없는 위치를 위한 JS 값 미러"로 존재한다.
+### 1.2 기본 팔레트
 
-### 1.2 알려진 드리프트 (해소 필요)
+아래 이름은 참고 이미지의 색 이름이다. 코드에서는 역할에 맞는 토큰명을 사용한다.
 
-두 파일의 값이 일부 어긋나 있다. 새 토큰을 추가하거나 기존 값을 바꿀 때 반드시 두 파일을 함께 갱신할 것.
+| 역할               | 이름               | Hex       | 코드 토큰                                  | 사용                                      |
+| ------------------ | ------------------ | --------- | ------------------------------------------ | ----------------------------------------- |
+| 기본 배경          | Bianco 기반 조정색 | `#FAFAF8` | `canvas` / `bg-light` / `gray100`          | 홈·탐색·다이어리의 캔버스                 |
+| 기본 글자          | Kimber             | `#2D2D23` | `ink` / `gray900`                          | 제목, 본문, 주요 아이콘                   |
+| 브랜드 중심색      | Deep Plum          | `#5F1D3E` | `brand`                                    | 주요 CTA, 활성 탭, 선택 상태, 링크·포커스 |
+| 다크 화면 브랜드색 | Light Plum         | `#E3A9C7` | `brand-on-dark`                            | 어두운 표면 위의 브랜드 강조              |
+| 기본 카드          | White              | `#FFFFFF` | `white`                                    | 읽는 콘텐츠와 입력 필드의 표면            |
+| 연한 톤 표면       | Soft neutral       | `#F3F3F0` | `surface-neutral` / `bg-tonal` / `gray200` | 검색창·작은 안내 영역                     |
+| 따뜻한 표면        | Blanket            | `#F2E0CF` | `blanket`                                  | 비어 있는 카드와 한정된 색 면             |
+| 경계·보조 표면     | Mushroom           | `#D4C7B4` | `mushroom` / `divider`                     | 구분선, 면적이 작은 톤 구분               |
+| 편집 강조          | Autumn Fern        | `#854628` | `editorial`                                | 날짜·섹션 번호·인용 등 제한된 요소        |
+| 보조 장식          | Oak                | `#B48954` | `oak`                                      | 작은 그래픽, 일러스트 세부 요소           |
+| 보조 장식          | Khaki Moss         | `#7C7458` | `moss`                                     | 자연 소재를 표현하는 작은 그래픽          |
 
-| 토큰                                                                                                                                                                                                                           | `tailwind.config.js` | `src/constants/colors.ts` | 상태                                                                                                                         |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------- | ------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| description                                                                                                                                                                                                                    | 없음                 | `#6B6360`                 | tailwind.config.js에 대응 className 없음 — className으로 이 색을 쓰려면 `text-[#6B6360]` 임의값을 써야 함(정식 토큰화 안 됨) |
-| 그 외 (primary, primaryDark/primary-dark, secondary, gray100~gray900, white, bgLight/bg-light, bgDark, bgTonal, onDark, imagePlaceholder, border/divider, borderDark/divider-dark, accent, error, errorAlt/error-alt, success) | 동일                 | 동일                      | 일치 (2026-08-26 전수 대조)                                                                                                  |
+**Deep Plum이 주요 행동의 유일한 색이다.** Autumn Fern·Oak·Khaki Moss는 별도의 CTA 색이 아니다. 브라운 계열을 큰 버튼이나 활성 탭에 섞지 않는다.
 
-2026-08-25: bgLight/bg-light 드리프트 해소 — `tailwind.config.js`의 `bg-light`를 `#f4f4f1` → `#F8F6F2`로 통일(`Screen.tsx`가 그라디언트에 실제 사용 중인 값 기준).
+### 1.3 장식용 파스텔
 
-2026-08-26: **컬러 시스템 전면 개편(`color-system-overhaul`)으로 두 파일의 전 토큰 값을 대조 완료 — 잔여 드리프트 0건.** 신규 `gray100`~`gray900`, `primary`/`primaryDark`(`primary-dark`)/`secondary`/`accent`/`white`는 추가·교체 시점에 두 파일을 같은 커밋에서 함께 수정했고 hex를 1:1 대조했다. `description`의 tailwind 미등록 상태는 의도적으로 유지(위 표 1행 그대로).
+두 번째 참고 이미지의 파스텔은 작은 배지, 빈 상태 일러스트, 온보딩의 한정된 장면에 사용한다. **한 화면에는 한 계열만** 고른다. 전시 포스터가 많이 보이는 목록에서는 파스텔 배경을 반복하지 않는다.
 
-2026-09-17: **브랜드 컬러 재도색 확인 — `primary`/`primary-dark`/`accent` 3개 토큰의 hex 값이 바뀜(더스티 라벤더·코럴 계열 → 비비드 퍼플·민트 계열).** `tailwind.config.js`와 `src/constants/colors.ts` 재대조 결과 두 파일은 여전히 1:1 일치(드리프트 0건) — 값만 함께 갱신됐다. §1.3 표의 hex·설명을 최신 값으로 갱신.
+| 이름         | Hex       | 권장 용도                                 |
+| ------------ | --------- | ----------------------------------------- |
+| French Tips  | `#FFD6EB` | `pastel-pink` · 작은 감성 배지·일러스트   |
+| Very Buttery | `#FFF5B4` | `pastel-yellow` · 작은 안내·하이라이트    |
+| Cloudy Latte | `#CAE4EF` | `pastel-blue` · 빈 상태·보조 일러스트     |
+| Matcha Coded | `#939E86` | `pastel-green` · 자연 소재의 장식 면      |
+| Soft Peach   | `#FFA873` | `pastel-peach` · 특별한 일러스트의 포인트 |
 
-### 1.2.1 마이그레이션 매핑표 (2026-08-26, `tertiary` / `muted` 제거)
+파스텔 위에 글자가 필요하면 Kimber를 우선 사용한다. 파스텔 자체를 본문 글자색이나 아이콘의 유일한 상태 신호로 쓰지 않는다. 작은 배지의 글자색도 실제 배경과 대비를 확인한다.
 
-`primary` / `secondary` / `tertiary` / `muted`는 원래 브랜드 컬러 이름인데 무채색 텍스트 명도 사다리로 쓰이고 있었다. 명도는 `gray100~900`이 담당하도록 전량 이관했고, `tertiary`와 `muted`는 **정의에서 제거**했다.
+### 1.4 화면 요소별 사용 규칙
 
-| 구 토큰 (className)                                                | 신 토큰                                              | 값 변화               |
-| ------------------------------------------------------------------ | ---------------------------------------------------- | --------------------- |
-| `text-primary` (#1C1917)                                           | `text-gray900`                                       | 동일 (#1C1917)        |
-| `text-secondary` (#57534E)                                         | `text-gray700`                                       | 동일 (#57534E)        |
-| `text-tertiary` (#78716C)                                          | `text-gray600`                                       | 동일 (#78716C)        |
-| `text-muted` / `bg-muted` (#A8A29E)                                | `text-gray500` / `bg-gray500`                        | 동일 (#A8A29E)        |
-| `colors.primary`                                                   | `colors.gray900`                                     | 동일                  |
-| `colors.secondary`                                                 | `colors.gray700`                                     | 동일                  |
-| `colors.tertiary`                                                  | `colors.gray600`                                     | 동일                  |
-| `colors.muted`                                                     | `colors.gray500`                                     | 동일                  |
-| `bg-primary` (무채색 표면: 시트·마커·바코드·구분선·다크 입력 필드) | `bg-gray900`                                         | 동일 (#1C1917)        |
-| `bg-primary` (브랜드 표면, 흰 텍스트 O)                            | `bg-primary-dark`                                    | #1C1917 → **#625876** |
-| `bg-primary` (브랜드 표면, 텍스트 X)                               | `bg-primary`                                         | #1C1917 → **#81759B** |
-| `accent` / `text-accent` / `bg-accent` (#3B82F6)                   | 라이트 배경 → `primary-dark` / 다크 배경 → `primary` | 블루 제거             |
+| 요소                 | 색 조합                                          | 추가 규칙                                                                      |
+| -------------------- | ------------------------------------------------ | ------------------------------------------------------------------------------ |
+| 화면 배경            | Bianco                                           | 기본값. 작품 이미지의 색을 살리는 여백으로 사용                                |
+| 본문·제목            | Kimber / Bianco                                  | 보조 글자는 크기·굵기와 기존 회색 단계로 구분하되 대비 검증 필요               |
+| 주요 버튼            | Deep Plum 배경 + White 글자                      | 화면의 가장 중요한 행동 하나에 사용                                            |
+| 보조 버튼            | White 또는 Bianco 배경 + Deep Plum 글자·테두리   | 주요 버튼과 같은 시각적 무게로 만들지 않음                                     |
+| 활성 탭·선택 항목    | Deep Plum 아이콘·글자, 필요하면 연한 브랜드 배경 | 선택 아이콘 모양·굵기·체크 등 비색상 신호를 함께 사용                          |
+| 카드·입력 필드       | White 또는 Soft neutral                          | 내용이 많은 카드는 White, 짧은 안내는 Soft neutral. Blanket은 장식용 면에 제한 |
+| 마이페이지 계정 카드 | Deep Plum 배경 + White 글자                      | 첫 계정 카드 한 곳에 집중, 보조 글자도 충분한 대비 유지                        |
+| 마이페이지 설정 카드 | White 배경 + 중립색 얇은 테두리                  | 밝은 캔버스와 경계를 만들고 그룹 제목으로 묶음 구분                            |
+| 구분선               | Mushroom 계열의 얇은 선                          | 카드의 모든 면을 진한 선으로 둘러싸지 않음                                     |
+| 포커스               | Deep Plum 테두리 + 두께 변화 또는 캐럿           | 포커스 여부가 색 변화만으로 결정되지 않게 함                                   |
+| 에러·성공            | 전용 상태색 + 문구·아이콘                        | 브랜드 장식색을 상태색 대신 쓰지 않음                                          |
+| 다크 화면            | `bg-dark` + `on-dark`, 브랜드 강조는 Light Plum  | Light Plum 면 위 글자는 Kimber 사용                                            |
 
-**`tertiary` / `muted`는 더 이상 유효 토큰이 아니다.** NativeWind는 미정의 className을 런타임 에러 없이 무시하므로 `tsc`로 잡히지 않는다 — 새로 쓰지 말 것.
+에러·성공·disabled 색, 다크 화면, 지도·노선·도메인 전용 색은 이번 팔레트만으로 확정하지 않는다. 코드 이관 시 기존 의미를 유지하면서 각 조합을 검증한다. 외부 로그인 버튼의 브랜드 색도 유지한다.
 
-### 1.3 전역 컬러 팔레트 (정본: `tailwind.config.js`)
+### 1.5 대비 기준
 
-#### 무채색 명도 스케일
+WCAG 상대휘도 공식으로 계산한 대표 조합이다. 수치는 반올림한 정적 계산값이며 실제 컴포넌트에서는 글자 크기, 투명도, 이미지 오버레이까지 확인한다.
 
-| 시맨틱 이름 | Hex       | className                     | 용도                                                                                                          |
-| ----------- | --------- | ----------------------------- | ------------------------------------------------------------------------------------------------------------- |
-| gray100     | `#F8F6F2` | `bg-gray100`                  | 최상위 밝기 배경. **`background` 토큰은 도입하지 않으며 이 토큰이 그 역할을 대신한다** (`bg-light`와 동일 값) |
-| gray200     | `#F2EFE9` | `bg-gray200`                  | 톤온톤 카드 배경 (`bg-tonal`과 동일 값)                                                                       |
-| gray300     | `#E7E5E4` | `border-gray300`              | 라이트 구분선 (`divider`와 동일 값)                                                                           |
-| gray400     | `#C7C3BD` | `bg-gray400` / `text-gray400` | **disabled 전용** — 비활성 fill 배경·비활성 아이콘/텍스트                                                     |
-| gray500     | `#A8A29E` | `text-gray500`                | placeholder·비활성 텍스트                                                                                     |
-| gray600     | `#78716C` | `text-gray600`                | 3차 텍스트·로딩 인디케이터                                                                                    |
-| gray700     | `#57534E` | `text-gray700`                | 보조 텍스트                                                                                                   |
-| gray800     | `#292524` | `border-gray800`              | 다크 구분선 (`divider-dark`와 동일 값)                                                                        |
-| gray900     | `#1C1917` | `text-gray900` / `bg-gray900` | 본문 텍스트 + 무채색 표면(시트·지도 마커·바코드·구분선)                                                       |
+| 조합                                     |    대비 | 판정·용도                    |
+| ---------------------------------------- | ------: | ---------------------------- |
+| Kimber 글자 / 조정된 Bianco 배경         | 13.30:1 | 본문 사용 가능               |
+| White 글자 / Deep Plum 배경              | 12.13:1 | 주요 버튼 사용 가능          |
+| Deep Plum 글자 / 조정된 Bianco 배경      | 11.60:1 | 링크·활성 탭 사용 가능       |
+| Kimber 글자 / Mushroom 배경              |  8.36:1 | 보조 카드 사용 가능          |
+| Autumn Fern 글자 / 조정된 Bianco 배경    |  6.92:1 | 제한된 편집 요소에 사용 가능 |
+| Khaki Moss 글자 / 조정된 Bianco 배경     |  4.47:1 | 일반 본문 글자에는 사용 금지 |
+| White 글자 / Matcha Coded 배경           |  2.81:1 | 글자 조합으로 사용 금지      |
+| Kimber 글자 / Light Plum 배경            |  7.12:1 | 다크 화면 버튼 사용 가능     |
+| Light Plum 아이콘 / 다크 배경(`#171412`) |  9.40:1 | 다크 화면 강조 사용 가능     |
 
-#### 브랜드 컬러
+본문 글자는 최소 4.5:1, 큰 글자는 최소 3:1, 필수 UI 표시와 포커스 경계는 최소 3:1을 목표로 한다. 반투명 배경·사진 위 글자는 실제 합성 결과로 다시 계산한다. 밝은 파스텔 위에는 White 글자를 기본값으로 두지 않는다.
 
-| 시맨틱 이름  | Hex       | className                               | 용도                                                                                                                   |
-| ------------ | --------- | --------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
-| primary      | `#AB77F1` | `bg-primary` / `text-primary`           | 브랜드 메인(비비드 퍼플). **텍스트를 얹지 않는 브랜드 표면** + **다크 배경 위 브랜드 표면** 전용                       |
-| primary-dark | `#7C3AED` | `bg-primary-dark` / `text-primary-dark` | **흰 텍스트를 얹는 모든 라이트 배경 브랜드 표면** + 탭바 활성 tint + 라이트 배경 위 브랜드 텍스트                      |
-| secondary    | `#302D33` | `border-secondary` / `text-secondary`   | 보조/아웃라인 버튼(취소·닫기·스킵 계열)                                                                                |
-| accent       | `#00E9C8` | `bg-accent`                             | 포인트 강조(민트). **적용처(2026-09-17 스캔): 온보딩 진행 dot 2곳**(`OnboardingIntroStack.tsx`, `OnboardingEnter.tsx`) |
-| white        | `#FFFFFF` | `bg-white` / `text-white`               | 순백 (정식 토큰화)                                                                                                     |
+### 1.6 코드 정본과 별칭
 
-**브랜드 컬러 사용 판정 (폰트 크기는 판정에 개입하지 않는다)**
+앱의 컬러 값 정본은 [`src/constants/colors.ts`](../src/constants/colors.ts) 한 곳이다. [`tailwind.config.js`](../tailwind.config.js)의 `theme.extend.colors`가 이 객체를 가져온다. NativeWind의 `bg-*`·`text-*`·`border-*`와 런타임 JS 색상 prop이 같은 값을 참조한다.
 
-2026-09-17 재도색 후 수치 — WCAG 상대휘도 공식으로 재계산·검증(`#767676` vs `#FFFFFF` = 4.54:1, `#000000` vs `#FFFFFF` = 21:1 기준값으로 계산식 자체를 먼저 검증한 뒤 산출):
+`primary`·`primary-dark`·`accent` 브랜드 토큰은 제거하고, 밝은 화면은 `brand`, 어두운 화면은 `brand-on-dark`를 사용한다. `gray100`·`gray900`, `bg-light`·`bg-tonal`은 기존 컴포넌트와 호환되는 역할 별칭으로 남는다. 가장 밝은 두 회색 단계는 중립적인 흰색 계열에 맞게 조정됐다.
 
-```
-표면 위에 흰색 텍스트가 올라가는가?
-  ├─ YES → 배경이 라이트인가?
-  │         ├─ YES → bg-primary-dark  (white 5.70:1 ✅)
-  │         └─ NO(다크 화면) → bg-primary  (표면 3:1 기준 5.80:1 ✅, 본문 4.5:1 기준도 통과 — 재도색 전엔 4.5:1 미달이라 본문 텍스트를 금지했으나, 새 hex(#AB77F1)에서는 이 표면에 본문 텍스트를 얹어도 된다)
-  └─ NO(아이콘·인디케이터·점·바) → bg-primary  (비텍스트 3:1 기준 3.16:1 ✅ — 라이트 배경 위 기준)
-```
+`secondary`는 기존 역색 버튼과 텍스트 호출부의 호환 별칭이며 Kimber와 같은 `#2D2D23`이다. `description`, 상태색, `bg-dark`는 역할을 유지한다.
 
-- **다크 배경(`bg-dark` #171412) 위에 `primary-dark`를 쓰지 않는다** — 3.22:1로 배경에 묻힌다(재도색 전 2.89:1에서 소폭 개선됐으나 여전히 미달).
-- **`primary`를 라이트 배경 위 본문 텍스트/링크 색으로 쓰지 않는다** — 3.16:1(본문 4.5:1 미달, 비텍스트 3:1은 통과). 필요하면 `primary-dark`(5.70:1, 본문 기준도 통과).
-- disabled는 `bg-gray400` + `text-white`(fill) 또는 `text-gray400`(배경 없는 버튼)으로 통일하고 `accessibilityState={{ disabled }}`를 함께 둔다. 외부 브랜드 고정색(카카오/Apple)은 예외로 배경을 바꾸지 않는다.
-- focus 시각 상태는 현재 코드베이스에 0건이다. 새로 만들 때는 라이트/다크 모두 `border-primary`(#AB77F1)를 쓰고, 캐럿(`selectionColor`) 또는 보더 두께 변화 같은 비색상 신호를 함께 둔다.
+### 1.7 유지·검증 규칙
 
-#### 기타 (이번 개편에서 변경 없음)
+1. 새 색은 재사용 가능한 UI 역할이 있을 때 `colors.ts`에 추가한다. 일회성 도메인 색은 해당 도메인에 둔다.
+2. 밝은 화면의 새 CTA는 `brand` + `white`, 다크 화면은 `brand-on-dark` + `ink` 조합을 기본으로 한다.
+3. 실제 화면의 일반·선택·disabled·로딩·오류·포커스 상태를 캡처하고, 텍스트·아이콘 대비와 터치 동작을 확인한다.
+4. `primary`·`primary-dark`·`accent`를 신규 코드에 다시 도입하지 않는다.
 
-| 시맨틱 이름       | Hex       | className                     | 용도                                                 |
-| ----------------- | --------- | ----------------------------- | ---------------------------------------------------- |
-| description       | `#6B6360` | (tailwind 미등록)             | 설명 텍스트 — JS 값(`colors.description`)으로만 사용 |
-| bg-light          | `#F8F6F2` | `bg-bg-light`                 | 라이트 모드 배경                                     |
-| bg-dark           | `#171412` | `bg-bg-dark`                  | 다크 모드 배경                                       |
-| bg-tonal          | `#F2EFE9` | `bg-bg-tonal`                 | 카드 등 톤온톤 배경                                  |
-| on-dark           | `#E8E8E8` | `text-on-dark`                | 다크 배경 위 텍스트                                  |
-| image-placeholder | `#E5E1D8` | `bg-image-placeholder`        | 이미지 로딩 전 배경                                  |
-| divider           | `#E7E5E4` | `border-divider`              | 라이트 모드 구분선                                   |
-| divider-dark      | `#292524` | `border-divider-dark`         | 다크 모드 구분선                                     |
-| error             | `#EF4444` | `text-error` / `bg-error`     | 에러/경고                                            |
-| error-alt         | `#F43F5E` | `text-error-alt`              | 에러와 톤이 다른 빨강 (스와이프 "패스" 등)           |
-| success           | `#00BC7D` | `text-success` / `bg-success` | 성공 상태                                            |
+### 1.8 도메인 전용 색
 
-className 조합 예: `bg-[rgba(28,25,23,0.06)]`처럼 위 hex를 rgba 임의값으로 쓰는 경우도 있다 — 이는 [`component-convention.md`](../.claude/rules/component-convention.md) §2 표를 따른다.
+[`archivePalette.ts`](../src/constants/archivePalette.ts)의 통계·썸네일 색, [`ticketColor.ts`](../src/utils/ticketColor.ts)의 방문 티켓 색, [`routeColors.ts`](../src/utils/routeColors.ts)의 교통 노선 색은 별도 역할을 갖는다. 특히 노선 색은 외부 데이터의 의미를 전달하므로 브랜드 팔레트에 맞추어 변경하지 않는다. 재사용 가능한 UI 역할색만 전역 토큰으로 올린다.
 
-### 1.4 도메인 전용 팔레트 (전역 토큰과 분리된 이유)
+## 2. Typography
 
-아래 팔레트들은 전역 시맨틱 토큰(1.3)과 의도적으로 분리되어 있다. 특정 도메인의 의사난수/분류 로직에서만 쓰이고, 재사용 가능한 UI 시맨틱이 아니기 때문이다.
+글꼴의 코드 정본은 `tailwind.config.js`의 `theme.extend.fontFamily`다. 폰트는 `className`으로 지정한다.
 
-| 파일                                       | 성격                                                                                                                  | 분리 이유                                                                                                                   |
-| ------------------------------------------ | --------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| `src/components/archive/archivePalette.ts` | 아카이브 통계 강조색(`ARCHIVE_STAT_ACCENTS`), 썸네일 없을 때 카드 틴트 로테이션(`ARCHIVE_CARD_TINTS`, 해시 기반 선택) | 특정 화면(아카이브)의 시각적 다양성을 위한 장식용 팔레트. 전역 시맨틱 의미가 없음                                           |
-| `src/utils/ticketColor.ts`                 | 방문 티켓 카드 배경 12색 (빈티지 웜톤 파스텔), 문자열 해시(`djb2`) 기반 결정적 색상 선택                              | 티켓 고유 식별을 위한 의사난수 배정 팔레트. 전역 토큰과 무관                                                                |
-| `src/utils/routeColors.ts`                 | 대중교통 노선 색상 — 버스 타입 코드, 지하철 노선 코드(ODsay 공식 코드 기준)                                           | **외부 표준(실제 노선 색상)**을 그대로 반영해야 하는 데이터이므로 디자인 토큰이 아니라 참조 데이터. 전역 팔레트로 흡수 불가 |
+| 글꼴                | className                               | 용도                             |
+| ------------------- | --------------------------------------- | -------------------------------- |
+| Pretendard Regular  | `font-pretendard-regular` / `font-sans` | 본문                             |
+| Pretendard Light    | `font-pretendard-light`                 | 큰 보조 문구                     |
+| Pretendard Medium   | `font-pretendard-medium`                | 강조 본문                        |
+| Pretendard SemiBold | `font-pretendard-semibold`              | 버튼·목록 제목                   |
+| Pretendard Bold     | `font-pretendard-bold`                  | 강한 강조                        |
+| Hahmlet Regular     | `font-hahmlet`                          | 에디토리얼 제목                  |
+| Hahmlet SemiBold    | `font-hahmlet-semibold`                 | 강조 제목                        |
+| Hahmlet Bold        | `font-hahmlet-bold`                     | 표지형 제목                      |
+| Nanum Pen Script    | `font-nanum-pen`                        | 손글씨 표현이 필요한 한정된 영역 |
 
-## 2. 타이포그래피
-
-`tailwind.config.js`의 `theme.extend.fontFamily`가 정본. `component-convention.md` §2 규칙에 따라 폰트는 항상 className으로만 지정한다 (`style={{ fontFamily }}` 금지).
-
-| 폰트 패밀리         | className                                       | 실제 폰트 파일/패키지                                               | 사용 여부                                                                                                                                    |
-| ------------------- | ----------------------------------------------- | ------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
-| Pretendard Regular  | `font-pretendard-regular` / `font-sans`(기본값) | `Pretendard-Regular` (커스텀 폰트 파일)                             | 사용 중                                                                                                                                      |
-| Pretendard Light    | `font-pretendard-light`                         | `Pretendard-Light`                                                  | 사용 중                                                                                                                                      |
-| Pretendard Medium   | `font-pretendard-medium`                        | `Pretendard-Medium`                                                 | 사용 중                                                                                                                                      |
-| Pretendard SemiBold | `font-pretendard-semibold`                      | `Pretendard-SemiBold`                                               | 사용 중                                                                                                                                      |
-| Pretendard Bold     | `font-pretendard-bold`                          | `Pretendard-Bold`                                                   | 사용 중                                                                                                                                      |
-| Hahmlet Regular     | `font-hahmlet`                                  | `Hahmlet_400Regular` (`@expo-google-fonts/hahmlet`)                 | 사용 중                                                                                                                                      |
-| Hahmlet SemiBold    | `font-hahmlet-semibold`                         | `Hahmlet_600SemiBold`                                               | 사용 중                                                                                                                                      |
-| Hahmlet Bold        | `font-hahmlet-bold`                             | `Hahmlet_700Bold`                                                   | 사용 중                                                                                                                                      |
-| Nanum Pen Script    | `font-nanum-pen`                                | `NanumPenScript_400Regular` (`@expo-google-fonts/nanum-pen-script`) | 사용 중 — `src/components/archive/SignaturePad.tsx` 서명 안내 캡션 전용. **사용 범위를 이 한 곳으로 제한한다**(tailwind.config.js 주석 참고) |
-
-2026-09-17 재확인: `nanum-pen`은 tailwind.config.js `fontFamily`에 정식 등록되고 `SignaturePad.tsx`에서 `font-nanum-pen` className으로 쓰이는 상태로 확정됐다 — 위 "미등록" 절에서 이 표로 이동.
-
-### 설치됐지만 tailwind.config.js에 등록되지 않은 폰트
-
-`package.json`에 설치되어 있고 `app/_layout.tsx`에서 `useFonts`로 로드는 되지만, `tailwind.config.js`의 `fontFamily`에는 등록되어 있지 않다 — 즉 className으로 쓸 수 없고 `style={{ fontFamily }}`로만 접근 가능한 상태(component-convention.md 규칙 위반 소지가 있는 예외 상태).
-
-| 패키지                                  | 로드 위치                                                                                               | tailwind 등록 | 상태                                                                                                                  |
-| --------------------------------------- | ------------------------------------------------------------------------------------------------------- | ------------- | --------------------------------------------------------------------------------------------------------------------- |
-| `@expo-google-fonts/cormorant-garamond` | `app/_layout.tsx` (4종 `useFonts` 로드: Regular/Regular_Italic/SemiBold/Bold 확인됨, 2026-09-17 재스캔) | 미등록        | **실제 사용처 0건 확인(2026-09-17, className·style 전수 grep)** — 미사용 폰트 4종을 로드만 하고 있음. 정리(제거) 후보 |
-
-2026-09-17: `nanum-pen-script`는 위 표에서 빠지고 정식 등록 표로 이동. `cormorant-garamond`는 여전히 미등록·미사용 상태를 유지 — 번들 크기만 차지하는 죽은 로드이므로 제거를 적극 검토할 것.
+색으로 위계를 만들기 전에 크기·굵기·여백으로 읽는 순서를 만든다. Hahmlet은 큰 제목과 에디토리얼 강조에 쓰고, 긴 본문과 조작 라벨은 Pretendard를 쓴다.
 
 ## 3. Shadow
 
-`tailwind.config.js`의 `theme.extend.boxShadow`에 정의된 시맨틱 그림자 토큰(2026-09-17 스캔 시점 신규 확인 — 이전 버전 문서에 누락돼 있었다).
+현재 그림자 토큰은 `tailwind.config.js`의 `theme.extend.boxShadow`에 있다.
 
-| 시맨틱 이름       | className                  | 값                                  | 용도                       |
-| ----------------- | -------------------------- | ----------------------------------- | -------------------------- |
-| floating          | `shadow-floating`          | `0 6px 14px rgba(28, 25, 23, 0.28)` | 떠있는 카드/버튼 일반      |
-| map-control       | `shadow-map-control`       | `0 2px 8px rgba(0, 0, 0, 0.12)`     | 지도 위 컨트롤(줌 버튼 등) |
-| onboarding-button | `shadow-onboarding-button` | `0 4px 12px rgba(0, 0, 0, 0.08)`    | 온보딩 화면 버튼           |
-| onboarding-card   | `shadow-onboarding-card`   | `0 8px 20px rgba(0, 0, 0, 0.12)`    | 온보딩 화면 카드           |
-| chip              | `shadow-chip`              | `0 1px 4px rgba(0, 0, 0, 0.12)`     | 칩/뱃지류 소형 요소        |
+| 이름              | className                  | 값                                  | 용도              |
+| ----------------- | -------------------------- | ----------------------------------- | ----------------- |
+| floating          | `shadow-floating`          | `0 6px 14px rgba(45, 45, 35, 0.28)` | 떠 있는 카드·버튼 |
+| map-control       | `shadow-map-control`       | `0 2px 8px rgba(0, 0, 0, 0.12)`     | 지도 컨트롤       |
+| onboarding-button | `shadow-onboarding-button` | `0 4px 12px rgba(0, 0, 0.08)`       | 온보딩 버튼       |
+| onboarding-card   | `shadow-onboarding-card`   | `0 8px 20px rgba(0, 0, 0, 0.12)`    | 온보딩 카드       |
+| chip              | `shadow-chip`              | `0 1px 4px rgba(0, 0, 0, 0.12)`     | 칩·배지           |
 
-이 토큰들은 `hex 값이 아니라 CSS box-shadow 문자열`이라 §1의 컬러 정본 절차(§5 참고)와는 별개다 — 새 그림자 토큰을 추가할 때도 `tailwind.config.js`가 정본이며, 이 문서에 표만 갱신하면 된다(colors.ts처럼 JS 값 미러가 필요 없다 — `style={{ shadowColor, shadowOpacity, ... }}` RN 네이티브 그림자 prop은 컴포넌트별로 개별 지정되고 있어 이 토큰과는 아직 통합돼 있지 않음, component-convention.md §2의 그림자 style 예외 규칙 참고).
+새 팔레트를 코드에 적용할 때 그림자의 색도 화면 배경과 함께 확인한다. 그림자만으로 터치 가능 여부를 표현하지 않는다.
 
 ## 4. Spacing / Radius
 
-별도의 시맨틱 spacing/radius 토큰 파일은 **존재하지 않는다**. Tailwind 기본 숫자 스케일(`p-4`, `gap-2`, `rounded-xl` 등)을 그대로 사용하며, 값이 필요할 때는 [`component-convention.md`](../.claude/rules/component-convention.md) §2 표에 따라 `px-[11px]`, `rounded-tl-[14px]` 같은 임의값 className으로 표현한다. 프로젝트 전용 spacing 스케일을 도입하려면 이 문서와 `tailwind.config.js`에 함께 추가해야 한다(현재는 없음을 있는 그대로 기록).
+프로젝트 전용 시맨틱 간격·모서리 반경 토큰은 없다. Tailwind 기본 스케일을 사용하고, 예외값은 [component-convention.md](rules/component-convention.md)의 `className` 규칙에 따라 기록한다. 넓은 여백은 작품과 주요 행동을 구분하는 디자인 요소로 취급한다.
 
-## 5. 새 토큰 추가 절차
+## 5. 변경 관리
 
-컬러 토큰을 추가/변경할 때:
-
-1. `tailwind.config.js` `theme.extend.colors`에 시맨틱 이름으로 추가 (정본)
-2. 해당 색상을 `style={{}}`(JS 값)로도 참조해야 하는 지점이 있다면 `src/constants/colors.ts`에 **동일한 hex 값**으로 동기화 추가
-3. 두 파일의 값이 다르면 안 됨 — 다르면 그 자체가 §1.2 같은 드리프트가 되므로, PR 리뷰에서 반드시 diff 확인
-4. 도메인 전용 팔레트(§1.4)에 넣을지 전역 토큰(§1.3)에 넣을지는 "다른 화면에서도 재사용 가능한 시맨틱 색인가?" 기준으로 판단 — 재사용 가능하면 전역, 특정 화면/도메인 로직 전용이면 도메인 파일
-
-폰트 토큰을 추가할 때:
-
-1. `@expo-google-fonts/*` 패키지 설치 및 `app/_layout.tsx`의 `useFonts`에 등록
-2. `tailwind.config.js` `theme.extend.fontFamily`에 className 등록
-3. 실제 컴포넌트에서 `className='font-xxx'`로만 사용 (`style={{ fontFamily }}` 금지)
+- 색을 추가하기 전에 §1.2~1.4에 이미 같은 역할이 있는지 확인한다. 화면 하나의 장식색은 전역 토큰으로 승격하지 않는다.
+- 구현 시 `src/constants/colors.ts`를 수정한다. `tailwind.config.js`가 이를 정상적으로 가져오는지 확인하고, 런타임 JS 색상 prop과 NativeWind className을 함께 검증한다.
+- 새 버튼·텍스트·상태 조합은 대비 수치를 기록하고, 실제 화면에서 시각·인터랙션 검증을 거친다.
+- 이 문서의 디자인 기준과 앱 구현값을 함께 갱신한다. 컬러 토큰 변경 시 밝은 화면과 다크 화면 모두 확인한다.

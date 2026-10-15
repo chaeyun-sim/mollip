@@ -23,13 +23,13 @@ interface ResultProps {
 
 const TONE_ICON_CLASSNAME: Record<ResultTone, string> = {
 	neutral: 'text-secondary',
-	success: 'text-primary',
+	success: 'text-brand',
 	danger: 'text-error',
 };
 
 const TONE_ICON_CLASSNAME_DARK: Record<ResultTone, string> = {
 	neutral: 'text-gray300',
-	success: 'text-primary',
+	success: 'text-brand-on-dark',
 	danger: 'text-error',
 };
 

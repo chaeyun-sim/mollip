@@ -5,6 +5,7 @@ import { Alert, Linking, Pressable, Text, View } from 'react-native';
 import Purchases from 'react-native-purchases';
 import { Screen } from '@/src/components/layout/Screen';
 import { CardRow, SettingsCard } from '@/src/components/mypage';
+import { colors } from '@/src/constants/colors';
 import { formatSubscriptionDate } from '@/src/lib/subscription';
 import { useSubscriptionStore } from '@/src/store/subscriptionStore';
 
@@ -51,7 +52,7 @@ export default function SubscribeScreen() {
 
 			<View className="gap-4 mt-2 px-6">
 				<LinearGradient
-					colors={['#171412', '#7C3AED', '#E985FF']}
+					colors={[colors['bg-dark'], colors.brand, colors.editorial]}
 					start={{ x: 0, y: 0 }}
 					end={{ x: 1, y: 1 }}
 					style={{ paddingHorizontal: 20, paddingVertical: 20, borderRadius: 16 }}
@@ -93,7 +94,7 @@ export default function SubscribeScreen() {
 								<View key={benefit} className="flex-row items-center gap-2">
 									{/* 체크 아이콘 대신 프리미엄 느낌의 보라색/반짝이 아이콘 추천 */}
 									<View className="h-5 w-5 items-center justify-center rounded-full">
-										<Ionicons name="sparkles" size={14} className="text-primary" />
+										<Ionicons name="sparkles" size={14} className="text-brand-on-dark" />
 									</View>
 									<Text className="font-pretendard-medium text-sm text-secondary">{benefit}</Text>
 								</View>
