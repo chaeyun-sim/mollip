@@ -390,8 +390,9 @@ function RootLayout() {
 								<Stack.Screen name="(explore)" options={{ headerShown: false }} />
 								<Stack.Screen name="auth" options={{ headerShown: false }} />
 								<Stack.Screen name="diary/[date]" options={{ headerShown: false }} />
-								<Stack.Screen name="diary/verify-ticket" options={{ headerShown: false }} />
-								<Stack.Screen name="diary/confirm-visits" options={{ headerShown: false }} />
+								<Stack.Screen name="diary/record/index" options={{ headerShown: false }} />
+								<Stack.Screen name="diary/record/write" options={{ headerShown: false }} />
+								<Stack.Screen name="diary/record/caption" options={{ headerShown: false }} />
 								<Stack.Screen
 									name="onboarding"
 									options={{ headerShown: false, gestureEnabled: false }}

@@ -9,7 +9,7 @@ export const MAX_ESSAY_GENERATES = 5;
 
 export type EssayStage = 'idle' | 'streaming' | 'done' | 'error';
 
-// 확정 큐(confirm-visits)의 감상 생성 단계 전용 경량 스트리밍 훅.
+// 기록하기(영감 한 줄 'AI로 다듬기') 전용 경량 스트리밍 훅.
 // useDescriptionStream의 델타 누적/문자 단위 표시 패턴만 참고해 신규 작성했다 —
 // 이미지 해설 플로우 상태(artworkImageUrl, 재생목록 자동 저장 등)와 결합되어 있지 않다.
 export function useEssayStream() {
