@@ -11,6 +11,7 @@ import { ExhibitionListRowSkeleton } from '@/src/components/explore/ExhibitionLi
 import type { RecommendableItem } from '@/src/components/explore/RecommendableItem.types';
 import { Screen } from '@/src/components/layout/Screen';
 import { useAllExhibitions } from '@/src/hooks/useAllExhibitions';
+import { CommonHeader } from '@/src/components/common/CommonHeader';
 
 const SKELETON_ROW_COUNT = 5;
 
@@ -107,35 +108,7 @@ export default function ExhibitionsScreen() {
 	return (
 		<Screen variant="warm">
 			{/* 헤더 */}
-			<Screen.Header>
-				<Screen.Header.Left>
-					<Screen.Header.Logo />
-				</Screen.Header.Left>
-				<Screen.Header.Right>
-					<View className="flex-row items-center gap-4">
-						<LoginRequiredPressable
-							onPress={() => router.push('/bookmark')}
-							hitSlop={8}
-							accessibilityRole="button"
-							accessibilityLabel="북마크"
-							style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
-							returnTo="/bookmark"
-						>
-							<Ionicons name="bookmark-outline" size={24} className="text-gray900" />
-						</LoginRequiredPressable>
-						<LoginRequiredPressable
-							onPress={() => router.push('/notifications')}
-							hitSlop={8}
-							accessibilityRole="button"
-							accessibilityLabel="알림"
-							style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
-							returnTo="/notifications"
-						>
-							<Ionicons name="notifications-outline" size={24} className="text-gray900" />
-						</LoginRequiredPressable>
-					</View>
-				</Screen.Header.Right>
-			</Screen.Header>
+			<CommonHeader />
 
 			<FlatList
 				data={items}

@@ -10,8 +10,6 @@ export { ExhibitionImmersiveFab } from './ExhibitionImmersiveFab';
 export { ExhibitionInfoRow } from './ExhibitionInfoRow';
 export { ExhibitionMapPreview } from './ExhibitionMapPreview';
 export { ExhibitionMetaPill } from './ExhibitionMetaPill';
-export { FeaturedExhibitionHero } from './FeaturedExhibitionHero';
-export type { FeaturedExhibitionProps } from './FeaturedExhibitionHero';
 export type { RecommendableItem } from './RecommendableItem.types';
 export { ImmersiveOverlay } from './ImmersiveOverlay';
 export { KcisaExhibitionCard } from './KcisaExhibitionCard';

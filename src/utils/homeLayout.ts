@@ -8,3 +8,20 @@ export const getGridColumnWidth = (
 	columns = 2,
 ): number =>
 	Math.max(0, Math.floor((windowWidth - sidePadding * 2 - gap * (columns - 1)) / columns));
+
+/** 주 목록을 앞에 두고, 모자란 칸은 보조 목록에서 중복 없이 채워 최대 count개를 만든다 */
+export const fillToCount = <T extends { id: string }>(
+	primary: T[],
+	extras: T[],
+	count: number,
+): T[] => {
+	const seen = new Set<string>();
+	const result: T[] = [];
+	for (const item of [...primary, ...extras]) {
+		if (result.length >= count) break;
+		if (seen.has(item.id)) continue;
+		seen.add(item.id);
+		result.push(item);
+	}
+	return result;
+};

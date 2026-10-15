@@ -23,7 +23,6 @@ export type FeaturedExhibition = ExhibitionSummary & {
 };
 
 const FEATURED_CAROUSEL_SIZE = 5;
-const RECOMMENDED_FALLBACK_SIZE = 5;
 
 const withListQuery = <TItem, TQuery extends { isLoading: boolean; isError: boolean }>(
 	query: TQuery,
@@ -83,11 +82,6 @@ export function useExploreScreenData() {
 		[kcisaItems, featured, featuredCarousel.length],
 	);
 
-	const cultureList = useMemo(
-		() => withoutFeatured(cultureItems, 'culture', featured, featuredCarousel.length),
-		[cultureItems, featured, featuredCarousel.length],
-	);
-
 	// preferredArtists는 useRecommendedExhibitions의 스코어링에 반영되지 않는다
 	// (exhibitions 테이블에 artist 컬럼이 없음) — 개인화 여부는 장르 선호로만 판단한다.
 	const isPersonalized = preferredGenres.length > 0;
@@ -97,23 +91,13 @@ export function useExploreScreenData() {
 		isPersonalized,
 	);
 
-	const displayedRecommended = useMemo<ExhibitionSummary[]>(() => {
-		if (recommendedItems.length > 0) return recommendedItems;
-		const culturePart = cultureList.slice(0, RECOMMENDED_FALLBACK_SIZE);
-		if (culturePart.length >= RECOMMENDED_FALLBACK_SIZE) return culturePart;
-		return [
-			...culturePart,
-			...kcisaCarousel.slice(0, RECOMMENDED_FALLBACK_SIZE - culturePart.length),
-		];
-	}, [recommendedItems, cultureList, kcisaCarousel]);
-
 	return {
 		cultureQuery: withListQuery(cultureQuery, cultureItems),
 		kcisaQuery: withListQuery(kcisaQuery, kcisaItems),
 		featured,
 		featuredCarousel,
 		kcisaCarousel,
-		displayedRecommended,
+		displayedRecommended: recommendedItems,
 		isPersonalized,
 	};
 }

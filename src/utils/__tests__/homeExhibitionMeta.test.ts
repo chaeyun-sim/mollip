@@ -1,8 +1,10 @@
 import {
+	formatBoardDate,
+	formatHomeDate,
 	getClosingSoonDaysLeft,
 	getDailyIndex,
 	getExhibitionMeta,
-	pickClosingSoon,
+	pickDepartureRows,
 } from '../homeExhibitionMeta';
 
 const BASE = new Date(2026, 9, 7, 15, 0); // 2026.10.07 오후
@@ -57,72 +59,6 @@ describe('getExhibitionMeta — 카드 메타 라벨', () => {
 	});
 });
 
-describe('pickClosingSoon — 마감 임박 목록', () => {
-	it('14일 이내 진행 중 전시만 마감 순으로 고른다', () => {
-		const result = pickClosingSoon(
-			[
-				[
-					item('a', '2026.09.01', '2026.10.20'), // D-13
-					item('b', '2026.09.01', '2026.12.31'), // 범위 밖
-					item('c', '2026.09.01', '2026.10.08'), // D-1
-				],
-				[item('d', '2026.10.20', '2026.10.25')], // 예정 → 제외
-			],
-			{ base: BASE },
-		);
-		expect(result.map((r) => r.id)).toEqual(['c', 'a']);
-		expect(result[0].daysLeft).toBe(1);
-	});
-
-	it('제외 ID와 소스 간 중복 ID를 뺀다', () => {
-		const result = pickClosingSoon(
-			[
-				[item('a', '2026.09.01', '2026.10.10'), item('b', '2026.09.01', '2026.10.11')],
-				[item('a', '2026.09.01', '2026.10.10'), item('c', '2026.09.01', '2026.10.12')],
-			],
-			{ base: BASE, excludeIds: ['b'] },
-		);
-		expect(result.map((r) => r.id)).toEqual(['a', 'c']);
-	});
-
-	it('limit 개수까지만 반환하고 날짜 없는 항목은 무시한다', () => {
-		const result = pickClosingSoon(
-			[
-				[
-					item('a', '2026.09.01', '2026.10.09'),
-					item('b', '2026.09.01', '2026.10.10'),
-					item('x', null, null),
-				],
-			],
-			{ base: BASE, limit: 1 },
-		);
-		expect(result.map((r) => r.id)).toEqual(['a']);
-	});
-});
-
-describe('pickClosingSoon — maxDays', () => {
-	it('maxDays를 넓히면 그 범위까지 포함한다', () => {
-		const sources = [[item('a', '2026.09.01', '2026.10.30')]]; // D-23
-		expect(pickClosingSoon(sources, { base: BASE })).toHaveLength(0);
-		expect(pickClosingSoon(sources, { base: BASE, maxDays: 30 })[0].daysLeft).toBe(23);
-	});
-});
-
-describe('pickClosingSoon — minDays', () => {
-	it('minDays: 1이면 오늘 마감(철수일일 수 있음)은 뺀다', () => {
-		const sources = [
-			[item('today', '2026.09.01', '2026.10.07'), item('tomorrow', '2026.09.01', '2026.10.08')],
-		];
-		expect(pickClosingSoon(sources, { base: BASE }).map((r) => r.id)).toEqual([
-			'today',
-			'tomorrow',
-		]);
-		expect(pickClosingSoon(sources, { base: BASE, minDays: 1 }).map((r) => r.id)).toEqual([
-			'tomorrow',
-		]);
-	});
-});
-
 describe('getClosingSoonDaysLeft — 검색 "마감 임박" 필터', () => {
 	it('진행 중이고 1~14일 남았으면 남은 일수', () => {
 		expect(getClosingSoonDaysLeft({ startDate: '2026.09.01', endDate: '2026.10.08' }, BASE)).toBe(
@@ -161,5 +97,86 @@ describe('getDailyIndex — 날짜 고정 선택', () => {
 
 	it('길이가 0이면 0', () => {
 		expect(getDailyIndex(BASE, 0)).toBe(0);
+	});
+});
+
+describe('formatHomeDate', () => {
+	it('마스트헤드 날짜를 "YYYY. M. D 요일" 형식으로 만든다', () => {
+		expect(formatHomeDate(BASE)).toBe('2026. 10. 7 수요일');
+		expect(formatHomeDate(new Date(2026, 0, 4))).toBe('2026. 1. 4 일요일');
+	});
+});
+
+describe('pickDepartureRows — 출발 안내판', () => {
+	const sources = [
+		[
+			// last call: 진행 중 · 1~3일 남음
+			item('lc-3', '2026.09.01', '2026.10.10'),
+			item('lc-1a', '2026.09.01', '2026.10.08'),
+			item('lc-2', '2026.09.01', '2026.10.09'),
+			item('lc-1b', '2026.09.01', '2026.10.08'),
+			// boarding: 진행 중 · 4일 이상
+			item('bd-c', '2026.09.01', '2026.11.01'),
+			item('bd-a', '2026.09.01', '2026.10.15'),
+			item('bd-d', '2026.09.01', '2026.12.01'),
+			item('bd-b', '2026.09.01', '2026.10.20'),
+		],
+		[
+			// on time: 개막 예정
+			item('ot-b', '2026.10.20', '2026.12.31'),
+			item('ot-a', '2026.10.12', '2026.12.31'),
+			item('ot-c', '2026.11.01', '2026.12.31'),
+			// 제외: 오늘 마감(철수일), 이미 끝남, 날짜 없음
+			item('today', '2026.09.01', '2026.10.07'),
+			item('ended', '2026.08.01', '2026.09.30'),
+			item('nodate', null, null),
+		],
+	];
+
+	it('상태별 3 · 3 · 2개를 마감(개막)이 가까운 순으로 고른다', () => {
+		const { rows } = pickDepartureRows(sources, { base: BASE });
+		expect(rows.map((r) => [r.id, r.departure])).toEqual([
+			['lc-1a', 'last-call'],
+			['lc-1b', 'last-call'],
+			['lc-2', 'last-call'],
+			['bd-a', 'boarding'],
+			['bd-b', 'boarding'],
+			['bd-c', 'boarding'],
+			['ot-a', 'on-time'],
+			['ot-b', 'on-time'],
+		]);
+	});
+
+	it('날짜판은 진행 중이면 마감일, 개막 예정이면 개막일', () => {
+		const { rows } = pickDepartureRows(sources, { base: BASE });
+		expect(rows.find((r) => r.id === 'lc-2')?.boardDate).toBe('10.09');
+		expect(rows.find((r) => r.id === 'ot-a')?.boardDate).toBe('10.12');
+	});
+
+	it('가장 가까운 마감 일수와 그 날 떠나는 전시 수를 함께 준다', () => {
+		expect(pickDepartureRows(sources, { base: BASE }).nearest).toEqual({ daysLeft: 1, count: 2 });
+	});
+
+	it('제외 ID와 중복은 빼고, last call이 없으면 nearest는 null', () => {
+		const { rows, nearest } = pickDepartureRows(
+			[[item('bd-a', '2026.09.01', '2026.10.15')], sources[0]],
+			{
+				base: BASE,
+				excludeIds: ['lc-1a', 'lc-1b', 'lc-2', 'lc-3'],
+			},
+		);
+		expect(rows.map((r) => r.id)).toEqual(['bd-a', 'bd-b', 'bd-c']);
+		expect(nearest).toBeNull();
+	});
+});
+
+describe('formatBoardDate', () => {
+	it('YYYY.MM.DD에서 안내판용 MM.DD만 남긴다', () => {
+		expect(formatBoardDate('2026.10.10')).toBe('10.10');
+	});
+
+	it('형식이 맞지 않으면 빈 문자열', () => {
+		expect(formatBoardDate(null)).toBe('');
+		expect(formatBoardDate('2026-10-10')).toBe('');
 	});
 });

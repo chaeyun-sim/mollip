@@ -66,14 +66,6 @@ async function fetchExhibitionRows(preferredGenres: string[]): Promise<Exhibitio
 	return (data ?? []) as ExhibitionRow[];
 }
 
-async function fetchRecommendedRows(preferredGenres: string[]): Promise<ExhibitionRow[]> {
-	const filtered = await fetchExhibitionRows(preferredGenres);
-	if (preferredGenres.length > 0 && filtered.length === 0) {
-		return fetchExhibitionRows([]);
-	}
-	return filtered;
-}
-
 function toRecommendableItem(row: ExhibitionRow): RecommendableItem {
 	return {
 		id: String(row.id),
@@ -92,7 +84,8 @@ export function useRecommendedExhibitions(preferredGenres: string[], isPersonali
 
 	const query = useQuery({
 		queryKey: recommendedExhibitionsQueryKey(preferredGenres),
-		queryFn: () => fetchRecommendedRows(preferredGenres),
+		queryFn: () => fetchExhibitionRows(preferredGenres),
+		enabled: isPersonalized,
 		staleTime: RECOMMENDED_STALE_MS,
 		retry: 1,
 	});

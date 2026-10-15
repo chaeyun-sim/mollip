@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="ko">
+	<head>
+		<meta charset="utf-8" />
+		<title>홈 E 다가오는 2주</title>
+		<script src="./support.js"></script>
+	</head>
+	<body>
+		<x-dc>
+			<helmet>
+				<link
+					rel="stylesheet"
+					href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@400;600;700&amp;display=swap"
+				/>
+				<style>
+					@font-face {
+						font-family: 'Pretendard';
+						src: url('/_blob/7977b3ca42ace65d7e67bd031fe90ded') format('opentype');
+						font-weight: 400;
+					}
+					@font-face {
+						font-family: 'Pretendard';
+						src: url('/_blob/8f065eca601ce3cb85348621e7b4c825') format('opentype');
+						font-weight: 500;
+					}
+					@font-face {
+						font-family: 'Pretendard';
+						src: url('/_blob/7a9653a1bcd0948efd3d3730b1362841') format('opentype');
+						font-weight: 600;
+					}
+					body {
+						margin: 0;
+					}
+					a {
+						color: #1c1917;
+						text-decoration: none;
+					}
+					a:hover {
+						color: #57534e;
+					}
+				</style>
+			</helmet>
+			<div
+				style="
+					width: 390px;
+					height: 844px;
+					box-sizing: border-box;
+					background: #f8f6f2;
+					color: #1c1917;
+					font-family: 'Pretendard', sans-serif;
+					position: relative;
+					display: flex;
+					flex-direction: column;
+					overflow: hidden;
+				"
+			>
+				<header
+					style="
+						display: flex;
+						justify-content: space-between;
+						align-items: center;
+						padding: 56px 20px 0 24px;
+					"
+				>
+					<div
+						style="
+							font-family: 'Hahmlet', serif;
+							font-weight: 700;
+							font-size: 26px;
+							letter-spacing: -0.5px;
+						"
+					>
+						mollip
+					</div>
+					<div style="display: flex; gap: 8px">
+						<button
+							aria-label="북마크"
+							style="
+								width: 44px;
+								height: 44px;
+								border: 0;
+								background: transparent;
+								padding: 0;
+								display: flex;
+								align-items: center;
+								justify-content: center;
+							"
+						>
+							<svg
+								width="22"
+								height="22"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="#1C1917"
+								stroke-width="1.6"
+							>
+								<path d="M6 3h12v18l-6-4-6 4z" />
+							</svg>
+						</button>
+						<button
+							aria-label="알림"
+							style="
+								width: 44px;
+								height: 44px;
+								border: 0;
+								background: transparent;
+								padding: 0;
+								display: flex;
+								align-items: center;
+								justify-content: center;
+							"
+						>
+							<svg
+								width="22"
+								height="22"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="#1C1917"
+								stroke-width="1.6"
+							>
+								<path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4z" />
+								<path d="M10 21h4" />
+							</svg>
+						</button>
+					</div>
+				</header>
+
+				<section
+					style="
+						margin: 16px 16px 0 16px;
+						background: #1c1917;
+						border-radius: 24px;
+						padding: 26px 22px 22px 22px;
+						display: flex;
+						flex-direction: column;
+						box-shadow: 0 18px 40px rgba(28, 25, 23, 0.18);
+					"
+				>
+					<div style="display: flex; justify-content: space-between; align-items: flex-start">
+						<div style="display: flex; flex-direction: column; gap: 4px">
+							<span
+								style="
+									font-family: 'Hahmlet', serif;
+									font-weight: 600;
+									font-size: 24px;
+									color: #f8f6f2;
+								"
+								>다가오는 2주</span
+							>
+							<span style="font-size: 15px; color: #78716c">끝나거나 시작하는 전시</span>
+						</div>
+						<span style="font-size: 12px; color: #a8a29e; padding-top: 6px">10월</span>
+					</div>
+
+					<div
+						style="
+							margin-top: 64px;
+							display: grid;
+							grid-template-columns: repeat(7, minmax(0, 1fr));
+							row-gap: 12px;
+							justify-items: center;
+						"
+					>
+						<sc-for list="{{days}}" as="day" hint-placeholder-count="14">
+							<div
+								style="width: 38px; height: 38px; border-radius: 999px; background: {{day.bg}}; color: {{day.fg}}; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-size: 13px; font-weight: {{day.weight}}"
+							>
+								<span style="display: flex; gap: 2px; height: 4px">
+									<sc-for list="{{day.dots}}" as="dot" hint-placeholder-count="0">
+										<span
+											style="width: 4px; height: 4px; border-radius: 999px; background: {{dot}}"
+										></span>
+									</sc-for>
+								</span>
+								<span>{{day.n}}</span>
+							</div>
+						</sc-for>
+					</div>
+
+					<div
+						style="margin-top: 18px; display: flex; gap: 14px; font-size: 11.5px; color: #a8a29e"
+					>
+						<span style="display: flex; align-items: center; gap: 6px"
+							><span
+								style="width: 6px; height: 6px; border-radius: 999px; background: #ab77f1"
+							></span
+							>막을 내림</span
+						>
+						<span style="display: flex; align-items: center; gap: 6px"
+							><span
+								style="width: 6px; height: 6px; border-radius: 999px; background: #00e9c8"
+							></span
+							>새로 열림</span
+						>
+					</div>
+				</section>
+
+				<div style="margin: 12px 16px 0 16px; display: flex; flex-direction: column; gap: 10px">
+					<sc-for list="{{rows}}" as="row" hint-placeholder-count="3">
+						<a
+							href="#"
+							style="
+								display: flex;
+								align-items: center;
+								gap: 14px;
+								padding: 14px 16px;
+								background: #ffffff;
+								border-radius: 20px;
+							"
+						>
+							<span
+								style="width: 34px; display: flex; flex-direction: column; align-items: flex-start"
+							>
+								<span style="font-size: 12px; color: #78716c">{{row.month}}</span>
+								<span style="font-size: 22px; line-height: 26px; color: #57534e">{{row.day}}</span>
+							</span>
+							<span style="width: 1px; height: 40px; background: #e7e5e4"></span>
+							<span
+								style="width: 52px; height: 52px; border-radius: 12px; background: {{row.thumb}}; flex-shrink: 0"
+							></span>
+							<span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px">
+								<span
+									style="
+										font-size: 15px;
+										font-weight: 500;
+										white-space: nowrap;
+										overflow: hidden;
+										text-overflow: ellipsis;
+									"
+									>{{row.title}}</span
+								>
+								<span style="font-size: 13px; color: {{row.statusColor}}">{{row.status}}</span>
+							</span>
+							<span
+								style="
+									width: 32px;
+									height: 32px;
+									border-radius: 999px;
+									border: 1px solid #e7e5e4;
+									display: flex;
+									align-items: center;
+									justify-content: center;
+								"
+							>
+								<svg
+									width="14"
+									height="14"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="#A8A29E"
+									stroke-width="1.8"
+								>
+									<path d="M6 3h12v18l-6-4-6 4z" />
+								</svg>
+							</span>
+						</a>
+					</sc-for>
+				</div>
+
+				<button
+					style="
+						position: absolute;
+						right: 20px;
+						bottom: 100px;
+						height: 52px;
+						padding: 0 20px;
+						border: 0;
+						border-radius: 999px;
+						background: #1c1917;
+						color: #ffffff;
+						font-family: 'Pretendard', sans-serif;
+						font-size: 15px;
+						font-weight: 600;
+						display: flex;
+						align-items: center;
+						gap: 8px;
+						box-shadow: 0 6px 14px rgba(28, 25, 23, 0.28);
+					"
+				>
+					<svg
+						width="20"
+						height="20"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="#FFFFFF"
+						stroke-width="1.8"
+					>
+						<path d="M4 8h3l2-3h6l2 3h3v11H4z" />
+						<circle cx="12" cy="13" r="3.5" />
+					</svg>
+					AI 도슨트
+				</button>
+
+				<footer
+					style="
+						position: absolute;
+						left: 0;
+						right: 0;
+						bottom: 0;
+						height: 84px;
+						background: #ffffff;
+						border-top: 0.5px solid #e7e5e4;
+						display: grid;
+						grid-template-columns: repeat(5, minmax(0, 1fr));
+						padding-top: 12px;
+						box-sizing: border-box;
+					"
+				>
+					<span style="text-align: center; font-size: 11px; color: #a8a29e">전시</span>
+					<span style="text-align: center; font-size: 11px; color: #a8a29e">지도</span>
+					<span style="text-align: center; font-size: 11px; font-weight: 600; color: #7c3aed"
+						>둘러보기</span
+					>
+					<span style="text-align: center; font-size: 11px; color: #a8a29e">다이어리</span>
+					<span style="text-align: center; font-size: 11px; color: #a8a29e">마이페이지</span>
+				</footer>
+			</div>
+		</x-dc>
+		<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+			class Component extends DCLogic {
+			  renderVals() {
+			    const close = '#AB77F1';
+			    const open = '#00E9C8';
+			    // 10.9(오늘) ~ 10.22 — 날짜별 마감·개막 점
+			    const marks = { 10: [close, close], 11: [close], 15: [open], 18: [close], 22: [open] };
+			    const days = Array.from({ length: 14 }, (_, i) => {
+			      const n = 9 + i;
+			      const isToday = n === 9;
+			      return {
+			        n,
+			        dots: marks[n] || [],
+			        bg: isToday ? '#F8F6F2' : '#292524',
+			        fg: isToday ? '#1C1917' : '#E8E8E8',
+			        weight: isToday ? 600 : 400
+			      };
+			    });
+			    const gray = '#78716C';
+			    return {
+			      days,
+			      rows: [
+			        { month: '10월', day: '10', thumb: '#2F6FB7', title: '제목전(展)', status: 'D-1 · 한국영화박물관', statusColor: '#7C3AED' },
+			        { month: '10월', day: '10', thumb: '#C9B79C', title: '최은정 - 하늘 아래, 희망을 새기다', status: 'D-1 · 네오아트센터', statusColor: '#7C3AED' },
+			        { month: '10월', day: '11', thumb: '#9ED3E6', title: '혼자 보긴 아까워서', status: 'D-2 · 경기도박물관', statusColor: '#7C3AED' }
+			      ]
+			    };
+			  }
+			}
+		</script>
+	</body>
+</html>

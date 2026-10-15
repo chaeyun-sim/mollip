@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="ko">
+	<head>
+		<meta charset="utf-8" />
+		<title>홈 B 오늘 단 하나</title>
+		<script src="./support.js"></script>
+	</head>
+	<body>
+		<x-dc>
+			<helmet>
+				<link
+					rel="stylesheet"
+					href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@400;600;700&amp;display=swap"
+				/>
+				<style>
+					@font-face {
+						font-family: 'Pretendard';
+						src: url('/_blob/7977b3ca42ace65d7e67bd031fe90ded') format('opentype');
+						font-weight: 400;
+					}
+					@font-face {
+						font-family: 'Pretendard';
+						src: url('/_blob/8f065eca601ce3cb85348621e7b4c825') format('opentype');
+						font-weight: 500;
+					}
+					@font-face {
+						font-family: 'Pretendard';
+						src: url('/_blob/7a9653a1bcd0948efd3d3730b1362841') format('opentype');
+						font-weight: 600;
+					}
+					body {
+						margin: 0;
+					}
+					a {
+						color: #1c1917;
+						text-decoration: none;
+					}
+					a:hover {
+						color: #57534e;
+					}
+				</style>
+			</helmet>
+			<div
+				style="
+					width: 390px;
+					height: 844px;
+					box-sizing: border-box;
+					background: #f8f6f2;
+					color: #1c1917;
+					font-family: 'Pretendard', sans-serif;
+					position: relative;
+					display: flex;
+					flex-direction: column;
+					overflow: hidden;
+				"
+			>
+				<header
+					style="
+						display: flex;
+						justify-content: space-between;
+						align-items: center;
+						padding: 56px 24px 0 24px;
+					"
+				>
+					<div
+						style="
+							font-family: 'Hahmlet', serif;
+							font-weight: 700;
+							font-size: 26px;
+							letter-spacing: -0.5px;
+						"
+					>
+						mollip
+					</div>
+					<div style="display: flex; gap: 16px">
+						<button
+							aria-label="북마크"
+							style="
+								width: 44px;
+								height: 44px;
+								border: 0;
+								background: transparent;
+								padding: 0;
+								display: flex;
+								align-items: center;
+								justify-content: center;
+							"
+						>
+							<svg
+								width="22"
+								height="22"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="#1C1917"
+								stroke-width="1.6"
+							>
+								<path d="M6 3h12v18l-6-4-6 4z" />
+							</svg>
+						</button>
+						<button
+							aria-label="알림"
+							style="
+								width: 44px;
+								height: 44px;
+								border: 0;
+								background: transparent;
+								padding: 0;
+								display: flex;
+								align-items: center;
+								justify-content: center;
+							"
+						>
+							<svg
+								width="22"
+								height="22"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="#1C1917"
+								stroke-width="1.6"
+							>
+								<path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4z" />
+								<path d="M10 21h4" />
+							</svg>
+						</button>
+					</div>
+				</header>
+
+				<div style="margin: 32px 24px 0 24px; display: flex; align-items: center; gap: 12px">
+					<span style="font-size: 13px; font-weight: 500; color: #57534e"
+						>10월 9일, 오늘의 한 전시</span
+					>
+					<span style="flex: 1; height: 1px; background: #1c1917"></span>
+					<span style="font-size: 12px; font-weight: 600; letter-spacing: 1px">1 / 3</span>
+				</div>
+
+				<h1
+					style="
+						margin: 36px 24px 0 24px;
+						font-family: 'Hahmlet', serif;
+						font-weight: 700;
+						font-size: 54px;
+						line-height: 1.12;
+						letter-spacing: -1.5px;
+					"
+				>
+					혼자 보긴<br />아까워서
+				</h1>
+				<p style="margin: 14px 24px 0 24px; font-size: 14px; line-height: 21px; color: #57534e">
+					경기도박물관 개관 30주년 기념 기증 특별전
+				</p>
+
+				<div style="margin: 32px 24px 0 24px; display: flex; gap: 20px; align-items: stretch">
+					<div
+						style="
+							width: 112px;
+							height: 140px;
+							flex-shrink: 0;
+							background: #e5e1d8;
+							display: flex;
+							align-items: center;
+							justify-content: center;
+							font-size: 11px;
+							color: #78716c;
+							border-radius: 2px;
+						"
+					>
+						[포스터]
+					</div>
+					<dl
+						style="
+							margin: 0;
+							flex: 1;
+							display: grid;
+							grid-template-columns: 52px minmax(0, 1fr);
+							row-gap: 10px;
+							column-gap: 8px;
+							align-content: start;
+							font-size: 13px;
+							line-height: 19px;
+						"
+					>
+						<dt style="color: #78716c">장소</dt>
+						<dd style="margin: 0; font-weight: 500">경기도박물관 1F</dd>
+						<dt style="color: #78716c">기간</dt>
+						<dd style="margin: 0; font-weight: 500">6.18 – 10.11</dd>
+						<dt style="color: #78716c">남은 날</dt>
+						<dd style="margin: 0; font-weight: 600; color: {{accent}}">이틀</dd>
+						<dt style="color: #78716c">고른 이유</dt>
+						<dd style="margin: 0; font-weight: 500">곧 막을 내리는 특별전</dd>
+					</dl>
+				</div>
+
+				<div style="margin: 36px 24px 0 24px; display: flex; gap: 10px">
+					<a
+						href="#"
+						style="
+							flex: 1;
+							height: 52px;
+							border-radius: 999px;
+							background: #1c1917;
+							color: #ffffff;
+							display: flex;
+							align-items: center;
+							justify-content: center;
+							font-size: 15px;
+							font-weight: 600;
+						"
+						>전시 보러 가기</a
+					>
+					<a
+						href="#"
+						aria-label="다음 추천"
+						style="
+							width: 52px;
+							height: 52px;
+							border-radius: 999px;
+							border: 1px solid #1c1917;
+							display: flex;
+							align-items: center;
+							justify-content: center;
+						"
+					>
+						<svg
+							width="18"
+							height="18"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="#1C1917"
+							stroke-width="1.6"
+						>
+							<path d="M5 12h14M13 6l6 6-6 6" />
+						</svg>
+					</a>
+				</div>
+
+				<button
+					style="
+						position: absolute;
+						right: 24px;
+						bottom: 100px;
+						height: 52px;
+						padding: 0 20px;
+						border: 0;
+						border-radius: 999px;
+						background: #1c1917;
+						color: #ffffff;
+						font-family: 'Pretendard', sans-serif;
+						font-size: 15px;
+						font-weight: 600;
+						display: flex;
+						align-items: center;
+						gap: 8px;
+						box-shadow: 0 6px 14px rgba(28, 25, 23, 0.28);
+					"
+				>
+					<svg
+						width="20"
+						height="20"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="#FFFFFF"
+						stroke-width="1.8"
+					>
+						<path d="M4 8h3l2-3h6l2 3h3v11H4z" />
+						<circle cx="12" cy="13" r="3.5" />
+					</svg>
+					AI 도슨트
+				</button>
+
+				<footer
+					style="
+						position: absolute;
+						left: 0;
+						right: 0;
+						bottom: 0;
+						height: 84px;
+						background: #ffffff;
+						border-top: 0.5px solid #e7e5e4;
+						display: grid;
+						grid-template-columns: repeat(5, minmax(0, 1fr));
+						padding-top: 12px;
+						box-sizing: border-box;
+					"
+				>
+					<span style="text-align: center; font-size: 11px; color: #a8a29e">전시</span>
+					<span style="text-align: center; font-size: 11px; color: #a8a29e">지도</span>
+					<span style="text-align: center; font-size: 11px; font-weight: 600; color: #7c3aed"
+						>둘러보기</span
+					>
+					<span style="text-align: center; font-size: 11px; color: #a8a29e">다이어리</span>
+					<span style="text-align: center; font-size: 11px; color: #a8a29e">마이페이지</span>
+				</footer>
+			</div>
+		</x-dc>
+		<script
+			type="text/x-dc"
+			data-dc-script
+			data-props='{"accent":{"editor":"color","default":"#7C3AED","options":["#7C3AED","#1C1917","#B45309"]},"$preview":{"width":390,"height":844}}'
+		>
+			class Component extends DCLogic {
+			  renderVals() {
+			    return { accent: this.props.accent ?? '#7C3AED' };
+			  }
+			}
+		</script>
+	</body>
+</html>

@@ -5,7 +5,6 @@ import { parseDate } from '@/src/utils/mapUtils';
 export const CLOSING_SOON_DAYS = 14;
 /** 마감일 당일은 철수 중일 수 있어 "마감 임박"으로 추천하지 않는다 */
 export const CLOSING_SOON_MIN_DAYS = 1;
-const CLOSING_SOON_LIMIT = 8;
 const DAY_MS = 24 * 60 * 60 * 1000;
 
 interface ExhibitionDates {
@@ -76,39 +75,102 @@ export const getClosingSoonDaysLeft = (
 	return daysLeft;
 };
 
-interface PickClosingSoonOptions {
+/** 출발 안내판 상태 — 곧 마감(last call) · 진행 중(boarding) · 개막 예정(on time) */
+export type DepartureStatus = 'last-call' | 'boarding' | 'on-time';
+
+/** 이 일수 이내로 남은 진행 중 전시는 last call */
+const LAST_CALL_MAX_DAYS = 3;
+const DEPARTURE_QUOTA: Record<DepartureStatus, number> = {
+	'last-call': 3,
+	boarding: 3,
+	'on-time': 2,
+};
+
+/** 출발 안내판 날짜판 — "2026.10.10" → "10.10", 형식이 다르면 빈 문자열 */
+export const formatBoardDate = (date: string | null | undefined): string =>
+	isValidExhibitionDateString(date) ? (date as string).trim().slice(5) : '';
+
+export type DepartureRow<T> = T & {
+	departure: DepartureStatus;
+	/** 진행 중이면 마감까지 남은 일수, 개막 예정이면 개막까지 남은 일수 */
+	days: number;
+	/** 진행 중이면 마감일, 개막 예정이면 개막일 (MM.DD) */
+	boardDate: string;
+};
+
+interface PickDepartureRowsOptions {
 	base?: Date;
 	excludeIds?: string[];
-	limit?: number;
-	maxDays?: number;
-	/** 남은 일수 하한 — 1이면 오늘 마감(철수일일 수 있음)을 뺀다 */
-	minDays?: number;
 }
 
-/** 여러 소스에서 maxDays(기본 14일) 이내 마감 진행 중 전시를 마감 순으로 고른다 (제외·중복 ID 제거) */
-export const pickClosingSoon = <T extends ExhibitionDates & { id: string }>(
+/**
+ * 출발 안내판 행 — last call 3 · boarding 3 · on time 2개를 각각 가까운 순으로 고른다.
+ * nearest는 가장 가까운 last call 일수와 그 날 떠나는 전시 수 (last call이 없으면 null)
+ */
+export const pickDepartureRows = <T extends ExhibitionDates & { id: string }>(
 	sources: T[][],
-	{
-		base = new Date(),
-		excludeIds = [],
-		limit = CLOSING_SOON_LIMIT,
-		maxDays = CLOSING_SOON_DAYS,
-		minDays = 0,
-	}: PickClosingSoonOptions = {},
-): (T & { daysLeft: number })[] => {
+	{ base = new Date(), excludeIds = [] }: PickDepartureRowsOptions = {},
+): { rows: DepartureRow<T>[]; nearest: { daysLeft: number; count: number } | null } => {
 	const seen = new Set(excludeIds);
-	const picked: (T & { daysLeft: number })[] = [];
+	const buckets: Record<DepartureStatus, DepartureRow<T>[]> = {
+		'last-call': [],
+		boarding: [],
+		'on-time': [],
+	};
 
 	for (const item of sources.flat()) {
 		if (seen.has(item.id)) continue;
-		const daysLeft = getDaysLeft(item, base);
-		if (daysLeft === null || daysLeft < minDays || daysLeft > maxDays) continue;
+		const dates = toDates(item);
+		if (dates === null) continue;
+
+		const status = getExhibitionStatus(dates, base);
+		if (status === 'upcoming') {
+			const days = Math.round(
+				(parseDate(dates.startDate).getTime() - startOfDay(base).getTime()) / DAY_MS,
+			);
+			seen.add(item.id);
+			buckets['on-time'].push({
+				...item,
+				departure: 'on-time',
+				days,
+				boardDate: formatBoardDate(dates.startDate),
+			});
+			continue;
+		}
+
+		const daysLeft = getDaysLeft(dates, base);
+		// 마감일 당일은 철수 중일 수 있어 안내판에 올리지 않는다
+		if (daysLeft === null || daysLeft < CLOSING_SOON_MIN_DAYS) continue;
+		const departure = daysLeft <= LAST_CALL_MAX_DAYS ? 'last-call' : 'boarding';
 		seen.add(item.id);
-		picked.push({ ...item, daysLeft });
+		buckets[departure].push({
+			...item,
+			departure,
+			days: daysLeft,
+			boardDate: formatBoardDate(dates.endDate),
+		});
 	}
 
-	return picked.sort((a, b) => a.daysLeft - b.daysLeft).slice(0, limit);
+	const byDays = (a: DepartureRow<T>, b: DepartureRow<T>) => a.days - b.days;
+	const lastCalls = buckets['last-call'].sort(byDays);
+	const nearestDays = lastCalls[0]?.days;
+
+	return {
+		rows: (['last-call', 'boarding', 'on-time'] as const).flatMap((key) =>
+			buckets[key].sort(byDays).slice(0, DEPARTURE_QUOTA[key]),
+		),
+		nearest:
+			nearestDays === undefined
+				? null
+				: { daysLeft: nearestDays, count: lastCalls.filter((r) => r.days === nearestDays).length },
+	};
 };
+
+const WEEKDAYS = ['일', '월', '화', '수', '목', '금', '토'];
+
+/** 홈 마스트헤드 날짜 — "2026. 10. 9 목요일" */
+export const formatHomeDate = (date: Date): string =>
+	`${date.getFullYear()}. ${date.getMonth() + 1}. ${date.getDate()} ${WEEKDAYS[date.getDay()]}요일`;
 
 /** 날짜(로컬 자정 기준)마다 하루씩 넘어가는 순환 인덱스 */
 export const getDailyIndex = (base: Date, length: number): number => {

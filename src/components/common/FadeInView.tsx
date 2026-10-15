@@ -1,9 +1,9 @@
 import { useEffect, type ReactNode } from 'react';
 import Animated, {
+	Easing,
 	useAnimatedStyle,
 	useSharedValue,
 	withDelay,
-	withSpring,
 	withTiming,
 } from 'react-native-reanimated';
 import type { StyleProp, ViewStyle } from 'react-native';
@@ -23,7 +23,11 @@ export function FadeInView({ children, delay = 0, style }: FadeInViewProps) {
 		opacity.value = 0;
 		translateY.value = 18;
 		opacity.value = withDelay(delay, withTiming(1, { duration: 420 }));
-		translateY.value = withDelay(delay, withSpring(0, { damping: 18, stiffness: 120 }));
+		// 스프링 대신 ease-out — 목표 지점을 넘었다 돌아오는 바운스 없이 멈춘다
+		translateY.value = withDelay(
+			delay,
+			withTiming(0, { duration: 420, easing: Easing.out(Easing.cubic) }),
+		);
 	}, [delay, opacity, translateY]);
 
 	const animatedStyle = useAnimatedStyle(() => ({
