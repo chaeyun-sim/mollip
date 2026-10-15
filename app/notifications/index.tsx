@@ -72,6 +72,26 @@ export default function NotificationsScreen() {
 		[router],
 	);
 
+	// 읽지 않은 알림을 한 번에 읽음 처리 — 화면은 먼저 갱신하고, 서버 반영이 실패하면 다시 불러온다
+	const handleReadAll = useCallback(() => {
+		if (!userId) return;
+
+		const readAt = new Date().toISOString();
+		setLogs((prev) => prev?.map((l) => (l.read_at ? l : { ...l, read_at: readAt })) ?? null);
+		supabase
+			.from('notification_logs')
+			.update({ read_at: readAt })
+			.eq('user_id', userId)
+			.is('read_at', null)
+			.then(({ error }) => {
+				if (!error) return;
+				console.warn('[notifications] 전체 읽음 처리 실패:', error.message);
+				loadLogs();
+			});
+	}, [userId, loadLogs]);
+
+	const hasUnread = logs?.some((log) => !log.read_at) ?? false;
+
 	const iconName = (
 		log: NotificationLog,
 	): { name: keyof typeof Ionicons.glyphMap; color: string } | undefined => {
@@ -102,14 +122,26 @@ export default function NotificationsScreen() {
 				<Screen.Header.Back />
 				<Screen.Header.Center className="mb-1">알림</Screen.Header.Center>
 				<Screen.Header.Right>
-					<Pressable
-						onPress={() => router.push('/notifications/settings')}
-						hitSlop={8}
-						accessibilityRole="button"
-						accessibilityLabel="알림 설정"
-					>
-						<Ionicons name="settings-outline" size={22} className="text-black" />
-					</Pressable>
+					<View className="flex-row items-center gap-4">
+						{hasUnread && (
+							<Pressable
+								onPress={handleReadAll}
+								hitSlop={8}
+								accessibilityRole="button"
+								accessibilityLabel="모든 알림 읽음 처리"
+							>
+								<Text className="font-pretendard-medium text-[14px] text-gray700">모두 읽음</Text>
+							</Pressable>
+						)}
+						<Pressable
+							onPress={() => router.push('/notifications/settings')}
+							hitSlop={8}
+							accessibilityRole="button"
+							accessibilityLabel="알림 설정"
+						>
+							<Ionicons name="settings-outline" size={22} className="text-black" />
+						</Pressable>
+					</View>
 				</Screen.Header.Right>
 			</Screen.Header>
 
