@@ -1,0 +1,4 @@
+appId: com.simune.mollip
+---
+- tapOn:
+    point: '68%, 55%'
