@@ -5,13 +5,14 @@ import { useState } from 'react';
 import { ActivityIndicator, Pressable, ScrollView, Text, View } from 'react-native';
 import { useShallow } from 'zustand/react/shallow';
 import { Screen } from '@/src/components/layout/Screen';
-import { CardRow, PremiumStatusBanner, SettingsCard } from '@/src/components/mypage';
+import { CardRow, SettingsCard } from '@/src/components/mypage';
 import { APP_VERSION } from '@/src/data/mypage';
 import { useSubscription } from '@/src/hooks/useSubscription';
 import { useAuthStore } from '@/src/store/authStore';
 import { cn } from '@/src/lib/cn';
 import { formatSubscriptionDate } from '@/src/lib/subscription';
 import { useSubscriptionStore } from '@/src/store/subscriptionStore';
+import { CommonHeader } from '@/src/components/common/CommonHeader';
 import { openLegalDocument } from '@/src/utils/openLegalDocument';
 
 export default function MyPageScreen() {
@@ -44,15 +45,20 @@ export default function MyPageScreen() {
 		}
 	};
 
+	const showUpgrade = !isSubscriptionLoading && !isPremium;
+	// 결제 문제가 있으면 행에서 바로 보이게 — 없으면 만료일, 만료일도 모르면 이용 중 표시
+	const getSubscriptionValue = () => {
+		if (billingIssueDetectedAt) return '결제 확인 필요';
+		if (expirationDate) return `${formatSubscriptionDate(expirationDate)}까지`;
+		return 'Premium';
+	};
+	const subscriptionValue = getSubscriptionValue();
+
 	if (authLoading) return <ActivityIndicator style={{ flex: 1 }} />;
 
 	return (
 		<Screen variant="warm" className={session ? 'px-6' : 'px-0'}>
-			<Screen.Header fullBleed={!session}>
-				<Screen.Header.Left>
-					<Screen.Header.Logo />
-				</Screen.Header.Left>
-			</Screen.Header>
+			<CommonHeader />
 
 			<ScrollView
 				showsVerticalScrollIndicator={false}
@@ -94,42 +100,35 @@ export default function MyPageScreen() {
 								accessibilityRole="button"
 								accessibilityLabel="계정 정보"
 								style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
-								className="flex-row items-center gap-3.5 mt-3 rounded-2xl bg-white px-4 py-3.5 shadow-gray900 elevation-[2px]"
+								className="flex-row items-center gap-3.5 mt-3 rounded-2xl bg-brand px-4 py-3.5 shadow-gray900 elevation-[2px]"
 							>
-								<View className="w-12 h-12 rounded-full bg-bg-tonal items-center justify-center">
-									<Text className="font-pretendard-semibold text-gray900 text-[18px]">
+								<View className="w-12 h-12 rounded-full bg-brand-on-dark items-center justify-center">
+									<Text className="font-pretendard-semibold text-ink text-[18px]">
 										{user?.email?.charAt(0).toUpperCase()}
 									</Text>
 								</View>
 								<View className="flex-1">
-									<Text className="font-pretendard-semibold text-gray900 text-[17px]">
+									<Text className="font-pretendard-semibold text-white text-[17px]">
 										{isPremium
 											? `✨${user?.email?.split('@')[0]}님✨`
 											: `${user?.email?.split('@')[0]}님`}
 									</Text>
-									<Text className="font-pretendard-regular text-gray500 text-[13px] mt-0.5">
+									<Text className="font-pretendard-regular text-on-dark text-[13px] mt-0.5">
 										{user?.app_metadata?.provider === 'kakao' ? '카카오 계정' : 'Apple 계정'}
 									</Text>
 								</View>
-								<Ionicons name="chevron-forward" size={18} className="text-gray500" />
+								<Ionicons name="chevron-forward" size={18} className="text-white" />
 							</Pressable>
 
-							{isSubscriptionLoading ? (
-								<View className="h-[76px] rounded-2xl bg-white/60" />
-							) : isPremium ? (
-								<PremiumStatusBanner
-									expiresAt={formatSubscriptionDate(expirationDate)}
-									billingIssueDetectedAt={billingIssueDetectedAt}
-									onPress={() => router.push('/settings/subscribe')}
-								/>
-							) : (
+							{/* 프리미엄 이용자는 배너 대신 아래 '구독 관리' 행으로 — 업그레이드 안내만 비구독자에게 */}
+							{showUpgrade && (
 								<Pressable
 									onPress={() => router.push('/settings/premium')}
 									accessibilityRole="button"
 									accessibilityLabel="프리미엄 이용권 보기"
 									className="flex-row items-center gap-3.5 rounded-2xl bg-secondary px-4 py-4"
 								>
-									<Ionicons name="sparkles" size={20} className="text-accent" />
+									<Ionicons name="sparkles" size={20} className="text-brand" />
 									<View className="flex-1">
 										<Text className="font-pretendard-bold text-white text-[15px] mb-0.5">
 											프리미엄으로 업그레이드
@@ -144,7 +143,18 @@ export default function MyPageScreen() {
 
 							{session && (
 								<View>
+									<Text className="ml-1 mb-2 font-pretendard-semibold text-gray600 text-[12px] tracking-[1px]">
+										계정 관리
+									</Text>
 									<SettingsCard>
+										{isPremium && (
+											<CardRow
+												icon="card-outline"
+												label="구독 관리"
+												value={subscriptionValue}
+												onPress={() => router.push('/settings/subscribe')}
+											/>
+										)}
 										<CardRow
 											icon="color-palette-outline"
 											label="내 취향 수정"
@@ -155,6 +165,9 @@ export default function MyPageScreen() {
 							)}
 
 							<View>
+								<Text className="ml-1 mb-2 font-pretendard-semibold text-gray600 text-[12px] tracking-[1px]">
+									해설
+								</Text>
 								<SettingsCard locked={!isPremium}>
 									<CardRow
 										icon="headset-outline"
@@ -168,6 +181,9 @@ export default function MyPageScreen() {
 					)}
 
 					<View>
+						<Text className="ml-1 mb-2 font-pretendard-semibold text-gray600 text-[12px] tracking-[1px]">
+							서비스
+						</Text>
 						<SettingsCard>
 							<CardRow
 								icon="megaphone-outline"
@@ -184,6 +200,9 @@ export default function MyPageScreen() {
 					</View>
 
 					<View>
+						<Text className="ml-1 mb-2 font-pretendard-semibold text-gray600 text-[12px] tracking-[1px]">
+							앱 정보
+						</Text>
 						<SettingsCard>
 							<CardRow
 								icon="document-text-outline"
