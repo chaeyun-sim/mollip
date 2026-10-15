@@ -10,6 +10,7 @@ import { supabase } from '@/src/utils/supabase';
 import { useAuthStore } from '@/src/store/authStore';
 import { Screen } from '@/src/components/layout/Screen';
 import { ScreenHeader } from '@/src/components/layout/ScreenHeader';
+import { openLegalDocument } from '@/src/utils/openLegalDocument';
 
 function safeReturnTo(raw: string | string[] | undefined): string {
 	const value = Array.isArray(raw) ? raw[0] : raw;
@@ -137,7 +138,7 @@ export default function LoginScreen() {
 						</Text>
 						<View className="flex-row gap-1 justify-center">
 							<View className="flex-row">
-								<Pressable onPress={() => router.push('/privacy-policy')}>
+								<Pressable onPress={() => void openLegalDocument('privacy')}>
 									<Text className="text-[11px] leading-[16px] text-black/70 text-center font-pretendard-medium">
 										개인정보처리방침
 									</Text>
@@ -147,7 +148,7 @@ export default function LoginScreen() {
 								</Text>
 							</View>
 							<View className="flex-row">
-								<Pressable onPress={() => router.push('/terms')}>
+								<Pressable onPress={() => void openLegalDocument('terms')}>
 									<Text className="text-[11px] leading-[16px] text-black/70 text-center font-pretendard-medium">
 										서비스 이용약관
 									</Text>

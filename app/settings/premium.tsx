@@ -19,6 +19,7 @@ import {
 import { cn } from '@/src/lib/cn';
 import { NETWORK_UNAVAILABLE_MESSAGE } from '@/src/lib/networkErrors';
 import { usePurchaseLockStore } from '@/src/store/purchaseLockStore';
+import { openLegalDocument } from '@/src/utils/openLegalDocument';
 
 const PLAN_TITLE: Record<PlanId, string> = {
 	weekly: '1주',
@@ -335,7 +336,7 @@ export default function PremiumScreen() {
 							<Text className="font-pretendard-medium text-xs text-white/65">구매 복원</Text>
 						</Pressable>
 						<Pressable
-							onPress={() => router.push('/terms')}
+							onPress={() => void openLegalDocument('terms')}
 							accessibilityRole="link"
 							accessibilityLabel="이용약관 열기"
 							hitSlop={8}
@@ -344,7 +345,7 @@ export default function PremiumScreen() {
 							<Text className="font-pretendard-medium text-xs text-white/65">이용약관</Text>
 						</Pressable>
 						<Pressable
-							onPress={() => router.push('/privacy-policy')}
+							onPress={() => void openLegalDocument('privacy')}
 							accessibilityRole="link"
 							accessibilityLabel="개인정보 처리방침 열기"
 							hitSlop={8}

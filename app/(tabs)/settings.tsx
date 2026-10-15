@@ -12,6 +12,7 @@ import { useAuthStore } from '@/src/store/authStore';
 import { cn } from '@/src/lib/cn';
 import { formatSubscriptionDate } from '@/src/lib/subscription';
 import { useSubscriptionStore } from '@/src/store/subscriptionStore';
+import { openLegalDocument } from '@/src/utils/openLegalDocument';
 
 export default function MyPageScreen() {
 	const router = useRouter();
@@ -187,12 +188,12 @@ export default function MyPageScreen() {
 							<CardRow
 								icon="document-text-outline"
 								label="서비스 이용약관"
-								onPress={() => router.push('/terms')}
+								onPress={() => void openLegalDocument('terms')}
 							/>
 							<CardRow
 								icon="shield-checkmark-outline"
 								label="개인정보 처리방침"
-								onPress={() => router.push('/privacy-policy')}
+								onPress={() => void openLegalDocument('privacy')}
 							/>
 							<CardRow
 								icon="code-slash-outline"

@@ -16,8 +16,6 @@ FE 구현 현황의 단일 정본. 코드 탐색 전에 먼저 읽을 것.
 | `app/+not-found.tsx`     | 404 화면                                                                                            |
 | `app/bookmark.tsx`       | 북마크 화면 — 전시/오디오 탭 (`app/settings/bookmark/*`와 별개, 탭 전환 UI로 통합 진입)             |
 | `app/notifications.tsx`  | 알림 목록 화면                                                                                      |
-| `app/privacy-policy.tsx` | 개인정보처리방침                                                                                    |
-| `app/terms.tsx`          | 이용약관                                                                                            |
 
 ### `(tabs)` — 하단 탭
 
