@@ -2,12 +2,14 @@ import { Ionicons } from '@expo/vector-icons';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Dimensions, Modal, Pressable, Text, View } from 'react-native';
 
+import { ArtworkChatThread } from '@/src/components/archive/ArtworkChatThread';
+import { ListenedArtworkRow } from '@/src/components/archive/ListenedArtworkRow';
 import { PhotoGallery } from '@/src/components/archive/PhotoGallery';
 import { StarRating } from '@/src/components/archive/StarRating';
 import { colors } from '@/src/constants/colors';
 import { useExhibitionDetail } from '@/src/hooks/queries/useExhibitionDetail';
 import { cn } from '@/src/lib/cn';
-import type { HistoryItem } from '@/src/store/historyStore';
+import type { HistoryItem, StoredChatMessage } from '@/src/store/historyStore';
 import { isTicketVisit } from '@/src/store/visitStore';
 import type { DayVisit, ListenedItem } from '@/src/store/visitStore';
 import { cleanText } from '@/src/utils/museumWall';
@@ -88,6 +90,22 @@ export function VisitBlock({
 		() =>
 			dayChatItems.filter((item) => listenedTitles.includes(item.title) || item.title === title),
 		[dayChatItems, listenedTitles, title],
+	);
+
+	// 들은 작품 행에 붙일 대화 — 같은 제목의 기록이 여럿이면 메시지를 이어 붙인다
+	const chatByTitle = useMemo(() => {
+		const map = new Map<string, StoredChatMessage[]>();
+		for (const item of visitChatItems) {
+			if (!listenedTitles.includes(item.title)) continue;
+			map.set(item.title, [...(map.get(item.title) ?? []), ...(item.chatMessages ?? [])]);
+		}
+		return map;
+	}, [visitChatItems, listenedTitles]);
+
+	// 들은 작품 목록에 없는 대화(전시 자체에 대한 질문 등)는 별도 섹션으로 남긴다
+	const otherChatItems = useMemo(
+		() => visitChatItems.filter((item) => !listenedTitles.includes(item.title)),
+		[visitChatItems, listenedTitles],
 	);
 
 	const playableByTitle = useMemo(() => {
@@ -182,7 +200,13 @@ export function VisitBlock({
 			{hasReview && (
 				<View className="mt-10 px-6">
 					{/* 관람 노트 — 잡지 기사 머리말처럼 가는 선 위에 작은 제목과 별점을 한 줄로 둔다 */}
-					<View className="flex-row items-center justify-between border-b-[0.5px] border-divider pb-3">
+					<View
+						className={cn(
+							'flex-row items-center justify-between',
+							// 메모가 없으면 아래에 이어지는 구분선과 겹쳐 두 줄이 되니 머리말 선은 뺀다
+							memo && 'border-b-[0.5px] border-divider pb-3',
+						)}
+					>
 						<View className="flex-row items-center gap-2">
 							<View className="h-[2px] w-4 bg-editorial" />
 							<Text className="font-pretendard-semibold text-[11px] tracking-[1.5px] text-gray600">
@@ -227,81 +251,52 @@ export function VisitBlock({
 			)}
 
 			{listenedItems.length > 0 && (
-				<View className="mx-6 mt-8 border-t-[0.5px] border-divider pt-6">
+				<View
+					className={cn(
+						'mx-6 border-t-[0.5px] border-divider pt-6',
+						hasReview && !memo ? 'mt-5' : 'mt-8',
+					)}
+				>
 					<Text
 						accessibilityRole="header"
 						className="mb-2 font-pretendard-semibold text-[13px] text-gray600"
 					>
 						들은 작품
 					</Text>
-					{listenedItems.map((item) => {
-						const playable = playableByTitle.has(item.title);
-						return (
-							<Pressable
-								key={item.title}
-								onPress={() => handlePlayListened(item)}
-								disabled={!playable}
-								accessibilityRole={playable ? 'button' : 'text'}
-								accessibilityLabel={playable ? `${item.title} 해설 듣기` : item.title}
-								className="min-h-11 flex-row items-center justify-between gap-3 py-2"
-								style={({ pressed }) => ({ opacity: pressed && playable ? 0.6 : 1 })}
-							>
-								<Text
-									numberOfLines={2}
-									className="flex-1 font-pretendard-medium text-[15px] leading-[21px] text-ink"
-								>
-									{item.title}
-								</Text>
-								{playable && <Ionicons name="play-circle" size={28} color={colors.brand} />}
-							</Pressable>
-						);
-					})}
+					{listenedItems.map((item) => (
+						<ListenedArtworkRow
+							key={item.title}
+							title={item.title}
+							playable={playableByTitle.has(item.title)}
+							chatMessages={chatByTitle.get(item.title) ?? []}
+							onPlay={() => handlePlayListened(item)}
+						/>
+					))}
 				</View>
 			)}
 
-			{visitChatItems.length > 0 && (
+			{otherChatItems.length > 0 && (
 				<View className="mx-6 mt-8 border-t-[0.5px] border-divider pt-6">
-					{visitChatItems.map((item, index) => (
-						<View key={item.id} className={cn(index > 0 && 'mt-8')}>
-							<Text
-								className="mb-3 font-pretendard-semibold text-[15px] text-ink"
-								numberOfLines={1}
-								accessibilityRole="header"
-							>
-								{`『${item.title}』${item.artist ? ` - ${item.artist}` : ''}`}
-							</Text>
-							<View className="gap-y-2">
-								{item.chatMessages!.map((msg) => (
-									<View
-										key={msg.id}
-										className={msg.role === 'user' ? 'items-end' : 'items-start'}
-										accessibilityRole="text"
-										accessibilityLabel={
-											msg.role === 'user' ? `내 질문: ${msg.text}` : `AI 답변: ${msg.text}`
-										}
-									>
-										<View
-											className={cn(
-												'max-w-[80%] rounded-2xl px-4 py-2.5',
-												msg.role === 'user'
-													? 'rounded-tr-sm bg-brand'
-													: 'rounded-tl-sm bg-surface-neutral',
-											)}
-										>
-											<Text
-												className={cn(
-													'font-pretendard-regular text-[14px] leading-[20px]',
-													msg.role === 'user' ? 'text-white' : 'text-ink',
-												)}
-											>
-												{msg.text}
-											</Text>
-										</View>
-									</View>
-								))}
+					<Text
+						accessibilityRole="header"
+						className="mb-2 font-pretendard-semibold text-[13px] text-gray600"
+					>
+						함께 나눈 채팅
+					</Text>
+					<View className="mt-4">
+						{otherChatItems.map((item, index) => (
+							<View key={item.id} className={cn(index > 0 && 'mt-8')}>
+								<Text
+									className="mb-3 font-pretendard-semibold text-[15px] text-ink"
+									numberOfLines={1}
+									accessibilityRole="header"
+								>
+									{`『${item.title}』${item.artist ? ` - ${item.artist}` : ''}`}
+								</Text>
+								<ArtworkChatThread messages={item.chatMessages ?? []} />
 							</View>
-						</View>
-					))}
+						))}
+					</View>
 				</View>
 			)}
 
