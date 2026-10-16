@@ -50,10 +50,9 @@ export default function DiaryScreen() {
 				.map(([key, v]) => ({
 					visitKey: key,
 					title: toWallItem(key, v).title,
-					imageUri: toWallItem(key, v, posterUrls[key]).imageUri,
 					daysLeft: pendingDaysLeft(v.pendingSince),
 				})),
-		[visits, posterUrls],
+		[visits],
 	);
 
 	useEffect(() => {
