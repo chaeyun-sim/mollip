@@ -26,6 +26,7 @@ import { AppState, Platform, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useShallow } from 'zustand/react/shallow';
 import { Result } from '../src/components/common/Result';
+import { ErrorIllustration } from '../src/components/illustration/ErrorIllustration';
 import { Screen } from '../src/components/layout/Screen';
 import { useArtistIntroStore } from '../src/store/artistIntroStore';
 import { useImmersiveStore } from '../src/store/immersiveStore';
@@ -73,6 +74,7 @@ export function ErrorBoundary({ error, retry }: ErrorBoundaryProps) {
 		<Screen variant="warm">
 			<Result
 				icon="ice-cream-outline"
+				illustration={<ErrorIllustration />}
 				title="문제가 발생했어요"
 				description={'화면을 불러오지 못했어요. 다시 시도해 주세요.'}
 				actionLabel="다시 시도하기"

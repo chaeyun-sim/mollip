@@ -12,6 +12,7 @@ import {
 import { LoginRequiredPressable } from '@/src/components/auth/LoginRequiredPressable';
 import { Button } from '@/src/components/common/Button';
 import { CommonHeader } from '@/src/components/common/CommonHeader';
+import { EmptyWallIllustration } from '@/src/components/illustration/EmptyWallIllustration';
 import { Screen } from '@/src/components/layout/Screen';
 import { useExhibitionPosterUrls } from '@/src/hooks/useExhibitionPosterUrls';
 import { useSubscription } from '@/src/hooks/useSubscription';
@@ -186,11 +187,7 @@ export default function DiaryScreen() {
 					))
 				) : (
 					<View className="mt-20 items-center px-4">
-						<View className="mb-6 flex-row gap-3">
-							<View className="h-[72px] w-[54px] rounded-[2px] border-[1px] border-dashed border-gray400" />
-							<View className="h-[72px] w-[72px] rounded-[2px] border-[1px] border-dashed border-gray400" />
-							<View className="h-[72px] w-[54px] rounded-[2px] border-[1px] border-dashed border-gray400" />
-						</View>
+						<EmptyWallIllustration />
 						<Text className="font-hahmlet-bold text-[20px] text-ink">첫 전시를 걸어보세요</Text>
 						<Text className="mt-2 mb-8 text-center font-pretendard-regular text-[14px] leading-[21px] text-gray600">
 							다녀온 전시를 기록하면 이곳에 액자로 걸려요

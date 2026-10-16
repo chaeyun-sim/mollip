@@ -4,6 +4,7 @@ import { FlatList, Text, View, useWindowDimensions } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ListFooter } from '@/src/components/common/ListFooter';
 import { Result } from '@/src/components/common/Result';
+import { ErrorIllustration } from '@/src/components/illustration/ErrorIllustration';
 import { ExhibitionListRow } from '@/src/components/explore/ExhibitionListRow';
 import { ExhibitionListRowSkeleton } from '@/src/components/explore/ExhibitionListRowSkeleton';
 import type { RecommendableItem } from '@/src/components/explore/RecommendableItem.types';
@@ -91,6 +92,7 @@ export default function ExhibitionsScreen() {
 			return (
 				<Result
 					icon="cloud-offline-outline"
+					illustration={<ErrorIllustration />}
 					tone="danger"
 					title="전시 정보를 불러오지 못했어요"
 					actionLabel="다시 시도"

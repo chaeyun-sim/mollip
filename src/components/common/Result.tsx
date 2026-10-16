@@ -1,4 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
+import type { ReactNode } from 'react';
 import { Text, View } from 'react-native';
 
 import { Button } from '@/src/components/common/Button';
@@ -8,6 +9,8 @@ export type ResultTone = 'neutral' | 'success' | 'danger';
 
 interface ResultProps {
 	icon: keyof typeof Ionicons.glyphMap;
+	/** 아이콘 대신 보여줄 일러스트 — 있으면 icon·iconBackground·iconSize는 무시한다 */
+	illustration?: ReactNode;
 	title: string;
 	description?: string;
 	actionLabel?: string;
@@ -45,6 +48,7 @@ const TONE_ICON_BACKGROUND_CLASSNAME: Record<ResultTone, string> = {
  */
 export function Result({
 	icon,
+	illustration,
 	title,
 	description,
 	actionLabel,
@@ -57,20 +61,23 @@ export function Result({
 }: ResultProps) {
 	const iconClassName = dark ? TONE_ICON_CLASSNAME_DARK[tone] : TONE_ICON_CLASSNAME[tone];
 
+	const iconVisual = iconBackground ? (
+		<View
+			className={cn(
+				'w-16 h-16 rounded-full items-center justify-center mb-1',
+				TONE_ICON_BACKGROUND_CLASSNAME[tone],
+			)}
+		>
+			<Ionicons name={icon} size={28} className={iconClassName} />
+		</View>
+	) : (
+		<Ionicons name={icon} size={iconSize ?? 44} className={iconClassName} />
+	);
+	const visual = illustration ?? iconVisual;
+
 	return (
 		<View className={cn('flex-1 items-center justify-center px-8', className)}>
-			{iconBackground ? (
-				<View
-					className={cn(
-						'w-16 h-16 rounded-full items-center justify-center mb-1',
-						TONE_ICON_BACKGROUND_CLASSNAME[tone],
-					)}
-				>
-					<Ionicons name={icon} size={28} className={iconClassName} />
-				</View>
-			) : (
-				<Ionicons name={icon} size={iconSize ?? 44} className={iconClassName} />
-			)}
+			{visual}
 			<View className="gap-3 mt-5">
 				<Text
 					className={cn(

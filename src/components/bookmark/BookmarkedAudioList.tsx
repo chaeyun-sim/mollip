@@ -9,6 +9,7 @@ import { Divider } from '@/src/components/common/Divider';
 import { IconButton } from '@/src/components/common/IconButton';
 import { ImageFallback } from '@/src/components/common/ImageFallback';
 import { Result } from '@/src/components/common/Result';
+import { AudioEmptyIllustration } from '@/src/components/illustration/AudioEmptyIllustration';
 import { DownloadStatusBadge } from '@/src/components/guide/DownloadStatusBadge';
 import { colors } from '@/src/constants/colors';
 import { useSubscription } from '@/src/hooks/useSubscription';
@@ -349,7 +350,7 @@ export function BookmarkedAudioList() {
 			) : (
 				<Result
 					icon="headset-outline"
-					iconSize={36}
+					illustration={<AudioEmptyIllustration />}
 					title="저장된 오디오가 없어요"
 					description={'해설 화면에서 하트를 눌러 저장해보세요'}
 					className="mb-20"

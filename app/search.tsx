@@ -7,6 +7,7 @@ import { useShallow } from 'zustand/react/shallow';
 import { Screen } from '@/src/components/layout/Screen';
 import { SearchBar } from '@/src/components/common/SearchBar';
 import { DatePickerModal } from '@/src/components/common/DatePickerModal';
+import { SearchEmptyIllustration } from '@/src/components/illustration/SearchEmptyIllustration';
 import { Result } from '@/src/components/common/Result';
 import { SearchFilterBar } from '@/src/components/search/SearchFilterBar';
 import { ExcludeWordsModal } from '@/src/components/search/ExcludeWordsModal';
@@ -332,7 +333,7 @@ export default function SearchScreen() {
 						ListEmptyComponent={
 							<Result
 								icon="search-outline"
-								iconSize={36}
+								illustration={<SearchEmptyIllustration width={200} />}
 								title="조건에 맞는 전시가 없어요"
 								description={'검색어나 필터를 조정해 보세요'}
 								className="flex-none py-16"

@@ -3,6 +3,8 @@ import { useState } from 'react';
 import { FlatList, View } from 'react-native';
 import { Chip } from '@/src/components/common/Chip';
 import { Result } from '@/src/components/common/Result';
+import { BookmarkEmptyIllustration } from '@/src/components/illustration/BookmarkEmptyIllustration';
+import { ErrorIllustration } from '@/src/components/illustration/ErrorIllustration';
 import { ExhibitionResultCard } from '@/src/components/search/ExhibitionResultCard';
 import { ExhibitionResultCardSkeleton } from '@/src/components/search/ExhibitionResultCardSkeleton';
 import { useBookmarkedExhibitions } from '@/src/hooks/useBookmarkedExhibitions';
@@ -43,7 +45,7 @@ export function BookmarkedExhibitionList() {
 		return (
 			<Result
 				icon="cloud-offline-outline"
-				iconSize={36}
+				illustration={<ErrorIllustration width={200} />}
 				tone="danger"
 				title="전시 정보를 불러오지 못했어요"
 			/>
@@ -54,7 +56,7 @@ export function BookmarkedExhibitionList() {
 		return (
 			<Result
 				icon="bookmark-outline"
-				iconSize={36}
+				illustration={<BookmarkEmptyIllustration />}
 				title="관심 있는 전시가 없어요"
 				description={'전시를 탐색하고 북마크해보세요'}
 			/>
@@ -93,7 +95,11 @@ export function BookmarkedExhibitionList() {
 					showsVerticalScrollIndicator={false}
 				/>
 			) : (
-				<Result icon="bookmark-outline" iconSize={36} title="해당하는 전시가 없어요" />
+				<Result
+					icon="bookmark-outline"
+					illustration={<BookmarkEmptyIllustration width={180} />}
+					title="해당하는 전시가 없어요"
+				/>
 			)}
 		</View>
 	);
