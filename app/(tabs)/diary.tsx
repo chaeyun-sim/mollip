@@ -19,11 +19,7 @@ import { useAuthStore } from '@/src/store/authStore';
 import { useRecordDraftStore } from '@/src/store/recordDraftStore';
 import { dateKeyOf, useVisitStore } from '@/src/store/visitStore';
 import { ARCHIVE_STAT_ACCENTS } from '@/src/constants/archivePalette';
-import { buildMockVisits } from '@/src/utils/devMockVisits';
 import { buildWallMonths, pendingDaysLeft, toWallItem } from '@/src/utils/museumWall';
-
-// TODO(임시): 벽 레이아웃·스크롤 확인용 가짜 기록. 확인이 끝나면 이 상수와 사용처를 지운다
-const MOCK_VISIT_COUNT = __DEV__ ? 60 : 0;
 
 export default function DiaryScreen() {
 	const router = useRouter();
@@ -33,11 +29,7 @@ export default function DiaryScreen() {
 	);
 	const { isPremium, isLoading: subscriptionLoading } = useSubscription();
 	const startDraft = useRecordDraftStore((s) => s.start);
-	const storeVisits = useVisitStore((s) => s.visits);
-	const visits = useMemo(
-		() => ({ ...buildMockVisits(MOCK_VISIT_COUNT), ...storeVisits }),
-		[storeVisits],
-	);
+	const visits = useVisitStore((s) => s.visits);
 
 	// 벽에는 확정 기록, 상단 스트립에는 기록 대기 관람만 쓴다 — 포스터는 한 번에 조회
 	const wallVisits = useMemo(

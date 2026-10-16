@@ -37,13 +37,10 @@ import { Screen } from '@/src/components/layout/Screen';
 import { cn } from '@/src/lib/cn';
 import { colors } from '@/src/constants/colors';
 import { WEEKDAYS } from '@/src/constants/week';
-import { buildMockVisits, getQaFixtureVisit } from '@/src/utils/devMockVisits';
 import { galleryStageHeight } from '@/src/utils/visitGallery';
 import { uploadTicketVisitPhotos } from '@/src/utils/visitPhotos';
 
 const MAX_VENUE_PHOTOS = 9;
-// TODO(임시): 다이어리 목록(diary.tsx)의 가짜 기록과 같은 개수 — 목록에서 누른 가짜 액자가 상세에서도 열리게 한다. 확인이 끝나면 함께 지운다
-const MOCK_VISIT_COUNT = __DEV__ ? 60 : 0;
 
 export default function DiaryDateScreen() {
 	const router = useRouter();
@@ -62,13 +59,7 @@ export default function DiaryDateScreen() {
 		return `${y}.${m}.${d} ${weekday}요일`;
 	}, [dateKey]);
 
-	const {
-		visits: storeVisits,
-		setVisitMemo,
-		setVisitRating,
-		deleteVisit,
-		updateVisitPhotos,
-	} = useVisitStore(
+	const { visits, setVisitMemo, setVisitRating, deleteVisit, updateVisitPhotos } = useVisitStore(
 		useShallow((s) => ({
 			visits: s.visits,
 			setVisitMemo: s.setVisitMemo,
@@ -77,16 +68,6 @@ export default function DiaryDateScreen() {
 			updateVisitPhotos: s.updateVisitPhotos,
 		})),
 	);
-	// 개발용 가짜 기록은 읽기 전용 미리보기다 — 스토어에 없는 키라 아래 handle*에서 쓰기 경로를 모두 막는다.
-	// 같은 키의 실제 기록이 스토어에 있으면 그쪽이 덮어쓰므로 정상 동작한다
-	const visits = useMemo(() => {
-		const qaVisit = __DEV__ && params.visit ? getQaFixtureVisit(params.visit) : undefined;
-		return {
-			...buildMockVisits(MOCK_VISIT_COUNT),
-			...(qaVisit && params.visit ? { [params.visit]: qaVisit } : {}),
-			...storeVisits,
-		};
-	}, [storeVisits, params.visit]);
 	const playlist = useImmersiveStore((s) => s.playlist);
 	const historyItems = useHistoryStore((s) => s.items);
 	const userId = useAuthStore((s) => s.user?.id);
@@ -102,7 +83,7 @@ export default function DiaryDateScreen() {
 	}, [visits, dateKey, params.visit]);
 
 	const isStoredKey = (key: string | null): key is string =>
-		key !== null && storeVisits[key] !== undefined;
+		key !== null && visits[key] !== undefined;
 
 	const [playingGuide, setPlayingGuide] = useState<HistoryItem | null>(null);
 	const playerRef = useRef<DiaryGuidePlayerHandle>(null);
@@ -122,6 +103,8 @@ export default function DiaryDateScreen() {
 	const [editVenuePhotos, setEditVenuePhotos] = useState<string[]>([]);
 	const [photosDirty, setPhotosDirty] = useState(false);
 	const [savingPhotos, setSavingPhotos] = useState(false);
+	// 마지막 기록을 지우는 동안 "기록을 찾을 수 없어요" 화면이 번쩍 뜨지 않게 한다
+	const [isLeavingAfterDelete, setIsLeavingAfterDelete] = useState(false);
 
 	useEffect(() => {
 		if (!activeMemoKey) return;
@@ -139,7 +122,7 @@ export default function DiaryDateScreen() {
 	useEffect(() => {
 		if (activeMemoKey !== null && !isStoredKey(activeMemoKey)) setActiveMemoKey(null);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [activeMemoKey, storeVisits]);
+	}, [activeMemoKey, visits]);
 
 	useEffect(() => {
 		if (!activeMemoKey) return;
@@ -280,8 +263,15 @@ export default function DiaryDateScreen() {
 				text: '삭제',
 				style: 'destructive',
 				onPress: async () => {
-					await deleteVisit(visitKey);
-					if (dayVisitEntries.length <= 1) handleBack();
+					const isLastEntry = dayVisitEntries.length <= 1;
+					if (isLastEntry) setIsLeavingAfterDelete(true);
+					try {
+						await deleteVisit(visitKey);
+					} catch (error) {
+						setIsLeavingAfterDelete(false);
+						throw error;
+					}
+					if (isLastEntry) handleBack();
 				},
 			},
 		]);
@@ -358,13 +348,15 @@ export default function DiaryDateScreen() {
 					))}
 				</ScrollView>
 			) : (
-				<Result
-					icon="images-outline"
-					title="기록을 찾을 수 없어요"
-					description="삭제되었거나 아직 불러오지 못한 기록이에요."
-					actionLabel="돌아가기"
-					onAction={handleBack}
-				/>
+				!isLeavingAfterDelete && (
+					<Result
+						icon="images-outline"
+						title="기록을 찾을 수 없어요"
+						description="삭제되었거나 아직 불러오지 못한 기록이에요."
+						actionLabel="돌아가기"
+						onAction={handleBack}
+					/>
+				)
 			)}
 
 			{showPreviewNotice && (
