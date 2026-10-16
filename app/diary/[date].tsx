@@ -505,7 +505,8 @@ export default function DiaryDateScreen() {
 										scrollEnabled={false}
 										maxLength={400}
 										accessibilityLabel="관람 메모 입력"
-										className="text-ink text-[15px] leading-[24px] min-h-[120px]"
+										className="text-ink text-[15px] min-h-[120px]"
+										style={{ lineHeight: 30 }}
 									/>
 								</View>
 							</ScrollView>
