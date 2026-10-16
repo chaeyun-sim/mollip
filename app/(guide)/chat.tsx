@@ -156,7 +156,8 @@ export default function ChatScreen() {
 				<ScreenHeader.Left>
 					<ScreenHeader.Back onPress={() => router.back()} color="muted" />
 				</ScreenHeader.Left>
-				<ScreenHeader.Center>
+				{/* 제목은 좌우 버튼 영역(뒤로 가기·검색)을 피해 가운데에 두고, 길면 말줄임한다 */}
+				<ScreenHeader.Center className="px-[72px]">
 					<Text className="text-base font-pretendard-semibold text-white" numberOfLines={1}>
 						{exhibitionTitle ? `${exhibitionTitle}에 대해 물어보기` : '작품에 대해 물어보기'}
 					</Text>
