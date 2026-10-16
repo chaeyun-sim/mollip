@@ -11,6 +11,9 @@ export type ArtistIntroStatus = 'idle' | 'loading' | 'ready' | 'failed';
 interface ArtistIntroStore {
 	artist: string | null;
 	imageUrl?: string;
+	/** 작가 소개 생성에 같이 넘기는 전시 정보 — 재시도에서도 같은 단서를 쓰도록 들고 있는다 */
+	context?: string;
+	exhibitionTitle?: string;
 	status: ArtistIntroStatus;
 	text: string | null;
 	prepare: (exhibitionId: string | null, exhibitionTitle?: string) => void;
@@ -21,6 +24,8 @@ interface ArtistIntroStore {
 const INITIAL = {
 	artist: null,
 	imageUrl: undefined,
+	context: undefined,
+	exhibitionTitle: undefined,
 	status: 'idle' as ArtistIntroStatus,
 	text: null,
 };
@@ -50,19 +55,26 @@ export const useArtistIntroStore = create<ArtistIntroStore>()((set, get) => ({
 			if (!info) return;
 
 			if (token !== sessionToken) return;
-			set({ artist: info.artist, imageUrl: info.imageUrl, status: 'loading', text: null });
-			await load(info.artist, exhibitionTitle, token, set);
+			set({
+				artist: info.artist,
+				imageUrl: info.imageUrl,
+				context: info.context,
+				exhibitionTitle,
+				status: 'loading',
+				text: null,
+			});
+			await load(info.artist, exhibitionTitle, info.context, token, set);
 		})();
 	},
 
 	// 실패 상태의 트랙을 탭했을 때 재생성(AC-7)
 	retry: () => {
-		const { artist, status } = get();
+		const { artist, status, exhibitionTitle, context } = get();
 		if (!artist || status === 'loading') return;
 
 		const token = sessionToken;
 		set({ status: 'loading', text: null });
-		void load(artist, undefined, token, set);
+		void load(artist, exhibitionTitle, context, token, set);
 	},
 
 	// 몰입 종료·재진입 시 세션 상태 초기화(AC-8). 전역 캐시 테이블 데이터는 그대로 유지된다.
@@ -78,6 +90,7 @@ type SetState = (partial: Partial<ArtistIntroStore>) => void;
 async function load(
 	artist: string,
 	exhibitionTitle: string | undefined,
+	context: string | undefined,
 	token: number,
 	set: SetState,
 ) {
@@ -89,9 +102,14 @@ async function load(
 	}
 
 	try {
-		const intro = await generateArtistIntro(artist, exhibitionTitle);
-		writeArtistIntroCache(artist, intro);
+		const intro = await generateArtistIntro(artist, exhibitionTitle, context);
 		if (token !== sessionToken) return;
+		// 작가 정보를 확신할 수 없어 쓸 만한 해설이 없으면 캐시하지 않고 트랙을 숨긴다(단체전과 같은 취급)
+		if (!intro) {
+			set({ ...INITIAL });
+			return;
+		}
+		writeArtistIntroCache(artist, intro);
 		set({ status: 'ready', text: intro });
 	} catch {
 		if (token !== sessionToken) return;

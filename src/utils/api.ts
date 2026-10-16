@@ -1,4 +1,5 @@
 import { getAccessTokenForApi } from '@/src/store/authStore';
+import { isUsableArtistIntro } from '@/src/utils/artistIntro';
 import { supabase } from '@/src/utils/supabase';
 
 const SUPABASE_URL = process.env.EXPO_PUBLIC_SUPABASE_URL ?? '';
@@ -114,20 +115,21 @@ export async function* streamRoute(systemPrompt: string, prompt: string): AsyncG
 
 // 작가 소개 인트로는 타이프라이터 표시가 필요 없고 결과를 캐시에 통째로 저장해야 하므로
 // SSE가 아닌 단발 JSON 응답으로 받는다.
+// 모델이 작가 정보를 확신하지 못해 쓸 만한 해설이 없으면 null — 호출부는 작가 소개를 건너뛴다.
 export async function generateArtistIntro(
 	artist: string,
 	exhibitionTitle?: string,
-): Promise<string> {
+	exhibitionContext?: string,
+): Promise<string | null> {
 	const res = await fetch(edgeFunctionUrl('generate-artist-intro'), {
 		method: 'POST',
 		headers: await authHeaders({ requireUser: true }),
-		body: JSON.stringify({ artist, exhibitionTitle }),
+		body: JSON.stringify({ artist, exhibitionTitle, exhibitionContext }),
 	});
 	if (!res.ok) throw new Error(`generate-artist-intro ${res.status}`);
 	const data = await res.json();
 	const intro = typeof data.intro === 'string' ? data.intro.trim() : '';
-	if (!intro) throw new Error('generate-artist-intro empty');
-	return intro;
+	return isUsableArtistIntro(intro) ? intro : null;
 }
 
 // -- ElevenLabs ---------------------------------------------------------------
