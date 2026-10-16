@@ -8,10 +8,11 @@ import {
 	canAdvanceWriteStep,
 	getNextWriteStep,
 	getPrevWriteStep,
+	getProgressTotal,
 	getWriteStepIndex,
+	getWriteSteps,
 	PICK_STEP,
 	resolveWriteStep,
-	WRITE_STEPS,
 	type FlowStep,
 } from '@/src/utils/recordWriteFlow';
 import { getRecordDateKey } from '@/src/utils/visitRecord';
@@ -21,7 +22,7 @@ const goToPrevStep = (): boolean => {
 	const { draft, patch } = useRecordDraftStore.getState();
 	if (!draft || draft.writeStep === PICK_STEP) return false;
 
-	const prev = getPrevWriteStep(draft.writeStep);
+	const prev = getPrevWriteStep(draft.writeStep, getWriteSteps(Boolean(draft.fixedDateKey)));
 	if (prev) {
 		patch({ writeStep: prev });
 		return true;
@@ -43,7 +44,10 @@ export const useRecordWriteFlow = () => {
 
 	// 아직 전시를 고르지 않았거나(draft 없음) 고르기로 돌아온 경우
 	const isPicking = !draft || draft.writeStep === PICK_STEP;
-	const step: FlowStep = isPicking ? PICK_STEP : resolveWriteStep(draft.writeStep);
+	// 방문일이 정해져 있으면(도슨트 관람) 방문일 질문 없이 별점부터 시작한다
+	const hasFixedDate = Boolean(draft?.fixedDateKey);
+	const steps = getWriteSteps(hasFixedDate);
+	const step: FlowStep = isPicking ? PICK_STEP : resolveWriteStep(draft.writeStep, steps);
 	// 고르기를 이 화면에서 거치는 흐름이면 질문 번호가 한 칸 밀린다 (diary.tsx처럼 바로 들어오면 질문만 센다)
 	const pickOffset = !draft || draft.fromPicker ? 1 : 0;
 	const canAdvance =
@@ -60,7 +64,7 @@ export const useRecordWriteFlow = () => {
 
 	const goNext = () => {
 		if (!draft || !canAdvance) return;
-		const next = getNextWriteStep(step);
+		const next = getNextWriteStep(step, steps);
 		if (next) {
 			patch({ writeStep: next });
 			return;
@@ -79,8 +83,8 @@ export const useRecordWriteFlow = () => {
 
 	return {
 		step,
-		stepIndex: step === PICK_STEP ? 0 : getWriteStepIndex(step) + pickOffset,
-		totalSteps: WRITE_STEPS.length + pickOffset,
+		stepIndex: step === PICK_STEP ? 0 : getWriteStepIndex(step, steps) + pickOffset,
+		totalSteps: getProgressTotal(pickOffset === 1, hasFixedDate),
 		canAdvance,
 		goBack,
 		goNext,

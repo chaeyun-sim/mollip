@@ -4,11 +4,13 @@ import {
 	getPrevWriteStep,
 	getWriteStepIndex,
 	resolveWriteStep,
+	getProgressTotal,
+	getWriteSteps,
 	WRITE_STEPS,
 } from '../recordWriteFlow';
 
 describe('recordWriteFlow — 질문 순서', () => {
-	it('방문일 → 별점 → 사진 → 재방문 순서다 (시설 평가는 아직 없다)', () => {
+	it('방문일 → 별점(+후기) → 사진 → 재방문 순서다 (시설 평가는 아직 없다)', () => {
 		expect([...WRITE_STEPS]).toEqual(['date', 'rating', 'photos', 'revisit']);
 	});
 
@@ -47,5 +49,33 @@ describe('recordWriteFlow — 다음으로 넘어가는 조건', () => {
 		expect(canAdvanceWriteStep('revisit', {})).toBe(false);
 		expect(canAdvanceWriteStep('revisit', { isRevisit: true })).toBe(true);
 		expect(canAdvanceWriteStep('revisit', { isRevisit: false })).toBe(true);
+	});
+});
+
+describe('recordWriteFlow — 진행 바 칸 수', () => {
+	it('질문 수 + 마지막 확인 화면이고, 전시 고르기를 거치면 한 칸 더한다', () => {
+		expect(getProgressTotal(false)).toBe(WRITE_STEPS.length + 1);
+		expect(getProgressTotal(true)).toBe(WRITE_STEPS.length + 2);
+	});
+});
+
+describe('recordWriteFlow — 방문일이 정해진 기록(도슨트 관람)', () => {
+	it('방문일 질문을 빼고 별점부터 시작한다', () => {
+		const steps = getWriteSteps(true);
+		expect([...steps]).toEqual(['rating', 'photos', 'revisit']);
+		expect(getWriteSteps(false)).toBe(WRITE_STEPS);
+	});
+
+	it('저장된 단계가 없으면 별점이 첫 질문이고, 이전 질문은 없다', () => {
+		const steps = getWriteSteps(true);
+		expect(resolveWriteStep(undefined, steps)).toBe('rating');
+		expect(resolveWriteStep('date', steps)).toBe('rating');
+		expect(getWriteStepIndex('rating', steps)).toBe(0);
+		expect(getPrevWriteStep('rating', steps)).toBeNull();
+		expect(getNextWriteStep('rating', steps)).toBe('photos');
+	});
+
+	it('진행 바 칸 수도 한 칸 줄어든다', () => {
+		expect(getProgressTotal(false, true)).toBe(getProgressTotal(false) - 1);
 	});
 });

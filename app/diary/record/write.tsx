@@ -1,17 +1,25 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Stack } from 'expo-router';
-import { useRef, useState } from 'react';
-import { Pressable, ScrollView, Text, View } from 'react-native';
+import { useEffect, useRef, useState } from 'react';
+import {
+	Keyboard,
+	KeyboardAvoidingView,
+	Platform,
+	Pressable,
+	ScrollView,
+	Text,
+	View,
+} from 'react-native';
 import Animated, { FadeIn, FadeInDown, FadeOutUp, useReducedMotion } from 'react-native-reanimated';
 import { useShallow } from 'zustand/react/shallow';
 import { StarRating } from '@/src/components/archive/StarRating';
 import { Button } from '@/src/components/common/Button';
 import { DatePickerModal } from '@/src/components/common/DatePickerModal';
-import { TextField } from '@/src/components/common/TextField';
 import { Screen } from '@/src/components/layout/Screen';
 import { PhotoGrid } from '@/src/components/record/PhotoGrid';
 import { RecordChoice } from '@/src/components/record/RecordChoice';
 import { RecordExhibitionPicker } from '@/src/components/record/RecordExhibitionPicker';
+import { RecordMemoField } from '@/src/components/record/RecordMemoField';
 import { RecordQuestion } from '@/src/components/record/RecordQuestion';
 import { RecordStepHeader } from '@/src/components/record/RecordStepHeader';
 import { RecordWriteProgress } from '@/src/components/record/RecordWriteProgress';
@@ -24,11 +32,29 @@ import { parseDate } from '@/src/utils/mapUtils';
 import { PICK_STEP } from '@/src/utils/recordWriteFlow';
 import { getRecordDateKey, MAX_RECORD_PHOTOS, toPassDate } from '@/src/utils/visitRecord';
 
+const MAX_MEMO_LENGTH = 100;
+
 /** 기록하기 — 전시 고르기 → 방문일 → 별점 → 오늘 찍은 사진 → 재방문, 화면 이동 없이 한 번에 한 질문씩 */
 export default function RecordWriteScreen() {
 	const reduceMotion = useReducedMotion();
 	const [isPickingDate, setIsPickingDate] = useState(false);
 	const scrollRef = useRef<ScrollView>(null);
+	const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
+	useEffect(() => {
+		const showSub = Keyboard.addListener(
+			Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow',
+			() => setIsKeyboardVisible(true),
+		);
+		const hideSub = Keyboard.addListener(
+			Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide',
+			() => setIsKeyboardVisible(false),
+		);
+		return () => {
+			showSub.remove();
+			hideSub.remove();
+		};
+	}, []);
+
 	const { draft, patch, start } = useRecordDraftStore(
 		useShallow((s) => ({ draft: s.draft, patch: s.patch, start: s.start })),
 	);
@@ -77,162 +103,172 @@ export default function RecordWriteScreen() {
 		<Screen variant="warm">
 			{/* 질문 사이에서 스와이프 백으로 화면째 빠지지 않게 한다 — 맨 앞 단계에서만 허용 */}
 			<Stack.Screen options={{ gestureEnabled: stepIndex === 0 }} />
-			<RecordStepHeader step={2} onBack={goBack} />
+			<RecordStepHeader
+				step={draft.fromPicker ? 2 : 1}
+				total={draft.fromPicker ? 3 : 2}
+				onBack={goBack}
+			/>
 			<RecordWriteProgress index={stepIndex} total={totalSteps} />
 
-			<ScrollView
-				ref={scrollRef}
-				showsVerticalScrollIndicator={false}
-				keyboardShouldPersistTaps="handled"
-				contentContainerClassName="pb-36"
+			<KeyboardAvoidingView
+				behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+				className="flex-1"
 			>
-				{/*
-				<View className="mt-3">
-					<RecordFramePreview
-						compact
-						dateKey={dateKey}
-						exhibitionId={draft.exhibitionId}
-						title={draft.title}
-						venue={draft.venue}
-						imageUri={draft.poster ?? photos[0]}
-						rating={rating > 0 ? rating : undefined}
-					/>
-				</View> */}
+				<ScrollView
+					ref={scrollRef}
+					className="flex-1"
+					showsVerticalScrollIndicator={false}
+					keyboardShouldPersistTaps="handled"
+					contentContainerClassName="pb-6"
+				>
+					{/*
+					<View className="mt-3">
+						<RecordFramePreview
+							compact
+							dateKey={dateKey}
+							exhibitionId={draft.exhibitionId}
+							title={draft.title}
+							venue={draft.venue}
+							imageUri={draft.poster ?? photos[0]}
+							rating={rating > 0 ? rating : undefined}
+						/>
+					</View> */}
 
-				<Animated.View key={step} entering={reduceMotion ? undefined : FadeIn.duration(180)}>
-					{step === 'date' && (
-						<RecordQuestion title="언제 방문했나요?" description="실제 방문한 날짜를 알려주세요">
-							<Pressable
-								onPress={() => setIsPickingDate(true)}
-								disabled={isDateFixed}
-								accessibilityRole="button"
-								accessibilityLabel={
-									isDateFixed
-										? `방문일 ${toPassDate(dateKey)}, 도슨트 관람일로 고정`
-										: `방문일 ${toPassDate(dateKey)}, 바꾸기`
-								}
-								accessibilityState={{ disabled: isDateFixed }}
-								className="min-h-[56px] flex-row items-end justify-between border-b border-divider/50 pb-3"
-								style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
-							>
-								<Text className="font-pretendard-medium text-lg leading-[34px] text-ink">
-									{toPassDate(dateKey)}
-								</Text>
-								<Ionicons
-									name={isDateFixed ? 'lock-closed-outline' : 'calendar-outline'}
-									size={18}
-									className="mb-2 text-gray600"
-								/>
-							</Pressable>
-							{isDateFixed && (
-								<Text className="mt-2 font-pretendard-regular text-[12px] text-gray600">
-									도슨트 관람일로 고정
-								</Text>
-							)}
-						</RecordQuestion>
-					)}
-
-					{step === 'rating' && (
-						<RecordQuestion
-							title="전시는 어떠셨나요?"
-							description="만족도에 따라 별점과 후기를 남겨주세요"
-						>
-							<View className="mt-6 items-center rounded-3xl bg-white py-7">
-								<StarRating
-									value={rating}
-									onChange={(value) => patch({ rating: value })}
-									size={28}
-									tone="gold"
-								/>
-								<Text
-									className={cn('mt-4 font-pretendard-medium', {
-										'text-[18px] text-ink': rating > 0,
-										'text-[14px] text-gray600': rating === 0,
-									})}
+					<Animated.View key={step} entering={reduceMotion ? undefined : FadeIn.duration(180)}>
+						{step === 'date' && (
+							<RecordQuestion title="언제 방문했나요?" description="실제 방문한 날짜를 알려주세요">
+								<Pressable
+									onPress={() => setIsPickingDate(true)}
+									disabled={isDateFixed}
+									accessibilityRole="button"
+									accessibilityLabel={
+										isDateFixed
+											? `방문일 ${toPassDate(dateKey)}, 도슨트 관람일로 고정`
+											: `방문일 ${toPassDate(dateKey)}, 바꾸기`
+									}
+									accessibilityState={{ disabled: isDateFixed }}
+									className="min-h-[56px] flex-row items-end justify-between border-b border-divider/50 pb-3"
+									style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
 								>
-									{rating > 0 ? `${rating.toFixed(1)} / 5` : '별을 탭해 점수를 남겨보세요'}
-								</Text>
-							</View>
-							{rating > 0 && (
-								<Animated.View
-									className="mt-6"
-									entering={reduceMotion ? undefined : FadeInDown.duration(260)}
-									exiting={reduceMotion ? undefined : FadeOutUp.duration(150)}
-								>
-									<TextField
-										variant="area"
-										onChangeText={(memo) => patch({ memo: memo.slice(0, 100) })}
-										onFocus={() => scrollRef.current?.scrollToEnd({ animated: true })}
-										placeholder="기억에 남는 순간을 적어보세요 (선택)"
-										maxLength={100}
-										accessibilityLabel="전시 후기 (선택)"
-										className="min-h-[110px] rounded-2xl bg-white py-4 text-[14px] leading-[1.1]"
-										lineBreakStrategyIOS="hangul-word"
-									/>
-									<Text className="mt-2 text-right font-pretendard-regular text-[12px] text-gray600">
-										{(draft.memo ?? '').length} / 100
+									<Text className="font-pretendard-medium text-lg leading-[34px] text-ink">
+										{toPassDate(dateKey)}
 									</Text>
-								</Animated.View>
-							)}
-						</RecordQuestion>
-					)}
+									<Ionicons
+										name={isDateFixed ? 'lock-closed-outline' : 'calendar-outline'}
+										size={18}
+										className="mb-2 text-gray600"
+									/>
+								</Pressable>
+								{isDateFixed && (
+									<Text className="mt-2 font-pretendard-regular text-[12px] text-gray600">
+										도슨트 관람일로 고정
+									</Text>
+								)}
+							</RecordQuestion>
+						)}
 
-					{step === 'photos' && (
-						<RecordQuestion
-							title="오늘 찍은 사진이 있나요?"
-							description="선택이에요. 최대 6장까지 올릴 수 있어요"
+						{step === 'rating' && (
+							<RecordQuestion
+								title="전시는 어땠나요?"
+								description="만족도에 따라 별점과 후기를 남겨주세요"
+							>
+								<View className="mt-6 items-center rounded-3xl bg-white py-7">
+									<StarRating
+										value={rating}
+										onChange={(value) => patch({ rating: value })}
+										size={28}
+										tone="gold"
+									/>
+									<Text
+										className={cn('mt-4 font-pretendard-medium', {
+											'text-[18px] text-ink': rating > 0,
+											'text-[14px] text-gray600': rating === 0,
+										})}
+									>
+										{rating > 0 ? `${rating.toFixed(1)} / 5` : '별을 탭해 점수를 남겨보세요'}
+									</Text>
+								</View>
+								{rating > 0 && (
+									<Animated.View
+										className="mt-6"
+										entering={reduceMotion ? undefined : FadeInDown.duration(260)}
+										exiting={reduceMotion ? undefined : FadeOutUp.duration(150)}
+									>
+										<RecordMemoField
+											value={draft.memo ?? ''}
+											onChange={(memo) => patch({ memo })}
+											exhibitionTitle={draft.title}
+											rating={rating}
+											listenedTitles={draft.listenedTitles ?? []}
+											maxLength={MAX_MEMO_LENGTH}
+										/>
+									</Animated.View>
+								)}
+							</RecordQuestion>
+						)}
+
+						{step === 'photos' && (
+							<RecordQuestion
+								title="오늘 찍은 사진이 있나요?"
+								description="선택이에요. 최대 6장까지 올릴 수 있어요"
+							>
+								<PhotoGrid
+									value={photos}
+									onChange={(value) => patch({ photos: value })}
+									max={MAX_RECORD_PHOTOS}
+								/>
+							</RecordQuestion>
+						)}
+
+						{step === 'revisit' && (
+							<RecordQuestion title="다시 방문할 의향있나요?">
+								<View accessibilityRole="radiogroup" className="gap-3">
+									<RecordChoice
+										label="네, 또 갈거에요."
+										selected={draft.isRevisit === true}
+										onPress={() => patch({ isRevisit: true })}
+									/>
+									{/* <RecordChoice
+										label="고민중이에요."
+										selected={draft.isRevisit === true}
+										onPress={() => patch({ isRevisit: true })}
+									/> */}
+									<RecordChoice
+										label="아니요, 다시 안 갈거에요."
+										selected={draft.isRevisit === false}
+										onPress={() => patch({ isRevisit: false })}
+									/>
+								</View>
+							</RecordQuestion>
+						)}
+					</Animated.View>
+				</ScrollView>
+
+				<Screen.Bottom className={cn('bg-bg-light', isKeyboardVisible ? 'pb-3' : 'pb-10')}>
+					<View className="flex-row items-center gap-2">
+						<Button
+							variant="ghost"
+							tone="gray"
+							onPress={goBack}
+							accessibilityLabel="이전 질문"
+							className="px-5"
 						>
-							<PhotoGrid
-								value={photos}
-								onChange={(value) => patch({ photos: value })}
-								max={MAX_RECORD_PHOTOS}
-							/>
-						</RecordQuestion>
-					)}
-
-					{step === 'revisit' && (
-						<RecordQuestion title="이 전시, 다시 찾으셨나요?">
-							<View accessibilityRole="radiogroup" className="gap-3">
-								<RecordChoice
-									label="네, 다시 찾았어요"
-									selected={draft.isRevisit === true}
-									onPress={() => patch({ isRevisit: true })}
-								/>
-								<RecordChoice
-									label="아니요, 처음이에요"
-									selected={draft.isRevisit === false}
-									onPress={() => patch({ isRevisit: false })}
-								/>
-							</View>
-						</RecordQuestion>
-					)}
-				</Animated.View>
-			</ScrollView>
-
-			<Screen.BottomAbsolute className="bottom-0 bg-bg-light px-6 pb-10 pt-3">
-				<View className="flex-row items-center gap-2">
-					<Button
-						variant="ghost"
-						tone="gray"
-						onPress={goBack}
-						accessibilityLabel="이전 질문"
-						className="px-5"
-					>
-						뒤로
-					</Button>
-					<Button
-						onPress={goNext}
-						disabled={!canAdvance}
-						accessibilityLabel={nextLabel}
-						tone="inverse"
-						haptic="light"
-						block={false}
-						className="flex-1"
-					>
-						{nextLabel}
-					</Button>
-				</View>
-			</Screen.BottomAbsolute>
+							뒤로
+						</Button>
+						<Button
+							onPress={goNext}
+							disabled={!canAdvance}
+							accessibilityLabel={nextLabel}
+							tone="inverse"
+							haptic="light"
+							block={false}
+							className="flex-1"
+						>
+							{nextLabel}
+						</Button>
+					</View>
+				</Screen.Bottom>
+			</KeyboardAvoidingView>
 
 			<DatePickerModal
 				visible={isPickingDate}
