@@ -169,7 +169,7 @@ export default function DiaryScreen() {
 					months.map((month) => (
 						<View key={month.monthKey} className="mt-8">
 							<View className="mb-4 flex-row items-baseline justify-between">
-								<Text className="font-hahmlet-bold text-[18px] text-ink">{month.label}</Text>
+								<Text className="font-pretendard-bold text-[18px] text-ink">{month.label}</Text>
 								<Text className="font-pretendard-regular text-[12px] text-gray600">
 									{`${month.count}점`}
 								</Text>
