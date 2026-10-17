@@ -6,6 +6,7 @@ import { ArtworkChatThread } from '@/src/components/archive/ArtworkChatThread';
 import { ListenedArtworkRow } from '@/src/components/archive/ListenedArtworkRow';
 import { PhotoGallery } from '@/src/components/archive/PhotoGallery';
 import { StarRating } from '@/src/components/archive/StarRating';
+import { VisitSectionHeader } from '@/src/components/archive/VisitSectionHeader';
 import { colors } from '@/src/constants/colors';
 import { useExhibitionDetail } from '@/src/hooks/queries/useExhibitionDetail';
 import { cn } from '@/src/lib/cn';
@@ -200,34 +201,27 @@ export function VisitBlock({
 			{hasReview && (
 				<View className="mt-10 px-6">
 					{/* 관람 노트 — 잡지 기사 머리말처럼 가는 선 위에 작은 제목과 별점을 한 줄로 둔다 */}
-					<View
-						className={cn(
-							'flex-row items-center justify-between',
-							// 메모가 없으면 아래에 이어지는 구분선과 겹쳐 두 줄이 되니 머리말 선은 뺀다
-							memo && 'border-b-[0.5px] border-divider pb-3',
-						)}
-					>
-						<View className="flex-row items-center gap-2">
-							<View className="h-[2px] w-4 bg-editorial" />
-							<Text className="font-pretendard-semibold text-[11px] tracking-[1.5px] text-gray600">
-								관람 노트
-							</Text>
-						</View>
-						{hasRating && (
-							// 읽기 전용 별 5개가 버튼으로 따로 읽히지 않게 별점 + 점수를 하나의 요소로 묶는다
-							<View
-								accessible
-								accessibilityRole="text"
-								accessibilityLabel={`별점 ${ratingText}점, 5점 만점`}
-								className="flex-row items-center gap-2"
-							>
-								<StarRating value={rating} onChange={() => {}} disabled size={18} tone="light" />
-								<Text className="font-pretendard-medium text-[12px] text-gray600">
-									{`${ratingText} / 5`}
-								</Text>
-							</View>
-						)}
-					</View>
+					{/* 메모가 없으면 아래에 이어지는 구분선과 겹쳐 두 줄이 되니 머리말 선은 뺀다 */}
+					<VisitSectionHeader
+						label="관람 노트"
+						divider={Boolean(memo)}
+						right={
+							hasRating && (
+								// 읽기 전용 별 5개가 버튼으로 따로 읽히지 않게 별점 + 점수를 하나의 요소로 묶는다
+								<View
+									accessible
+									accessibilityRole="text"
+									accessibilityLabel={`별점 ${ratingText}점, 5점 만점`}
+									className="flex-row items-center gap-2"
+								>
+									<StarRating value={rating} onChange={() => {}} disabled size={18} tone="light" />
+									<Text className="font-pretendard-medium text-[12px] text-gray600">
+										{`${ratingText} / 5`}
+									</Text>
+								</View>
+							)
+						}
+					/>
 
 					{memo && (
 						<View className="pt-6">
@@ -251,21 +245,20 @@ export function VisitBlock({
 			)}
 
 			{listenedItems.length > 0 && (
-				<View
-					className={cn(
-						'mx-6 border-t-[0.5px] border-divider pt-6',
-						hasReview && !memo ? 'mt-5' : 'mt-8',
-					)}
-				>
-					<Text
-						accessibilityRole="header"
-						className="mb-2 font-pretendard-semibold text-[13px] text-gray600"
-					>
-						들은 작품
-					</Text>
-					{listenedItems.map((item) => (
+				<View className="mx-6 mt-10">
+					<VisitSectionHeader
+						label="들은 작품"
+						divider
+						right={
+							<Text className="font-pretendard-regular text-[12px] text-gray600">
+								{`${listenedItems.length}곡`}
+							</Text>
+						}
+					/>
+					{listenedItems.map((item, index) => (
 						<ListenedArtworkRow
 							key={item.title}
+							index={index}
 							title={item.title}
 							playable={playableByTitle.has(item.title)}
 							chatMessages={chatByTitle.get(item.title) ?? []}
@@ -276,27 +269,21 @@ export function VisitBlock({
 			)}
 
 			{otherChatItems.length > 0 && (
-				<View className="mx-6 mt-8 border-t-[0.5px] border-divider pt-6">
-					<Text
-						accessibilityRole="header"
-						className="mb-2 font-pretendard-semibold text-[13px] text-gray600"
-					>
-						함께 나눈 채팅
-					</Text>
-					<View className="mt-4">
-						{otherChatItems.map((item, index) => (
-							<View key={item.id} className={cn(index > 0 && 'mt-8')}>
-								<Text
-									className="mb-3 font-pretendard-semibold text-[15px] text-ink"
-									numberOfLines={1}
-									accessibilityRole="header"
-								>
-									{`『${item.title}』${item.artist ? ` - ${item.artist}` : ''}`}
-								</Text>
+				<View className="mx-6 mt-10">
+					<VisitSectionHeader label="함께 나눈 채팅" divider />
+					{otherChatItems.map((item) => (
+						<View key={item.id} className="mt-5">
+							<Text
+								numberOfLines={1}
+								className="mb-2 font-pretendard-semibold text-[14px] text-ink"
+							>
+								{`『${item.title}』${item.artist ? ` - ${item.artist}` : ''}`}
+							</Text>
+							<View className="rounded-2xl bg-surface-neutral p-3">
 								<ArtworkChatThread messages={item.chatMessages ?? []} />
 							</View>
-						))}
-					</View>
+						</View>
+					))}
 				</View>
 			)}
 
