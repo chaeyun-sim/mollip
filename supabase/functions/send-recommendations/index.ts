@@ -88,7 +88,11 @@ Deno.serve(async (req) => {
 	const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
 	const supabase = createClient(supabaseUrl, serviceKey);
 
-	const today = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+	// exhibitions.end_date는 'YYYY.MM.DD' 문자열이라 같은 형식(KST 기준)으로 비교해야 한다.
+	const today = new Date(Date.now() + 9 * 60 * 60 * 1000)
+		.toISOString()
+		.slice(0, 10)
+		.replace(/-/g, '.');
 
 	// push_token 있는 프로필
 	const { data: profiles, error: profileErr } = await supabase
@@ -104,6 +108,7 @@ Deno.serve(async (req) => {
 	const { data: exhibitions, error: exErr } = await supabase
 		.from('exhibitions')
 		.select('id, title, venue_name_fallback, genre, synced_at')
+		.lte('start_date', today)
 		.gte('end_date', today)
 		.order('synced_at', { ascending: false })
 		.limit(50);
