@@ -7,7 +7,7 @@ import { useVisitStore } from '@/src/store/visitStore';
 import { getExhibitionStatus, todayExhibitionDateString } from '@/src/utils/exhibitionSearch';
 import { supabase } from '@/src/utils/supabase';
 
-const MAX_RECOMMENDED = 5;
+const MAX_RECOMMENDED = 100;
 const FETCH_LIMIT = 100;
 const FRESHNESS_DAYS = 7;
 const RECOMMENDED_STALE_MS = 5 * 60 * 1000;
@@ -66,7 +66,11 @@ async function fetchExhibitionRows(preferredGenres: string[]): Promise<Exhibitio
 	return (data ?? []) as ExhibitionRow[];
 }
 
-function toRecommendableItem(row: ExhibitionRow): RecommendableItem {
+function toRecommendableItem(
+	row: ExhibitionRow,
+	preferredGenres: string[] = [],
+): RecommendableItem {
+	const matchedGenre = row.genre && preferredGenres.includes(row.genre) ? row.genre : null;
 	return {
 		id: String(row.id),
 		title: row.title.trim(),
@@ -75,6 +79,9 @@ function toRecommendableItem(row: ExhibitionRow): RecommendableItem {
 		status: getExhibitionStatus({ startDate: row.start_date, endDate: row.end_date }),
 		startDate: row.start_date ?? null,
 		endDate: row.end_date ?? null,
+		recommendationReason: matchedGenre
+			? `${matchedGenre} 장르를 좋아하는 취향에 맞춰 골랐어요.`
+			: undefined,
 	};
 }
 
@@ -94,7 +101,7 @@ export function useRecommendedExhibitions(preferredGenres: string[], isPersonali
 		const rows = query.data ?? [];
 		if (rows.length === 0) return [];
 		if (!isPersonalized) {
-			return rows.slice(0, MAX_RECOMMENDED).map(toRecommendableItem);
+			return rows.slice(0, MAX_RECOMMENDED).map((row) => toRecommendableItem(row));
 		}
 
 		const visitedIds = Object.values(visits)
@@ -109,8 +116,13 @@ export function useRecommendedExhibitions(preferredGenres: string[], isPersonali
 			}))
 			.sort((a, b) => b.score - a.score)
 			.slice(0, MAX_RECOMMENDED)
-			.map(({ row }) => toRecommendableItem(row));
+			.map(({ row }) => toRecommendableItem(row, preferredGenres));
 	}, [query.data, preferredGenres, visits, bookmarkedIds, isPersonalized]);
 
-	return { data };
+	return {
+		data,
+		isLoading: query.isLoading,
+		isError: query.isError,
+		refetch: query.refetch,
+	};
 }

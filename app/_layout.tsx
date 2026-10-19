@@ -433,6 +433,7 @@ function RootLayout() {
 								<Stack.Screen name="settings" options={{ headerShown: false }} />
 								<Stack.Screen name="bookmark" options={{ headerShown: false }} />
 								<Stack.Screen name="notifications" options={{ headerShown: false }} />
+								<Stack.Screen name="recommendations" options={{ headerShown: false }} />
 								<Stack.Screen
 									name="search"
 									options={{ headerShown: false, animation: 'fade', animationDuration: 130 }}

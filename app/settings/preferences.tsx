@@ -1,18 +1,22 @@
 import { useRouter } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
 import { ActivityIndicator, Alert, Pressable, Text, View } from 'react-native';
+import { useQueryClient } from '@tanstack/react-query';
 
 import { Screen } from '@/src/components/layout/Screen';
 import { OnboardingGalleryWall } from '@/src/components/onboarding/OnboardingGalleryWall';
 import { OnboardingSaveErrorBar } from '@/src/components/onboarding/OnboardingSaveErrorBar';
 import { useOnboardingWallPlacement } from '@/src/hooks/useOnboardingWallPlacement';
 import { useOnboardingWallPreferences } from '@/src/hooks/useOnboardingWallPreferences';
+import { preferencesQueryKey } from '@/src/hooks/queries/usePreferences';
+import type { Preferences } from '@/src/hooks/queries/usePreferences';
 import { useAuthStore } from '@/src/store/authStore';
 import { toValidGenres } from '@/src/utils/onboardingWallGenres';
 import { supabase } from '@/src/utils/supabase';
 
 export default function PreferencesScreen() {
 	const router = useRouter();
+	const queryClient = useQueryClient();
 	const userId = useAuthStore((s) => s.user?.id);
 	const [saving, setSaving] = useState(false);
 	const [errorCount, setErrorCount] = useState(0);
@@ -46,9 +50,14 @@ export default function PreferencesScreen() {
 			return;
 		}
 
+		queryClient.setQueryData(preferencesQueryKey(userId), (current: Preferences | undefined) => ({
+			preferredGenres: genres,
+			preferredArtists: current?.preferredArtists ?? [],
+		}));
+		void queryClient.invalidateQueries({ queryKey: ['exhibitions', 'recommended'] });
 		setSaving(false);
 		router.back();
-	}, [userId, saving, selectedGenres, wall.pieceIds, router]);
+	}, [userId, saving, selectedGenres, wall.pieceIds, queryClient, router]);
 
 	const handleSkipWithoutSave = useCallback(() => {
 		router.back();
@@ -71,11 +80,19 @@ export default function PreferencesScreen() {
 						Alert.alert('지우기 실패', '잠시 후 다시 시도해 주세요.');
 						return;
 					}
+					queryClient.setQueryData(
+						preferencesQueryKey(userId),
+						(current: Preferences | undefined) => ({
+							preferredGenres: [],
+							preferredArtists: current?.preferredArtists ?? [],
+						}),
+					);
+					void queryClient.invalidateQueries({ queryKey: ['exhibitions', 'recommended'] });
 					initializeWall([]);
 				},
 			},
 		]);
-	}, [userId, initializeWall]);
+	}, [userId, initializeWall, queryClient]);
 
 	if (preferences.status === 'error') {
 		return (

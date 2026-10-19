@@ -77,6 +77,7 @@ export default function ExploreScreen() {
 	const departuresStatus = toAsyncStatus(cultureQuery.isLoading || kcisaQuery.isLoading, false);
 
 	const openExhibition = useCallback((id: string) => router.push(`/(explore)/${id}`), [router]);
+	const openRecommendations = useCallback(() => router.push('/recommendations'), [router]);
 
 	const handleDocentPress = () => {
 		// 프리미엄 여부를 아직 모르는 동안에는 구독자를 결제 화면으로 보내지 않는다.
@@ -150,6 +151,7 @@ export default function ExploreScreen() {
 						title={name ? `${name}님의 취향 저격!` : '취향 맞춤 추천'}
 						items={homeRecommended}
 						onPress={openExhibition}
+						onSeeAll={openRecommendations}
 					/>
 				)}
 			</ScrollView>
