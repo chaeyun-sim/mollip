@@ -1,6 +1,6 @@
 const { readFileSync } = require('fs');
 const { resolve } = require('path');
-const { withInfoPlist } = require('@expo/config-plugins');
+const { withInfoPlist, withPodfile } = require('@expo/config-plugins');
 
 // .env 파일을 prebuild 시에도 로드
 try {
@@ -147,6 +147,21 @@ module.exports = {
 					project: process.env.EXPO_PUBLIC_SENTRY_PROJECT_SLUG,
 				},
 			],
+			(config) =>
+				withPodfile(config, (c) => {
+					const marker = 'post_install do |installer|\n';
+					if (
+						!c.modResults.contents.includes(
+							"build_settings['CLANG_CXX_LANGUAGE_STANDARD'] = 'c++20'",
+						)
+					) {
+						c.modResults.contents = c.modResults.contents.replace(
+							marker,
+							`${marker}    # React Native 0.85 headers use std::shared_mutex in Expo pods too.\n    installer.pods_project.targets.each do |target|\n      target.build_configurations.each do |build_configuration|\n        build_configuration.build_settings['CLANG_CXX_LANGUAGE_STANDARD'] = 'c++20'\n      end\n    end\n`,
+						);
+					}
+					return c;
+				}),
 			// NMFClientId를 마지막에 강제 주입 (다른 플러그인이 덮어쓰는 것 방지)
 			(config) =>
 				withInfoPlist(config, (c) => {
