@@ -6,7 +6,7 @@
  *  Authorization 헤더에 SERVICE_ROLE_KEY 입력)
  *
  * 직접 발송하지 않고 notification_jobs 큐에 1분 뒤 작업으로 넣는다.
- * 실제 발송(category별 notification_prefs 확인 포함)은 process-notification-jobs가 처리한다.
+ * 실제 발송은 process-notification-jobs가 처리한다.
  * DB 트리거(enqueue_notice_notification)와 dedupe_key가 같아 중복 작업은 생기지 않는다.
  */
 

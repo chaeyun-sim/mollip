@@ -46,10 +46,8 @@ const buildNoticeRecords = async (
 ): Promise<NotificationRecord[]> => {
 	const profiles = await profilesWithTokens(supabase);
 	const category = String(payload.category ?? 'general');
-	const prefKey = category === 'version_update' || category === 'terms_update' ? category : null;
 
 	return profiles.flatMap((profile) => {
-		if (prefKey && profile.notification_prefs?.[prefKey] === false) return [];
 		if (!isExpoToken(profile.push_token)) return [];
 		return [
 			{
