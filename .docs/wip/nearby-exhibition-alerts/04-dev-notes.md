@@ -50,3 +50,11 @@ status: in-progress
 
 - Added `expo-task-manager`; the iOS app must be rebuilt after installing the module and enabling background location. Android background location permission is enabled in the Expo location plugin.
 - iOS monitors at most 20 regions. Android force-quit behavior and device-vendor background restrictions need physical-device verification.
+
+## AC-8 — 이동 중 지역 갱신 (2026-10-19)
+
+- 등록할 때마다 현재 위치 중심 반경 5km 경계 지역(`nearby-exhibition-boundary`, 이탈만 감지)을 함께 등록한다. 장소 지역은 19개로 줄여 OS 20개 제한을 지킨다.
+- 근처에 장소가 없어도 경계 지역은 등록한다(예전에는 지오펜싱을 멈췄음).
+- 활성화·포그라운드 갱신 때 진행 중 전시 장소 목록을 AsyncStorage(`@mollip/nearby-exhibition/venues`)에 저장한다. 비활성화·로그아웃 시 삭제한다.
+- 경계 이탈 이벤트는 알림을 만들지 않는다. 권한 재확인 → 마지막 위치(30초 이내) 또는 현재 위치(10초 제한, 실패 시 기존 지역 유지) → 캐시에서 종료된 전시 제외 → 큐 안에서 활성 여부 재확인 후 재등록한다. 네트워크를 쓰지 않는다.
+- 순수 로직: `filterActiveVenues`, `buildNearbyGeofences` (`src/utils/nearbyExhibitionAlertPolicy.ts`)

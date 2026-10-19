@@ -7,6 +7,11 @@ export const NEARBY_ALERT_COOLDOWN_MS = 14 * 24 * 60 * 60 * 1000;
 export const NEARBY_ALERT_DAILY_LIMIT_MS = 24 * 60 * 60 * 1000;
 export const NEARBY_ALERT_WEEK_MS = 7 * 24 * 60 * 60 * 1000;
 export const NEARBY_ALERT_RECENT_USE_MS = 60 * 60 * 1000;
+/** 등록 시점 위치를 감싸는 경계 지역 — 벗어나면 백그라운드에서 가까운 지역을 다시 등록한다 */
+export const NEARBY_ALERT_BOUNDARY_ID = 'nearby-exhibition-boundary';
+export const NEARBY_ALERT_BOUNDARY_RADIUS_METERS = 5000;
+/** OS 지역 제한(iOS 20개) 중 1개는 경계 지역 몫 */
+export const NEARBY_ALERT_MAX_VENUE_REGIONS = NEARBY_ALERT_MAX_REGIONS - 1;
 
 export interface NearbyExhibitionCandidate {
 	id: string;
@@ -57,6 +62,55 @@ export const isExhibitionActive = (startDate: string, endDate: string, now: Date
 	end.setHours(23, 59, 59, 999);
 	return now >= start && now <= end;
 };
+
+export interface NearbyGeofence {
+	identifier: string;
+	latitude: number;
+	longitude: number;
+	radius: number;
+	notifyOnEnter: boolean;
+	notifyOnExit: boolean;
+}
+
+/** 기기에 캐시한 장소 목록에서 지금 진행 중인 전시만 남기고, 남은 전시가 없는 장소는 뺀다. */
+export const filterActiveVenues = (
+	venues: NearbyExhibitionVenue[],
+	now: Date,
+): NearbyExhibitionVenue[] =>
+	venues
+		.map((venue) => ({
+			...venue,
+			exhibitions: venue.exhibitions.filter((item) =>
+				isExhibitionActive(item.startDate, item.endDate, now),
+			),
+		}))
+		.filter((venue) => venue.exhibitions.length > 0);
+
+/**
+ * OS에 등록할 지오펜스 목록 — 장소 지역(진입·이탈) + 현재 위치 중심 경계 지역(이탈만).
+ * 근처에 장소가 없어도 경계 지역은 등록해, 전시가 있는 곳으로 이동하면 다시 등록할 수 있게 한다.
+ */
+export const buildNearbyGeofences = (
+	regions: NearbyAlertRegion[],
+	origin: { latitude: number; longitude: number },
+): NearbyGeofence[] => [
+	...regions.slice(0, NEARBY_ALERT_MAX_VENUE_REGIONS).map((region) => ({
+		identifier: region.identifier,
+		latitude: region.latitude,
+		longitude: region.longitude,
+		radius: NEARBY_ALERT_RADIUS_METERS,
+		notifyOnEnter: true,
+		notifyOnExit: true,
+	})),
+	{
+		identifier: NEARBY_ALERT_BOUNDARY_ID,
+		latitude: origin.latitude,
+		longitude: origin.longitude,
+		radius: NEARBY_ALERT_BOUNDARY_RADIUS_METERS,
+		notifyOnEnter: false,
+		notifyOnExit: true,
+	},
+];
 
 export const selectNearbyAlertRegions = (
 	venues: NearbyExhibitionVenue[],

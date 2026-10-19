@@ -4,9 +4,12 @@ import * as Notifications from 'expo-notifications';
 import * as TaskManager from 'expo-task-manager';
 import { AppState, Platform } from 'react-native';
 import {
-	NEARBY_ALERT_MAX_REGIONS,
+	NEARBY_ALERT_BOUNDARY_ID,
+	NEARBY_ALERT_MAX_VENUE_REGIONS,
 	NEARBY_ALERT_RADIUS_METERS,
+	buildNearbyGeofences,
 	canSendNearbyExhibitionAlert,
+	filterActiveVenues,
 	isExhibitionActive,
 	selectNearbyAlertRegions,
 	type NearbyAlertDelivery,
@@ -23,6 +26,11 @@ const REGIONS_KEY = '@mollip/nearby-exhibition/regions';
 const ARMED_KEY = '@mollip/nearby-exhibition/armed-regions';
 const DELIVERIES_KEY = '@mollip/nearby-exhibition/deliveries';
 const LAST_FOREGROUND_KEY = '@mollip/nearby-exhibition/last-foreground';
+// 경계 이탈 시 백그라운드에서 네트워크 없이 재등록하도록, 마지막으로 받은 진행 중 전시 장소 목록을 기기에 둔다.
+const VENUES_KEY = '@mollip/nearby-exhibition/venues';
+// 이탈 전(옛 경계 안) 위치를 중심으로 다시 잡지 않도록 짧게 두고, iOS 백그라운드 실행 시간 안에 끝나도록 새 위치 조회에 제한을 둔다.
+const BACKGROUND_LOCATION_MAX_AGE_MS = 30 * 1000;
+const BACKGROUND_LOCATION_TIMEOUT_MS = 10 * 1000;
 const MAX_CACHED_DELIVERIES = 60;
 const REGION_REFRESH_DISTANCE_KM = 20;
 
@@ -177,6 +185,7 @@ export const enableNearbyExhibitionAlerts = async (): Promise<void> =>
 				latitude: location.coords.latitude,
 				longitude: location.coords.longitude,
 			});
+			await writeJson(VENUES_KEY, venues);
 			await AsyncStorage.setItem(ENABLED_KEY, 'true');
 		} catch (error) {
 			if (await Location.hasStartedGeofencingAsync(TASK_NAME)) {
@@ -186,6 +195,7 @@ export const enableNearbyExhibitionAlerts = async (): Promise<void> =>
 				AsyncStorage.setItem(ENABLED_KEY, 'false'),
 				AsyncStorage.removeItem(REGIONS_KEY),
 				AsyncStorage.removeItem(ARMED_KEY),
+				AsyncStorage.removeItem(VENUES_KEY),
 			]);
 			throw error;
 		}
@@ -202,7 +212,11 @@ export const disableNearbyExhibitionAlerts = async (): Promise<void> =>
 		} catch (error) {
 			stopError = error;
 		}
-		await Promise.all([AsyncStorage.removeItem(REGIONS_KEY), AsyncStorage.removeItem(ARMED_KEY)]);
+		await Promise.all([
+			AsyncStorage.removeItem(REGIONS_KEY),
+			AsyncStorage.removeItem(ARMED_KEY),
+			AsyncStorage.removeItem(VENUES_KEY),
+		]);
 		if (stopError) throw stopError;
 	});
 
@@ -213,7 +227,7 @@ const registerRegions = async (
 	const nextRegions = selectNearbyAlertRegions(
 		venues,
 		origin,
-		NEARBY_ALERT_MAX_REGIONS,
+		NEARBY_ALERT_MAX_VENUE_REGIONS,
 		REGION_REFRESH_DISTANCE_KM,
 	) as StoredRegion[];
 	const previousRegions = await readJson<StoredRegion[]>(REGIONS_KEY, []);
@@ -236,23 +250,8 @@ const registerRegions = async (
 	await writeJson(REGIONS_KEY, nextRegions);
 	await writeJson(ARMED_KEY, nextArmed);
 	try {
-		if (nextRegions.length === 0) {
-			if (await Location.hasStartedGeofencingAsync(TASK_NAME)) {
-				await Location.stopGeofencingAsync(TASK_NAME);
-			}
-			return;
-		}
-		await Location.startGeofencingAsync(
-			TASK_NAME,
-			nextRegions.map((region) => ({
-				identifier: region.identifier,
-				latitude: region.latitude,
-				longitude: region.longitude,
-				radius: NEARBY_ALERT_RADIUS_METERS,
-				notifyOnEnter: true,
-				notifyOnExit: true,
-			})),
-		);
+		// 근처 장소가 없어도 경계 지역은 등록해 이동 후 다시 등록할 수 있게 한다.
+		await Location.startGeofencingAsync(TASK_NAME, buildNearbyGeofences(nextRegions, origin));
 	} catch (error) {
 		await writeJson(REGIONS_KEY, previousRegions);
 		await writeJson(ARMED_KEY, previousArmed);
@@ -294,10 +293,44 @@ export const refreshNearbyExhibitionGeofences = async (): Promise<void> => {
 				latitude: location.coords.latitude,
 				longitude: location.coords.longitude,
 			});
+			await writeJson(VENUES_KEY, venues);
 		});
 	} catch (error) {
 		console.warn('[nearby-alert] 지역 갱신 실패:', error instanceof Error ? error.message : error);
 	}
+};
+
+/** 경계 지역을 벗어났을 때(백그라운드) — 캐시한 장소 목록과 현재 위치로 가까운 지역을 다시 등록한다. */
+const refreshFromBoundaryExit = async (): Promise<void> => {
+	if (!(await isNearbyExhibitionAlertEnabled())) return;
+	if (!(await hasNearbyAlertPermissions())) {
+		await disableNearbyExhibitionAlerts();
+		return;
+	}
+	// 위치를 못 얻으면 예외로 끝내 기존 지역을 그대로 두고, 다음 앱 실행 때 갱신한다.
+	const location =
+		(await Location.getLastKnownPositionAsync({ maxAge: BACKGROUND_LOCATION_MAX_AGE_MS })) ??
+		(await new Promise<Location.LocationObject>((resolve, reject) => {
+			const timer = setTimeout(
+				() => reject(new Error('background location timeout')),
+				BACKGROUND_LOCATION_TIMEOUT_MS,
+			);
+			Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Balanced })
+				.then(resolve, reject)
+				.finally(() => clearTimeout(timer));
+		}));
+	const venues = filterActiveVenues(
+		await readJson<NearbyExhibitionVenue[]>(VENUES_KEY, []),
+		new Date(),
+	);
+	await withQueue(async () => {
+		// 위치 조회 중에 비활성화·로그아웃되었으면 다시 등록하지 않는다.
+		if (!(await isNearbyExhibitionAlertEnabled())) return;
+		await registerRegions(venues, {
+			latitude: location.coords.latitude,
+			longitude: location.coords.longitude,
+		});
+	});
 };
 
 export const markNearbyAlertForeground = async (): Promise<void> => {
@@ -370,6 +403,11 @@ TaskManager.defineTask<GeofencingTaskData>(TASK_NAME, async ({ data, error }) =>
 	if (error || !data?.region?.identifier) return;
 	const regionIdentifier = data.region.identifier;
 	try {
+		// 경계 지역은 알림을 만들지 않고, 벗어날 때 지역 재등록만 한다.
+		if (regionIdentifier === NEARBY_ALERT_BOUNDARY_ID) {
+			if (data.eventType === Location.GeofencingEventType.Exit) await refreshFromBoundaryExit();
+			return;
+		}
 		const shouldDeliver = await withQueue(async () => {
 			const armed = await readJson<Record<string, boolean>>(ARMED_KEY, {});
 			if (data.eventType === Location.GeofencingEventType.Exit) {
