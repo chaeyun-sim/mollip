@@ -24,25 +24,37 @@ interface ExhibitionRow {
 	genre: string | null;
 }
 
-function buildRecords(profiles: ProfileRow[], exhibitions: ExhibitionRow[]): NotificationRecord[] {
+function buildRecords(
+	profiles: ProfileRow[],
+	exhibitions: ExhibitionRow[],
+	weekIndex: number,
+): NotificationRecord[] {
 	return profiles.flatMap((profile) => {
 		if (profile.notification_prefs?.weekly_recommendation === false) return [];
 		if (!profile.push_token.startsWith('ExponentPushToken')) return [];
 
 		const genres = profile.preferred_genres;
-		let picks: ExhibitionRow[];
-
-		if (genres.length > 0) {
-			picks = exhibitions.filter((e) => e.genre && genres.includes(e.genre)).slice(0, 3);
-			// 매칭 부족하면 비매칭으로 채움
-			if (picks.length < 3) {
-				const matched = new Set(picks.map((e) => String(e.id)));
-				const rest = exhibitions.filter((e) => !matched.has(String(e.id)));
-				picks = [...picks, ...rest].slice(0, 3);
-			}
-		} else {
-			picks = exhibitions.slice(0, 3);
-		}
+		const matched = exhibitions.filter(
+			(exhibition) => exhibition.genre && genres.includes(exhibition.genre),
+		);
+		const matchedIds = new Set(matched.map((exhibition) => String(exhibition.id)));
+		const rest = exhibitions.filter((exhibition) => !matchedIds.has(String(exhibition.id)));
+		const profileOffset = [...profile.id].reduce(
+			(sum, character) => sum + character.charCodeAt(0),
+			0,
+		);
+		// 주차·프로필마다 시작 위치를 바꿔 매주 같은 전시만 보내지 않는다.
+		const rotate = (list: ExhibitionRow[], count: number) => {
+			if (list.length === 0 || count <= 0) return [];
+			const startIndex = (weekIndex * 3 + profileOffset) % list.length;
+			return Array.from(
+				{ length: Math.min(count, list.length) },
+				(_, index) => list[(startIndex + index) % list.length],
+			);
+		};
+		// 장르 매칭이 3개 이상이면 매칭 안에서만 순환하고, 부족할 때만 비매칭으로 채운다.
+		const picks =
+			matched.length >= 3 ? rotate(matched, 3) : [...matched, ...rotate(rest, 3 - matched.length)];
 
 		if (picks.length === 0) return [];
 
@@ -100,7 +112,8 @@ Deno.serve(async (req) => {
 		return new Response(JSON.stringify({ sent: 0, reason: exErr?.message ?? 'no exhibitions' }));
 	}
 
-	const records = buildRecords(profiles as ProfileRow[], exhibitions as ExhibitionRow[]);
+	const weekIndex = Math.floor(Date.now() / (7 * 24 * 60 * 60 * 1000));
+	const records = buildRecords(profiles as ProfileRow[], exhibitions as ExhibitionRow[], weekIndex);
 	const sent = await sendAndLog(supabase, records);
 
 	return new Response(JSON.stringify({ sent }), {
