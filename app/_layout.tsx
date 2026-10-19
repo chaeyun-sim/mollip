@@ -310,19 +310,32 @@ function RootLayout() {
 		void SplashScreen.hideAsync();
 	};
 
-	// 알림 탭 딥링크 처리
+	// 알림 탭 딥링크 처리 — 부트스트랩(폰트·온보딩·몰입 복원 replace)이 끝난 뒤에만 이동한다.
+	const bootReady = !bootCovered;
+	const handledResponsesRef = useRef(new Set<string>());
 	useEffect(() => {
+		if (!bootReady) return;
 		let sub: ReturnType<typeof Notifications.addNotificationResponseReceivedListener>;
 		try {
-			sub = Notifications.addNotificationResponseReceivedListener((response) => {
+			const handleNotificationResponse = (response: Notifications.NotificationResponse) => {
+				const identifier = response.notification.request.identifier;
+				if (handledResponsesRef.current.has(identifier)) return;
+				handledResponsesRef.current.add(identifier);
 				const data = response.notification.request.content.data as Record<string, unknown>;
 				void navigateToNotification(router, data);
+			};
+			sub = Notifications.addNotificationResponseReceivedListener(handleNotificationResponse);
+			// 앱이 종료된 상태에서 알림을 탭해 실행된 경우
+			void Notifications.getLastNotificationResponseAsync().then((response) => {
+				if (!response) return;
+				handleNotificationResponse(response);
+				void Notifications.clearLastNotificationResponseAsync();
 			});
 		} catch {
 			// 네이티브 모듈 미빌드 환경에서 무시
 		}
 		return () => sub?.remove();
-	}, [router]);
+	}, [bootReady, router]);
 
 	// 지도 탭 마커 이미지를 앱 시작 시점에 미리 캐싱 — 미리 로드하지 않으면 지도 진입 직후
 	// 첫 마커가 잠깐 네이버 지도 SDK 기본(초록) 핀으로 보였다가 커스텀 이미지로 바뀐다.
