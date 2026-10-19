@@ -32,7 +32,7 @@ async function fetchPreferences(userId: string): Promise<Preferences> {
 	};
 }
 
-export function usePreferences(userId: string | undefined): Preferences {
+export function usePreferences(userId: string | undefined): Preferences & { isLoading: boolean } {
 	const query = useQuery({
 		queryKey: preferencesQueryKey(userId ?? ''),
 		queryFn: () => {
@@ -44,5 +44,6 @@ export function usePreferences(userId: string | undefined): Preferences {
 		retry: 1,
 	});
 
-	return query.data ?? EMPTY_PREFERENCES;
+	// isLoading: 첫 조회 중 — 이 동안의 빈 장르 목록은 "취향 없음"이 아니다.
+	return { ...(query.data ?? EMPTY_PREFERENCES), isLoading: query.isLoading };
 }

@@ -18,7 +18,7 @@ export default function RecommendationsScreen() {
 	const insets = useSafeAreaInsets();
 	const { width: windowWidth } = useWindowDimensions();
 	const userId = useAuthStore((state) => state.user?.id);
-	const { preferredGenres } = usePreferences(userId);
+	const { preferredGenres, isLoading: preferencesLoading } = usePreferences(userId);
 	const { data, isLoading, isError, refetch } = useRecommendedExhibitions(
 		preferredGenres,
 		preferredGenres.length > 0,
@@ -64,7 +64,7 @@ export default function RecommendationsScreen() {
 				)}
 				ListEmptyComponent={
 					<RecommendationsEmptyState
-						isLoading={isLoading}
+						isLoading={preferencesLoading || isLoading}
 						isError={isError}
 						hasPreferredGenres={preferredGenres.length > 0}
 						cardWidth={cardWidth}
