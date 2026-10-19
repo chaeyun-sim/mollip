@@ -9,6 +9,7 @@ import { useHistoryStore } from './historyStore';
 import { useChatStore } from './chatStore';
 import { useImmersiveStore } from './immersiveStore';
 import { useVisitStore } from './visitStore';
+import { disableNearbyExhibitionAlerts } from '@/src/services/nearbyExhibitionAlerts';
 
 type AuthStore = {
 	session: Session | null;
@@ -45,6 +46,9 @@ export const useAuthStore = create<AuthStore>((set) => ({
 	signOut: async () => {
 		const { error } = await supabase.auth.signOut();
 		if (error) throw error;
+		await disableNearbyExhibitionAlerts().catch((disableError) => {
+			console.warn('[nearby-alert] 로그아웃 후 지오펜스 정리 실패:', disableError);
+		});
 		// 로컬 유저 데이터 초기화 (다른 사용자 데이터 노출 방지)
 		useBookmarkStore.setState({ ids: [] });
 		useBookmarkAudioStore.setState({ ids: [] });

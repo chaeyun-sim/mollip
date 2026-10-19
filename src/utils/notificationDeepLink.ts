@@ -43,6 +43,21 @@ export async function navigateToNotification(
 		return;
 	}
 
+	if (
+		type === 'nearby_exhibition' &&
+		typeof data?.venueName === 'string' &&
+		typeof data?.latitude === 'number' &&
+		typeof data?.longitude === 'number'
+	) {
+		useMapStore.getState().setPendingCamera({
+			venueName: data.venueName,
+			latitude: data.latitude,
+			longitude: data.longitude,
+		});
+		router.push('/(tabs)/map');
+		return;
+	}
+
 	const exhibitionId = data?.exhibitionId;
 	if (typeof exhibitionId === 'string' && exhibitionId) {
 		router.push(`/(explore)/${exhibitionId}`);

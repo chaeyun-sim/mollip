@@ -115,6 +115,18 @@ module.exports = {
 			'expo-font',
 			'expo-image',
 			[
+				'expo-location',
+				{
+					locationWhenInUsePermission: '지도에서 내 주변 전시관을 찾기 위해 위치를 사용합니다.',
+					locationAlwaysAndWhenInUsePermission:
+						'근처 전시 알림을 켠 경우, 주변 전시에 도착했을 때 알려드리기 위해 위치를 사용합니다. 이동 경로는 저장하거나 전송하지 않습니다.',
+					locationAlwaysPermission:
+						'근처 전시 알림을 켠 경우, 주변 전시에 도착했을 때 알려드리기 위해 위치를 사용합니다. 이동 경로는 저장하거나 전송하지 않습니다.',
+					isIosBackgroundLocationEnabled: true,
+					isAndroidBackgroundLocationEnabled: true,
+				},
+			],
+			[
 				'expo-splash-screen',
 				{
 					backgroundColor: '#F8F6F2',

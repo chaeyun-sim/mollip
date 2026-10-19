@@ -63,6 +63,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { TTS_CACHE_PROBE_RUN_KEY, runTtsCacheProbe } from '../src/utils/runTtsCacheProbe';
 import { Observe, ObserveRoot } from 'expo-observe';
 import { supabase } from '@/src/utils/supabase';
+import {
+	markNearbyAlertForeground,
+	refreshNearbyExhibitionGeofences,
+} from '@/src/services/nearbyExhibitionAlerts';
 
 // 렌더링 중 처리되지 않은 예외를 흰 화면/크래시 대신 이 화면으로 잡는다 (웹의 500 페이지에 해당).
 export function ErrorBoundary({ error, retry }: ErrorBoundaryProps) {
@@ -263,6 +267,20 @@ function RootLayout() {
 	}, [authLoading, user?.id]);
 	const { blocked: forceUpdateBlocked, storeUrl: forceUpdateStoreUrl } = useForceUpdate();
 	usePushNotifications(user?.id);
+	useEffect(() => {
+		const onForeground = () => {
+			void markNearbyAlertForeground();
+			void refreshNearbyExhibitionGeofences();
+		};
+		// 지오펜스 이벤트로 백그라운드 실행된 경우는 사용 시각으로 기록하지 않는다.
+		if (AppState.currentState === 'active') onForeground();
+		const subscription = AppState.addEventListener('change', (state) => {
+			if (state === 'active') onForeground();
+			// 앱을 떠나는 시점도 마지막 사용 시각으로 기록해 1시간 억제 기준으로 쓴다.
+			if (state === 'background') void markNearbyAlertForeground();
+		});
+		return () => subscription.remove();
+	}, []);
 	useEffect(() => {
 		void cancelAllDeadlineNotifications();
 	}, []);
