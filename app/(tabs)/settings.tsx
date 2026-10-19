@@ -102,7 +102,7 @@ export default function MyPageScreen() {
 								style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
 								className="flex-row items-center gap-3.5 mt-3 rounded-2xl bg-brand px-4 py-3.5 shadow-gray900 elevation-[2px]"
 							>
-								<View className="w-12 h-12 rounded-full bg-brand-on-dark items-center justify-center">
+								<View className="w-10 h-10 rounded-full bg-brand-on-dark items-center justify-center">
 									<Text className="font-pretendard-semibold text-ink text-[18px]">
 										{user?.email?.charAt(0).toUpperCase()}
 									</Text>
@@ -112,9 +112,6 @@ export default function MyPageScreen() {
 										{isPremium
 											? `✨${user?.email?.split('@')[0]}님✨`
 											: `${user?.email?.split('@')[0]}님`}
-									</Text>
-									<Text className="font-pretendard-regular text-on-dark text-[13px] mt-0.5">
-										{user?.app_metadata?.provider === 'kakao' ? '카카오 계정' : 'Apple 계정'}
 									</Text>
 								</View>
 								<Ionicons name="chevron-forward" size={18} className="text-white" />

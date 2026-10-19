@@ -59,6 +59,7 @@ export function BookmarkedExhibitionList() {
 				illustration={<BookmarkEmptyIllustration />}
 				title="관심 있는 전시가 없어요"
 				description={'전시를 탐색하고 북마크해보세요'}
+				className="mb-20"
 			/>
 		);
 	}

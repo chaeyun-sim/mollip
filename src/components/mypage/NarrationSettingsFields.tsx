@@ -5,7 +5,6 @@ import { useEffect, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 
 import { CardRow } from '@/src/components/mypage/CardRow';
-import { SettingsCard } from '@/src/components/mypage/SettingsCard';
 import { DESCRIPTION_LENGTH_OPTIONS, FONT_SIZE_OPTIONS, SPEED_OPTIONS } from '@/src/data/mypage';
 import type { Voice } from '@/src/hooks/useTTS';
 import { cn } from '@/src/lib/cn';
@@ -103,7 +102,7 @@ export function NarrationSettingsFields({ theme = 'light' }: NarrationSettingsFi
 	}
 
 	return (
-		<SettingsCard>
+		<View>
 			<CardRow label={LABEL_SPEED} className="py-3.5">
 				<SettingPills options={SPEED_OPTIONS} value={voiceSpeed} onPress={setVoiceSpeed} />
 			</CardRow>
@@ -123,7 +122,7 @@ export function NarrationSettingsFields({ theme = 'light' }: NarrationSettingsFi
 			<CardRow label={LABEL_FONT_SIZE} className="py-3.5">
 				<SettingPills options={FONT_SIZE_OPTIONS} value={fontSize} onPress={setFontSize} />
 			</CardRow>
-		</SettingsCard>
+		</View>
 	);
 }
 
@@ -139,7 +138,7 @@ function SettingPills<T extends string | number>({
 	onPress,
 }: SettingPillsProps<T>) {
 	return (
-		<View className="flex-row gap-1.5 items-center absolute right-0">
+		<View className="shrink-0 flex-row items-center gap-1.5">
 			{options.map((opt) => {
 				const selected = value === opt.value;
 				return (
@@ -156,7 +155,7 @@ function SettingPills<T extends string | number>({
 							transform: [{ scale: pressed ? 0.93 : 1 }],
 						})}
 						className={cn(
-							'px-3 py-1.5 rounded-full',
+							'px-2 py-1.5 rounded-full',
 							selected ? 'bg-brand border-2 border-brand' : 'border border-[rgba(28,25,23,0.15)]',
 						)}
 					>
