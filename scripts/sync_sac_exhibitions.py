@@ -9,7 +9,14 @@ import sys
 import urllib.parse
 import urllib.request
 
-from exhibition_sync_filters import END_DATE_MIN, clean_exhibition_text, end_date_eligible, venue_sync_allowed
+from exhibition_sync_filters import (
+    SYNC_END_DATE_MIN,
+    SYNC_TODAY,
+    clean_exhibition_text,
+    new_exhibition_end_date_eligible,
+    postgrest_in_list,
+    venue_sync_allowed,
+)
 from ensure_museums import ensure_museums_from_exhibitions
 from fill_museum_details import fill_empty_museum_fields
 
@@ -66,7 +73,7 @@ def fetch_exhibitions(api_key: str) -> list[dict]:
             sy, sm, sd, ey, em, ed = m.groups()
             start_date = f"{sy}.{sm}.{sd}"
             end_date = f"{ey}.{em}.{ed}"
-            if not end_date_eligible(end_date):
+            if not new_exhibition_end_date_eligible(end_date):
                 skipped_end += 1
                 continue
             venue = (
@@ -102,7 +109,7 @@ def fetch_exhibitions(api_key: str) -> list[dict]:
         page_no += 1
     if skipped_end or skipped_venue:
         print(
-            f"filtered out: end_date<{END_DATE_MIN} → {skipped_end}, venue blocklist → {skipped_venue}",
+            f"filtered out: end_date<{SYNC_END_DATE_MIN} → {skipped_end}, venue blocklist → {skipped_venue}",
             file=sys.stderr,
         )
     return out
@@ -124,6 +131,19 @@ def sb_request(method: str, path: str, base: str, key: str, body=None, prefer: s
         return resp.status
 
 
+def prune_existing_exhibitions(source: str, rows: list[dict], base: str, key: str) -> None:
+    """다시 적재할 기존 전시를 지운다. 오늘·내일 끝나는 전시는 남기되(새로 적재만 하지 않음),
+    이미 끝났거나 종료일이 없는 전시, 연장되어 같은 제목으로 새로 들어오는 전시는 지운다."""
+    prefix = f"/rest/v1/exhibitions?source=eq.{source}"
+    sb_request("DELETE", f"{prefix}&end_date=gte.{SYNC_END_DATE_MIN}", base, key)
+    sb_request("DELETE", f"{prefix}&end_date=lt.{SYNC_TODAY}", base, key)
+    sb_request("DELETE", f"{prefix}&end_date=is.null", base, key)
+    titles = sorted({row["title"] for row in rows})
+    for i in range(0, len(titles), 20):
+        in_list = urllib.parse.quote(postgrest_in_list(titles[i : i + 20]), safe="")
+        sb_request("DELETE", f"{prefix}&end_date=lt.{SYNC_END_DATE_MIN}&title=in.{in_list}", base, key)
+
+
 INSERT_PATH = "/rest/v1/exhibitions?on_conflict=title,start_date,end_date"
 INSERT_PREFER = "resolution=merge-duplicates,return=minimal"
 
@@ -141,9 +161,9 @@ def main() -> None:
         sys.exit(1)
 
     rows = fetch_exhibitions(api_key)
-    print(f"fetched {len(rows)} exhibitions (GENRE=전시, end_date >= {END_DATE_MIN}, venue filter, deduped)")
+    print(f"fetched {len(rows)} exhibitions (GENRE=전시, end_date >= {SYNC_END_DATE_MIN}, venue filter, deduped)")
 
-    sb_request("DELETE", "/rest/v1/exhibitions?source=eq.sac", sb_url, sb_key)
+    prune_existing_exhibitions("sac", rows, sb_url, sb_key)
     inserted = 0
     skipped_conflict = 0
     batch = 100

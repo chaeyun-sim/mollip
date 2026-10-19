@@ -11,8 +11,9 @@ import urllib.request
 
 from exhibition_sync_filters import (
     END_DATE_MIN,
+    SYNC_END_DATE_MIN,
     clean_exhibition_text,
-    end_date_eligible,
+    new_exhibition_end_date_eligible,
     title_key,
     venue_sync_allowed,
 )
@@ -102,7 +103,7 @@ def fetch_exhibitions(api_key: str) -> tuple[list[dict], dict[str, tuple[str, st
             if len(sd) != 8 or len(ed) != 8:
                 continue
             end_date = f"{ed[:4]}.{ed[4:6]}.{ed[6:8]}"
-            if not end_date_eligible(end_date):
+            if not new_exhibition_end_date_eligible(end_date):
                 skipped_end += 1
                 continue
             place = clean_exhibition_text(tag(b, "place") or "")
@@ -142,7 +143,7 @@ def fetch_exhibitions(api_key: str) -> tuple[list[dict], dict[str, tuple[str, st
     print(f"period2 pages={pages} totalCount={total or '?'}", file=sys.stderr)
     if skipped_end or skipped_venue:
         print(
-            f"filtered out: end_date<{END_DATE_MIN} → {skipped_end}, venue blocklist → {skipped_venue}",
+            f"filtered out: end_date<{SYNC_END_DATE_MIN} → {skipped_end}, venue blocklist → {skipped_venue}",
             file=sys.stderr,
         )
     return out, venue_gps
@@ -274,7 +275,7 @@ def main() -> None:
     taken = existing_title_keys(sb_url, sb_key)
     rows, skipped_existing = drop_known_titles(rows, taken)
     print(
-        f"fetched {len(rows)} exhibitions (serviceName=전시, end_date >= {END_DATE_MIN}, "
+        f"fetched {len(rows)} exhibitions (serviceName=전시, end_date >= {SYNC_END_DATE_MIN}, "
         f"deduped by title, skipped existing names {skipped_existing})"
     )
 

@@ -3,9 +3,13 @@ from __future__ import annotations
 
 import html
 import re
+from datetime import datetime, timedelta, timezone
 
 # 2026-09-01(9월 포함) 이전에 종료한 전시는 적재하지 않음. end_date >= 이 값만.
 END_DATE_MIN = "2026.09.01"
+SEOUL_TZ = timezone(timedelta(hours=9))
+SYNC_TODAY = datetime.now(SEOUL_TZ).date().strftime("%Y.%m.%d")
+SYNC_END_DATE_MIN = (datetime.now(SEOUL_TZ).date() + timedelta(days=2)).strftime("%Y.%m.%d")
 
 VENUE_EXACT_BLOCKLIST: frozenset[str] = frozenset(
     {
@@ -81,6 +85,22 @@ def end_date_eligible(end_date: str) -> bool:
     if len(end_date) != 10 or end_date[4] != "." or end_date[7] != ".":
         return False
     return end_date >= END_DATE_MIN
+
+
+def new_exhibition_end_date_eligible(end_date: str) -> bool:
+    """Sync only exhibitions ending after tomorrow in Korea Standard Time."""
+    if len(end_date) != 10 or end_date[4] != "." or end_date[7] != ".":
+        return False
+    return end_date >= SYNC_END_DATE_MIN
+
+
+def postgrest_in_list(values: list[str]) -> str:
+    """PostgREST `in.(...)` 값 목록 — 쉼표·괄호가 든 제목도 안전하도록 큰따옴표로 감싼다."""
+    quoted = []
+    for value in values:
+        escaped = value.replace("\\", "\\\\").replace('"', '\\"')
+        quoted.append(f'"{escaped}"')
+    return f"({','.join(quoted)})"
 
 
 def venue_sync_allowed(venue: str, title: str = "") -> bool:
