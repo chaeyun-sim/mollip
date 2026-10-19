@@ -1,12 +1,14 @@
 import { Ionicons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
+import { useFocusEffect, useRouter } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
-import { Pressable, ScrollView, Text, View } from 'react-native';
+import { AppState, Pressable, ScrollView, Text, View } from 'react-native';
 import { useShallow } from 'zustand/react/shallow';
 import { Screen } from '@/src/components/layout/Screen';
+import { NotificationPermissionPage } from '@/src/components/notifications/NotificationPermissionPage';
 import { useAuthStore } from '@/src/store/authStore';
 import { cn } from '@/src/lib/cn';
 import { navigateToNotification } from '@/src/utils/notificationDeepLink';
+import { arePushNotificationsDisabled } from '@/src/utils/notificationPermissions';
 import { supabase } from '@/src/utils/supabase';
 
 interface NotificationLog {
@@ -34,6 +36,28 @@ export default function NotificationsScreen() {
 	const router = useRouter();
 	const { userId } = useAuthStore(useShallow((s) => ({ userId: s.user?.id })));
 	const [logs, setLogs] = useState<NotificationLog[] | null>(null);
+	const [pushDisabled, setPushDisabled] = useState<boolean | null>(null);
+	const [permissionChecked, setPermissionChecked] = useState(false);
+	const checkPushPermission = useCallback(async () => {
+		try {
+			setPushDisabled(await arePushNotificationsDisabled());
+		} catch (error) {
+			console.warn('[notifications] 권한 상태 조회 실패:', error);
+			setPushDisabled(null);
+		} finally {
+			setPermissionChecked(true);
+		}
+	}, []);
+
+	useFocusEffect(
+		useCallback(() => {
+			void checkPushPermission();
+			const subscription = AppState.addEventListener('change', (state) => {
+				if (state === 'active') void checkPushPermission();
+			});
+			return () => subscription.remove();
+		}, [checkPushPermission]),
+	);
 
 	const loadLogs = useCallback(() => {
 		if (!userId) return;
@@ -116,6 +140,10 @@ export default function NotificationsScreen() {
 		}
 	};
 
+	if (permissionChecked && pushDisabled) {
+		return <NotificationPermissionPage onPermissionRequested={() => void checkPushPermission()} />;
+	}
+
 	return (
 		<Screen variant="warm" className="px-0">
 			<Screen.Header fullBleed>
@@ -145,7 +173,15 @@ export default function NotificationsScreen() {
 				</Screen.Header.Right>
 			</Screen.Header>
 
-			{logs === null && (
+			{!permissionChecked && (
+				<View className="flex-1 items-center justify-center">
+					<Text className="font-pretendard-regular text-[14px] text-gray500">
+						알림 설정을 확인하고 있어요
+					</Text>
+				</View>
+			)}
+
+			{permissionChecked && logs === null && (
 				<View className="flex-1 items-center justify-center">
 					<Text className="font-pretendard-regular text-gray500 text-[14px]">
 						불러오는 중이에요
@@ -153,7 +189,7 @@ export default function NotificationsScreen() {
 				</View>
 			)}
 
-			{logs !== null && logs.length === 0 && (
+			{permissionChecked && logs !== null && logs.length === 0 && (
 				<View className="flex-1 items-center justify-center">
 					<Text className="font-pretendard-regular text-gray500 text-[14px]">
 						아직 받은 알림이 없어요
@@ -161,7 +197,7 @@ export default function NotificationsScreen() {
 				</View>
 			)}
 
-			{logs !== null && logs.length > 0 && (
+			{permissionChecked && logs !== null && logs.length > 0 && (
 				<ScrollView showsVerticalScrollIndicator={false}>
 					{logs.map((log) => (
 						<Pressable
@@ -179,16 +215,12 @@ export default function NotificationsScreen() {
 									className={cn('mt-1', iconName(log)?.color)}
 								/>
 							</View>
-							<View className="flex-1 ml-3">
+							<View className="flex-1 ml-3 mt-1.5">
 								<View className="flex-row items-center justify-between">
-									{log.title && (
-										<Text className="font-pretendard-semibold text-gray900 text-base mb-0.5">
-											{log.title}
-										</Text>
-									)}
-									<Text className="font-pretendard-regular text-gray500 text-md mt-1">
+									<Text className="font-pretendard-regular text-gray500 text-md">
 										{formatRelativeTime(log.created_at)}
 									</Text>
+									{!log.read_at && <View className="bg-red-500 w-3 h-3 rounded-full" />}
 								</View>
 								<Text className="font-pretendard-regular text-gray700 text-base mt-1.5 leading-normal">
 									{log.body}
