@@ -1,7 +1,6 @@
 import { useCallback, useRef, useState } from 'react';
 import { Image, Pressable, ScrollView, Text, View, useWindowDimensions } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-
 import { OnboardingDraggable } from '@/src/components/onboarding/OnboardingDraggable';
 import { OnboardingFrame } from '@/src/components/onboarding/OnboardingFrame';
 import { OnboardingPieceCard } from '@/src/components/onboarding/OnboardingPieceCard';
@@ -14,9 +13,15 @@ interface OnboardingGalleryWallProps {
 	wall: ReturnType<typeof useOnboardingWallPlacement>;
 	busy: boolean;
 	onConfirm: () => void;
+	onResetPreferences?: () => void;
 }
 
-export function OnboardingGalleryWall({ wall, busy, onConfirm }: OnboardingGalleryWallProps) {
+export function OnboardingGalleryWall({
+	wall,
+	busy,
+	onConfirm,
+	onResetPreferences,
+}: OnboardingGalleryWallProps) {
 	const insets = useSafeAreaInsets();
 	const dimensions = useWindowDimensions();
 	const rootRef = useRef<View>(null);
@@ -157,6 +162,10 @@ export function OnboardingGalleryWall({ wall, busy, onConfirm }: OnboardingGalle
 		wall.cancel();
 		onConfirm();
 	}, [wall, onConfirm]);
+	const canConfirmWall = wall.count >= 3 && !busy && drag === null;
+	// 취향 수정 화면(초기화 버튼 있음)은 저장, 온보딩은 시작 문구를 쓴다
+	const confirmLabel = onResetPreferences ? '취향 저장하기' : '바로 시작하기';
+	const busyLabel = onResetPreferences ? '저장 중…' : '취향 저장 중…';
 
 	return (
 		<View ref={rootRef} className="flex-1" testID="gallery-wall">
@@ -169,6 +178,7 @@ export function OnboardingGalleryWall({ wall, busy, onConfirm }: OnboardingGalle
 					}}
 					scrollEventThrottle={16}
 					contentContainerClassName="items-center"
+					showsVerticalScrollIndicator={false}
 				>
 					<View
 						ref={canvasRef}
@@ -244,28 +254,45 @@ export function OnboardingGalleryWall({ wall, busy, onConfirm }: OnboardingGalle
 				</ScrollView>
 			</View>
 
-			<View className="pt-3" style={{ paddingBottom: insets.bottom + 12 }}>
-				<Pressable
-					testID="wall-continue"
-					accessibilityRole="button"
-					accessibilityLabel="이 취향으로 시작하기"
-					accessibilityState={{ disabled: wall.count < 3 || busy || drag !== null, busy }}
-					disabled={wall.count < 3 || busy || drag !== null}
-					onPress={handleConfirm}
-					className={cn(
-						'min-h-[52px] items-center justify-center rounded-[18px] px-4',
-						wall.count >= 3 && !busy && drag === null ? 'bg-brand' : 'bg-gray400',
+			<View className="pt-3" style={{ paddingBottom: insets.bottom }}>
+				<View className={cn(onResetPreferences && 'flex-row gap-2')}>
+					{onResetPreferences && (
+						<Pressable
+							onPress={onResetPreferences}
+							accessibilityRole="button"
+							accessibilityLabel="내 취향 초기화하기"
+							accessibilityState={{ disabled: busy, busy }}
+							disabled={busy}
+							className="min-h-[52px] flex-1 items-center justify-center rounded-[18px] border border-gray300 bg-white px-3"
+						>
+							<Text className="font-pretendard-semibold text-base text-gray800">초기화</Text>
+						</Pressable>
 					)}
-				>
-					<Text
+					<Pressable
+						testID="wall-continue"
+						accessibilityRole="button"
+						accessibilityLabel={confirmLabel}
+						accessibilityState={{ disabled: wall.count < 3 || busy || drag !== null, busy }}
+						disabled={wall.count < 3 || busy || drag !== null}
+						onPress={handleConfirm}
 						className={cn(
-							'font-pretendard-semibold text-base',
-							wall.count >= 3 && !busy && drag === null ? 'text-white' : 'text-ink',
+							'min-h-[52px] items-center justify-center rounded-[18px]',
+							onResetPreferences ? 'flex-1 px-3' : 'px-4',
+							canConfirmWall ? 'bg-brand' : 'bg-gray400',
 						)}
 					>
-						{busy ? '취향 저장 중…' : '이 취향으로 시작하기'}
-					</Text>
-				</Pressable>
+						<Text
+							numberOfLines={1}
+							adjustsFontSizeToFit
+							className={cn(
+								'font-pretendard-semibold text-base',
+								canConfirmWall ? 'text-white' : 'text-ink',
+							)}
+						>
+							{busy ? busyLabel : confirmLabel}
+						</Text>
+					</Pressable>
+				</View>
 			</View>
 			{ONBOARDING_WALL_PIECES.map((piece) => {
 				const active = drag?.piece.id === piece.id;

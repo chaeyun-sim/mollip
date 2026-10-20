@@ -16,6 +16,7 @@ export default function SettingsLayout() {
 			<Stack.Screen name="bookmark/audio" options={{ headerShown: false }} />
 			<Stack.Screen name="description" options={{ headerShown: false }} />
 			<Stack.Screen name="preferences" options={{ headerShown: false }} />
+			<Stack.Screen name="preferences-chips" options={{ headerShown: false }} />
 			<Stack.Screen name="notice/index" options={{ headerShown: false }} />
 			<Stack.Screen name="notice/[id]" options={{ headerShown: false }} />
 			<Stack.Screen name="subscribe" options={{ headerShown: false }} />

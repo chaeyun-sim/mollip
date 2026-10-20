@@ -2,7 +2,6 @@ import { useRouter } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
 import { ActivityIndicator, Alert, Pressable, Text, View } from 'react-native';
 import { useQueryClient } from '@tanstack/react-query';
-
 import { Screen } from '@/src/components/layout/Screen';
 import { OnboardingGalleryWall } from '@/src/components/onboarding/OnboardingGalleryWall';
 import { OnboardingSaveErrorBar } from '@/src/components/onboarding/OnboardingSaveErrorBar';
@@ -12,6 +11,7 @@ import { preferencesQueryKey } from '@/src/hooks/queries/usePreferences';
 import type { Preferences } from '@/src/hooks/queries/usePreferences';
 import { useAuthStore } from '@/src/store/authStore';
 import { toValidGenres } from '@/src/utils/onboardingWallGenres';
+import { EMPTY_PREFERRED_TASTE } from '@/src/utils/preferredTaste';
 import { supabase } from '@/src/utils/supabase';
 
 export default function PreferencesScreen() {
@@ -27,12 +27,17 @@ export default function PreferencesScreen() {
 	const selectedGenres = wall.genres;
 	const initializeWall = wall.initialize;
 	const loadPreferences = preferences.load;
+	const handleStrengthenPreferences = useCallback(() => {
+		router.push({
+			pathname: '/settings/preferences-chips',
+		});
+	}, [router]);
 
 	useEffect(() => {
 		void loadPreferences();
 	}, [loadPreferences]);
 
-	// AC-6: 다시 꾸미기·지우기 모두 preferred_genres만 교체한다 — onboarding_completed/preferred_artists는 건드리지 않음
+	// 벽 저장은 장르와 작품 배치만 갱신한다. 추가 취향은 취향 강화하기 화면에서 별도로 저장한다.
 	const handleConfirm = useCallback(async () => {
 		if (!userId || saving) return;
 		setSaving(true);
@@ -53,6 +58,7 @@ export default function PreferencesScreen() {
 		queryClient.setQueryData(preferencesQueryKey(userId), (current: Preferences | undefined) => ({
 			preferredGenres: genres,
 			preferredArtists: current?.preferredArtists ?? [],
+			preferredTasteDetails: current?.preferredTasteDetails ?? EMPTY_PREFERRED_TASTE,
 		}));
 		void queryClient.invalidateQueries({ queryKey: ['exhibitions', 'recommended'] });
 		setSaving(false);
@@ -64,7 +70,7 @@ export default function PreferencesScreen() {
 	}, [router]);
 
 	const handleClearPreferences = useCallback(() => {
-		Alert.alert('내 취향 지우기', '저장된 취향 장르를 모두 지울까요?', [
+		Alert.alert('내 취향 지우기', '저장된 취향을 모두 지울까요?', [
 			{ text: '취소', style: 'cancel' },
 			{
 				text: '지우기',
@@ -73,18 +79,33 @@ export default function PreferencesScreen() {
 					if (!userId) return;
 					const { error } = await supabase
 						.from('profiles')
-						.update({ preferred_genres: [], preferred_wall_piece_ids: [] })
+						.update({
+							preferred_genres: [],
+							preferred_artists: [],
+							preferred_wall_piece_ids: [],
+						})
 						.eq('id', userId);
 					if (error) {
 						console.error('[preferences] clear failed:', error.message);
 						Alert.alert('지우기 실패', '잠시 후 다시 시도해 주세요.');
 						return;
 					}
+					const { error: tasteError } = await supabase
+						.from('profiles')
+						.update({ preferred_taste_details: EMPTY_PREFERRED_TASTE })
+						.eq('id', userId);
+					const tasteColumnMissing =
+						tasteError?.code === '42703' || tasteError?.code === 'PGRST204';
+					if (tasteError && !tasteColumnMissing) {
+						console.error('[preferences] detailed taste clear failed:', tasteError.message);
+						Alert.alert('일부 취향만 초기화했어요', '잠시 후 상세 취향을 다시 초기화해 주세요.');
+					}
 					queryClient.setQueryData(
 						preferencesQueryKey(userId),
 						(current: Preferences | undefined) => ({
 							preferredGenres: [],
-							preferredArtists: current?.preferredArtists ?? [],
+							preferredArtists: [],
+							preferredTasteDetails: EMPTY_PREFERRED_TASTE,
 						}),
 					);
 					void queryClient.invalidateQueries({ queryKey: ['exhibitions', 'recommended'] });
@@ -145,21 +166,26 @@ export default function PreferencesScreen() {
 				{preferences.status === 'ready' && (
 					<Screen.Header.Right>
 						<Pressable
-							onPress={handleClearPreferences}
+							onPress={handleStrengthenPreferences}
 							hitSlop={8}
 							accessibilityRole="button"
-							accessibilityLabel="내 취향 초기화하기"
+							accessibilityLabel="취향 강화하기"
 							className="min-h-11 justify-center"
 							style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
 						>
-							<Text className="text-[15px] font-pretendard-regular text-error">초기화</Text>
+							<Text className="text-[15px] font-pretendard-regular text-brand">취향 강화</Text>
 						</Pressable>
 					</Screen.Header.Right>
 				)}
 			</Screen.Header>
 
 			<View className="flex-1">
-				<OnboardingGalleryWall wall={wall} busy={saving || hasError} onConfirm={handleConfirm} />
+				<OnboardingGalleryWall
+					wall={wall}
+					busy={saving || hasError}
+					onConfirm={handleConfirm}
+					onResetPreferences={handleClearPreferences}
+				/>
 				{hasError && (
 					<OnboardingSaveErrorBar
 						key={errorCount}

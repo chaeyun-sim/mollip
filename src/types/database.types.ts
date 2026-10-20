@@ -375,6 +375,7 @@ export type Database = {
 					preferred_artists: string[];
 					preferred_genres: string[];
 					preferred_wall_piece_ids: string[];
+					preferred_taste_details: Json;
 					push_token: string | null;
 					updated_at: string;
 				};
@@ -389,6 +390,7 @@ export type Database = {
 					preferred_artists?: string[];
 					preferred_genres?: string[];
 					preferred_wall_piece_ids?: string[];
+					preferred_taste_details?: Json;
 					push_token?: string | null;
 					updated_at?: string;
 				};
@@ -403,6 +405,7 @@ export type Database = {
 					preferred_artists?: string[];
 					preferred_genres?: string[];
 					preferred_wall_piece_ids?: string[];
+					preferred_taste_details?: Json;
 					push_token?: string | null;
 					updated_at?: string;
 				};
