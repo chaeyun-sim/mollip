@@ -2,7 +2,6 @@ import { act } from 'react';
 import { AppState, type AppStateStatus } from 'react-native';
 import { createRoot } from 'test-renderer';
 import * as Notifications from 'expo-notifications';
-
 import { usePushNotifications } from '../usePushNotifications';
 
 jest.mock('expo-device', () => ({ isDevice: true }));

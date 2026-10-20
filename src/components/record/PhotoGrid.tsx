@@ -1,6 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Image, Pressable, Text, View } from 'react-native';
-
 import { ScalePressable } from '@/src/components/common/ScalePressable';
 import { pickPhotos } from '@/src/utils/pickPhotos';
 

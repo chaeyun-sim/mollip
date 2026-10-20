@@ -1,6 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as SQLite from 'expo-sqlite';
-
 import type { DayVisit, ListenedItem } from '@/src/store/visitStore';
 import { COMPANION_LABELS, type Companion } from '@/src/utils/visitRecord';
 import { persistVisitPhotoFields } from '@/src/utils/visitPhotoFiles';

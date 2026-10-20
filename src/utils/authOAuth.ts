@@ -1,7 +1,6 @@
 import * as WebBrowser from 'expo-web-browser';
 import * as AppleAuthentication from 'expo-apple-authentication';
 import { Platform } from 'react-native';
-
 import { getAuthRedirectUri, parseAuthCallbackParams } from '@/src/utils/authRedirect';
 import { supabase } from '@/src/utils/supabase';
 

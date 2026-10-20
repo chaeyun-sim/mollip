@@ -1,5 +1,4 @@
 import { useMemo } from 'react';
-
 import { dateKeyOf, type DayVisit } from '@/src/store/visitStore';
 import { useExhibitionPosterUrls } from '@/src/hooks/useExhibitionPosterUrls';
 

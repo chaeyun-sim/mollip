@@ -1,5 +1,4 @@
 import { useEffect } from 'react';
-
 import { useAuthStore } from '../store/authStore';
 import { localVisitKeyFromRemote, upsertRemoteVisit, useVisitStore } from '../store/visitStore';
 import type { DayVisit } from '../store/visitStore';

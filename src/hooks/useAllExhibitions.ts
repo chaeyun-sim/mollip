@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-
 import type { RecommendableItem } from '@/src/components/explore/RecommendableItem.types';
 import { getExhibitionStatus, todayExhibitionDateString } from '@/src/utils/exhibitionSearch';
 import { supabase } from '@/src/utils/supabase';

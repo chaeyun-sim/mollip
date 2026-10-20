@@ -1,7 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import { memo, useState } from 'react';
 import { Keyboard, Pressable, ScrollView, Text, View } from 'react-native';
-
 import { SearchBar } from '@/src/components/common/SearchBar';
 import { cn } from '@/src/lib/cn';
 import type { RecentLocation } from '@/src/hooks/useRecentLocations';

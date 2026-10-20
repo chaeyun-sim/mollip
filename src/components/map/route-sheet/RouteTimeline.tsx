@@ -2,7 +2,6 @@ import { Ionicons } from '@expo/vector-icons';
 import { useMemo } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
-
 import type { ExternalMapTarget } from '@/src/components/map/ExternalMapSheet';
 import { buildTimeline } from './utils';
 import type { RouteCoord, RouteResult } from '@/src/api/tmap';

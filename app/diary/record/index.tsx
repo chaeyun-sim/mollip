@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-
 import { useRecordDraftStore } from '@/src/store/recordDraftStore';
 import RecordWriteScreen from './write';
 

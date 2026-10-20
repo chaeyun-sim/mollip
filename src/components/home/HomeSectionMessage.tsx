@@ -1,5 +1,4 @@
 import { Pressable, Text, View } from 'react-native';
-
 import { HOME_SIDE_PADDING } from '@/src/components/home/HomeSectionHeader';
 
 interface HomeSectionMessageProps {

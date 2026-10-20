@@ -1,5 +1,4 @@
 import { Pressable, Text, View } from 'react-native';
-
 import { TextField } from '@/src/components/common/TextField';
 import { cn } from '@/src/lib/cn';
 

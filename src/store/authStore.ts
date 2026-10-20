@@ -1,6 +1,5 @@
 import type { Session, User } from '@supabase/supabase-js';
 import { create } from 'zustand';
-
 import { supabase } from '@/src/utils/supabase';
 import { purgeAccountLocalCaches } from '@/src/utils/purgeAccountLocalCaches';
 import { useBookmarkStore } from './bookmarkStore';

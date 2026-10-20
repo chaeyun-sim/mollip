@@ -1,7 +1,6 @@
 import * as Haptics from 'expo-haptics';
 import { Dimensions, Pressable, Text, View } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
-
 import { ImageFallback } from '@/src/components/common/ImageFallback';
 import type { Artwork } from '@/src/data/exhibitions';
 

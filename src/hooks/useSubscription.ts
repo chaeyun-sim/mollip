@@ -1,5 +1,4 @@
 import { useShallow } from 'zustand/react/shallow';
-
 import { useAuthStore } from '@/src/store/authStore';
 import { useSubscriptionStore } from '@/src/store/subscriptionStore';
 

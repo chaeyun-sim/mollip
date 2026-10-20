@@ -1,5 +1,4 @@
 import { View } from 'react-native';
-
 import { StarButton } from '@/src/components/archive/StarButton';
 
 interface StarRatingProps {

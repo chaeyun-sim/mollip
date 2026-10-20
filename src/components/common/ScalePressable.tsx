@@ -1,7 +1,6 @@
 import type { GestureResponderEvent, PressableProps, StyleProp, ViewStyle } from 'react-native';
 import { Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
-
 import { usePressScale } from '@/src/hooks/usePressScale';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);

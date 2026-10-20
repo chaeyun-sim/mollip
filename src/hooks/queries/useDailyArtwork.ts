@@ -1,7 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useFocusEffect } from 'expo-router';
 import { useShallow } from 'zustand/react/shallow';
-
 import { getMetObjectImage } from '@/src/api/met';
 import { DAILY_ARTWORKS } from '@/src/data/dailyArtworks';
 import { useDailyArtworkStore } from '@/src/store/dailyArtworkStore';

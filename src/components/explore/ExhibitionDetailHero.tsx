@@ -1,7 +1,6 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import { Dimensions, View, type ImageSourcePropType } from 'react-native';
 import Animated from 'react-native-reanimated';
-
 import { ImageFallback } from '@/src/components/common/ImageFallback';
 import type { HeroImageStyle } from '@/src/hooks/useHeroAnimation';
 

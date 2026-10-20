@@ -11,7 +11,6 @@ import {
 	View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-
 import { ScalePressable } from '@/src/components/common/ScalePressable';
 import { SearchBar } from '@/src/components/common/SearchBar';
 import { ManualRecordForm, type ManualRecordValue } from '@/src/components/record/ManualRecordForm';

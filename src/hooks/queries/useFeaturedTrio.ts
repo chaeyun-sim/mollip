@@ -1,6 +1,5 @@
 import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
-
 import type { ExhibitionSummary } from '@/src/hooks/queries/useExploreScreenData';
 import {
 	applyExhibitionDateFilters,

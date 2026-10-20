@@ -1,7 +1,6 @@
 import Constants from 'expo-constants';
 import { useEffect, useState } from 'react';
 import { Platform } from 'react-native';
-
 import { supabase } from '@/src/utils/supabase';
 
 interface ForceUpdateState {

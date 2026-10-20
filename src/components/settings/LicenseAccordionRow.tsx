@@ -2,7 +2,6 @@ import { Ionicons } from '@expo/vector-icons';
 import * as WebBrowser from 'expo-web-browser';
 import { useState } from 'react';
 import { Linking, Pressable, Text, View } from 'react-native';
-
 import type { OpenSourceLicense } from '@/src/data/licenses';
 
 export interface LicenseAccordionRowProps {

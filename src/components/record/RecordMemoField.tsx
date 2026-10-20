@@ -1,7 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useEffect, useRef } from 'react';
 import { Alert, Pressable, Text, View } from 'react-native';
-
 import { TextField } from '@/src/components/common/TextField';
 import { useEssayStream } from '@/src/hooks/useEssayStream';
 import { clipToSentence } from '@/src/utils/clipToSentence';

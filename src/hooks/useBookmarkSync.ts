@@ -1,5 +1,4 @@
 import { useEffect } from 'react';
-
 import { useAuthStore } from '../store/authStore';
 import { useBookmarkStore } from '../store/bookmarkStore';
 import { supabase } from '../utils/supabase';

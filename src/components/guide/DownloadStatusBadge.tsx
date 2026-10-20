@@ -1,6 +1,5 @@
 import { ActivityIndicator, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-
 import { IconButton } from '@/src/components/common/IconButton';
 import type { DownloadStatus } from '@/src/store/offlineDownloadStore';
 

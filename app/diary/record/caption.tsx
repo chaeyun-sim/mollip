@@ -3,7 +3,6 @@ import { useRouter } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 import { Alert, ScrollView, Text, View } from 'react-native';
 import { useShallow } from 'zustand/react/shallow';
-
 import { Button } from '@/src/components/common/Button';
 import { Screen } from '@/src/components/layout/Screen';
 import { RecordFramePreview } from '@/src/components/record/RecordFramePreview';

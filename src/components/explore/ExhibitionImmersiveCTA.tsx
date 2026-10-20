@@ -3,7 +3,6 @@ import * as Haptics from 'expo-haptics';
 import * as WebBrowser from 'expo-web-browser';
 import { Pressable, Text } from 'react-native';
 import Animated from 'react-native-reanimated';
-
 import { usePressScale } from '@/src/hooks/usePressScale';
 
 interface ExhibitionTicketCTAProps {

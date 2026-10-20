@@ -1,5 +1,4 @@
 import { Pressable, Text } from 'react-native';
-
 import { cn } from '@/src/lib/cn';
 
 interface OnboardingSkipActionProps {

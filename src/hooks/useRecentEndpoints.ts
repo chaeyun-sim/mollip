@@ -1,6 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useCallback, useEffect, useState } from 'react';
-
 import type { RouteEndpoint } from '@/src/hooks/useDirections';
 
 export interface RecentLocation {

@@ -9,7 +9,6 @@ import {
 	type NativeScrollEvent,
 	type NativeSyntheticEvent,
 } from 'react-native';
-
 import { GalleryPhoto } from '@/src/components/archive/GalleryPhoto';
 import { cn } from '@/src/lib/cn';
 import {

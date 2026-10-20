@@ -1,5 +1,4 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
 import {
 	VISITS_ASYNC_KEY,
 	clearAllLocalVisits,

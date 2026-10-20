@@ -1,6 +1,5 @@
 import * as Crypto from 'expo-crypto';
 import { create } from 'zustand';
-
 import { useAuthStore } from './authStore';
 import { supabase } from '../utils/supabase';
 import type { Json } from '../types/database.types';

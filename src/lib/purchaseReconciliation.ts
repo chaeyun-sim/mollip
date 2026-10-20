@@ -1,5 +1,4 @@
 import type { CustomerInfo } from 'react-native-purchases';
-
 import { usePurchaseTransactionStore } from '@/src/store/purchaseTransactionStore';
 import { ENTITLEMENT_ID } from '@/src/lib/subscription';
 import {

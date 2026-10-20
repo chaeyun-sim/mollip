@@ -1,7 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import type { ReactNode } from 'react';
 import { Text, View } from 'react-native';
-
 import { Button } from '@/src/components/common/Button';
 import { cn } from '@/src/lib/cn';
 

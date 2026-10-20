@@ -1,7 +1,6 @@
 import * as Linking from 'expo-linking';
 import { useEffect, type ReactNode } from 'react';
 import { useShallow } from 'zustand/react/shallow';
-
 import { useAuthStore } from '@/src/store/authStore';
 import { createSessionFromUrl } from '@/src/utils/authOAuth';
 import { getLocalOnboardingCompleted } from '@/src/utils/onboardingLocalStorage';

@@ -8,7 +8,6 @@ import Animated, {
 	useSharedValue,
 	withTiming,
 } from 'react-native-reanimated';
-
 import type { OnboardingIntroTicket } from '@/src/data/onboardingIntroTickets';
 import { ONBOARDING_INTRO_TICKETS } from '@/src/data/onboardingIntroTickets';
 import { Screen } from '@/src/components/layout/Screen';

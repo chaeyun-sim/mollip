@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-
 import type { Exhibition } from '@/src/data/exhibitions';
 import { useBookmarkStore } from '@/src/store/bookmarkStore';
 import {

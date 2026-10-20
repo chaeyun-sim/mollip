@@ -1,5 +1,4 @@
 import Purchases from 'react-native-purchases';
-
 import { syncSubscription } from '@/src/lib/subscription';
 import { markOnlineVerifiedAt } from '@/src/lib/subscriptionVerification';
 import { useSubscriptionStore } from '@/src/store/subscriptionStore';

@@ -1,6 +1,5 @@
 import { useCallback } from 'react';
 import { Image, Text, View } from 'react-native';
-
 import { OnboardingDraggable } from '@/src/components/onboarding/OnboardingDraggable';
 import { cn } from '@/src/lib/cn';
 import type { OnboardingWallPiece } from '@/src/data/onboardingWallPieces';

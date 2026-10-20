@@ -2,7 +2,6 @@ import { Pressable, PressableProps, View, type StyleProp, type ViewStyle } from 
 import type { ReactNode } from 'react';
 import * as Haptics from 'expo-haptics';
 import Animated from 'react-native-reanimated';
-
 import { cn } from '@/src/lib/cn';
 import { usePressScale } from '@/src/hooks/usePressScale';
 

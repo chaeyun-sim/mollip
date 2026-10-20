@@ -1,5 +1,4 @@
 import { Text, View } from 'react-native';
-
 import { Button } from '@/src/components/common/Button';
 import { Dialog } from '@/src/components/common/Dialog';
 

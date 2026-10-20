@@ -7,7 +7,6 @@ import Animated, {
 	withSequence,
 	withTiming,
 } from 'react-native-reanimated';
-
 import { FrameCard } from '@/src/components/archive/FrameCard';
 import { buildPreviewItem, type PreviewInput } from '@/src/utils/museumWall';
 

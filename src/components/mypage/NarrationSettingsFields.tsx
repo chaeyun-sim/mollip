@@ -3,7 +3,6 @@ import * as Haptics from 'expo-haptics';
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
-
 import { CardRow } from '@/src/components/mypage/CardRow';
 import { DESCRIPTION_LENGTH_OPTIONS, FONT_SIZE_OPTIONS, SPEED_OPTIONS } from '@/src/data/mypage';
 import type { Voice } from '@/src/hooks/useTTS';

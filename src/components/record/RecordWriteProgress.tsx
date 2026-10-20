@@ -1,6 +1,5 @@
 import { Text, View } from 'react-native';
 import { useReducedMotion } from 'react-native-reanimated';
-
 import { ProgressBar } from '@/src/components/common/ProgressBar';
 
 interface RecordWriteProgressProps {

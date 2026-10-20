@@ -3,7 +3,6 @@ import { BottomSheetScrollView, BottomSheetTextInput } from '@gorhom/bottom-shee
 import { type ComponentRef, useRef, useState } from 'react';
 import { Image, Keyboard, Pressable, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-
 import { Button } from '@/src/components/common/Button';
 import { DatePickerModal } from '@/src/components/common/DatePickerModal';
 import { RecordFormSection } from '@/src/components/record/RecordFormSection';

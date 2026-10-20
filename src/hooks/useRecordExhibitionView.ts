@@ -1,5 +1,4 @@
 import { useEffect } from 'react';
-
 import { useAuthStore } from '@/src/store/authStore';
 import { supabase } from '@/src/utils/supabase';
 import { formatDate } from '../utils/cultureExhibitionMapper';

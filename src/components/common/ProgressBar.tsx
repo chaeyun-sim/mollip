@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import { View } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
-
 import { cn } from '@/src/lib/cn';
 
 export type ProgressBarSize = 'light' | 'normal' | 'bold';

@@ -1,6 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Pressable, type PressableProps, Text, View } from 'react-native';
-
 import { cn } from '@/src/lib/cn';
 
 interface SourceActionRowProps extends Omit<PressableProps, 'children' | 'onPress'> {

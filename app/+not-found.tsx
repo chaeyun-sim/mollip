@@ -1,5 +1,4 @@
 import { useRouter } from 'expo-router';
-
 import { Result } from '@/src/components/common/Result';
 import { ErrorIllustration } from '@/src/components/illustration/ErrorIllustration';
 import { Screen } from '@/src/components/layout/Screen';

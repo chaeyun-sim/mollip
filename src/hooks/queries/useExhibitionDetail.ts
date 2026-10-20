@@ -1,5 +1,4 @@
 import { useQuery } from '@tanstack/react-query';
-
 import type { Exhibition } from '@/src/data/exhibitions';
 import { fetchArtworksForExhibition } from '@/src/utils/fetchArtworksForExhibition';
 import { findRelatedExhibitions } from '@/src/utils/findRelatedExhibitions';

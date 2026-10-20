@@ -11,7 +11,6 @@ import {
 	View,
 } from 'react-native';
 import * as Haptics from 'expo-haptics';
-
 import { TextField } from '@/src/components/common/TextField';
 import { Screen } from '../../src/components/layout/Screen';
 import { ScreenHeader } from '../../src/components/layout/ScreenHeader';

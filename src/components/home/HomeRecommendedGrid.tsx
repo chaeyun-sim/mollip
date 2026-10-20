@@ -1,5 +1,4 @@
 import { Text, useWindowDimensions, View } from 'react-native';
-
 import { FadeInView } from '@/src/components/common/FadeInView';
 import { ImageFallback } from '@/src/components/common/ImageFallback';
 import { ScalePressable } from '@/src/components/common/ScalePressable';

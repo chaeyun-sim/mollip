@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-
 import { searchNaverLocal, type NaverLocalItem } from '@/src/api/naver';
 import { distanceKm, formatDistance } from '@/src/utils/mapUtils';
 

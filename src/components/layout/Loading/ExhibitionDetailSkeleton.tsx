@@ -1,7 +1,6 @@
 import { useRouter } from 'expo-router';
 import { View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-
 import { CircleActionButton } from '@/src/components/explore/CircleActionButton';
 import { SkeletonBox } from './SkeletonBox';
 

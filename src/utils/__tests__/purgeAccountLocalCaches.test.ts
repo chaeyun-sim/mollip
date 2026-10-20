@@ -1,5 +1,4 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
 import { purgeAccountLocalCaches } from '../purgeAccountLocalCaches';
 
 jest.mock('@react-native-async-storage/async-storage', () =>

@@ -1,7 +1,6 @@
 import { useMemo } from 'react';
 import { Image, Text, View } from 'react-native';
 import Svg, { Defs, ClipPath, Ellipse, Rect, Image as SvgImage, G } from 'react-native-svg';
-
 import { ONBOARDING_WALL_FRAMES } from '@/src/data/onboardingWallFrames';
 import type { OnboardingWallPiece } from '@/src/data/onboardingWallPieces';
 

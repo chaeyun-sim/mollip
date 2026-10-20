@@ -1,6 +1,5 @@
 import type { ReactNode } from 'react';
 import { Text, View } from 'react-native';
-
 import { cn } from '@/src/lib/cn';
 
 interface RecordQuestionProps {

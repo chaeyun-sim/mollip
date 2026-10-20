@@ -1,6 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as SQLite from 'expo-sqlite';
-
 import type { HistoryItem, StoredChatMessage } from '@/src/store/historyStore';
 
 export const GUEST_HISTORY_ASYNC_KEY = 'audio-history';

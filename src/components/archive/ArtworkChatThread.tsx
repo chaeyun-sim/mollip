@@ -1,5 +1,4 @@
 import { Text, View } from 'react-native';
-
 import { cn } from '@/src/lib/cn';
 import type { StoredChatMessage } from '@/src/store/historyStore';
 

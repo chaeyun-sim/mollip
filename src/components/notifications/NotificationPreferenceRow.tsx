@@ -1,5 +1,4 @@
 import { Switch, Text, View } from 'react-native';
-
 import { colors } from '@/src/constants/colors';
 
 export interface NotificationPreferenceRowProps {

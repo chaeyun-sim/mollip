@@ -1,7 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { Pressable, Text, View } from 'react-native';
-
 import { ImageFallback } from '@/src/components/common/ImageFallback';
 import type { DayVisit } from '@/src/store/visitStore';
 import { cn } from '@/src/lib/cn';

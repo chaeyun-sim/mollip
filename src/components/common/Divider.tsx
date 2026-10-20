@@ -1,5 +1,4 @@
 import { View, type ViewProps } from 'react-native';
-
 import { cn } from '@/src/lib/cn';
 
 export type DividerVariant = 'full' | 'inset' | 'section';

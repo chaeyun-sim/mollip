@@ -1,5 +1,4 @@
 import { Pressable, Text, View } from 'react-native';
-
 import { cn } from '@/src/lib/cn';
 
 interface OnboardingFlowHeaderProps {

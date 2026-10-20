@@ -1,7 +1,6 @@
 import { useCallback, useMemo, useState } from 'react';
 import { AccessibilityInfo } from 'react-native';
 import * as Haptics from 'expo-haptics';
-
 import { normalizeOnboardingGenres } from '@/src/utils/onboardingWallGenres';
 import { ONBOARDING_WALL_PIECES, type OnboardingWallPiece } from '@/src/data/onboardingWallPieces';
 

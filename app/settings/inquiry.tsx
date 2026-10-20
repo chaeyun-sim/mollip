@@ -2,7 +2,6 @@ import * as Haptics from 'expo-haptics';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { KeyboardAvoidingView, Platform, ScrollView, Text, View } from 'react-native';
-
 import { Button } from '@/src/components/common/Button';
 import { Chip } from '@/src/components/common/Chip';
 import { Result } from '@/src/components/common/Result';

@@ -1,5 +1,4 @@
 import { Pressable, Text, View } from 'react-native';
-
 import { Screen } from '@/src/components/layout/Screen';
 
 interface OnboardingEnterProps {

@@ -1,6 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
 import { LinearTransition } from 'react-native-reanimated';
-
 import type { RouteCoord, RouteLeg, RouteResult } from '@/src/api/tmap';
 import type { DirectionsMode } from '@/src/hooks/useDirections';
 import { legColor } from '@/src/utils/routeColors';

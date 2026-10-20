@@ -2,7 +2,6 @@ import { useCallback } from 'react';
 import type { GestureResponderEvent, PressableProps } from 'react-native';
 import { Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
-
 import { useAuthStore } from '@/src/store/authStore';
 
 interface LoginRequiredPressableProps extends PressableProps {

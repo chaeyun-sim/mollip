@@ -1,7 +1,6 @@
 import { Image, Linking, Text, View } from 'react-native';
 import * as Notifications from 'expo-notifications';
 import Animated, { FadeInDown, useReducedMotion } from 'react-native-reanimated';
-
 import { Button } from '@/src/components/common/Button';
 import { PottedPlantIllustration } from '@/src/components/illustration/PottedPlantIllustration';
 import { Screen } from '@/src/components/layout/Screen';

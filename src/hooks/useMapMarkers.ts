@@ -1,5 +1,4 @@
 import { useMemo } from 'react';
-
 import type { VenueGroup } from '@/src/data/venues';
 import { declutterMarkers } from '@/src/utils/mapUtils';
 

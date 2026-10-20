@@ -1,7 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { Pressable, Text, View } from 'react-native';
-
 import { FadeInView } from '@/src/components/common/FadeInView';
 import { ScalePressable } from '@/src/components/common/ScalePressable';
 import { FlapTile } from '@/src/components/home/FlapTile';

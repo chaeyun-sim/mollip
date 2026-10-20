@@ -1,6 +1,5 @@
 import { View } from 'react-native';
 import Svg, { Circle, Path, Rect } from 'react-native-svg';
-
 import { Swingable, TILT_SWING } from '@/src/components/guide/Swingable';
 import { ILLUSTRATION_COLORS as C } from '@/src/components/illustration/illustrationPalette';
 

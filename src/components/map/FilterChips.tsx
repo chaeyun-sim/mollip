@@ -1,5 +1,4 @@
 import { ScrollView, View } from 'react-native';
-
 import { Chip } from '@/src/components/common/Chip';
 import { FILTERS, type FilterKey } from '@/src/hooks/useMapFilter';
 

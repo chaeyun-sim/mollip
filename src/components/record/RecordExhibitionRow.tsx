@@ -1,6 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Text, View } from 'react-native';
-
 import { ImageFallback } from '@/src/components/common/ImageFallback';
 import { ScalePressable } from '@/src/components/common/ScalePressable';
 

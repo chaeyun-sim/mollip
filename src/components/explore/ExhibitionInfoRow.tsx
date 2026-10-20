@@ -1,6 +1,5 @@
 import { ReactNode } from 'react';
 import { Pressable, Text, View } from 'react-native';
-
 import { cn } from '@/src/lib/cn';
 
 interface ExhibitionInfoRowProps {

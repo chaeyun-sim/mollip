@@ -1,5 +1,4 @@
 import type { useRouter } from 'expo-router';
-
 import { useMapStore } from '@/src/store/mapStore';
 import { supabase } from '@/src/utils/supabase';
 

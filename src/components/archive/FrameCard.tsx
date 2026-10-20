@@ -2,7 +2,6 @@ import { Image } from 'expo-image';
 import { useState } from 'react';
 import { Pressable, Text, View, type LayoutChangeEvent } from 'react-native';
 import Svg, { Circle, Line } from 'react-native-svg';
-
 import { CaptionLabel } from '@/src/components/archive/CaptionLabel';
 import { colors } from '@/src/constants/colors';
 import { cn } from '@/src/lib/cn';

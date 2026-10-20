@@ -2,7 +2,6 @@ import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { useState } from 'react';
 import { Text, View } from 'react-native';
-
 import { Button } from '@/src/components/common/Button';
 import { Indicator } from '@/src/components/common/Indicator';
 import { colors } from '@/src/constants/colors';

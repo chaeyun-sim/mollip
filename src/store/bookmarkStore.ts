@@ -1,6 +1,5 @@
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
-
 import { useAuthStore } from './authStore';
 import { supabase } from '../utils/supabase';
 import { createAuthAwareStorage } from '../utils/authAwareStorage';

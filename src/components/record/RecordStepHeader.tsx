@@ -1,5 +1,4 @@
 import { Text } from 'react-native';
-
 import { ScreenHeader } from '@/src/components/layout/ScreenHeader';
 
 interface RecordStepHeaderProps {

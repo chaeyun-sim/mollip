@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-
 import { supabase } from '@/src/utils/supabase';
 
 interface VenueFollowStatusState {

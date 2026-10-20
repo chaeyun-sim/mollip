@@ -1,6 +1,5 @@
 import { useEffect, useRef } from 'react';
 import { AccessibilityInfo, findNodeHandle, Pressable, Text, View } from 'react-native';
-
 import { cn } from '@/src/lib/cn';
 
 interface OnboardingSaveErrorBarProps {

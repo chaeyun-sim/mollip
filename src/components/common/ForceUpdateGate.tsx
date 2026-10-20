@@ -1,5 +1,4 @@
 import * as Linking from 'expo-linking';
-
 import { Result } from '@/src/components/common/Result';
 import { Screen } from '@/src/components/layout/Screen';
 

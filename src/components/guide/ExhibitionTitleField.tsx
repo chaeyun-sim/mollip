@@ -1,6 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
 import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native';
-
 import { TextField } from '@/src/components/common/TextField';
 import { cn } from '@/src/lib/cn';
 

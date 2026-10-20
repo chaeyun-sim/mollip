@@ -2,7 +2,6 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { Pressable, ScrollView, Text, View } from 'react-native';
 import { useShallow } from 'zustand/react/shallow';
-
 import { Screen } from '@/src/components/layout/Screen';
 import { SettingsCard } from '@/src/components/mypage';
 import { cn } from '@/src/lib/cn';

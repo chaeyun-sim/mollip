@@ -1,7 +1,6 @@
 import type { ReactNode } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { Pressable, Text, View } from 'react-native';
-
 import { cn } from '@/src/lib/cn';
 
 export interface CardRowProps {

@@ -3,7 +3,6 @@ import { BottomSheetBackdrop, BottomSheetModal, BottomSheetScrollView } from '@g
 import { forwardRef } from 'react';
 import { Pressable, Text, View, useWindowDimensions } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-
 import type { PendingRecordItem } from '@/src/components/archive/PendingRecordStrip';
 import { colors } from '@/src/constants/colors';
 import { cn } from '@/src/lib/cn';

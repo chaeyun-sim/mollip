@@ -1,5 +1,4 @@
 import { View } from 'react-native';
-
 import { SkeletonBox } from '@/src/components/layout/Loading/SkeletonBox';
 
 const SKELETON_ROWS = 3;

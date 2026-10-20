@@ -2,7 +2,6 @@ import { Ionicons } from '@expo/vector-icons';
 import type { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { useMemo, useRef } from 'react';
 import { Pressable, Text, View } from 'react-native';
-
 import { PendingRecordSheet } from '@/src/components/archive/PendingRecordSheet';
 import { colors } from '@/src/constants/colors';
 

@@ -2,7 +2,6 @@ import { useRouter } from 'expo-router';
 import { useEffect } from 'react';
 import { BackHandler, Platform } from 'react-native';
 import { useShallow } from 'zustand/react/shallow';
-
 import { useRecordDraftStore } from '@/src/store/recordDraftStore';
 import {
 	canAdvanceWriteStep,

@@ -1,7 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
-
 import { ArtworkChatThread } from '@/src/components/archive/ArtworkChatThread';
 import { colors } from '@/src/constants/colors';
 import { cn } from '@/src/lib/cn';

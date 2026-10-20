@@ -1,6 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Pressable, type PressableProps, Text } from 'react-native';
-
 import { cn } from '@/src/lib/cn';
 
 export type ChipVariant = 'elevated' | 'tonal';

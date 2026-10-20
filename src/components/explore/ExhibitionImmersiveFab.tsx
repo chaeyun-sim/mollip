@@ -2,7 +2,6 @@ import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { View } from 'react-native';
 import Animated from 'react-native-reanimated';
-
 import { usePressScale } from '@/src/hooks/usePressScale';
 import { LoginRequiredPressable } from '../auth/LoginRequiredPressable';
 

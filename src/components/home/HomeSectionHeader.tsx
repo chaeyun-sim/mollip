@@ -1,6 +1,5 @@
 import type { ReactNode } from 'react';
 import { Text, View } from 'react-native';
-
 import { cn } from '@/src/lib/cn';
 
 /** rem 기반 px-6(≈21px)과 무관하게 폭 계산과 맞도록 24로 고정 */

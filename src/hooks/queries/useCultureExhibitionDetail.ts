@@ -1,5 +1,4 @@
 import { useQuery } from '@tanstack/react-query';
-
 import { getCultureDetail } from '@/src/api/culture';
 import type { Exhibition } from '@/src/data/exhibitions';
 import { mapCultureItemToExhibition } from '@/src/utils/cultureExhibitionMapper';

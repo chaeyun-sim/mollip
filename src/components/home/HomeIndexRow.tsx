@@ -1,5 +1,4 @@
 import { Text, View } from 'react-native';
-
 import { ScalePressable } from '@/src/components/common/ScalePressable';
 import { cn } from '@/src/lib/cn';
 
