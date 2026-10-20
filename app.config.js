@@ -41,13 +41,7 @@ module.exports = {
 			infoPlist: {
 				CFBundleDisplayName: '몰립',
 				CFBundleName: '몰립',
-				NSPhotoLibraryUsageDescription: '사진 라이브러리에 접근합니다.',
-				NSCameraUsageDescription: '카메라를 사용합니다.',
-				NSMicrophoneUsageDescription: '마이크를 사용합니다.',
-				NSLocationWhenInUseUsageDescription:
-					'주변 전시관을 지도에 표시하기 위해 위치 정보를 사용합니다.',
-				NSLocationAlwaysAndWhenInUseUsageDescription:
-					'주변 전시관을 지도에 표시하기 위해 위치 정보를 사용합니다.',
+				// 사진·카메라·위치 권한 문구는 아래 expo-image-picker / expo-location 플러그인에서 지정한다
 				NMFClientId: NAVER_CLIENT_ID,
 				// 문화포털(culture.go.kr) 전시 썸네일이 HTTP로만 제공되어 ATS 예외 필요
 				NSAppTransportSecurity: {
@@ -108,8 +102,12 @@ module.exports = {
 			[
 				'expo-image-picker',
 				{
-					photosPermission: '사진 라이브러리에 접근합니다.',
-					cameraPermission: '카메라를 사용합니다.',
+					photosPermission:
+						'작품 사진으로 AI 해설을 만들고 관람 기록에 사진을 첨부하기 위해 사진 보관함에 접근합니다.',
+					cameraPermission:
+						'작품을 촬영해 AI 해설을 만들고 관람 기록에 사진을 남기기 위해 카메라를 사용합니다.',
+					// 동영상 촬영을 하지 않으므로 마이크 권한을 요청하지 않는다
+					microphonePermission: false,
 				},
 			],
 			'expo-font',
@@ -122,6 +120,8 @@ module.exports = {
 						'근처 전시 알림을 켠 경우, 주변 전시에 도착했을 때 알려드리기 위해 위치를 사용합니다. 이동 경로는 저장하거나 전송하지 않습니다.',
 					locationAlwaysPermission:
 						'근처 전시 알림을 켠 경우, 주변 전시에 도착했을 때 알려드리기 위해 위치를 사용합니다. 이동 경로는 저장하거나 전송하지 않습니다.',
+					// 활동(모션) 인식을 쓰지 않으므로 모션 권한 문구를 넣지 않는다
+					motionUsagePermission: false,
 					isIosBackgroundLocationEnabled: true,
 					isAndroidBackgroundLocationEnabled: true,
 				},
@@ -138,6 +138,8 @@ module.exports = {
 				'expo-secure-store',
 				{
 					configureAndroidBackup: true,
+					// 생체 인증 보호(requireAuthentication)를 쓰지 않으므로 Face ID 권한 문구를 넣지 않는다
+					faceIDPermission: false,
 				},
 			],
 			'expo-sqlite',
