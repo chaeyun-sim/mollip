@@ -35,8 +35,18 @@ export default function ExploreScreen() {
 	const name = useAuthStore((s) => s.user?.user_metadata?.full_name);
 	const { isPremium, isLoading: isSubscriptionLoading } = useSubscription();
 
-	const { kcisaQuery, cultureQuery, featuredCarousel, displayedRecommended, isPersonalized } =
-		useExploreScreenData();
+	const {
+		kcisaQuery,
+		cultureQuery,
+		featuredCarousel,
+		displayedRecommended,
+		isPersonalized,
+		preferredGenres,
+		preferencesLoading,
+		preferencesError,
+		recommendationsLoading,
+		recommendationsError,
+	} = useExploreScreenData();
 
 	// 인기 데이터는 '이번 주의 전시'의 '인기 전시' 자리를 고르는 데만 쓴다
 	const { data: popularItems = [], isLoading: popularLoading } = usePopularExhibitions(
@@ -77,7 +87,6 @@ export default function ExploreScreen() {
 	const departuresStatus = toAsyncStatus(cultureQuery.isLoading || kcisaQuery.isLoading, false);
 
 	const openExhibition = useCallback((id: string) => router.push(`/(explore)/${id}`), [router]);
-	const openRecommendations = useCallback(() => router.push('/recommendations'), [router]);
 
 	const handleDocentPress = () => {
 		// 프리미엄 여부를 아직 모르는 동안에는 구독자를 결제 화면으로 보내지 않는다.
@@ -86,7 +95,7 @@ export default function ExploreScreen() {
 	};
 
 	// 도록 목차처럼 보이는 섹션에만 번호를 이어서 매긴다 (숨겨진 섹션 번호는 건너뛰지 않는다)
-	const showRecommended = isPersonalized && homeRecommended.length > 0;
+	const showRecommended = isPersonalized || preferencesLoading || preferencesError;
 
 	return (
 		<Screen variant="warm" className="px-0">
@@ -150,8 +159,11 @@ export default function ExploreScreen() {
 					<RecommendedIndex
 						title={name ? `${name}님의 취향 저격!` : '취향 맞춤 추천'}
 						items={homeRecommended}
+						preferredGenres={preferredGenres}
 						onPress={openExhibition}
-						onSeeAll={openRecommendations}
+						isLoading={preferencesLoading || recommendationsLoading}
+						isError={preferencesError || recommendationsError}
+						hasPreferences={isPersonalized}
 					/>
 				)}
 			</ScrollView>

@@ -4,22 +4,22 @@ author: taylor
 status: blocked
 ---
 
-# QA report — 취향 추천 그리드와 전체 보기
+# QA report — 취향 추천 미리보기와 큐레이션 페이지
 
 ## AC evidence
 
-| AC                  | tsc         | Tests           | Screenshot              | Interaction    | Result  |
-| ------------------- | ----------- | --------------- | ----------------------- | -------------- | ------- |
-| AC-1 홈 미리보기    | ✅ 0 errors | ✅ suite passed | ⏸ Simulator unavailable | ⏸ Not verified | Partial |
-| AC-2 전체 페이지    | ✅ 0 errors | ✅ suite passed | ⏸ Simulator unavailable | ⏸ Not verified | Partial |
-| AC-3 상태·취향 갱신 | ✅ 0 errors | ✅ suite passed | ⏸ Simulator unavailable | ⏸ Not verified | Partial |
+| AC                  | tsc         | Tests                               | Screenshot                    | Interaction                  | Result  |
+| ------------------- | ----------- | ----------------------------------- | ----------------------------- | ---------------------------- | ------- |
+| AC-1 홈 미리보기    | ✅ 0 errors | ⚠️ 전체 1건 실패 (기능 무관 테스트) | ⏸ 실기기 확인 중, 캡처 미수집 | ⏸ 사용자 실기기 확인 진행 중 | Partial |
+| AC-2 전체 페이지    | ✅ 0 errors | ⚠️ 전체 1건 실패 (기능 무관 테스트) | ⏸ 실기기 확인 중, 캡처 미수집 | ⏸ 사용자 실기기 확인 진행 중 | Partial |
+| AC-3 상태·취향 갱신 | ✅ 0 errors | ⚠️ 전체 1건 실패 (기능 무관 테스트) | ⏸ 실기기 확인 중, 캡처 미수집 | ⏸ 사용자 실기기 확인 진행 중 | Partial |
 
 ## Checks
 
 - `npx tsc --noEmit`: passed, 0 errors.
-- `npm test -- --runInBand`: passed, 50 suites / 381 tests.
+- `npm test -- --runInBand`: 51 suites passed, 1 suite failed (390 passed / 391 tests). `src/hooks/queries/__tests__/usePreferences.test.tsx` fails because the pending mocked query does not expose `['회화']` after its flush; reproduced when run alone. This test does not exercise recommendation ranking or cards.
 - `git diff --check`: passed.
-- iOS simulator: `xcrun simctl list devices available` worked, but after booting iPhone 16 Pro, CoreSimulatorService became invalid and `simctl` could no longer connect. Screenshot inspection and interaction QA were not possible.
+- Simulator testing is intentionally excluded at the user's request; the user is testing on a physical device. Screenshot and interaction evidence remain pending.
 - Claude Alex design review: not run because Claude CLI is not authenticated (`Not logged in`).
 
 ## Exception QA scenarios — manual required
@@ -33,4 +33,4 @@ status: blocked
 
 ## Status
 
-Implementation is in place, but visual/interaction verification and the independent design QA gate remain incomplete due to environment access failures.
+Implementation is in place. Static checks passed; visual/interaction verification remains with the user's current physical-device session. The independent design QA gate also remains open because Claude CLI is unauthenticated.

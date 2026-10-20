@@ -9,6 +9,6 @@ export interface RecommendableItem {
 	/** Supabase `start_date` (YYYY.MM.DD), 썸네일 표시 불가 시 대체 정보로 사용 */
 	startDate?: string | null;
 	endDate?: string | null;
-	/** 사용자에게 보여줄 수 있는 실제 추천 근거 */
-	recommendationReason?: string;
+	/** 전시 데이터와 실제로 일치한 사용자 취향 태그 */
+	recommendationTags?: string[];
 }

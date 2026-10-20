@@ -67,7 +67,13 @@ export function useExploreScreenData() {
 
 	const { data: kcisaItems = [], ...kcisaQuery } = useKcisaExhibitions();
 
-	const { preferredGenres } = usePreferences(userId);
+	const {
+		preferredGenres,
+		preferredArtists,
+		preferredTasteDetails,
+		isLoading: preferencesLoading,
+		isError: preferencesError,
+	} = usePreferences(userId);
 
 	const featuredCarousel = useMemo<FeaturedExhibition[]>(() => {
 		if (kcisaItems.length > 0) return toFeaturedCarousel(kcisaItems, 'kcisa');
@@ -82,12 +88,23 @@ export function useExploreScreenData() {
 		[kcisaItems, featured, featuredCarousel.length],
 	);
 
-	// preferredArtists는 useRecommendedExhibitions의 스코어링에 반영되지 않는다
-	// (exhibitions 테이블에 artist 컬럼이 없음) — 개인화 여부는 장르 선호로만 판단한다.
-	const isPersonalized = preferredGenres.length > 0;
+	// 전시 정보 텍스트에서 작가명이 확인되는 경우에도 개인화 추천을 제공한다.
+	const isPersonalized =
+		preferredGenres.length > 0 ||
+		preferredArtists.length > 0 ||
+		preferredTasteDetails.moods.length > 0 ||
+		preferredTasteDetails.venueScales.length > 0 ||
+		preferredTasteDetails.artMovements.length > 0;
 
-	const { data: recommendedItems = [] } = useRecommendedExhibitions(
+	const {
+		data: recommendedItems = [],
+		isLoading: recommendationsLoading,
+		isError: recommendationsError,
+		refetch: refetchRecommendations,
+	} = useRecommendedExhibitions(
 		preferredGenres,
+		preferredArtists,
+		preferredTasteDetails,
 		isPersonalized,
 	);
 
@@ -99,5 +116,11 @@ export function useExploreScreenData() {
 		kcisaCarousel,
 		displayedRecommended: recommendedItems,
 		isPersonalized,
+		preferredGenres,
+		preferencesLoading,
+		preferencesError,
+		recommendationsLoading,
+		recommendationsError,
+		refetchRecommendations,
 	};
 }

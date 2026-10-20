@@ -5,7 +5,7 @@ author: john
 status: pass
 ---
 
-# Spec — 취향 추천 그리드와 전체 보기
+# Spec — 취향 추천 미리보기와 큐레이션 페이지
 
 ## Problem
 
