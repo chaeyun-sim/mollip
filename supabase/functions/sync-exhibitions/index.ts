@@ -159,9 +159,10 @@ function kcisaRow(item: string, source: 'sac' | 'kcisa_moca'): Exhibition | null
 	const isSac = source === 'sac';
 	if (isSac && tag(item, 'GENRE') !== '전시') return null;
 	const title = tag(item, isSac ? 'TITLE' : 'title');
+	// MOCA의 rights는 주최·후원 문구이고 venue는 '과천'·'청주' 같은 분관명만 온다.
 	const venue = isSac
 		? tag(item, 'EVENT_SITE') || tag(item, 'CNTC_INSTT_NM')
-		: tag(item, 'rights') || tag(item, 'venue');
+		: `국립현대미술관 ${tag(item, 'venue')}`.trim();
 	const period = tag(item, isSac ? 'PERIOD' : 'eventPeriod');
 	const match = period.match(/^(\d{4})-(\d{2})-(\d{2})~(\d{4})-(\d{2})-(\d{2})$/);
 	if (!match) return null;
@@ -177,7 +178,13 @@ function kcisaRow(item: string, source: 'sac' | 'kcisa_moca'): Exhibition | null
 				image_url: tag(item, 'IMAGE_OBJECT'),
 			}
 		: {
-				description: tag(item, 'subDescription'),
+				// 참여 작가를 설명에 남겨 취향 작가 매칭에 쓸 수 있게 한다.
+				description: [
+					tag(item, 'subDescription'),
+					tag(item, 'person') && `참여 작가: ${tag(item, 'person')}`,
+				]
+					.filter(Boolean)
+					.join('\n'),
 				admission: tag(item, 'charge') === '0' ? '무료' : tag(item, 'charge') || '정보 없음',
 			};
 	for (const [key, value] of Object.entries(fields)) if (value) row[key] = value;
@@ -265,9 +272,9 @@ Deno.serve(async (req) => {
 		const serviceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';
 		if (!supabaseUrl || !serviceKey) throw new Error('Supabase server credentials are missing.');
 		const supabase = createClient(supabaseUrl, serviceKey);
-		const dataKey = Deno.env.get('EXPO_PUBLIC_DATA_KEY') ?? '';
-		const sacKey = Deno.env.get('EXPO_SAC_API_KEY') ?? '';
-		const kcisaKey = Deno.env.get('EXPO_KOREAN_CONTEMPORARY_MUSEUM_API_KEY') ?? '';
+		const dataKey = Deno.env.get('PUBLIC_DATA_KEY') ?? '';
+		const sacKey = Deno.env.get('SAC_API_KEY') ?? '';
+		const kcisaKey = Deno.env.get('KOREAN_CONTEMPORARY_MUSEUM_API_KEY') ?? '';
 		if (!dataKey || !sacKey || !kcisaKey)
 			throw new Error('One or more exhibition source API keys are missing.');
 

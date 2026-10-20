@@ -100,7 +100,7 @@ Supabase Edge Functions 인벤토리 및 클라이언트-백엔드 연동 방식
   supabase functions deploy sync-exhibitions --no-verify-jwt
   ```
 
-전시 동기화에는 Edge Function Secrets `EXPO_PUBLIC_DATA_KEY`, `EXPO_SAC_API_KEY`, `EXPO_KOREAN_CONTEMPORARY_MUSEUM_API_KEY`가 추가로 필요하다. Vault에는 기존 `cron_secret` 외에 `supabase_url`(예: `https://<project-ref>.supabase.co`)을 저장한다. 스케줄 마이그레이션은 이 두 Vault 값을 읽어 함수를 호출한다. 동기화 결과는 Supabase Dashboard의 Edge Function Logs와 `data_sync_meta`에서 확인한다.
+전시 동기화에는 Edge Function Secrets `PUBLIC_DATA_KEY`, `SAC_API_KEY`, `KOREAN_CONTEMPORARY_MUSEUM_API_KEY`가 추가로 필요하다(값은 로컬 `.env`의 `EXPO_` 접두사 키와 같다). Vault에는 기존 `cron_secret` 외에 `supabase_url`(예: `https://<project-ref>.supabase.co`)을 저장한다. 스케줄 마이그레이션은 이 두 Vault 값을 읽어 함수를 호출한다. 동기화 결과는 Supabase Dashboard의 Edge Function Logs와 `data_sync_meta`에서 확인한다.
 
 cron의 `succeeded`는 요청을 던졌다는 뜻일 뿐이다. 실제 응답은 `net._http_response`의 `status_code`와 `content`로 확인한다.
 
@@ -121,7 +121,7 @@ cron의 `succeeded`는 요청을 던졌다는 뜻일 뿐이다. 실제 응답은
 | `EXPO_PUBLIC_JUSO_CONFIRM_KEY`                                 | 클라이언트(`.env`)                                    | 도로명주소 검색                                                                                               |
 | `EXPO_PUBLIC_DATA_KEY`                                         | 클라이언트(`.env`)                                    | 문화포털(공공데이터포털) 서비스키 — `src/api/culture.ts`                                                      |
 | `EXPO_PUBLIC_EUROPEANA_SPI`                                    | 클라이언트(`.env`)                                    | Europeana 작품 검색 — `src/api/europeana.ts`, 없으면 빈 배열로 폴백                                           |
-| `EXPO_KOREAN_CONTEMPORARY_MUSEUM_API_KEY` / `EXPO_SAC_API_KEY` | Supabase Edge Function Secrets + 로컬 `.env`          | `sync-exhibitions` 및 기존 동기화 스크립트 — 앱 런타임에서는 사용하지 않음                                    |
+| `EXPO_KOREAN_CONTEMPORARY_MUSEUM_API_KEY` / `EXPO_SAC_API_KEY` | 로컬 `.env`                                           | 기존 동기화 스크립트 — 앱 런타임에서는 사용하지 않음. `sync-exhibitions`는 `EXPO_` 없는 이름의 Secrets를 사용 |
 
 Met/AIC/Wikidata는 키가 필요 없다 — §2.6 참고. `EXPO_PUBLIC_KAKAO_JS_KEY`는 카카오톡 공유가 네이티브 SDK(`@react-native-kakao/share`)로 바뀌면서 코드 어디에서도 더 이상 참조되지 않는다(`.env.example`엔 남아있을 수 있으니 정리 시 같이 제거 대상).
 
