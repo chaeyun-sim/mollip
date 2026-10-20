@@ -32,7 +32,7 @@ module.exports = {
 		icon: './assets/images/logo/icon.png',
 		userInterfaceStyle: 'light',
 		ios: {
-			supportsTablet: true,
+			supportsTablet: false,
 			bundleIdentifier: 'com.simune.mollip',
 			usesAppleSignIn: true,
 			config: {
