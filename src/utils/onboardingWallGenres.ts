@@ -1,5 +1,15 @@
 import { ART_GENRE_VALUES } from '@/src/constants/exhibitionTaxonomy';
 
+export const ONBOARDING_GENRE_OPTIONS = [
+	'회화',
+	'한국화',
+	'조각',
+	'공예',
+	'사진',
+	'판화',
+	'현대미술',
+] as const;
+
 /** 선택된 장르 목록에서 ART_GENRE_VALUES와 일치하는 중복 없는 값만 남긴다 (AC-4). */
 export function toValidGenres(genres: string[]): string[] {
 	const unique = [...new Set(genres)];

@@ -1,16 +1,20 @@
 import { Image, Text, View } from 'react-native';
-
 import { Button } from '@/src/components/common/Button';
 import { Screen } from '@/src/components/layout/Screen';
 import { OnboardingSkipAction } from '@/src/components/onboarding/OnboardingSkipAction';
 
 interface OnboardingWallPrologueProps {
-	onStart: () => void;
+	onStartWall: () => void;
+	onStartChips: () => void;
 	onSkip: () => void;
 }
 
 /** 빈 벽 앞에서 시작하는 온보딩 프롤로그 — 소개 티켓·오디오 없이 진입/스킵만 제공한다. */
-export function OnboardingWallPrologue({ onStart, onSkip }: OnboardingWallPrologueProps) {
+export function OnboardingWallPrologue({
+	onStartWall,
+	onStartChips,
+	onSkip,
+}: OnboardingWallPrologueProps) {
 	return (
 		<>
 			<Screen.Header>
@@ -21,13 +25,13 @@ export function OnboardingWallPrologue({ onStart, onSkip }: OnboardingWallProlog
 			</Screen.Header>
 			<View className="gap-2">
 				<Text className="text-3xl text-gray900 mb-2 font-pretendard-bold">
-					마음이 머무는 작품으로{'\n'}첫 전시를 꾸며볼까요?
+					마음이 머무는 방식으로{'\n'}취향을 골라볼까요?
 				</Text>
 				<Text className="text-md leading-6 text-gray700">
-					{`최소 세 장만 고르면\n취향에 맞는 전시를 먼저 보여드려요`}
+					좋아하는 장르를 알려주시면 취향에 맞는 전시를 추천해드려요.
 				</Text>
 			</View>
-			<View className="mb-20 w-full flex-1 items-center justify-center">
+			<View className="mb-8 w-full flex-1 items-center justify-center">
 				<View className="w-[270px] h-[200px] relative rounded-2xl border-[1.5px] border-dashed border-gray300 overflow-hidden">
 					<Image
 						source={require('@/assets/images/onboarding/wall-bg.png')}
@@ -39,9 +43,18 @@ export function OnboardingWallPrologue({ onStart, onSkip }: OnboardingWallProlog
 					/>
 				</View>
 			</View>
-			<Screen.Bottom className="items-center bottom-10">
-				<Button onPress={onStart} accessibilityLabel="내 전시 벽 만들기">
-					내 전시 벽 만들기
+			<Screen.Bottom className="bottom-10 gap-2">
+				<Button onPress={onStartWall} accessibilityLabel="작품을 골라 전시 벽 만들기">
+					작품을 골라 전시 벽 만들기
+				</Button>
+				<Button
+					variant="ghost"
+					tone="gray"
+					block
+					onPress={onStartChips}
+					accessibilityLabel="장르 칩으로 빠르게 고르기"
+				>
+					장르 칩으로 빠르게 고르기
 				</Button>
 			</Screen.Bottom>
 		</>
