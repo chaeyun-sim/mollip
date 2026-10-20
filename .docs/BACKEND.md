@@ -51,6 +51,7 @@ Supabase Edge Functions 인벤토리 및 클라이언트-백엔드 연동 방식
 | `kakao-local-search`   | `{ query, size? }`                                                                                                                                                              | Kakao 키워드 장소 검색 API 프록시 (`KAKAO_API_KEY`는 서버 전용)                                                                                                                                                                                   | Kakao 응답 relay        |
 | `naver-local-search`   | `{ query, display? }`                                                                                                                                                           | NAVER API HUB(NCP) 지역 검색 프록시. 2026-07-31부로 구 openapi.naver.com에서 이관되어 엔드포인트·인증 헤더가 다름(주석에 명시). 좌표 기반 정렬 미지원이라 거리순 정렬은 클라이언트에서 처리                                                       | `{ items: [...] }`      |
 | `send-recommendations` | 없음 (cron 전용, `pg_cron '30 2 * * 1'` = 매주 월요일 11:30 KST, jobname `mollip-recommendations`. 명령에 남은 "최근 3일 내 발송 시 건너뜀" 조건은 주 1회 실행이라 걸리지 않음) | `push_token`·`preferred_genres` 있는 프로필 조회 → 진행 중 전시에서 장르 매칭 top 3 선정 → Expo Push API로 배치(100건 단위) 발송. 인증은 `CRON_SECRET`(§2.8)                                                                                      | 없음 (side-effect only) |
+| `sync-exhibitions`     | 없음 (cron 전용, `pg_cron '20 18 * * *'` = 매일 03:20 KST)                                                                                                                      | 문화포털·예술의전당·KCISA 공개 API에서 전시를 가져와 `exhibitions`에 동기화. `CRON_SECRET` 인증. API별 키는 Edge Function Secrets에 설정                                                                                                          | `{ ok, synced }`        |
 | `odsay-route`          | `{ start: {latitude,longitude}, end: {latitude,longitude}, searchMethod: '1'\|'2' }`                                                                                            | ODsay Lab 멀티모달 길찾기(`maasRP`) 프록시. `ODSAY_API_KEY` 미설정 시 500                                                                                                                                                                         | ODsay 원본 응답 relay   |
 
 `image-proxy`는 `src/utils/imageProxy.ts`의 `proxiedImageUrl()`이 감싸며, 위키 이미지 등 외부 이미지 URL을 화면에 표시하기 전에 항상 이 프록시를 거치도록 강제한다. `kakao-local-search`/`naver-local-search`는 각각 `src/api/kakao.ts`/`src/api/naver.ts`에서 호출되고, `generate-route`(`streamRoute`)는 `src/components/explore/RouteSheet.tsx`에서 호출된다. `odsay-route`는 `src/api/tmap.ts`(이름은 tmap이지만 실제 구현은 ODsay로 교체됨)가 `supabase.functions.invoke('odsay-route', ...)`로 호출하고, `src/hooks/useDirections.ts`가 이를 감싼다.
@@ -96,7 +97,10 @@ Supabase Edge Functions 인벤토리 및 클라이언트-백엔드 연동 방식
   supabase functions deploy process-notification-jobs --no-verify-jwt
   supabase functions deploy send-bookmark-deadline-reminders --no-verify-jwt
   supabase functions deploy send-recommendations --no-verify-jwt
+  supabase functions deploy sync-exhibitions --no-verify-jwt
   ```
+
+전시 동기화에는 Edge Function Secrets `EXPO_PUBLIC_DATA_KEY`, `EXPO_SAC_API_KEY`, `EXPO_KOREAN_CONTEMPORARY_MUSEUM_API_KEY`가 추가로 필요하다. Vault에는 기존 `cron_secret` 외에 `supabase_url`(예: `https://<project-ref>.supabase.co`)을 저장한다. 스케줄 마이그레이션은 이 두 Vault 값을 읽어 함수를 호출한다. 동기화 결과는 Supabase Dashboard의 Edge Function Logs와 `data_sync_meta`에서 확인한다.
 
 cron의 `succeeded`는 요청을 던졌다는 뜻일 뿐이다. 실제 응답은 `net._http_response`의 `status_code`와 `content`로 확인한다.
 
@@ -117,7 +121,7 @@ cron의 `succeeded`는 요청을 던졌다는 뜻일 뿐이다. 실제 응답은
 | `EXPO_PUBLIC_JUSO_CONFIRM_KEY`                                 | 클라이언트(`.env`)                                    | 도로명주소 검색                                                                                               |
 | `EXPO_PUBLIC_DATA_KEY`                                         | 클라이언트(`.env`)                                    | 문화포털(공공데이터포털) 서비스키 — `src/api/culture.ts`                                                      |
 | `EXPO_PUBLIC_EUROPEANA_SPI`                                    | 클라이언트(`.env`)                                    | Europeana 작품 검색 — `src/api/europeana.ts`, 없으면 빈 배열로 폴백                                           |
-| `EXPO_KOREAN_CONTEMPORARY_MUSEUM_API_KEY` / `EXPO_SAC_API_KEY` | 로컬 스크립트 전용                                    | `scripts/sync_kcisa_moca_exhibitions.py`, `scripts/sync_sac_exhibitions.py` — 앱 런타임에서는 사용하지 않음   |
+| `EXPO_KOREAN_CONTEMPORARY_MUSEUM_API_KEY` / `EXPO_SAC_API_KEY` | Supabase Edge Function Secrets + 로컬 `.env`          | `sync-exhibitions` 및 기존 동기화 스크립트 — 앱 런타임에서는 사용하지 않음                                    |
 
 Met/AIC/Wikidata는 키가 필요 없다 — §2.6 참고. `EXPO_PUBLIC_KAKAO_JS_KEY`는 카카오톡 공유가 네이티브 SDK(`@react-native-kakao/share`)로 바뀌면서 코드 어디에서도 더 이상 참조되지 않는다(`.env.example`엔 남아있을 수 있으니 정리 시 같이 제거 대상).
 
