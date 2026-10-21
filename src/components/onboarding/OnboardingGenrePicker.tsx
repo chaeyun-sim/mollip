@@ -21,7 +21,7 @@ export function OnboardingGenrePicker({
 	onConfirm,
 	title = '어떤 장르의 전시가 끌리나요?',
 	description = '좋아하는 장르를 모두 골라주세요',
-	submitLabel = '이 취향으로 시작하기',
+	submitLabel = '다음',
 }: OnboardingGenrePickerProps) {
 	const hasSelection = selectedGenres.length > 0;
 

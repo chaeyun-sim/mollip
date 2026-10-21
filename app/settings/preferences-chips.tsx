@@ -1,4 +1,4 @@
-import { useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
 import { Alert } from 'react-native';
 import { useQueryClient } from '@tanstack/react-query';
@@ -12,12 +12,15 @@ import { supabase } from '@/src/utils/supabase';
 
 export default function PreferencesChipsScreen() {
 	const router = useRouter();
+	const { from } = useLocalSearchParams<{ from?: string }>();
 	const queryClient = useQueryClient();
 	const userId = useAuthStore((state) => state.user?.id);
 	const preferences = usePreferences(userId);
 	const [value, setValue] = useState<PreferredTasteDetails>(EMPTY_PREFERRED_TASTE);
 	const [artists, setArtists] = useState<string[]>([]);
 	const [saving, setSaving] = useState(false);
+
+	const isFromOnboarding = from === 'onboarding';
 
 	useEffect(() => {
 		setValue(preferences.preferredTasteDetails);
@@ -108,14 +111,28 @@ export default function PreferencesChipsScreen() {
 			preferredTasteDetails: value,
 		}));
 		void queryClient.invalidateQueries({ queryKey: ['exhibitions', 'recommended'] });
+		if (isFromOnboarding) {
+			// 온보딩에서 방금 저장한 장르가 캐시에 없을 수 있어 서버 값으로 다시 불러온다
+			void queryClient.invalidateQueries({ queryKey: preferencesQueryKey(userId) });
+			router.replace('/(tabs)');
+			return;
+		}
 		router.back();
-	}, [userId, saving, value, artists, queryClient, router]);
+	}, [userId, saving, value, artists, queryClient, router, isFromOnboarding]);
+
+	const handleBack = useCallback(() => {
+		if (isFromOnboarding) {
+			router.replace('/(tabs)');
+			return;
+		}
+		router.back();
+	}, [isFromOnboarding, router]);
 
 	return (
 		<Screen variant="warm">
 			<Screen.Header>
 				<Screen.Header.Left>
-					<Screen.Header.Back />
+					<Screen.Header.Back onPress={handleBack} />
 				</Screen.Header.Left>
 				<Screen.Header.Center>취향 강화하기</Screen.Header.Center>
 			</Screen.Header>

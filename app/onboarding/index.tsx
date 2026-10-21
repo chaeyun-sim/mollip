@@ -88,7 +88,8 @@ export default function OnboardingScreen() {
 
 			await setLocalOnboardingCompleted(userId, true);
 			setOnboardingCompleted(true);
-			router.replace('/(tabs)');
+			// 신규 가입자는 장르 저장 후 바로 시작하지 않고 취향 강화하기로 이어간다
+			router.replace({ pathname: '/settings/preferences-chips', params: { from: 'onboarding' } });
 		},
 		[userId, saving, setOnboardingCompleted, router],
 	);

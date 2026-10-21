@@ -47,15 +47,6 @@ export function OnboardingWallPrologue({
 				<Button onPress={onStartWall} accessibilityLabel="작품을 골라 전시 벽 만들기">
 					작품을 골라 전시 벽 만들기
 				</Button>
-				<Button
-					variant="ghost"
-					tone="gray"
-					block
-					onPress={onStartChips}
-					accessibilityLabel="장르 칩으로 빠르게 고르기"
-				>
-					장르 칩으로 빠르게 고르기
-				</Button>
 			</Screen.Bottom>
 		</>
 	);

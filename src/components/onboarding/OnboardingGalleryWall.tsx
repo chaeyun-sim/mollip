@@ -163,8 +163,8 @@ export function OnboardingGalleryWall({
 		onConfirm();
 	}, [wall, onConfirm]);
 	const canConfirmWall = wall.count >= 3 && !busy && drag === null;
-	// 취향 수정 화면(초기화 버튼 있음)은 저장, 온보딩은 시작 문구를 쓴다
-	const confirmLabel = onResetPreferences ? '취향 저장하기' : '바로 시작하기';
+	// 취향 수정 화면(초기화 버튼 있음)은 저장, 온보딩은 취향 강화하기로 넘어가므로 다음 문구를 쓴다
+	const confirmLabel = onResetPreferences ? '취향 저장하기' : '다음';
 	const busyLabel = onResetPreferences ? '저장 중…' : '취향 저장 중…';
 
 	return (
