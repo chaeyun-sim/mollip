@@ -58,7 +58,7 @@ export default function MyPageScreen() {
 
 	return (
 		<Screen variant="warm" className={session ? 'px-6' : 'px-0'}>
-			<CommonHeader />
+			<CommonHeader fullBleed={!session} />
 
 			<ScrollView
 				showsVerticalScrollIndicator={false}
