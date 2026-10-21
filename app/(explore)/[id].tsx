@@ -117,11 +117,6 @@ export default function ExhibitionDetailScreen() {
 				<View className="flex-row items-center justify-between">
 					<CircleActionButton icon="chevron-back" label="뒤로가기" onPress={() => router.back()} />
 					<View className="flex-row gap-2">
-						<CircleActionButton
-							icon="map-outline"
-							label="관람 루트 보기"
-							onPress={() => router.push(`/(explore)/route?id=${id}`)}
-						/>
 						<CircleActionButton icon="share-outline" label="공유하기" onPress={handleShare} />
 					</View>
 				</View>
