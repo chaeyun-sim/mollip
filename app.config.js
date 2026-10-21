@@ -120,8 +120,9 @@ module.exports = {
 						'근처 전시 알림을 켠 경우, 주변 전시에 도착했을 때 알려드리기 위해 위치를 사용합니다. 이동 경로는 저장하거나 전송하지 않습니다.',
 					locationAlwaysPermission:
 						'근처 전시 알림을 켠 경우, 주변 전시에 도착했을 때 알려드리기 위해 위치를 사용합니다. 이동 경로는 저장하거나 전송하지 않습니다.',
-					// 활동(모션) 인식을 쓰지 않으므로 모션 권한 문구를 넣지 않는다
-					motionUsagePermission: false,
+					// 앱은 모션 인식을 쓰지 않지만 expo-location이 모션 API를 참조해 App Store 업로드 시 문구가 필수다
+					motionUsagePermission:
+						'근처 전시 알림 기능에서 위치 서비스와 함께 기기의 동작 정보를 사용할 수 있습니다.',
 					isIosBackgroundLocationEnabled: true,
 					isAndroidBackgroundLocationEnabled: true,
 				},
