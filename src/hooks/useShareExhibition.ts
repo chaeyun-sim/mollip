@@ -1,3 +1,4 @@
+import { initializeKakaoSDK } from '@react-native-kakao/core';
 import { shareLocationTemplate } from '@react-native-kakao/share';
 import { Share } from 'react-native';
 import type { Exhibition } from '@/src/data/exhibitions';
@@ -19,6 +20,10 @@ export function useShareExhibition(exhibition: Exhibition | null) {
 				: undefined;
 
 		try {
+			// 초기화하지 않은 카카오 SDK로 공유하면 네이티브에서 앱이 크래시하므로 공유 직전에 초기화한다
+			const kakaoAppKey = process.env.EXPO_PUBLIC_KAKAO_API_KEY;
+			if (!kakaoAppKey) throw new Error('Kakao app key is missing');
+			await initializeKakaoSDK(kakaoAppKey);
 			await shareLocationTemplate({
 				template: {
 					address: exhibition.venueAddress ?? '',
