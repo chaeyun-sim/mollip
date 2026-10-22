@@ -28,13 +28,12 @@ FE 구현 현황의 단일 정본. 코드 탐색 전에 먼저 읽을 것.
 | `app/(tabs)/search.tsx`      | 검색 화면                          |
 | `app/(tabs)/diary.tsx`       | 관람 기록(다이어리) 홈             |
 
-### `(explore)` — 전시 상세/경로
+### `(explore)` — 전시 상세
 
 | 파일                        | 역할                                      |
 | --------------------------- | ----------------------------------------- |
 | `app/(explore)/_layout.tsx` | 전시 상세 스택 레이아웃                   |
 | `app/(explore)/[id].tsx`    | 전시 상세 화면 — `ExhibitionDetailScreen` |
-| `app/(explore)/route.tsx`   | 전시관까지 길찾기 경로 화면               |
 
 ### `(guide)` — 오디오 가이드 플로우 (CLAUDE.md App Flow 참고)
 
