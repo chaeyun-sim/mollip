@@ -1,0 +1,96 @@
+import { Ionicons } from '@expo/vector-icons';
+import { Pressable, Text, View } from 'react-native';
+import { useShallow } from 'zustand/react/shallow';
+import { ExhibitionStatusBadge } from '@/src/components/common/ExhibitionStatusBadge';
+import { ImageFallback } from '@/src/components/common/ImageFallback';
+import { useRequireAuth } from '@/src/hooks/useRequireAuth';
+import { useBookmarkStore } from '@/src/store/bookmarkStore';
+import { formatDistance } from '@/src/utils/mapUtils';
+import { getDdayLabel, STATUS_LABELS } from '@/src/utils/exhibitionSearch';
+import { CLOSING_SOON_DAYS } from '@/src/utils/homeExhibitionMeta';
+import type { SearchResult } from '@/src/hooks/useExhibitionSearch';
+
+interface ExhibitionResultCardProps {
+	result: SearchResult;
+	onPress: (id: string) => void;
+	/** 마감 임박 목록 — 전부 진행 중이라 상태 배지를 숨기고, D-day를 14일까지 보여준다 */
+	closingSoon?: boolean;
+}
+
+export function ExhibitionResultCard({
+	result,
+	onPress,
+	closingSoon = false,
+}: ExhibitionResultCardProps) {
+	const { exhibition: ex, status, distanceKm } = result;
+
+	const ddayLabel = closingSoon
+		? getDdayLabel(ex, new Date(), CLOSING_SOON_DAYS)
+		: getDdayLabel(ex);
+	const { isBookmarked, toggleBookmark } = useBookmarkStore(
+		useShallow((s) => ({ isBookmarked: s.isBookmarked(ex.id), toggleBookmark: s.toggle })),
+	);
+	const { ensureAuth } = useRequireAuth();
+
+	const handleToggleBookmark = () => {
+		if (!ensureAuth(`/(explore)/${ex.id}`)) return;
+		toggleBookmark(ex.id);
+	};
+
+	return (
+		<Pressable
+			onPress={() => onPress(ex.id)}
+			accessibilityLabel={`${ex.title}, ${ex.venue}, ${closingSoon && ddayLabel ? ddayLabel : STATUS_LABELS[status]}`}
+			accessibilityRole="button"
+			className="flex-row gap-3.5"
+			style={({ pressed }) => ({ opacity: pressed ? 0.85 : 1 })}
+		>
+			{/* 썸네일 + 상태 배지 오버레이 */}
+			<ImageFallback
+				heroImageUri={ex.heroImageUri}
+				posterImage={ex.posterImage}
+				className="rounded-lg w-[76px] h-[100px]"
+				iconSize={36}
+				resizeMode="cover"
+				useImageProxy
+			/>
+
+			{/* 정보 */}
+			<View className="flex-1 justify-center gap-1">
+				{!closingSoon && <ExhibitionStatusBadge status={status} />}
+				<Text numberOfLines={1} className="text-gray900 text-[15px] font-pretendard-semibold">
+					{ex.title}
+				</Text>
+
+				<Text numberOfLines={1} className="text-gray600 text-[13px] font-pretendard-regular">
+					{ex.venue}
+					{distanceKm !== null && ` · ${formatDistance(distanceKm)}`}
+				</Text>
+
+				<View className="flex-row items-center gap-1.5">
+					<Text className="text-gray500 text-xs font-pretendard-regular">
+						{ex.startDate} - {ex.endDate}
+					</Text>
+					{ddayLabel && (
+						<Text className="text-orange-700 text-xs font-pretendard-semibold">{ddayLabel}</Text>
+					)}
+				</View>
+			</View>
+
+			{/* 북마크 토글 */}
+			<Pressable
+				onPress={handleToggleBookmark}
+				hitSlop={8}
+				accessibilityLabel={isBookmarked ? '북마크 해제' : '북마크 추가'}
+				accessibilityRole="button"
+				className="self-center pl-1"
+			>
+				<Ionicons
+					name={isBookmarked ? 'bookmark' : 'bookmark-outline'}
+					size={20}
+					className={isBookmarked ? 'text-gray900' : 'text-stone-300'}
+				/>
+			</Pressable>
+		</Pressable>
+	);
+}

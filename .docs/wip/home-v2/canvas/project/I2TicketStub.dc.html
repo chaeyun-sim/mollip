@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="ko">
+	<head>
+		<meta charset="utf-8" />
+		<title>홈 I2 티켓 스텁</title>
+		<script src="./support.js"></script>
+	</head>
+	<body>
+		<x-dc>
+			<helmet>
+				<link
+					rel="stylesheet"
+					href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@400;600;700&amp;display=swap"
+				/>
+				<style>
+					@font-face {
+						font-family: 'Pretendard';
+						src: url('/_blob/7977b3ca42ace65d7e67bd031fe90ded') format('opentype');
+						font-weight: 400;
+					}
+					@font-face {
+						font-family: 'Pretendard';
+						src: url('/_blob/8f065eca601ce3cb85348621e7b4c825') format('opentype');
+						font-weight: 500;
+					}
+					@font-face {
+						font-family: 'Pretendard';
+						src: url('/_blob/7a9653a1bcd0948efd3d3730b1362841') format('opentype');
+						font-weight: 600;
+					}
+					body {
+						margin: 0;
+					}
+					a {
+						color: #1c1917;
+						text-decoration: none;
+					}
+					a:hover {
+						color: #57534e;
+					}
+				</style>
+			</helmet>
+			<div
+				style="
+					width: 390px;
+					height: 844px;
+					box-sizing: border-box;
+					background: #f8f6f2;
+					color: #1c1917;
+					font-family: 'Pretendard', sans-serif;
+					position: relative;
+					display: flex;
+					flex-direction: column;
+					overflow: hidden;
+				"
+			>
+				<header
+					style="
+						display: flex;
+						justify-content: space-between;
+						align-items: center;
+						padding: 56px 20px 0 24px;
+					"
+				>
+					<div
+						style="
+							font-family: 'Hahmlet', serif;
+							font-weight: 700;
+							font-size: 26px;
+							letter-spacing: -0.5px;
+						"
+					>
+						mollip
+					</div>
+					<div style="display: flex; gap: 8px">
+						<button
+							aria-label="북마크"
+							style="
+								width: 44px;
+								height: 44px;
+								border: 0;
+								background: transparent;
+								padding: 0;
+								display: flex;
+								align-items: center;
+								justify-content: center;
+							"
+						>
+							<svg
+								width="22"
+								height="22"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="#1C1917"
+								stroke-width="1.6"
+							>
+								<path d="M6 3h12v18l-6-4-6 4z" />
+							</svg>
+						</button>
+						<button
+							aria-label="알림"
+							style="
+								width: 44px;
+								height: 44px;
+								border: 0;
+								background: transparent;
+								padding: 0;
+								display: flex;
+								align-items: center;
+								justify-content: center;
+							"
+						>
+							<svg
+								width="22"
+								height="22"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="#1C1917"
+								stroke-width="1.6"
+							>
+								<path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4z" />
+								<path d="M10 21h4" />
+							</svg>
+						</button>
+					</div>
+				</header>
+
+				<div style="margin: 28px 24px 0 24px; display: flex; align-items: center; gap: 12px">
+					<span style="font-size: 12px; font-weight: 600; letter-spacing: 1px">02</span>
+					<span style="flex: 1; height: 1px; background: #1c1917"></span>
+					<span style="font-size: 10.5px; font-weight: 600; letter-spacing: 2px; color: #a8a29e"
+						>DEPARTURES</span
+					>
+				</div>
+				<div
+					style="
+						margin: 10px 24px 0 24px;
+						font-family: 'Hahmlet', serif;
+						font-weight: 600;
+						font-size: 20px;
+					"
+				>
+					곧 떠나는 전시
+				</div>
+
+				<div style="margin: 14px 16px 0 16px; display: flex; flex-direction: column; gap: 10px">
+					<sc-for list="{{tickets}}" as="t" hint-placeholder-count="4">
+						<a
+							href="#"
+							style="
+								position: relative;
+								display: flex;
+								align-items: stretch;
+								background: #ffffff;
+								border-radius: 14px;
+								box-shadow: 0 1px 2px rgba(28, 25, 23, 0.06);
+							"
+						>
+							<span
+								style="
+									width: 78px;
+									flex-shrink: 0;
+									display: flex;
+									flex-direction: column;
+									align-items: center;
+									justify-content: center;
+									padding: 14px 0;
+									gap: 1px;
+								"
+							>
+								<span style="font-size: 11px; color: #78716c">{{t.month}}</span>
+								<span
+									style="font-family: 'Hahmlet', serif; font-weight: 700; font-size: 28px; line-height: 32px; color: {{t.dayColor}}"
+									>{{t.day}}</span
+								>
+							</span>
+							<span style="width: 0; border-left: 1.5px dashed #e7e5e4; margin: 10px 0"></span>
+							<span
+								style="
+									position: absolute;
+									left: 71px;
+									top: -7px;
+									width: 14px;
+									height: 14px;
+									border-radius: 999px;
+									background: #f8f6f2;
+								"
+							></span>
+							<span
+								style="
+									position: absolute;
+									left: 71px;
+									bottom: -7px;
+									width: 14px;
+									height: 14px;
+									border-radius: 999px;
+									background: #f8f6f2;
+								"
+							></span>
+							<span
+								style="
+									flex: 1;
+									min-width: 0;
+									display: flex;
+									flex-direction: column;
+									justify-content: center;
+									gap: 3px;
+									padding: 14px 16px;
+								"
+							>
+								<span
+									style="
+										font-family: 'Hahmlet', serif;
+										font-weight: 600;
+										font-size: 15px;
+										line-height: 21px;
+										white-space: nowrap;
+										overflow: hidden;
+										text-overflow: ellipsis;
+									"
+									>{{t.title}}</span
+								>
+								<span
+									style="
+										display: flex;
+										justify-content: space-between;
+										align-items: center;
+										gap: 8px;
+									"
+								>
+									<span
+										style="
+											font-size: 11.5px;
+											color: #78716c;
+											white-space: nowrap;
+											overflow: hidden;
+											text-overflow: ellipsis;
+										"
+										>{{t.venue}}</span
+									>
+									<span
+										style="flex-shrink: 0; font-size: 10.5px; font-weight: 600; color: {{t.color}}; border: 1px solid {{t.color}}; border-radius: 999px; padding: 2px 8px; transform: rotate({{t.tilt}})"
+										>{{t.status}}</span
+									>
+								</span>
+							</span>
+						</a>
+					</sc-for>
+				</div>
+
+				<button
+					style="
+						position: absolute;
+						right: 20px;
+						bottom: 100px;
+						height: 52px;
+						padding: 0 20px;
+						border: 0;
+						border-radius: 999px;
+						background: #1c1917;
+						color: #ffffff;
+						font-family: 'Pretendard', sans-serif;
+						font-size: 15px;
+						font-weight: 600;
+						display: flex;
+						align-items: center;
+						gap: 8px;
+						box-shadow: 0 6px 14px rgba(28, 25, 23, 0.28);
+					"
+				>
+					<svg
+						width="20"
+						height="20"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="#FFFFFF"
+						stroke-width="1.8"
+					>
+						<path d="M4 8h3l2-3h6l2 3h3v11H4z" />
+						<circle cx="12" cy="13" r="3.5" />
+					</svg>
+					AI 도슨트
+				</button>
+
+				<footer
+					style="
+						position: absolute;
+						left: 0;
+						right: 0;
+						bottom: 0;
+						height: 84px;
+						background: #ffffff;
+						border-top: 0.5px solid #e7e5e4;
+						display: grid;
+						grid-template-columns: repeat(5, minmax(0, 1fr));
+						padding-top: 12px;
+						box-sizing: border-box;
+					"
+				>
+					<span style="text-align: center; font-size: 11px; color: #a8a29e">전시</span>
+					<span style="text-align: center; font-size: 11px; color: #a8a29e">지도</span>
+					<span style="text-align: center; font-size: 11px; font-weight: 600; color: #7c3aed"
+						>둘러보기</span
+					>
+					<span style="text-align: center; font-size: 11px; color: #a8a29e">다이어리</span>
+					<span style="text-align: center; font-size: 11px; color: #a8a29e">마이페이지</span>
+				</footer>
+			</div>
+		</x-dc>
+		<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+			class Component extends DCLogic {
+			  renderVals() {
+			    const purple = '#7C3AED';
+			    const ink = '#1C1917';
+			    const last = { status: '내일 떠나요', color: purple, dayColor: purple, tilt: '-4deg' };
+			    const soon = { status: '곧 떠나요', color: ink, dayColor: ink, tilt: '0deg' };
+			    return {
+			      tickets: [
+			        { month: '10월', day: '10', title: '제목전(展)', venue: '한국영화박물관', ...last },
+			        { month: '10월', day: '10', title: '최은정 - 하늘 아래, 희망을 새기다', venue: '네오아트센터', ...last },
+			        { month: '10월', day: '11', title: '혼자 보긴 아까워서', venue: '경기도박물관', ...soon },
+			        { month: '10월', day: '11', title: '풍경을 담은 시선: 월전 장우성과 오늘의 한국화', venue: '이천시립월전미술관', ...soon }
+			      ]
+			    };
+			  }
+			}
+		</script>
+	</body>
+</html>

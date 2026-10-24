@@ -1,0 +1,166 @@
+import {
+	daysUntilEnd,
+	getDdayLabel,
+	getExhibitionStatus,
+	getPopularTags,
+	isExhibitionEndDateEligible,
+	isExhibitionListingTitle,
+	isViewableOn,
+	matchesExcluded,
+	matchesQuery,
+} from '../exhibitionSearch';
+import type { Exhibition } from '../../data/exhibitions';
+
+const base: Exhibition = {
+	id: 't1',
+	title: '모네, 빛을 그리다',
+	venue: '예술의전당',
+	startDate: '2026.05.01',
+	endDate: '2026.08.31',
+	artist: '클로드 모네',
+	description: '인상주의 특별전',
+	posterColor: '#fff',
+	genre: '인상주의',
+	openHours: '10:00 – 20:00',
+	admission: '18,000원',
+	artworks: [],
+	tags: ['인상주의', '명화'],
+};
+
+describe('getExhibitionStatus — 진행 상태 계산', () => {
+	it('기간 내 → ongoing', () => {
+		expect(getExhibitionStatus(base, new Date(2026, 6, 15))).toBe('ongoing');
+	});
+	it('시작 전 → upcoming', () => {
+		expect(getExhibitionStatus(base, new Date(2026, 3, 30))).toBe('upcoming');
+	});
+	it('종료 후 → ended', () => {
+		expect(getExhibitionStatus(base, new Date(2026, 8, 1))).toBe('ended');
+	});
+	it('시작일 당일 → ongoing (경계값)', () => {
+		expect(getExhibitionStatus(base, new Date(2026, 4, 1))).toBe('ongoing');
+	});
+	it('종료일 당일 → ongoing (경계값)', () => {
+		expect(getExhibitionStatus(base, new Date(2026, 7, 31))).toBe('ongoing');
+	});
+});
+
+describe('matchesQuery — 검색어 매칭', () => {
+	it('제목 매칭', () => {
+		expect(matchesQuery(base, '모네')).toBe(true);
+	});
+	it('미술관 매칭', () => {
+		expect(matchesQuery(base, '예술의전당')).toBe(true);
+	});
+	it('작가 매칭', () => {
+		expect(matchesQuery(base, '클로드')).toBe(true);
+	});
+	it('태그 매칭', () => {
+		expect(matchesQuery(base, '인상주의')).toBe(true);
+	});
+	it('빈 검색어 → 전체 통과', () => {
+		expect(matchesQuery(base, '  ')).toBe(true);
+	});
+	it('무관한 검색어 → 미매칭', () => {
+		expect(matchesQuery(base, '피카소')).toBe(false);
+	});
+});
+
+describe('matchesExcluded — 제외어', () => {
+	it('제목에 제외어 포함 → 걸러짐', () => {
+		expect(matchesExcluded(base, ['모네'])).toBe(true);
+	});
+	it('설명에 제외어 포함 → 걸러짐', () => {
+		expect(matchesExcluded(base, ['특별전'])).toBe(true);
+	});
+	it('무관한 제외어 → 통과', () => {
+		expect(matchesExcluded(base, ['미디어아트'])).toBe(false);
+	});
+	it('제외어 없음 → 통과', () => {
+		expect(matchesExcluded(base, [])).toBe(false);
+	});
+});
+
+describe('daysUntilEnd / getDdayLabel — 마감 임박', () => {
+	it('종료일 7일 전 → 7', () => {
+		expect(daysUntilEnd(base, new Date(2026, 7, 24))).toBe(7);
+	});
+	it('종료일 당일 → 0', () => {
+		expect(daysUntilEnd(base, new Date(2026, 7, 31))).toBe(0);
+	});
+	it('D-7 이내 → D-n 라벨', () => {
+		expect(getDdayLabel(base, new Date(2026, 7, 28))).toBe('D-3');
+	});
+	it('종료일 당일 → 오늘 마감', () => {
+		expect(getDdayLabel(base, new Date(2026, 7, 31))).toBe('오늘 마감');
+	});
+	it('7일 초과 남음 → null', () => {
+		expect(getDdayLabel(base, new Date(2026, 6, 1))).toBeNull();
+	});
+	it('예정 전시 → null', () => {
+		expect(getDdayLabel(base, new Date(2026, 3, 1))).toBeNull();
+	});
+	it('마감된 전시 → null', () => {
+		expect(getDdayLabel(base, new Date(2026, 8, 10))).toBeNull();
+	});
+});
+
+describe('getPopularTags — 추천 태그', () => {
+	const list = [
+		{ ...base, id: 'p1', tags: ['명화', '인상주의'] },
+		{ ...base, id: 'p2', tags: ['명화', '조각'] },
+		{ ...base, id: 'p3', tags: ['명화', '인상주의', '미디어아트'] },
+	];
+	it('빈도순 정렬 + limit 적용', () => {
+		expect(getPopularTags(2, list)).toEqual(['명화', '인상주의']);
+	});
+	it('태그 없는 전시만 → 빈 배열', () => {
+		expect(getPopularTags(5, [{ ...base, tags: undefined }])).toEqual([]);
+	});
+	it('한 전시가 쿼터(2개) 초과 시 나머지 태그는 다른 전시로 채움', () => {
+		// '명화'(3전시), '인상주의'(2전시) → 상위 2개
+		// '조각', '미디어아트'는 각 1전시 → p2/p3 쿼터 초과 시 등장 가능
+		expect(getPopularTags(2, list)).toEqual(['명화', '인상주의']);
+	});
+	it('단일 전시 독점 방지 — 태그가 한 전시에만 있으면 최대 2개까지만', () => {
+		const solo = [{ ...base, id: 's1', tags: ['a', 'b', 'c', 'd'] }];
+		expect(getPopularTags(10, solo)).toEqual(['a', 'b']);
+	});
+});
+
+describe('isViewableOn — 날짜 필터', () => {
+	it('기간 내 날짜 → 관람 가능', () => {
+		expect(isViewableOn(base, new Date(2026, 5, 10))).toBe(true);
+	});
+	it('기간 밖 날짜 → 불가', () => {
+		expect(isViewableOn(base, new Date(2026, 9, 10))).toBe(false);
+	});
+});
+
+describe('isExhibitionEndDateEligible — 마감일 하한(2026.09.01)', () => {
+	it('9월 1일 포함', () => {
+		expect(isExhibitionEndDateEligible('2026.09.01')).toBe(true);
+	});
+	it('9월 이후', () => {
+		expect(isExhibitionEndDateEligible('2026.09.30')).toBe(true);
+		expect(isExhibitionEndDateEligible('2026.10.01')).toBe(true);
+	});
+	it('8월 마감은 제외', () => {
+		expect(isExhibitionEndDateEligible('2026.08.31')).toBe(false);
+	});
+	it('형식 오류는 제외', () => {
+		expect(isExhibitionEndDateEligible('20260901')).toBe(false);
+		expect(isExhibitionEndDateEligible('')).toBe(false);
+	});
+});
+
+describe('isExhibitionListingTitle — 대관 공고 제외', () => {
+	it('대관 모집·공고는 제외', () => {
+		expect(isExhibitionListingTitle('청주 갤러리 원 정기 대관 모집')).toBe(false);
+		expect(isExhibitionListingTitle('2026 하반기 대관공고')).toBe(false);
+	});
+	it('대관람·실제 전시는 통과', () => {
+		expect(isExhibitionListingTitle('서울도시계획 대관람')).toBe(true);
+		expect(isExhibitionListingTitle('함석헌기념관 대관 전시 서정희 개인전')).toBe(true);
+	});
+});

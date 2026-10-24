@@ -1,0 +1,119 @@
+"""Shared filters for exhibition sync scripts (culture, kcisa_moca, sac)."""
+from __future__ import annotations
+
+import html
+import re
+from datetime import datetime, timedelta, timezone
+
+# 2026-09-01(9월 포함) 이전에 종료한 전시는 적재하지 않음. end_date >= 이 값만.
+END_DATE_MIN = "2026.09.01"
+SEOUL_TZ = timezone(timedelta(hours=9))
+SYNC_TODAY = datetime.now(SEOUL_TZ).date().strftime("%Y.%m.%d")
+SYNC_END_DATE_MIN = (datetime.now(SEOUL_TZ).date() + timedelta(days=2)).strftime("%Y.%m.%d")
+
+VENUE_EXACT_BLOCKLIST: frozenset[str] = frozenset(
+    {
+        "현대어린이책미술관",
+        "증평민속체험미술관",
+        "수목원테마파크",
+    }
+)
+
+VENUE_SUBSTRING_BLOCKLIST: tuple[str, ...] = (
+    "어린이책미술",
+    "어린이미술관",
+    "어린이박물관",
+    "민속체험미술",
+    "민속체험박물",
+    "테마파크",
+    "체험형전시",
+)
+
+_VENUE_TITLE_PATTERN = re.compile(
+    r"(5\s*d|3\s*d|\bvr\b|가상현실|테마\s*파크)",
+    re.IGNORECASE,
+)
+
+# 대관 공고·모집 (대관람, 대관 공간의 실제 전시는 제외)
+_TITLE_BLOCK_PATTERN = re.compile(
+    r"대관\s*(공고|모집|안내|신청|접수|요강)|정기\s*대관",
+)
+
+
+def _normalize(text: str) -> str:
+    return re.sub(r"\s+", "", text or "").strip()
+
+
+def clean_exhibition_text(text: str) -> str:
+    """&amp;middot; → ·, &amp;lt;제목&amp;gt; → <제목> 처럼 이중 인코딩 엔티티를 푼다."""
+    cleaned = html.unescape(html.unescape(text or ""))
+    return re.sub(r"\s+", " ", cleaned).strip()
+
+
+_TITLE_PREFIX_RE = re.compile(
+    r"^\s*(?:"
+    r"\[[^\]]*(?:온라인|특별|기획|상설|전시)[^\]]*\]"
+    r"|【[^】]*(?:온라인|특별|기획|상설|전시)[^】]*】"
+    r"|\([^)]*(?:온라인|특별|기획|상설|전시)[^)]*\)"
+    r"|<[^>]*(?:온라인|특별|기획|상설|전시)[^>]*>"
+    r"|(?:온라인\s*)?(?:특별|기획|상설)\s*전\s*[:：\-–—]?"
+    r"|온라인\s*전시\s*[:：\-–—]?"
+    r")\s*",
+)
+
+
+def canonical_exhibition_title(title: str) -> str:
+    """동일 전시 비교용 제목. API 홍보 접두사만 제거하고 작품명은 보존한다."""
+    cleaned = clean_exhibition_text(title)
+    prev = None
+    while prev != cleaned:
+        prev = cleaned
+        cleaned = _TITLE_PREFIX_RE.sub("", cleaned).strip()
+    return cleaned.strip(" -–—:：")
+
+
+def title_key(title: str) -> str:
+    canonical = canonical_exhibition_title(title).lower()
+    return re.sub(r"[^0-9a-z가-힣]+", "", canonical)
+
+
+VENUE_EXACT_NORM: frozenset[str] = frozenset(_normalize(v) for v in VENUE_EXACT_BLOCKLIST)
+
+
+def end_date_eligible(end_date: str) -> bool:
+    """end_date format: YYYY.MM.DD"""
+    if len(end_date) != 10 or end_date[4] != "." or end_date[7] != ".":
+        return False
+    return end_date >= END_DATE_MIN
+
+
+def new_exhibition_end_date_eligible(end_date: str) -> bool:
+    """Sync only exhibitions ending after tomorrow in Korea Standard Time."""
+    if len(end_date) != 10 or end_date[4] != "." or end_date[7] != ".":
+        return False
+    return end_date >= SYNC_END_DATE_MIN
+
+
+def postgrest_in_list(values: list[str]) -> str:
+    """PostgREST `in.(...)` 값 목록 — 쉼표·괄호가 든 제목도 안전하도록 큰따옴표로 감싼다."""
+    quoted = []
+    for value in values:
+        escaped = value.replace("\\", "\\\\").replace('"', '\\"')
+        quoted.append(f'"{escaped}"')
+    return f"({','.join(quoted)})"
+
+
+def venue_sync_allowed(venue: str, title: str = "") -> bool:
+    """False → sync/update from API skip."""
+    if _normalize(venue) in VENUE_EXACT_NORM:
+        return False
+    hay = f"{venue} {title}"
+    hay_norm = _normalize(hay)
+    for needle in VENUE_SUBSTRING_BLOCKLIST:
+        if _normalize(needle) in hay_norm:
+            return False
+    if _VENUE_TITLE_PATTERN.search(hay):
+        return False
+    if _TITLE_BLOCK_PATTERN.search(title) or _TITLE_BLOCK_PATTERN.search(venue):
+        return False
+    return True

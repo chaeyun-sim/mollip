@@ -1,0 +1,4 @@
+appId: com.simune.mollip
+---
+- tapOn: '해설 설정'
+- assertVisible: '해설 설정'

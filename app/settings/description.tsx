@@ -1,0 +1,108 @@
+import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
+import { Pressable, ScrollView, Text, View } from 'react-native';
+import { useShallow } from 'zustand/react/shallow';
+import { Screen } from '@/src/components/layout/Screen';
+import { SettingsCard } from '@/src/components/mypage';
+import { cn } from '@/src/lib/cn';
+import { type DescriptionFocus, useSettingsStore } from '@/src/store/settingsStore';
+
+interface FocusOption {
+	key: DescriptionFocus;
+	label: string;
+}
+
+const FOCUS_OPTIONS: FocusOption[] = [
+	{
+		key: 'aesthetics',
+		label: '구도, 색채, 조형적 특징',
+	},
+	{
+		key: 'art_history',
+		label: '작품의 사조와 역사적 맥락',
+	},
+	{
+		key: 'artist_life',
+		label: '작가의 삶과 이 작품의 연관성',
+	},
+	{
+		key: 'social_context',
+		label: '시대 배경과 사회적 의미',
+	},
+	{
+		key: 'appreciation',
+		label: '직접 느낄 수 있는 감성적 감상 포인트',
+	},
+	{
+		key: 'technique',
+		label: '사용된 재료, 물감 종류, 붓 터치, 제작 기법',
+	},
+	{
+		key: 'symbolism',
+		label: '작품 속 숨겨진 상징, 도상, 알레고리',
+	},
+	{
+		key: 'viewer_gaze',
+		label: '조명, 액자, 구도가 시선을 이끄는 방식',
+	},
+];
+
+export default function DescriptionSettingsScreen() {
+	const router = useRouter();
+	const { descriptionFocus, toggleDescriptionFocus } = useSettingsStore(
+		useShallow((s) => ({
+			descriptionFocus: s.descriptionFocus,
+			toggleDescriptionFocus: s.toggleDescriptionFocus,
+		})),
+	);
+
+	return (
+		<Screen variant="warm">
+			<Screen.Header>
+				<Screen.Header.Back onPress={() => router.back()} />
+				<Screen.Header.Center>해설 강화 항목</Screen.Header.Center>
+			</Screen.Header>
+
+			<ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-[60px]">
+				<Text className="text-[13px] font-pretendard-regular text-gray600 mt-4 mb-3">
+					{`선택한 항목을 해설에서 더 깊게 다뤄요.\n여러 개 선택할 수 있어요.`}
+				</Text>
+
+				<View className="mt-2">
+					<SettingsCard>
+						{FOCUS_OPTIONS.map((option) => {
+							const isSelected = descriptionFocus.includes(option.key);
+
+							return (
+								<Pressable
+									key={option.key}
+									onPress={() => toggleDescriptionFocus(option.key)}
+									accessibilityRole="checkbox"
+									accessibilityLabel={option.label}
+									accessibilityState={{ checked: isSelected }}
+									style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
+								>
+									<View className="flex-row items-center py-4 gap-3">
+										<View
+											className={cn(
+												'w-5 h-5 rounded items-center justify-center',
+												isSelected ? 'bg-brand' : 'border border-[#D6D3D1] bg-white',
+											)}
+										>
+											{isSelected && <Ionicons name="checkmark" size={13} color="white" />}
+										</View>
+										<View className="flex-1">
+											<Text className="text-[14px] font-pretendard-medium text-gray900">
+												{option.label}
+											</Text>
+										</View>
+									</View>
+								</Pressable>
+							);
+						})}
+					</SettingsCard>
+				</View>
+			</ScrollView>
+		</Screen>
+	);
+}

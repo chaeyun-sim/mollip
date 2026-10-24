@@ -1,0 +1,6 @@
+appId: com.simune.mollip
+---
+- tapOn:
+    point: '91%,51%'
+- waitForAnimationToEnd
+- takeScreenshot: g2-artwork-play-tap

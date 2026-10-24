@@ -1,0 +1,7 @@
+appId: com.simune.mollip
+---
+- tapOn:
+    point: '50%,94%'
+- takeScreenshot: b4-overlay
+- waitForAnimationToEnd
+- takeScreenshot: b5-overlay-2
