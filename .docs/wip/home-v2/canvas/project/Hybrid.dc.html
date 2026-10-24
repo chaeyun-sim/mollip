@@ -1,0 +1,388 @@
+<!doctype html>
+<html lang="ko">
+	<head>
+		<meta charset="utf-8" />
+		<title>홈 D 숫자와 오늘의 하나</title>
+		<script src="./support.js"></script>
+	</head>
+	<body>
+		<x-dc>
+			<helmet>
+				<link
+					rel="stylesheet"
+					href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@400;600;700&amp;display=swap"
+				/>
+				<style>
+					@font-face {
+						font-family: 'Pretendard';
+						src: url('/_blob/7977b3ca42ace65d7e67bd031fe90ded') format('opentype');
+						font-weight: 400;
+					}
+					@font-face {
+						font-family: 'Pretendard';
+						src: url('/_blob/8f065eca601ce3cb85348621e7b4c825') format('opentype');
+						font-weight: 500;
+					}
+					@font-face {
+						font-family: 'Pretendard';
+						src: url('/_blob/7a9653a1bcd0948efd3d3730b1362841') format('opentype');
+						font-weight: 600;
+					}
+					body {
+						margin: 0;
+					}
+					a {
+						color: #1c1917;
+						text-decoration: none;
+					}
+					a:hover {
+						color: #57534e;
+					}
+				</style>
+			</helmet>
+			<div
+				style="
+					width: 390px;
+					height: 1180px;
+					box-sizing: border-box;
+					background: #f8f6f2;
+					color: #1c1917;
+					font-family: 'Pretendard', sans-serif;
+					position: relative;
+					display: flex;
+					flex-direction: column;
+					overflow: hidden;
+				"
+			>
+				<header
+					style="
+						display: flex;
+						justify-content: space-between;
+						align-items: center;
+						padding: 56px 24px 0 24px;
+					"
+				>
+					<div
+						style="
+							font-family: 'Hahmlet', serif;
+							font-weight: 700;
+							font-size: 26px;
+							letter-spacing: -0.5px;
+						"
+					>
+						mollip
+					</div>
+					<div style="display: flex; gap: 16px">
+						<button
+							aria-label="북마크"
+							style="
+								width: 44px;
+								height: 44px;
+								border: 0;
+								background: transparent;
+								padding: 0;
+								display: flex;
+								align-items: center;
+								justify-content: center;
+							"
+						>
+							<svg
+								width="22"
+								height="22"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="#1C1917"
+								stroke-width="1.6"
+							>
+								<path d="M6 3h12v18l-6-4-6 4z" />
+							</svg>
+						</button>
+						<button
+							aria-label="알림"
+							style="
+								width: 44px;
+								height: 44px;
+								border: 0;
+								background: transparent;
+								padding: 0;
+								display: flex;
+								align-items: center;
+								justify-content: center;
+							"
+						>
+							<svg
+								width="22"
+								height="22"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="#1C1917"
+								stroke-width="1.6"
+							>
+								<path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4z" />
+								<path d="M10 21h4" />
+							</svg>
+						</button>
+					</div>
+				</header>
+
+				<section
+					style="
+						padding: 24px 24px 0 24px;
+						display: flex;
+						align-items: flex-end;
+						justify-content: space-between;
+					"
+				>
+					<div
+						style="
+							font-family: 'Hahmlet', serif;
+							font-weight: 700;
+							font-size: 80px;
+							line-height: 0.9;
+							letter-spacing: -3px;
+						"
+					>
+						10.09
+					</div>
+					<div
+						style="
+							display: flex;
+							flex-direction: column;
+							align-items: flex-end;
+							gap: 2px;
+							padding-bottom: 6px;
+						"
+					>
+						<span style="font-size: 13px; font-weight: 600; letter-spacing: 2px">FRI</span>
+						<span style="font-size: 13px; font-weight: 500; color: #78716c; letter-spacing: 1px"
+							>2026</span
+						>
+					</div>
+				</section>
+
+				<nav
+					style="
+						margin: 28px 24px 0 24px;
+						border-top: 1.5px solid #1c1917;
+						display: flex;
+						flex-direction: column;
+					"
+				>
+					<a
+						href="#"
+						style="
+							display: flex;
+							align-items: baseline;
+							gap: 16px;
+							padding: 16px 0;
+							border-bottom: 0.5px solid #d6d3ce;
+						"
+					>
+						<span
+							style="
+								width: 64px;
+								font-family: 'Hahmlet', serif;
+								font-weight: 700;
+								font-size: 40px;
+								line-height: 1;
+							"
+							>4</span
+						>
+						<span style="flex: 1; font-size: 15px; font-weight: 600">걸어서 갈 수 있는 전시</span>
+						<span style="font-size: 12px; color: #78716c">1km</span>
+					</a>
+					<a
+						href="#"
+						style="
+							display: flex;
+							align-items: baseline;
+							gap: 16px;
+							padding: 16px 0;
+							border-bottom: 0.5px solid #d6d3ce;
+						"
+					>
+						<span
+							style="width: 64px; font-family: 'Hahmlet', serif; font-weight: 700; font-size: 40px; line-height: 1; color: {{accent}}"
+							>6</span
+						>
+						<span style="flex: 1; font-size: 15px; font-weight: 600"
+							>이번 주에 막을 내리는 전시</span
+						>
+						<span style="font-size: 12px; color: #78716c">D-1부터</span>
+					</a>
+					<a
+						href="#"
+						style="
+							display: flex;
+							align-items: baseline;
+							gap: 16px;
+							padding: 16px 0;
+							border-bottom: 0.5px solid #d6d3ce;
+						"
+					>
+						<span
+							style="
+								width: 64px;
+								font-family: 'Hahmlet', serif;
+								font-weight: 700;
+								font-size: 40px;
+								line-height: 1;
+							"
+							>3</span
+						>
+						<span style="flex: 1; font-size: 15px; font-weight: 600">새로 열린 전시</span>
+						<span style="font-size: 12px; color: #78716c">이번 주</span>
+					</a>
+					<a href="#" style="display: flex; align-items: baseline; gap: 16px; padding: 16px 0">
+						<span
+							style="
+								width: 64px;
+								font-family: 'Hahmlet', serif;
+								font-weight: 700;
+								font-size: 40px;
+								line-height: 1;
+							"
+							>12</span
+						>
+						<span style="flex: 1; font-size: 15px; font-weight: 600">채윤님 취향의 전시</span>
+						<span style="font-size: 12px; color: #78716c">추천</span>
+					</a>
+				</nav>
+
+				<section
+					style="
+						margin-top: 48px;
+						background: #f2efe9;
+						padding: 36px 24px 40px 24px;
+						display: flex;
+						flex-direction: column;
+					"
+				>
+					<div style="display: flex; align-items: center; gap: 12px">
+						<span style="font-size: 13px; font-weight: 500; color: #57534e">오늘의 한 전시</span>
+						<span style="flex: 1; height: 1px; background: #1c1917"></span>
+					</div>
+					<div style="margin-top: 28px; display: flex; gap: 20px; align-items: flex-end">
+						<h2
+							style="
+								margin: 0;
+								flex: 1;
+								font-family: 'Hahmlet', serif;
+								font-weight: 700;
+								font-size: 40px;
+								line-height: 1.15;
+								letter-spacing: -1px;
+							"
+						>
+							혼자 보긴<br />아까워서
+						</h2>
+						<div
+							style="
+								width: 96px;
+								height: 120px;
+								flex-shrink: 0;
+								background: #e5e1d8;
+								display: flex;
+								align-items: center;
+								justify-content: center;
+								font-size: 11px;
+								color: #78716c;
+								border-radius: 2px;
+							"
+						>
+							[포스터]
+						</div>
+					</div>
+					<p style="margin: 16px 0 0 0; font-size: 13.5px; line-height: 21px; color: #57534e">
+						경기도박물관 개관 30주년 기념 기증 특별전.<br />이틀 뒤 막을 내려요.
+					</p>
+					<a
+						href="#"
+						style="
+							margin-top: 24px;
+							height: 52px;
+							border-radius: 999px;
+							background: #1c1917;
+							color: #ffffff;
+							display: flex;
+							align-items: center;
+							justify-content: center;
+							font-size: 15px;
+							font-weight: 600;
+						"
+						>전시 보러 가기</a
+					>
+				</section>
+
+				<button
+					style="
+						position: absolute;
+						right: 24px;
+						bottom: 100px;
+						height: 52px;
+						padding: 0 20px;
+						border: 0;
+						border-radius: 999px;
+						background: #1c1917;
+						color: #ffffff;
+						font-family: 'Pretendard', sans-serif;
+						font-size: 15px;
+						font-weight: 600;
+						display: flex;
+						align-items: center;
+						gap: 8px;
+						box-shadow: 0 6px 14px rgba(28, 25, 23, 0.28);
+					"
+				>
+					<svg
+						width="20"
+						height="20"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="#FFFFFF"
+						stroke-width="1.8"
+					>
+						<path d="M4 8h3l2-3h6l2 3h3v11H4z" />
+						<circle cx="12" cy="13" r="3.5" />
+					</svg>
+					AI 도슨트
+				</button>
+
+				<footer
+					style="
+						position: absolute;
+						left: 0;
+						right: 0;
+						bottom: 0;
+						height: 84px;
+						background: #ffffff;
+						border-top: 0.5px solid #e7e5e4;
+						display: grid;
+						grid-template-columns: repeat(5, minmax(0, 1fr));
+						padding-top: 12px;
+						box-sizing: border-box;
+					"
+				>
+					<span style="text-align: center; font-size: 11px; color: #a8a29e">전시</span>
+					<span style="text-align: center; font-size: 11px; color: #a8a29e">지도</span>
+					<span style="text-align: center; font-size: 11px; font-weight: 600; color: #7c3aed"
+						>둘러보기</span
+					>
+					<span style="text-align: center; font-size: 11px; color: #a8a29e">다이어리</span>
+					<span style="text-align: center; font-size: 11px; color: #a8a29e">마이페이지</span>
+				</footer>
+			</div>
+		</x-dc>
+		<script
+			type="text/x-dc"
+			data-dc-script
+			data-props='{"accent":{"editor":"color","default":"#7C3AED","options":["#7C3AED","#1C1917","#B45309"]},"$preview":{"width":390,"height":1180}}'
+		>
+			class Component extends DCLogic {
+			  renderVals() {
+			    return { accent: this.props.accent ?? '#7C3AED' };
+			  }
+			}
+		</script>
+	</body>
+</html>

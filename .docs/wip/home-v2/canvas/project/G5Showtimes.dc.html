@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="ko">
+	<head>
+		<meta charset="utf-8" />
+		<title>홈 G5 상영 시간표</title>
+		<script src="./support.js"></script>
+	</head>
+	<body>
+		<x-dc>
+			<helmet>
+				<link
+					rel="stylesheet"
+					href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@400;600;700&amp;display=swap"
+				/>
+				<style>
+					@font-face {
+						font-family: 'Pretendard';
+						src: url('/_blob/7977b3ca42ace65d7e67bd031fe90ded') format('opentype');
+						font-weight: 400;
+					}
+					@font-face {
+						font-family: 'Pretendard';
+						src: url('/_blob/8f065eca601ce3cb85348621e7b4c825') format('opentype');
+						font-weight: 500;
+					}
+					@font-face {
+						font-family: 'Pretendard';
+						src: url('/_blob/7a9653a1bcd0948efd3d3730b1362841') format('opentype');
+						font-weight: 600;
+					}
+					body {
+						margin: 0;
+					}
+					a {
+						color: #1c1917;
+						text-decoration: none;
+					}
+					a:hover {
+						color: #57534e;
+					}
+				</style>
+			</helmet>
+			<div
+				style="
+					width: 390px;
+					height: 844px;
+					box-sizing: border-box;
+					background: #f8f6f2;
+					color: #1c1917;
+					font-family: 'Pretendard', sans-serif;
+					position: relative;
+					display: flex;
+					flex-direction: column;
+					overflow: hidden;
+				"
+			>
+				<header
+					style="
+						display: flex;
+						justify-content: space-between;
+						align-items: center;
+						padding: 56px 20px 0 24px;
+					"
+				>
+					<div
+						style="
+							font-family: 'Hahmlet', serif;
+							font-weight: 700;
+							font-size: 26px;
+							letter-spacing: -0.5px;
+						"
+					>
+						mollip
+					</div>
+					<div style="display: flex; gap: 8px">
+						<button
+							aria-label="북마크"
+							style="
+								width: 44px;
+								height: 44px;
+								border: 0;
+								background: transparent;
+								padding: 0;
+								display: flex;
+								align-items: center;
+								justify-content: center;
+							"
+						>
+							<svg
+								width="22"
+								height="22"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="#1C1917"
+								stroke-width="1.6"
+							>
+								<path d="M6 3h12v18l-6-4-6 4z" />
+							</svg>
+						</button>
+						<button
+							aria-label="알림"
+							style="
+								width: 44px;
+								height: 44px;
+								border: 0;
+								background: transparent;
+								padding: 0;
+								display: flex;
+								align-items: center;
+								justify-content: center;
+							"
+						>
+							<svg
+								width="22"
+								height="22"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="#1C1917"
+								stroke-width="1.6"
+							>
+								<path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4z" />
+								<path d="M10 21h4" />
+							</svg>
+						</button>
+					</div>
+				</header>
+
+				<div
+					style="
+						margin: 18px 24px 0 24px;
+						display: flex;
+						justify-content: space-between;
+						align-items: flex-end;
+					"
+				>
+					<div style="display: flex; flex-direction: column; gap: 2px">
+						<span style="font-size: 11px; font-weight: 600; letter-spacing: 2.5px; color: #78716c"
+							>NOW SHOWING</span
+						>
+						<span style="font-family: 'Hahmlet', serif; font-weight: 600; font-size: 24px"
+							>지금 열려 있는 곳</span
+						>
+					</div>
+					<span style="font-size: 12px; color: #78716c">내 주변 · 17:42</span>
+				</div>
+
+				<div style="margin: 18px 24px 0 24px; position: relative">
+					<div
+						style="
+							display: flex;
+							justify-content: space-between;
+							font-size: 10px;
+							color: #a8a29e;
+							font-variant-numeric: tabular-nums;
+							padding-bottom: 6px;
+							border-bottom: 1px solid #1c1917;
+						"
+					>
+						<span>09</span><span>12</span><span>15</span><span>18</span><span>21</span>
+					</div>
+					<span
+						style="position: absolute; top: -18px; left: {{nowLeft}}; transform: translateX(-50%); font-size: 10px; font-weight: 600; color: #7C3AED; background: #F8F6F2; padding: 0 3px"
+						>17:42</span
+					>
+
+					<div style="display: flex; flex-direction: column">
+						<sc-for list="{{rows}}" as="r" hint-placeholder-count="6">
+							<a
+								href="#"
+								style="
+									display: flex;
+									flex-direction: column;
+									gap: 8px;
+									padding: 13px 0 12px 0;
+									border-bottom: 0.5px solid #d6d3ce;
+								"
+							>
+								<span
+									style="
+										display: flex;
+										justify-content: space-between;
+										align-items: baseline;
+										gap: 10px;
+									"
+								>
+									<span style="min-width: 0; display: flex; flex-direction: column; gap: 1px">
+										<span
+											style="
+												font-size: 14.5px;
+												font-weight: 500;
+												white-space: nowrap;
+												overflow: hidden;
+												text-overflow: ellipsis;
+											"
+											>{{r.title}}</span
+										>
+										<span style="font-size: 11.5px; color: #78716c">{{r.venue}} · {{r.hours}}</span>
+									</span>
+									<span
+										style="flex-shrink: 0; font-size: 12px; font-weight: 600; color: {{r.leftColor}}"
+										>{{r.left}}</span
+									>
+								</span>
+								<span style="position: relative; height: 6px; display: block">
+									<span
+										style="position: absolute; top: 0; height: 6px; border-radius: 999px; left: {{r.openLeft}}; width: {{r.openWidth}}; background: #E7E5E4"
+									></span>
+									<span
+										style="position: absolute; top: 0; height: 6px; border-radius: 999px 0 0 999px; left: {{r.openLeft}}; width: {{r.doneWidth}}; background: #1C1917"
+									></span>
+									<span
+										style="position: absolute; top: -4px; height: 14px; width: 1.5px; left: {{nowLeft}}; background: #7C3AED"
+									></span>
+								</span>
+							</a>
+						</sc-for>
+					</div>
+				</div>
+
+				<button
+					style="
+						position: absolute;
+						right: 20px;
+						bottom: 100px;
+						height: 52px;
+						padding: 0 20px;
+						border: 0;
+						border-radius: 999px;
+						background: #1c1917;
+						color: #ffffff;
+						font-family: 'Pretendard', sans-serif;
+						font-size: 15px;
+						font-weight: 600;
+						display: flex;
+						align-items: center;
+						gap: 8px;
+						box-shadow: 0 6px 14px rgba(28, 25, 23, 0.28);
+					"
+				>
+					<svg
+						width="20"
+						height="20"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="#FFFFFF"
+						stroke-width="1.8"
+					>
+						<path d="M4 8h3l2-3h6l2 3h3v11H4z" />
+						<circle cx="12" cy="13" r="3.5" />
+					</svg>
+					AI 도슨트
+				</button>
+
+				<footer
+					style="
+						position: absolute;
+						left: 0;
+						right: 0;
+						bottom: 0;
+						height: 84px;
+						background: #ffffff;
+						border-top: 0.5px solid #e7e5e4;
+						display: grid;
+						grid-template-columns: repeat(5, minmax(0, 1fr));
+						padding-top: 12px;
+						box-sizing: border-box;
+					"
+				>
+					<span style="text-align: center; font-size: 11px; color: #a8a29e">전시</span>
+					<span style="text-align: center; font-size: 11px; color: #a8a29e">지도</span>
+					<span style="text-align: center; font-size: 11px; font-weight: 600; color: #7c3aed"
+						>둘러보기</span
+					>
+					<span style="text-align: center; font-size: 11px; color: #a8a29e">다이어리</span>
+					<span style="text-align: center; font-size: 11px; color: #a8a29e">마이페이지</span>
+				</footer>
+			</div>
+		</x-dc>
+		<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+			class Component extends DCLogic {
+			  renderVals() {
+			    // 축: 09시 ~ 21시 (12시간). 현재 17:42
+			    const START = 9, SPAN = 12, NOW = 17 + 42 / 60;
+			    const pct = (h) => ((h - START) / SPAN) * 100 + '%';
+			    const fmt = (h) => String(Math.floor(h)).padStart(2, '0') + ':' + String(Math.round((h % 1) * 60)).padStart(2, '0');
+			    const remain = (close) => {
+			      const m = Math.round((close - NOW) * 60);
+			      return m < 60 ? '마감까지 ' + m + '분' : Math.floor(m / 60) + '시간 ' + (m % 60) + '분 남음';
+			    };
+			    const venues = [
+			      { title: '혼자 보긴 아까워서', venue: '경기도박물관', open: 10, close: 18 },
+			      { title: '최은정 - 하늘 아래, 희망을 새기다', venue: '네오아트센터', open: 11, close: 18 },
+			      { title: '제목전(展)', venue: '한국영화박물관', open: 10, close: 19 },
+			      { title: '장-프랑수아 라리유 : Coexistence', venue: '한가람미술관', open: 10, close: 19 },
+			      { title: '조은 원화전: 오늘의 정원', venue: '그라운드 시소 이스트', open: 10.5, close: 20 },
+			      { title: 'Language of Selves-Paris Contemporary', venue: '갤러리CNK', open: 11, close: 19 }
+			    ];
+			    return {
+			      nowLeft: pct(NOW),
+			      rows: venues.map((v) => {
+			        const soon = v.close - NOW < 1;
+			        return {
+			          ...v,
+			          hours: fmt(v.open) + '–' + fmt(v.close),
+			          left: remain(v.close),
+			          leftColor: soon ? '#7C3AED' : '#57534E',
+			          openLeft: pct(v.open),
+			          openWidth: ((v.close - v.open) / SPAN) * 100 + '%',
+			          doneWidth: ((NOW - v.open) / SPAN) * 100 + '%'
+			        };
+			      })
+			    };
+			  }
+			}
+		</script>
+	</body>
+</html>

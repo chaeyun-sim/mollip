@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="ko">
+	<head>
+		<meta charset="utf-8" />
+		<title>홈 E 스크롤 후</title>
+		<script src="./support.js"></script>
+	</head>
+	<body>
+		<x-dc>
+			<helmet>
+				<link
+					rel="stylesheet"
+					href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@400;600;700&amp;display=swap"
+				/>
+				<style>
+					@font-face {
+						font-family: 'Pretendard';
+						src: url('/_blob/7977b3ca42ace65d7e67bd031fe90ded') format('opentype');
+						font-weight: 400;
+					}
+					@font-face {
+						font-family: 'Pretendard';
+						src: url('/_blob/8f065eca601ce3cb85348621e7b4c825') format('opentype');
+						font-weight: 500;
+					}
+					@font-face {
+						font-family: 'Pretendard';
+						src: url('/_blob/7a9653a1bcd0948efd3d3730b1362841') format('opentype');
+						font-weight: 600;
+					}
+					body {
+						margin: 0;
+					}
+					a {
+						color: #1c1917;
+						text-decoration: none;
+					}
+					a:hover {
+						color: #57534e;
+					}
+				</style>
+			</helmet>
+			<div
+				style="
+					width: 390px;
+					height: 844px;
+					box-sizing: border-box;
+					background: #f8f6f2;
+					color: #1c1917;
+					font-family: 'Pretendard', sans-serif;
+					position: relative;
+					display: flex;
+					flex-direction: column;
+					overflow: hidden;
+				"
+			>
+				<a
+					href="#"
+					style="
+						margin: 60px 16px 0 16px;
+						background: #1c1917;
+						border-radius: 18px;
+						padding: 12px 14px;
+						display: flex;
+						align-items: center;
+						gap: 12px;
+						box-shadow: 0 14px 30px rgba(28, 25, 23, 0.22);
+						position: relative;
+						z-index: 2;
+					"
+				>
+					<span
+						style="
+							width: 36px;
+							height: 36px;
+							border-radius: 8px;
+							background: #2f6fb7;
+							flex-shrink: 0;
+						"
+					></span>
+					<span style="flex: 1; display: flex; flex-direction: column; gap: 2px">
+						<span style="font-size: 12px; color: #a8a29e">곧 막을 내려요 · 10.10</span>
+						<span style="font-size: 15px; font-weight: 500; color: #f8f6f2">제목전(展)</span>
+					</span>
+					<span style="font-size: 12px; font-weight: 600; color: #ab77f1">D-1</span>
+				</a>
+
+				<div style="margin: 12px 16px 0 16px; display: flex; flex-direction: column; gap: 10px">
+					<sc-for list="{{rows}}" as="row" hint-placeholder-count="6">
+						<a
+							href="#"
+							style="
+								display: flex;
+								align-items: center;
+								gap: 14px;
+								padding: 14px 16px;
+								background: #ffffff;
+								border-radius: 20px;
+							"
+						>
+							<span
+								style="width: 34px; display: flex; flex-direction: column; align-items: flex-start"
+							>
+								<span style="font-size: 12px; color: #78716c">{{row.month}}</span>
+								<span style="font-size: 22px; line-height: 26px; color: #57534e">{{row.day}}</span>
+							</span>
+							<span style="width: 1px; height: 40px; background: #e7e5e4"></span>
+							<span
+								style="width: 52px; height: 52px; border-radius: 12px; background: {{row.thumb}}; flex-shrink: 0"
+							></span>
+							<span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px">
+								<span
+									style="
+										font-size: 15px;
+										font-weight: 500;
+										white-space: nowrap;
+										overflow: hidden;
+										text-overflow: ellipsis;
+									"
+									>{{row.title}}</span
+								>
+								<span style="font-size: 13px; color: {{row.statusColor}}">{{row.status}}</span>
+							</span>
+							<sc-if value="{{row.done}}" hint-placeholder-val="{{false}}">
+								<span
+									aria-label="관람 완료"
+									style="
+										width: 32px;
+										height: 32px;
+										border-radius: 999px;
+										background: #00bc7d;
+										display: flex;
+										align-items: center;
+										justify-content: center;
+										box-shadow: 0 4px 10px rgba(0, 188, 125, 0.3);
+									"
+								>
+									<svg
+										width="14"
+										height="14"
+										viewBox="0 0 24 24"
+										fill="none"
+										stroke="#FFFFFF"
+										stroke-width="2.4"
+									>
+										<path d="M5 12l5 5 9-10" />
+									</svg>
+								</span>
+							</sc-if>
+							<sc-if value="{{row.open}}" hint-placeholder-val="{{true}}">
+								<span
+									style="
+										width: 32px;
+										height: 32px;
+										border-radius: 999px;
+										border: 1px solid #e7e5e4;
+										display: flex;
+										align-items: center;
+										justify-content: center;
+									"
+								>
+									<svg
+										width="14"
+										height="14"
+										viewBox="0 0 24 24"
+										fill="none"
+										stroke="#A8A29E"
+										stroke-width="1.8"
+									>
+										<path d="M6 3h12v18l-6-4-6 4z" />
+									</svg>
+								</span>
+							</sc-if>
+						</a>
+					</sc-for>
+				</div>
+
+				<button
+					style="
+						position: absolute;
+						right: 20px;
+						bottom: 100px;
+						height: 52px;
+						padding: 0 20px;
+						border: 0;
+						border-radius: 999px;
+						background: #1c1917;
+						color: #ffffff;
+						font-family: 'Pretendard', sans-serif;
+						font-size: 15px;
+						font-weight: 600;
+						display: flex;
+						align-items: center;
+						gap: 8px;
+						box-shadow: 0 6px 14px rgba(28, 25, 23, 0.28);
+					"
+				>
+					<svg
+						width="20"
+						height="20"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="#FFFFFF"
+						stroke-width="1.8"
+					>
+						<path d="M4 8h3l2-3h6l2 3h3v11H4z" />
+						<circle cx="12" cy="13" r="3.5" />
+					</svg>
+					AI 도슨트
+				</button>
+
+				<footer
+					style="
+						position: absolute;
+						left: 0;
+						right: 0;
+						bottom: 0;
+						height: 84px;
+						background: #ffffff;
+						border-top: 0.5px solid #e7e5e4;
+						display: grid;
+						grid-template-columns: repeat(5, minmax(0, 1fr));
+						padding-top: 12px;
+						box-sizing: border-box;
+					"
+				>
+					<span style="text-align: center; font-size: 11px; color: #a8a29e">전시</span>
+					<span style="text-align: center; font-size: 11px; color: #a8a29e">지도</span>
+					<span style="text-align: center; font-size: 11px; font-weight: 600; color: #7c3aed"
+						>둘러보기</span
+					>
+					<span style="text-align: center; font-size: 11px; color: #a8a29e">다이어리</span>
+					<span style="text-align: center; font-size: 11px; color: #a8a29e">마이페이지</span>
+				</footer>
+			</div>
+		</x-dc>
+		<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+			class Component extends DCLogic {
+			  renderVals() {
+			    const purple = '#7C3AED';
+			    const gray = '#78716C';
+			    const row = (r) => ({ done: false, open: true, ...r });
+			    return {
+			      rows: [
+			        row({ month: '10월', day: '10', thumb: '#C9B79C', title: '최은정 - 하늘 아래, 희망을 새기다', status: 'D-1 · 네오아트센터', statusColor: purple }),
+			        row({ month: '10월', day: '11', thumb: '#9ED3E6', title: '혼자 보긴 아까워서', status: 'D-2 · 경기도박물관', statusColor: purple }),
+			        row({ month: '10월', day: '24', thumb: '#E9A23B', title: '장-프랑수아 라리유 : Coexistence', status: '진행 중 · 한가람미술관', statusColor: gray }),
+			        row({ month: '11월', day: '29', thumb: '#D8C3A5', title: '고양이도 임금을 볼 수 있다', status: '진행 중 · 대구미술관', statusColor: gray }),
+			        row({ month: '12월', day: '11', thumb: '#B9B4AC', title: '세상은 어떻게 읽히는가', status: '개막 예정 · 부산현대미술관', statusColor: gray }),
+			        row({ month: '9월', day: '27', thumb: '#5C7A5E', title: '조은 원화전: 오늘의 정원', status: '관람 완료', statusColor: '#A8A29E', done: true, open: false })
+			      ]
+			    };
+			  }
+			}
+		</script>
+	</body>
+</html>

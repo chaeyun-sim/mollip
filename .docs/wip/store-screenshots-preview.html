@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="ko">
+	<head>
+		<meta charset="utf-8" />
+		<style>
+			* {
+				box-sizing: border-box;
+			}
+			html,
+			body {
+				margin: 0;
+				width: 1320px;
+				height: 2868px;
+				overflow: hidden;
+			}
+			body {
+				background: linear-gradient(155deg, #f8f6f2 0%, #eee9e2 100%);
+				color: #1c1917;
+				font-family:
+					-apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+			}
+			.copy {
+				width: 1120px;
+				margin-top: 190px;
+				text-align: center;
+			}
+			.eyebrow {
+				font-size: 34px;
+				letter-spacing: 8px;
+				font-weight: 700;
+				color: #6d5a4e;
+			}
+			h1 {
+				margin: 32px 0 0;
+				font-size: 112px;
+				line-height: 1.12;
+				letter-spacing: -5px;
+				font-weight: 800;
+			}
+			.sub {
+				margin: 38px 0 0;
+				font-size: 48px;
+				line-height: 1.35;
+				color: #6b625c;
+				font-weight: 500;
+			}
+			.device {
+				position: relative;
+				width: 930px;
+				height: 2018px;
+				margin-top: 150px;
+				padding: 24px;
+				background: #151515;
+				border-radius: 132px;
+				box-shadow:
+					0 70px 150px rgba(60, 43, 31, 0.28),
+					inset 0 0 0 4px #3a3735;
+				transform: rotate(-1.5deg);
+			}
+			.screen {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+				object-position: top;
+				border-radius: 110px;
+				display: block;
+			}
+			.island {
+				position: absolute;
+				top: 52px;
+				left: 50%;
+				transform: translateX(-50%);
+				width: 248px;
+				height: 72px;
+				border-radius: 40px;
+				background: #000;
+				z-index: 2;
+			}
+			.footer {
+				position: absolute;
+				bottom: 76px;
+				font-size: 30px;
+				color: #7b6c61;
+				letter-spacing: 1px;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="copy">
+			<div class="eyebrow">MOLLIP</div>
+			<h1>오늘의 전시를 발견하세요</h1>
+			<div class="sub">가까운 전시를 한눈에 보고, 작품 앞에서 더 깊이 만나요</div>
+		</div>
+		<div class="device">
+			<img class="screen" src="./store-source-home.png" alt="몰립 둘러보기 화면" />
+			<div class="island"></div>
+		</div>
+		<div class="footer">전시를 발견하고 · 듣고 · 기록하는 몰립</div>
+	</body>
+</html>

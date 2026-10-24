@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="ko">
+	<head>
+		<meta charset="utf-8" />
+		<title>홈 F3 인사와 두 섹션</title>
+		<script src="./support.js"></script>
+	</head>
+	<body>
+		<x-dc>
+			<helmet>
+				<link
+					rel="stylesheet"
+					href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@400;600;700&amp;display=swap"
+				/>
+				<style>
+					@font-face {
+						font-family: 'Pretendard';
+						src: url('/_blob/7977b3ca42ace65d7e67bd031fe90ded') format('opentype');
+						font-weight: 400;
+					}
+					@font-face {
+						font-family: 'Pretendard';
+						src: url('/_blob/8f065eca601ce3cb85348621e7b4c825') format('opentype');
+						font-weight: 500;
+					}
+					@font-face {
+						font-family: 'Pretendard';
+						src: url('/_blob/7a9653a1bcd0948efd3d3730b1362841') format('opentype');
+						font-weight: 600;
+					}
+					body {
+						margin: 0;
+					}
+					a {
+						color: #1c1917;
+						text-decoration: none;
+					}
+					a:hover {
+						color: #57534e;
+					}
+				</style>
+			</helmet>
+			<div
+				style="
+					width: 390px;
+					height: 844px;
+					box-sizing: border-box;
+					background: #f8f6f2;
+					color: #1c1917;
+					font-family: 'Pretendard', sans-serif;
+					position: relative;
+					display: flex;
+					flex-direction: column;
+					overflow: hidden;
+				"
+			>
+				<header
+					style="
+						display: flex;
+						justify-content: space-between;
+						align-items: center;
+						padding: 56px 20px 0 24px;
+					"
+				>
+					<div
+						style="
+							font-family: 'Hahmlet', serif;
+							font-weight: 700;
+							font-size: 26px;
+							letter-spacing: -0.5px;
+						"
+					>
+						mollip
+					</div>
+					<div style="display: flex; gap: 8px">
+						<button
+							aria-label="북마크"
+							style="
+								width: 44px;
+								height: 44px;
+								border: 0;
+								background: transparent;
+								padding: 0;
+								display: flex;
+								align-items: center;
+								justify-content: center;
+							"
+						>
+							<svg
+								width="22"
+								height="22"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="#1C1917"
+								stroke-width="1.6"
+							>
+								<path d="M6 3h12v18l-6-4-6 4z" />
+							</svg>
+						</button>
+						<button
+							aria-label="알림"
+							style="
+								width: 44px;
+								height: 44px;
+								border: 0;
+								background: transparent;
+								padding: 0;
+								display: flex;
+								align-items: center;
+								justify-content: center;
+							"
+						>
+							<svg
+								width="22"
+								height="22"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="#1C1917"
+								stroke-width="1.6"
+							>
+								<path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4z" />
+								<path d="M10 21h4" />
+							</svg>
+						</button>
+					</div>
+				</header>
+
+				<h1
+					style="
+						margin: 24px 24px 0 24px;
+						font-family: 'Hahmlet', serif;
+						font-weight: 600;
+						font-size: 28px;
+						line-height: 38px;
+						letter-spacing: -0.5px;
+					"
+				>
+					채윤님,<br />이번 주엔 <span style="color: #7c3aed">3개</span>가 끝나요
+				</h1>
+
+				<div
+					style="
+						margin: 20px 24px 0 24px;
+						display: flex;
+						flex-direction: column;
+						border-top: 1px solid #1c1917;
+					"
+				>
+					<sc-for list="{{closing}}" as="row" hint-placeholder-count="3">
+						<a
+							href="#"
+							style="display: flex; gap: 16px; padding: 14px 0; border-bottom: 0.5px solid #d6d3ce"
+						>
+							<span
+								style="width: 120px; height: 80px; background: {{row.thumb}}; flex-shrink: 0"
+							></span>
+							<span
+								style="
+									flex: 1;
+									height: 80px;
+									display: flex;
+									flex-direction: column;
+									position: relative;
+								"
+							>
+								<span style="font-size: 9px; color: #a8a29e">{{row.venue}}</span>
+								<span
+									style="
+										flex: 1;
+										display: flex;
+										align-items: center;
+										justify-content: center;
+										text-align: center;
+										padding: 0 8px;
+										font-family: 'Hahmlet', serif;
+										font-weight: 600;
+										font-size: 14.5px;
+										line-height: 20px;
+									"
+									>{{row.title}}</span
+								>
+								<span
+									style="
+										position: absolute;
+										right: 0;
+										top: 0;
+										font-size: 12px;
+										font-weight: 600;
+										color: #7c3aed;
+									"
+									>{{row.dday}}</span
+								>
+							</span>
+						</a>
+					</sc-for>
+				</div>
+
+				<div
+					style="
+						margin: 28px 24px 0 24px;
+						display: flex;
+						justify-content: space-between;
+						align-items: flex-end;
+					"
+				>
+					<span style="font-family: 'Hahmlet', serif; font-weight: 600; font-size: 20px"
+						>취향에 맞는 전시</span
+					>
+					<a href="#" style="font-size: 13px; color: #57534e">더보기</a>
+				</div>
+				<div style="margin: 14px 0 0 24px; display: flex; gap: 12px">
+					<sc-for list="{{picks}}" as="p" hint-placeholder-count="3">
+						<a
+							href="#"
+							style="width: 140px; flex-shrink: 0; display: flex; flex-direction: column; gap: 8px"
+						>
+							<span style="width: 140px; height: 96px; background: {{p.thumb}}"></span>
+							<span
+								style="
+									font-family: 'Hahmlet', serif;
+									font-weight: 600;
+									font-size: 13.5px;
+									line-height: 19px;
+								"
+								>{{p.title}}</span
+							>
+						</a>
+					</sc-for>
+				</div>
+
+				<button
+					style="
+						position: absolute;
+						right: 20px;
+						bottom: 100px;
+						height: 52px;
+						padding: 0 20px;
+						border: 0;
+						border-radius: 999px;
+						background: #1c1917;
+						color: #ffffff;
+						font-family: 'Pretendard', sans-serif;
+						font-size: 15px;
+						font-weight: 600;
+						display: flex;
+						align-items: center;
+						gap: 8px;
+						box-shadow: 0 6px 14px rgba(28, 25, 23, 0.28);
+					"
+				>
+					<svg
+						width="20"
+						height="20"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="#FFFFFF"
+						stroke-width="1.8"
+					>
+						<path d="M4 8h3l2-3h6l2 3h3v11H4z" />
+						<circle cx="12" cy="13" r="3.5" />
+					</svg>
+					AI 도슨트
+				</button>
+
+				<footer
+					style="
+						position: absolute;
+						left: 0;
+						right: 0;
+						bottom: 0;
+						height: 84px;
+						background: #ffffff;
+						border-top: 0.5px solid #e7e5e4;
+						display: grid;
+						grid-template-columns: repeat(5, minmax(0, 1fr));
+						padding-top: 12px;
+						box-sizing: border-box;
+					"
+				>
+					<span style="text-align: center; font-size: 11px; color: #a8a29e">전시</span>
+					<span style="text-align: center; font-size: 11px; color: #a8a29e">지도</span>
+					<span style="text-align: center; font-size: 11px; font-weight: 600; color: #7c3aed"
+						>둘러보기</span
+					>
+					<span style="text-align: center; font-size: 11px; color: #a8a29e">다이어리</span>
+					<span style="text-align: center; font-size: 11px; color: #a8a29e">마이페이지</span>
+				</footer>
+			</div>
+		</x-dc>
+		<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+			class Component extends DCLogic {
+			  renderVals() {
+			    return {
+			      closing: [
+			        { thumb: '#2F6FB7', venue: '한국영화박물관', title: '제목전(展)', dday: 'D-1' },
+			        { thumb: '#C9B79C', venue: '네오아트센터', title: '최은정 - 하늘 아래, 희망을 새기다', dday: 'D-1' },
+			        { thumb: '#9ED3E6', venue: '경기도박물관', title: '혼자 보긴 아까워서', dday: 'D-2' }
+			      ],
+			      picks: [
+			        { thumb: '#8FA68A', title: '풍경을 담은 시선: 월전 장우성과 오늘의 한국화' },
+			        { thumb: '#6E6A73', title: '2026 다티스트《심윤 : 회색 극장》' },
+			        { thumb: '#D8C3A5', title: '고양이도 임금을 볼 수 있다' }
+			      ]
+			    };
+			  }
+			}
+		</script>
+	</body>
+</html>

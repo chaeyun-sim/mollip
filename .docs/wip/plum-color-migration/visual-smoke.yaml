@@ -1,0 +1,11 @@
+appId: com.simune.mollip
+---
+- tapOn:
+    point: '50%, 94%'
+- takeScreenshot: '.docs/wip/plum-color-migration/explore'
+- tapOn:
+    point: '70%, 94%'
+- takeScreenshot: '.docs/wip/plum-color-migration/diary'
+- tapOn:
+    point: '90%, 94%'
+- takeScreenshot: '.docs/wip/plum-color-migration/mypage'

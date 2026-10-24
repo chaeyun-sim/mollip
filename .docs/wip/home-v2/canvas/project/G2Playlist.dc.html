@@ -1,0 +1,399 @@
+<!doctype html>
+<html lang="ko">
+	<head>
+		<meta charset="utf-8" />
+		<title>홈 G2 플레이리스트</title>
+		<script src="./support.js"></script>
+	</head>
+	<body>
+		<x-dc>
+			<helmet>
+				<link
+					rel="stylesheet"
+					href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@400;600;700&amp;display=swap"
+				/>
+				<style>
+					@font-face {
+						font-family: 'Pretendard';
+						src: url('/_blob/7977b3ca42ace65d7e67bd031fe90ded') format('opentype');
+						font-weight: 400;
+					}
+					@font-face {
+						font-family: 'Pretendard';
+						src: url('/_blob/8f065eca601ce3cb85348621e7b4c825') format('opentype');
+						font-weight: 500;
+					}
+					@font-face {
+						font-family: 'Pretendard';
+						src: url('/_blob/7a9653a1bcd0948efd3d3730b1362841') format('opentype');
+						font-weight: 600;
+					}
+					body {
+						margin: 0;
+					}
+					a {
+						color: #1c1917;
+						text-decoration: none;
+					}
+					a:hover {
+						color: #57534e;
+					}
+				</style>
+			</helmet>
+			<div
+				style="
+					width: 390px;
+					height: 844px;
+					box-sizing: border-box;
+					background: #f8f6f2;
+					color: #1c1917;
+					font-family: 'Pretendard', sans-serif;
+					position: relative;
+					display: flex;
+					flex-direction: column;
+					overflow: hidden;
+				"
+			>
+				<header
+					style="
+						display: flex;
+						justify-content: space-between;
+						align-items: center;
+						padding: 56px 20px 0 24px;
+					"
+				>
+					<div
+						style="
+							font-family: 'Hahmlet', serif;
+							font-weight: 700;
+							font-size: 26px;
+							letter-spacing: -0.5px;
+						"
+					>
+						mollip
+					</div>
+					<div style="display: flex; gap: 8px">
+						<button
+							aria-label="북마크"
+							style="
+								width: 44px;
+								height: 44px;
+								border: 0;
+								background: transparent;
+								padding: 0;
+								display: flex;
+								align-items: center;
+								justify-content: center;
+							"
+						>
+							<svg
+								width="22"
+								height="22"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="#1C1917"
+								stroke-width="1.6"
+							>
+								<path d="M6 3h12v18l-6-4-6 4z" />
+							</svg>
+						</button>
+						<button
+							aria-label="알림"
+							style="
+								width: 44px;
+								height: 44px;
+								border: 0;
+								background: transparent;
+								padding: 0;
+								display: flex;
+								align-items: center;
+								justify-content: center;
+							"
+						>
+							<svg
+								width="22"
+								height="22"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="#1C1917"
+								stroke-width="1.6"
+							>
+								<path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4z" />
+								<path d="M10 21h4" />
+							</svg>
+						</button>
+					</div>
+				</header>
+
+				<section style="margin: 18px 24px 0 24px; display: flex; gap: 16px; align-items: flex-end">
+					<div
+						style="
+							width: 128px;
+							height: 128px;
+							flex-shrink: 0;
+							display: grid;
+							grid-template-columns: repeat(2, minmax(0, 1fr));
+							box-shadow: 0 10px 22px rgba(28, 25, 23, 0.18);
+						"
+					>
+						<span style="background: #9ed3e6"></span><span style="background: #2f6fb7"></span>
+						<span style="background: #8fa68a"></span><span style="background: #c9b79c"></span>
+					</div>
+					<div
+						style="flex: 1; display: flex; flex-direction: column; gap: 4px; padding-bottom: 2px"
+					>
+						<span style="font-size: 11px; font-weight: 600; letter-spacing: 1.5px; color: #78716c"
+							>PLAYLIST</span
+						>
+						<span
+							style="
+								font-family: 'Hahmlet', serif;
+								font-weight: 700;
+								font-size: 22px;
+								line-height: 29px;
+							"
+							>채윤님의<br />이번 주 전시</span
+						>
+						<span style="font-size: 12px; color: #78716c">전시 5개 · 선호 장르 + 곧 마감</span>
+					</div>
+				</section>
+
+				<div style="margin: 16px 24px 0 24px; display: flex; gap: 8px">
+					<a
+						href="#"
+						style="
+							height: 36px;
+							padding: 0 14px;
+							border-radius: 999px;
+							border: 1px solid #1c1917;
+							display: flex;
+							align-items: center;
+							gap: 6px;
+							font-size: 13px;
+							font-weight: 500;
+						"
+					>
+						<svg
+							width="14"
+							height="14"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="#1C1917"
+							stroke-width="1.8"
+						>
+							<path d="M9 4l-5 2v14l5-2 6 2 5-2V4l-5 2z" />
+							<path d="M9 4v14M15 6v14" />
+						</svg>
+						동선으로 보기
+					</a>
+					<a
+						href="#"
+						style="
+							height: 36px;
+							padding: 0 14px;
+							border-radius: 999px;
+							border: 1px solid #d6d3ce;
+							display: flex;
+							align-items: center;
+							gap: 6px;
+							font-size: 13px;
+							color: #57534e;
+						"
+					>
+						<svg
+							width="14"
+							height="14"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="#57534E"
+							stroke-width="1.8"
+						>
+							<path d="M6 3h12v18l-6-4-6 4z" />
+						</svg>
+						모두 저장
+					</a>
+				</div>
+
+				<ol
+					style="
+						margin: 14px 24px 0 24px;
+						padding: 0;
+						list-style: none;
+						display: flex;
+						flex-direction: column;
+					"
+				>
+					<sc-for list="{{tracks}}" as="t" hint-placeholder-count="5">
+						<li style="display: flex; align-items: center; gap: 12px; padding: 9px 0">
+							<span
+								style="
+									width: 16px;
+									font-size: 13px;
+									color: #a8a29e;
+									font-variant-numeric: tabular-nums;
+								"
+								>{{t.no}}</span
+							>
+							<span
+								style="width: 44px; height: 44px; background: {{t.thumb}}; flex-shrink: 0"
+							></span>
+							<span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px">
+								<span
+									style="font-size: 14.5px; font-weight: 500; color: {{t.titleColor}}; white-space: nowrap; overflow: hidden; text-overflow: ellipsis"
+									>{{t.title}}</span
+								>
+								<span
+									style="
+										font-size: 12px;
+										color: #78716c;
+										white-space: nowrap;
+										overflow: hidden;
+										text-overflow: ellipsis;
+									"
+									>{{t.meta}}</span
+								>
+							</span>
+							<span style="font-size: 12px; font-weight: 600; color: {{t.ddayColor}}"
+								>{{t.dday}}</span
+							>
+						</li>
+					</sc-for>
+				</ol>
+
+				<div
+					style="
+						position: absolute;
+						left: 12px;
+						right: 12px;
+						bottom: 94px;
+						height: 60px;
+						background: #1c1917;
+						border-radius: 16px;
+						display: flex;
+						align-items: center;
+						gap: 12px;
+						padding: 0 10px;
+						box-shadow: 0 10px 24px rgba(28, 25, 23, 0.28);
+						overflow: hidden;
+					"
+				>
+					<span
+						style="
+							width: 40px;
+							height: 40px;
+							border-radius: 8px;
+							background: #9ed3e6;
+							flex-shrink: 0;
+						"
+					></span>
+					<span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px">
+						<span
+							style="
+								font-size: 13.5px;
+								font-weight: 500;
+								color: #f8f6f2;
+								white-space: nowrap;
+								overflow: hidden;
+								text-overflow: ellipsis;
+							"
+							>혼자 보긴 아까워서</span
+						>
+						<span style="font-size: 11px; color: #a8a29e">AI 도슨트 · 마지막으로 들은 해설</span>
+					</span>
+					<button
+						aria-label="작품 촬영해서 해설 받기"
+						style="
+							width: 44px;
+							height: 44px;
+							border: 0;
+							background: transparent;
+							display: flex;
+							align-items: center;
+							justify-content: center;
+						"
+					>
+						<svg
+							width="20"
+							height="20"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="#F8F6F2"
+							stroke-width="1.7"
+						>
+							<path d="M4 8h3l2-3h6l2 3h3v11H4z" />
+							<circle cx="12" cy="13" r="3.5" />
+						</svg>
+					</button>
+					<button
+						aria-label="해설 재생"
+						style="
+							width: 44px;
+							height: 44px;
+							border: 0;
+							border-radius: 999px;
+							background: #f8f6f2;
+							display: flex;
+							align-items: center;
+							justify-content: center;
+						"
+					>
+						<svg width="16" height="16" viewBox="0 0 24 24" fill="#1C1917">
+							<path d="M7 4l13 8-13 8z" />
+						</svg>
+					</button>
+					<span
+						style="
+							position: absolute;
+							left: 0;
+							bottom: 0;
+							width: 38%;
+							height: 2px;
+							background: #ab77f1;
+						"
+					></span>
+				</div>
+
+				<footer
+					style="
+						position: absolute;
+						left: 0;
+						right: 0;
+						bottom: 0;
+						height: 84px;
+						background: #ffffff;
+						border-top: 0.5px solid #e7e5e4;
+						display: grid;
+						grid-template-columns: repeat(5, minmax(0, 1fr));
+						padding-top: 12px;
+						box-sizing: border-box;
+					"
+				>
+					<span style="text-align: center; font-size: 11px; color: #a8a29e">전시</span>
+					<span style="text-align: center; font-size: 11px; color: #a8a29e">지도</span>
+					<span style="text-align: center; font-size: 11px; font-weight: 600; color: #7c3aed"
+						>둘러보기</span
+					>
+					<span style="text-align: center; font-size: 11px; color: #a8a29e">다이어리</span>
+					<span style="text-align: center; font-size: 11px; color: #a8a29e">마이페이지</span>
+				</footer>
+			</div>
+		</x-dc>
+		<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+			class Component extends DCLogic {
+			  renderVals() {
+			    const purple = '#7C3AED';
+			    const gray = '#A8A29E';
+			    return {
+			      tracks: [
+			        { no: 1, thumb: '#9ED3E6', title: '혼자 보긴 아까워서', meta: '경기도박물관', dday: 'D-2', ddayColor: purple, titleColor: '#7C3AED' },
+			        { no: 2, thumb: '#8FA68A', title: '풍경을 담은 시선: 월전 장우성과 오늘의 한국화', meta: '이천시립월전미술관', dday: 'D-2', ddayColor: purple, titleColor: '#1C1917' },
+			        { no: 3, thumb: '#6E6A73', title: '2026 다티스트《심윤 : 회색 극장》', meta: '대구미술관', dday: 'D-2', ddayColor: purple, titleColor: '#1C1917' },
+			        { no: 4, thumb: '#D8C3A5', title: '고양이도 임금을 볼 수 있다', meta: '대구미술관', dday: '~11.29', ddayColor: gray, titleColor: '#1C1917' },
+			        { no: 5, thumb: '#B9B4AC', title: '세상은 어떻게 읽히는가', meta: '부산현대미술관', dday: '12.11 개막', ddayColor: gray, titleColor: '#1C1917' }
+			      ]
+			    };
+			  }
+			}
+		</script>
+	</body>
+</html>

@@ -1,0 +1,9 @@
+appId: com.simune.mollip
+---
+- tapOn:
+    point: '50%, 94%'
+- swipe:
+    direction: UP
+- swipe:
+    direction: UP
+- assertVisible: '채윤님을 위한'

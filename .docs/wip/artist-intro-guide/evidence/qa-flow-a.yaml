@@ -1,0 +1,13 @@
+appId: com.simune.mollip
+---
+- launchApp:
+    clearState: false
+- waitForAnimationToEnd
+- tapOn:
+    text: 'Continue'
+    optional: true
+- tapOn:
+    text: 'Close'
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: a0-home

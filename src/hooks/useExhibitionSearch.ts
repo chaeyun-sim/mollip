@@ -1,0 +1,210 @@
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { EXHIBITIONS, type Exhibition } from '../data/exhibitions';
+import { supabase } from '../utils/supabase';
+import {
+	EXHIBITION_COLUMNS,
+	mapExhibitionRowToExhibition,
+	type ExhibitionRow,
+} from '../utils/exhibitionMapper';
+import {
+	applyExhibitionDateFilters,
+	getExhibitionStatus,
+	getPopularTags,
+	isExhibitionListed,
+	isViewableOn,
+	matchesExcluded,
+	matchesQuery,
+	todayExhibitionDateString,
+	type ExhibitionStatus,
+} from '../utils/exhibitionSearch';
+import { getClosingSoonDaysLeft } from '../utils/homeExhibitionMeta';
+import { distanceKm } from '../utils/mapUtils';
+import { useUserLocation } from './useUserLocation';
+
+export interface SearchResult {
+	exhibition: Exhibition;
+	status: ExhibitionStatus;
+	/** 현재 위치 미확보 또는 좌표 없는 전시는 null */
+	distanceKm: number | null;
+}
+
+const DEBOUNCE_MS = 300;
+// @MX:NOTE: 전체 전시를 마운트 시 1회 fetch 후 클라이언트 사이드 필터링.
+// 렌더링은 화면 단에서 PAGE_SIZE(20)씩 무한스크롤로 처리하므로 fetch 한도는 크게 잡는다.
+const SEARCH_LIMIT = 2000;
+
+export function useExhibitionSearch() {
+	const [inputText, setInputText] = useState('');
+	const [searchText, setSearchText] = useState('');
+	const [statusFilters, setStatusFilters] = useState<Set<ExhibitionStatus>>(new Set());
+	const [filterDate, setFilterDate] = useState<Date | null>(null);
+	const [excludedWords, setExcludedWords] = useState<string[]>([]);
+	const [freeOnly, setFreeOnly] = useState(false);
+	// 마감 임박(1~14일 남음) — 홈 "곧 막을 내려요" 전체 보기와 같은 기준
+	const [closingSoonOnly, setClosingSoonOnly] = useState(false);
+	const { currentCoord } = useUserLocation();
+	const [remoteExhibitions, setRemoteExhibitions] = useState<Exhibition[]>([]);
+	const [remoteLoading, setRemoteLoading] = useState(false);
+	const [popularTags, setPopularTags] = useState<string[]>([]);
+	const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+	const handleInputChange = useCallback((text: string) => {
+		setInputText(text);
+		if (debounceTimer.current) clearTimeout(debounceTimer.current);
+		debounceTimer.current = setTimeout(() => setSearchText(text), DEBOUNCE_MS);
+	}, []);
+
+	useEffect(
+		() => () => {
+			if (debounceTimer.current) clearTimeout(debounceTimer.current);
+		},
+		[],
+	);
+
+	const commitSearchText = useCallback((text: string) => {
+		if (debounceTimer.current) clearTimeout(debounceTimer.current);
+		setInputText(text);
+		setSearchText(text);
+	}, []);
+
+	// 마운트 시 1회 전체 목록 fetch — 텍스트 필터링은 클라이언트 사이드(matchesQuery)로 처리.
+	// 서버 ilike 필터는 title/venue/artist만 커버해 tags 검색이 누락되고,
+	// 결과 0개 시 remoteExhibitions = [] → catalog 붕괴 문제가 있어 제거함.
+	useEffect(() => {
+		let cancelled = false;
+		(async () => {
+			setRemoteLoading(true);
+			const { data, error } = await applyExhibitionDateFilters(
+				supabase
+					.from('exhibitions')
+					.select(`${EXHIBITION_COLUMNS}, museums ( gps_x, gps_y )`)
+					.gte('end_date', todayExhibitionDateString())
+					.order('start_date', { ascending: false })
+					.limit(SEARCH_LIMIT),
+			);
+			if (cancelled) return;
+			if (error || !data) {
+				setRemoteLoading(false);
+				return;
+			}
+			type Row = ExhibitionRow & {
+				museums: { gps_x: string; gps_y: string } | { gps_x: string; gps_y: string }[] | null;
+			};
+			const mapped = (data as unknown as Row[]).map((row) => {
+				const ex = mapExhibitionRowToExhibition(row);
+				const museum = Array.isArray(row.museums) ? row.museums[0] : row.museums;
+				const lat = Number(museum?.gps_y);
+				const lon = Number(museum?.gps_x);
+				if (Number.isFinite(lat) && Number.isFinite(lon)) {
+					ex.coordinates = { latitude: lat, longitude: lon };
+				}
+				return ex;
+			});
+			setRemoteExhibitions(mapped);
+			setPopularTags(getPopularTags(8, mapped));
+			setRemoteLoading(false);
+		})();
+		return () => {
+			cancelled = true;
+		};
+	}, []);
+
+	const toggleStatusFilter = useCallback((key: ExhibitionStatus) => {
+		setStatusFilters((prev) => {
+			const next = new Set(prev);
+			if (next.has(key)) next.delete(key);
+			else next.add(key);
+			return next;
+		});
+	}, []);
+
+	// 마감 임박은 전부 진행 중이라 예정·진행 중 칩을 숨긴다 — 켜는 순간 숨겨질 상태 필터도 비워
+	// '예정'이 켜진 채로 결과 0건인데 칩이 안 보여 끌 수 없는 상황을 막는다
+	const applyClosingSoonOnly = useCallback((value: boolean) => {
+		if (value) setStatusFilters(new Set());
+		setClosingSoonOnly(value);
+	}, []);
+
+	const addExcludedWord = useCallback((word: string) => {
+		const trimmed = word.trim();
+		if (!trimmed) return;
+		setExcludedWords((prev) => (prev.includes(trimmed) ? prev : [...prev, trimmed]));
+	}, []);
+
+	const removeExcludedWord = useCallback((word: string) => {
+		setExcludedWords((prev) => prev.filter((w) => w !== word));
+	}, []);
+
+	const clearExcludedWords = useCallback(() => {
+		setExcludedWords([]);
+	}, []);
+
+	const catalog = remoteExhibitions.length > 0 ? remoteExhibitions : EXHIBITIONS;
+
+	const results = useMemo<SearchResult[]>(() => {
+		return catalog
+			.filter((ex) => {
+				if (!isExhibitionListed(ex)) return false;
+				if (!matchesQuery(ex, searchText)) return false;
+				if (matchesExcluded(ex, excludedWords)) return false;
+				if (statusFilters.size > 0 && !statusFilters.has(getExhibitionStatus(ex))) return false;
+				if (filterDate && !isViewableOn(ex, filterDate)) return false;
+				if (freeOnly && !ex.admissionFree) return false;
+				if (closingSoonOnly && getClosingSoonDaysLeft(ex) === null) return false;
+				return true;
+			})
+			.map((ex) => ({
+				exhibition: ex,
+				status: getExhibitionStatus(ex),
+				distanceKm:
+					currentCoord && ex.coordinates
+						? distanceKm(
+								currentCoord.latitude,
+								currentCoord.longitude,
+								ex.coordinates.latitude,
+								ex.coordinates.longitude,
+							)
+						: null,
+			}))
+			.sort((a, b) =>
+				closingSoonOnly
+					? // 마감 임박 필터일 때는 마감 빠른 순
+						(getClosingSoonDaysLeft(a.exhibition) ?? Infinity) -
+						(getClosingSoonDaysLeft(b.exhibition) ?? Infinity)
+					: (a.distanceKm ?? Infinity) - (b.distanceKm ?? Infinity),
+			);
+	}, [
+		catalog,
+		searchText,
+		excludedWords,
+		statusFilters,
+		filterDate,
+		freeOnly,
+		closingSoonOnly,
+		currentCoord,
+	]);
+
+	return {
+		searchText: inputText,
+		debouncedSearchText: searchText,
+		setSearchText: handleInputChange,
+		commitSearchText,
+		statusFilters,
+		toggleStatusFilter,
+		filterDate,
+		setFilterDate,
+		excludedWords,
+		addExcludedWord,
+		removeExcludedWord,
+		clearExcludedWords,
+		freeOnly,
+		toggleFreeOnly: () => setFreeOnly((prev) => !prev),
+		closingSoonOnly,
+		setClosingSoonOnly: applyClosingSoonOnly,
+		toggleClosingSoonOnly: () => applyClosingSoonOnly(!closingSoonOnly),
+		hasLocation: currentCoord !== null,
+		results,
+		isLoading: remoteLoading,
+		popularTags,
+	};
+}

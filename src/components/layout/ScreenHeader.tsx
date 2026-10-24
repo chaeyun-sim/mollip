@@ -1,0 +1,157 @@
+import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
+import { ReactNode } from 'react';
+import { Pressable, Text, TextStyle, View, ViewStyle } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { LinearGradient } from 'expo-linear-gradient';
+import { cn } from '../../lib/cn';
+
+interface SlotProps {
+	children?: ReactNode;
+	className?: string;
+	style?: ViewStyle;
+}
+
+interface LogoProps {
+	className?: string;
+	fontSize?: number;
+	textStyle?: TextStyle;
+}
+
+function ScreenHeader({
+	children,
+	className,
+	style,
+	topOffset = false,
+	fullBleed = false,
+}: { topOffset?: boolean; fullBleed?: boolean } & SlotProps) {
+	const insets = useSafeAreaInsets();
+
+	// -ml-6/w-screen는 부모 Screen이 기본 px-6일 때만 좌우가 정확히 상쇄된다.
+	// Screen이 px-0(콘텐츠를 화면 끝까지 채우는 경우)이면 이미 폭이 화면 그대로라
+	// 같은 트릭을 쓰면 오른쪽만 안쪽으로 밀린다 — fullBleed로 그 경우를 분기한다.
+	return (
+		<View
+			className={cn('pb-4 z-[9999]', fullBleed ? 'w-full' : '-ml-6 w-screen', className)}
+			style={[{ marginTop: topOffset ? 0 : -insets.top, paddingTop: insets.top + 16 }, style]}
+		>
+			<View className="relative flex-row items-center px-6" style={{ height: 32 }}>
+				{children}
+			</View>
+		</View>
+	);
+}
+
+function Logo({ className, fontSize = 24, textStyle }: LogoProps) {
+	return (
+		<View className={cn('flex-row items-start', className)}>
+			<Text className="text-gray900 font-hahmlet-semibold" style={{ fontSize, ...textStyle }}>
+				moll
+			</Text>
+
+			<View className="relative">
+				<Text className="text-gray900 font-hahmlet-semibold" style={{ fontSize, ...textStyle }}>
+					ı
+				</Text>
+
+				<View
+					className="absolute left-1/2"
+					style={{
+						transform: [{ translateX: -(fontSize / 8) }],
+						height: fontSize / 4,
+						width: fontSize,
+						top: fontSize / 4.5,
+					}}
+				>
+					<LinearGradient
+						colors={['#F7DCCB', '#EBCFD5', '#D4C5DD', '#CDD3E1']}
+						locations={[0, 0.35, 0.7, 1]}
+						start={{ x: 0, y: 0 }}
+						end={{ x: 1, y: 1 }}
+						style={{
+							width: '100%',
+							height: '100%',
+							borderRadius: 1,
+						}}
+					/>
+				</View>
+			</View>
+
+			<Text className="text-gray900 font-hahmlet-semibold" style={{ fontSize, ...textStyle }}>
+				p
+			</Text>
+		</View>
+	);
+}
+
+function Left({ children, className, style }: SlotProps) {
+	return (
+		<View className={cn('absolute left-6', className)} style={style}>
+			{children}
+		</View>
+	);
+}
+
+function Center({ children, className, style }: SlotProps) {
+	return (
+		<View
+			className={cn('absolute inset-0 items-center justify-center mt-1', className)}
+			style={style}
+			pointerEvents="none"
+		>
+			{typeof children === 'string' ? (
+				<Text className="text-[17px] text-gray900 font-pretendard-semibold">{children}</Text>
+			) : (
+				children
+			)}
+		</View>
+	);
+}
+
+function Right({ children, className, style }: SlotProps) {
+	return (
+		<View className={cn('absolute right-6', className)} style={style}>
+			{children}
+		</View>
+	);
+}
+
+function Back({
+	onPress,
+	color = 'default',
+	className,
+}: {
+	onPress?: () => void;
+	color?: 'default' | 'muted' | 'white-90' | 'white';
+	className?: string;
+}) {
+	const router = useRouter();
+	const colorClass =
+		color === 'muted'
+			? 'text-gray600'
+			: color === 'white-90'
+				? 'text-white/90'
+				: color === 'white'
+					? 'text-white'
+					: 'text-gray900';
+
+	return (
+		<Pressable
+			onPress={onPress ?? (() => router.back())}
+			hitSlop={8}
+			accessibilityLabel="뒤로 가기"
+			accessibilityRole="button"
+			style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
+		>
+			<Ionicons name="arrow-back" size={24} className={cn(colorClass, className)} />
+		</Pressable>
+	);
+}
+
+ScreenHeader.Left = Left;
+ScreenHeader.Center = Center;
+ScreenHeader.Right = Right;
+ScreenHeader.Back = Back;
+ScreenHeader.Logo = Logo;
+
+export { ScreenHeader };

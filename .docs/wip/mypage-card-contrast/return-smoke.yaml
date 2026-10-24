@@ -1,0 +1,6 @@
+appId: com.simune.mollip
+---
+- tapOn:
+    point: '8%, 10%'
+- assertVisible: '계정 관리'
+- assertVisible: '서비스'

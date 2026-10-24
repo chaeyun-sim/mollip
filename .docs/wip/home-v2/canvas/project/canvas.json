@@ -1,0 +1,221 @@
+{
+	"v": 3,
+	"createdOnFiles": {
+		"v": 1,
+		"at": "2026-10-09T17:30:00+09:00"
+	},
+	"title": "mollip 홈 리디자인",
+	"launch": {
+		"view": "canvas"
+	},
+	"pages": [],
+	"boards": {
+		"Main.dc.html": {
+			"x": 0,
+			"y": 0,
+			"w": 390,
+			"h": 844,
+			"title": "A · 숫자 포스터"
+		},
+		"OneToday.dc.html": {
+			"x": 470,
+			"y": 0,
+			"w": 390,
+			"h": 844,
+			"title": "B · 오늘 단 하나"
+		},
+		"WallLabel.dc.html": {
+			"x": 940,
+			"y": 0,
+			"w": 390,
+			"h": 844,
+			"title": "C · 벽 레이블"
+		},
+		"Hybrid.dc.html": {
+			"x": 1410,
+			"y": 0,
+			"w": 390,
+			"h": 1180,
+			"title": "D · A + B 혼합 (스크롤)"
+		},
+		"Upcoming.dc.html": {
+			"x": 0,
+			"y": 1560,
+			"w": 390,
+			"h": 844,
+			"title": "E-1 · 다가오는 2주 (펼침)"
+		},
+		"UpcomingScrolled.dc.html": {
+			"x": 470,
+			"y": 1560,
+			"w": 390,
+			"h": 844,
+			"title": "E-2 · 스크롤 후 (접힘)"
+		},
+		"F1Plain.dc.html": {
+			"x": 0,
+			"y": 2790,
+			"w": 390,
+			"h": 844,
+			"title": "F1 · 전시 탭 그대로"
+		},
+		"F2DocentFirst.dc.html": {
+			"x": 470,
+			"y": 2790,
+			"w": 390,
+			"h": 844,
+			"title": "F2 · 도슨트 먼저"
+		},
+		"F3Greeting.dc.html": {
+			"x": 940,
+			"y": 2790,
+			"w": 390,
+			"h": 844,
+			"title": "F3 · 인사 + 두 섹션"
+		},
+		"F4WeekCard.dc.html": {
+			"x": 1410,
+			"y": 2790,
+			"w": 390,
+			"h": 844,
+			"title": "F4 · 이번 주 카드 + 목록"
+		},
+		"G0Combo.dc.html": {
+			"x": 0,
+			"y": 4020,
+			"w": 390,
+			"h": 844,
+			"title": "G0 · 조합 (안내판 + 띠지 + Now Playing)"
+		},
+		"G1Departures.dc.html": {
+			"x": 470,
+			"y": 4020,
+			"w": 390,
+			"h": 844,
+			"title": "G1 · 출발 안내판 × 마감"
+		},
+		"G2Playlist.dc.html": {
+			"x": 940,
+			"y": 4020,
+			"w": 390,
+			"h": 844,
+			"title": "G2 · 플레이리스트 × 도슨트"
+		},
+		"G3Obi.dc.html": {
+			"x": 1410,
+			"y": 4020,
+			"w": 390,
+			"h": 844,
+			"title": "G3 · 서점 띠지 × 추천"
+		},
+		"G5Showtimes.dc.html": {
+			"x": 1880,
+			"y": 4020,
+			"w": 390,
+			"h": 844,
+			"title": "G5 · 상영 시간표 × 운영 시간"
+		},
+		"H1Light.dc.html": {
+			"x": 0,
+			"y": 5250,
+			"w": 390,
+			"h": 844,
+			"title": "H1 · 출발 안내판 미니멀 — 라이트"
+		},
+		"H2DarkMinimal.dc.html": {
+			"x": 470,
+			"y": 5250,
+			"w": 390,
+			"h": 844,
+			"title": "H2 · 출발 안내판 미니멀 — 다크"
+		},
+		"I1PaperTimetable.dc.html": {
+			"x": 0,
+			"y": 6480,
+			"w": 390,
+			"h": 844,
+			"title": "I1 · 종이 시간표"
+		},
+		"I2TicketStub.dc.html": {
+			"x": 470,
+			"y": 6480,
+			"w": 390,
+			"h": 844,
+			"title": "I2 · 티켓 스텁"
+		},
+		"I3SerifFlap.dc.html": {
+			"x": 940,
+			"y": 6480,
+			"w": 390,
+			"h": 844,
+			"title": "I3 · 세리프 플랩 + 한 줄"
+		}
+	},
+	"order": [
+		"Main.dc.html",
+		"OneToday.dc.html",
+		"WallLabel.dc.html",
+		"Hybrid.dc.html",
+		"Upcoming.dc.html",
+		"UpcomingScrolled.dc.html",
+		"F1Plain.dc.html",
+		"F2DocentFirst.dc.html",
+		"F3Greeting.dc.html",
+		"F4WeekCard.dc.html",
+		"G0Combo.dc.html",
+		"G1Departures.dc.html",
+		"G2Playlist.dc.html",
+		"G3Obi.dc.html",
+		"G5Showtimes.dc.html",
+		"H1Light.dc.html",
+		"H2DarkMinimal.dc.html",
+		"I1PaperTimetable.dc.html",
+		"I2TicketStub.dc.html",
+		"I3SerifFlap.dc.html"
+	],
+	"notes": {
+		"rowTitle": {
+			"x": 0,
+			"y": -260,
+			"text": "홈 — 포스터 없이, 타이포와 숫자로",
+			"kind": "title1",
+			"maxW": 1800
+		},
+		"rowTitleE": {
+			"x": 0,
+			"y": 1300,
+			"text": "E — 캘린더 카드가 스크롤하면 상단 알약으로 접힘",
+			"kind": "title1",
+			"maxW": 1800
+		},
+		"rowTitleF": {
+			"x": 0,
+			"y": 2530,
+			"text": "F — 마감 임박 · AI 도슨트 · 나에게 맞춘 한 가지 (전시 탭과 같은 행)",
+			"kind": "title1",
+			"maxW": 1800
+		},
+		"rowTitleG": {
+			"x": 0,
+			"y": 3760,
+			"text": "G — 익숙한 목록 + 다른 분야의 은유",
+			"kind": "title1",
+			"maxW": 2280
+		},
+		"rowTitleH": {
+			"x": 0,
+			"y": 4990,
+			"text": "H — G1을 더 미니멀하게",
+			"kind": "title1",
+			"maxW": 1800
+		},
+		"rowTitleI": {
+			"x": 0,
+			"y": 6220,
+			"text": "I — 출발 안내판을 mollip 톤으로 (종이 · 세리프 · 한국어)",
+			"kind": "title1",
+			"maxW": 1800
+		}
+	},
+	"designSystems": []
+}

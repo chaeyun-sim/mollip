@@ -1,0 +1,11 @@
+appId: com.simune.mollip
+---
+- tapOn:
+    point: '8%,10%'
+- waitForAnimationToEnd
+- tapOn:
+    point: '91%,40%'
+- waitForAnimationToEnd
+- tapOn:
+    point: '67%,56%'
+- waitForAnimationToEnd

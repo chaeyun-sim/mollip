@@ -1,0 +1,44 @@
+import { Ionicons } from '@expo/vector-icons';
+import { Pressable, Text } from 'react-native';
+import type { DirectionsStatus } from '@/src/hooks/useDirections';
+
+interface MapBottomControlsProps {
+	onLocate: () => void;
+	directionsStatus: DirectionsStatus;
+	onShowRoute: () => void;
+}
+
+export function MapBottomControls({
+	onLocate,
+	directionsStatus,
+	onShowRoute,
+}: MapBottomControlsProps) {
+	return (
+		<>
+			{/* FAB - 현재 위치 */}
+			<Pressable
+				onPress={onLocate}
+				className="absolute right-5 bottom-8 w-12 h-12 rounded-full items-center justify-center bg-[rgba(15,14,13,0.92)] border border-white/15"
+				style={({ pressed }) => (pressed ? { opacity: 0.6 } : undefined)}
+				accessibilityLabel="내 위치로 이동"
+				accessibilityRole="button"
+			>
+				<Ionicons name="locate-outline" size={22} className="text-white" />
+			</Pressable>
+
+			{/* 길찾기 패널을 다시 열 수 있는 버튼 */}
+			{directionsStatus !== 'idle' && directionsStatus !== 'planning' && (
+				<Pressable
+					onPress={onShowRoute}
+					className="absolute left-5 bottom-8 flex-row items-center gap-2 h-12 px-5 rounded-full bg-[rgba(15,14,13,0.92)] border border-white/15"
+					style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
+					accessibilityLabel="경로 패널 다시 보기"
+					accessibilityRole="button"
+				>
+					<Ionicons name="navigate" size={16} className="text-white" />
+					<Text className="text-white text-[13px] font-pretendard-bold">경로 보기</Text>
+				</Pressable>
+			)}
+		</>
+	);
+}
