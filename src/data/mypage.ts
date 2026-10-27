@@ -1,6 +1,6 @@
 import type { DescriptionLength, FontSize, VoiceSpeed } from '@/src/store/settingsStore';
 
-export const APP_VERSION = '1.0.0';
+export const APP_VERSION = '1.0.1';
 
 export const FONT_SIZE_OPTIONS: { value: FontSize; label: string }[] = [
 	{ value: 'small', label: '소' },
