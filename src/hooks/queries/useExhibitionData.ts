@@ -10,17 +10,29 @@ export function useExhibitionData(id: string) {
 		data: dbExhibition,
 		isLoading: dbLoading,
 		isError: dbError,
+		error: dbQueryError,
+		refetch: refetchDb,
 	} = useExhibitionDetail(isNumericDbId ? id : undefined);
 
 	const {
 		data: cultureExhibition,
 		isLoading: cultureLoading,
 		isError: cultureError,
+		error: cultureQueryError,
+		refetch: refetchCulture,
 	} = useCultureExhibitionDetail(id);
 
 	const data = dbExhibition ?? cultureExhibition;
 	const isLoading = !data && (dbLoading || cultureLoading);
-	const isError = !data && !isLoading && dbError && cultureError;
+	const isLookupFailure = (error: unknown) =>
+		error != null && (error as { message?: string }).message !== 'exhibition not found';
+	const isError =
+		!data &&
+		!isLoading &&
+		((dbError && isLookupFailure(dbQueryError)) ||
+			(cultureError && isLookupFailure(cultureQueryError)));
+	const refetch = () =>
+		Promise.all([isNumericDbId ? refetchDb() : Promise.resolve(), refetchCulture()]);
 
-	return { data, isLoading, isError };
+	return { data, isLoading, isError, refetch };
 }

@@ -27,7 +27,7 @@ module.exports = {
 		slug: 'mollip',
 		scheme: 'mollip',
 		owner: 'simune',
-		version: '1.0.0',
+		version: '1.0.1',
 		orientation: 'portrait',
 		icon: './assets/images/logo/icon.png',
 		userInterfaceStyle: 'light',
