@@ -48,7 +48,7 @@ export default function ExhibitionDetailScreen() {
 	const [expanded, setExpanded] = useState(false);
 	const [isDescriptionLong, setIsDescriptionLong] = useState(false);
 
-	const { data: exhibition, isLoading } = useExhibitionData(id);
+	const { data: exhibition, isLoading, isError, refetch } = useExhibitionData(id);
 	const { isBookmarked, toggle } = useBookmarkStore(
 		useShallow((s) => ({ isBookmarked: s.isBookmarked(id), toggle: s.toggle })),
 	);
@@ -91,6 +91,20 @@ export default function ExhibitionDetailScreen() {
 	}, [ensureAuth, enterImmersive, exhibition, id, recordVisit, router]);
 
 	if (isLoading) return <ExhibitionDetailSkeleton />;
+
+	if (isError) {
+		return (
+			<SafeAreaView className="flex-1 bg-bg-light">
+				<Result
+					icon="alert-circle-outline"
+					title="전시 정보를 불러오지 못했어요"
+					description="잠시 후 다시 시도해 주세요."
+					actionLabel="다시 시도"
+					onAction={() => void refetch()}
+				/>
+			</SafeAreaView>
+		);
+	}
 
 	if (!exhibition) {
 		return (

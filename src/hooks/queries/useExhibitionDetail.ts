@@ -30,7 +30,7 @@ async function fetchExhibitionDetail(numericId: number): Promise<Exhibition> {
 	const { data, error } = await supabase
 		.from('exhibitions')
 		.select(
-			`${EXHIBITION_COLUMNS}, museums ( id, name, address, phone, homepage_url, open_hours, rstdeInfo, description, amenities, parking, notes, gps_x, gps_y, venue_group_name, accessibility )`,
+			`${EXHIBITION_COLUMNS}, museums ( id, name, address, phone, homepage_url, open_hours, rstdeInfo, amenities, parking, notes, gps_x, gps_y, accessibility )`,
 		)
 		.eq('id', numericId)
 		.maybeSingle();

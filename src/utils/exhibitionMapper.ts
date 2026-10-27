@@ -46,9 +46,8 @@ export type MuseumJoinRow = Pick<
 	| 'notes'
 	| 'gps_x'
 	| 'gps_y'
-	| 'venue_group_name'
 	| 'accessibility'
->;
+> & { venue_group_name?: string | null };
 
 function isAdmissionFree(raw: string | null | undefined): boolean {
 	if (raw == null) return true;
