@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { useCallback, useRef, useState } from 'react';
 import { Image, Pressable, ScrollView, Text, View, useWindowDimensions } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -22,6 +23,8 @@ export function OnboardingGalleryWall({
 	onConfirm,
 	onResetPreferences,
 }: OnboardingGalleryWallProps) {
+	const { t } = useTranslation();
+
 	const insets = useSafeAreaInsets();
 	const dimensions = useWindowDimensions();
 	const rootRef = useRef<View>(null);
@@ -60,13 +63,13 @@ export function OnboardingGalleryWall({
 					destination = empty[0]?.index ?? null;
 				}
 				if (destination === null) {
-					wall.announce('바꿀 액자를 먼저 선택해 주세요');
+					wall.announce(t('onboarding.select_frame_first'));
 					return;
 				}
 				wall.place(piece, destination);
 			});
 		},
-		[wall, scale],
+		[wall, scale, t],
 	);
 	const handleDrag = useCallback(
 		(
@@ -164,8 +167,10 @@ export function OnboardingGalleryWall({
 	}, [wall, onConfirm]);
 	const canConfirmWall = wall.count >= 3 && !busy && drag === null;
 	// 취향 수정 화면(초기화 버튼 있음)은 저장, 온보딩은 취향 강화하기로 넘어가므로 다음 문구를 쓴다
-	const confirmLabel = onResetPreferences ? '취향 저장하기' : '다음';
-	const busyLabel = onResetPreferences ? '저장 중…' : '취향 저장 중…';
+	const confirmLabel = onResetPreferences ? t('onboarding.save_preferences') : t('common.next');
+	const busyLabel = onResetPreferences
+		? t('onboarding.saving')
+		: t('onboarding.saving_preferences');
 
 	return (
 		<View ref={rootRef} className="flex-1" testID="gallery-wall">
@@ -199,7 +204,10 @@ export function OnboardingGalleryWall({
 							>
 								<OnboardingDraggable
 									testID={`frame-${index + 1}`}
-									label={`${index + 1}번 액자, ${wall.placements[index]?.label ?? '비어 있음'}`}
+									label={t('onboarding.frame_label', {
+										number: index + 1,
+										piece: wall.placements[index]?.label ?? t('onboarding.frame_empty'),
+									})}
 									selected={wall.selectedFrame === index}
 									disabled={busy}
 									draggable={wall.placements[index] !== null}
@@ -260,12 +268,14 @@ export function OnboardingGalleryWall({
 						<Pressable
 							onPress={onResetPreferences}
 							accessibilityRole="button"
-							accessibilityLabel="내 취향 초기화하기"
+							accessibilityLabel={t('onboarding.reset_preferences_a11y')}
 							accessibilityState={{ disabled: busy, busy }}
 							disabled={busy}
 							className="min-h-[52px] flex-1 items-center justify-center rounded-[18px] border border-gray300 bg-white px-3"
 						>
-							<Text className="font-pretendard-semibold text-base text-gray800">초기화</Text>
+							<Text className="font-pretendard-semibold text-base text-gray800">
+								{t('onboarding.reset')}
+							</Text>
 						</Pressable>
 					)}
 					<Pressable

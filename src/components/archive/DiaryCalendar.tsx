@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { cn } from '@/src/lib/cn';
 import { Ionicons } from '@expo/vector-icons';
 import { useMemo } from 'react';
@@ -43,6 +44,8 @@ export function DiaryCalendar({
 	onSelectDate,
 	onChangeMonth,
 }: DiaryCalendarProps) {
+	const { t } = useTranslation();
+
 	const now = new Date();
 	const today = now.toISOString().slice(0, 10);
 
@@ -115,7 +118,9 @@ export function DiaryCalendar({
 				</View>
 				<View className="flex-row items-center gap-1">
 					<View className="w-2 h-2 rounded-[1px] border border-dashed border-gray500" />
-					<Text className="text-[11px] text-gray600 font-pretendard-medium">관람</Text>
+					<Text className="text-[11px] text-gray600 font-pretendard-medium">
+						{t('exhibitions.visit')}
+					</Text>
 				</View>
 			</View>
 

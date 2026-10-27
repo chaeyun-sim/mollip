@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
 import { Stack, useRouter } from 'expo-router';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -23,6 +24,8 @@ const GUIDE_NOTES = [
 ] as const;
 
 export default function ImmersiveStartScreen() {
+	const { t } = useTranslation();
+
 	const router = useRouter();
 	const enterImmersive = useImmersiveStore((s) => s.enter);
 	const recordExhibition = useVisitStore((s) => s.recordExhibition);
@@ -177,7 +180,7 @@ export default function ImmersiveStartScreen() {
 
 					<Screen.BottomAbsolute className="bottom-2">
 						<Button tone="inverse" onPress={handleSubmit} accessibilityLabel="몰입 모드 시작하기">
-							시작하기
+							{t('onboarding.start')}
 						</Button>
 					</Screen.BottomAbsolute>
 				</Pressable>

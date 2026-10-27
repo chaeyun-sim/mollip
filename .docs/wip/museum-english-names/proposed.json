@@ -1,0 +1,4399 @@
+[
+  {
+    "id": 1,
+    "name": "갤러리 topohaus",
+    "address": "서울 종로구 인사동11길 6\n",
+    "homepage_url": "http://www.topohaus.com/",
+    "name_en": "TOPOHAUS",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.topohaus.com/",
+        "basis": "titles",
+        "evidence": "전시 | Topohaus"
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "name": "경인미술관",
+    "address": "서울 종로구 인사동10길 11-4",
+    "homepage_url": "http://www.kyunginart.co.kr/kor/",
+    "name_en": "Kyung-In Museum of Fine Art",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://english.visitkorea.or.kr/svc/contents/contentsView.do?vcontsId=111088",
+        "basis": "Manually reviewed official institution / tourism source"
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "name": "사비나미술관",
+    "address": "서울 은평구 진관1로 93",
+    "homepage_url": "http://www.savinamuseum.com/kor/about/direction.jsp",
+    "name_en": "Savina Museum of Contemporary Art",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "http://www.savinamuseum.com/kor/about/direction.jsp",
+        "basis": "english",
+        "evidence": "copyright SAVINA MUSEUM OF CONTEMPORARY ART All Right Reserved."
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "name": "이응노미술관",
+    "address": "대전 서구 둔산대로 152",
+    "homepage_url": "https://www.leeungnomuseum.or.kr/",
+    "name_en": "Lee Ungno Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.leeungnomuseum.or.kr/",
+        "basis": "metadata",
+        "evidence": "<meta name=\"description\" content=\"이응노미술관, 이응노, 대전고암미술문화재단, 고암미술문화재단, leeungno museum,  Daejeon Goam Art & Culture Foundation\" />"
+      },
+      {
+        "url": "https://www.leeungnomuseum.or.kr/?en=Us",
+        "basis": "titles",
+        "evidence": "LEEUNGNO MUSEUM"
+      }
+    ]
+  },
+  {
+    "id": 10,
+    "name": "미메시스 아트 뮤지엄",
+    "address": "경기 파주 문발로 253",
+    "homepage_url": "https://mimesisartmuseum.co.kr/",
+    "name_en": "Mimesis Art Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://mimesisartmuseum.co.kr/",
+        "basis": "titles",
+        "evidence": "mimesis art museum"
+      }
+    ]
+  },
+  {
+    "id": 11,
+    "name": "유나이티드 갤러리",
+    "address": "서울 강남구 강남대로102길 41",
+    "homepage_url": "https://www.unitedgallery.co.kr/index.asp",
+    "name_en": "United Gallery",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.unitedgallery.co.kr/index.asp",
+        "basis": "titles",
+        "evidence": "United Gallery"
+      }
+    ]
+  },
+  {
+    "id": 12,
+    "name": "서울시립북서울미술관",
+    "address": "서울 노원구 동일로 1238",
+    "homepage_url": "https://sema.seoul.go.kr/kr/visit/bukseoul",
+    "name_en": "Buk-Seoul Museum of Art",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://sema.seoul.go.kr/en/index",
+        "basis": "english",
+        "evidence": "Buk-Seoul Museum of Art"
+      }
+    ]
+  },
+  {
+    "id": 13,
+    "name": "송암미술관",
+    "address": "인천 미추홀구 비류대로55번길 68",
+    "homepage_url": "http://songam.incheon.go.kr/index.do",
+    "name_en": "Songam Art Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.incheon.go.kr/museum/MU020501",
+        "basis": "Manually reviewed official institution / tourism source"
+      }
+    ]
+  },
+  {
+    "id": 14,
+    "name": "우양미술관",
+    "address": "경북 경주시 보문로 484-79",
+    "homepage_url": "https://wooyangmuseum.org/main",
+    "name_en": "Wooyang Art Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://wooyangmuseum.org/main",
+        "basis": "titles",
+        "evidence": "우양미술관 Wooyang Art Museum"
+      }
+    ]
+  },
+  {
+    "id": 16,
+    "name": "제주도립미술관",
+    "address": "제주 제주시 1100로 2894-78",
+    "homepage_url": "https://www.jeju.go.kr/jmoa",
+    "name_en": "Jeju Museum of Art",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.jeju.go.kr/jmoa/",
+        "basis": "english",
+        "evidence": "제주도립미술관 - Jeju Museum of Art"
+      },
+      {
+        "url": "https://www.jeju.go.kr/jmoa/#english",
+        "basis": "english",
+        "evidence": "제주도립미술관 - Jeju Museum of Art"
+      }
+    ]
+  },
+  {
+    "id": 17,
+    "name": "성곡미술관",
+    "address": "서울 종로구 경희궁길 42",
+    "homepage_url": "http://www.sungkokmuseum.org/main/",
+    "name_en": "Sungkok Art Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "http://www.sungkokmuseum.org/main/",
+        "basis": "titles",
+        "evidence": "Sungkok Art Museum"
+      }
+    ]
+  },
+  {
+    "id": 19,
+    "name": "가나아트파크",
+    "address": "경기 양주시 장흥면 권율로 117",
+    "homepage_url": "http://www.artpark.co.kr/about/facilities",
+    "name_en": "Gana ArtPark",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "http://www.artpark.co.kr/about/facilities",
+        "basis": "titles",
+        "evidence": "시설안내 &mdash; Gana ArtPark"
+      }
+    ]
+  },
+  {
+    "id": 20,
+    "name": "아모레퍼시픽미술관",
+    "address": "서울 용산구 한강대로 100",
+    "homepage_url": "https://apma.amorepacific.com/index.do",
+    "name_en": "Amorepacific Museum of Art",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://apma.amorepacific.com/index.do",
+        "basis": "Manually reviewed official institution / tourism source"
+      }
+    ]
+  },
+  {
+    "id": 21,
+    "name": "아트선재센터",
+    "address": "서울 종로구 율곡로3길 87",
+    "homepage_url": "http://artsonje.org",
+    "name_en": "Art Sonje Center",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://artsonje.org/",
+        "basis": "english",
+        "evidence": "© Art Sonje Center. All Rights reserved."
+      },
+      {
+        "url": "https://artsonje.org/en/",
+        "basis": "titles",
+        "evidence": "Art Sonje Center"
+      }
+    ]
+  },
+  {
+    "id": 23,
+    "name": "한원미술관",
+    "address": "서울 서초구 남부순환로 2423",
+    "homepage_url": "http://www.hanwon.org/",
+    "name_en": "Hanwon Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "http://www.hanwon.org/",
+        "basis": "titles",
+        "evidence": "한원미술관 | hanwonmuseum"
+      }
+    ]
+  },
+  {
+    "id": 25,
+    "name": "백남준아트센터",
+    "address": "경기 용인시 기흥구 백남준로 10",
+    "homepage_url": "http://njp.ggcf.kr/",
+    "name_en": "Nam June Paik Art Center",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://njp.ggcf.kr/",
+        "basis": "english",
+        "evidence": "NAM JUNE PAIK ART CENTER"
+      },
+      {
+        "url": "https://njpart.ggcf.kr/",
+        "basis": "titles",
+        "evidence": "NAM JUNE PAIK ART CENTER"
+      }
+    ]
+  },
+  {
+    "id": 27,
+    "name": "JCC 아트센터",
+    "address": "서울 종로구 창경궁로35길 29",
+    "homepage_url": "https://www.jeijcc.org/intro.html",
+    "name_en": "JCC Art Center",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://culture.seoul.go.kr/culture/culture/cultureSpace/view.do?facCode=100931&menuNo=200119",
+        "basis": "Manually reviewed official institution / tourism source"
+      }
+    ]
+  },
+  {
+    "id": 30,
+    "name": "아줄레주 갤러리",
+    "address": "서울 강남구 삼성로149길 10",
+    "homepage_url": "https://azulejogallery.com/",
+    "name_en": "Azulejo Gallery",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://azulejogallery.com/",
+        "basis": "titles",
+        "evidence": "Azulejo Gallery"
+      }
+    ]
+  },
+  {
+    "id": 32,
+    "name": "솔거미술관",
+    "address": "경북 경주시 경감로 614",
+    "homepage_url": "http://www.gjsam.or.kr/ko/",
+    "name_en": "Solgeo Art Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.gjsam.or.kr/programs/page/page.aspx?mnu_uid=83",
+        "basis": "Manually reviewed official institution / tourism source"
+      }
+    ]
+  },
+  {
+    "id": 33,
+    "name": "두산갤러리",
+    "address": "서울 종로구 종로33길 15",
+    "homepage_url": "http://www.doosangallery.com/",
+    "name_en": "DOOSAN Gallery",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.doosangallery.com/",
+        "basis": "titles",
+        "evidence": "DOOSAN Art Center DOOSAN Gallery"
+      },
+      {
+        "url": "https://www.doosangallery.com/en",
+        "basis": "titles",
+        "evidence": "DOOSAN Art Center DOOSAN Gallery"
+      }
+    ]
+  },
+  {
+    "id": 35,
+    "name": "임립미술관",
+    "address": "충남 공주 계룡면 봉곡길 77-13",
+    "homepage_url": "http://www.limlipmuseum.org/",
+    "name_en": "Limlip Art Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "http://www.limlipmuseum.org/",
+        "basis": "english",
+        "evidence": "Limlip Art Museum"
+      }
+    ]
+  },
+  {
+    "id": 40,
+    "name": "국립현대미술관 덕수궁관",
+    "address": "서울 중구 세종대로 99",
+    "homepage_url": "http://www.mmca.go.kr/",
+    "name_en": "MMCA Deoksugung",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.mmca.go.kr/eng/visitingInfo/deoksugungInfo.do",
+        "basis": "Manually reviewed official institution / tourism source"
+      }
+    ]
+  },
+  {
+    "id": 53,
+    "name": "국립현대미술관 과천관",
+    "address": "경기 과천시 광명로 313",
+    "homepage_url": "https://www.mmca.go.kr/",
+    "name_en": "MMCA Gwacheon",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://m.mmca.go.kr/eng/about/introduction.do",
+        "basis": "Manually reviewed official institution / tourism source"
+      }
+    ]
+  },
+  {
+    "id": 55,
+    "name": "창원시립마산문신미술관",
+    "address": "경남 창원시 마산합포구 문신길 147",
+    "homepage_url": "https://changwon.go.kr/moonshin/",
+    "name_en": "Changwon City Masan Moonshin Art Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://changwon.go.kr/moonshin/",
+        "basis": "english",
+        "evidence": "ⓒ ChangwonCity Masan MoonShin Art Museum, Korea."
+      }
+    ]
+  },
+  {
+    "id": 56,
+    "name": "플랫폼-엘 컨템포러리 아트센터",
+    "address": "서울 강남구 언주로133길 11",
+    "homepage_url": "https://platform-l.org/",
+    "name_en": "Platform-L Contemporary Art Center",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://platform-l.org/",
+        "basis": "english",
+        "evidence": "Copyright Platform-L Contemporary Art Center All Right Reserved."
+      }
+    ]
+  },
+  {
+    "id": 57,
+    "name": "안상철미술관",
+    "address": "경기 양주시 백석읍 권율로 905",
+    "homepage_url": "https://www.ahnsangchul.co.kr/",
+    "name_en": "Ahn Sang Chul Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.ahnsangchul.co.kr/",
+        "basis": "titles",
+        "evidence": "AHNSANGCHUL MUSEUM"
+      }
+    ]
+  },
+  {
+    "id": 62,
+    "name": "경기도미술관",
+    "address": "경기 안산시 단원구 동산로 268",
+    "homepage_url": "http://gmoma.ggcf.kr/",
+    "name_en": "Gyeonggi Museum of Modern Art",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://gmoma.ggcf.kr/",
+        "basis": "english",
+        "evidence": "경기도미술관 GYEONGGI MUSEUM OF MODERN ART 경기도미술관 GYEONGGI MUSEUM OF MODERN ART 경기도미술관"
+      }
+    ]
+  },
+  {
+    "id": 63,
+    "name": "국립현대미술관 서울관",
+    "address": "서울 종로구 삼청로 30",
+    "homepage_url": "https://www.mmca.go.kr/",
+    "name_en": "MMCA Seoul",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://m.mmca.go.kr/eng/about/introduction.do",
+        "basis": "Manually reviewed official institution / tourism source"
+      }
+    ]
+  },
+  {
+    "id": 65,
+    "name": "코리아나미술관",
+    "address": "서울 강남구 언주로 827",
+    "homepage_url": "http://www.spacec.co.kr/",
+    "name_en": "Coreana Museum of Art",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "http://www.spacec.co.kr/",
+        "basis": "english",
+        "evidence": "Coreana Museum of Art"
+      },
+      {
+        "url": "http://www.spacec.co.kr/en/index",
+        "basis": "english",
+        "evidence": "Coreana Museum of Art"
+      }
+    ]
+  },
+  {
+    "id": 67,
+    "name": "국제갤러리",
+    "address": "서울 종로구 삼청로 54",
+    "homepage_url": "https://www.kukjegallery.com/",
+    "name_en": "Kukje Gallery",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.kukjegallery.com/",
+        "basis": "titles",
+        "evidence": "KUKJE GALLERY"
+      }
+    ]
+  },
+  {
+    "id": 68,
+    "name": "이천시립월전미술관",
+    "address": "경기 이천시 경충대로 2709번길 185",
+    "homepage_url": "https://www.iwoljeon.co.kr/main/main.php",
+    "name_en": "Woljeon Museum of Art Icheon",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.iwoljeon.co.kr/main/main.php",
+        "basis": "english",
+        "evidence": "Copyright © 2023. Woljeon Museum Of Art ICHEON.All Rights Reserved."
+      }
+    ]
+  },
+  {
+    "id": 70,
+    "name": "갤러리현대",
+    "address": "서울 종로구 삼청로 14",
+    "homepage_url": "http://www.galleryhyundai.com/",
+    "name_en": "Gallery Hyundai",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.galleryhyundai.com/main",
+        "basis": "titles",
+        "evidence": "갤러리현대 GALLERY HYUNDAI"
+      }
+    ]
+  },
+  {
+    "id": 71,
+    "name": "서울시립미술관",
+    "address": "서울 중구 덕수궁길 61",
+    "homepage_url": "http://sema.seoul.go.kr/",
+    "name_en": "Seoul Museum of Art",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://sema.seoul.go.kr/",
+        "basis": "alts",
+        "evidence": "서울시립미술관 SEOUL MUSEUM OF ART"
+      },
+      {
+        "url": "https://sema.seoul.go.kr/en/index",
+        "basis": "alts",
+        "evidence": "서울시립미술관 SEOUL MUSEUM OF ART"
+      }
+    ]
+  },
+  {
+    "id": 74,
+    "name": "갤러리SP",
+    "address": "서울 용산구 회나무로44가길 30",
+    "homepage_url": "https://www.gallerysp.com/",
+    "name_en": "Gallery SP",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.gallerysp.com/",
+        "basis": "titles",
+        "evidence": "Gallery SP"
+      }
+    ]
+  },
+  {
+    "id": 77,
+    "name": "남송미술관",
+    "address": "경기 가평군 북면 백둔로 322",
+    "homepage_url": "http://www.namsongart.com",
+    "name_en": "Namsong Art Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://english1.visitkorea.or.kr/enu/nphotogallery/photo.kto?func_name=photo_view&newphotoDTO.photo_code=3111014200801014k&newphotoDTO.sub_menu=contest",
+        "basis": "Manually reviewed official institution / tourism source"
+      }
+    ]
+  },
+  {
+    "id": 79,
+    "name": "비트리갤러리",
+    "address": "서울 마포구 와우산로 94 홍익대학교 홍문관",
+    "homepage_url": "https://ko.b-treegallery.com/",
+    "name_en": "B-tree Gallery",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://ko.b-treegallery.com/",
+        "basis": "english",
+        "evidence": "WELCOME B-tree gallery"
+      }
+    ]
+  },
+  {
+    "id": 80,
+    "name": "갤러리 라메르",
+    "address": "서울 종로구 인사동 5길 26",
+    "homepage_url": "http://www.gallerylamer.com/about-us/",
+    "name_en": "Gallery Lamer",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "http://www.gallerylamer.com/about-us/",
+        "basis": "titles",
+        "evidence": "갤러리 안내 &#8211; GALLERY LAMER"
+      }
+    ]
+  },
+  {
+    "id": 82,
+    "name": "대림미술관",
+    "address": "서울 종로구 자하문로4길 21",
+    "homepage_url": "http://www.daelimmuseum.org/",
+    "name_en": "Daelim Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://daelimmuseum.org/",
+        "basis": "titles",
+        "evidence": "DAELIM MUSEUM | D MUSEUM"
+      }
+    ]
+  },
+  {
+    "id": 83,
+    "name": "소다미술관",
+    "address": "경기 화성시 효행로707번기 30",
+    "homepage_url": "http://www.museumsoda.org/",
+    "name_en": "Museum Soda",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.museumsoda.org/",
+        "basis": "titles",
+        "evidence": "museum soda - art museum"
+      }
+    ]
+  },
+  {
+    "id": 100,
+    "name": "전남도립미술관",
+    "address": "전라남도 광양시 광양읍 순광로 660",
+    "homepage_url": "http://artmuseum.jeonnam.go.kr/",
+    "name_en": "Jeonnam Museum of Art",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://en.artmuseum.jeonnam.go.kr/www/29",
+        "basis": "Manually reviewed official institution / tourism source"
+      }
+    ]
+  },
+  {
+    "id": 136,
+    "name": "뮤지엄산미술관",
+    "address": "강원특별자치도 원주시 지정면 오크밸리2길 260",
+    "homepage_url": "www.museumsan.org",
+    "name_en": "Museum SAN",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.museumsan.org",
+        "basis": "titles",
+        "evidence": "뮤지엄산 Museum SAN"
+      }
+    ]
+  },
+  {
+    "id": 151,
+    "name": "한향림도자미술관",
+    "address": "경기도 파주시 탄현면 헤이리마을길 76-101",
+    "homepage_url": "https://www.hhlceramicmuseum.com/",
+    "name_en": "Hanhyanglim Ceramic Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://hhlceramicmuseum.com/",
+        "basis": "Manually reviewed official institution / tourism source"
+      }
+    ]
+  },
+  {
+    "id": 164,
+    "name": "블루메미술관",
+    "address": "경기도 파주시 탄현면 헤이리마을길 59-30",
+    "homepage_url": "https://bmca.or.kr",
+    "name_en": "Blume Museum of Contemporary Art",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://bmca.or.kr",
+        "basis": "titles",
+        "evidence": "\\ube14\\ub8e8\\uba54\\ubbf8\\uc220\\uad00<\\/title>\\n  <meta name=\\\"description\\\" content=\\\"Blume Museum of Contemporary Art\\\" \\/>\\n  <meta\\n    name=\\\"keywords\\\"\\n    content=\\\"\\ubbf8\\uc220\\uad00, \\ud30c\\uc8fc, \\ud5e4\\uc774\\ub9ac, \\ube14\\ub8e8\\uba54, \\ube14\\ub8e8\\uba54\\ubbf8\\uc220\\uad00, museum, paju, blume\\\"\\n  \\/>\\n  <meta property=\\\"og:locale\\\" content=\\\"ko_KR\\\" \\/>\\n  <meta itemprop=\\\"name\\\" content=\\\"\\ube14\\ub8e8\\uba54\\ubbf8\\uc220\\uad00\\\" \\/>\\n  "
+      }
+    ]
+  },
+  {
+    "id": 183,
+    "name": "수원시립미술관",
+    "address": "경기도 수원시 팔달구 정조로 833",
+    "homepage_url": "https://suma.suwon.go.kr",
+    "name_en": "Suwon Museum of Art",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://suma.suwon.go.kr/main/main.do?lang=en",
+        "basis": "Manually reviewed official institution / tourism source"
+      }
+    ]
+  },
+  {
+    "id": 196,
+    "name": "우리미술관",
+    "address": "인천광역시 동구 화도진로 198번길 6",
+    "homepage_url": "http://www.wooriart.co.kr/",
+    "name_en": "Woori Museum of Art",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://itour.incheon.go.kr/upload/guide/guidebook_vintage.pdf",
+        "basis": "Manually reviewed official institution / tourism source"
+      }
+    ]
+  },
+  {
+    "id": 218,
+    "name": "모산조형미술관",
+    "address": "충청남도 보령시 성주면 성주산로 673-24",
+    "homepage_url": "http://mosanmuseum.com/",
+    "name_en": "Mosan Art Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "http://mosanmuseum.com/",
+        "basis": "english",
+        "evidence": "Forest of Sculpture, Mosan Art Museum"
+      }
+    ]
+  },
+  {
+    "id": 331,
+    "name": "닻미술관",
+    "address": "경기도 광주시 초월읍 진새골길 184",
+    "homepage_url": "www.datzmuseum.org",
+    "name_en": "Datz Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.datzmuseum.org",
+        "basis": "english",
+        "evidence": "datzmuseum"
+      }
+    ]
+  },
+  {
+    "id": 332,
+    "name": "영은미술관",
+    "address": "경기도 광주시 청석로 300(쌍령동)",
+    "homepage_url": "www.youngeunmuseum.org/",
+    "name_en": "Youngeun Museum of Contemporary Art",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.youngeunmuseum.org/main/",
+        "basis": "english",
+        "evidence": "Youngeun Museum of Contemporary Art"
+      },
+      {
+        "url": "https://www.youngeunmuseum.org/eng/main/",
+        "basis": "english",
+        "evidence": "Youngeun Museum of Contemporary Art"
+      }
+    ]
+  },
+  {
+    "id": 334,
+    "name": "엄미술관",
+    "address": "경기도 화성시 효행구 봉담읍 오궁길 37",
+    "homepage_url": "http://www.ummuseum.com/",
+    "name_en": "Um Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "http://www.ummuseum.com/",
+        "basis": "titles",
+        "evidence": "엄미술관 Um Museum "
+      }
+    ]
+  },
+  {
+    "id": 340,
+    "name": "예술의전당 한가람미술관",
+    "address": "서울 서초구 남부순환로 2406 예술의전당 한가람미술관",
+    "homepage_url": "https://www.sac.or.kr",
+    "name_en": "Hangaram Art Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.sac.or.kr/site/eng/content/exhibitionHallMain",
+        "basis": "Manually reviewed official institution / tourism source"
+      },
+      {
+        "url": "https://www.sac.or.kr/site/eng/home",
+        "basis": "english",
+        "evidence": "Temporary Closure Notice: Hangaram Art Museum Renovation"
+      }
+    ]
+  },
+  {
+    "id": 342,
+    "name": "(재)한원미술관",
+    "address": "서울특별시 서초구 남부순환로 2423",
+    "homepage_url": "http://www.hanwon.org/",
+    "name_en": "Hanwon Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "http://www.hanwon.org/",
+        "basis": "titles",
+        "evidence": "한원미술관 | hanwonmuseum"
+      }
+    ]
+  },
+  {
+    "id": 350,
+    "name": "김세중미술관",
+    "address": "서울특별시 용산구 효창원로70길 35",
+    "homepage_url": "http://www.kimsechoong.com/main.php",
+    "name_en": "Kimsechoong Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "http://www.kimsechoong.com/main.php",
+        "basis": "english",
+        "evidence": "Kimsechoong Museum"
+      }
+    ]
+  },
+  {
+    "id": 352,
+    "name": "리움미술관",
+    "address": "서울특별시 용산구 이태원로55길 60-16",
+    "homepage_url": "https://www.leeumhoam.org/leeum",
+    "name_en": "Leeum Museum of Art",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.leeumhoam.org/leeum",
+        "basis": "metadata",
+        "evidence": "<meta property=\"og:title\" content=\"Leeum Museum of Art\">"
+      }
+    ]
+  },
+  {
+    "id": 365,
+    "name": "클레이아크 김해미술관",
+    "address": "경상남도 김해시 진례면 분청로 21",
+    "homepage_url": "https://clayarch.ghct.or.kr/home/main",
+    "name_en": "Clayarch Gimhae Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://clayarch.ghct.or.kr/home/main",
+        "basis": "english",
+        "evidence": "Copyright © 2023. ALL RIGHTS RESERVED Clayarch Gimhae Museum."
+      },
+      {
+        "url": "https://clayarcheng.ghct.or.kr/home/main;jsessionid=1CAAAE6EA5E3519419BB754589D1D17E",
+        "basis": "english",
+        "evidence": "CLAYARCH GIMHAE MUSEUM"
+      }
+    ]
+  },
+  {
+    "id": 407,
+    "name": "아르코미술관",
+    "address": "서울특별시 종로구 동숭길 3",
+    "homepage_url": "https://www.arko.or.kr/artcenter/",
+    "name_en": "ARKO Art Center",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.arko.or.kr/artcenter/assets/download/2026_arko_art_center.pdf",
+        "basis": "Manually reviewed official institution / tourism source"
+      }
+    ]
+  },
+  {
+    "id": 409,
+    "name": "세종문화회관 미술관(세종미술관)",
+    "address": "서울특별시 종로구 세종대로 175",
+    "homepage_url": "http://sejongpac.or.kr",
+    "name_en": "Sejong Museum of Art",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.sejongpac.or.kr/eng/main/main.do",
+        "basis": "english",
+        "evidence": "Sejong Museum of Art 1"
+      }
+    ]
+  },
+  {
+    "id": 412,
+    "name": "금호미술관",
+    "address": "서울특별시 종로구 삼청로 18",
+    "homepage_url": "http://www.kumhomuseum.com/",
+    "name_en": "Kumho Museum of Art",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "http://www.kumhomuseum.com/eng/",
+        "basis": "titles",
+        "evidence": "Kumho Museum of Art"
+      }
+    ]
+  },
+  {
+    "id": 414,
+    "name": "OCI 미술관",
+    "address": "서울특별시 종로구 우정국로 45-14",
+    "homepage_url": "http://www.ocimuseum.org/",
+    "name_en": "OCI Museum of Art",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.ocimuseum.org/en",
+        "basis": "english",
+        "evidence": "OCI Museum of Art Residency"
+      }
+    ]
+  },
+  {
+    "id": 441,
+    "name": "세화미술관",
+    "address": "서울특별시 종로구 새문안로 68, 3층",
+    "homepage_url": "www.sehwamuseum.org",
+    "name_en": "Sehwa Museum of Art",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://sehwamuseum.org/",
+        "basis": "metadata",
+        "evidence": "<meta property=\"og:site_name\" content=\"Sehwa Museum of Art\" />"
+      },
+      {
+        "url": "https://sehwamuseum.org/en/home/",
+        "basis": "titles",
+        "evidence": "Sehwa Museum of Art"
+      }
+    ]
+  },
+  {
+    "id": 442,
+    "name": "환기미술관",
+    "address": "서울특별시 종로구 자하문로 40길 63",
+    "homepage_url": "http://whankimuseum.org/",
+    "name_en": "Whanki Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "http://whankimuseum.org/",
+        "basis": "english",
+        "evidence": "info@whankimuseum.org"
+      },
+      {
+        "url": "http://whankimuseum.org/en/museum/operation/visit/",
+        "basis": "titles",
+        "evidence": "Plan your visit &ndash; Whanki Museum"
+      }
+    ]
+  },
+  {
+    "id": 443,
+    "name": "학아재미술관",
+    "address": "서울특별시 종로구 돈화문로 98",
+    "homepage_url": "http://www.seoulscm.com/museum/345",
+    "name_en": "Hagajae Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "http://www.seoulscm.com/museum/345",
+        "basis": "english",
+        "evidence": "HAGAJAE MUSEUM"
+      }
+    ]
+  },
+  {
+    "id": 444,
+    "name": "토탈미술관",
+    "address": "서울특별시 종로구 평창32길 8",
+    "homepage_url": "http://totalmuseum.org/",
+    "name_en": "Total Museum of Contemporary Art",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://totalmuseum.org/wp-content/uploads/2020/03/MondaySalon2017.pdf",
+        "basis": "Manually reviewed official institution / tourism source"
+      }
+    ]
+  },
+  {
+    "id": 445,
+    "name": "자하미술관",
+    "address": "서울특별시 종로구 창의문로5가길 46",
+    "homepage_url": "https://www.zahamuseum.org/",
+    "name_en": "Zaha Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.zahamuseum.org/",
+        "basis": "titles",
+        "evidence": "home | Zaha museum"
+      }
+    ]
+  },
+  {
+    "id": 446,
+    "name": "일민미술관",
+    "address": "서울특별시 종로구 세종대로 152",
+    "homepage_url": "http://www.ilmin.org/",
+    "name_en": "Ilmin Museum of Art",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://ilmin.org/",
+        "basis": "english",
+        "evidence": "Exhibitions + Current Past Programs Archives Visit + Visit Information Membership Café & Bookshop Store About + Ilmin Museum of Art Ilmin Cultural Foundation Presseum Notice My Account"
+      },
+      {
+        "url": "https://ilmin.org/#en",
+        "basis": "english",
+        "evidence": "Exhibitions + Current Past Programs Archives Visit + Visit Information Membership Café & Bookshop Store About + Ilmin Museum of Art Ilmin Cultural Foundation Presseum Notice My Account"
+      }
+    ]
+  },
+  {
+    "id": 451,
+    "name": "진주시립 이성자미술관",
+    "address": "경상남도 진주시 에나로 128번길 14",
+    "homepage_url": "http://www.jinju.go.kr/rheesjmuseum/",
+    "name_en": "Rhee Seund Ja Jinju Art Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.jinju.go.kr/rheesjmuseum/",
+        "basis": "english",
+        "evidence": "Rhee Seund ja Jinju Art Museum"
+      }
+    ]
+  },
+  {
+    "id": 453,
+    "name": "시안미술관",
+    "address": "경상북도 영천시 화산면 가래실로 364",
+    "homepage_url": "http://www.cianmuseum.org/",
+    "name_en": "Cian Museum of Art",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://cianmuseum.org/",
+        "basis": "english",
+        "evidence": "CIAN MUSEUM OF ART"
+      }
+    ]
+  },
+  {
+    "id": 483,
+    "name": "대구미술관",
+    "address": "대구광역시 수성구 미술관로 40",
+    "homepage_url": "https://daeguartmuseum.or.kr",
+    "name_en": "Daegu Art Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://daeguartmuseum.or.kr",
+        "basis": "titles",
+        "evidence": "대구미술관 DAEGUARTMUSEUM"
+      },
+      {
+        "url": "https://daeguartmuseum.or.kr/eng/index.do",
+        "basis": "titles",
+        "evidence": "DAEGUARTMUSEUM"
+      }
+    ]
+  },
+  {
+    "id": 485,
+    "name": "대구간송미술관",
+    "address": "대구광역시 수성구 미술관로 70",
+    "homepage_url": "https://kansong.org/daegu/",
+    "name_en": "Kansong Art Museum Daegu",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://kansong.org/daegu/",
+        "basis": "Manually reviewed official institution / tourism source"
+      }
+    ]
+  },
+  {
+    "id": 508,
+    "name": "리각미술관",
+    "address": "충청남도 천안시 동남구 태조산길 245",
+    "homepage_url": "http://ligakmuseum.co.kr/",
+    "name_en": "Ligak Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "http://ligakmuseum.co.kr/",
+        "basis": "titles",
+        "evidence": "ligakmuseum &#8211; 리각미술관"
+      }
+    ]
+  },
+  {
+    "id": 509,
+    "name": "천안시립미술관",
+    "address": "충청남도 천안시 동남구 성남면 종합휴양지로 185",
+    "homepage_url": "https://www.camoa.or.kr/",
+    "name_en": "Cheonan Museum of Art",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.camoa.or.kr/",
+        "basis": "alts",
+        "evidence": "CAMOA\r\nCHEONAN MUSEUM OF ART\r\n시민과 함께 성장하는 열린 천안시립미술관으로 초대합니다."
+      }
+    ]
+  },
+  {
+    "id": 524,
+    "name": "경남도립미술관",
+    "address": "경상남도 창원시 의창구 용지로 296(경남도립미술관)",
+    "homepage_url": "https://www.gyeongnam.go.kr/gam/index.gyeong",
+    "name_en": "Gyeongnam Art Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.gyeongnam.go.kr/gam/index.gyeong",
+        "basis": "english",
+        "evidence": "GAM 경남도립미술관 Gyeongnam Art Museum"
+      }
+    ]
+  },
+  {
+    "id": 593,
+    "name": "양주시립장욱진미술관",
+    "address": "경기도 양주시 장흥면 권율로 193",
+    "homepage_url": "http://changucchin.yangju.go.kr/",
+    "name_en": "Yangju City Chang Ucchin Museum of Art",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.yangju.go.kr/changucchin/contents.do?key=1990",
+        "basis": "Manually reviewed official institution / tourism source"
+      }
+    ]
+  },
+  {
+    "id": 607,
+    "name": "경주솔거미술관",
+    "address": "경상북도 경주시 경감로614",
+    "homepage_url": "https://www.gjsam.or.kr/ko/",
+    "name_en": "Solgeo Art Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.gjsam.or.kr/programs/page/page.aspx?mnu_uid=83",
+        "basis": "Manually reviewed official institution / tourism source"
+      }
+    ]
+  },
+  {
+    "id": 611,
+    "name": "한라디지털아트뮤지엄",
+    "address": "제주특별자치도 제주시 한라대학로38",
+    "homepage_url": "https://halladigitalartmuseum.com/",
+    "name_en": "Halla Digital Art Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://halladigitalartmuseum.com/eng/index.htm",
+        "basis": "titles",
+        "evidence": "Jeju Halla University Halla Digital Art Museum"
+      }
+    ]
+  },
+  {
+    "id": 636,
+    "name": "유동룡미술관",
+    "address": "제주특별자치도 제주시 한림읍 용금로906-10",
+    "homepage_url": "www.itamijunmuseum.com",
+    "name_en": "Itami Jun Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.itamijunmuseum.com",
+        "basis": "english",
+        "evidence": "유동룡미술관 ITAMI JUN MUSEUM"
+      }
+    ]
+  },
+  {
+    "id": 645,
+    "name": "유민 아르누보 뮤지엄",
+    "address": "제주특별자치도 서귀포시 성산읍 섭지코지로 107",
+    "homepage_url": "http://www.yuminart.org/",
+    "name_en": "Yumin Art Nouveau Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://phoenixhnr.co.kr/en/page/main/jeju",
+        "basis": "english",
+        "evidence": "Yumin Art Nouveau Museum"
+      }
+    ]
+  },
+  {
+    "id": 653,
+    "name": "제주도립 김창열미술관",
+    "address": "제주특별자치도 제주시 한림읍 용금로 883-5",
+    "homepage_url": "http://kimtschang-yeul.jeju.go.kr/",
+    "name_en": "Kim Tschang-Yeul Art Museum Jeju",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://kimtschang-yeul.jeju.go.kr/",
+        "basis": "titles",
+        "evidence": "KIM TSCHANG-YEUL ART MUSEUM JEJU"
+      }
+    ]
+  },
+  {
+    "id": 655,
+    "name": "제주 현대미술관",
+    "address": "제주특별자치도 제주시 한경면 저지14길 35",
+    "homepage_url": "http://jejumuseum.go.kr/kor/",
+    "name_en": "Jeju Museum of Contemporary Art",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://m.visitjeju.net/en/detail/view?contentsid=CONT_000000000500583",
+        "basis": "Manually reviewed official institution / tourism source"
+      }
+    ]
+  },
+  {
+    "id": 657,
+    "name": "김영갑갤러리 두모악",
+    "address": "제주특별자치도 서귀포시 성산읍 삼달로 137",
+    "homepage_url": "http://www.dumoak.com/",
+    "name_en": "Kimyounggap Gallery Dumoak",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "http://www.dumoak.com/",
+        "basis": "english",
+        "evidence": "Copyrightⓒ KIMYOUNGGAP GALLERY DUMOAK. All Rights Reserved"
+      }
+    ]
+  },
+  {
+    "id": 658,
+    "name": "이중섭미술관",
+    "address": "제주특별자치도 서귀포시 이중섭로 27-3",
+    "homepage_url": "http://culture.seogwipo.go.kr/jslee/index.htm",
+    "name_en": "Lee Jung-seop Art Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.visitjeju.net/en/detail/view?contentsid=CONT_000000000500509",
+        "basis": "Manually reviewed official institution / tourism source"
+      }
+    ]
+  },
+  {
+    "id": 659,
+    "name": "기당미술관",
+    "address": "제주특별자치도 서귀포시 남성중로 153번길 15",
+    "homepage_url": "http://culture.seogwipo.go.kr/gidang/index.htm",
+    "name_en": "Gidang Art Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.visitjeju.net/en/detail/view?contentsid=CONT_000000000500326",
+        "basis": "Manually reviewed official institution / tourism source"
+      }
+    ]
+  },
+  {
+    "id": 686,
+    "name": "울산시립미술관",
+    "address": "울산광역시 중구 미술관길 72",
+    "homepage_url": "https://www.ulsan.go.kr/uam",
+    "name_en": "Ulsan Art Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.ulsan.go.kr/s/uam/main.ulsan",
+        "basis": "english",
+        "evidence": "울산시립미술관 XR랩 (XR LAB, ULSAN ART MUSEUM)"
+      },
+      {
+        "url": "https://www.ulsan.go.kr/s/euam/main.ulsan",
+        "basis": "titles",
+        "evidence": "Ulsan Art Museum (English)"
+      }
+    ]
+  },
+  {
+    "id": 706,
+    "name": "성남큐브미술관",
+    "address": "경기도 성남시 분당구 성남대로 808",
+    "homepage_url": "http://www.snab.or.kr",
+    "name_en": "Seongnam Cube Art Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://museum.snart.or.kr/",
+        "basis": "english",
+        "evidence": "Copyright by Seongnam Cube Art Museum. All right reserved"
+      }
+    ]
+  },
+  {
+    "id": 722,
+    "name": "밀알미술관",
+    "address": "서울특별시 강남구 일원로 90",
+    "homepage_url": "http://www.milalmuseum.or.kr/",
+    "name_en": "Milal Museum of Art",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "http://www.milalmuseum.or.kr/",
+        "basis": "english",
+        "evidence": "milal museum of art 713, Ilwon-dong,Gangnam-gu, Seoul"
+      }
+    ]
+  },
+  {
+    "id": 726,
+    "name": "서울대학교 미술관",
+    "address": "서울특별시 관악구 관악로 1",
+    "homepage_url": "http://www.snumoa.org",
+    "name_en": "Seoul National University Museum of Art",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "http://www.snumoa.org/en/",
+        "basis": "titles",
+        "evidence": "Seoul National University Museum of Art"
+      }
+    ]
+  },
+  {
+    "id": 727,
+    "name": "서울시립남서울미술관",
+    "address": "서울특별시 관악구 남부순환로 2076",
+    "homepage_url": "http://sema.seoul.go.kr/kr/visit/namseoul",
+    "name_en": "Nam-Seoul Museum of Art",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://sema.seoul.go.kr/en/index",
+        "basis": "english",
+        "evidence": "Nam-Seoul Museum of Art"
+      }
+    ]
+  },
+  {
+    "id": 743,
+    "name": "진천군립 생거판화미술관",
+    "address": "충청북도 진천군 진천읍 백곡로 1504-10",
+    "homepage_url": "http://www.jincheon.go.kr/sisul/sub.do?menukey=784",
+    "name_en": "Jincheon County Museum of Prints and Printmaking",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.jincheon.go.kr/sisul/sub.do?menukey=784",
+        "basis": "english",
+        "evidence": "Welcome to Jincheon County Museum of Prints and Printmaking"
+      }
+    ]
+  },
+  {
+    "id": 744,
+    "name": "이강하미술관",
+    "address": "광주광역시 남구 3·1만세운동길 6",
+    "homepage_url": "http://www.lkh-artmuseum.com/default/",
+    "name_en": "Lee Kang Ha Art Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.gwangjubiennale.org/en/index.do?sellan=en",
+        "basis": "Manually reviewed official institution / tourism source"
+      }
+    ]
+  },
+  {
+    "id": 784,
+    "name": "성북구립미술관",
+    "address": "서울특별시 성북구 성북로 134",
+    "homepage_url": "http://sma.sbculture.or.kr",
+    "name_en": "Seongbuk Museum of Art",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://sma.sbculture.or.kr/sma/index.do",
+        "basis": "alts",
+        "evidence": "성북구립미술관 SEONGBUK MUSEUM OF ART"
+      },
+      {
+        "url": "https://sma.sbculture.or.kr/sma/index.do",
+        "basis": "alts",
+        "evidence": "성북구립미술관 SEONGBUK MUSEUM OF ART"
+      }
+    ]
+  },
+  {
+    "id": 819,
+    "name": "전북도립미술관",
+    "address": "전북특별자치도 완주군 구이면 모악산길 111-6",
+    "homepage_url": "https://www.jma.go.kr/",
+    "name_en": "Jeonbuk Museum of Art",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.jeonbuk.go.kr/index.jeonbuk?menuCd=DOM_000000104016000000",
+        "basis": "Manually reviewed official institution / tourism source"
+      }
+    ]
+  },
+  {
+    "id": 825,
+    "name": "뮤지엄한미 삼청\n",
+    "address": "서울 종로구 삼청로9길 45",
+    "homepage_url": "https://museumhanmi.or.kr",
+    "name_en": "Museum Hanmi Samcheong",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://museumhanmi.or.kr/en/",
+        "basis": "english",
+        "evidence": "Early Closing Notice for Museum Hanmi Samcheong on Thursday, September 3, 2026"
+      }
+    ]
+  },
+  {
+    "id": 828,
+    "name": "소마미술관",
+    "address": "서울특별시 송파구 위례성대로 51",
+    "homepage_url": "http://soma.kspo.or.kr/",
+    "name_en": "Seoul Olympic Museum of Art",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://soma.kspo.or.kr/main",
+        "basis": "metadata",
+        "evidence": "<meta name=\"description\" content=\"Seoul Olympic Museum of Art\"/>"
+      },
+      {
+        "url": "https://soma.kspo.or.kr/eng/main",
+        "basis": "metadata",
+        "evidence": "<meta name=\"description\" content=\"Seoul Olympic Museum of Art\"/>"
+      }
+    ]
+  },
+  {
+    "id": 832,
+    "name": "드영미술관",
+    "address": "광주광역시 동구 성촌길 6(운림동)",
+    "homepage_url": "http://www.deyoungmuseum.co.kr/",
+    "name_en": "De Young Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "http://www.deyoungmuseum.co.kr/",
+        "basis": "english",
+        "evidence": "드영미술관 / 전화 : 062-223-6515 / 팩스 : 062-223-6517 / 주소 : 전남광주통합특별시 동구 성촌길 6 드영미술관(운림동,A) 6, Seongchon-gil, Dong-gu, Jeonnam-Gwangju Special Metropolitan City, Republic of Korea / Copyright ⓒ “deyoungmuseum” All Rights Reserved."
+      }
+    ]
+  },
+  {
+    "id": 833,
+    "name": "주안미술관",
+    "address": "광주광역시 동구 제봉로 197(대인동)",
+    "homepage_url": "https://juanartmuseum.org/",
+    "name_en": "JuAn Art Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://juanartmuseum.org/",
+        "basis": "english",
+        "evidence": "현대 미술의 창의적 공간, 주안미술관 This website was built on Dorik Create your website today Home 전시 현재 전시 지난 전시 교육 전시 연계 교육 프로그램 공지사항 미술관 공지 주안미술관 소개 미술관 소개 보도자료 미술관 연락하기 Juan Art Museum"
+      }
+    ]
+  },
+  {
+    "id": 842,
+    "name": "호암미술관",
+    "address": "경기도 용인시 처인구 포곡읍 에버랜드로562번길 38",
+    "homepage_url": "www.hoammuseum.org",
+    "name_en": "Hoam Museum of Art",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://english.visitkorea.or.kr/svc/whereToGo/locIntrdn/rgnContentsView.do?vcontsId=111430",
+        "basis": "Manually reviewed official institution / tourism source"
+      }
+    ]
+  },
+  {
+    "id": 849,
+    "name": "양평군립미술관",
+    "address": "경기도 양평군 양평읍 문화복지길 2",
+    "homepage_url": "http://www.ymuseum.org/home/",
+    "name_en": "Yangpyeong Museum of Art",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "http://www.ymuseum.org/home/",
+        "basis": "english",
+        "evidence": "copyright(c) 2018 Yangpyeong Museum of Art All right Reserved."
+      }
+    ]
+  },
+  {
+    "id": 856,
+    "name": "안젤리미술관",
+    "address": "경기도 용인시 처인구 이동읍 이원로 244",
+    "homepage_url": "http://www.angeliartmuseum.net/",
+    "name_en": "KwonSookJa Angeli Art Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.angeliartmuseum.net/",
+        "basis": "english",
+        "evidence": "angeli_info@naver.com 문화예술 복합공간 권숙자 안젤리미술관 (KwonSookJa Angeli Art Museum)은 제1종 등록 미술관으로 2015년도에 개관하였습니다."
+      }
+    ]
+  },
+  {
+    "id": 858,
+    "name": "문아트그라운드 뮤지엄",
+    "address": "경기도 용인시 처인구 모현읍 문형동림로101번길 37",
+    "homepage_url": "https://magmuseum.com/",
+    "name_en": "Moon Art Grounds Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://magmuseum.com/",
+        "basis": "alts",
+        "evidence": "Moon Art Grounds Museum"
+      }
+    ]
+  },
+  {
+    "id": 867,
+    "name": "쉐마미술관",
+    "address": "충청북도 청주시 청원구 내수읍 내수로 241",
+    "homepage_url": "https://schemaartmuseum.com",
+    "name_en": "Schema Art Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://schemaartmuseum.com",
+        "basis": "english",
+        "evidence": "Copyright ⓒ Schema art museum All Right Reserved."
+      }
+    ]
+  },
+  {
+    "id": 869,
+    "name": "청주시립대청호미술관",
+    "address": "충청북도 청주시 상당구 문의면 대청호반로 721",
+    "homepage_url": "https://cmoa.cheongju.go.kr/daecheongho/index.do",
+    "name_en": "Dacheongho Museum of Art",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://cmoa.cheongju.go.kr/daecheongho/index.do",
+        "basis": "english",
+        "evidence": "DACHEONGHO MUSEUM OF ART"
+      }
+    ]
+  },
+  {
+    "id": 872,
+    "name": "광주시립미술관",
+    "address": "광주광역시 북구 하서로 52",
+    "homepage_url": "https://artmuse.gwangju.go.kr/",
+    "name_en": "Gwangju Museum of Art",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://gjartmuse.jeonnam-gwangju.go.kr/",
+        "basis": "alts",
+        "evidence": "gma 광주시립미술관 Gwangju Museum of Art"
+      },
+      {
+        "url": "https://gjartmuse.jeonnam-gwangju.go.kr/?site=english",
+        "basis": "titles",
+        "evidence": "Gwangju Museum of Art"
+      }
+    ]
+  },
+  {
+    "id": 883,
+    "name": "노적봉예술공원미술관",
+    "address": "전라남도 목포시 유달로 116",
+    "homepage_url": "https://www.mokpo.go.kr/artmuseum",
+    "name_en": "Nojeokbong Art Park Art Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.mokpo.go.kr/artmuseum",
+        "basis": "english",
+        "evidence": "COPYRIGHT (C) Nojeokbong Art Park Art Museum. ALL RIGHT RESERVED."
+      }
+    ]
+  },
+  {
+    "id": 892,
+    "name": "청주시립미술관",
+    "address": "충청북도 청주시 서원구 충렬로18번길 50(사직동)",
+    "homepage_url": "https://cmoa.cheongju.go.kr/www/index.do",
+    "name_en": "Cheongju Museum of Art",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://cmoa.cheongju.go.kr/www/index.do",
+        "basis": "english",
+        "evidence": "CHEONGJU MUSEUM OF ART -->"
+      },
+      {
+        "url": "https://cmoa.cheongju.go.kr/english/index.do",
+        "basis": "titles",
+        "evidence": "WELCOME TO CHEONGJU MUSEUM OF ART"
+      }
+    ]
+  },
+  {
+    "id": 972,
+    "name": "포스코미술관",
+    "address": "서울특별시 강남구 테헤란로 440",
+    "homepage_url": "http://www.poscoartmuseum.org/S91_010/S91_010010/front/main.do",
+    "name_en": "POSCO Art Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.poscoartmuseum.org:443/S91_010/S91_010010/front/main.do",
+        "basis": "titles",
+        "evidence": "posco art museum "
+      }
+    ]
+  },
+  {
+    "id": 988,
+    "name": "전혁림미술관",
+    "address": "경상남도 통영시 봉수1길 10(봉평동)",
+    "homepage_url": "https://www.utour.go.kr/00056/00058/00073.web?idx=1691&amode=view",
+    "name_en": "Chun Hyuck Lim Art Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.utour.go.kr/eng.web",
+        "basis": "english",
+        "evidence": "Chun Hyuck Lim Art Museum"
+      }
+    ]
+  },
+  {
+    "id": 996,
+    "name": "포항시립미술관",
+    "address": "경상북도 포항시 북구 환호공원길 10",
+    "homepage_url": "http://poma.pohang.go.kr",
+    "name_en": "Pohang Museum of Steel Art",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://english.visitkorea.or.kr/svc/whereToGo/locIntrdn/rgnContentsView.do?vcontsId=219525",
+        "basis": "Manually reviewed official institution / tourism source"
+      }
+    ]
+  },
+  {
+    "id": 1013,
+    "name": "고은사진미술관",
+    "address": "부산광역시 해운대구 해운대로452번길 16",
+    "homepage_url": "http://www.goeunmuseum.kr/",
+    "name_en": "Goeun Museum of Photography",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.goeunmuseum.kr/",
+        "basis": "Manually reviewed official institution / tourism source"
+      }
+    ]
+  },
+  {
+    "id": 1014,
+    "name": "부산시립미술관",
+    "address": "부산광역시 해운대구 APEC로 58",
+    "homepage_url": "http://art.busan.go.kr",
+    "name_en": "Busan Museum of Art",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://english.visitkorea.or.kr/svc/contents/contentsView.do?vcontsId=91156",
+        "basis": "Manually reviewed official institution / tourism source"
+      }
+    ]
+  },
+  {
+    "id": 1054,
+    "name": "양구군립박수근미술관",
+    "address": "강원특별자치도양구군 양구읍 박수근로 265-15",
+    "homepage_url": "http://www.parksookeun.or.kr/",
+    "name_en": "Park Soo Keun Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://english.visitkorea.or.kr/svc/contents/contentsView.do?vcontsId=84250",
+        "basis": "Manually reviewed official institution / tourism source"
+      }
+    ]
+  },
+  {
+    "id": 1057,
+    "name": "정선507미술관",
+    "address": "강원특별자치도 정선군 정선읍 동강로 2914",
+    "homepage_url": "https://www.museum507.org/",
+    "name_en": "507 Art Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.museum507.org/",
+        "basis": "english",
+        "evidence": "507 ART MUSEUM \"전세계 65억명 인구 중"
+      }
+    ]
+  },
+  {
+    "id": 1074,
+    "name": "부산현대미술관",
+    "address": "부산광역시 사하구 낙동남로 1191(하단동)",
+    "homepage_url": "https://www.busan.go.kr/moca",
+    "name_en": "Museum of Contemporary Art Busan",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.busan.go.kr/moca_en/index",
+        "basis": "titles",
+        "evidence": "Home : Museum of Contemporary Art Busan"
+      }
+    ]
+  },
+  {
+    "id": 1097,
+    "name": "대전시립미술관",
+    "address": "대전광역시 서구 둔산대로 155",
+    "homepage_url": "www.daejeon.go.kr/dma",
+    "name_en": "Daejeon Museum of Art",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.daejeon.go.kr/dmae/index.do",
+        "basis": "titles",
+        "evidence": "DAEJEON MUSEUM OF ART"
+      }
+    ]
+  },
+  {
+    "id": 1102,
+    "name": "CICA미술관",
+    "address": "경기도 김포시 양촌읍 삼도로 196-30",
+    "homepage_url": "https://cicamuseum.com/",
+    "name_en": "CICA Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://cicamuseum.com/",
+        "basis": "Manually reviewed official institution / tourism source"
+      }
+    ]
+  },
+  {
+    "id": 1121,
+    "name": "국립경주박물관",
+    "address": "경상북도 경주시 일정로 186",
+    "homepage_url": "https://gyeongju.museum.go.kr/",
+    "name_en": "Gyeongju National Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://gyeongju.museum.go.kr/",
+        "basis": "english",
+        "evidence": "Copyright(c)2017 Gyeongju National Museum. All rights reserved."
+      },
+      {
+        "url": "https://gyeongju.museum.go.kr/eng/",
+        "basis": "titles",
+        "evidence": "Gyeongju National Museum"
+      }
+    ]
+  },
+  {
+    "id": 1122,
+    "name": "국립부여박물관",
+    "address": "충청남도 부여군 부여읍 금성로 5",
+    "homepage_url": "https://buyeo.museum.go.kr/index.do",
+    "name_en": "Buyeo National Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://buyeo.museum.go.kr/index.do",
+        "basis": "english",
+        "evidence": "Buyeo National Museum"
+      }
+    ]
+  },
+  {
+    "id": 1123,
+    "name": "국립공주박물관",
+    "address": "충청남도 공주시 관광단지길 34",
+    "homepage_url": "https://gongju.museum.go.kr/kor/index.do",
+    "name_en": "Gongju National Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://gongju.museum.go.kr/kor/index.do",
+        "basis": "english",
+        "evidence": "COPYRIGHT 2024 GONGJU NATIONAL MUSEUM. ALL RIGHTS RESERVED."
+      },
+      {
+        "url": "https://gongju.museum.go.kr/eng/index.do",
+        "basis": "titles",
+        "evidence": "Gongju National Museum"
+      }
+    ]
+  },
+  {
+    "id": 1124,
+    "name": "국립청주박물관",
+    "address": "충청북도 청주시 상당구 명암로 143",
+    "homepage_url": "https://cheongju.museum.go.kr/www/index.do",
+    "name_en": "Cheongju National Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://cheongju.museum.go.kr/www/index.do",
+        "basis": "alts",
+        "evidence": "국립청주박물관\r\nCheongju National Museum\r\n\r\n2026년\r\n큐레이터와의 대화\r\n\r\n당신은 유물 앞에서\r\n어떤 생각을 하나요?\r\n\r\n박물관 큐레이터의 생생하고 진솔한 설명,\r\n2026년 국립청주박물관 큐레이터와의\r\n대화에 초대합니다."
+      },
+      {
+        "url": "https://cheongju.museum.go.kr/english/index.do",
+        "basis": "titles",
+        "evidence": "Cheongju National Museum"
+      }
+    ]
+  },
+  {
+    "id": 1125,
+    "name": "국립춘천박물관",
+    "address": "강원특별자치도 춘천시 우석로 70",
+    "homepage_url": "https://chuncheon.museum.go.kr/kor/index.do",
+    "name_en": "Chuncheon National Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://chuncheon.museum.go.kr/kor/index.do",
+        "basis": "english",
+        "evidence": "copyright ⓒ 2021 CHUNCHEON NATIONAL MUSEUM. all rights reserved."
+      },
+      {
+        "url": "https://chuncheon.museum.go.kr/eng/index.do",
+        "basis": "titles",
+        "evidence": "Chuncheon National Museum ​"
+      }
+    ]
+  },
+  {
+    "id": 1126,
+    "name": "국립광주박물관",
+    "address": "광주광역시 북구 하서로 110",
+    "homepage_url": "https://gwangju.museum.go.kr/",
+    "name_en": "Gwangju National Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://gwangju.museum.go.kr/",
+        "basis": "english",
+        "evidence": "Gwangju National Museum"
+      },
+      {
+        "url": "https://gwangju.museum.go.kr/eng/index.do",
+        "basis": "titles",
+        "evidence": "Gwangju National Museum"
+      }
+    ]
+  },
+  {
+    "id": 1127,
+    "name": "국립대구박물관",
+    "address": "대구광역시 수성구 청호로 321",
+    "homepage_url": "https://daegu.museum.go.kr/",
+    "name_en": "Daegu National Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://daegu.museum.go.kr/",
+        "basis": "english",
+        "evidence": "© 2023. DAEGU NATIONAL MUSEUM All Rights Reserved."
+      },
+      {
+        "url": "https://daegu.museum.go.kr/eng/",
+        "basis": "titles",
+        "evidence": "Daegu National Museum"
+      }
+    ]
+  },
+  {
+    "id": 1130,
+    "name": "국립중앙박물관",
+    "address": "서울특별시 용산구 서빙고로 137",
+    "homepage_url": "https://www.museum.go.kr/MUSEUM/main/index.do",
+    "name_en": "National Museum of Korea",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.museum.go.kr/MUSEUM/main/index.do",
+        "basis": "english",
+        "evidence": "© National Museum of Korea."
+      },
+      {
+        "url": "https://www.museum.go.kr/ENG/main/index.do",
+        "basis": "titles",
+        "evidence": "NATIONAL MUSEUM OF KOREA"
+      }
+    ]
+  },
+  {
+    "id": 1131,
+    "name": "국립제주박물관",
+    "address": "제주특별자치도 제주시 일주동로 17",
+    "homepage_url": "https://jeju.museum.go.kr/html/kr/index.html",
+    "name_en": "Jeju National Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://jeju.museum.go.kr/html/kr/index.html",
+        "basis": "english",
+        "evidence": "Explore the longstanding history of Jeju and stories of its people at the Jeju National Museum!"
+      },
+      {
+        "url": "https://jeju.museum.go.kr/html/en/",
+        "basis": "titles",
+        "evidence": "JEJU NATIONAL MUSEUM"
+      }
+    ]
+  },
+  {
+    "id": 1132,
+    "name": "국립진주박물관",
+    "address": "경상남도 진주시 남강로 626-35",
+    "homepage_url": "https://jinju.museum.go.kr/kor/",
+    "name_en": "Jinju National Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://jinju.museum.go.kr/kor/",
+        "basis": "english",
+        "evidence": "Copyright (C)jinju national museum. all rights reserved."
+      },
+      {
+        "url": "https://jinju.museum.go.kr/eng/",
+        "basis": "titles",
+        "evidence": "Jinju National Museum"
+      }
+    ]
+  },
+  {
+    "id": 1133,
+    "name": "국립김해박물관",
+    "address": "경상남도 김해시 가야의길 190",
+    "homepage_url": "https://gimhae.museum.go.kr/kr/",
+    "name_en": "Gimhae National Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://gimhae.museum.go.kr/kr/",
+        "basis": "english",
+        "evidence": "© COPYRIGHT GIM HAE NATIONAL MUSEUM. ALL RIGHTS RESERVED."
+      },
+      {
+        "url": "https://gimhae.museum.go.kr/en/",
+        "basis": "titles",
+        "evidence": "Gimhae National Museum"
+      }
+    ]
+  },
+  {
+    "id": 1135,
+    "name": "포도뮤지엄",
+    "address": "제주특별자치도 서귀포시 안덕면 산록남로 788",
+    "homepage_url": "https://www.podomuseum.com/",
+    "name_en": "PODO Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.podomuseum.com/",
+        "basis": "titles",
+        "evidence": "PODO MUSEUM"
+      },
+      {
+        "url": "https://en.podomuseum.com/",
+        "basis": "titles",
+        "evidence": "PODO MUSEUM"
+      }
+    ]
+  },
+  {
+    "id": 1141,
+    "name": "롯데뮤지엄",
+    "address": "서울 송파구 올림픽로 300 롯데월드타워7층 롯데뮤지엄",
+    "homepage_url": "https://www.lottemuseum.com/",
+    "name_en": "Lotte Museum of Art",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.lottemuseum.com/",
+        "basis": "english",
+        "evidence": "LOTTE MUSEUM OF ART - LMOA"
+      },
+      {
+        "url": "https://www.lottemuseum.com/en",
+        "basis": "english",
+        "evidence": "LOTTE MUSEUM OF ART - LMOA"
+      }
+    ]
+  },
+  {
+    "id": 1142,
+    "name": "화이트 큐브 서울",
+    "address": "서울 강남구 도산대로 45길 6",
+    "homepage_url": "https://www.whitecube.com/",
+    "name_en": "White Cube Seoul",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.whitecube.com/locations/white-cube-seoul",
+        "basis": "Manually reviewed official institution / tourism source"
+      }
+    ]
+  },
+  {
+    "id": 1143,
+    "name": "송은",
+    "address": "서울 도산대로 441",
+    "homepage_url": "https://songeun.or.kr/",
+    "name_en": "SONGEUN",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://songeun.or.kr/",
+        "basis": "titles",
+        "evidence": "SONGEUN – Index"
+      },
+      {
+        "url": "https://songeun.or.kr/en/menu",
+        "basis": "titles",
+        "evidence": "SONGEUN – Menu"
+      }
+    ]
+  },
+  {
+    "id": 1148,
+    "name": "미들맨 갤러리",
+    "address": "부산 해운대구 좌동로 14번길 54",
+    "homepage_url": "https://iammiddleman.org",
+    "name_en": "Middleman",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://iammiddleman.org",
+        "basis": "titles",
+        "evidence": "Middleman"
+      }
+    ]
+  },
+  {
+    "id": 1149,
+    "name": "국립아시아문화전당",
+    "address": "전남광주통합특별시 동구 문화전당로 38",
+    "homepage_url": "https://www.acc.go.kr/main/index.do",
+    "name_en": "Asia Culture Center",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.acc.go.kr/en/index.do",
+        "basis": "titles",
+        "evidence": "Asia Culture Center "
+      }
+    ]
+  },
+  {
+    "id": 1150,
+    "name": "예술의전당 서울서예박물관",
+    "address": "서울 서초구 남부순환로 2406 예술의전당 서울서예박물관",
+    "homepage_url": "https://www.sac.or.kr",
+    "name_en": "Seoul Calligraphy Art Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.sac.or.kr/site/eng/content/exhibitionHallMain",
+        "basis": "Manually reviewed official institution / tourism source"
+      }
+    ]
+  },
+  {
+    "id": 1152,
+    "name": "문화역 서울 284",
+    "address": "서울 중구 통일로 1 서울역(본옥) 문화역서울284",
+    "homepage_url": "https://www.seoul284.org/main",
+    "name_en": "Culture Station Seoul 284",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.seoul284.org/eng",
+        "basis": "english",
+        "evidence": "Culture Station Seoul 284"
+      }
+    ]
+  },
+  {
+    "id": 1153,
+    "name": "마이아트뮤지엄",
+    "address": "서울 강남구 테헤란로 518 섬유센터빌딩 B1 (대치동994-31)",
+    "homepage_url": "http://www.myartmuseum.co.kr",
+    "name_en": "My Art Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://visitgangnam.net/en/places/my-art-museum",
+        "basis": "Manually reviewed official institution / tourism source"
+      }
+    ]
+  },
+  {
+    "id": 1154,
+    "name": "아라리오뮤지엄 서울 (인스페이스)",
+    "address": "서울 종로구 율곡로 83",
+    "homepage_url": "https://www.arariomuseum.org\n",
+    "name_en": "ARARIO Museum in SPACE",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.arario.com/images/아라리오회사소개서.pdf",
+        "basis": "Manually reviewed official institution / tourism source"
+      }
+    ]
+  },
+  {
+    "id": 1155,
+    "name": "아라리오뮤지엄 제주 (탑동)",
+    "address": "제주 제주시 탑동로 14",
+    "homepage_url": "https://www.arariomuseum.org",
+    "name_en": "ARARIO Museum Tapdong Cinema",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.arario.com/images/아라리오회사소개서.pdf",
+        "basis": "Manually reviewed official institution / tourism source"
+      }
+    ]
+  },
+  {
+    "id": 1156,
+    "name": "아라리오뮤지엄 제주 (동문모텔 I, II)",
+    "address": "제주 제주시 산지로 37-5/제주 제주시 산지로 23",
+    "homepage_url": "https://www.arariomuseum.org",
+    "name_en": "ARARIO Museum Dongmun Motel I, II",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.visitjeju.net/en/detail/view?contentsid=CNTS_000000000020607&menuId=DOM_000001817000000003",
+        "basis": "Manually reviewed official institution / tourism source"
+      }
+    ]
+  },
+  {
+    "id": 1157,
+    "name": "국립현대미술관 청주관",
+    "address": "충북 청주시 청원구 상당로 314",
+    "homepage_url": "https://www.mmca.go.kr/visitingInfo/cheongjuInfo.do",
+    "name_en": "MMCA Cheongju",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.mmca.go.kr/upload/artInfo/2022/06/2022061703590101216091.pdf",
+        "basis": "Manually reviewed official institution / tourism source"
+      }
+    ]
+  },
+  {
+    "id": 1159,
+    "name": "예술의전당 한가람디자인미술관",
+    "address": "서울 서초구 남부순환로 2406 예술의전당 한가람디자인미술관",
+    "homepage_url": "https://www.sac.or.kr",
+    "name_en": "Hangaram Design Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.sac.or.kr/site/eng/content/exhibitionHallMain",
+        "basis": "Manually reviewed official institution / tourism source"
+      },
+      {
+        "url": "https://www.sac.or.kr/site/eng/home",
+        "basis": "english",
+        "evidence": "Hangaram Design Museum"
+      }
+    ]
+  },
+  {
+    "id": 1160,
+    "name": "디뮤지엄",
+    "address": "서울특별시 성동구 왕십리로 83-21",
+    "homepage_url": "https://www.daelimmuseum.org/",
+    "name_en": "D Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.daelimmuseum.org/",
+        "basis": "titles",
+        "evidence": "DAELIM MUSEUM | D MUSEUM"
+      }
+    ]
+  },
+  {
+    "id": 1164,
+    "name": "서울시립서서울미술관",
+    "address": "서울 금천구 시흥대로79길 65 (독산동)",
+    "homepage_url": "https://sema.seoul.go.kr/kr/visit/seoseoul#museumHerecoms",
+    "name_en": "Seo-Seoul Museum of Art",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://sema.seoul.go.kr/en/index",
+        "basis": "alts",
+        "evidence": "Seo-Seoul Museum of Art Solo Exhibition of Media Artist Kim Heecheon: Moles"
+      }
+    ]
+  },
+  {
+    "id": 1165,
+    "name": "광주시립미술관 하정웅미술관",
+    "address": "전남광주통합특별시 서구 상무대로 1165 ",
+    "homepage_url": "https://gjartmuse.jeonnam-gwangju.go.kr/co/contentsView.php?pageID=artmuse0902000000&lang=kor",
+    "name_en": "Ha Jung-woong Museum of Art",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://gjartmuse.jeonnam-gwangju.go.kr/?site=english",
+        "basis": "english",
+        "evidence": "Ha Jung-woong Museum of Art Ha Jungwoong Museum, Gwangju Museum of Art (Gallery 4–6, 2nd Floor)"
+      }
+    ]
+  },
+  {
+    "id": 1167,
+    "name": "그라운드 시소 센트럴",
+    "address": "서울특별시 중구 세종대로 14 그랜드센트럴 3F",
+    "homepage_url": "https://groundseesaw.co.kr",
+    "name_en": "Groundseesaw Central",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://en.groundseesaw.co.kr/",
+        "basis": "Manually reviewed official institution / tourism source"
+      }
+    ]
+  },
+  {
+    "id": 1168,
+    "name": "그라운드 시소 이스트",
+    "address": "서울특별시 광진구 아차산로 402 이스트폴 2F",
+    "homepage_url": "https://groundseesaw.co.kr",
+    "name_en": "Groundseesaw East",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://en.groundseesaw.co.kr/",
+        "basis": "Manually reviewed official institution / tourism source"
+      }
+    ]
+  },
+  {
+    "id": 1169,
+    "name": "그라운드 시소 한남",
+    "address": "서울특별시 용산구 한남대로 91 고메이494 한남 B층",
+    "homepage_url": "https://groundseesaw.co.kr",
+    "name_en": "Groundseesaw Hannam",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://groundseesaw.co.kr/",
+        "basis": "Manually reviewed official institution / tourism source"
+      }
+    ]
+  },
+  {
+    "id": 1172,
+    "name": "갤러리 그라프",
+    "address": "서울특별시 강남구 삼성로 149길 10 (청담동)",
+    "homepage_url": "https://ggrappe.com",
+    "name_en": "Gallery Grappe",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://ggrappe.com",
+        "basis": "titles",
+        "evidence": "GALLERY GRAPPE"
+      }
+    ]
+  },
+  {
+    "id": 1175,
+    "name": "16아카이브",
+    "address": "서울 중구 퇴계로45길 31-15, 2층\n",
+    "homepage_url": "https://16akaiv.com",
+    "name_en": "16AKAIV",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://16akaiv.com",
+        "basis": "titles",
+        "evidence": "16AKAIV — Curated Art &amp; Craft, Seoul"
+      }
+    ]
+  },
+  {
+    "id": 1176,
+    "name": "갤러리박 (BHAK)",
+    "address": "서울 용산구 한남대로40길 19, 1F",
+    "homepage_url": "https://galeriebhak.com",
+    "name_en": "BHAK",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://galeriebhak.com",
+        "basis": "titles",
+        "evidence": "갤러리박 BHAK"
+      }
+    ]
+  },
+  {
+    "id": 1177,
+    "name": "DMZ 박물관",
+    "address": "강원 고성군 현내면 통일전망대로 369",
+    "homepage_url": "dmzmuseum.com",
+    "name_en": "DMZ Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.dmzmuseum.com/",
+        "basis": "Manually reviewed official institution / tourism source"
+      }
+    ]
+  },
+  {
+    "id": 1178,
+    "name": "K-ARTS Space",
+    "address": "서울시 성북구 돌곶이로 34 (2층, 3층)\n",
+    "homepage_url": "https://www.instagram.com/karts.space/?hl=en",
+    "name_en": "K-Arts Space",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.instagram.com/karts.space/?hl=en",
+        "basis": "titles",
+        "evidence": "K-Arts space (&#064;karts.space) • Instagram photos and videos"
+      }
+    ]
+  },
+  {
+    "id": 1179,
+    "name": "PS센터",
+    "address": "서울시 중구 창경궁로5다길 18 3층",
+    "homepage_url": "https://ps-center.kr",
+    "name_en": "PS Center",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://ps-center.kr",
+        "basis": "titles",
+        "evidence": "PS CENTER"
+      }
+    ]
+  },
+  {
+    "id": 1180,
+    "name": "가나아트센터",
+    "address": "서울 종로구 평창30길 28(평창동, 가나아트센터)",
+    "homepage_url": "https://www.ganaart.com",
+    "name_en": "Gana Art Center",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.ganaart.com/about/",
+        "basis": "Manually reviewed official institution / tourism source"
+      }
+    ]
+  },
+  {
+    "id": 1181,
+    "name": "갤러리 그림손",
+    "address": "서울 종로구 인사동 10길 22",
+    "homepage_url": "https://www.grimson.co.kr",
+    "name_en": "Gallery Grimson",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.grimson.co.kr",
+        "basis": "english",
+        "evidence": "GalleryGrimson"
+      }
+    ]
+  },
+  {
+    "id": 1182,
+    "name": "갤러리 스페이스포포",
+    "address": "부산광역시 금정구 금정로 79 3층 (눈사랑안경 3층)",
+    "homepage_url": "http://spacefofo.kr/",
+    "name_en": "spaceFOFO Photo Gallery",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "http://spacefofo.kr/wp/",
+        "basis": "titles",
+        "evidence": "spaceFOFO photo gallery &#8211; #spacefofo #fotoforest #busangallery #photogallery"
+      }
+    ]
+  },
+  {
+    "id": 1184,
+    "name": "갤러리 지하",
+    "address": "서울 마포구 서강로11길 15 지하",
+    "homepage_url": "https://galleryjiha.com",
+    "name_en": "Gallery JIHA",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://galleryjiha.com",
+        "basis": "english",
+        "evidence": "@gallery_jiha"
+      }
+    ]
+  },
+  {
+    "id": 1185,
+    "name": "갤러리 플래닛",
+    "address": "서울 강남구 압구정로71길 14, 2F",
+    "homepage_url": "http://galleryplanet.co.kr/",
+    "name_en": "Gallery Planet",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "http://galleryplanet.co.kr/",
+        "basis": "titles",
+        "evidence": "galleryplanet"
+      }
+    ]
+  },
+  {
+    "id": 1186,
+    "name": "경기도박물관",
+    "address": "경기 용인시 기흥구 상갈로 6",
+    "homepage_url": "https://musenet.ggcf.kr/",
+    "name_en": "Gyeonggi Provincial Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://njpart.ggcf.kr/",
+        "basis": "Manually reviewed official institution / tourism source"
+      }
+    ]
+  },
+  {
+    "id": 1187,
+    "name": "남산골한옥마을",
+    "address": "서울 중구 퇴계로34길 28",
+    "homepage_url": "https://hanokmaeul.co.kr/",
+    "name_en": "Namsangol Hanok Village",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://hanokmaeul.co.kr/",
+        "basis": "english",
+        "evidence": "Namsangol Hanok Village Visit Guide"
+      },
+      {
+        "url": "https://hanokmaeul.co.kr/en-guide",
+        "basis": "english",
+        "evidence": "Namsangol Hanok Village Visit Guide"
+      }
+    ]
+  },
+  {
+    "id": 1189,
+    "name": "서리풀청년아트갤러리",
+    "address": "서울 서초구 남부순환로323길 1",
+    "homepage_url": "https://seoripulgallery.com/",
+    "name_en": "Seoripul Gallery",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://seoripulgallery.com/",
+        "basis": "alts",
+        "evidence": "SEORIPUL GALLERY"
+      }
+    ]
+  },
+  {
+    "id": 1190,
+    "name": "부산영화체험박물관",
+    "address": "부산 중구 대청로126번길 12",
+    "homepage_url": "https://busanbom.kr/",
+    "name_en": "Busan Museum of Movies",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://busanbom.kr/",
+        "basis": "english",
+        "evidence": "busan museum of movies"
+      },
+      {
+        "url": "https://busanbom.kr/en/",
+        "basis": "titles",
+        "evidence": "Busan Museum of Movies"
+      }
+    ]
+  },
+  {
+    "id": 1193,
+    "name": "어진박물관",
+    "address": "전북특별자치도 전주시 완산구 태조로 44",
+    "homepage_url": "https://jeonju.go.kr/eojinmuseum/index.9is",
+    "name_en": "Royal Portrait Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://jeonju.go.kr/eojinmuseum/index.9is",
+        "basis": "english",
+        "evidence": "COPYRIGHT © 2022 ROYAL PORTRAIT MUSEUM. ALL RIGHTS RESERVED."
+      }
+    ]
+  },
+  {
+    "id": 1197,
+    "name": "실학박물관",
+    "address": "경기 남양주시 조안면 다산로747번길 16",
+    "homepage_url": "https://www.instagram.com/seuldoart/",
+    "name_en": "The Museum of Silhak",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://english.gg.go.kr/blog/faq-category/silhak-museum/",
+        "basis": "Manually reviewed official institution / tourism source"
+      }
+    ]
+  },
+  {
+    "id": 1198,
+    "name": "서울기록원",
+    "address": "서울 은평구 통일로62길 7",
+    "homepage_url": "https://archives.seoul.go.kr/main",
+    "name_en": "Seoul Metropolitan Archives",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://archives.seoul.go.kr/",
+        "basis": "Manually reviewed official institution / tourism source"
+      },
+      {
+        "url": "https://archives.seoul.go.kr/main",
+        "basis": "english",
+        "evidence": "©2023 서울기록원 SEOUL METROPOLITAN ARCHIVES"
+      }
+    ]
+  },
+  {
+    "id": 1201,
+    "name": "종로구립 고희동미술관",
+    "address": "서울 종로구 창덕궁5길 40",
+    "homepage_url": "https://www.jfac.or.kr/site/main/content/gohd01",
+    "name_en": "Jongno Ko Huidong Art Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://culture.seoul.go.kr/culture/culture/cultureEvent/view.do?cultcode=155839&menuNo=200011",
+        "basis": "Manually reviewed official institution / tourism source"
+      }
+    ]
+  },
+  {
+    "id": 1208,
+    "name": "성북구립 최만린미술관",
+    "address": "서울 성북구 솔샘로7길 23",
+    "homepage_url": "https://sma.sbculture.or.kr/cml/index.do",
+    "name_en": "Choi Man Lin Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://sma.sbculture.or.kr/cml/index.do",
+        "basis": "alts",
+        "evidence": "성북구립 최만린미술관 CHOI MAN LIN MUSEUM"
+      },
+      {
+        "url": "https://sma.sbculture.or.kr/cml/index.do",
+        "basis": "alts",
+        "evidence": "성북구립 최만린미술관 CHOI MAN LIN MUSEUM"
+      }
+    ]
+  },
+  {
+    "id": 1210,
+    "name": "김중업 건축문화의 집",
+    "address": "서울 성북구 장위로21나길 11",
+    "homepage_url": "https://sma.sbculture.or.kr/kcu/index.do",
+    "name_en": "Kim Chungup Architectural Culture House",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://sma.sbculture.or.kr/kcu/index.do",
+        "basis": "english",
+        "evidence": "Copyright© 2026 Kim Chungup Architectural Culture House"
+      },
+      {
+        "url": "https://sma.sbculture.or.kr/kcu/index.do",
+        "basis": "english",
+        "evidence": "Copyright© 2026 Kim Chungup Architectural Culture House"
+      }
+    ]
+  },
+  {
+    "id": 1211,
+    "name": "서울공예박물관",
+    "address": "서울 종로구 율곡로3길 4",
+    "homepage_url": "https://www.instagram.com/seoulmuseumofcraftart/",
+    "name_en": "Seoul Museum of Craft Art",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://english.visitkorea.or.kr/svc/contents/contentsView.do?vcontsId=186458",
+        "basis": "Manually reviewed official institution / tourism source"
+      },
+      {
+        "url": "https://www.instagram.com/seoulmuseumofcraftart/",
+        "basis": "titles",
+        "evidence": "서울공예박물관 SeMoCA (&#064;seoulmuseumofcraftart) • Instagram photos and videos"
+      }
+    ]
+  },
+  {
+    "id": 1212,
+    "name": "광명업사이클아트센터",
+    "address": "경기 광명시 오리로 703",
+    "homepage_url": "https://upcycle.gm.go.kr/ko/index.do",
+    "name_en": "Gwangmyeong Upcycle Art Center",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://upcycle.gm.go.kr/ko/index.do",
+        "basis": "english",
+        "evidence": "© Gwangmyeong Upcycle Art Center. all rights reserved."
+      },
+      {
+        "url": "https://upcycle.gm.go.kr/en/index.do",
+        "basis": "titles",
+        "evidence": "Gwangmyeong Upcycle Art Center"
+      }
+    ]
+  },
+  {
+    "id": 1216,
+    "name": "숙명여자대학교 정영양자수박물관",
+    "address": "서울 용산구 청파로47길 99",
+    "homepage_url": "n",
+    "name_en": "The Chung Young Yang Embroidery Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.chungyoungyang.com/chungyoungyang/6787/subview.do",
+        "basis": "Manually reviewed official institution / tourism source"
+      }
+    ]
+  },
+  {
+    "id": 1217,
+    "name": "한국영화박물관",
+    "address": "서울 마포구 월드컵북로 400",
+    "homepage_url": "https://www.koreafilm.or.kr/museum/main",
+    "name_en": "Korean Film Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://eng.koreafilm.or.kr/pages/PC_00000104",
+        "basis": "Manually reviewed official institution / tourism source"
+      }
+    ]
+  },
+  {
+    "id": 1219,
+    "name": "서울생활사박물관",
+    "address": "서울 노원구 동일로174길 27",
+    "homepage_url": "https://museum.seoul.go.kr/sulm/index.do",
+    "name_en": "Seoul Urban Life Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://museum.seoul.go.kr/eng/about/org.jsp",
+        "basis": "Manually reviewed official institution / tourism source"
+      }
+    ]
+  },
+  {
+    "id": 1220,
+    "name": "국립해양박물관",
+    "address": "부산 영도구 해양로301번길 45",
+    "homepage_url": "https://www.mmk.or.kr/",
+    "name_en": "National Maritime Museum of Korea",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.mmk.or.kr/",
+        "basis": "english",
+        "evidence": "COPYRIGHTⒸ NATIONAL MARITIME MUSEUM OF KOREA. ALL RIGHTS RESERVED."
+      },
+      {
+        "url": "https://www.mmk.or.kr/eng/",
+        "basis": "english",
+        "evidence": "National Maritime Museum of Korea"
+      }
+    ]
+  },
+  {
+    "id": 1226,
+    "name": "대한민국역사박물관",
+    "address": "서울 종로구 세종대로 198",
+    "homepage_url": "https://www.much.go.kr/",
+    "name_en": "National Museum of Korean Contemporary History",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.much.go.kr/",
+        "basis": "english",
+        "evidence": "Copyright © National Museum of Korean Contemporary History.All Right reserved"
+      }
+    ]
+  },
+  {
+    "id": 1227,
+    "name": "청계천박물관",
+    "address": "서울 성동구 청계천로 530",
+    "homepage_url": "https://museum.seoul.go.kr/cgcm/index.do",
+    "name_en": "Cheonggyecheon Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://museum.seoul.go.kr/eng/about/org.jsp",
+        "basis": "Manually reviewed official institution / tourism source"
+      }
+    ]
+  },
+  {
+    "id": 1228,
+    "name": "한밭교육박물관",
+    "address": "대전 동구 우암로 96",
+    "homepage_url": "https://www.hbem.or.kr/kor.do",
+    "name_en": "Hanbat Museum of Education",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.hbem.or.kr/kor.do",
+        "basis": "english",
+        "evidence": "Hanbat Museum of Education"
+      }
+    ]
+  },
+  {
+    "id": 1230,
+    "name": "국립나주박물관",
+    "address": "전남광주통합특별시 나주시 반남면 고분로 747",
+    "homepage_url": "https://naju.museum.go.kr/kor/index.do",
+    "name_en": "Naju National Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://naju.museum.go.kr/kor/index.do",
+        "basis": "english",
+        "evidence": "NAJU NATIONAL MUSEUM 국립나주박물관"
+      },
+      {
+        "url": "https://naju.museum.go.kr/eng/",
+        "basis": "titles",
+        "evidence": "Naju National Museum"
+      }
+    ]
+  },
+  {
+    "id": 1231,
+    "name": "김포문화재단",
+    "address": "경기 김포시 돌문로 26",
+    "homepage_url": "https://www.gcf.or.kr/main/main.do",
+    "name_en": "Gimpo Cultural Foundation",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.gcf.or.kr/main/main.do",
+        "basis": "english",
+        "evidence": "Copyright(C) Gimpo Cultural Foundation all rights reserved."
+      },
+      {
+        "url": "https://www.gcf.or.kr/eng/main.do",
+        "basis": "english",
+        "evidence": "Gimpo Cultural Foundation"
+      }
+    ]
+  },
+  {
+    "id": 1237,
+    "name": "루나아틀리에",
+    "address": "대구 동구 이노밸리로 322",
+    "homepage_url": "https://www.lunaatelier.co.kr/",
+    "name_en": "LUNA Atelier",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.lunaatelier.co.kr/",
+        "basis": "titles",
+        "evidence": "LUNA Atelier"
+      }
+    ]
+  },
+  {
+    "id": 1238,
+    "name": "서울시립과학관",
+    "address": "서울 노원구 한글비석로 160",
+    "homepage_url": "https://science.seoul.go.kr/main",
+    "name_en": "Seoul Science Center",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://science.seoul.go.kr/main",
+        "basis": "alts",
+        "evidence": "서울시립과학단 SEOUL SCIENCE CENTER"
+      },
+      {
+        "url": "https://science.seoul.go.kr/main",
+        "basis": "alts",
+        "evidence": "서울시립과학단 SEOUL SCIENCE CENTER"
+      }
+    ]
+  },
+  {
+    "id": 1239,
+    "name": "울산암각화박물관",
+    "address": "울산 울주군 두동면 반구대안길 254",
+    "homepage_url": "https://www.ulsan.go.kr/s/bangudae/main.ulsan",
+    "name_en": "Ulsan Petroglyph Museum of Bangudae",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.ulsan.go.kr/s/bangudae/main.ulsan",
+        "basis": "english",
+        "evidence": "copyrights ⓒ 2019. Ulsan petroglyph museum of BANGUDAE. All rights reserved."
+      },
+      {
+        "url": "https://www.ulsan.go.kr/s/bangudae/main.ulsan#void",
+        "basis": "english",
+        "evidence": "copyrights ⓒ 2019. Ulsan petroglyph museum of BANGUDAE. All rights reserved."
+      }
+    ]
+  },
+  {
+    "id": 1241,
+    "name": "부천시립박물관",
+    "address": "경기 부천시 오정구 소사로 638",
+    "homepage_url": "https://www.bcmuseum.or.kr/ko",
+    "name_en": "Bucheon Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.bcmuseum.or.kr/ko",
+        "basis": "english",
+        "evidence": "Copyright © BUCHEON MUSEUM. All rights reserved."
+      }
+    ]
+  },
+  {
+    "id": 1242,
+    "name": "국립중앙도서관",
+    "address": "서울 용산구 서빙고로 137",
+    "homepage_url": "https://www.nl.go.kr/",
+    "name_en": "National Library of Korea",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.nl.go.kr/EN/main/index.do",
+        "basis": "titles",
+        "evidence": "National Library of Korea"
+      }
+    ]
+  },
+  {
+    "id": 1244,
+    "name": "양구인문학박물관",
+    "address": "강원특별자치도 양구군 양구읍 파로호로869번길 101",
+    "homepage_url": "https://www.ymunhak.or.kr/",
+    "name_en": "Yanggu Humanities Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.ymunhak.or.kr/",
+        "basis": "english",
+        "evidence": "Copyright ⓒ Yanggu Humanities Museum. All rights reserved"
+      }
+    ]
+  },
+  {
+    "id": 1247,
+    "name": "천안문화재단",
+    "address": "충남 천안시 서북구 성정8길 5",
+    "homepage_url": "https://cfac.or.kr/",
+    "name_en": "Cheonan Foundation for Arts and Culture",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://cfac.or.kr/",
+        "basis": "english",
+        "evidence": "COPYRIGHT CHEONAN FOUNDATION for ARTS and CULTURE."
+      }
+    ]
+  },
+  {
+    "id": 1249,
+    "name": "서울시립사진미술관",
+    "address": "서울 도봉구 마들로13길 68",
+    "homepage_url": "https://sema.seoul.go.kr/kr/visit/photosema",
+    "name_en": "Photography Seoul Museum of Art",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://sema.seoul.go.kr/en/index",
+        "basis": "english",
+        "evidence": "Photography Seoul Museum of Art"
+      }
+    ]
+  },
+  {
+    "id": 1250,
+    "name": "오창전시관",
+    "address": "충북 청주시 청원구 오창읍 오창공원로 102",
+    "homepage_url": "https://cmoa.cheongju.go.kr/ochang/index.do",
+    "name_en": "Ochang Gallery",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://cmoa.cheongju.go.kr/ochang/index.do",
+        "basis": "english",
+        "evidence": "OCHANG GALLERY"
+      }
+    ]
+  },
+  {
+    "id": 1251,
+    "name": "국립민속박물관 파주",
+    "address": "경기 파주시 탄현면 헤이리로 30",
+    "homepage_url": "https://www.nfm.go.kr/paju/main",
+    "name_en": "National Folk Museum of Korea Paju",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://nfm.go.kr/english/index.do",
+        "basis": "Manually reviewed official institution / tourism source"
+      }
+    ]
+  },
+  {
+    "id": 1252,
+    "name": "우란문화재단",
+    "address": "서울 성동구 연무장7길 11",
+    "homepage_url": "https://wooranfdn.org/main.jsp",
+    "name_en": "Wooran Foundation",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://wooranfdn.org/en/about/about.jsp",
+        "basis": "Manually reviewed official institution / tourism source"
+      }
+    ]
+  },
+  {
+    "id": 1253,
+    "name": "국립전주박물관",
+    "address": "전북특별자치도 전주시 완산구 쑥고개로 249",
+    "homepage_url": "https://jeonju.museum.go.kr/",
+    "name_en": "Jeonju National Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://jeonju.museum.go.kr/",
+        "basis": "english",
+        "evidence": "JEONJU NATIONAL MUSEUM"
+      },
+      {
+        "url": "https://jeonju.museum.go.kr/english/",
+        "basis": "titles",
+        "evidence": "Jeonju National Museum"
+      }
+    ]
+  },
+  {
+    "id": 1255,
+    "name": "KF갤러리",
+    "address": "서울 중구 을지로5길 26",
+    "homepage_url": "https://www.kf.or.kr/kf/ru/list.do?mi=1660",
+    "name_en": "KF Gallery",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.kf.or.kr/kfEng/main.do?langTy=ENG",
+        "basis": "english",
+        "evidence": "KF Gallery Exhibition \"Exported Reality\" May 27, 2026"
+      }
+    ]
+  },
+  {
+    "id": 1258,
+    "name": "경기창작센터",
+    "address": "경기도 안산시 단원구 선감로 101-19",
+    "homepage_url": "https://gcc.ggcf.kr/",
+    "name_en": "Gyeonggi Creation Center",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://artsandculture.google.com/partner/gyeonggi-cultural-foundation",
+        "basis": "Manually reviewed official institution / tourism source"
+      }
+    ]
+  },
+  {
+    "id": 1260,
+    "name": "그림책정원1937",
+    "address": "충북 청주시 상당구 상당로 82",
+    "homepage_url": "https://picturebookgarden1937.chungbuk.go.kr/home/main.php",
+    "name_en": "Picture Book Garden 1937",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://picturebookgarden1937.chungbuk.go.kr/home/main.php",
+        "basis": "english",
+        "evidence": "© PICTURE BOOK GARDEN 1937. ALL RIGHTS RESERVED."
+      }
+    ]
+  },
+  {
+    "id": 1261,
+    "name": "작은미술관 보구곶",
+    "address": "경기 김포시 월곶면 문수산로 373",
+    "homepage_url": "https://www.instagram.com/bogugot/",
+    "name_en": "Small Museum Bogugot",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.gcf.or.kr/eng/main.do",
+        "basis": "Manually reviewed official institution / tourism source"
+      }
+    ]
+  },
+  {
+    "id": 1263,
+    "name": "수원시립만석전시관",
+    "address": "경기 수원시 장안구 송정로 19",
+    "homepage_url": "https://suma.suwon.go.kr/views/intro.do?gubun=6",
+    "name_en": "Suwon Manseok Gallery",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://suma.suwon.go.kr/main/main.do?lang=en",
+        "basis": "english",
+        "evidence": "Suwon Manseok Gallery"
+      }
+    ]
+  },
+  {
+    "id": 1264,
+    "name": "국립민속박물관",
+    "address": "서울 종로구 삼청로 37",
+    "homepage_url": "nfm.go.kr",
+    "name_en": "National Folk Museum of Korea",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://nfm.go.kr/english/index.do",
+        "basis": "Manually reviewed official institution / tourism source"
+      }
+    ]
+  },
+  {
+    "id": 1266,
+    "name": "인천아트플랫폼",
+    "address": "인천 제물포구 제물량로218번길 3",
+    "homepage_url": "https://inartplatform.kr/home/home",
+    "name_en": "Incheon Art Platform",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://inartplatform.kr/home/home",
+        "basis": "alts",
+        "evidence": "INCHEON ART PLATFORM"
+      },
+      {
+        "url": "https://inartplatform.kr/home/home",
+        "basis": "alts",
+        "evidence": "INCHEON ART PLATFORM"
+      }
+    ]
+  },
+  {
+    "id": 1268,
+    "name": "아마도 예술 공간(Amado Art Space)",
+    "address": "서울 용산구 이태원로54길 8",
+    "homepage_url": "https://amadoart.org/",
+    "name_en": "Amado Art Space",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://amadoart.org/",
+        "basis": "titles",
+        "evidence": "Main - Amado Art Space"
+      }
+    ]
+  },
+  {
+    "id": 1269,
+    "name": "서울역사박물관",
+    "address": "서울 종로구 새문안로 55",
+    "homepage_url": "https://museum.seoul.go.kr/www/NR_index.do?sso=ok",
+    "name_en": "Seoul Museum of History",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://museum.seoul.go.kr/eng/visit/floor/floor1st.jsp",
+        "basis": "Manually reviewed official institution / tourism source"
+      }
+    ]
+  },
+  {
+    "id": 1275,
+    "name": "갤러리JJ",
+    "address": "서울 강남구 압구정로30길 63",
+    "homepage_url": "https://www.galleryjj.org/",
+    "name_en": "Gallery JJ",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.galleryjj.org/",
+        "basis": "titles",
+        "evidence": "Gallery JJ | 갤러리 JJ - Current Exhibitions | 현재전시"
+      }
+    ]
+  },
+  {
+    "id": 1277,
+    "name": "청주시립도서관 청주미술창작스튜디오",
+    "address": "충북 청주시 상당구 용암로 55",
+    "homepage_url": "https://cmoa.cheongju.go.kr/cjas/index.do",
+    "name_en": "Cheongju Art Studio",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://cmoa.cheongju.go.kr/cjas/index.do",
+        "basis": "english",
+        "evidence": "CHEONGJU ART STUDIO"
+      },
+      {
+        "url": "https://cmoa.cheongju.go.kr/cjasEng/index.do",
+        "basis": "titles",
+        "evidence": "WELCOME TO CHEONGJU ART STUDIO"
+      }
+    ]
+  },
+  {
+    "id": 1278,
+    "name": "갤러리세줄",
+    "address": "서울 종로구 평창30길 40",
+    "homepage_url": "https://sejul.com/",
+    "name_en": "Gallery Sejul",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://sejul.com/",
+        "basis": "titles",
+        "evidence": "Gallery Sejul"
+      }
+    ]
+  },
+  {
+    "id": 1279,
+    "name": "갤러리 예 (예화랑)",
+    "address": "서울 종로구 창덕궁길 100",
+    "homepage_url": "https://www.galleryyeh.com/",
+    "name_en": "Gallery Yeh",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.galleryyeh.com/",
+        "basis": "titles",
+        "evidence": "HOME | GALLERY YEH"
+      }
+    ]
+  },
+  {
+    "id": 1280,
+    "name": "취미인간",
+    "address": "대구 남구 중앙대로31길 124",
+    "homepage_url": "https://www.instagram.com/chwimi_ingan/",
+    "name_en": "chwimi_ingan",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.instagram.com/chwimi_ingan/",
+        "basis": "titles",
+        "evidence": "취미인간 chwimi_ingan (&#064;chwimi_ingan) • Instagram photos and videos"
+      }
+    ]
+  },
+  {
+    "id": 1281,
+    "name": "용산문화재단",
+    "address": "서울 용산구 이태원로 274",
+    "homepage_url": "https://yongsanculture.or.kr/site/main/home",
+    "name_en": "Yongsan Foundation for Arts & Culture",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://yongsanculture.or.kr/site/main/home",
+        "basis": "english",
+        "evidence": "© Yongsan Foundation For Arts & Culture"
+      }
+    ]
+  },
+  {
+    "id": 1287,
+    "name": "한국만화박물관",
+    "address": "경기 부천시 원미구 길주로 1",
+    "homepage_url": "https://www.komacon.kr/comicsmuseum_m/",
+    "name_en": "Korea Manhwa Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://english.visitkorea.or.kr/svc/contents/contentsView.do?menuSn=351&vcontsId=215510",
+        "basis": "Manually reviewed official institution / tourism source"
+      }
+    ]
+  },
+  {
+    "id": 1291,
+    "name": "갤러리CNK",
+    "address": "대구 중구 이천로 206",
+    "homepage_url": "https://www.gallerycnk.com/",
+    "name_en": "Gallery CNK",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.gallerycnk.com/",
+        "basis": "titles",
+        "evidence": "gallerycnk"
+      }
+    ]
+  },
+  {
+    "id": 1292,
+    "name": "오에이오에이",
+    "address": "서울 강남구 삼성로63길 32-11",
+    "homepage_url": "https://oaoagallery.com/",
+    "name_en": "OAOA Gallery",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://oaoagallery.com/",
+        "basis": "titles",
+        "evidence": "오에이오에이 갤러리 : OAOA gallery"
+      }
+    ]
+  },
+  {
+    "id": 1296,
+    "name": "서울시립미술아카이브",
+    "address": "서울 종로구 평창문화로 101",
+    "homepage_url": "https://sema.seoul.go.kr/semaaa/front/main.do",
+    "name_en": "Art Archives Seoul Museum of Art",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://sema.seoul.go.kr/semaaa/front/main.do",
+        "basis": "alts",
+        "evidence": "서울시립 미술아카이브 ART ARCHIVES SEOUL MUSEUM OF ART"
+      }
+    ]
+  },
+  {
+    "id": 1298,
+    "name": "수원시립아트스페이스광교",
+    "address": "경기 수원시 영통구 광교중앙로 140",
+    "homepage_url": "https://suma.suwon.go.kr/views/intro.do?gubun=10",
+    "name_en": "Suwon Art Space Gwanggyo",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://suma.suwon.go.kr/main/main.do?lang=en",
+        "basis": "english",
+        "evidence": "Suwon Art Space Gwanggyo"
+      }
+    ]
+  },
+  {
+    "id": 1299,
+    "name": "금산갤러리",
+    "address": "서울 중구 소공로 46",
+    "homepage_url": "http://www.keumsangallery.com/",
+    "name_en": "Keumsan Gallery",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "http://www.keumsangallery.com/",
+        "basis": "english",
+        "evidence": "KEUMSAN GALLERY"
+      }
+    ]
+  },
+  {
+    "id": 1302,
+    "name": "갤러리위",
+    "address": "경기 용인시 수지구 호수로52번길 25-17",
+    "homepage_url": "http://www.gallerywe.com/",
+    "name_en": "Gallery We",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "http://www.gallerywe.com/",
+        "basis": "english",
+        "evidence": "© GALLERY WE ALL RIGHTS RESERVED."
+      }
+    ]
+  },
+  {
+    "id": 1311,
+    "name": "유엠 갤러리",
+    "address": "서울 강남구 도산대로25길 35",
+    "homepage_url": "https://www.umgallery.co.kr/",
+    "name_en": "UM Gallery",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.umgallery.co.kr/",
+        "basis": "titles",
+        "evidence": "UM Gallery"
+      }
+    ]
+  },
+  {
+    "id": 1314,
+    "name": "갤러리508",
+    "address": "서울 강남구 도산대로67길 14",
+    "homepage_url": "https://gallery-508.com/",
+    "name_en": "Gallery 508",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://gallery-508.com/",
+        "basis": "titles",
+        "evidence": "Gallery 508 – Seoul Contemporary Art Gallery | 청담동 갤러리"
+      }
+    ]
+  },
+  {
+    "id": 1317,
+    "name": "대전광역시 서예진흥원",
+    "address": "대전 중구 중앙로 119",
+    "homepage_url": "https://www.daejeon.go.kr/djseoye",
+    "name_en": "Daejeon Calligraphy Promotion Agency",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.daejeon.go.kr/djseoye",
+        "basis": "english",
+        "evidence": "Copyright 2024 Daejeon Calligraphy Promotion Agency. All Rights reserved."
+      }
+    ]
+  },
+  {
+    "id": 1320,
+    "name": "하슬라아트월드",
+    "address": "강원특별자치도 강릉시 강동면 율곡로 1441",
+    "homepage_url": "https://www.museumhaslla.com/",
+    "name_en": "Haslla Art World",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.museumhaslla.com/",
+        "basis": "english",
+        "evidence": "HASLLA ART WORLD"
+      }
+    ]
+  },
+  {
+    "id": 1321,
+    "name": "오션갤러리",
+    "address": "부산 해운대구 청사포로 139-4",
+    "homepage_url": "https://www.oceangallery.kr/",
+    "name_en": "Ocean Gallery",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.oceangallery.kr/",
+        "basis": "english",
+        "evidence": "top of page OCEAN GALLERY HOME ABOUT US ARTISTS ART FAIRS CONTACT EXHIBITION > Youngcheol LEE 이영철 Unsik JUNG 정운식 Thomas LAMADIEU 토마스라마디유 Jenny Parc 제니박 Changhyun JEON 전창현 DREAMS 로빈 초대전"
+      }
+    ]
+  },
+  {
+    "id": 1322,
+    "name": "아트 포 랩",
+    "address": "경기 안양시 동안구 신기대로33번길 22",
+    "homepage_url": "https://www.art-for-lab.space/",
+    "name_en": "Art For Lab.",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.art-for-lab.space/",
+        "basis": "titles",
+        "evidence": "아트 포 랩 Art For Lab."
+      }
+    ]
+  },
+  {
+    "id": 1323,
+    "name": "마리나갤러리",
+    "address": "경기 고양시 일산서구 호수로 817",
+    "homepage_url": "https://marinagallery.co.kr/",
+    "name_en": "Marina Gallery",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://marinagallery.co.kr/",
+        "basis": "english",
+        "evidence": "©Marina Gallery. ALL RIGHTS RESERVED."
+      }
+    ]
+  },
+  {
+    "id": 1325,
+    "name": "광주비엔날레",
+    "address": "전남광주통합특별시 북구 비엔날레로 111",
+    "homepage_url": "https://www.gwangjubiennale.org/gb/index.do",
+    "name_en": "Gwangju Biennale",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.gwangjubiennale.org/gb/index.do",
+        "basis": "english",
+        "evidence": "GWANGJU BIENNALE"
+      },
+      {
+        "url": "https://www.gwangjubiennale.org/en/index.do?sellan=en",
+        "basis": "titles",
+        "evidence": "gwangjubiennale "
+      }
+    ]
+  },
+  {
+    "id": 1344,
+    "name": "화이트블럭",
+    "address": "경기 파주시 탄현면 헤이리마을길 72",
+    "homepage_url": "https://www.whiteblock.org/",
+    "name_en": "White Block",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.whiteblock.org/",
+        "basis": "titles",
+        "evidence": "WHITE BLOCK"
+      }
+    ]
+  },
+  {
+    "id": 1345,
+    "name": "엄뮤지엄",
+    "address": "경기 화성시 봉담읍 오궁길 37",
+    "homepage_url": "http://www.ummuseum.com/",
+    "name_en": "Um Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "http://www.ummuseum.com/",
+        "basis": "titles",
+        "evidence": "엄미술관 Um Museum "
+      }
+    ]
+  },
+  {
+    "id": 1346,
+    "name": "의재미술관",
+    "address": "전남광주통합특별시 동구 증심사길 155",
+    "homepage_url": "https://www.uijae.org/",
+    "name_en": "Uijae Museum of Korean Art",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.uijae.org/",
+        "basis": "english",
+        "evidence": "ⓒ UIJAE MUSEUM OF KOREAN ART."
+      }
+    ]
+  },
+  {
+    "id": 1349,
+    "name": "갤러리 조은",
+    "address": "서울 용산구 이태원로55가길 3",
+    "homepage_url": "https://galleryjoeun.com/kor/main/",
+    "name_en": "Gallery Joeun",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://galleryjoeun.com/kor/main/",
+        "basis": "titles",
+        "evidence": "갤러리조은 - Gallery Joeun"
+      }
+    ]
+  },
+  {
+    "id": 1350,
+    "name": "한솥아트스페이스",
+    "address": "서울 강남구 압구정로 459, 지하 1층",
+    "homepage_url": "https://www.instagram.com/hansot_artspace/",
+    "name_en": "Hansot ArtSpace",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.instagram.com/hansot_artspace/",
+        "basis": "titles",
+        "evidence": "한솥아트스페이스 Hansot ArtSpace (&#064;hansot_artspace) • Instagram photos and videos"
+      }
+    ]
+  },
+  {
+    "id": 1351,
+    "name": "갤러리 나우",
+    "address": "서울 강남구 언주로152길 16",
+    "homepage_url": "https://gallery-now.com/",
+    "name_en": "Gallery NoW",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://gallery-now.com/",
+        "basis": "titles",
+        "evidence": "galleryNOW"
+      }
+    ]
+  },
+  {
+    "id": 1352,
+    "name": "아난티 컬쳐클럽",
+    "address": "부산 기장군 기장읍 기장해안로 267-7, 빌라쥬 드 아난티 엘.피. 크리스탈",
+    "homepage_url": "https://ananti.kr/ko/village/board/cultureclub/PA0801",
+    "name_en": "Ananti Culture Club",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://ananti.kr/ko/village/board/cultureclub/PA0801",
+        "basis": "english",
+        "evidence": "ANANTI CULTURE CLUB"
+      }
+    ]
+  },
+  {
+    "id": 1355,
+    "name": "갤러리 다선",
+    "address": "경기 과천시 양지마을4로 44-18 ",
+    "homepage_url": "https://www.gallerydasun.com",
+    "name_en": "Gallery Dasun",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.gallerydasun.com",
+        "basis": "titles",
+        "evidence": "Home | 갤러리다선 gallery dasun"
+      }
+    ]
+  },
+  {
+    "id": 1357,
+    "name": "갤러리 소헌 & 소헌 컨템포러리",
+    "address": "대구 중구 동덕로 18 (대봉동), 2층",
+    "homepage_url": "http://www.gallerysoheon.com/main/index.html",
+    "name_en": "Gallery Soheon & Soheon Contemporary",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "http://www.gallerysoheon.com/main/index.html",
+        "basis": "titles",
+        "evidence": "GALLERY SOHEON & SOHEON Contemporary 갤러리소헌"
+      }
+    ]
+  },
+  {
+    "id": 1360,
+    "name": "마루아트센터",
+    "address": "서울 종로구 인사동길 35-4, 35-6",
+    "homepage_url": "https://www.maruartcenter.co.kr/default/",
+    "name_en": "Maru Art Center",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.maruartcenter.co.kr/default/",
+        "basis": "metadata",
+        "evidence": "<meta property=\"og:description\" content=\"예술과 대중이 함께 호흡하는 공간, MARU ART CENTER\">"
+      }
+    ]
+  },
+  {
+    "id": 1362,
+    "name": "어반플루토",
+    "address": "서울 영등포구 양평로22나길 3-2, 2층",
+    "homepage_url": "https://www.urbanpluto.com/",
+    "name_en": "urbanpluto",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.urbanpluto.com/",
+        "basis": "titles",
+        "evidence": "urbanpluto &#062; 홍대입구, 신촌, 합정, 선유도공원과 가까운 예쁜 전시대관 공간 갤러리 어반플루토, 알지비큐브, 에그템페라"
+      }
+    ]
+  },
+  {
+    "id": 1364,
+    "name": "인가희갤러리",
+    "address": "서울 용산구 소월로44길 29, 102호",
+    "homepage_url": "https://ingahee.com/",
+    "name_en": "ingahee",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://ingahee.com/",
+        "basis": "titles",
+        "evidence": "ingahee"
+      }
+    ]
+  },
+  {
+    "id": 1365,
+    "name": "챔버(CHMBR)",
+    "address": "서울 성북구 동소문로 26-6",
+    "homepage_url": "https://www.instagram.com/chamber26_6/",
+    "name_en": "CHMBR",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.instagram.com/chamber26_6/",
+        "basis": "titles",
+        "evidence": "챔버 CHMBR (&#064;chamber26_6) • Instagram photos and videos"
+      }
+    ]
+  },
+  {
+    "id": 1367,
+    "name": "청화랑",
+    "address": "서울 강남구 삼성로147길 4",
+    "homepage_url": "https://www.chungartgallery.com/",
+    "name_en": "Chung Art Gallery",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.chungartgallery.com/",
+        "basis": "titles",
+        "evidence": "Chung Art Gallery"
+      }
+    ]
+  },
+  {
+    "id": 1369,
+    "name": "히든엠갤러리",
+    "address": "서울 강남구 논현로86길 16",
+    "homepage_url": "http://hiddenmgallery.com/",
+    "name_en": "Hidden M Gallery",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "http://hiddenmgallery.com/",
+        "basis": "english",
+        "evidence": "© Copyright 2015 Hidden M Gallery"
+      }
+    ]
+  },
+  {
+    "id": 1375,
+    "name": "수원시미디어센터",
+    "address": "경기 수원시 팔달구 창룡대로 64",
+    "homepage_url": "https://www.swmedia.or.kr/",
+    "name_en": "Suwon Media Center",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.swmedia.or.kr/",
+        "basis": "english",
+        "evidence": "COPYRIGHT SUWON MEDIA CENTER. ALL RIGHTS RESERVED"
+      }
+    ]
+  },
+  {
+    "id": 1376,
+    "name": "뮤지엄 원",
+    "address": "부산 해운대구 센텀서로 20",
+    "homepage_url": "https://museum1.co.kr/",
+    "name_en": "Museum 1",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://museum1.co.kr/",
+        "basis": "titles",
+        "evidence": "museum1"
+      }
+    ]
+  },
+  {
+    "id": 1381,
+    "name": "진천종박물관",
+    "address": "충북 진천군 진천읍 백곡로 1504-12",
+    "homepage_url": "https://www.jincheon.go.kr/home/main.do",
+    "name_en": "Jincheon Bell Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.jincheon.go.kr/site/eng/main.do",
+        "basis": "english",
+        "evidence": "Jincheon Bell Museum"
+      }
+    ]
+  },
+  {
+    "id": 1382,
+    "name": "아난티 앳 부산 코브",
+    "address": "부산 기장군 기장읍 기장해안로 268-32",
+    "homepage_url": "https://ananti.kr/ko/event?bsns=20",
+    "name_en": "Ananti at Busan Cove",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://ananti.kr/ko/event?bsns=20",
+        "basis": "titles",
+        "evidence": "아난티 앳 부산 코브 | ANANTI AT BUSAN COVE"
+      }
+    ]
+  },
+  {
+    "id": 1383,
+    "name": "대구방짜유기박물관",
+    "address": "대구 동구 도장길 29",
+    "homepage_url": "https://www.bangjja.or.kr/",
+    "name_en": "Daegu Bangjja Yugi (Korean Bronzeware) Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.bangjja.or.kr/",
+        "basis": "english",
+        "evidence": "Copyright by Daegu BangJJa Yugi(Korean Bronzeware) Museum All rights Reserved."
+      }
+    ]
+  },
+  {
+    "id": 1384,
+    "name": "부산근현대역사관",
+    "address": "부산 중구 대청로 104",
+    "homepage_url": "https://www.busan.go.kr/mmch/index",
+    "name_en": "Busan Modern and Contemporary History Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.busan.go.kr/eng/bsfacility01",
+        "basis": "Manually reviewed official institution / tourism source"
+      }
+    ]
+  },
+  {
+    "id": 1385,
+    "name": "국립어린이청소년도서관",
+    "address": "서울 강남구 테헤란로7길 21",
+    "homepage_url": "https://nlcy.go.kr/NLCY/main/index.do",
+    "name_en": "National Library for Children and Young Adults",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://nlcy.go.kr/",
+        "basis": "Manually reviewed official institution / tourism source"
+      }
+    ]
+  },
+  {
+    "id": 1388,
+    "name": "원주문화재단",
+    "address": "강원특별자치도 원주시 향교길 77",
+    "homepage_url": "https://www.wcf.or.kr/",
+    "name_en": "Wonju Cultural Foundation",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.wcf.or.kr/",
+        "basis": "english",
+        "evidence": "Copyright © 2009 Wonju Cultural Foundation All Rights Reserved."
+      }
+    ]
+  },
+  {
+    "id": 1389,
+    "name": "국립대한민국임시정부기념관",
+    "address": "서울 서대문구 통일로 279-24",
+    "homepage_url": "https://www.nmkpg.go.kr/",
+    "name_en": "National Memorial of the Korean Provisional Government",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.nmkpg.go.kr/",
+        "basis": "alts",
+        "evidence": "국립대한민국임시정부기념관 | National Memorial of the Korean Provisional Government"
+      },
+      {
+        "url": "https://www.nmkpg.go.kr/eng",
+        "basis": "titles",
+        "evidence": "Main Page | National Memorial of the Korean Provisional Government"
+      }
+    ]
+  },
+  {
+    "id": 1392,
+    "name": "충북문화재단",
+    "address": "충북 청주시 청원구 향군로94번길 7",
+    "homepage_url": "https://www.cbfc.or.kr/home/main.php",
+    "name_en": "Chungcheongbuk-do Cultural Foundation",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.cbfc.or.kr/home/main.php",
+        "basis": "english",
+        "evidence": "Copyright(c) 2021 BY CHUNGCHEONGBUK-DO CULTURAL FOUNDATION. All Rights Reserved."
+      }
+    ]
+  },
+  {
+    "id": 1395,
+    "name": "갤러리 인사 1010",
+    "address": "서울 종로구 인사동10길 10",
+    "homepage_url": "https://www.insa1010.com/",
+    "name_en": "INSA1010",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.insa1010.com/",
+        "basis": "titles",
+        "evidence": "INSA1010"
+      }
+    ]
+  },
+  {
+    "id": 1396,
+    "name": "대구섬유박물관",
+    "address": "대구 동구 팔공로 227",
+    "homepage_url": "https://www.dtmuseum.org/main",
+    "name_en": "Daegu Textile Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.dtmuseum.org/main",
+        "basis": "alts",
+        "evidence": "대구섬유박물관 daegu textile museum"
+      },
+      {
+        "url": "https://www.dtmuseum.org/eng/main",
+        "basis": "titles",
+        "evidence": "Daegu Textile Museum"
+      }
+    ]
+  },
+  {
+    "id": 1400,
+    "name": "아트코드갤러리",
+    "address": "경기 광명시 양지로 16",
+    "homepage_url": "https://www.artcode.co.kr/",
+    "name_en": "Artcode Gallery",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.artcode.co.kr/",
+        "basis": "titles",
+        "evidence": "ARTCODE GALLERY"
+      }
+    ]
+  },
+  {
+    "id": 1401,
+    "name": "노들섬",
+    "address": "서울 용산구 양녕로 445",
+    "homepage_url": "https://nodeul.org/types/exhibit/",
+    "name_en": "Nodeul Island",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://nodeul.org/types/exhibit/",
+        "basis": "english",
+        "evidence": "Copyright © 2019 - 2026 Nodeul Island. All rights reserved."
+      },
+      {
+        "url": "https://english.nodeul.org/",
+        "basis": "titles",
+        "evidence": "Nodeul Island &#8211; Nodeul Island Official Website"
+      }
+    ]
+  },
+  {
+    "id": 1403,
+    "name": "SETEC",
+    "address": "서울 강남구 남부순환로 3104",
+    "homepage_url": "https://www.setec.or.kr/front/schedule/calendar.do",
+    "name_en": "SETEC",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.setec.or.kr/front/schedule/calendar.do",
+        "basis": "titles",
+        "evidence": "이달의 전시일정 &lt; SETEC"
+      },
+      {
+        "url": "https://www.setec.or.kr/eng/introduce/setecInfo.do",
+        "basis": "titles",
+        "evidence": "SETEC Introduction &lt; SETEC"
+      }
+    ]
+  },
+  {
+    "id": 1404,
+    "name": "공간일리",
+    "address": "서울 종로구 세검정로9길 19",
+    "homepage_url": "https://www.instagram.com/space_illi_1and2/",
+    "name_en": "Space Illi",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.instagram.com/space_illi_1and2/",
+        "basis": "titles",
+        "evidence": "세검정 공간:일리 space illi 공식 계정 (&#064;space_illi_1and2) • Instagram photos and videos"
+      }
+    ]
+  },
+  {
+    "id": 1408,
+    "name": "부산문화재단",
+    "address": "부산 남구 우암로 84-1",
+    "homepage_url": "https://www.bscf.or.kr/index.do",
+    "name_en": "Busan Cultural Foundation",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.bscf.or.kr/index.do",
+        "basis": "english",
+        "evidence": "Copyright BY 2025 BUSAN CULTURAL FOUNDATION. All rights reserved."
+      },
+      {
+        "url": "https://www.bscf.or.kr/view.do?no=1015&pgMode=show&evntNewsSn=457",
+        "basis": "english",
+        "evidence": "Copyright BY 2025 BUSAN CULTURAL FOUNDATION. All rights reserved."
+      }
+    ]
+  },
+  {
+    "id": 1410,
+    "name": "주석모음집",
+    "address": "서울 종로구 낙산성곽동길 53",
+    "homepage_url": "https://www.instagram.com/footnote_unit/",
+    "name_en": "Footnote Unit",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.instagram.com/footnote_unit/",
+        "basis": "titles",
+        "evidence": "Footnote Unit 🪐 (&#064;footnote_unit) • Instagram photos and videos"
+      }
+    ]
+  },
+  {
+    "id": 1411,
+    "name": "키다리 갤러리",
+    "address": "대구 동구 신서로21길 3-5",
+    "homepage_url": "https://www.kidarigallery.com/",
+    "name_en": "Kidari Gallery",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.kidarigallery.com/",
+        "basis": "titles",
+        "evidence": "HOME | KIDARI GALLERY"
+      }
+    ]
+  },
+  {
+    "id": 1412,
+    "name": "프린트아트리서치센터",
+    "address": "서울 종로구 율곡로19길 33-13",
+    "homepage_url": "https://parc.imweb.me/",
+    "name_en": "PARC",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://parc.imweb.me/",
+        "basis": "titles",
+        "evidence": "PARC"
+      }
+    ]
+  },
+  {
+    "id": 1414,
+    "name": "필 갤러리",
+    "address": "서울 용산구 유엔빌리지길 24",
+    "homepage_url": "https://www.instagram.com/fillgallery/",
+    "name_en": "Fill Gallery",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.instagram.com/fillgallery/",
+        "basis": "titles",
+        "evidence": "Fill Gallery (&#064;fillgallery) • Instagram photos and videos"
+      }
+    ]
+  },
+  {
+    "id": 1416,
+    "name": "강원문화재단",
+    "address": "강원특별자치도 춘천시 안마산로 85",
+    "homepage_url": "https://gwcf.or.kr/ko",
+    "name_en": "Gangwon Art & Culture Foundation",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://gwcf.or.kr/ko",
+        "basis": "english",
+        "evidence": "소재지 : (24455) 강원특별자치도 춘천시 안마산로 85 한숲캐슬 4층, 강원문화재단, 대표전화 : 033-240-1300 , 팩스번호 : 033-240-1358 COPYRIGHTS 2019 Ⓒ GANGWON ART & CULTURE FOUNDATION. ALL RIGHT RESERVED."
+      },
+      {
+        "url": "https://gwcf.or.kr/en",
+        "basis": "titles",
+        "evidence": "GANGWON ART &amp; CULTURE FOUNDATION"
+      }
+    ]
+  },
+  {
+    "id": 1420,
+    "name": "부평역사박물관",
+    "address": "인천 부평구 굴포로 151",
+    "homepage_url": "https://portal.icbp.go.kr/bphm/",
+    "name_en": "Bupyeong History Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://portal.icbp.go.kr/bphm/",
+        "basis": "english",
+        "evidence": "Copyright(c) 2019 Bupyeong History Museum. All Rights Reserved."
+      }
+    ]
+  },
+  {
+    "id": 1422,
+    "name": "경운박물관",
+    "address": "서울 강남구 삼성로 29",
+    "homepage_url": "https://kwmuseum.org/",
+    "name_en": "Kyungwoon Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://kwmuseum.org/",
+        "basis": "titles",
+        "evidence": "경운박물관 | kyungwoon museum"
+      }
+    ]
+  },
+  {
+    "id": 1423,
+    "name": "의정부예술의전당",
+    "address": "경기 의정부시 의정로 1",
+    "homepage_url": "https://www.uac.or.kr/uac.php",
+    "name_en": "Uijeongbu Arts Center",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.uac.or.kr/uac.php",
+        "basis": "english",
+        "evidence": "Copyright(c) 2004-2018 Uijeongbu Arts Center, All Rights Reserved."
+      }
+    ]
+  },
+  {
+    "id": 1424,
+    "name": "소울아트스페이스",
+    "address": "부산 해운대구 해운대해변로 30",
+    "homepage_url": "http://www.soulartspace.com/",
+    "name_en": "Soul Art Space",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "http://www.soulartspace.com/",
+        "basis": "titles",
+        "evidence": "SOUL ART SPACE"
+      }
+    ]
+  },
+  {
+    "id": 1428,
+    "name": "경기생활도자미술관",
+    "address": "경기 여주시 신륵사길 7",
+    "homepage_url": "https://www.gmocca.org/info/yeoju-museum",
+    "name_en": "Gyeonggi Museum of Ceramic Design",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.gmocca.org/eng",
+        "basis": "english",
+        "evidence": "Gyeonggi Museum of Ceramic Design"
+      }
+    ]
+  },
+  {
+    "id": 1429,
+    "name": "경기도자미술관",
+    "address": "경기 이천시 경충대로2697번길 231",
+    "homepage_url": "https://www.gmocca.org/",
+    "name_en": "Gyeonggi Museum of Contemporary Ceramic Art",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.gmocca.org/",
+        "basis": "english",
+        "evidence": "Copyright 2022. Gyeonggi Museum of Contemporary Ceramic Art. All rights reserved."
+      },
+      {
+        "url": "https://www.gmocca.org/eng",
+        "basis": "english",
+        "evidence": "Gyeonggi Museum of Contemporary Ceramic Art"
+      }
+    ]
+  },
+  {
+    "id": 1434,
+    "name": "국립무형유산원",
+    "address": "전북특별자치도 전주시 완산구 서학로 95",
+    "homepage_url": "https://www.nihc.go.kr/",
+    "name_en": "National Intangible Heritage Center",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.ihf.kr/about",
+        "basis": "Manually reviewed official institution / tourism source"
+      }
+    ]
+  },
+  {
+    "id": 1435,
+    "name": "갤러리 이마주",
+    "address": "서울 강남구 테헤란로20길 12",
+    "homepage_url": "http://www.imazoo.com/index.htm",
+    "name_en": "Gallery Imazoo",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "http://www.imazoo.com/index.htm",
+        "basis": "titles",
+        "evidence": "GALLERY IMAZOO"
+      }
+    ]
+  },
+  {
+    "id": 1438,
+    "name": "어피스어피스",
+    "address": "서울 종로구 필운대로 48",
+    "homepage_url": "https://www.instagram.com/apiece_apeace/",
+    "name_en": "a piece a peace",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.instagram.com/apiece_apeace/",
+        "basis": "titles",
+        "evidence": "a piece a peace (&#064;apiece_apeace) • Instagram photos and videos"
+      }
+    ]
+  },
+  {
+    "id": 1440,
+    "name": "김만덕기념관",
+    "address": "제주특별자치도 제주시 산지로 7",
+    "homepage_url": "http://www.mandukmuseum.or.kr/",
+    "name_en": "Kim Man-duk Memorial Hall",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "http://www.mandukmuseum.or.kr/index.php/eng",
+        "basis": "english",
+        "evidence": "7 Sanji-ro, Jeju Special Self-Governing Province 63278 Telephone. 064-759-6090 Fax. 064-759-6097 Copyright© Kim Man-duk Memorial Hall All Rights Peserved."
+      }
+    ]
+  },
+  {
+    "id": 1443,
+    "name": "표갤러리",
+    "address": "서울 종로구 자하문로5길 18-4",
+    "homepage_url": "https://www.pyogallery.com/",
+    "name_en": "PYO Gallery",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.pyogallery.com/",
+        "basis": "titles",
+        "evidence": "PYO Gallery | 화랑 | 대한민국 서울시 종로구 체부동 자하문로5길 18-4"
+      }
+    ]
+  },
+  {
+    "id": 1444,
+    "name": "갤러리 조선",
+    "address": "서울 종로구 북촌로 5길 64",
+    "homepage_url": "https://www.gallerychosun.com/",
+    "name_en": "Gallery Chosun",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.gallerychosun.com/",
+        "basis": "titles",
+        "evidence": "gallerychosun"
+      },
+      {
+        "url": "https://www.gallerychosun.com/",
+        "basis": "titles",
+        "evidence": "gallerychosun"
+      }
+    ]
+  },
+  {
+    "id": 1445,
+    "name": "간송미술관",
+    "address": "서울 성북구 성북로 102-11",
+    "homepage_url": "https://kansong.org/seoul/",
+    "name_en": "Kansong Art Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://kansong.org/seoul/index.do",
+        "basis": "Manually reviewed official institution / tourism source"
+      }
+    ]
+  },
+  {
+    "id": 1447,
+    "name": "여의도 한강공원",
+    "address": "서울 영등포구 여의도동 85",
+    "homepage_url": null,
+    "name_en": "Yeouido Hangang River Park",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://hangang.seoul.go.kr/www/contents/669.do?mid=473&tr_code=sweb",
+        "basis": "Manually reviewed official institution / tourism source"
+      }
+    ]
+  },
+  {
+    "id": 1454,
+    "name": "021갤러리",
+    "address": "대구 동구 안심로 54",
+    "homepage_url": null,
+    "name_en": "021 Gallery",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://gadg.or.kr/gallery/view-gallery-021g.html",
+        "basis": "Manually reviewed official institution / tourism source"
+      }
+    ]
+  },
+  {
+    "id": 1456,
+    "name": "홍티아트센터",
+    "address": "부산 사하구 다산로106번길 6",
+    "homepage_url": null,
+    "name_en": "Hong-Ti Art Center",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://hongti.bscf.or.kr/intro/ci.php",
+        "basis": "Manually reviewed official institution / tourism source"
+      }
+    ]
+  },
+  {
+    "id": 1457,
+    "name": "갤러리바톤",
+    "address": "서울 용산구 이태원로 223-9",
+    "homepage_url": null,
+    "name_en": "Gallery Baton",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://gallerybaton.com/exhibitions/",
+        "basis": "Manually reviewed official institution / tourism source"
+      }
+    ]
+  },
+  {
+    "id": 1458,
+    "name": "한국이민사박물관",
+    "address": "인천 제물포구 월미로 329",
+    "homepage_url": null,
+    "name_en": "The Museum of Korea Emigration History",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://datalab.visitkorea.or.kr/common/board/Download.do?bcIdx=299505&cbIdx=1129&streFileNm=1b9f0b02-844f-4eac-917b-0cc2cb3e9077.pdf",
+        "basis": "Manually reviewed official institution / tourism source"
+      }
+    ]
+  },
+  {
+    "id": 1465,
+    "name": "고려대학교박물관",
+    "address": "서울 성북구 안암로 145",
+    "homepage_url": null,
+    "name_en": "Korea University Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.korea.ac.kr/ko/501/subview.do",
+        "basis": "Manually reviewed official institution / tourism source"
+      }
+    ]
+  },
+  {
+    "id": 1467,
+    "name": "갤러리진선",
+    "address": "서울 종로구 삼청로 59",
+    "homepage_url": null,
+    "name_en": "Gallery Jinsun",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://www.galleryjinsun.com/",
+        "basis": "Manually reviewed official institution / tourism source"
+      }
+    ]
+  },
+  {
+    "id": 1477,
+    "name": "트라이보울",
+    "address": "인천 연수구 인천타워대로 250",
+    "homepage_url": null,
+    "name_en": "Tri-Bowl",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://tribowl.kr/_NBoard/page.php?hid=sub_0102",
+        "basis": "Manually reviewed official institution / tourism source"
+      }
+    ]
+  },
+  {
+    "id": 1478,
+    "name": "울산박물관",
+    "address": "울산 남구 두왕로 277",
+    "homepage_url": null,
+    "name_en": "Ulsan Museum",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://ulsan.go.kr/u/english/contents.ulsan?mId=001005001005000000",
+        "basis": "Manually reviewed official institution / tourism source"
+      }
+    ]
+  },
+  {
+    "id": 1481,
+    "name": "올림픽공원",
+    "address": "서울 송파구 올림픽로 424",
+    "homepage_url": null,
+    "name_en": "Olympic Park",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://soma.kspo.or.kr/eng/ucms/contents/600042",
+        "basis": "Manually reviewed official institution / tourism source"
+      }
+    ]
+  },
+  {
+    "id": 1486,
+    "name": "띠오 THEO",
+    "address": "서울 강남구 봉은사로68길 55-3 B1F",
+    "homepage_url": "https://gallerytheo.com",
+    "name_en": "THEO",
+    "previous_name_en": null,
+    "sources": [
+      {
+        "url": "https://gallerytheo.com",
+        "basis": "titles",
+        "evidence": "THEO &#8211; 띠오"
+      }
+    ]
+  }
+]

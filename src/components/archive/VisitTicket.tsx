@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { useCallback, useMemo, useState } from 'react';
 import { Image, Modal, Pressable, ScrollView, Text, View } from 'react-native';
 import { Gesture, GestureDetector, GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -70,6 +71,8 @@ export function VisitTicket({
 	ticketPhotoUri,
 	venuePhotos,
 }: VisitTicketProps) {
+	const { t } = useTranslation();
+
 	const [flipped, setFlipped] = useState(false);
 	const [photoGridWidth, setPhotoGridWidth] = useState(0);
 	const [previewUri, setPreviewUri] = useState<string | null>(null);
@@ -211,11 +214,11 @@ export function VisitTicket({
 	const flipA11yLabel = flipped ? '티켓 앞면 보기' : backA11yLabel;
 	const frontCells = isTicketVerified
 		? [
-				{ label: '장소', value: exhibition.venue || '—' },
+				{ label: t('exhibitions.venue'), value: exhibition.venue || '—' },
 				{ label: '날짜', value: dateLabel.split(' ')[0] },
 			]
 		: [
-				{ label: '장소', value: exhibition.venue },
+				{ label: t('exhibitions.venue'), value: exhibition.venue },
 				{ label: '날짜', value: dateLabel.split(' ')[0] },
 				{ label: '들은 해설', value: `${listenedTitles.length}개` },
 			];

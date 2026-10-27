@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useCallback } from 'react';
 import { BookmarkTabs, type BookmarkTab } from '@/src/components/bookmark/BookmarkTabs';
@@ -6,6 +7,8 @@ import { BookmarkedExhibitionList } from '@/src/components/bookmark/BookmarkedEx
 import { Screen } from '@/src/components/layout/Screen';
 
 export default function BookmarkScreen() {
+	const { t } = useTranslation();
+
 	const router = useRouter();
 	const { tab: tabParam } = useLocalSearchParams<{ tab?: string }>();
 
@@ -22,7 +25,7 @@ export default function BookmarkScreen() {
 		<Screen variant="warm">
 			<Screen.Header>
 				<Screen.Header.Back color="muted" />
-				<Screen.Header.Center>북마크</Screen.Header.Center>
+				<Screen.Header.Center>{t('bookmark.title')}</Screen.Header.Center>
 			</Screen.Header>
 			<BookmarkTabs tab={tab} onChangeTab={handleChangeTab} />
 			{tab === 'audio' ? <BookmarkedAudioList /> : <BookmarkedExhibitionList />}

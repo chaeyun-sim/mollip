@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Text, View } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import { cn } from '@/src/lib/cn';
@@ -45,6 +46,8 @@ export function VisitTicketFooter({
 	signatureSvg,
 	visitedAt,
 }: VisitTicketFooterProps) {
+	const { t } = useTranslation();
+
 	return (
 		<>
 			<Perforation />
@@ -79,7 +82,8 @@ export function VisitTicketFooter({
 					<View className="relative items-center justify-center">
 						{visitedAt && (
 							<Text className="text-center text-[11px] text-gray500 font-pretendard-medium">
-								{formatClockTime(visitedAt.start)} - {formatClockTime(visitedAt.end)} 관람
+								{formatClockTime(visitedAt.start)} - {formatClockTime(visitedAt.end)}{' '}
+								{t('exhibitions.visit')}
 							</Text>
 						)}
 					</View>

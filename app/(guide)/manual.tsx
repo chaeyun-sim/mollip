@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { useNavigation, useRouter } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 import {
@@ -18,6 +19,8 @@ import { useTextField } from '@/src/hooks/useTextField';
 import { updateStore } from '../../src/store';
 
 export default function ManualScreen() {
+	const { t } = useTranslation();
+
 	const router = useRouter();
 	const navigation = useNavigation();
 	const title = useTextField();
@@ -128,14 +131,14 @@ export default function ManualScreen() {
 
 							<View className="mb-5">
 								<Text className="text-xs mb-2 font-pretendard-semibold text-gray500 tracking-wider">
-									작품명
+									{t('guide.title_placeholder')}
 								</Text>
 								<TextField
 									tone="dark"
 									value={title.value}
 									error={title.error}
 									placeholder="예) 별이 빛나는 밤"
-									accessibilityLabel="작품명"
+									accessibilityLabel={t('guide.title_placeholder')}
 									onChangeText={title.onChangeText}
 									onSubmitEditing={() => artistInputRef.current?.focus()}
 									returnKeyType="next"
@@ -150,7 +153,7 @@ export default function ManualScreen() {
 
 							<View className="mb-5">
 								<Text className="text-xs mb-2 font-pretendard-semibold text-gray500 tracking-wider">
-									작가명
+									{t('guide.artist_placeholder')}
 								</Text>
 								<TextField
 									ref={artistInputRef}
@@ -158,7 +161,7 @@ export default function ManualScreen() {
 									value={artist.value}
 									error={artist.error}
 									placeholder="예) 빈센트 반 고흐"
-									accessibilityLabel="작가명"
+									accessibilityLabel={t('guide.artist_placeholder')}
 									onChangeText={artist.onChangeText}
 									returnKeyType="next"
 									onSubmitEditing={() => yearInputRef.current?.focus()}
@@ -173,7 +176,7 @@ export default function ManualScreen() {
 							<View className="mb-5">
 								<View className="flex-row items-center gap-1.5 mb-2">
 									<Text className="text-xs font-pretendard-semibold text-gray500 tracking-wider">
-										제작 연도
+										{t('guide.year_placeholder')}
 									</Text>
 									<Text className="text-xs font-pretendard-regular text-gray700">(선택)</Text>
 								</View>

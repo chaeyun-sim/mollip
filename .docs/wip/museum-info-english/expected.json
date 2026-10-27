@@ -1,0 +1,3320 @@
+[
+  {
+    "id": 1,
+    "rstdeInfo": null,
+    "open_hours": "10:00-19:00",
+    "rstdeInfo_en": null,
+    "open_hours_en": "10:00-19:00"
+  },
+  {
+    "id": 3,
+    "rstdeInfo": null,
+    "open_hours": "10:00-18:00",
+    "rstdeInfo_en": null,
+    "open_hours_en": "10:00-18:00"
+  },
+  {
+    "id": 4,
+    "rstdeInfo": "월",
+    "open_hours": "10:00-18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "10:00-18:00"
+  },
+  {
+    "id": 5,
+    "rstdeInfo": null,
+    "open_hours": "10:00-19:00 (동절기 18시까지)",
+    "rstdeInfo_en": null,
+    "open_hours_en": "10:00-19:00 (Winter until 18:00)"
+  },
+  {
+    "id": 7,
+    "rstdeInfo": null,
+    "open_hours": "10:00-22:00",
+    "rstdeInfo_en": null,
+    "open_hours_en": "10:00-22:00"
+  },
+  {
+    "id": 10,
+    "rstdeInfo": null,
+    "open_hours": "10:00-19:00",
+    "rstdeInfo_en": null,
+    "open_hours_en": "10:00-19:00"
+  },
+  {
+    "id": 11,
+    "rstdeInfo": "일",
+    "open_hours": "10:00-19:00",
+    "rstdeInfo_en": "Sun",
+    "open_hours_en": "10:00-19:00"
+  },
+  {
+    "id": 12,
+    "rstdeInfo": null,
+    "open_hours": "월~목, 주말: 10:00-20:00\n금: 10:00-21:00\n(하절기 주말 19시까지, 동절기 주말 18시까지)",
+    "rstdeInfo_en": null,
+    "open_hours_en": "Mon–Thu, Weekends: 10:00-20:00\nFri: 10:00-21:00\n(Summer Weekends until 19:00, Winter Weekends until 18:00)"
+  },
+  {
+    "id": 13,
+    "rstdeInfo": "월",
+    "open_hours": "09:00-18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "09:00-18:00"
+  },
+  {
+    "id": 14,
+    "rstdeInfo": "월",
+    "open_hours": "10:00-18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "10:00-18:00"
+  },
+  {
+    "id": 16,
+    "rstdeInfo": null,
+    "open_hours": "09:00-18:00 (하절기 20시까지)",
+    "rstdeInfo_en": null,
+    "open_hours_en": "09:00-18:00 (Summer until 20:00)"
+  },
+  {
+    "id": 17,
+    "rstdeInfo": "월",
+    "open_hours": "10:00-18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "10:00-18:00"
+  },
+  {
+    "id": 19,
+    "rstdeInfo": "월",
+    "open_hours": "10:00-19:00 (동절기 18시까지)",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "10:00-19:00 (Winter until 18:00)"
+  },
+  {
+    "id": 20,
+    "rstdeInfo": "월",
+    "open_hours": "10:00-18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "10:00-18:00"
+  },
+  {
+    "id": 21,
+    "rstdeInfo": "월",
+    "open_hours": "12:00-18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "12:00-18:00"
+  },
+  {
+    "id": 23,
+    "rstdeInfo": "일/월",
+    "open_hours": "10:00-18:00",
+    "rstdeInfo_en": "Sun/Mon",
+    "open_hours_en": "10:00-18:00"
+  },
+  {
+    "id": 25,
+    "rstdeInfo": "월",
+    "open_hours": "10:00-18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "10:00-18:00"
+  },
+  {
+    "id": 27,
+    "rstdeInfo": "월",
+    "open_hours": "10:00-18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "10:00-18:00"
+  },
+  {
+    "id": 30,
+    "rstdeInfo": "일/월",
+    "open_hours": "10:00-18:00",
+    "rstdeInfo_en": "Sun/Mon",
+    "open_hours_en": "10:00-18:00"
+  },
+  {
+    "id": 32,
+    "rstdeInfo": null,
+    "open_hours": "10:00-18:00 (5~9월 19시까지)",
+    "rstdeInfo_en": null,
+    "open_hours_en": "10:00-18:00 (May–Sep until 19:00)"
+  },
+  {
+    "id": 33,
+    "rstdeInfo": "일/월",
+    "open_hours": "10:00-19:00",
+    "rstdeInfo_en": "Sun/Mon",
+    "open_hours_en": "10:00-19:00"
+  },
+  {
+    "id": 34,
+    "rstdeInfo": null,
+    "open_hours": "10:00-19:00",
+    "rstdeInfo_en": null,
+    "open_hours_en": "10:00-19:00"
+  },
+  {
+    "id": 35,
+    "rstdeInfo": "월",
+    "open_hours": "10:00-18:00 (동절기 17시까지)",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "10:00-18:00 (Winter until 17:00)"
+  },
+  {
+    "id": 38,
+    "rstdeInfo": null,
+    "open_hours": "상시 개방",
+    "rstdeInfo_en": null,
+    "open_hours_en": "Always open"
+  },
+  {
+    "id": 40,
+    "rstdeInfo": "월",
+    "open_hours": "화,목,금,일: 10:00-18:00\n수,토: 10:00-21:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Tue,Thu,Fri,Sun: 10:00-18:00\nWed,Sat: 10:00-21:00"
+  },
+  {
+    "id": 44,
+    "rstdeInfo": "월",
+    "open_hours": "09:00-18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "09:00-18:00"
+  },
+  {
+    "id": 45,
+    "rstdeInfo": "월",
+    "open_hours": "10:00-21:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "10:00-21:00"
+  },
+  {
+    "id": 48,
+    "rstdeInfo": "월",
+    "open_hours": "화~토: 09:30-15:30\n일: 09:30-18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Tue–Sat: 09:30-15:30\nSun: 09:30-18:00"
+  },
+  {
+    "id": 51,
+    "rstdeInfo": "일/월",
+    "open_hours": "10:00-18:00",
+    "rstdeInfo_en": "Sun/Mon",
+    "open_hours_en": "10:00-18:00"
+  },
+  {
+    "id": 53,
+    "rstdeInfo": "월",
+    "open_hours": "10:00-18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "10:00-18:00"
+  },
+  {
+    "id": 54,
+    "rstdeInfo": "월",
+    "open_hours": "화~토: 09:30-18:00\n일: 10:30-18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Tue–Sat: 09:30-18:00\nSun: 10:30-18:00"
+  },
+  {
+    "id": 55,
+    "rstdeInfo": "월",
+    "open_hours": "09:00-18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "09:00-18:00"
+  },
+  {
+    "id": 56,
+    "rstdeInfo": "월",
+    "open_hours": "11:00-20:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "11:00-20:00"
+  },
+  {
+    "id": 57,
+    "rstdeInfo": "월/화",
+    "open_hours": "11:00-17:00",
+    "rstdeInfo_en": "Mon/Tue",
+    "open_hours_en": "11:00-17:00"
+  },
+  {
+    "id": 60,
+    "rstdeInfo": "월",
+    "open_hours": "09:00-18:00 (동절기 17시까지)",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "09:00-18:00 (Winter until 17:00)"
+  },
+  {
+    "id": 61,
+    "rstdeInfo": "월/화",
+    "open_hours": "11:00-17:00",
+    "rstdeInfo_en": "Mon/Tue",
+    "open_hours_en": "11:00-17:00"
+  },
+  {
+    "id": 62,
+    "rstdeInfo": "월",
+    "open_hours": "10:00-18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "10:00-18:00"
+  },
+  {
+    "id": 63,
+    "rstdeInfo": null,
+    "open_hours": "월~화,목~금,일: 10:00-18:00\n수,토: 10:00-21:00",
+    "rstdeInfo_en": null,
+    "open_hours_en": "Mon–Tue,Thu–Fri,Sun: 10:00-18:00\nWed,Sat: 10:00-21:00"
+  },
+  {
+    "id": 65,
+    "rstdeInfo": "토/일/월",
+    "open_hours": "11:00-18:00",
+    "rstdeInfo_en": "Sat/Sun/Mon",
+    "open_hours_en": "11:00-18:00"
+  },
+  {
+    "id": 67,
+    "rstdeInfo": null,
+    "open_hours": "월~금: 10:00-18:00\n일: 10:00-17:00",
+    "rstdeInfo_en": null,
+    "open_hours_en": "Mon–Fri: 10:00-18:00\nSun: 10:00-17:00"
+  },
+  {
+    "id": 68,
+    "rstdeInfo": "월",
+    "open_hours": "10:00-18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "10:00-18:00"
+  },
+  {
+    "id": 70,
+    "rstdeInfo": "월",
+    "open_hours": "10:00-18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "10:00-18:00"
+  },
+  {
+    "id": 71,
+    "rstdeInfo": "월",
+    "open_hours": "화~목: 10:00-20:00\n금: 10:00-21:00\n주말: 10:00-19:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Tue–Thu: 10:00-20:00\nFri: 10:00-21:00\nWeekends: 10:00-19:00"
+  },
+  {
+    "id": 73,
+    "rstdeInfo": "월",
+    "open_hours": "09:00-18:00 (동절기 17시까지)",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "09:00-18:00 (Winter until 17:00)"
+  },
+  {
+    "id": 74,
+    "rstdeInfo": "일/월",
+    "open_hours": "10:00-18:00",
+    "rstdeInfo_en": "Sun/Mon",
+    "open_hours_en": "10:00-18:00"
+  },
+  {
+    "id": 75,
+    "rstdeInfo": "월",
+    "open_hours": "10:00-18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "10:00-18:00"
+  },
+  {
+    "id": 76,
+    "rstdeInfo": "월",
+    "open_hours": "10:00-18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "10:00-18:00"
+  },
+  {
+    "id": 77,
+    "rstdeInfo": "월/화",
+    "open_hours": "10:00-18:00",
+    "rstdeInfo_en": "Mon/Tue",
+    "open_hours_en": "10:00-18:00"
+  },
+  {
+    "id": 79,
+    "rstdeInfo": "일/월",
+    "open_hours": "화~금: 10:00-18:00\n토: 11:00-18:00",
+    "rstdeInfo_en": "Sun/Mon",
+    "open_hours_en": "Tue–Fri: 10:00-18:00\nSat: 11:00-18:00"
+  },
+  {
+    "id": 80,
+    "rstdeInfo": "화",
+    "open_hours": "10:30-18:00",
+    "rstdeInfo_en": "Tue",
+    "open_hours_en": "10:30-18:00"
+  },
+  {
+    "id": 82,
+    "rstdeInfo": "월",
+    "open_hours": "10:00-18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "10:00-18:00"
+  },
+  {
+    "id": 83,
+    "rstdeInfo": "월/화",
+    "open_hours": "11:00-18:00",
+    "rstdeInfo_en": "Mon/Tue",
+    "open_hours_en": "11:00-18:00"
+  },
+  {
+    "id": 92,
+    "rstdeInfo": "월",
+    "open_hours": "평일 10:00~18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 10:00-18:00"
+  },
+  {
+    "id": 100,
+    "rstdeInfo": "월",
+    "open_hours": "평일 10:00~18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 10:00-18:00"
+  },
+  {
+    "id": 105,
+    "rstdeInfo": "월",
+    "open_hours": "평일 10:00~18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 10:00-18:00"
+  },
+  {
+    "id": 109,
+    "rstdeInfo": "",
+    "open_hours": "평일 09:00~18:00",
+    "rstdeInfo_en": null,
+    "open_hours_en": "Weekdays 09:00-18:00"
+  },
+  {
+    "id": 115,
+    "rstdeInfo": "월",
+    "open_hours": "평일 10:00~17:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 10:00-17:00"
+  },
+  {
+    "id": 136,
+    "rstdeInfo": "월",
+    "open_hours": "평일 10:00~18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 10:00-18:00"
+  },
+  {
+    "id": 138,
+    "rstdeInfo": "",
+    "open_hours": "평일 10:00~19:00",
+    "rstdeInfo_en": null,
+    "open_hours_en": "Weekdays 10:00-19:00"
+  },
+  {
+    "id": 139,
+    "rstdeInfo": "월",
+    "open_hours": "평일 10:00~18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 10:00-18:00"
+  },
+  {
+    "id": 140,
+    "rstdeInfo": "토/일",
+    "open_hours": "평일 10:00~18:00",
+    "rstdeInfo_en": "Sat/Sun",
+    "open_hours_en": "Weekdays 10:00-18:00"
+  },
+  {
+    "id": 150,
+    "rstdeInfo": "월",
+    "open_hours": "평일 11:00~18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 11:00-18:00"
+  },
+  {
+    "id": 151,
+    "rstdeInfo": "월/화",
+    "open_hours": "평일 10:00~19:00",
+    "rstdeInfo_en": "Mon/Tue",
+    "open_hours_en": "Weekdays 10:00-19:00"
+  },
+  {
+    "id": 164,
+    "rstdeInfo": "월",
+    "open_hours": "평일 11:00~18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 11:00-18:00"
+  },
+  {
+    "id": 183,
+    "rstdeInfo": "월",
+    "open_hours": "평일 10:00~19:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 10:00-19:00"
+  },
+  {
+    "id": 196,
+    "rstdeInfo": "월",
+    "open_hours": "평일 10:00~18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 10:00-18:00"
+  },
+  {
+    "id": 203,
+    "rstdeInfo": "",
+    "open_hours": "평일 10:00~17:00",
+    "rstdeInfo_en": null,
+    "open_hours_en": "Weekdays 10:00-17:00"
+  },
+  {
+    "id": 216,
+    "rstdeInfo": "월",
+    "open_hours": "평일 09:00~18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 09:00-18:00"
+  },
+  {
+    "id": 218,
+    "rstdeInfo": "",
+    "open_hours": "평일 09:00~18:00",
+    "rstdeInfo_en": null,
+    "open_hours_en": "Weekdays 09:00-18:00"
+  },
+  {
+    "id": 234,
+    "rstdeInfo": "일",
+    "open_hours": "평일 10:00~18:00",
+    "rstdeInfo_en": "Sun",
+    "open_hours_en": "Weekdays 10:00-18:00"
+  },
+  {
+    "id": 237,
+    "rstdeInfo": "월",
+    "open_hours": "평일 10:00~18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 10:00-18:00"
+  },
+  {
+    "id": 247,
+    "rstdeInfo": "월",
+    "open_hours": "평일 10:00~18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 10:00-18:00"
+  },
+  {
+    "id": 248,
+    "rstdeInfo": "월, 12/31",
+    "open_hours": "평일 09:30~18:00",
+    "rstdeInfo_en": "Mon, Dec 31",
+    "open_hours_en": "Weekdays 09:30-18:00"
+  },
+  {
+    "id": 252,
+    "rstdeInfo": "월요일",
+    "open_hours": "평일 10:00~18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 10:00-18:00"
+  },
+  {
+    "id": 254,
+    "rstdeInfo": "월",
+    "open_hours": "평일 10:00~18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 10:00-18:00"
+  },
+  {
+    "id": 315,
+    "rstdeInfo": "",
+    "open_hours": "평일 09:00~19:00",
+    "rstdeInfo_en": null,
+    "open_hours_en": "Weekdays 09:00-19:00"
+  },
+  {
+    "id": 320,
+    "rstdeInfo": "",
+    "open_hours": "평일 10:00~18:00",
+    "rstdeInfo_en": null,
+    "open_hours_en": "Weekdays 10:00-18:00"
+  },
+  {
+    "id": 322,
+    "rstdeInfo": "월",
+    "open_hours": "평일 09:00~18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 09:00-18:00"
+  },
+  {
+    "id": 331,
+    "rstdeInfo": "월/화",
+    "open_hours": "평일 11:00~18:00",
+    "rstdeInfo_en": "Mon/Tue",
+    "open_hours_en": "Weekdays 11:00-18:00"
+  },
+  {
+    "id": 332,
+    "rstdeInfo": "월/화",
+    "open_hours": "평일 10:00~18:00",
+    "rstdeInfo_en": "Mon/Tue",
+    "open_hours_en": "Weekdays 10:00-18:00"
+  },
+  {
+    "id": 334,
+    "rstdeInfo": "일/월",
+    "open_hours": "평일 10:00~17:00",
+    "rstdeInfo_en": "Sun/Mon",
+    "open_hours_en": "Weekdays 10:00-17:00"
+  },
+  {
+    "id": 340,
+    "rstdeInfo": "월",
+    "open_hours": "평일 10:00-19:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 10:00-19:00"
+  },
+  {
+    "id": 342,
+    "rstdeInfo": "일/월",
+    "open_hours": "10:00~18:00",
+    "rstdeInfo_en": "Sun/Mon",
+    "open_hours_en": "10:00-18:00"
+  },
+  {
+    "id": 350,
+    "rstdeInfo": "월",
+    "open_hours": "평일 11:00~17:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 11:00-17:00"
+  },
+  {
+    "id": 352,
+    "rstdeInfo": "월",
+    "open_hours": "평일 10:30~18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 10:30-18:00"
+  },
+  {
+    "id": 365,
+    "rstdeInfo": "월",
+    "open_hours": "평일 10:00~18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 10:00-18:00"
+  },
+  {
+    "id": 377,
+    "rstdeInfo": "월",
+    "open_hours": "평일 10:00~17:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 10:00-17:00"
+  },
+  {
+    "id": 380,
+    "rstdeInfo": "월",
+    "open_hours": "평일 10:00~18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 10:00-18:00"
+  },
+  {
+    "id": 407,
+    "rstdeInfo": "월",
+    "open_hours": "평일 11:00~19:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 11:00-19:00"
+  },
+  {
+    "id": 409,
+    "rstdeInfo": "",
+    "open_hours": "평일 10:30~20:00",
+    "rstdeInfo_en": null,
+    "open_hours_en": "Weekdays 10:30-20:00"
+  },
+  {
+    "id": 412,
+    "rstdeInfo": "월",
+    "open_hours": "평일 10:00~18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 10:00-18:00"
+  },
+  {
+    "id": 414,
+    "rstdeInfo": "일/월",
+    "open_hours": "평일 10:00~18:00",
+    "rstdeInfo_en": "Sun/Mon",
+    "open_hours_en": "Weekdays 10:00-18:00"
+  },
+  {
+    "id": 416,
+    "rstdeInfo": "월",
+    "open_hours": "평일 10:00~18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 10:00-18:00"
+  },
+  {
+    "id": 437,
+    "rstdeInfo": "11/1",
+    "open_hours": "평일 09:30~17:00",
+    "rstdeInfo_en": "Nov 1",
+    "open_hours_en": "Weekdays 09:30-17:00"
+  },
+  {
+    "id": 441,
+    "rstdeInfo": "월",
+    "open_hours": "평일 10:00~18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 10:00-18:00"
+  },
+  {
+    "id": 442,
+    "rstdeInfo": "월",
+    "open_hours": "평일 10:00~18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 10:00-18:00"
+  },
+  {
+    "id": 443,
+    "rstdeInfo": "목",
+    "open_hours": "평일 11:00~18:00",
+    "rstdeInfo_en": "Thu",
+    "open_hours_en": "Weekdays 11:00-18:00"
+  },
+  {
+    "id": 444,
+    "rstdeInfo": "월",
+    "open_hours": "평일 11:00~18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 11:00-18:00"
+  },
+  {
+    "id": 445,
+    "rstdeInfo": "월",
+    "open_hours": "평일 10:00~18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 10:00-18:00"
+  },
+  {
+    "id": 446,
+    "rstdeInfo": "월",
+    "open_hours": "평일 11:00~19:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 11:00-19:00"
+  },
+  {
+    "id": 447,
+    "rstdeInfo": "토/일",
+    "open_hours": "평일 11:00~18:00",
+    "rstdeInfo_en": "Sat/Sun",
+    "open_hours_en": "Weekdays 11:00-18:00"
+  },
+  {
+    "id": 451,
+    "rstdeInfo": "월",
+    "open_hours": "평일 09:00~18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 09:00-18:00"
+  },
+  {
+    "id": 453,
+    "rstdeInfo": "월",
+    "open_hours": "평일 10:00~17:30",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 10:00-17:30"
+  },
+  {
+    "id": 465,
+    "rstdeInfo": "월",
+    "open_hours": "평일 10:00~18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 10:00-18:00"
+  },
+  {
+    "id": 481,
+    "rstdeInfo": "일",
+    "open_hours": "평일 10:00~18:00",
+    "rstdeInfo_en": "Sun",
+    "open_hours_en": "Weekdays 10:00-18:00"
+  },
+  {
+    "id": 483,
+    "rstdeInfo": "월",
+    "open_hours": "평일 10:00~19:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 10:00-19:00"
+  },
+  {
+    "id": 484,
+    "rstdeInfo": "월",
+    "open_hours": "평일 10:00~19:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 10:00-19:00"
+  },
+  {
+    "id": 485,
+    "rstdeInfo": "월",
+    "open_hours": "평일 10:00~19:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 10:00-19:00"
+  },
+  {
+    "id": 508,
+    "rstdeInfo": "",
+    "open_hours": "평일 11:00~18:00",
+    "rstdeInfo_en": null,
+    "open_hours_en": "Weekdays 11:00-18:00"
+  },
+  {
+    "id": 509,
+    "rstdeInfo": "월",
+    "open_hours": "평일 10:00~18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 10:00-18:00"
+  },
+  {
+    "id": 524,
+    "rstdeInfo": "월",
+    "open_hours": "평일 10:00~18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 10:00-18:00"
+  },
+  {
+    "id": 582,
+    "rstdeInfo": "월",
+    "open_hours": "평일 10:00~18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 10:00-18:00"
+  },
+  {
+    "id": 593,
+    "rstdeInfo": "월",
+    "open_hours": "평일 10:00~18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 10:00-18:00"
+  },
+  {
+    "id": 606,
+    "rstdeInfo": "월",
+    "open_hours": "평일 10:00~18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 10:00-18:00"
+  },
+  {
+    "id": 607,
+    "rstdeInfo": "",
+    "open_hours": "평일 10:00~18:00",
+    "rstdeInfo_en": null,
+    "open_hours_en": "Weekdays 10:00-18:00"
+  },
+  {
+    "id": 611,
+    "rstdeInfo": "",
+    "open_hours": "평일 10:00~19:00",
+    "rstdeInfo_en": null,
+    "open_hours_en": "Weekdays 10:00-19:00"
+  },
+  {
+    "id": 636,
+    "rstdeInfo": "월",
+    "open_hours": "평일 10:00~18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 10:00-18:00"
+  },
+  {
+    "id": 641,
+    "rstdeInfo": "목",
+    "open_hours": "평일 10:00~18:00",
+    "rstdeInfo_en": "Thu",
+    "open_hours_en": "Weekdays 10:00-18:00"
+  },
+  {
+    "id": 645,
+    "rstdeInfo": "화",
+    "open_hours": "평일 09:00~18:00",
+    "rstdeInfo_en": "Tue",
+    "open_hours_en": "Weekdays 09:00-18:00"
+  },
+  {
+    "id": 647,
+    "rstdeInfo": "월",
+    "open_hours": "평일 10:00~18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 10:00-18:00"
+  },
+  {
+    "id": 653,
+    "rstdeInfo": "월",
+    "open_hours": "평일 09:00~18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 09:00-18:00"
+  },
+  {
+    "id": 654,
+    "rstdeInfo": "",
+    "open_hours": "평일 09:00~18:00",
+    "rstdeInfo_en": null,
+    "open_hours_en": "Weekdays 09:00-18:00"
+  },
+  {
+    "id": 655,
+    "rstdeInfo": "월",
+    "open_hours": "평일 09:00~18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 09:00-18:00"
+  },
+  {
+    "id": 657,
+    "rstdeInfo": "월",
+    "open_hours": "평일 09:30~18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 09:30-18:00"
+  },
+  {
+    "id": 658,
+    "rstdeInfo": "월",
+    "open_hours": "평일 09:00~18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 09:00-18:00"
+  },
+  {
+    "id": 659,
+    "rstdeInfo": "월",
+    "open_hours": "평일 09:00~18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 09:00-18:00"
+  },
+  {
+    "id": 686,
+    "rstdeInfo": "월",
+    "open_hours": "평일 09:00~18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 09:00-18:00"
+  },
+  {
+    "id": 695,
+    "rstdeInfo": "월",
+    "open_hours": "평일 09:00~18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 09:00-18:00"
+  },
+  {
+    "id": 706,
+    "rstdeInfo": "월",
+    "open_hours": "평일 10:00~18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 10:00-18:00"
+  },
+  {
+    "id": 720,
+    "rstdeInfo": "월",
+    "open_hours": "평일 10:00~19:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 10:00-19:00"
+  },
+  {
+    "id": 722,
+    "rstdeInfo": "",
+    "open_hours": "평일 09:30~17:00",
+    "rstdeInfo_en": null,
+    "open_hours_en": "Weekdays 09:30-17:00"
+  },
+  {
+    "id": 726,
+    "rstdeInfo": "월",
+    "open_hours": "평일 10:00~18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 10:00-18:00"
+  },
+  {
+    "id": 727,
+    "rstdeInfo": "월",
+    "open_hours": "평일 10:00~20:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 10:00-20:00"
+  },
+  {
+    "id": 731,
+    "rstdeInfo": "월",
+    "open_hours": "평일 10:00~18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 10:00-18:00"
+  },
+  {
+    "id": 734,
+    "rstdeInfo": "일",
+    "open_hours": "평일 10:00~19:00",
+    "rstdeInfo_en": "Sun",
+    "open_hours_en": "Weekdays 10:00-19:00"
+  },
+  {
+    "id": 735,
+    "rstdeInfo": "일/월",
+    "open_hours": "평일 10:00~18:00",
+    "rstdeInfo_en": "Sun/Mon",
+    "open_hours_en": "Weekdays 10:00-18:00"
+  },
+  {
+    "id": 736,
+    "rstdeInfo": "월",
+    "open_hours": "평일 09:00~18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 09:00-18:00"
+  },
+  {
+    "id": 743,
+    "rstdeInfo": "월",
+    "open_hours": "평일 10:00~18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 10:00-18:00"
+  },
+  {
+    "id": 744,
+    "rstdeInfo": "월",
+    "open_hours": "평일 10:00~18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 10:00-18:00"
+  },
+  {
+    "id": 752,
+    "rstdeInfo": "월",
+    "open_hours": "평일 10:00~17:30",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 10:00-17:30"
+  },
+  {
+    "id": 753,
+    "rstdeInfo": "월",
+    "open_hours": "평일 10:00~18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 10:00-18:00"
+  },
+  {
+    "id": 784,
+    "rstdeInfo": "월(월요일이 공휴일인 경우 정상 개관)",
+    "open_hours": "평일 10:00~18:00",
+    "rstdeInfo_en": "Mon (open if Mon is a public holiday)",
+    "open_hours_en": "Weekdays 10:00-18:00"
+  },
+  {
+    "id": 796,
+    "rstdeInfo": "일요일",
+    "open_hours": "평일 10:00~19:00",
+    "rstdeInfo_en": "Sun",
+    "open_hours_en": "Weekdays 10:00-19:00"
+  },
+  {
+    "id": 815,
+    "rstdeInfo": "월",
+    "open_hours": "평일 10:00~17:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 10:00-17:00"
+  },
+  {
+    "id": 818,
+    "rstdeInfo": "토/일",
+    "open_hours": "평일 10:00~18:00",
+    "rstdeInfo_en": "Sat/Sun",
+    "open_hours_en": "Weekdays 10:00-18:00"
+  },
+  {
+    "id": 819,
+    "rstdeInfo": "월",
+    "open_hours": "평일 10:00~18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 10:00-18:00"
+  },
+  {
+    "id": 825,
+    "rstdeInfo": "월",
+    "open_hours": "10:00-18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "10:00-18:00"
+  },
+  {
+    "id": 828,
+    "rstdeInfo": "월",
+    "open_hours": "평일 10:00~18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 10:00-18:00"
+  },
+  {
+    "id": 831,
+    "rstdeInfo": "월",
+    "open_hours": "평일 10:00~18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 10:00-18:00"
+  },
+  {
+    "id": 832,
+    "rstdeInfo": "월",
+    "open_hours": "평일 10:00~18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 10:00-18:00"
+  },
+  {
+    "id": 833,
+    "rstdeInfo": "월",
+    "open_hours": "평일 09:30~19:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 09:30-19:00"
+  },
+  {
+    "id": 834,
+    "rstdeInfo": "일",
+    "open_hours": "평일 10:00~18:00",
+    "rstdeInfo_en": "Sun",
+    "open_hours_en": "Weekdays 10:00-18:00"
+  },
+  {
+    "id": 837,
+    "rstdeInfo": "월",
+    "open_hours": "평일 09:00~18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 09:00-18:00"
+  },
+  {
+    "id": 838,
+    "rstdeInfo": "",
+    "open_hours": "평일 09:00~18:00",
+    "rstdeInfo_en": null,
+    "open_hours_en": "Weekdays 09:00-18:00"
+  },
+  {
+    "id": 842,
+    "rstdeInfo": "월",
+    "open_hours": "평일 10:00~18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 10:00-18:00"
+  },
+  {
+    "id": 849,
+    "rstdeInfo": "월",
+    "open_hours": "평일 10:00~18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 10:00-18:00"
+  },
+  {
+    "id": 855,
+    "rstdeInfo": "월",
+    "open_hours": "평일 10:00~18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 10:00-18:00"
+  },
+  {
+    "id": 856,
+    "rstdeInfo": "월",
+    "open_hours": "평일 09:30~18:30",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 09:30-18:30"
+  },
+  {
+    "id": 858,
+    "rstdeInfo": "월",
+    "open_hours": "평일 10:30~18:30",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 10:30-18:30"
+  },
+  {
+    "id": 867,
+    "rstdeInfo": "",
+    "open_hours": "평일 10:00~18:00",
+    "rstdeInfo_en": null,
+    "open_hours_en": "Weekdays 10:00-18:00"
+  },
+  {
+    "id": 869,
+    "rstdeInfo": "월",
+    "open_hours": "평일 10:00~18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 10:00-18:00"
+  },
+  {
+    "id": 872,
+    "rstdeInfo": "월",
+    "open_hours": "평일 10:00~18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 10:00-18:00"
+  },
+  {
+    "id": 875,
+    "rstdeInfo": "월",
+    "open_hours": "평일 10:00~18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 10:00-18:00"
+  },
+  {
+    "id": 876,
+    "rstdeInfo": "월",
+    "open_hours": "평일 11:00~18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 11:00-18:00"
+  },
+  {
+    "id": 878,
+    "rstdeInfo": "토/일",
+    "open_hours": "평일 10:00~17:00",
+    "rstdeInfo_en": "Sat/Sun",
+    "open_hours_en": "Weekdays 10:00-17:00"
+  },
+  {
+    "id": 883,
+    "rstdeInfo": "월",
+    "open_hours": "평일 09:00~18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 09:00-18:00"
+  },
+  {
+    "id": 892,
+    "rstdeInfo": "월",
+    "open_hours": "평일 10:00~19:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 10:00-19:00"
+  },
+  {
+    "id": 898,
+    "rstdeInfo": "",
+    "open_hours": "평일 11:00~20:00",
+    "rstdeInfo_en": null,
+    "open_hours_en": "Weekdays 11:00-20:00"
+  },
+  {
+    "id": 902,
+    "rstdeInfo": "월",
+    "open_hours": "평일 09:00~18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 09:00-18:00"
+  },
+  {
+    "id": 972,
+    "rstdeInfo": "일",
+    "open_hours": "평일 10:00~19:00",
+    "rstdeInfo_en": "Sun",
+    "open_hours_en": "Weekdays 10:00-19:00"
+  },
+  {
+    "id": 985,
+    "rstdeInfo": "월",
+    "open_hours": "평일 10:00~17:30",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 10:00-17:30"
+  },
+  {
+    "id": 988,
+    "rstdeInfo": "월/화",
+    "open_hours": "평일 10:00~17:30",
+    "rstdeInfo_en": "Mon/Tue",
+    "open_hours_en": "Weekdays 10:00-17:30"
+  },
+  {
+    "id": 996,
+    "rstdeInfo": "월",
+    "open_hours": "평일 10:00~19:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 10:00-19:00"
+  },
+  {
+    "id": 997,
+    "rstdeInfo": "월",
+    "open_hours": "평일 09:00~18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 09:00-18:00"
+  },
+  {
+    "id": 1001,
+    "rstdeInfo": "일/월",
+    "open_hours": "평일 11:00~18:00",
+    "rstdeInfo_en": "Sun/Mon",
+    "open_hours_en": "Weekdays 11:00-18:00"
+  },
+  {
+    "id": 1013,
+    "rstdeInfo": "월",
+    "open_hours": "평일 10:00~18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 10:00-18:00"
+  },
+  {
+    "id": 1014,
+    "rstdeInfo": "",
+    "open_hours": "평일 10:00~18:00",
+    "rstdeInfo_en": null,
+    "open_hours_en": "Weekdays 10:00-18:00"
+  },
+  {
+    "id": 1054,
+    "rstdeInfo": "월",
+    "open_hours": "평일 10:00~18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 10:00-18:00"
+  },
+  {
+    "id": 1057,
+    "rstdeInfo": "월, 12~1월",
+    "open_hours": "평일 10:00~18:00",
+    "rstdeInfo_en": "Mon, Dec–Jan",
+    "open_hours_en": "Weekdays 10:00-18:00"
+  },
+  {
+    "id": 1069,
+    "rstdeInfo": "",
+    "open_hours": "평일 09:00~18:00",
+    "rstdeInfo_en": null,
+    "open_hours_en": "Weekdays 09:00-18:00"
+  },
+  {
+    "id": 1070,
+    "rstdeInfo": "일/월",
+    "open_hours": "평일 10:00~18:00",
+    "rstdeInfo_en": "Sun/Mon",
+    "open_hours_en": "Weekdays 10:00-18:00"
+  },
+  {
+    "id": 1072,
+    "rstdeInfo": "월",
+    "open_hours": "평일 10:00~18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 10:00-18:00"
+  },
+  {
+    "id": 1074,
+    "rstdeInfo": "월",
+    "open_hours": "평일 10:00~18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 10:00-18:00"
+  },
+  {
+    "id": 1097,
+    "rstdeInfo": "월",
+    "open_hours": "평일 10:00~19:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 10:00-19:00"
+  },
+  {
+    "id": 1099,
+    "rstdeInfo": "토/일",
+    "open_hours": "평일 10:00~17:00",
+    "rstdeInfo_en": "Sat/Sun",
+    "open_hours_en": "Weekdays 10:00-17:00"
+  },
+  {
+    "id": 1102,
+    "rstdeInfo": "월/화",
+    "open_hours": "10:30~17:30",
+    "rstdeInfo_en": "Mon/Tue",
+    "open_hours_en": "10:30-17:30"
+  },
+  {
+    "id": 1110,
+    "rstdeInfo": "월",
+    "open_hours": "평일 10:00~17:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 10:00-17:00"
+  },
+  {
+    "id": 1121,
+    "rstdeInfo": "3월/11월 첫 번째 월요일",
+    "open_hours": "10:00~18:00 (입장 마감 17:30) / 야간연장개관 18:00~20:00 (3월~10월 매주 토요일)",
+    "rstdeInfo_en": "First Mon in Mar/Nov",
+    "open_hours_en": "10:00-18:00 (last admission 17:30) / extended evening hours 18:00-20:00 (every Sat, Mar–Oct)"
+  },
+  {
+    "id": 1122,
+    "rstdeInfo": "월",
+    "open_hours": "평일 09:00~18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 09:00-18:00"
+  },
+  {
+    "id": 1123,
+    "rstdeInfo": "월",
+    "open_hours": "평일 09:00~18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 09:00-18:00"
+  },
+  {
+    "id": 1124,
+    "rstdeInfo": "월",
+    "open_hours": "평일 09:00~18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 09:00-18:00"
+  },
+  {
+    "id": 1125,
+    "rstdeInfo": "월",
+    "open_hours": "평일 09:00~18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 09:00-18:00"
+  },
+  {
+    "id": 1126,
+    "rstdeInfo": "4월/11월 첫번째 주 월요일",
+    "open_hours": "평일 10:00~18:00",
+    "rstdeInfo_en": "First Mon in Apr/Nov",
+    "open_hours_en": "Weekdays 10:00-18:00"
+  },
+  {
+    "id": 1127,
+    "rstdeInfo": "월",
+    "open_hours": "평일 09:00~18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 09:00-18:00"
+  },
+  {
+    "id": 1130,
+    "rstdeInfo": "",
+    "open_hours": "월,화,목,금,일: 9:30-17:30\n수,토: 9:30-21:00",
+    "rstdeInfo_en": null,
+    "open_hours_en": "Mon,Tue,Thu,Fri,Sun: 9:30-17:30\nWed,Sat: 9:30-21:00"
+  },
+  {
+    "id": 1131,
+    "rstdeInfo": "월",
+    "open_hours": "평일 09:00~18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 09:00-18:00"
+  },
+  {
+    "id": 1132,
+    "rstdeInfo": "월",
+    "open_hours": "평일 09:00~18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 09:00-18:00"
+  },
+  {
+    "id": 1133,
+    "rstdeInfo": "월",
+    "open_hours": "평일 09:00~18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 09:00-18:00"
+  },
+  {
+    "id": 1135,
+    "rstdeInfo": "화",
+    "open_hours": "평일 10:00~18:00",
+    "rstdeInfo_en": "Tue",
+    "open_hours_en": "Weekdays 10:00-18:00"
+  },
+  {
+    "id": 1141,
+    "rstdeInfo": null,
+    "open_hours": "10:30-19:00",
+    "rstdeInfo_en": null,
+    "open_hours_en": "10:30-19:00"
+  },
+  {
+    "id": 1142,
+    "rstdeInfo": "일/월",
+    "open_hours": "10:00-18:00",
+    "rstdeInfo_en": "Sun/Mon",
+    "open_hours_en": "10:00-18:00"
+  },
+  {
+    "id": 1143,
+    "rstdeInfo": "일",
+    "open_hours": "11:00-18:30",
+    "rstdeInfo_en": "Sun",
+    "open_hours_en": "11:00-18:30"
+  },
+  {
+    "id": 1144,
+    "rstdeInfo": null,
+    "open_hours": "11:00-19:00 (변동)",
+    "rstdeInfo_en": null,
+    "open_hours_en": "11:00-19:00 (subject to change)"
+  },
+  {
+    "id": 1146,
+    "rstdeInfo": "월",
+    "open_hours": "09:00-18:00 (변동)",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "09:00-18:00 (subject to change)"
+  },
+  {
+    "id": 1147,
+    "rstdeInfo": null,
+    "open_hours": "10:00~22:00",
+    "rstdeInfo_en": null,
+    "open_hours_en": "10:00-22:00"
+  },
+  {
+    "id": 1148,
+    "rstdeInfo": "일/월",
+    "open_hours": "09:00-18:00",
+    "rstdeInfo_en": "Sun/Mon",
+    "open_hours_en": "09:00-18:00"
+  },
+  {
+    "id": 1149,
+    "rstdeInfo": "월",
+    "open_hours": "10:00 ~ 18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "10:00-18:00"
+  },
+  {
+    "id": 1150,
+    "rstdeInfo": "월",
+    "open_hours": "평일 10:00-19:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 10:00-19:00"
+  },
+  {
+    "id": 1151,
+    "rstdeInfo": null,
+    "open_hours": "평일 11:00-18:00\n주밀 11:00-18:30",
+    "rstdeInfo_en": null,
+    "open_hours_en": "Weekdays 11:00-18:00\nWeekends 11:00-18:30"
+  },
+  {
+    "id": 1152,
+    "rstdeInfo": "월",
+    "open_hours": "11:00-19:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "11:00-19:00"
+  },
+  {
+    "id": 1153,
+    "rstdeInfo": null,
+    "open_hours": "10:00-09:00",
+    "rstdeInfo_en": null,
+    "open_hours_en": null
+  },
+  {
+    "id": 1154,
+    "rstdeInfo": "월",
+    "open_hours": "10:00-19:00 (입장 마감 18:00)",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "10:00-19:00 (last admission 18:00)"
+  },
+  {
+    "id": 1155,
+    "rstdeInfo": "월",
+    "open_hours": "10:00-19:00 (입장 마감 18:00)",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "10:00-19:00 (last admission 18:00)"
+  },
+  {
+    "id": 1156,
+    "rstdeInfo": "월",
+    "open_hours": "10:00 - 19:00 (입장 마감 18:00)",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "10:00 - 19:00 (last admission 18:00)"
+  },
+  {
+    "id": 1157,
+    "rstdeInfo": "월",
+    "open_hours": "10:00-18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "10:00-18:00"
+  },
+  {
+    "id": 1159,
+    "rstdeInfo": "월",
+    "open_hours": "평일 10:00-19:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 10:00-19:00"
+  },
+  {
+    "id": 1160,
+    "rstdeInfo": "월",
+    "open_hours": "화~목,일 11:00 ~ 18:00\n금,토 11:00 ~ 19:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Tue–Thu,Sun 11:00-18:00\nFri,Sat 11:00-19:00"
+  },
+  {
+    "id": 1161,
+    "rstdeInfo": null,
+    "open_hours": "10:00-20:00",
+    "rstdeInfo_en": null,
+    "open_hours_en": "10:00-20:00"
+  },
+  {
+    "id": 1162,
+    "rstdeInfo": "월",
+    "open_hours": "10:00-18:00 (입장마감 17:30)",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "10:00-18:00 (last admission 17:30)"
+  },
+  {
+    "id": 1163,
+    "rstdeInfo": "월",
+    "open_hours": "10:00-18:00 (입장 마감 17:30)",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "10:00-18:00 (last admission 17:30)"
+  },
+  {
+    "id": 1164,
+    "rstdeInfo": "월",
+    "open_hours": "평일 10:00-20:00 / 주말 10:00-19:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 10:00-20:00 / Weekends 10:00-19:00"
+  },
+  {
+    "id": 1165,
+    "rstdeInfo": "월",
+    "open_hours": "10:00-18:00 ",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "10:00-18:00"
+  },
+  {
+    "id": 1167,
+    "rstdeInfo": "매월 첫 번째 월요일",
+    "open_hours": "10:00–19:00 (입장 마감 18:00)",
+    "rstdeInfo_en": "First Mon of each month",
+    "open_hours_en": "10:00-19:00 (last admission 18:00)"
+  },
+  {
+    "id": 1168,
+    "rstdeInfo": "매월 첫 번째 월요일",
+    "open_hours": "10:00–19:00 (입장 마감 18:00)",
+    "rstdeInfo_en": "First Mon of each month",
+    "open_hours_en": "10:00-19:00 (last admission 18:00)"
+  },
+  {
+    "id": 1169,
+    "rstdeInfo": "매월 첫 번째 월요일",
+    "open_hours": "10:00–19:00 (입장 마감 18:00)",
+    "rstdeInfo_en": "First Mon of each month",
+    "open_hours_en": "10:00-19:00 (last admission 18:00)"
+  },
+  {
+    "id": 1170,
+    "rstdeInfo": null,
+    "open_hours": "평일 10:30-20:00\n금/토/일 10:30-20:30",
+    "rstdeInfo_en": null,
+    "open_hours_en": "Weekdays 10:30-20:00\nFri/Sat/Sun 10:30-20:30"
+  },
+  {
+    "id": 1171,
+    "rstdeInfo": "매주 월요일, 1월 1일, 설·추석 당일, 기타 박물관장이 지정한 날",
+    "open_hours": "동절기(11~2월) 10:00-18:00\n하절기(3~10월) 10:00-19:00",
+    "rstdeInfo_en": "Every Mon, Jan 1, Seollal and Chuseok days, and other days designated by the museum director",
+    "open_hours_en": "Winter(Nov–Feb) 10:00-18:00\nSummer(Mar–Oct) 10:00-19:00"
+  },
+  {
+    "id": 1172,
+    "rstdeInfo": "일/월",
+    "open_hours": "11:00-19:00",
+    "rstdeInfo_en": "Sun/Mon",
+    "open_hours_en": "11:00-19:00"
+  },
+  {
+    "id": 1173,
+    "rstdeInfo": null,
+    "open_hours": "10:00-18:00 (입장 마감 17:30)",
+    "rstdeInfo_en": null,
+    "open_hours_en": "10:00-18:00 (last admission 17:30)"
+  },
+  {
+    "id": 1174,
+    "rstdeInfo": "일/월",
+    "open_hours": "10:00-18:00 (입장마감 17:00)",
+    "rstdeInfo_en": "Sun/Mon",
+    "open_hours_en": "10:00-18:00 (last admission 17:00)"
+  },
+  {
+    "id": 1175,
+    "rstdeInfo": "월/화/수",
+    "open_hours": "12:00-19:00",
+    "rstdeInfo_en": "Mon/Tue/Wed",
+    "open_hours_en": "12:00-19:00"
+  },
+  {
+    "id": 1176,
+    "rstdeInfo": "일/월",
+    "open_hours": "10:00-18:00",
+    "rstdeInfo_en": "Sun/Mon",
+    "open_hours_en": "10:00-18:00"
+  },
+  {
+    "id": 1177,
+    "rstdeInfo": "월",
+    "open_hours": "하절기 (3월~10월) 09:00-18:00\n동절기 (11월~2월) 09:00-17:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Summer (Mar–Oct) 09:00-18:00\nWinter (Nov–Feb) 09:00-17:00"
+  },
+  {
+    "id": 1178,
+    "rstdeInfo": "월",
+    "open_hours": "12:00-18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "12:00-18:00"
+  },
+  {
+    "id": 1179,
+    "rstdeInfo": "월/화",
+    "open_hours": "11:00-18:00",
+    "rstdeInfo_en": "Mon/Tue",
+    "open_hours_en": "11:00-18:00"
+  },
+  {
+    "id": 1180,
+    "rstdeInfo": "월",
+    "open_hours": "10:00-19:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "10:00-19:00"
+  },
+  {
+    "id": 1181,
+    "rstdeInfo": "일",
+    "open_hours": "10:30-18:30 (점심시간 12:30-13:30)",
+    "rstdeInfo_en": "Sun",
+    "open_hours_en": "10:30-18:30 (lunch break 12:30-13:30)"
+  },
+  {
+    "id": 1182,
+    "rstdeInfo": "월",
+    "open_hours": "11:00-18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "11:00-18:00"
+  },
+  {
+    "id": 1183,
+    "rstdeInfo": "일",
+    "open_hours": "평일 11:00-18:00\n토 11:00-17:00",
+    "rstdeInfo_en": "Sun",
+    "open_hours_en": "Weekdays 11:00-18:00\nSat 11:00-17:00"
+  },
+  {
+    "id": 1184,
+    "rstdeInfo": null,
+    "open_hours": "12:00-19:00",
+    "rstdeInfo_en": null,
+    "open_hours_en": "12:00-19:00"
+  },
+  {
+    "id": 1185,
+    "rstdeInfo": "일/월",
+    "open_hours": "11:00-18:00",
+    "rstdeInfo_en": "Sun/Mon",
+    "open_hours_en": "11:00-18:00"
+  },
+  {
+    "id": 1186,
+    "rstdeInfo": "월",
+    "open_hours": "10:00-18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "10:00-18:00"
+  },
+  {
+    "id": 1187,
+    "rstdeInfo": "월",
+    "open_hours": "4~10월 09:00-21:00\n11~3월 09:00-20:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Apr–Oct 09:00-21:00\nNov–Mar 09:00-20:00"
+  },
+  {
+    "id": 1188,
+    "rstdeInfo": "일/월",
+    "open_hours": "10:00-18:00",
+    "rstdeInfo_en": "Sun/Mon",
+    "open_hours_en": "10:00-18:00"
+  },
+  {
+    "id": 1189,
+    "rstdeInfo": "월",
+    "open_hours": "11:00-19:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "11:00-19:00"
+  },
+  {
+    "id": 1190,
+    "rstdeInfo": "월",
+    "open_hours": "10:00-18:00 (입장마감 17:00)",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "10:00-18:00 (last admission 17:00)"
+  },
+  {
+    "id": 1191,
+    "rstdeInfo": "월",
+    "open_hours": "1회차 09:30-13:30\n2회차 14:00-18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Session 1 09:30-13:30\nSession 2 14:00-18:00"
+  },
+  {
+    "id": 1192,
+    "rstdeInfo": "월",
+    "open_hours": "09:00-18:00 (입장마감 17:30)",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "09:00-18:00 (last admission 17:30)"
+  },
+  {
+    "id": 1193,
+    "rstdeInfo": "월",
+    "open_hours": "09:00-18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "09:00-18:00"
+  },
+  {
+    "id": 1196,
+    "rstdeInfo": "월",
+    "open_hours": "09:30-18:00 (입장마감 17:00)",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "09:30-18:00 (last admission 17:00)"
+  },
+  {
+    "id": 1197,
+    "rstdeInfo": "월",
+    "open_hours": "10:00-18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "10:00-18:00"
+  },
+  {
+    "id": 1198,
+    "rstdeInfo": "월",
+    "open_hours": "10:00-17:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "10:00-17:00"
+  },
+  {
+    "id": 1199,
+    "rstdeInfo": "월",
+    "open_hours": "09:00-18:00 (입장마감 17:00)",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "09:00-18:00 (last admission 17:00)"
+  },
+  {
+    "id": 1201,
+    "rstdeInfo": "월",
+    "open_hours": "10:00-18:00 (입장마감 17:30)",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "10:00-18:00 (last admission 17:30)"
+  },
+  {
+    "id": 1202,
+    "rstdeInfo": "월",
+    "open_hours": "10:00-18:00 (입장마감 17:30)",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "10:00-18:00 (last admission 17:30)"
+  },
+  {
+    "id": 1203,
+    "rstdeInfo": "월",
+    "open_hours": "09:00-18:00 (입장마감 17:30)",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "09:00-18:00 (last admission 17:30)"
+  },
+  {
+    "id": 1207,
+    "rstdeInfo": "월",
+    "open_hours": "10:00-18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "10:00-18:00"
+  },
+  {
+    "id": 1208,
+    "rstdeInfo": "일/월",
+    "open_hours": "10:00-18:00",
+    "rstdeInfo_en": "Sun/Mon",
+    "open_hours_en": "10:00-18:00"
+  },
+  {
+    "id": 1210,
+    "rstdeInfo": "일/월",
+    "open_hours": "10:00-17:00 (12시부터 점심시간)",
+    "rstdeInfo_en": "Sun/Mon",
+    "open_hours_en": "10:00-17:00 (lunch break from 12:00)"
+  },
+  {
+    "id": 1211,
+    "rstdeInfo": "월",
+    "open_hours": "10:00-18:00\n금 10:00 ~ 21:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "10:00-18:00\nFri 10:00-21:00"
+  },
+  {
+    "id": 1212,
+    "rstdeInfo": "월",
+    "open_hours": "10:00-18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "10:00-18:00"
+  },
+  {
+    "id": 1216,
+    "rstdeInfo": "토/일",
+    "open_hours": "10:00-17:00",
+    "rstdeInfo_en": "Sat/Sun",
+    "open_hours_en": "10:00-17:00"
+  },
+  {
+    "id": 1217,
+    "rstdeInfo": "월",
+    "open_hours": "평일 10:00-19:00\n주말 10:00-18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 10:00-19:00\nWeekends 10:00-18:00"
+  },
+  {
+    "id": 1218,
+    "rstdeInfo": "일/월",
+    "open_hours": "4~10월 09:00-21:00\n11~3월 09:00-20:00",
+    "rstdeInfo_en": "Sun/Mon",
+    "open_hours_en": "Apr–Oct 09:00-21:00\nNov–Mar 09:00-20:00"
+  },
+  {
+    "id": 1219,
+    "rstdeInfo": "월",
+    "open_hours": "09:00-18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "09:00-18:00"
+  },
+  {
+    "id": 1220,
+    "rstdeInfo": "월",
+    "open_hours": "평일 09:00-18:00\n주말 09:00-19:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 09:00-18:00\nWeekends 09:00-19:00"
+  },
+  {
+    "id": 1222,
+    "rstdeInfo": "월",
+    "open_hours": "09:00-18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "09:00-18:00"
+  },
+  {
+    "id": 1223,
+    "rstdeInfo": "월",
+    "open_hours": "3월~10월 09:00-18:00\n11월~2월 09:00-17:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Mar–Oct 09:00-18:00\nNov–Feb 09:00-17:00"
+  },
+  {
+    "id": 1224,
+    "rstdeInfo": "월",
+    "open_hours": "12:00-20:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "12:00-20:00"
+  },
+  {
+    "id": 1225,
+    "rstdeInfo": "토/일",
+    "open_hours": "09:00-18:00",
+    "rstdeInfo_en": "Sat/Sun",
+    "open_hours_en": "09:00-18:00"
+  },
+  {
+    "id": 1226,
+    "rstdeInfo": null,
+    "open_hours": "10:00-18:00 (수/토는 21시까지)",
+    "rstdeInfo_en": null,
+    "open_hours_en": "10:00-18:00 (Wed/Sat until 21:00)"
+  },
+  {
+    "id": 1227,
+    "rstdeInfo": "월",
+    "open_hours": "09:00-18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "09:00-18:00"
+  },
+  {
+    "id": 1228,
+    "rstdeInfo": "월",
+    "open_hours": "09:30-17:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "09:30-17:00"
+  },
+  {
+    "id": 1230,
+    "rstdeInfo": "월",
+    "open_hours": "09:00-18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "09:00-18:00"
+  },
+  {
+    "id": 1231,
+    "rstdeInfo": "월",
+    "open_hours": "10:00-18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "10:00-18:00"
+  },
+  {
+    "id": 1232,
+    "rstdeInfo": "월",
+    "open_hours": "09:00-18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "09:00-18:00"
+  },
+  {
+    "id": 1235,
+    "rstdeInfo": "일",
+    "open_hours": "09:00-18:00",
+    "rstdeInfo_en": "Sun",
+    "open_hours_en": "09:00-18:00"
+  },
+  {
+    "id": 1236,
+    "rstdeInfo": "일/월",
+    "open_hours": "10:00-17:00",
+    "rstdeInfo_en": "Sun/Mon",
+    "open_hours_en": "10:00-17:00"
+  },
+  {
+    "id": 1237,
+    "rstdeInfo": "월",
+    "open_hours": "11:00-19:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "11:00-19:00"
+  },
+  {
+    "id": 1238,
+    "rstdeInfo": "월",
+    "open_hours": "09:30-17:30",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "09:30-17:30"
+  },
+  {
+    "id": 1239,
+    "rstdeInfo": "월",
+    "open_hours": "09:00-18:00 (입장마감 17:30)",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "09:00-18:00 (last admission 17:30)"
+  },
+  {
+    "id": 1240,
+    "rstdeInfo": "월",
+    "open_hours": "10:00-18:00 (입장마감 17:30)",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "10:00-18:00 (last admission 17:30)"
+  },
+  {
+    "id": 1241,
+    "rstdeInfo": "월",
+    "open_hours": "09:30-18:00 (입장마감 17:30)",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "09:30-18:00 (last admission 17:30)"
+  },
+  {
+    "id": 1242,
+    "rstdeInfo": "일/월(매월 둘째, 넷째)",
+    "open_hours": "10:00-18:00",
+    "rstdeInfo_en": "Sun/Mon (2nd and 4th of each month)",
+    "open_hours_en": "10:00-18:00"
+  },
+  {
+    "id": 1243,
+    "rstdeInfo": "월",
+    "open_hours": "09:00-18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "09:00-18:00"
+  },
+  {
+    "id": 1244,
+    "rstdeInfo": "월",
+    "open_hours": "09:00-18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "09:00-18:00"
+  },
+  {
+    "id": 1245,
+    "rstdeInfo": "월",
+    "open_hours": "10:00-18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "10:00-18:00"
+  },
+  {
+    "id": 1246,
+    "rstdeInfo": "월",
+    "open_hours": "09:00-18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "09:00-18:00"
+  },
+  {
+    "id": 1247,
+    "rstdeInfo": "월",
+    "open_hours": "10:00-18:00 (입장마감 17:30)",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "10:00-18:00 (last admission 17:30)"
+  },
+  {
+    "id": 1248,
+    "rstdeInfo": "일",
+    "open_hours": "평일 09:00-21:00\n토요일 09:00-18:00",
+    "rstdeInfo_en": "Sun",
+    "open_hours_en": "Weekdays 09:00-21:00\nSat 09:00-18:00"
+  },
+  {
+    "id": 1249,
+    "rstdeInfo": null,
+    "open_hours": "10:00-18:00",
+    "rstdeInfo_en": null,
+    "open_hours_en": "10:00-18:00"
+  },
+  {
+    "id": 1250,
+    "rstdeInfo": "월",
+    "open_hours": "10:00-18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "10:00-18:00"
+  },
+  {
+    "id": 1251,
+    "rstdeInfo": "월",
+    "open_hours": "10:00-18:00 (입장마감 17:30)",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "10:00-18:00 (last admission 17:30)"
+  },
+  {
+    "id": 1252,
+    "rstdeInfo": "일",
+    "open_hours": "11:00-19:00",
+    "rstdeInfo_en": "Sun",
+    "open_hours_en": "11:00-19:00"
+  },
+  {
+    "id": 1253,
+    "rstdeInfo": "",
+    "open_hours": "10:00-18:00 (입장마감 17:30)",
+    "rstdeInfo_en": null,
+    "open_hours_en": "10:00-18:00 (last admission 17:30)"
+  },
+  {
+    "id": 1255,
+    "rstdeInfo": "일",
+    "open_hours": "10:00-19:00",
+    "rstdeInfo_en": "Sun",
+    "open_hours_en": "10:00-19:00"
+  },
+  {
+    "id": 1256,
+    "rstdeInfo": "월",
+    "open_hours": "3~10월 09:00-18:00\n11~2월 09:00-17:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Mar–Oct 09:00-18:00\nNov–Feb 09:00-17:00"
+  },
+  {
+    "id": 1258,
+    "rstdeInfo": "월",
+    "open_hours": "10:00-18:00 (입장마감 17:00)",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "10:00-18:00 (last admission 17:00)"
+  },
+  {
+    "id": 1259,
+    "rstdeInfo": "일",
+    "open_hours": "평일 10:00-18:00\n토요일 10:00-16:00",
+    "rstdeInfo_en": "Sun",
+    "open_hours_en": "Weekdays 10:00-18:00\nSat 10:00-16:00"
+  },
+  {
+    "id": 1260,
+    "rstdeInfo": "월",
+    "open_hours": "10:00-18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "10:00-18:00"
+  },
+  {
+    "id": 1261,
+    "rstdeInfo": "일/월",
+    "open_hours": "10:00-17:00",
+    "rstdeInfo_en": "Sun/Mon",
+    "open_hours_en": "10:00-17:00"
+  },
+  {
+    "id": 1263,
+    "rstdeInfo": "월",
+    "open_hours": "10:00-18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "10:00-18:00"
+  },
+  {
+    "id": 1264,
+    "rstdeInfo": null,
+    "open_hours": "3~10월 09:00-18:00\n11~2월 09:00-17:00",
+    "rstdeInfo_en": null,
+    "open_hours_en": "Mar–Oct 09:00-18:00\nNov–Feb 09:00-17:00"
+  },
+  {
+    "id": 1265,
+    "rstdeInfo": "일/월/화",
+    "open_hours": "11:00-18:00",
+    "rstdeInfo_en": "Sun/Mon/Tue",
+    "open_hours_en": "11:00-18:00"
+  },
+  {
+    "id": 1266,
+    "rstdeInfo": "월",
+    "open_hours": "10:00-18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "10:00-18:00"
+  },
+  {
+    "id": 1267,
+    "rstdeInfo": null,
+    "open_hours": "09:00-18:00 (입장마감 17:30)",
+    "rstdeInfo_en": null,
+    "open_hours_en": "09:00-18:00 (last admission 17:30)"
+  },
+  {
+    "id": 1268,
+    "rstdeInfo": "월",
+    "open_hours": "11:00-18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "11:00-18:00"
+  },
+  {
+    "id": 1269,
+    "rstdeInfo": "월",
+    "open_hours": "09:00-18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "09:00-18:00"
+  },
+  {
+    "id": 1270,
+    "rstdeInfo": "일",
+    "open_hours": "평일 및 토요일 10:30-17:30\n수요일 13:00-17:30",
+    "rstdeInfo_en": "Sun",
+    "open_hours_en": "Weekdays and Sat 10:30-17:30\nWed 13:00-17:30"
+  },
+  {
+    "id": 1271,
+    "rstdeInfo": "월",
+    "open_hours": "10:00-18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "10:00-18:00"
+  },
+  {
+    "id": 1273,
+    "rstdeInfo": "월",
+    "open_hours": "10:00-19:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "10:00-19:00"
+  },
+  {
+    "id": 1275,
+    "rstdeInfo": "일/월",
+    "open_hours": "11:00-19:00",
+    "rstdeInfo_en": "Sun/Mon",
+    "open_hours_en": "11:00-19:00"
+  },
+  {
+    "id": 1277,
+    "rstdeInfo": "월",
+    "open_hours": "3~10월 10:00-18:00\n11~2월 10:00-17:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Mar–Oct 10:00-18:00\nNov–Feb 10:00-17:00"
+  },
+  {
+    "id": 1278,
+    "rstdeInfo": "일",
+    "open_hours": "10:00-18:00",
+    "rstdeInfo_en": "Sun",
+    "open_hours_en": "10:00-18:00"
+  },
+  {
+    "id": 1279,
+    "rstdeInfo": "일/월",
+    "open_hours": "10:00-18:00",
+    "rstdeInfo_en": "Sun/Mon",
+    "open_hours_en": "10:00-18:00"
+  },
+  {
+    "id": 1280,
+    "rstdeInfo": "월/화",
+    "open_hours": "13:00-21:00",
+    "rstdeInfo_en": "Mon/Tue",
+    "open_hours_en": "13:00-21:00"
+  },
+  {
+    "id": 1281,
+    "rstdeInfo": "월",
+    "open_hours": "10:00-18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "10:00-18:00"
+  },
+  {
+    "id": 1282,
+    "rstdeInfo": "월",
+    "open_hours": "10:00-18:00 (입장마감 17:00)",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "10:00-18:00 (last admission 17:00)"
+  },
+  {
+    "id": 1283,
+    "rstdeInfo": "일/월",
+    "open_hours": "11:00-18:00",
+    "rstdeInfo_en": "Sun/Mon",
+    "open_hours_en": "11:00-18:00"
+  },
+  {
+    "id": 1285,
+    "rstdeInfo": null,
+    "open_hours": "12:00-21:00",
+    "rstdeInfo_en": null,
+    "open_hours_en": "12:00-21:00"
+  },
+  {
+    "id": 1286,
+    "rstdeInfo": "월",
+    "open_hours": "평일 및 토요일 10:00-21:00\n일요일 10:00-18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays and Sat 10:00-21:00\nSun 10:00-18:00"
+  },
+  {
+    "id": 1287,
+    "rstdeInfo": "월",
+    "open_hours": "10:00-18:00 (입장마감 17:00)",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "10:00-18:00 (last admission 17:00)"
+  },
+  {
+    "id": 1288,
+    "rstdeInfo": "일/월",
+    "open_hours": "09:00-18:00",
+    "rstdeInfo_en": "Sun/Mon",
+    "open_hours_en": "09:00-18:00"
+  },
+  {
+    "id": 1290,
+    "rstdeInfo": "월",
+    "open_hours": "10:00-18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "10:00-18:00"
+  },
+  {
+    "id": 1291,
+    "rstdeInfo": "일/월",
+    "open_hours": "10:30-18:00",
+    "rstdeInfo_en": "Sun/Mon",
+    "open_hours_en": "10:30-18:00"
+  },
+  {
+    "id": 1292,
+    "rstdeInfo": "일",
+    "open_hours": "11:00-19:00",
+    "rstdeInfo_en": "Sun",
+    "open_hours_en": "11:00-19:00"
+  },
+  {
+    "id": 1293,
+    "rstdeInfo": "월",
+    "open_hours": "10:00-18:00 (입장마감 17:00)",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "10:00-18:00 (last admission 17:00)"
+  },
+  {
+    "id": 1294,
+    "rstdeInfo": "",
+    "open_hours": "09:00-22:00",
+    "rstdeInfo_en": null,
+    "open_hours_en": "09:00-22:00"
+  },
+  {
+    "id": 1296,
+    "rstdeInfo": "월",
+    "open_hours": "평일 09:00-21:00\n주말 09:00-20:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 09:00-21:00\nWeekends 09:00-20:00"
+  },
+  {
+    "id": 1297,
+    "rstdeInfo": "일",
+    "open_hours": "평일 10:00-19:00\n토요일 10:00-17:00",
+    "rstdeInfo_en": "Sun",
+    "open_hours_en": "Weekdays 10:00-19:00\nSat 10:00-17:00"
+  },
+  {
+    "id": 1298,
+    "rstdeInfo": "월",
+    "open_hours": "10:00-18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "10:00-18:00"
+  },
+  {
+    "id": 1299,
+    "rstdeInfo": "일",
+    "open_hours": "평일 10:00-18:30\n토요일 10:00-18:00",
+    "rstdeInfo_en": "Sun",
+    "open_hours_en": "Weekdays 10:00-18:30\nSat 10:00-18:00"
+  },
+  {
+    "id": 1300,
+    "rstdeInfo": "월/화",
+    "open_hours": "13:00-19:00",
+    "rstdeInfo_en": "Mon/Tue",
+    "open_hours_en": "13:00-19:00"
+  },
+  {
+    "id": 1301,
+    "rstdeInfo": "월",
+    "open_hours": "10:00-18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "10:00-18:00"
+  },
+  {
+    "id": 1302,
+    "rstdeInfo": "일/월",
+    "open_hours": "10:00-18:30",
+    "rstdeInfo_en": "Sun/Mon",
+    "open_hours_en": "10:00-18:30"
+  },
+  {
+    "id": 1304,
+    "rstdeInfo": "일",
+    "open_hours": "09:00-18:00",
+    "rstdeInfo_en": "Sun",
+    "open_hours_en": "09:00-18:00"
+  },
+  {
+    "id": 1309,
+    "rstdeInfo": "월",
+    "open_hours": "09:00-18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "09:00-18:00"
+  },
+  {
+    "id": 1310,
+    "rstdeInfo": "월/화",
+    "open_hours": "13:00-19:00",
+    "rstdeInfo_en": "Mon/Tue",
+    "open_hours_en": "13:00-19:00"
+  },
+  {
+    "id": 1311,
+    "rstdeInfo": "일",
+    "open_hours": "10:00-18:30 (토요일은 17시까지)",
+    "rstdeInfo_en": "Sun",
+    "open_hours_en": "10:00-18:30 (Sat until 17:00)"
+  },
+  {
+    "id": 1312,
+    "rstdeInfo": "월",
+    "open_hours": "10:00-18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "10:00-18:00"
+  },
+  {
+    "id": 1313,
+    "rstdeInfo": null,
+    "open_hours": "11:00-18:00 (프로그램에 따라 다름)",
+    "rstdeInfo_en": null,
+    "open_hours_en": "11:00-18:00 (varies by program)"
+  },
+  {
+    "id": 1314,
+    "rstdeInfo": "일/월",
+    "open_hours": "12:00-18:00",
+    "rstdeInfo_en": "Sun/Mon",
+    "open_hours_en": "12:00-18:00"
+  },
+  {
+    "id": 1315,
+    "rstdeInfo": "월",
+    "open_hours": "09:00-22:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "09:00-22:00"
+  },
+  {
+    "id": 1317,
+    "rstdeInfo": "",
+    "open_hours": "10:00-18:00",
+    "rstdeInfo_en": null,
+    "open_hours_en": "10:00-18:00"
+  },
+  {
+    "id": 1319,
+    "rstdeInfo": "dnjf",
+    "open_hours": "10:00-18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "10:00-18:00"
+  },
+  {
+    "id": 1320,
+    "rstdeInfo": null,
+    "open_hours": "09:00-18:00",
+    "rstdeInfo_en": null,
+    "open_hours_en": "09:00-18:00"
+  },
+  {
+    "id": 1321,
+    "rstdeInfo": null,
+    "open_hours": "10:00-19:00",
+    "rstdeInfo_en": null,
+    "open_hours_en": "10:00-19:00"
+  },
+  {
+    "id": 1322,
+    "rstdeInfo": "월/화",
+    "open_hours": "11:00-18:00",
+    "rstdeInfo_en": "Mon/Tue",
+    "open_hours_en": "11:00-18:00"
+  },
+  {
+    "id": 1323,
+    "rstdeInfo": "월/화",
+    "open_hours": "11:00-17:00",
+    "rstdeInfo_en": "Mon/Tue",
+    "open_hours_en": "11:00-17:00"
+  },
+  {
+    "id": 1324,
+    "rstdeInfo": "월",
+    "open_hours": "10:00-18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "10:00-18:00"
+  },
+  {
+    "id": 1325,
+    "rstdeInfo": null,
+    "open_hours": "10:00-18:00 (입장마감 17:30)",
+    "rstdeInfo_en": null,
+    "open_hours_en": "10:00-18:00 (last admission 17:30)"
+  },
+  {
+    "id": 1327,
+    "rstdeInfo": null,
+    "open_hours": "평일 10:30-20:00\n주말 11:00-20:00",
+    "rstdeInfo_en": null,
+    "open_hours_en": "Weekdays 10:30-20:00\nWeekends 11:00-20:00"
+  },
+  {
+    "id": 1328,
+    "rstdeInfo": "월",
+    "open_hours": "10:00-18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "10:00-18:00"
+  },
+  {
+    "id": 1329,
+    "rstdeInfo": null,
+    "open_hours": "10:00-18:00",
+    "rstdeInfo_en": null,
+    "open_hours_en": "10:00-18:00"
+  },
+  {
+    "id": 1330,
+    "rstdeInfo": "월",
+    "open_hours": "11:00-19:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "11:00-19:00"
+  },
+  {
+    "id": 1344,
+    "rstdeInfo": null,
+    "open_hours": "평일 11:00-18:00\n주말 11:00-18:30",
+    "rstdeInfo_en": null,
+    "open_hours_en": "Weekdays 11:00-18:00\nWeekends 11:00-18:30"
+  },
+  {
+    "id": 1345,
+    "rstdeInfo": "일/월",
+    "open_hours": "10:00-17:00",
+    "rstdeInfo_en": "Sun/Mon",
+    "open_hours_en": "10:00-17:00"
+  },
+  {
+    "id": 1346,
+    "rstdeInfo": "월",
+    "open_hours": "09:30-17:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "09:30-17:00"
+  },
+  {
+    "id": 1347,
+    "rstdeInfo": "화",
+    "open_hours": "10:00-19:00",
+    "rstdeInfo_en": "Tue",
+    "open_hours_en": "10:00-19:00"
+  },
+  {
+    "id": 1349,
+    "rstdeInfo": "일",
+    "open_hours": "10:00-18:00",
+    "rstdeInfo_en": "Sun",
+    "open_hours_en": "10:00-18:00"
+  },
+  {
+    "id": 1350,
+    "rstdeInfo": "일",
+    "open_hours": "10:00-19:30 (브레이크타임 14:00-15:00)",
+    "rstdeInfo_en": "Sun",
+    "open_hours_en": "10:00-19:30 (break 14:00-15:00)"
+  },
+  {
+    "id": 1351,
+    "rstdeInfo": "일/월",
+    "open_hours": "평일 10:00-18:00",
+    "rstdeInfo_en": "Sun/Mon",
+    "open_hours_en": "Weekdays 10:00-18:00"
+  },
+  {
+    "id": 1352,
+    "rstdeInfo": "화",
+    "open_hours": "11:00-19:00 (입장마감 18:00)",
+    "rstdeInfo_en": "Tue",
+    "open_hours_en": "11:00-19:00 (last admission 18:00)"
+  },
+  {
+    "id": 1353,
+    "rstdeInfo": null,
+    "open_hours": "11:00-20:00",
+    "rstdeInfo_en": null,
+    "open_hours_en": "11:00-20:00"
+  },
+  {
+    "id": 1354,
+    "rstdeInfo": null,
+    "open_hours": "평일 및 토요일 06:00-22:00\n일 09:00-18:00",
+    "rstdeInfo_en": null,
+    "open_hours_en": "Weekdays and Sat 06:00-22:00\nSun 09:00-18:00"
+  },
+  {
+    "id": 1355,
+    "rstdeInfo": "일/월, 화 (사전 예약제)",
+    "open_hours": "평일 및 토요일 12:00-17:00",
+    "rstdeInfo_en": "Sun/Mon, Tue (advance reservation required)",
+    "open_hours_en": "Weekdays and Sat 12:00-17:00"
+  },
+  {
+    "id": 1356,
+    "rstdeInfo": "일",
+    "open_hours": "평일 및 토요일 10:30-18:30 (12시~13시 제외)",
+    "rstdeInfo_en": "Sun",
+    "open_hours_en": "Weekdays and Sat 10:30-18:30 (closed 12:00-13:00)"
+  },
+  {
+    "id": 1357,
+    "rstdeInfo": "월",
+    "open_hours": "평일 10:00-18:00\n토요일 11:00-17:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 10:00-18:00\nSat 11:00-17:00"
+  },
+  {
+    "id": 1358,
+    "rstdeInfo": "화",
+    "open_hours": "10:30-18:30",
+    "rstdeInfo_en": "Tue",
+    "open_hours_en": "10:30-18:30"
+  },
+  {
+    "id": 1359,
+    "rstdeInfo": "일/월",
+    "open_hours": "평일 10:30-17:30\n토요일 12:00-17:00",
+    "rstdeInfo_en": "Sun/Mon",
+    "open_hours_en": "Weekdays 10:30-17:30\nSat 12:00-17:00"
+  },
+  {
+    "id": 1360,
+    "rstdeInfo": null,
+    "open_hours": "10:30-18:30",
+    "rstdeInfo_en": null,
+    "open_hours_en": "10:30-18:30"
+  },
+  {
+    "id": 1361,
+    "rstdeInfo": "월",
+    "open_hours": "11:00-19:00 (프로그램에 따라 유동적)",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "11:00-19:00 (varies by program)"
+  },
+  {
+    "id": 1362,
+    "rstdeInfo": null,
+    "open_hours": "12:00-19:00",
+    "rstdeInfo_en": null,
+    "open_hours_en": "12:00-19:00"
+  },
+  {
+    "id": 1363,
+    "rstdeInfo": "월",
+    "open_hours": "10:00-19:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "10:00-19:00"
+  },
+  {
+    "id": 1364,
+    "rstdeInfo": "일/월/화",
+    "open_hours": "13:00-18:00",
+    "rstdeInfo_en": "Sun/Mon/Tue",
+    "open_hours_en": "13:00-18:00"
+  },
+  {
+    "id": 1365,
+    "rstdeInfo": null,
+    "open_hours": "12:00-19:00",
+    "rstdeInfo_en": null,
+    "open_hours_en": "12:00-19:00"
+  },
+  {
+    "id": 1367,
+    "rstdeInfo": "일/월",
+    "open_hours": "평일 11:00-18:00\n토요일 11:00-17:00",
+    "rstdeInfo_en": "Sun/Mon",
+    "open_hours_en": "Weekdays 11:00-18:00\nSat 11:00-17:00"
+  },
+  {
+    "id": 1368,
+    "rstdeInfo": null,
+    "open_hours": "12:00-18:00 (유동적)",
+    "rstdeInfo_en": null,
+    "open_hours_en": "12:00-18:00 (subject to change)"
+  },
+  {
+    "id": 1369,
+    "rstdeInfo": "일/월",
+    "open_hours": "13:00-18:00",
+    "rstdeInfo_en": "Sun/Mon",
+    "open_hours_en": "13:00-18:00"
+  },
+  {
+    "id": 1375,
+    "rstdeInfo": "월",
+    "open_hours": "화~토 09:00-22:00\n일 09:00-18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Tue–Sat 09:00-22:00\nSun 09:00-18:00"
+  },
+  {
+    "id": 1376,
+    "rstdeInfo": null,
+    "open_hours": "평일 10:00-19:00\n주말 10:00-20:00",
+    "rstdeInfo_en": null,
+    "open_hours_en": "Weekdays 10:00-19:00\nWeekends 10:00-20:00"
+  },
+  {
+    "id": 1378,
+    "rstdeInfo": null,
+    "open_hours": "전시·행사 일정에 따라 운영",
+    "rstdeInfo_en": null,
+    "open_hours_en": "Hours depend on exhibition/event schedules"
+  },
+  {
+    "id": 1379,
+    "rstdeInfo": "월",
+    "open_hours": "09:30-17:30",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "09:30-17:30"
+  },
+  {
+    "id": 1381,
+    "rstdeInfo": "월",
+    "open_hours": "10:00-18:00 (입장마감 17:00)",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "10:00-18:00 (last admission 17:00)"
+  },
+  {
+    "id": 1382,
+    "rstdeInfo": null,
+    "open_hours": "00:00-24:00",
+    "rstdeInfo_en": null,
+    "open_hours_en": "00:00-24:00"
+  },
+  {
+    "id": 1383,
+    "rstdeInfo": "월",
+    "open_hours": "09:00-18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "09:00-18:00"
+  },
+  {
+    "id": 1384,
+    "rstdeInfo": "월",
+    "open_hours": "09:00-18:00 (입장마감 17:00)",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "09:00-18:00 (last admission 17:00)"
+  },
+  {
+    "id": 1385,
+    "rstdeInfo": "월",
+    "open_hours": "09:00-18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "09:00-18:00"
+  },
+  {
+    "id": 1386,
+    "rstdeInfo": "일/월",
+    "open_hours": "10:00-17:00",
+    "rstdeInfo_en": "Sun/Mon",
+    "open_hours_en": "10:00-17:00"
+  },
+  {
+    "id": 1388,
+    "rstdeInfo": "토/일",
+    "open_hours": "09:00-18:00",
+    "rstdeInfo_en": "Sat/Sun",
+    "open_hours_en": "09:00-18:00"
+  },
+  {
+    "id": 1389,
+    "rstdeInfo": "월",
+    "open_hours": "10:00-18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "10:00-18:00"
+  },
+  {
+    "id": 1392,
+    "rstdeInfo": "토/일",
+    "open_hours": "09:00-18:00",
+    "rstdeInfo_en": "Sat/Sun",
+    "open_hours_en": "09:00-18:00"
+  },
+  {
+    "id": 1393,
+    "rstdeInfo": "월",
+    "open_hours": "14:00-22:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "14:00-22:00"
+  },
+  {
+    "id": 1394,
+    "rstdeInfo": "월",
+    "open_hours": "10:00-18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "10:00-18:00"
+  },
+  {
+    "id": 1395,
+    "rstdeInfo": null,
+    "open_hours": "10:00-18:00 (변동)",
+    "rstdeInfo_en": null,
+    "open_hours_en": "10:00-18:00 (subject to change)"
+  },
+  {
+    "id": 1396,
+    "rstdeInfo": "월",
+    "open_hours": "09:00-18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "09:00-18:00"
+  },
+  {
+    "id": 1397,
+    "rstdeInfo": "토/일",
+    "open_hours": "09:00-18:00",
+    "rstdeInfo_en": "Sat/Sun",
+    "open_hours_en": "09:00-18:00"
+  },
+  {
+    "id": 1398,
+    "rstdeInfo": "월",
+    "open_hours": "09:00-18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "09:00-18:00"
+  },
+  {
+    "id": 1399,
+    "rstdeInfo": null,
+    "open_hours": "09:00-21:00",
+    "rstdeInfo_en": null,
+    "open_hours_en": "09:00-21:00"
+  },
+  {
+    "id": 1400,
+    "rstdeInfo": "월",
+    "open_hours": "11:00-19:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "11:00-19:00"
+  },
+  {
+    "id": 1401,
+    "rstdeInfo": "월",
+    "open_hours": "평일 10:00-21:00\n공휴일 10:00-22:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 10:00-21:00\nPublic holidays 10:00-22:00"
+  },
+  {
+    "id": 1403,
+    "rstdeInfo": null,
+    "open_hours": "전시·행사 일정에 따라 운영",
+    "rstdeInfo_en": null,
+    "open_hours_en": "Hours depend on exhibition/event schedules"
+  },
+  {
+    "id": 1404,
+    "rstdeInfo": null,
+    "open_hours": "전시 일정에 따라 변동",
+    "rstdeInfo_en": null,
+    "open_hours_en": "Hours vary by exhibition"
+  },
+  {
+    "id": 1405,
+    "rstdeInfo": "토/일",
+    "open_hours": "12:00-17:30",
+    "rstdeInfo_en": "Sat/Sun",
+    "open_hours_en": "12:00-17:30"
+  },
+  {
+    "id": 1406,
+    "rstdeInfo": null,
+    "open_hours": "10:00-19:00",
+    "rstdeInfo_en": null,
+    "open_hours_en": "10:00-19:00"
+  },
+  {
+    "id": 1407,
+    "rstdeInfo": null,
+    "open_hours": "10:00-19:00 (동절기 18시까지)",
+    "rstdeInfo_en": null,
+    "open_hours_en": "10:00-19:00 (Winter until 18:00)"
+  },
+  {
+    "id": 1408,
+    "rstdeInfo": "토/일",
+    "open_hours": "09:00-18:00",
+    "rstdeInfo_en": "Sat/Sun",
+    "open_hours_en": "09:00-18:00"
+  },
+  {
+    "id": 1409,
+    "rstdeInfo": "일/월",
+    "open_hours": "09:00-18:00",
+    "rstdeInfo_en": "Sun/Mon",
+    "open_hours_en": "09:00-18:00"
+  },
+  {
+    "id": 1410,
+    "rstdeInfo": "월",
+    "open_hours": "12:00-21:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "12:00-21:00"
+  },
+  {
+    "id": 1411,
+    "rstdeInfo": "일/월",
+    "open_hours": "11:00-19:00",
+    "rstdeInfo_en": "Sun/Mon",
+    "open_hours_en": "11:00-19:00"
+  },
+  {
+    "id": 1412,
+    "rstdeInfo": "일",
+    "open_hours": "평일 10:00-18:30\n토 11:00-18:30",
+    "rstdeInfo_en": "Sun",
+    "open_hours_en": "Weekdays 10:00-18:30\nSat 11:00-18:30"
+  },
+  {
+    "id": 1414,
+    "rstdeInfo": "일/월",
+    "open_hours": "11:00-18:00",
+    "rstdeInfo_en": "Sun/Mon",
+    "open_hours_en": "11:00-18:00"
+  },
+  {
+    "id": 1415,
+    "rstdeInfo": null,
+    "open_hours": "09:00-21:00",
+    "rstdeInfo_en": null,
+    "open_hours_en": "09:00-21:00"
+  },
+  {
+    "id": 1416,
+    "rstdeInfo": "토/일",
+    "open_hours": "09:00-18:00",
+    "rstdeInfo_en": "Sat/Sun",
+    "open_hours_en": "09:00-18:00"
+  },
+  {
+    "id": 1417,
+    "rstdeInfo": null,
+    "open_hours": "11:00-19:00",
+    "rstdeInfo_en": null,
+    "open_hours_en": "11:00-19:00"
+  },
+  {
+    "id": 1418,
+    "rstdeInfo": null,
+    "open_hours": "10:00-18:00 (변동))",
+    "rstdeInfo_en": null,
+    "open_hours_en": "10:00-18:00 (subject to change)"
+  },
+  {
+    "id": 1419,
+    "rstdeInfo": "월",
+    "open_hours": "09:00-22:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "09:00-22:00"
+  },
+  {
+    "id": 1420,
+    "rstdeInfo": "월",
+    "open_hours": "09:00-18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "09:00-18:00"
+  },
+  {
+    "id": 1422,
+    "rstdeInfo": "일",
+    "open_hours": "10:00-16:00",
+    "rstdeInfo_en": "Sun",
+    "open_hours_en": "10:00-16:00"
+  },
+  {
+    "id": 1423,
+    "rstdeInfo": "월",
+    "open_hours": "09:00-20:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "09:00-20:00"
+  },
+  {
+    "id": 1424,
+    "rstdeInfo": "일/월",
+    "open_hours": "화~금 11:00-18:30\n토 12:00-17:00",
+    "rstdeInfo_en": "Sun/Mon",
+    "open_hours_en": "Tue–Fri 11:00-18:30\nSat 12:00-17:00"
+  },
+  {
+    "id": 1425,
+    "rstdeInfo": "월",
+    "open_hours": "09:00-18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "09:00-18:00"
+  },
+  {
+    "id": 1427,
+    "rstdeInfo": "월",
+    "open_hours": "09:00-18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "09:00-18:00"
+  },
+  {
+    "id": 1428,
+    "rstdeInfo": "월",
+    "open_hours": "10:00-18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "10:00-18:00"
+  },
+  {
+    "id": 1429,
+    "rstdeInfo": "월",
+    "open_hours": "10:00-18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "10:00-18:00"
+  },
+  {
+    "id": 1431,
+    "rstdeInfo": "월",
+    "open_hours": "08:00-22:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "08:00-22:00"
+  },
+  {
+    "id": 1432,
+    "rstdeInfo": null,
+    "open_hours": "10:00-18:00 (입장마감 17:00)",
+    "rstdeInfo_en": null,
+    "open_hours_en": "10:00-18:00 (last admission 17:00)"
+  },
+  {
+    "id": 1434,
+    "rstdeInfo": "월",
+    "open_hours": "09:30-17:30",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "09:30-17:30"
+  },
+  {
+    "id": 1435,
+    "rstdeInfo": null,
+    "open_hours": "전시·행사 일정에 따라 운영",
+    "rstdeInfo_en": null,
+    "open_hours_en": "Hours depend on exhibition/event schedules"
+  },
+  {
+    "id": 1437,
+    "rstdeInfo": "일/월",
+    "open_hours": "09:00-21:00",
+    "rstdeInfo_en": "Sun/Mon",
+    "open_hours_en": "09:00-21:00"
+  },
+  {
+    "id": 1438,
+    "rstdeInfo": "월",
+    "open_hours": "11:00-18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "11:00-18:00"
+  },
+  {
+    "id": 1439,
+    "rstdeInfo": "월",
+    "open_hours": "10:00-18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "10:00-18:00"
+  },
+  {
+    "id": 1440,
+    "rstdeInfo": "월",
+    "open_hours": "09:00-18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "09:00-18:00"
+  },
+  {
+    "id": 1441,
+    "rstdeInfo": "월",
+    "open_hours": "평일 13:00-19:00\n주말 13:00-18:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "Weekdays 13:00-19:00\nWeekends 13:00-18:00"
+  },
+  {
+    "id": 1442,
+    "rstdeInfo": null,
+    "open_hours": "평일 11:00-19:00\n주말 12:00-18:00",
+    "rstdeInfo_en": null,
+    "open_hours_en": "Weekdays 11:00-19:00\nWeekends 12:00-18:00"
+  },
+  {
+    "id": 1443,
+    "rstdeInfo": "일",
+    "open_hours": "10:00-18:00",
+    "rstdeInfo_en": "Sun",
+    "open_hours_en": "10:00-18:00"
+  },
+  {
+    "id": 1444,
+    "rstdeInfo": "월",
+    "open_hours": "10:30-18:30",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "10:30-18:30"
+  },
+  {
+    "id": 1445,
+    "rstdeInfo": null,
+    "open_hours": "",
+    "rstdeInfo_en": null,
+    "open_hours_en": null
+  },
+  {
+    "id": 1446,
+    "rstdeInfo": null,
+    "open_hours": null,
+    "rstdeInfo_en": null,
+    "open_hours_en": null
+  },
+  {
+    "id": 1447,
+    "rstdeInfo": null,
+    "open_hours": null,
+    "rstdeInfo_en": null,
+    "open_hours_en": null
+  },
+  {
+    "id": 1448,
+    "rstdeInfo": null,
+    "open_hours": null,
+    "rstdeInfo_en": null,
+    "open_hours_en": null
+  },
+  {
+    "id": 1451,
+    "rstdeInfo": null,
+    "open_hours": null,
+    "rstdeInfo_en": null,
+    "open_hours_en": null
+  },
+  {
+    "id": 1452,
+    "rstdeInfo": null,
+    "open_hours": null,
+    "rstdeInfo_en": null,
+    "open_hours_en": null
+  },
+  {
+    "id": 1453,
+    "rstdeInfo": null,
+    "open_hours": null,
+    "rstdeInfo_en": null,
+    "open_hours_en": null
+  },
+  {
+    "id": 1454,
+    "rstdeInfo": null,
+    "open_hours": null,
+    "rstdeInfo_en": null,
+    "open_hours_en": null
+  },
+  {
+    "id": 1456,
+    "rstdeInfo": null,
+    "open_hours": null,
+    "rstdeInfo_en": null,
+    "open_hours_en": null
+  },
+  {
+    "id": 1457,
+    "rstdeInfo": null,
+    "open_hours": null,
+    "rstdeInfo_en": null,
+    "open_hours_en": null
+  },
+  {
+    "id": 1458,
+    "rstdeInfo": null,
+    "open_hours": null,
+    "rstdeInfo_en": null,
+    "open_hours_en": null
+  },
+  {
+    "id": 1459,
+    "rstdeInfo": null,
+    "open_hours": null,
+    "rstdeInfo_en": null,
+    "open_hours_en": null
+  },
+  {
+    "id": 1460,
+    "rstdeInfo": null,
+    "open_hours": null,
+    "rstdeInfo_en": null,
+    "open_hours_en": null
+  },
+  {
+    "id": 1461,
+    "rstdeInfo": null,
+    "open_hours": null,
+    "rstdeInfo_en": null,
+    "open_hours_en": null
+  },
+  {
+    "id": 1462,
+    "rstdeInfo": null,
+    "open_hours": null,
+    "rstdeInfo_en": null,
+    "open_hours_en": null
+  },
+  {
+    "id": 1463,
+    "rstdeInfo": null,
+    "open_hours": null,
+    "rstdeInfo_en": null,
+    "open_hours_en": null
+  },
+  {
+    "id": 1464,
+    "rstdeInfo": null,
+    "open_hours": null,
+    "rstdeInfo_en": null,
+    "open_hours_en": null
+  },
+  {
+    "id": 1465,
+    "rstdeInfo": null,
+    "open_hours": null,
+    "rstdeInfo_en": null,
+    "open_hours_en": null
+  },
+  {
+    "id": 1467,
+    "rstdeInfo": null,
+    "open_hours": null,
+    "rstdeInfo_en": null,
+    "open_hours_en": null
+  },
+  {
+    "id": 1468,
+    "rstdeInfo": null,
+    "open_hours": null,
+    "rstdeInfo_en": null,
+    "open_hours_en": null
+  },
+  {
+    "id": 1469,
+    "rstdeInfo": null,
+    "open_hours": null,
+    "rstdeInfo_en": null,
+    "open_hours_en": null
+  },
+  {
+    "id": 1470,
+    "rstdeInfo": null,
+    "open_hours": null,
+    "rstdeInfo_en": null,
+    "open_hours_en": null
+  },
+  {
+    "id": 1471,
+    "rstdeInfo": null,
+    "open_hours": null,
+    "rstdeInfo_en": null,
+    "open_hours_en": null
+  },
+  {
+    "id": 1472,
+    "rstdeInfo": null,
+    "open_hours": null,
+    "rstdeInfo_en": null,
+    "open_hours_en": null
+  },
+  {
+    "id": 1473,
+    "rstdeInfo": null,
+    "open_hours": null,
+    "rstdeInfo_en": null,
+    "open_hours_en": null
+  },
+  {
+    "id": 1474,
+    "rstdeInfo": null,
+    "open_hours": null,
+    "rstdeInfo_en": null,
+    "open_hours_en": null
+  },
+  {
+    "id": 1475,
+    "rstdeInfo": null,
+    "open_hours": null,
+    "rstdeInfo_en": null,
+    "open_hours_en": null
+  },
+  {
+    "id": 1476,
+    "rstdeInfo": null,
+    "open_hours": null,
+    "rstdeInfo_en": null,
+    "open_hours_en": null
+  },
+  {
+    "id": 1477,
+    "rstdeInfo": null,
+    "open_hours": null,
+    "rstdeInfo_en": null,
+    "open_hours_en": null
+  },
+  {
+    "id": 1478,
+    "rstdeInfo": null,
+    "open_hours": null,
+    "rstdeInfo_en": null,
+    "open_hours_en": null
+  },
+  {
+    "id": 1480,
+    "rstdeInfo": null,
+    "open_hours": null,
+    "rstdeInfo_en": null,
+    "open_hours_en": null
+  },
+  {
+    "id": 1481,
+    "rstdeInfo": null,
+    "open_hours": null,
+    "rstdeInfo_en": null,
+    "open_hours_en": null
+  },
+  {
+    "id": 1482,
+    "rstdeInfo": null,
+    "open_hours": null,
+    "rstdeInfo_en": null,
+    "open_hours_en": null
+  },
+  {
+    "id": 1483,
+    "rstdeInfo": null,
+    "open_hours": null,
+    "rstdeInfo_en": null,
+    "open_hours_en": null
+  },
+  {
+    "id": 1484,
+    "rstdeInfo": "월/목",
+    "open_hours": "12:30-21:00",
+    "rstdeInfo_en": "Mon/Thu",
+    "open_hours_en": "12:30-21:00"
+  },
+  {
+    "id": 1485,
+    "rstdeInfo": "월",
+    "open_hours": "12:00-19:00",
+    "rstdeInfo_en": "Mon",
+    "open_hours_en": "12:00-19:00"
+  },
+  {
+    "id": 1486,
+    "rstdeInfo": "일/월",
+    "open_hours": "13:00-19:00",
+    "rstdeInfo_en": "Sun/Mon",
+    "open_hours_en": "13:00-19:00"
+  }
+]

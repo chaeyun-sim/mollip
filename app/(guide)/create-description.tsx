@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet';
 import { Ionicons } from '@expo/vector-icons';
@@ -49,6 +50,8 @@ const EXAMPLES = [
 ];
 
 export default function IndexScreen() {
+	const { t } = useTranslation();
+
 	const router = useRouter();
 	const navigation = useNavigation();
 	const bottomSheetRef = useRef<BottomSheetModal>(null);
@@ -296,7 +299,9 @@ export default function IndexScreen() {
 								style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
 							>
 								<Ionicons name="headset-outline" size={18} className="text-white/70" />
-								<Text className="text-sm font-pretendard-regular text-white/70">몰입 모드</Text>
+								<Text className="text-sm font-pretendard-regular text-white/70">
+									{t('guide.immersive_mode')}
+								</Text>
 							</Pressable>
 						</ScreenHeader.Right>
 					</>

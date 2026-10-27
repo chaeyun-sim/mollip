@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
@@ -33,6 +34,8 @@ function formatRelativeTime(isoDate: string): string {
 }
 
 export default function NotificationsScreen() {
+	const { t } = useTranslation();
+
 	const router = useRouter();
 	const { userId } = useAuthStore(useShallow((s) => ({ userId: s.user?.id })));
 	const [logs, setLogs] = useState<NotificationLog[] | null>(null);
@@ -148,7 +151,7 @@ export default function NotificationsScreen() {
 		<Screen variant="warm" className="px-0">
 			<Screen.Header fullBleed>
 				<Screen.Header.Back />
-				<Screen.Header.Center className="mb-1">알림</Screen.Header.Center>
+				<Screen.Header.Center className="mb-1">{t('notifications.title')}</Screen.Header.Center>
 				<Screen.Header.Right>
 					<View className="flex-row items-center gap-4">
 						{hasUnread && (

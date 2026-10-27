@@ -1,6 +1,7 @@
+import { useTranslation } from 'react-i18next';
 import { ScrollView } from 'react-native';
 import { Chip } from '@/src/components/common/Chip';
-import { STATUS_LABELS, type ExhibitionStatus } from '@/src/utils/exhibitionSearch';
+import { type ExhibitionStatus } from '@/src/utils/exhibitionSearch';
 
 const STATUS_KEYS: ExhibitionStatus[] = ['upcoming', 'ongoing'];
 
@@ -29,6 +30,8 @@ export function SearchFilterBar({
 	excludedCount,
 	onPressExclude,
 }: SearchFilterBarProps) {
+	const { t } = useTranslation();
+
 	function formatChipDate(date: Date) {
 		return `${date.getMonth() + 1}.${date.getDate()}`;
 	}
@@ -44,18 +47,18 @@ export function SearchFilterBar({
 				STATUS_KEYS.map((key) => (
 					<Chip
 						key={key}
-						label={STATUS_LABELS[key]}
+						label={t(`exhibitions.${key}`)}
 						active={statusFilters.has(key)}
 						onPress={() => onToggleStatus(key)}
 					/>
 				))}
 			<Chip
-				label="마감 임박"
+				label={t('home.closing_soon')}
 				active={closingSoonOnly}
 				onPress={onToggleClosingSoon}
 				accessibilityLabel="2주 안에 끝나는 전시만 보기"
 			/>
-			<Chip label="무료" active={freeOnly} onPress={onToggleFree} />
+			<Chip label={t('common.free')} active={freeOnly} onPress={onToggleFree} />
 			<Chip
 				label={filterDate ? formatChipDate(filterDate) : '날짜'}
 				active={filterDate !== null}

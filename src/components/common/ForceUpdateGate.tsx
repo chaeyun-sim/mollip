@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import * as Linking from 'expo-linking';
 import { Result } from '@/src/components/common/Result';
 import { Screen } from '@/src/components/layout/Screen';
@@ -12,13 +13,15 @@ const handleOpenStore = (storeUrl: string | null) => {
 };
 
 export function ForceUpdateGate({ storeUrl }: ForceUpdateGateProps) {
+	const { t } = useTranslation();
+
 	return (
 		<Screen variant="warm">
 			<Result
 				icon="arrow-up-circle-outline"
-				title="새 버전이 있어요"
-				description={'더 안정적인 이용을 위해\n최신 버전으로 업데이트해 주세요.'}
-				actionLabel="업데이트하기"
+				title={t('force_update.title')}
+				description={t('force_update.description')}
+				actionLabel={t('force_update.update')}
 				onAction={() => handleOpenStore(storeUrl)}
 			/>
 		</Screen>

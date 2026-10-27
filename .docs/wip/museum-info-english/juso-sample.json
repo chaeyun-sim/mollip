@@ -1,0 +1,39 @@
+{
+  "results": {
+    "common": {
+      "countPerPage": "10",
+      "errorMessage": "정상",
+      "errorCode": "0",
+      "totalCount": "1",
+      "currentPage": "1"
+    },
+    "juso": [
+      {
+        "siNm": "서울특별시",
+        "lnbrMnnm": "183",
+        "bdKdcd": "0",
+        "jibunAddr": "서울특별시 종로구 관훈동 183 토포하우스",
+        "buldSlno": "0",
+        "bdMgtSn": "1111012800101840000017909",
+        "zipNo": "03145",
+        "roadAddr": "서울특별시 종로구 인사동11길 6 (관훈동)",
+        "admCd": "1111012800",
+        "liNm": "",
+        "bdNm": "토포하우스",
+        "mtYn": "0",
+        "rnMgtSn": "111104100247",
+        "roadAddrPart2": " (관훈동)",
+        "sggNm": "종로구",
+        "buldMnnm": "6",
+        "roadAddrPart1": "서울특별시 종로구 인사동11길 6",
+        "emdNm": "관훈동",
+        "lnbrSlno": "0",
+        "engAddr": "6 Insadong 11-gil, Jongno-gu, Seoul",
+        "udrtYn": "0",
+        "rn": "인사동11길",
+        "detBdNmList": "",
+        "emdNo": "01"
+      }
+    ]
+  }
+}

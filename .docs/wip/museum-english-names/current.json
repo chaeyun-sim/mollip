@@ -1,0 +1,4892 @@
+[
+  {
+    "id": 1,
+    "name": "갤러리 topohaus",
+    "name_en": null,
+    "homepage_url": "http://www.topohaus.com/",
+    "address": "서울 종로구 인사동11길 6\n",
+    "phone": "02-734-7555",
+    "gps_x": "126.98431591955091",
+    "gps_y": "37.57410738575803"
+  },
+  {
+    "id": 3,
+    "name": "경인미술관",
+    "name_en": null,
+    "homepage_url": "http://www.kyunginart.co.kr/kor/",
+    "address": "서울 종로구 인사동10길 11-4",
+    "phone": "02-733-4448",
+    "gps_x": "126.98571386621593",
+    "gps_y": "37.5745941003707"
+  },
+  {
+    "id": 4,
+    "name": "사비나미술관",
+    "name_en": null,
+    "homepage_url": "http://www.savinamuseum.com/kor/about/direction.jsp",
+    "address": "서울 은평구 진관1로 93",
+    "phone": "02-736-4371",
+    "gps_x": "126.92927808640972",
+    "gps_y": "37.63011082253609"
+  },
+  {
+    "id": 5,
+    "name": "이응노미술관",
+    "name_en": null,
+    "homepage_url": "https://www.leeungnomuseum.or.kr/",
+    "address": "대전 서구 둔산대로 152",
+    "phone": "042-611-9800",
+    "gps_x": "127.3870435321152",
+    "gps_y": "36.36687454730784"
+  },
+  {
+    "id": 7,
+    "name": "갤러리 엠",
+    "name_en": null,
+    "homepage_url": " https://www.instagram.com/gallerym_official/",
+    "address": "서울 종로구 삼일대로 445",
+    "phone": "02-735-9500",
+    "gps_x": "126.98696218416919",
+    "gps_y": "37.57308958347915"
+  },
+  {
+    "id": 10,
+    "name": "미메시스 아트 뮤지엄",
+    "name_en": null,
+    "homepage_url": "https://mimesisartmuseum.co.kr/",
+    "address": "경기 파주 문발로 253",
+    "phone": "031-955-4100",
+    "gps_x": "126.68891676590287",
+    "gps_y": "37.71674497516721"
+  },
+  {
+    "id": 11,
+    "name": "유나이티드 갤러리",
+    "name_en": null,
+    "homepage_url": "https://www.unitedgallery.co.kr/index.asp",
+    "address": "서울 강남구 강남대로102길 41",
+    "phone": "02-539-0692",
+    "gps_x": "127.02803908422175",
+    "gps_y": "37.5035838155189"
+  },
+  {
+    "id": 12,
+    "name": "서울시립북서울미술관",
+    "name_en": null,
+    "homepage_url": "https://sema.seoul.go.kr/kr/visit/bukseoul",
+    "address": "서울 노원구 동일로 1238",
+    "phone": "02-2124-5248~9",
+    "gps_x": "127.06680335608173",
+    "gps_y": "37.64089114205458"
+  },
+  {
+    "id": 13,
+    "name": "송암미술관",
+    "name_en": null,
+    "homepage_url": "http://songam.incheon.go.kr/index.do",
+    "address": "인천 미추홀구 비류대로55번길 68",
+    "phone": "032-440-6770",
+    "gps_x": "126.64225739986657",
+    "gps_y": "37.43441354349972"
+  },
+  {
+    "id": 14,
+    "name": "우양미술관",
+    "name_en": null,
+    "homepage_url": "https://wooyangmuseum.org/main",
+    "address": "경북 경주시 보문로 484-79",
+    "phone": "054-745-7075",
+    "gps_x": "129.2858849326689",
+    "gps_y": "35.84171814484573"
+  },
+  {
+    "id": 16,
+    "name": "제주도립미술관",
+    "name_en": null,
+    "homepage_url": "https://www.jeju.go.kr/jmoa",
+    "address": "제주 제주시 1100로 2894-78",
+    "phone": "064-710-4300",
+    "gps_x": "126.48963496144127",
+    "gps_y": "33.45259362658467"
+  },
+  {
+    "id": 17,
+    "name": "성곡미술관",
+    "name_en": null,
+    "homepage_url": "http://www.sungkokmuseum.org/main/",
+    "address": "서울 종로구 경희궁길 42",
+    "phone": "02-737-7650",
+    "gps_x": "126.96978121437739",
+    "gps_y": "37.57316977782238"
+  },
+  {
+    "id": 19,
+    "name": "가나아트파크",
+    "name_en": null,
+    "homepage_url": "http://www.artpark.co.kr/about/facilities",
+    "address": "경기 양주시 장흥면 권율로 117",
+    "phone": "031-877-0500",
+    "gps_x": "126.9496732040829",
+    "gps_y": "37.72553719403987"
+  },
+  {
+    "id": 20,
+    "name": "아모레퍼시픽미술관",
+    "name_en": null,
+    "homepage_url": "https://apma.amorepacific.com/index.do",
+    "address": "서울 용산구 한강대로 100",
+    "phone": "031-285-7215",
+    "gps_x": "127.1076616831132",
+    "gps_y": "37.26134292083489"
+  },
+  {
+    "id": 21,
+    "name": "아트선재센터",
+    "name_en": null,
+    "homepage_url": "http://artsonje.org",
+    "address": "서울 종로구 율곡로3길 87",
+    "phone": "02-733-8949",
+    "gps_x": "126.98183548346792",
+    "gps_y": "37.57954678361987"
+  },
+  {
+    "id": 23,
+    "name": "한원미술관",
+    "name_en": null,
+    "homepage_url": "http://www.hanwon.org/",
+    "address": "서울 서초구 남부순환로 2423",
+    "phone": "02-588-5642",
+    "gps_x": "127.01543015242063",
+    "gps_y": "37.48175473006915"
+  },
+  {
+    "id": 25,
+    "name": "백남준아트센터",
+    "name_en": null,
+    "homepage_url": "http://njp.ggcf.kr/",
+    "address": "경기 용인시 기흥구 백남준로 10",
+    "phone": "031-201-8500",
+    "gps_x": "127.11037318643987",
+    "gps_y": "37.26927634736376"
+  },
+  {
+    "id": 27,
+    "name": "JCC 아트센터",
+    "name_en": null,
+    "homepage_url": "https://www.jeijcc.org/intro.html",
+    "address": "서울 종로구 창경궁로35길 29",
+    "phone": "02-2138-7373",
+    "gps_x": "127.00187947499445",
+    "gps_y": "37.5871795800753"
+  },
+  {
+    "id": 30,
+    "name": "아줄레주 갤러리",
+    "name_en": null,
+    "homepage_url": "https://azulejogallery.com/",
+    "address": "서울 강남구 삼성로149길 10",
+    "phone": "02-725-6810",
+    "gps_x": "127.0467432642712",
+    "gps_y": "37.52346981046802"
+  },
+  {
+    "id": 32,
+    "name": "솔거미술관",
+    "name_en": null,
+    "homepage_url": "http://www.gjsam.or.kr/ko/",
+    "address": "경북 경주시 경감로 614",
+    "phone": "054-740-3990",
+    "gps_x": "129.28829443469297",
+    "gps_y": "35.83092972778872"
+  },
+  {
+    "id": 33,
+    "name": "두산갤러리",
+    "name_en": null,
+    "homepage_url": "http://www.doosangallery.com/",
+    "address": "서울 종로구 종로33길 15",
+    "phone": "02-708-5050",
+    "gps_x": "127.00118857756357",
+    "gps_y": "37.57164420037769"
+  },
+  {
+    "id": 34,
+    "name": "갤러리 통큰",
+    "name_en": null,
+    "homepage_url": "https://www.instagram.com/gallerytongkeun/",
+    "address": "서울 종로구 인사동길 52 2층",
+    "phone": "02-732-3848",
+    "gps_x": "126.9842620383497",
+    "gps_y": "37.57463220802411"
+  },
+  {
+    "id": 35,
+    "name": "임립미술관",
+    "name_en": null,
+    "homepage_url": "http://www.limlipmuseum.org/",
+    "address": "충남 공주 계룡면 봉곡길 77-13",
+    "phone": "041-856-7749",
+    "gps_x": "127.14031802202747",
+    "gps_y": "36.39625217170816"
+  },
+  {
+    "id": 38,
+    "name": "서울아산병원 갤러리",
+    "name_en": null,
+    "homepage_url": "http://www.amc.seoul.kr/asan/information/gallery/galleryList.do",
+    "address": "서울 송파구 올림픽로 43길 88 서울아산병원 동관 1층 로비",
+    "phone": "02-3010-3056 ,3057",
+    "gps_x": "127.1104719776797",
+    "gps_y": "37.52521137897048"
+  },
+  {
+    "id": 40,
+    "name": "국립현대미술관 덕수궁관",
+    "name_en": null,
+    "homepage_url": "http://www.mmca.go.kr/",
+    "address": "서울 중구 세종대로 99",
+    "phone": "02-2022-0600",
+    "gps_x": "126.97372877013612",
+    "gps_y": "37.56596726359523"
+  },
+  {
+    "id": 44,
+    "name": "김천시립미술관",
+    "name_en": null,
+    "homepage_url": "https://www.gc.go.kr/gma/main.do",
+    "address": "경북 김천시 학사대길 90-14",
+    "phone": "054-420-6725",
+    "gps_x": "128.11948683377508",
+    "gps_y": "36.11678900666687"
+  },
+  {
+    "id": 45,
+    "name": "소전미술관",
+    "name_en": null,
+    "homepage_url": "https://www.sojeonmuseum.org/",
+    "address": "경기 시흥시 소래산길 41",
+    "phone": "031-313-1211",
+    "gps_x": "126.785502398",
+    "gps_y": "37.4519678269"
+  },
+  {
+    "id": 48,
+    "name": "운보미술관",
+    "name_en": null,
+    "homepage_url": "https://unbo.co.kr/",
+    "address": "\t충북 청주시 청원구 내수읍 형동2길 92-41",
+    "phone": "043-213-0570",
+    "gps_x": "127.56577854416291",
+    "gps_y": "36.69204594126246"
+  },
+  {
+    "id": 51,
+    "name": "한전갤러리",
+    "name_en": null,
+    "homepage_url": "https://www.kepco.co.kr/art/index.do",
+    "address": "서울 서초구 효령료72길 60",
+    "phone": "02-3456-5096\n\n",
+    "gps_x": "127.02867980883956",
+    "gps_y": "37.48594870421582"
+  },
+  {
+    "id": 53,
+    "name": "국립현대미술관 과천관",
+    "name_en": null,
+    "homepage_url": "https://www.mmca.go.kr/",
+    "address": "경기 과천시 광명로 313",
+    "phone": "02-2188-6000",
+    "gps_x": "127.02007201176697",
+    "gps_y": "37.43135813689219"
+  },
+  {
+    "id": 54,
+    "name": "보름산미술관",
+    "name_en": null,
+    "homepage_url": "http://www.boroomsan.com/",
+    "address": "경기 김포시 고촌읍 수기로 100-78",
+    "phone": "031-986-2583",
+    "gps_x": "126.76053029298352",
+    "gps_y": "37.59632499953014"
+  },
+  {
+    "id": 55,
+    "name": "창원시립마산문신미술관",
+    "name_en": null,
+    "homepage_url": "https://changwon.go.kr/moonshin/",
+    "address": "경남 창원시 마산합포구 문신길 147",
+    "phone": "055-225-7181",
+    "gps_x": "128.5689782050479",
+    "gps_y": "35.20631542079396"
+  },
+  {
+    "id": 56,
+    "name": "플랫폼-엘 컨템포러리 아트센터",
+    "name_en": null,
+    "homepage_url": "https://platform-l.org/",
+    "address": "서울 강남구 언주로133길 11",
+    "phone": "02-6929-4470",
+    "gps_x": "127.03426505883716",
+    "gps_y": "37.51616019750851"
+  },
+  {
+    "id": 57,
+    "name": "안상철미술관",
+    "name_en": null,
+    "homepage_url": "https://www.ahnsangchul.co.kr/",
+    "address": "경기 양주시 백석읍 권율로 905",
+    "phone": "031-874-0734",
+    "gps_x": "126.956933397",
+    "gps_y": "37.7783989314"
+  },
+  {
+    "id": 60,
+    "name": "저녁노을미술관",
+    "name_en": null,
+    "homepage_url": "https://www.instagram.com/sunset_museum_/",
+    "address": "전남 신안군 압해읍 무지개길 350",
+    "phone": "061-240-8684",
+    "gps_x": "126.24982543694595",
+    "gps_y": "34.84456096439388"
+  },
+  {
+    "id": 61,
+    "name": "여주박물관",
+    "name_en": null,
+    "homepage_url": "http://yeojuartmuseum.com",
+    "address": "경기 여주시 세종로 394-38",
+    "phone": "031-884-8803",
+    "gps_x": "127.637078954755",
+    "gps_y": "37.2647904526816"
+  },
+  {
+    "id": 62,
+    "name": "경기도미술관",
+    "name_en": null,
+    "homepage_url": "http://gmoma.ggcf.kr/",
+    "address": "경기 안산시 단원구 동산로 268",
+    "phone": "031-481-7000",
+    "gps_x": "126.81407640381597",
+    "gps_y": "37.32580289466538"
+  },
+  {
+    "id": 63,
+    "name": "국립현대미술관 서울관",
+    "name_en": null,
+    "homepage_url": "https://www.mmca.go.kr/",
+    "address": "서울 종로구 삼청로 30",
+    "phone": "02-3701-9500",
+    "gps_x": "126.98010361777375",
+    "gps_y": "37.5786274905286"
+  },
+  {
+    "id": 65,
+    "name": "코리아나미술관",
+    "name_en": null,
+    "homepage_url": "http://www.spacec.co.kr/",
+    "address": "서울 강남구 언주로 827",
+    "phone": "02-547-9177",
+    "gps_x": "127.03276412436121",
+    "gps_y": "37.52412323746803"
+  },
+  {
+    "id": 67,
+    "name": "국제갤러리",
+    "name_en": null,
+    "homepage_url": "https://www.kukjegallery.com/",
+    "address": "서울 종로구 삼청로 54",
+    "phone": "02-735-8449",
+    "gps_x": "126.9804710062683",
+    "gps_y": "37.58069082797214"
+  },
+  {
+    "id": 68,
+    "name": "이천시립월전미술관",
+    "name_en": null,
+    "homepage_url": "https://www.iwoljeon.co.kr/main/main.php",
+    "address": "경기 이천시 경충대로 2709번길 185",
+    "phone": "031-637-0032",
+    "gps_x": "127.42442323601418",
+    "gps_y": "37.2794695281144"
+  },
+  {
+    "id": 70,
+    "name": "갤러리현대",
+    "name_en": null,
+    "homepage_url": "http://www.galleryhyundai.com/",
+    "address": "서울 종로구 삼청로 14",
+    "phone": "02-2287-3591",
+    "gps_x": "126.97984943601662",
+    "gps_y": "37.57663399766476"
+  },
+  {
+    "id": 71,
+    "name": "서울시립미술관",
+    "name_en": null,
+    "homepage_url": "http://sema.seoul.go.kr/",
+    "address": "서울 중구 덕수궁길 61",
+    "phone": "02-2124-8800",
+    "gps_x": "126.97376336838333",
+    "gps_y": "37.56413824910192"
+  },
+  {
+    "id": 73,
+    "name": "보성군립백민미술관",
+    "name_en": null,
+    "homepage_url": "https://korean.visitkorea.or.kr/detail/ms_detail.do?cotid=94615472-6af4-4647-a615-47f6eb03c6b0&big_category=undefined&mid_category=undefined&big_area=undefined&referrer=https%3A%2F%2Fkorean.visitkorea.or.kr%2Fkor%2Fbz15%2Fwhere%2Fwhere_tour.jsp%3Fcid%3D130113",
+    "address": "전남 보성군 문덕면 죽산길 168-14",
+    "phone": "061-853-0003",
+    "gps_x": "127.160065866",
+    "gps_y": "34.9669463154"
+  },
+  {
+    "id": 74,
+    "name": "갤러리SP",
+    "name_en": null,
+    "homepage_url": "https://www.gallerysp.com/",
+    "address": "서울 용산구 회나무로44가길 30",
+    "phone": "02-546-3560",
+    "gps_x": "126.99428605434707",
+    "gps_y": "37.53830039507708"
+  },
+  {
+    "id": 75,
+    "name": "강릉시립미술관 교동관",
+    "name_en": null,
+    "homepage_url": "https://www.gn.go.kr/mu/index.do",
+    "address": "강원 강릉시 화부산로40번길 46 (교동)",
+    "phone": "033-640-4271",
+    "gps_x": "128.89083631129705",
+    "gps_y": "37.76054633933659"
+  },
+  {
+    "id": 76,
+    "name": "영암군립 하정웅미술관",
+    "name_en": null,
+    "homepage_url": "https://www.yeongam.go.kr/home/haart",
+    "address": "전남 영암군 군서면 구림로 96",
+    "phone": "061-470-6841",
+    "gps_x": "126.62192184679296",
+    "gps_y": "34.76089207892455"
+  },
+  {
+    "id": 77,
+    "name": "남송미술관",
+    "name_en": null,
+    "homepage_url": "http://www.namsongart.com",
+    "address": "경기 가평군 북면 백둔로 322",
+    "phone": "031-581-0772",
+    "gps_x": "127.472273627",
+    "gps_y": "37.9045118194"
+  },
+  {
+    "id": 79,
+    "name": "비트리갤러리",
+    "name_en": null,
+    "homepage_url": "https://ko.b-treegallery.com/",
+    "address": "서울 마포구 와우산로 94 홍익대학교 홍문관",
+    "phone": "02-6951-0008",
+    "gps_x": "126.924990619497",
+    "gps_y": "37.5525192523979"
+  },
+  {
+    "id": 80,
+    "name": "갤러리 라메르",
+    "name_en": null,
+    "homepage_url": "http://www.gallerylamer.com/about-us/",
+    "address": "서울 종로구 인사동 5길 26",
+    "phone": "02-730-5454",
+    "gps_x": "126.98493601130363",
+    "gps_y": "37.57255325030841"
+  },
+  {
+    "id": 82,
+    "name": "대림미술관",
+    "name_en": null,
+    "homepage_url": "http://www.daelimmuseum.org/",
+    "address": "서울 종로구 자하문로4길 21",
+    "phone": "02-720-0667",
+    "gps_x": "126.97337942872869",
+    "gps_y": "37.57752695281287"
+  },
+  {
+    "id": 83,
+    "name": "소다미술관",
+    "name_en": null,
+    "homepage_url": "http://www.museumsoda.org/",
+    "address": "경기 화성시 효행로707번기 30",
+    "phone": "070-8915-9127",
+    "gps_x": "127.0061840965672",
+    "gps_y": "37.20161398977039"
+  },
+  {
+    "id": 92,
+    "name": "아트뮤지엄 려",
+    "name_en": null,
+    "homepage_url": "https://www.yeoju.go.kr/ryeo/",
+    "address": "경기도 여주시 명품로 370",
+    "phone": "031-887-2630",
+    "gps_x": "127.6078488",
+    "gps_y": "37.2380063"
+  },
+  {
+    "id": 100,
+    "name": "전남도립미술관",
+    "name_en": null,
+    "homepage_url": "http://artmuseum.jeonnam.go.kr/",
+    "address": "전라남도 광양시 광양읍 순광로 660",
+    "phone": "061-760-3242",
+    "gps_x": "127.5888221",
+    "gps_y": "34.96787817"
+  },
+  {
+    "id": 105,
+    "name": "남원시립김병종미술관",
+    "name_en": null,
+    "homepage_url": "https://www.instagram.com/nkam_nkam/",
+    "address": "전북특별자치도 남원시 함파우길 65-14",
+    "phone": "063-620-5660",
+    "gps_x": "127.389555",
+    "gps_y": "35.398706"
+  },
+  {
+    "id": 109,
+    "name": "수덕사 선미술관",
+    "name_en": null,
+    "homepage_url": "https://www.sudeoksa.com/pages/s2_5_2.php",
+    "address": "충청남도 예산군 덕산면 수덕사안길 79",
+    "phone": "041-338-9900",
+    "gps_x": "126.62266840",
+    "gps_y": "36.66245074"
+  },
+  {
+    "id": 115,
+    "name": "성마루미술관",
+    "name_en": null,
+    "homepage_url": "https://blog.naver.com/sungmaruart",
+    "address": "충청북도 충주시 대소원면 장성길 38-1",
+    "phone": "043-848-7200",
+    "gps_x": "127.8387836",
+    "gps_y": "36.96142968"
+  },
+  {
+    "id": 136,
+    "name": "뮤지엄산미술관",
+    "name_en": null,
+    "homepage_url": "www.museumsan.org",
+    "address": "강원특별자치도 원주시 지정면 오크밸리2길 260",
+    "phone": "033-730-9000",
+    "gps_x": "127.8232354",
+    "gps_y": "37.41819781"
+  },
+  {
+    "id": 138,
+    "name": "KT&G 상상마당 춘천 아트센터",
+    "name_en": null,
+    "homepage_url": "https://www.sangsangmadang.com/main/CC",
+    "address": "강원특별자치도 춘천시 스포츠타운길399번길 25",
+    "phone": "033-818-3200",
+    "gps_x": "127.702092",
+    "gps_y": "37.873618"
+  },
+  {
+    "id": 139,
+    "name": "이상원미술관",
+    "name_en": null,
+    "homepage_url": "http://www.lswmuseum.com",
+    "address": "강원특별자치도 춘천시 사북면 화악지암길 99",
+    "phone": "033-255-9001",
+    "gps_x": "127.578351",
+    "gps_y": "37.968325"
+  },
+  {
+    "id": 140,
+    "name": "춘천미술관",
+    "name_en": null,
+    "homepage_url": "http://ccart.or.kr/",
+    "address": "강원특별자치도 춘천시 서부대성로 71",
+    "phone": "033-241-1856",
+    "gps_x": "127.731333",
+    "gps_y": "37.882376"
+  },
+  {
+    "id": 150,
+    "name": "아트린뮤지움",
+    "name_en": null,
+    "homepage_url": "https://artrinmuseum.org/",
+    "address": "경기도 파주시 광탄면 기산로186번길 59",
+    "phone": "031-946-6468",
+    "gps_x": "126.9164735958",
+    "gps_y": "37.7737719224"
+  },
+  {
+    "id": 151,
+    "name": "한향림도자미술관",
+    "name_en": null,
+    "homepage_url": "https://www.hhlceramicmuseum.com/",
+    "address": "경기도 파주시 탄현면 헤이리마을길 76-101",
+    "phone": "070-8872-0469",
+    "gps_x": "126.7021101824",
+    "gps_y": "37.7865784815"
+  },
+  {
+    "id": 164,
+    "name": "블루메미술관",
+    "name_en": null,
+    "homepage_url": "https://bmca.or.kr",
+    "address": "경기도 파주시 탄현면 헤이리마을길 59-30",
+    "phone": "031-944-6324",
+    "gps_x": "126.6966333151",
+    "gps_y": "37.7893254058"
+  },
+  {
+    "id": 183,
+    "name": "수원시립미술관",
+    "name_en": null,
+    "homepage_url": "https://suma.suwon.go.kr",
+    "address": "경기도 수원시 팔달구 정조로 833",
+    "phone": "031-5191-3800",
+    "gps_x": "127.015823",
+    "gps_y": "37.282704"
+  },
+  {
+    "id": 196,
+    "name": "우리미술관",
+    "name_en": null,
+    "homepage_url": "http://www.wooriart.co.kr/",
+    "address": "인천광역시 동구 화도진로 198번길 6",
+    "phone": "032-770-6927",
+    "gps_x": "126.6226314657",
+    "gps_y": "37.4863877455"
+  },
+  {
+    "id": 203,
+    "name": "서울과학기술대학교미술관 (다빈치관 2층)",
+    "name_en": null,
+    "homepage_url": "https://art.seoultech.ac.kr/museum/guide",
+    "address": "서울 노원구 공릉로 232 서울과학기술대학교 다빈치관 2층",
+    "phone": "",
+    "gps_x": "127.0767947",
+    "gps_y": "37.63307893"
+  },
+  {
+    "id": 216,
+    "name": "무안군오승우미술관",
+    "name_en": null,
+    "homepage_url": "https://www.muan.go.kr/museum",
+    "address": "전라남도 무안군 삼향읍 초의길 7",
+    "phone": "061-450-5482",
+    "gps_x": "126.4152438",
+    "gps_y": "34.852575"
+  },
+  {
+    "id": 218,
+    "name": "모산조형미술관",
+    "name_en": null,
+    "homepage_url": "http://mosanmuseum.com/",
+    "address": "충청남도 보령시 성주면 성주산로 673-24",
+    "phone": "041-933-8100",
+    "gps_x": "126.6577924",
+    "gps_y": "36.3111117"
+  },
+  {
+    "id": 234,
+    "name": "경북대학교 미술관",
+    "name_en": null,
+    "homepage_url": "http://artmuseum.knu.ac.kr",
+    "address": "대구광역시 북구 대학로 80(산격동)",
+    "phone": "053-950-7968",
+    "gps_x": "128.6143217",
+    "gps_y": "35.88909849"
+  },
+  {
+    "id": 237,
+    "name": "함평군립미술관",
+    "name_en": null,
+    "homepage_url": "http://www.hpart.or.kr/",
+    "address": "전라남도 함평군 함평읍 곤재로 27",
+    "phone": "061-320-2276",
+    "gps_x": "126.5226056",
+    "gps_y": "35.05813923"
+  },
+  {
+    "id": 247,
+    "name": "모란미술관",
+    "name_en": null,
+    "homepage_url": "http://www.moranmuseum.org/",
+    "address": "경기도 남양주시 화도읍 경춘로2110번길 8",
+    "phone": "031-594-8001",
+    "gps_x": "127.3237775",
+    "gps_y": "37.6504135"
+  },
+  {
+    "id": 248,
+    "name": "맥아트미술관 (유리섬박물관)",
+    "name_en": null,
+    "homepage_url": "http://www.glassisland.co.kr",
+    "address": "경기도 안산시 단원구 부흥로 254",
+    "phone": "032-888-6262",
+    "gps_x": "126.6024204",
+    "gps_y": "37.2197536"
+  },
+  {
+    "id": 252,
+    "name": "종이미술관",
+    "name_en": null,
+    "homepage_url": "http://종이미술관.com",
+    "address": "경기도 안산시 단원구 대남로 233",
+    "phone": "032-887-0606",
+    "gps_x": "126.5759886",
+    "gps_y": "37.2245131"
+  },
+  {
+    "id": 254,
+    "name": "김홍도미술관",
+    "name_en": null,
+    "homepage_url": "https://www.ansanart.com/main/danwon/index.do",
+    "address": "경기도 안산시 상록구 충장로 422",
+    "phone": "031-481-0505",
+    "gps_x": "126.8517361",
+    "gps_y": "37.3160366"
+  },
+  {
+    "id": 315,
+    "name": "금구원 야외조각미술관",
+    "name_en": null,
+    "homepage_url": "http://www.keumkuwon.org/",
+    "address": "전북특별자치도 부안군 변산면 조각공원길 31",
+    "phone": "063-584-6770",
+    "gps_x": "126.4888399",
+    "gps_y": "35.62063562"
+  },
+  {
+    "id": 320,
+    "name": "서해미술관",
+    "name_en": null,
+    "homepage_url": "https://shas21.creatorlink.net/",
+    "address": "충청남도서산시부석면무학로152-13",
+    "phone": "041-664-7004",
+    "gps_x": "126.3774755",
+    "gps_y": "36.63887544"
+  },
+  {
+    "id": 322,
+    "name": "고성군 진부령미술관",
+    "name_en": null,
+    "homepage_url": "https://www.gwgs.go.kr/prog/tursmCn/tour/sub02_12/view.do?cntno=45",
+    "address": "강원특별자치도 인제군 북면 진부령로 663",
+    "phone": "033-681-7667",
+    "gps_x": "128.3585937",
+    "gps_y": "38.265504"
+  },
+  {
+    "id": 331,
+    "name": "닻미술관",
+    "name_en": null,
+    "homepage_url": "www.datzmuseum.org",
+    "address": "경기도 광주시 초월읍 진새골길 184",
+    "phone": "031-798-2581",
+    "gps_x": "127.2711276",
+    "gps_y": "37.38034358"
+  },
+  {
+    "id": 332,
+    "name": "영은미술관",
+    "name_en": null,
+    "homepage_url": "www.youngeunmuseum.org/",
+    "address": "경기도 광주시 청석로 300(쌍령동)",
+    "phone": "031-761-0137",
+    "gps_x": "127.268748",
+    "gps_y": "37.41355842"
+  },
+  {
+    "id": 334,
+    "name": "엄미술관",
+    "name_en": null,
+    "homepage_url": "http://www.ummuseum.com/",
+    "address": "경기도 화성시 효행구 봉담읍 오궁길 37",
+    "phone": "031-222-9188",
+    "gps_x": "126.9793812",
+    "gps_y": "37.205538"
+  },
+  {
+    "id": 340,
+    "name": "예술의전당 한가람미술관",
+    "name_en": null,
+    "homepage_url": "https://www.sac.or.kr",
+    "address": "서울 서초구 남부순환로 2406 예술의전당 한가람미술관",
+    "phone": "02-580-1300",
+    "gps_x": "127.0143122",
+    "gps_y": "37.4803315"
+  },
+  {
+    "id": 342,
+    "name": "(재)한원미술관",
+    "name_en": null,
+    "homepage_url": "http://www.hanwon.org/",
+    "address": "서울특별시 서초구 남부순환로 2423",
+    "phone": "02-588-5642",
+    "gps_x": "127.0154357",
+    "gps_y": "37.48178113"
+  },
+  {
+    "id": 350,
+    "name": "김세중미술관",
+    "name_en": null,
+    "homepage_url": "http://www.kimsechoong.com/main.php",
+    "address": "서울특별시 용산구 효창원로70길 35",
+    "phone": "02-717-5129",
+    "gps_x": "126.9638815",
+    "gps_y": "37.54201614"
+  },
+  {
+    "id": 352,
+    "name": "리움미술관",
+    "name_en": null,
+    "homepage_url": "https://www.leeumhoam.org/leeum",
+    "address": "서울특별시 용산구 이태원로55길 60-16",
+    "phone": "02-2014-6901",
+    "gps_x": "126.999294",
+    "gps_y": "37.53846091"
+  },
+  {
+    "id": 365,
+    "name": "클레이아크 김해미술관",
+    "name_en": null,
+    "homepage_url": "https://clayarch.ghct.or.kr/home/main",
+    "address": "경상남도 김해시 진례면 분청로 21",
+    "phone": "055-340-7000",
+    "gps_x": "128.7457858",
+    "gps_y": "35.2508918"
+  },
+  {
+    "id": 377,
+    "name": "설미재미술관",
+    "name_en": null,
+    "homepage_url": "http://www.artsm.kr/",
+    "address": "경기도 가평군 설악면 유명로 1454-38",
+    "phone": "031-585-6276",
+    "gps_x": "127.482238",
+    "gps_y": "37.660885"
+  },
+  {
+    "id": 380,
+    "name": "오산시립미술관",
+    "name_en": null,
+    "homepage_url": "http://osan.go.kr/arts/",
+    "address": "경기도 오산시 현충로 100",
+    "phone": "031-379-9990",
+    "gps_x": "127.0770823",
+    "gps_y": "37.16026829"
+  },
+  {
+    "id": 407,
+    "name": "아르코미술관",
+    "name_en": null,
+    "homepage_url": "https://www.arko.or.kr/artcenter/",
+    "address": "서울특별시 종로구 동숭길 3",
+    "phone": "02-760-4850",
+    "gps_x": "127.003256",
+    "gps_y": "37.58050139"
+  },
+  {
+    "id": 409,
+    "name": "세종문화회관 미술관(세종미술관)",
+    "name_en": null,
+    "homepage_url": "http://sejongpac.or.kr",
+    "address": "서울특별시 종로구 세종대로 175",
+    "phone": "02-399-1156",
+    "gps_x": "126.9761683",
+    "gps_y": "37.57184786"
+  },
+  {
+    "id": 412,
+    "name": "금호미술관",
+    "name_en": null,
+    "homepage_url": "http://www.kumhomuseum.com/",
+    "address": "서울특별시 종로구 삼청로 18",
+    "phone": "02-720-5114",
+    "gps_x": "126.9799126",
+    "gps_y": "37.57746518"
+  },
+  {
+    "id": 414,
+    "name": "OCI 미술관",
+    "name_en": null,
+    "homepage_url": "http://www.ocimuseum.org/",
+    "address": "서울특별시 종로구 우정국로 45-14",
+    "phone": "02-734-0440",
+    "gps_x": "126.982131",
+    "gps_y": "37.57323807"
+  },
+  {
+    "id": 416,
+    "name": "박노수미술관",
+    "name_en": null,
+    "homepage_url": "https://www.jfac.or.kr/",
+    "address": "서울특별시 종로구 옥인1길 34",
+    "phone": "02-2148-4171",
+    "gps_x": "126.966815",
+    "gps_y": "37.5813192"
+  },
+  {
+    "id": 437,
+    "name": "동아대학교석당미술관",
+    "name_en": null,
+    "homepage_url": "http://museumsd.donga.ac.kr",
+    "address": "부산광역시 서구 구덕로 225",
+    "phone": "051-200-8749",
+    "gps_x": "129.0194155",
+    "gps_y": "35.103747"
+  },
+  {
+    "id": 441,
+    "name": "세화미술관",
+    "name_en": null,
+    "homepage_url": "www.sehwamuseum.org",
+    "address": "서울특별시 종로구 새문안로 68, 3층",
+    "phone": "02-2002-7785",
+    "gps_x": "126.972186",
+    "gps_y": "37.56964296"
+  },
+  {
+    "id": 442,
+    "name": "환기미술관",
+    "name_en": null,
+    "homepage_url": "http://whankimuseum.org/",
+    "address": "서울특별시 종로구 자하문로 40길 63",
+    "phone": "02-391-7701",
+    "gps_x": "126.966112",
+    "gps_y": "37.59408714"
+  },
+  {
+    "id": 443,
+    "name": "학아재미술관",
+    "name_en": null,
+    "homepage_url": "http://www.seoulscm.com/museum/345",
+    "address": "서울특별시 종로구 돈화문로 98",
+    "phone": "02-766-7647",
+    "gps_x": "126.9904047",
+    "gps_y": "37.577059"
+  },
+  {
+    "id": 444,
+    "name": "토탈미술관",
+    "name_en": null,
+    "homepage_url": "http://totalmuseum.org/",
+    "address": "서울특별시 종로구 평창32길 8",
+    "phone": "02-379-7037",
+    "gps_x": "126.9756765",
+    "gps_y": "37.61212012"
+  },
+  {
+    "id": 445,
+    "name": "자하미술관",
+    "name_en": null,
+    "homepage_url": "https://www.zahamuseum.org/",
+    "address": "서울특별시 종로구 창의문로5가길 46",
+    "phone": "02-395-3222",
+    "gps_x": "126.960398",
+    "gps_y": "37.58937855"
+  },
+  {
+    "id": 446,
+    "name": "일민미술관",
+    "name_en": null,
+    "homepage_url": "http://www.ilmin.org/",
+    "address": "서울특별시 종로구 세종대로 152",
+    "phone": "02-2020-2050",
+    "gps_x": "126.9776553",
+    "gps_y": "37.56986758"
+  },
+  {
+    "id": 447,
+    "name": "아트센터 나비 미술관",
+    "name_en": null,
+    "homepage_url": "http://www.nabi.or.kr/",
+    "address": "서울 종로구 율곡로1길 37, 1층",
+    "phone": "02-2121-1031",
+    "gps_x": "126.980341",
+    "gps_y": "37.56969128"
+  },
+  {
+    "id": 451,
+    "name": "진주시립 이성자미술관",
+    "name_en": null,
+    "homepage_url": "http://www.jinju.go.kr/rheesjmuseum/",
+    "address": "경상남도 진주시 에나로 128번길 14",
+    "phone": "055-749-3661",
+    "gps_x": "128.1427382",
+    "gps_y": "35.17580907"
+  },
+  {
+    "id": 453,
+    "name": "시안미술관",
+    "name_en": null,
+    "homepage_url": "http://www.cianmuseum.org/",
+    "address": "경상북도 영천시 화산면 가래실로 364",
+    "phone": "054-338-9391",
+    "gps_x": "128.889217",
+    "gps_y": "36.03276243"
+  },
+  {
+    "id": 465,
+    "name": "화순군립 최상준미술관",
+    "name_en": null,
+    "homepage_url": "https://sbart.or.kr/",
+    "address": "전라남도 화순군 화순읍 진각로 249-8",
+    "phone": "061-379-3836",
+    "gps_x": "126.9875228",
+    "gps_y": "35.0733094"
+  },
+  {
+    "id": 481,
+    "name": "권정호미술관",
+    "name_en": null,
+    "homepage_url": "http://www.kwonjungho.com/",
+    "address": "대구광역시 동구 동부로 67",
+    "phone": "053-243-1601",
+    "gps_x": "128.619876",
+    "gps_y": "35.87535436"
+  },
+  {
+    "id": 483,
+    "name": "대구미술관",
+    "name_en": null,
+    "homepage_url": "https://daeguartmuseum.or.kr",
+    "address": "대구광역시 수성구 미술관로 40",
+    "phone": "053-430-7500",
+    "gps_x": "128.6743408",
+    "gps_y": "35.82702862"
+  },
+  {
+    "id": 484,
+    "name": "대구문화예술회관 미술관",
+    "name_en": null,
+    "homepage_url": "https://daeguartscenter.or.kr/",
+    "address": "대구광역시 달서구 공원순환로 201",
+    "phone": "053-430-7600",
+    "gps_x": "128.5581018",
+    "gps_y": "35.84476741"
+  },
+  {
+    "id": 485,
+    "name": "대구간송미술관",
+    "name_en": null,
+    "homepage_url": "https://kansong.org/daegu/",
+    "address": "대구광역시 수성구 미술관로 70",
+    "phone": "053-793-2022",
+    "gps_x": "128.6743408",
+    "gps_y": "35.82702862"
+  },
+  {
+    "id": 508,
+    "name": "리각미술관",
+    "name_en": null,
+    "homepage_url": "http://ligakmuseum.co.kr/",
+    "address": "충청남도 천안시 동남구 태조산길 245",
+    "phone": "070-4111-3463",
+    "gps_x": "127.186286",
+    "gps_y": "36.82015665"
+  },
+  {
+    "id": 509,
+    "name": "천안시립미술관",
+    "name_en": null,
+    "homepage_url": "https://www.camoa.or.kr/",
+    "address": "충청남도 천안시 동남구 성남면 종합휴양지로 185",
+    "phone": "041-901-6610",
+    "gps_x": "127.2248886",
+    "gps_y": "36.7561303"
+  },
+  {
+    "id": 524,
+    "name": "경남도립미술관",
+    "name_en": null,
+    "homepage_url": "https://www.gyeongnam.go.kr/gam/index.gyeong",
+    "address": "경상남도 창원시 의창구 용지로 296(경남도립미술관)",
+    "phone": "055-254-4600",
+    "gps_x": "128.6908555",
+    "gps_y": "35.23946503"
+  },
+  {
+    "id": 582,
+    "name": "고양 아람누리",
+    "name_en": null,
+    "homepage_url": "http://www.artgy.or.kr",
+    "address": "경기도 고양시 일산동구 중앙로 1286",
+    "phone": "031-960-0180",
+    "gps_x": "126.7744561",
+    "gps_y": "37.66148641"
+  },
+  {
+    "id": 593,
+    "name": "양주시립장욱진미술관",
+    "name_en": null,
+    "homepage_url": "http://changucchin.yangju.go.kr/",
+    "address": "경기도 양주시 장흥면 권율로 193",
+    "phone": "031-8082-4245",
+    "gps_x": "126.9492504",
+    "gps_y": "37.73281632"
+  },
+  {
+    "id": 606,
+    "name": "경주예술의전당 알천미술관",
+    "name_en": null,
+    "homepage_url": "https://garts.kr/",
+    "address": "경상북도 경주시 알천북로 1",
+    "phone": "1588-4925",
+    "gps_x": "129.205958",
+    "gps_y": "35.86235686"
+  },
+  {
+    "id": 607,
+    "name": "경주솔거미술관",
+    "name_en": null,
+    "homepage_url": "https://www.gjsam.or.kr/ko/",
+    "address": "경상북도 경주시 경감로614",
+    "phone": "054-740-3990",
+    "gps_x": "129.288868",
+    "gps_y": "35.83225413"
+  },
+  {
+    "id": 611,
+    "name": "한라디지털아트뮤지엄",
+    "name_en": null,
+    "homepage_url": "https://halladigitalartmuseum.com/",
+    "address": "제주특별자치도 제주시 한라대학로38",
+    "phone": "064-741-1666",
+    "gps_x": "126.4741519",
+    "gps_y": "33.47678976"
+  },
+  {
+    "id": 636,
+    "name": "유동룡미술관",
+    "name_en": null,
+    "homepage_url": "www.itamijunmuseum.com",
+    "address": "제주특별자치도 제주시 한림읍 용금로906-10",
+    "phone": "064-745-2678",
+    "gps_x": "126.2707159",
+    "gps_y": "33.34061683"
+  },
+  {
+    "id": 641,
+    "name": "제주김택화미술관",
+    "name_en": null,
+    "homepage_url": "www.kimtekhwa.com",
+    "address": "제주특별자치도 제주시 조첩읍 신흥로1",
+    "phone": "064-900-9097",
+    "gps_x": "126.652878",
+    "gps_y": "33.544049"
+  },
+  {
+    "id": 645,
+    "name": "유민 아르누보 뮤지엄",
+    "name_en": null,
+    "homepage_url": "http://www.yuminart.org/",
+    "address": "제주특별자치도 서귀포시 성산읍 섭지코지로 107",
+    "phone": "064-731-7791",
+    "gps_x": "126.9264499",
+    "gps_y": "33.42603156"
+  },
+  {
+    "id": 647,
+    "name": "왈종미술관",
+    "name_en": null,
+    "homepage_url": "http://walartmuseum.or.kr/",
+    "address": "제주특별자치도 서귀포시 칠십리로214번길 30",
+    "phone": "064-763-3600",
+    "gps_x": "126.5736629",
+    "gps_y": "33.24530212"
+  },
+  {
+    "id": 653,
+    "name": "제주도립 김창열미술관",
+    "name_en": null,
+    "homepage_url": "http://kimtschang-yeul.jeju.go.kr/",
+    "address": "제주특별자치도 제주시 한림읍 용금로 883-5",
+    "phone": "064-710-4150",
+    "gps_x": "126.2686717",
+    "gps_y": "33.33907132"
+  },
+  {
+    "id": 654,
+    "name": "돌하르방미술관",
+    "name_en": null,
+    "homepage_url": "https://blog.naver.com/dhbpark",
+    "address": "제주특별자치도 제주시 조천읍 북촌서1길 70",
+    "phone": "064-782-0570",
+    "gps_x": "126.6888123",
+    "gps_y": "33.5388475"
+  },
+  {
+    "id": 655,
+    "name": "제주 현대미술관",
+    "name_en": null,
+    "homepage_url": "http://jejumuseum.go.kr/kor/",
+    "address": "제주특별자치도 제주시 한경면 저지14길 35",
+    "phone": "064-710-7801",
+    "gps_x": "126.2656919",
+    "gps_y": "33.33969288"
+  },
+  {
+    "id": 657,
+    "name": "김영갑갤러리 두모악",
+    "name_en": null,
+    "homepage_url": "http://www.dumoak.com/",
+    "address": "제주특별자치도 서귀포시 성산읍 삼달로 137",
+    "phone": "064-784-9907",
+    "gps_x": "126.8542458",
+    "gps_y": "33.37236763"
+  },
+  {
+    "id": 658,
+    "name": "이중섭미술관",
+    "name_en": null,
+    "homepage_url": "http://culture.seogwipo.go.kr/jslee/index.htm",
+    "address": "제주특별자치도 서귀포시 이중섭로 27-3",
+    "phone": "064-760-3567",
+    "gps_x": "126.5648746",
+    "gps_y": "33.24586163"
+  },
+  {
+    "id": 659,
+    "name": "기당미술관",
+    "name_en": null,
+    "homepage_url": "http://culture.seogwipo.go.kr/gidang/index.htm",
+    "address": "제주특별자치도 서귀포시 남성중로 153번길 15",
+    "phone": "064-733-1586",
+    "gps_x": "126.5511958",
+    "gps_y": "33.24484755"
+  },
+  {
+    "id": 686,
+    "name": "울산시립미술관",
+    "name_en": null,
+    "homepage_url": "https://www.ulsan.go.kr/uam",
+    "address": "울산광역시 중구 미술관길 72",
+    "phone": "052-211-3800",
+    "gps_x": "129.3206661",
+    "gps_y": "35.55778844"
+  },
+  {
+    "id": 695,
+    "name": "아천미술관",
+    "name_en": null,
+    "homepage_url": "www.achen.kr",
+    "address": "전라남도 영암군 신북면 하정길12-7",
+    "phone": "061-472-9220",
+    "gps_x": "126.704699",
+    "gps_y": "34.88939751"
+  },
+  {
+    "id": 706,
+    "name": "성남큐브미술관",
+    "name_en": null,
+    "homepage_url": "http://www.snab.or.kr",
+    "address": "경기도 성남시 분당구 성남대로 808",
+    "phone": "031-783-8000",
+    "gps_x": "127.130558",
+    "gps_y": "37.402956"
+  },
+  {
+    "id": 720,
+    "name": "K현대미술관",
+    "name_en": null,
+    "homepage_url": "https://www.kmcaseoul.org/",
+    "address": "서울특별시 강남구 선릉로 807",
+    "phone": "02-2138-0952",
+    "gps_x": "127.0391734",
+    "gps_y": "37.52438077"
+  },
+  {
+    "id": 722,
+    "name": "밀알미술관",
+    "name_en": null,
+    "homepage_url": "http://www.milalmuseum.or.kr/",
+    "address": "서울특별시 강남구 일원로 90",
+    "phone": "02-3412-0061",
+    "gps_x": "127.0820739",
+    "gps_y": "37.48578132"
+  },
+  {
+    "id": 726,
+    "name": "서울대학교 미술관",
+    "name_en": null,
+    "homepage_url": "http://www.snumoa.org",
+    "address": "서울특별시 관악구 관악로 1",
+    "phone": "02-880-9504",
+    "gps_x": "126.9592943",
+    "gps_y": "37.46803806"
+  },
+  {
+    "id": 727,
+    "name": "서울시립남서울미술관",
+    "name_en": null,
+    "homepage_url": "http://sema.seoul.go.kr/kr/visit/namseoul",
+    "address": "서울특별시 관악구 남부순환로 2076",
+    "phone": "02-598-6247",
+    "gps_x": "126.9794659",
+    "gps_y": "37.47605354"
+  },
+  {
+    "id": 731,
+    "name": "정읍시립미술관",
+    "name_en": null,
+    "homepage_url": "http://www.jeongeup.go.kr",
+    "address": "전북특별자치도 정읍시 시기4길 7",
+    "phone": "063-539-6419",
+    "gps_x": "126.8613896",
+    "gps_y": "35.55232735"
+  },
+  {
+    "id": 734,
+    "name": "우민아트센터",
+    "name_en": null,
+    "homepage_url": "http://www.wuminartcenter.org",
+    "address": "충청북도 청주시 상당구 사북로 164, B1(북문로3가)",
+    "phone": "043-222-0357",
+    "gps_x": "127.489187",
+    "gps_y": "36.644553"
+  },
+  {
+    "id": 735,
+    "name": "스페이스몸미술관",
+    "name_en": null,
+    "homepage_url": "http://www.spacemom.org",
+    "address": "충청북도 청주시 흥덕구 풍년로 162 (1관)충청북도 청주시 흥덕구 서부로1205번길 183(2관)",
+    "phone": "043-236-6622",
+    "gps_x": "127.4328093",
+    "gps_y": "36.62677804"
+  },
+  {
+    "id": 736,
+    "name": "공립인제내설악미술관",
+    "name_en": null,
+    "homepage_url": "http://www.inama.co.kr/",
+    "address": "강원특별자치도 인제군 북면 예술인촌길 66-27",
+    "phone": "033-463-4081",
+    "gps_x": "128.2523603",
+    "gps_y": "38.14667693"
+  },
+  {
+    "id": 743,
+    "name": "진천군립 생거판화미술관",
+    "name_en": null,
+    "homepage_url": "http://www.jincheon.go.kr/sisul/sub.do?menukey=784",
+    "address": "충청북도 진천군 진천읍 백곡로 1504-10",
+    "phone": "043-539-3608",
+    "gps_x": "127.4148849",
+    "gps_y": "36.87095893"
+  },
+  {
+    "id": 744,
+    "name": "이강하미술관",
+    "name_en": null,
+    "homepage_url": "http://www.lkh-artmuseum.com/default/",
+    "address": "광주광역시 남구 3·1만세운동길 6",
+    "phone": "062-674-8515",
+    "gps_x": "126.9156644",
+    "gps_y": "35.13690654"
+  },
+  {
+    "id": 752,
+    "name": "청목미술관",
+    "name_en": null,
+    "homepage_url": "http://chungmokart.com",
+    "address": "전북특별자치도 전주시 완산구 팔달로 232, 청목빌딩 1층",
+    "phone": "063-246-2222",
+    "gps_x": "127.1455957",
+    "gps_y": "35.82290877"
+  },
+  {
+    "id": 753,
+    "name": "전주현대미술관",
+    "name_en": null,
+    "homepage_url": "https://www.instagram.com/jemamuseum_jeonju/",
+    "address": "전북특별자치도 전주시 완산구 풍남문2길 98-1",
+    "phone": "063-284-0777",
+    "gps_x": "127.1442048",
+    "gps_y": "35.81380222"
+  },
+  {
+    "id": 784,
+    "name": "성북구립미술관",
+    "name_en": null,
+    "homepage_url": "http://sma.sbculture.or.kr",
+    "address": "서울특별시 성북구 성북로 134",
+    "phone": "02-6925-5011",
+    "gps_x": "126.9948864",
+    "gps_y": "37.5948078"
+  },
+  {
+    "id": 796,
+    "name": "우주미술관",
+    "name_en": null,
+    "homepage_url": "https://www.ujumuseum.com/",
+    "address": "경상남도 사천시 정동면 사천강1길 3",
+    "phone": "055-855-0612",
+    "gps_x": "128.083174",
+    "gps_y": "35.07366768"
+  },
+  {
+    "id": 815,
+    "name": "바래길작은미술관",
+    "name_en": null,
+    "homepage_url": "https://www.namhae.go.kr/tour/00008/00023/00255.web",
+    "address": "경상남도 남해군 남면 남면로 1739번길 46-1",
+    "phone": "055-862-5557",
+    "gps_x": "127.847836",
+    "gps_y": "34.76768593"
+  },
+  {
+    "id": 818,
+    "name": "극재미술관",
+    "name_en": null,
+    "homepage_url": "https://gukje.kmu.ac.kr/sites/gukje/index.do",
+    "address": "대구광역시 남구 명덕로 104, 계명대학교 2층 동산관(대명동)",
+    "phone": "053-620-2381",
+    "gps_x": "128.5793157",
+    "gps_y": "35.85552317"
+  },
+  {
+    "id": 819,
+    "name": "전북도립미술관",
+    "name_en": null,
+    "homepage_url": "https://www.jma.go.kr/",
+    "address": "전북특별자치도 완주군 구이면 모악산길 111-6",
+    "phone": "063-290-6888",
+    "gps_x": "127.1069245",
+    "gps_y": "35.72770556"
+  },
+  {
+    "id": 825,
+    "name": "뮤지엄한미 삼청\n",
+    "name_en": null,
+    "homepage_url": "https://museumhanmi.or.kr",
+    "address": "서울 종로구 삼청로9길 45",
+    "phone": "02-733-1315",
+    "gps_x": "126.9824",
+    "gps_y": "37.5852"
+  },
+  {
+    "id": 828,
+    "name": "소마미술관",
+    "name_en": null,
+    "homepage_url": "http://soma.kspo.or.kr/",
+    "address": "서울특별시 송파구 위례성대로 51",
+    "phone": "02-425-1077",
+    "gps_x": "127.1181845",
+    "gps_y": "37.51686487"
+  },
+  {
+    "id": 831,
+    "name": "백영수미술관",
+    "name_en": null,
+    "homepage_url": "http://blog.naver.com/pysmuseum",
+    "address": "경기도 의정부시 안말로58번안길 55-1",
+    "phone": "031-873-4613",
+    "gps_x": "127.0444385",
+    "gps_y": "37.71369448"
+  },
+  {
+    "id": 832,
+    "name": "드영미술관",
+    "name_en": null,
+    "homepage_url": "http://www.deyoungmuseum.co.kr/",
+    "address": "광주광역시 동구 성촌길 6(운림동)",
+    "phone": "062-223-6515",
+    "gps_x": "126.953481",
+    "gps_y": "35.134298"
+  },
+  {
+    "id": 833,
+    "name": "주안미술관",
+    "name_en": null,
+    "homepage_url": "https://juanartmuseum.org/",
+    "address": "광주광역시 동구 제봉로 197(대인동)",
+    "phone": "062-222-2083",
+    "gps_x": "126.9156606",
+    "gps_y": "35.153376"
+  },
+  {
+    "id": 834,
+    "name": "은암미술관",
+    "name_en": null,
+    "homepage_url": "http://www.eunam.org",
+    "address": "광주광역시 동구 서석로 85번길8-12(대의동)",
+    "phone": "062-231-5299",
+    "gps_x": "126.920655",
+    "gps_y": "35.150012"
+  },
+  {
+    "id": 837,
+    "name": "진도현대미술관",
+    "name_en": null,
+    "homepage_url": "https://www.instagram.com/jindoh_art/",
+    "address": "전라남도 진도군 진도읍 교동5길 30",
+    "phone": "061-542-6711",
+    "gps_x": "126.2592679",
+    "gps_y": "34.48485654"
+  },
+  {
+    "id": 838,
+    "name": "남도전통미술관",
+    "name_en": null,
+    "homepage_url": "https://www.instagram.com/namdoart5406264/",
+    "address": "전라남도 진도군 의신면 운림산방로 315",
+    "phone": "061-540-6264",
+    "gps_x": "126.3083816",
+    "gps_y": "34.46699348"
+  },
+  {
+    "id": 842,
+    "name": "호암미술관",
+    "name_en": null,
+    "homepage_url": "www.hoammuseum.org",
+    "address": "경기도 용인시 처인구 포곡읍 에버랜드로562번길 38",
+    "phone": "031-320-1800",
+    "gps_x": "127.192333",
+    "gps_y": "37.29321604"
+  },
+  {
+    "id": 849,
+    "name": "양평군립미술관",
+    "name_en": null,
+    "homepage_url": "http://www.ymuseum.org/home/",
+    "address": "경기도 양평군 양평읍 문화복지길 2",
+    "phone": "031-775-8515",
+    "gps_x": "127.4839988",
+    "gps_y": "37.49709935"
+  },
+  {
+    "id": 855,
+    "name": "근현대사미술관담다",
+    "name_en": null,
+    "homepage_url": "http://www.damda3.com/niabbs5/index.php",
+    "address": "경기도 용인시 기흥구 강남동로140번길 1-6",
+    "phone": "031-283-7222",
+    "gps_x": "127.1366705",
+    "gps_y": "37.2771845"
+  },
+  {
+    "id": 856,
+    "name": "안젤리미술관",
+    "name_en": null,
+    "homepage_url": "http://www.angeliartmuseum.net/",
+    "address": "경기도 용인시 처인구 이동읍 이원로 244",
+    "phone": "031-323-1968",
+    "gps_x": "127.2313126",
+    "gps_y": "37.18451155"
+  },
+  {
+    "id": 858,
+    "name": "문아트그라운드 뮤지엄",
+    "name_en": null,
+    "homepage_url": "https://magmuseum.com/",
+    "address": "경기도 용인시 처인구 모현읍 문형동림로101번길 37",
+    "phone": "031-334-0365",
+    "gps_x": "127.1927877",
+    "gps_y": "37.331711"
+  },
+  {
+    "id": 867,
+    "name": "쉐마미술관",
+    "name_en": null,
+    "homepage_url": "https://schemaartmuseum.com",
+    "address": "충청북도 청주시 청원구 내수읍 내수로 241",
+    "phone": "043-221-3269",
+    "gps_x": "127.4996815",
+    "gps_y": "36.6950253"
+  },
+  {
+    "id": 869,
+    "name": "청주시립대청호미술관",
+    "name_en": null,
+    "homepage_url": "https://cmoa.cheongju.go.kr/daecheongho/index.do",
+    "address": "충청북도 청주시 상당구 문의면 대청호반로 721",
+    "phone": "043-201-0914",
+    "gps_x": "127.4937195",
+    "gps_y": "36.50711307"
+  },
+  {
+    "id": 872,
+    "name": "광주시립미술관",
+    "name_en": null,
+    "homepage_url": "https://artmuse.gwangju.go.kr/",
+    "address": "광주광역시 북구 하서로 52",
+    "phone": "062-613-7113",
+    "gps_x": "126.8857357552",
+    "gps_y": "35.1832330525"
+  },
+  {
+    "id": 875,
+    "name": "무등현대미술관",
+    "name_en": null,
+    "homepage_url": "https://www.instagram.com/mdmoca_2007/",
+    "address": "광주광역시 동구 증심사길 9(운림동)",
+    "phone": "062-223-6677",
+    "gps_x": "126.953723",
+    "gps_y": "35.134183"
+  },
+  {
+    "id": 876,
+    "name": "우제길미술관",
+    "name_en": null,
+    "homepage_url": "http://www.wooart.co.kr/",
+    "address": "광주광역시 동구 의재로 140-6(운림동)",
+    "phone": "062-224-6601",
+    "gps_x": "126.943042",
+    "gps_y": "35.131806"
+  },
+  {
+    "id": 878,
+    "name": "조선대학교미술관",
+    "name_en": null,
+    "homepage_url": "https://artmuseum.chosun.ac.kr/sites/artmuseum/index.do",
+    "address": "광주광역시 동구 필문대로 309(서석동,조선대학교)",
+    "phone": "062-230-7832",
+    "gps_x": "126.934363",
+    "gps_y": "35.146003"
+  },
+  {
+    "id": 883,
+    "name": "노적봉예술공원미술관",
+    "name_en": null,
+    "homepage_url": "https://www.mokpo.go.kr/artmuseum",
+    "address": "전라남도 목포시 유달로 116",
+    "phone": "061-270-8300",
+    "gps_x": "126.3809359",
+    "gps_y": "34.78811336"
+  },
+  {
+    "id": 892,
+    "name": "청주시립미술관",
+    "name_en": null,
+    "homepage_url": "https://cmoa.cheongju.go.kr/www/index.do",
+    "address": "충청북도 청주시 서원구 충렬로18번길 50(사직동)",
+    "phone": "043-201-2650",
+    "gps_x": "127.4782998",
+    "gps_y": "36.63471608"
+  },
+  {
+    "id": 898,
+    "name": "사립아인미술관",
+    "name_en": null,
+    "homepage_url": "https://blog.naver.com/ainmuseum",
+    "address": "전라남도 장성군 장성읍 미락단지길 8",
+    "phone": "0507-1312-200",
+    "gps_x": "126.817249",
+    "gps_y": "35.344232"
+  },
+  {
+    "id": 902,
+    "name": "벽천미술관",
+    "name_en": null,
+    "homepage_url": "https://www.gimje.go.kr/byeokgolje/index.gimje?menuCd=DOM_000002001002004000",
+    "address": "전북특별자치도 김제시 부량면 벽골제로 442",
+    "phone": "063-540-4990",
+    "gps_x": "126.8531043",
+    "gps_y": "35.7546256"
+  },
+  {
+    "id": 972,
+    "name": "포스코미술관",
+    "name_en": null,
+    "homepage_url": "http://www.poscoartmuseum.org/S91_010/S91_010010/front/main.do",
+    "address": "서울특별시 강남구 테헤란로 440",
+    "phone": "02-3457-1665",
+    "gps_x": "127.056137",
+    "gps_y": "37.50581326"
+  },
+  {
+    "id": 985,
+    "name": "홍천미술관",
+    "name_en": null,
+    "homepage_url": "https://www.hongcheon.go.kr/museum/art_gallery/",
+    "address": "강원특별자치도 홍천군 홍천읍 희망로 55",
+    "phone": "033-430-4380",
+    "gps_x": "127.8885105",
+    "gps_y": "37.69461263"
+  },
+  {
+    "id": 988,
+    "name": "전혁림미술관",
+    "name_en": null,
+    "homepage_url": "https://www.utour.go.kr/00056/00058/00073.web?idx=1691&amode=view",
+    "address": "경상남도 통영시 봉수1길 10(봉평동)",
+    "phone": "055-645-7349",
+    "gps_x": "128.4151206",
+    "gps_y": "34.82651379"
+  },
+  {
+    "id": 996,
+    "name": "포항시립미술관",
+    "name_en": null,
+    "homepage_url": "http://poma.pohang.go.kr",
+    "address": "경상북도 포항시 북구 환호공원길 10",
+    "phone": "054-270-4631",
+    "gps_x": "129.391093",
+    "gps_y": "36.06627642"
+  },
+  {
+    "id": 997,
+    "name": "여귀산미술관",
+    "name_en": null,
+    "homepage_url": "https://seagreen.co.kr/default/00/01.php",
+    "address": "전라남도 진도군 임회면 죽림길 100",
+    "phone": "061-542-1006",
+    "gps_x": "126.2504942",
+    "gps_y": "34.39097128"
+  },
+  {
+    "id": 1001,
+    "name": "디오티미술관",
+    "name_en": null,
+    "homepage_url": "https://dotmuseum.co.kr/",
+    "address": "부산광역시 금정구 금샘로35",
+    "phone": "051-518-8480",
+    "gps_x": "129.076708",
+    "gps_y": "35.228821"
+  },
+  {
+    "id": 1013,
+    "name": "고은사진미술관",
+    "name_en": null,
+    "homepage_url": "http://www.goeunmuseum.kr/",
+    "address": "부산광역시 해운대구 해운대로452번길 16",
+    "phone": "051-746-0055",
+    "gps_x": "129.1412107",
+    "gps_y": "35.1632784"
+  },
+  {
+    "id": 1014,
+    "name": "부산시립미술관",
+    "name_en": null,
+    "homepage_url": "http://art.busan.go.kr",
+    "address": "부산광역시 해운대구 APEC로 58",
+    "phone": "051-740-4421",
+    "gps_x": "129.1370273",
+    "gps_y": "35.16668716"
+  },
+  {
+    "id": 1054,
+    "name": "양구군립박수근미술관",
+    "name_en": null,
+    "homepage_url": "http://www.parksookeun.or.kr/",
+    "address": "강원특별자치도양구군 양구읍 박수근로 265-15",
+    "phone": "033-480-7228",
+    "gps_x": "127.9815765",
+    "gps_y": "38.0962413"
+  },
+  {
+    "id": 1057,
+    "name": "정선507미술관",
+    "name_en": null,
+    "homepage_url": "https://www.museum507.org/",
+    "address": "강원특별자치도 정선군 정선읍 동강로 2914",
+    "phone": "033-563-5755",
+    "gps_x": "128.6267068",
+    "gps_y": "37.36136689"
+  },
+  {
+    "id": 1069,
+    "name": "놀라운예술터 뜻밖의미술관",
+    "name_en": null,
+    "homepage_url": "https://www.sagsam.or.kr/",
+    "address": "전북특별자치도 전주시 완산구 물왕멀2길 3-6",
+    "phone": "063-281-2682",
+    "gps_x": "127.1471796",
+    "gps_y": "35.8263036"
+  },
+  {
+    "id": 1070,
+    "name": "누벨백미술관",
+    "name_en": null,
+    "homepage_url": "https://nouvelle-vague.kr/",
+    "address": "전북특별자치도 전주시 완산구 홍산북로 29-5",
+    "phone": "063-222-7235",
+    "gps_x": "127.1049483",
+    "gps_y": "35.81789497"
+  },
+  {
+    "id": 1072,
+    "name": "교동미술관",
+    "name_en": null,
+    "homepage_url": "http://www.gdart.co.kr",
+    "address": "전북특별자치도 전주시 완산구 경기전길 89",
+    "phone": "063-287-1244",
+    "gps_x": "127.1511349",
+    "gps_y": "35.815487"
+  },
+  {
+    "id": 1074,
+    "name": "부산현대미술관",
+    "name_en": null,
+    "homepage_url": "https://www.busan.go.kr/moca",
+    "address": "부산광역시 사하구 낙동남로 1191(하단동)",
+    "phone": "051-220-7400",
+    "gps_x": "128.9426935670",
+    "gps_y": "35.1093319279"
+  },
+  {
+    "id": 1097,
+    "name": "대전시립미술관",
+    "name_en": null,
+    "homepage_url": "www.daejeon.go.kr/dma",
+    "address": "대전광역시 서구 둔산대로 155",
+    "phone": "042-270-7370",
+    "gps_x": "127.3857273",
+    "gps_y": "36.36704913"
+  },
+  {
+    "id": 1099,
+    "name": "한양여자대학교 미술관",
+    "name_en": null,
+    "homepage_url": "https://www.hywoman.ac.kr/artmuseum/cms/FrCon/index.do?MENU_ID=20",
+    "address": "서울특별시 성동구 살곶이길 200",
+    "phone": "02-2290-2506",
+    "gps_x": "127.0493226",
+    "gps_y": "37.55791939"
+  },
+  {
+    "id": 1102,
+    "name": "CICA미술관",
+    "name_en": null,
+    "homepage_url": "https://cicamuseum.com/",
+    "address": "경기도 김포시 양촌읍 삼도로 196-30",
+    "phone": "031-988-6363",
+    "gps_x": "126.597767",
+    "gps_y": "37.6081903"
+  },
+  {
+    "id": 1110,
+    "name": "신풍미술관",
+    "name_en": null,
+    "homepage_url": "http://www.sinpungartm.org/home/index.php",
+    "address": "경상북도 예천군 지보면 신풍1리길 50",
+    "phone": "054-653-9329",
+    "gps_x": "128.4368456",
+    "gps_y": "36.5397019"
+  },
+  {
+    "id": 1121,
+    "name": "국립경주박물관",
+    "name_en": null,
+    "homepage_url": "https://gyeongju.museum.go.kr/",
+    "address": "경상북도 경주시 일정로 186",
+    "phone": "054-740-7500",
+    "gps_x": "129.2286819147",
+    "gps_y": "35.8294300868"
+  },
+  {
+    "id": 1122,
+    "name": "국립부여박물관",
+    "name_en": null,
+    "homepage_url": "https://buyeo.museum.go.kr/index.do",
+    "address": "충청남도 부여군 부여읍 금성로 5",
+    "phone": "041-833-8562",
+    "gps_x": "126.9178932509",
+    "gps_y": "36.2756427697"
+  },
+  {
+    "id": 1123,
+    "name": "국립공주박물관",
+    "name_en": null,
+    "homepage_url": "https://gongju.museum.go.kr/kor/index.do",
+    "address": "충청남도 공주시 관광단지길 34",
+    "phone": "041-850-6300",
+    "gps_x": "127.112179949",
+    "gps_y": "36.465529123"
+  },
+  {
+    "id": 1124,
+    "name": "국립청주박물관",
+    "name_en": null,
+    "homepage_url": "https://cheongju.museum.go.kr/www/index.do",
+    "address": "충청북도 청주시 상당구 명암로 143",
+    "phone": "043-229-6300",
+    "gps_x": "127.5120091",
+    "gps_y": "36.64966894"
+  },
+  {
+    "id": 1125,
+    "name": "국립춘천박물관",
+    "name_en": null,
+    "homepage_url": "https://chuncheon.museum.go.kr/kor/index.do",
+    "address": "강원특별자치도 춘천시 우석로 70",
+    "phone": "033-260-1500",
+    "gps_x": "127.7521906961",
+    "gps_y": "37.8640187675"
+  },
+  {
+    "id": 1126,
+    "name": "국립광주박물관",
+    "name_en": null,
+    "homepage_url": "https://gwangju.museum.go.kr/",
+    "address": "광주광역시 북구 하서로 110",
+    "phone": "062-570-7000",
+    "gps_x": "126.883951454",
+    "gps_y": "35.1896565756"
+  },
+  {
+    "id": 1127,
+    "name": "국립대구박물관",
+    "name_en": null,
+    "homepage_url": "https://daegu.museum.go.kr/",
+    "address": "대구광역시 수성구 청호로 321",
+    "phone": "053-768-6051",
+    "gps_x": "128.638341948",
+    "gps_y": "35.8455745296"
+  },
+  {
+    "id": 1130,
+    "name": "국립중앙박물관",
+    "name_en": null,
+    "homepage_url": "https://www.museum.go.kr/MUSEUM/main/index.do",
+    "address": "서울특별시 용산구 서빙고로 137",
+    "phone": "02-2077-9000",
+    "gps_x": "126.9777402465",
+    "gps_y": "37.5247022358"
+  },
+  {
+    "id": 1131,
+    "name": "국립제주박물관",
+    "name_en": null,
+    "homepage_url": "https://jeju.museum.go.kr/html/kr/index.html",
+    "address": "제주특별자치도 제주시 일주동로 17",
+    "phone": "064-720-8000",
+    "gps_x": "126.5479096",
+    "gps_y": "33.51379671"
+  },
+  {
+    "id": 1132,
+    "name": "국립진주박물관",
+    "name_en": null,
+    "homepage_url": "https://jinju.museum.go.kr/kor/",
+    "address": "경상남도 진주시 남강로 626-35",
+    "phone": "055-742-5951",
+    "gps_x": "128.0768441324",
+    "gps_y": "35.1890137051"
+  },
+  {
+    "id": 1133,
+    "name": "국립김해박물관",
+    "name_en": null,
+    "homepage_url": "https://gimhae.museum.go.kr/kr/",
+    "address": "경상남도 김해시 가야의길 190",
+    "phone": "055-320-6800",
+    "gps_x": "128.8725848349",
+    "gps_y": "35.243528"
+  },
+  {
+    "id": 1135,
+    "name": "포도뮤지엄",
+    "name_en": null,
+    "homepage_url": "https://www.podomuseum.com/",
+    "address": "제주특별자치도 서귀포시 안덕면 산록남로 788",
+    "phone": "064-794-5115",
+    "gps_x": "126.3859703",
+    "gps_y": "33.3192674"
+  },
+  {
+    "id": 1141,
+    "name": "롯데뮤지엄",
+    "name_en": null,
+    "homepage_url": "https://www.lottemuseum.com/",
+    "address": "서울 송파구 올림픽로 300 롯데월드타워7층 롯데뮤지엄",
+    "phone": "1544-7744",
+    "gps_x": "127.1026037",
+    "gps_y": "37.5128107"
+  },
+  {
+    "id": 1142,
+    "name": "화이트 큐브 서울",
+    "name_en": null,
+    "homepage_url": "https://www.whitecube.com/",
+    "address": "서울 강남구 도산대로 45길 6",
+    "phone": "02-6438-9093",
+    "gps_x": "127.0371",
+    "gps_y": "37.5244"
+  },
+  {
+    "id": 1143,
+    "name": "송은",
+    "name_en": null,
+    "homepage_url": "https://songeun.or.kr/",
+    "address": "서울 도산대로 441",
+    "phone": "02-3448-0100",
+    "gps_x": "127.0634978",
+    "gps_y": "37.5069893"
+  },
+  {
+    "id": 1144,
+    "name": "KT&G 상상마당 홍대",
+    "name_en": null,
+    "homepage_url": "https://www.sangsangmadang.com/main/HD",
+    "address": "서울특별시 마포구 어울마당로 65",
+    "phone": "02-330-6200",
+    "gps_x": "126.9210678",
+    "gps_y": "37.5509886"
+  },
+  {
+    "id": 1146,
+    "name": "KT&G 상상마당 대치",
+    "name_en": null,
+    "homepage_url": "https://www.sangsangmadang.com/main/DC",
+    "address": "서울특별시 강남구 영동대로 416",
+    "phone": "02-3404-4311",
+    "gps_x": "127.0653312",
+    "gps_y": "37.5065771"
+  },
+  {
+    "id": 1147,
+    "name": "KT&G 상상마당 부산",
+    "name_en": null,
+    "homepage_url": "https://www.sangsangmadang.com/main/BS",
+    "address": "부산광역시 부산진구 서면로 39",
+    "phone": "051-809-5555",
+    "gps_x": "129.0576071",
+    "gps_y": "35.1521720"
+  },
+  {
+    "id": 1148,
+    "name": "미들맨 갤러리",
+    "name_en": null,
+    "homepage_url": "https://iammiddleman.org",
+    "address": "부산 해운대구 좌동로 14번길 54",
+    "phone": "051-917-0589",
+    "gps_x": "129.1673",
+    "gps_y": "35.1664"
+  },
+  {
+    "id": 1149,
+    "name": "국립아시아문화전당",
+    "name_en": null,
+    "homepage_url": "https://www.acc.go.kr/main/index.do",
+    "address": "전남광주통합특별시 동구 문화전당로 38",
+    "phone": "1899-5566",
+    "gps_x": "126.9202",
+    "gps_y": "35.1468"
+  },
+  {
+    "id": 1150,
+    "name": "예술의전당 서울서예박물관",
+    "name_en": null,
+    "homepage_url": "https://www.sac.or.kr",
+    "address": "서울 서초구 남부순환로 2406 예술의전당 서울서예박물관",
+    "phone": "02-580-1300",
+    "gps_x": "127.0115288",
+    "gps_y": "37.4781636"
+  },
+  {
+    "id": 1151,
+    "name": "아트센터 화이트블럭",
+    "name_en": null,
+    "homepage_url": "https://www.whiteblock.org",
+    "address": "경기 파주시 탄현면 헤이리마을길 72",
+    "phone": "031-942-4401",
+    "gps_x": "126.7021",
+    "gps_y": "37.7884"
+  },
+  {
+    "id": 1152,
+    "name": "문화역 서울 284",
+    "name_en": null,
+    "homepage_url": "https://www.seoul284.org/main",
+    "address": "서울 중구 통일로 1 서울역(본옥) 문화역서울284",
+    "phone": "02-3407-3500",
+    "gps_x": "126.89989",
+    "gps_y": "37.55234"
+  },
+  {
+    "id": 1153,
+    "name": "마이아트뮤지엄",
+    "name_en": null,
+    "homepage_url": "http://www.myartmuseum.co.kr",
+    "address": "서울 강남구 테헤란로 518 섬유센터빌딩 B1 (대치동994-31)",
+    "phone": "02-567-8878",
+    "gps_x": "127.0605",
+    "gps_y": "37.5076"
+  },
+  {
+    "id": 1154,
+    "name": "아라리오뮤지엄 서울 (인스페이스)",
+    "name_en": null,
+    "homepage_url": "https://www.arariomuseum.org\n",
+    "address": "서울 종로구 율곡로 83",
+    "phone": "02-736-5700",
+    "gps_x": "126.9892",
+    "gps_y": "37.5760"
+  },
+  {
+    "id": 1155,
+    "name": "아라리오뮤지엄 제주 (탑동)",
+    "name_en": null,
+    "homepage_url": "https://www.arariomuseum.org",
+    "address": "제주 제주시 탑동로 14",
+    "phone": "064-720-8201",
+    "gps_x": "126.5262",
+    "gps_y": "33.5167"
+  },
+  {
+    "id": 1156,
+    "name": "아라리오뮤지엄 제주 (동문모텔 I, II)",
+    "name_en": null,
+    "homepage_url": "https://www.arariomuseum.org",
+    "address": "제주 제주시 산지로 37-5/제주 제주시 산지로 23",
+    "phone": "064-720-8202",
+    "gps_x": "126.5290",
+    "gps_y": "33.5134"
+  },
+  {
+    "id": 1157,
+    "name": "국립현대미술관 청주관",
+    "name_en": null,
+    "homepage_url": "https://www.mmca.go.kr/visitingInfo/cheongjuInfo.do",
+    "address": "충북 청주시 청원구 상당로 314",
+    "phone": "043-261-1400",
+    "gps_x": "127.4924",
+    "gps_y": "36.6562"
+  },
+  {
+    "id": 1159,
+    "name": "예술의전당 한가람디자인미술관",
+    "name_en": null,
+    "homepage_url": "https://www.sac.or.kr",
+    "address": "서울 서초구 남부순환로 2406 예술의전당 한가람디자인미술관",
+    "phone": "02-580-1300",
+    "gps_x": "127.0123226",
+    "gps_y": "37.4798703"
+  },
+  {
+    "id": 1160,
+    "name": "디뮤지엄",
+    "name_en": null,
+    "homepage_url": "https://www.daelimmuseum.org/",
+    "address": "서울특별시 성동구 왕십리로 83-21",
+    "phone": "02-6233-7200",
+    "gps_x": "127.0440",
+    "gps_y": "37.5443"
+  },
+  {
+    "id": 1161,
+    "name": "동대문디자인플라자(DDP)",
+    "name_en": null,
+    "homepage_url": "https://ddp.or.kr",
+    "address": "서울 중구 을지로 281",
+    "phone": "02-2153-0000",
+    "gps_x": "127.0094",
+    "gps_y": "37.5668"
+  },
+  {
+    "id": 1162,
+    "name": "빙하미술관",
+    "name_en": null,
+    "homepage_url": "https://www.gmoa.kr/",
+    "address": "강원 원주시 지정면 구재로 66",
+    "phone": "033-743-9833",
+    "gps_x": "127.8015",
+    "gps_y": "37.3411"
+  },
+  {
+    "id": 1163,
+    "name": "강릉시립미술관 솔올관",
+    "name_en": null,
+    "homepage_url": "https://www.gn.go.kr/mu/index.do",
+    "address": "강원 강릉시 원대로 45 (교동)",
+    "phone": "033-660-2446",
+    "gps_x": "128.8795464",
+    "gps_y": "37.7589477"
+  },
+  {
+    "id": 1164,
+    "name": "서울시립서서울미술관",
+    "name_en": null,
+    "homepage_url": "https://sema.seoul.go.kr/kr/visit/seoseoul#museumHerecoms",
+    "address": "서울 금천구 시흥대로79길 65 (독산동)",
+    "phone": "02–2124–5800",
+    "gps_x": "126.8957",
+    "gps_y": "37.4565"
+  },
+  {
+    "id": 1165,
+    "name": "광주시립미술관 하정웅미술관",
+    "name_en": null,
+    "homepage_url": "https://gjartmuse.jeonnam-gwangju.go.kr/co/contentsView.php?pageID=artmuse0902000000&lang=kor",
+    "address": "전남광주통합특별시 서구 상무대로 1165 ",
+    "phone": "062-613-5390",
+    "gps_x": "126.8885",
+    "gps_y": "35.1548"
+  },
+  {
+    "id": 1167,
+    "name": "그라운드 시소 센트럴",
+    "name_en": null,
+    "homepage_url": "https://groundseesaw.co.kr",
+    "address": "서울특별시 중구 세종대로 14 그랜드센트럴 3F",
+    "phone": "1522-1796",
+    "gps_x": "126.9743",
+    "gps_y": "37.5581"
+  },
+  {
+    "id": 1168,
+    "name": "그라운드 시소 이스트",
+    "name_en": null,
+    "homepage_url": "https://groundseesaw.co.kr",
+    "address": "서울특별시 광진구 아차산로 402 이스트폴 2F",
+    "phone": "1522-1796",
+    "gps_x": "127.0874",
+    "gps_y": "37.5368"
+  },
+  {
+    "id": 1169,
+    "name": "그라운드 시소 한남",
+    "name_en": null,
+    "homepage_url": "https://groundseesaw.co.kr",
+    "address": "서울특별시 용산구 한남대로 91 고메이494 한남 B층",
+    "phone": "1522-1796",
+    "gps_x": "127.0021",
+    "gps_y": "37.5365"
+  },
+  {
+    "id": 1170,
+    "name": "더현대 서울 ALT.1",
+    "name_en": null,
+    "homepage_url": "https://www.ehyundai.com/newCulture/EH/EH000001_L.do?bbsCd=210",
+    "address": "서울 영등포구 여의대로 108 6F",
+    "phone": null,
+    "gps_x": "126.928896250997",
+    "gps_y": "37.5260038891705"
+  },
+  {
+    "id": 1171,
+    "name": "대전시립박물관",
+    "name_en": null,
+    "homepage_url": "https://www.daejeon.go.kr/",
+    "address": "대전광역시 유성구 도안대로 398(상대동)",
+    "phone": "042-270-8600",
+    "gps_x": "127.33532404846524",
+    "gps_y": "36.336864030993404"
+  },
+  {
+    "id": 1172,
+    "name": "갤러리 그라프",
+    "name_en": null,
+    "homepage_url": "https://ggrappe.com",
+    "address": "서울특별시 강남구 삼성로 149길 10 (청담동)",
+    "phone": "02-566-0308",
+    "gps_x": "127.04670933238806",
+    "gps_y": "37.52347883391018"
+  },
+  {
+    "id": 1173,
+    "name": "안산어촌민속박물관",
+    "name_en": null,
+    "homepage_url": "https://www.ansanuc.net/museum/index.do",
+    "address": "경기도 안산시 단원구 대부황금로 7(선감동 717)",
+    "phone": "031-440-8310",
+    "gps_x": "126.64608634210117",
+    "gps_y": "37.19251743219681"
+  },
+  {
+    "id": 1174,
+    "name": "거창문화센터",
+    "name_en": null,
+    "homepage_url": "https://www.gccf.or.kr/front/M0000000/index.do",
+    "address": "경남 거창군 거창읍 수남로 2181",
+    "phone": "055-940-8460",
+    "gps_x": "127.910250598295",
+    "gps_y": "35.6735316123036"
+  },
+  {
+    "id": 1175,
+    "name": "16아카이브",
+    "name_en": null,
+    "homepage_url": "https://16akaiv.com",
+    "address": "서울 중구 퇴계로45길 31-15, 2층\n",
+    "phone": "0503-7152-8108",
+    "gps_x": "126.998842113932",
+    "gps_y": "37.5633708067416"
+  },
+  {
+    "id": 1176,
+    "name": "갤러리박 (BHAK)",
+    "name_en": null,
+    "homepage_url": "https://galeriebhak.com",
+    "address": "서울 용산구 한남대로40길 19, 1F",
+    "phone": "02-544-8481",
+    "gps_x": "127.00319095321318",
+    "gps_y": "37.54288657978156"
+  },
+  {
+    "id": 1177,
+    "name": "DMZ 박물관",
+    "name_en": null,
+    "homepage_url": "dmzmuseum.com",
+    "address": "강원 고성군 현내면 통일전망대로 369",
+    "phone": "033-681-0625",
+    "gps_x": "128.38256802397572",
+    "gps_y": "38.57625559782013"
+  },
+  {
+    "id": 1178,
+    "name": "K-ARTS Space",
+    "name_en": null,
+    "homepage_url": "https://www.instagram.com/karts.space/?hl=en",
+    "address": "서울시 성북구 돌곶이로 34 (2층, 3층)\n",
+    "phone": "",
+    "gps_x": "127.060800674897",
+    "gps_y": "37.6073601924929"
+  },
+  {
+    "id": 1179,
+    "name": "PS센터",
+    "name_en": null,
+    "homepage_url": "https://ps-center.kr",
+    "address": "서울시 중구 창경궁로5다길 18 3층",
+    "phone": "02-6956-3501",
+    "gps_x": "126.996581603147",
+    "gps_y": "37.5677360890364"
+  },
+  {
+    "id": 1180,
+    "name": "가나아트센터",
+    "name_en": null,
+    "homepage_url": "https://www.ganaart.com",
+    "address": "서울 종로구 평창30길 28(평창동, 가나아트센터)",
+    "phone": "02-720-1020",
+    "gps_x": "126.975119159947",
+    "gps_y": "37.6123074094318"
+  },
+  {
+    "id": 1181,
+    "name": "갤러리 그림손",
+    "name_en": null,
+    "homepage_url": "https://www.grimson.co.kr",
+    "address": "서울 종로구 인사동 10길 22",
+    "phone": "02-733-1045",
+    "gps_x": "126.98614408655",
+    "gps_y": "37.5743161947759"
+  },
+  {
+    "id": 1182,
+    "name": "갤러리 스페이스포포",
+    "name_en": null,
+    "homepage_url": "http://spacefofo.kr/",
+    "address": "부산광역시 금정구 금정로 79 3층 (눈사랑안경 3층)",
+    "phone": "010-8558-0026",
+    "gps_x": "129.086473973131",
+    "gps_y": "35.2317361092708"
+  },
+  {
+    "id": 1183,
+    "name": "갤러리 제이원 서울",
+    "name_en": null,
+    "homepage_url": "https://www.galleryjone.com/",
+    "address": "서울특별시 종로구 팔판길 13",
+    "phone": "02-733-0101",
+    "gps_x": "126.98073883577614",
+    "gps_y": "37.5825613347402"
+  },
+  {
+    "id": 1184,
+    "name": "갤러리 지하",
+    "name_en": null,
+    "homepage_url": "https://galleryjiha.com",
+    "address": "서울 마포구 서강로11길 15 지하",
+    "phone": "010-2970-8976",
+    "gps_x": "126.932677208227",
+    "gps_y": "37.5534775914676"
+  },
+  {
+    "id": 1185,
+    "name": "갤러리 플래닛",
+    "name_en": null,
+    "homepage_url": "http://galleryplanet.co.kr/",
+    "address": "서울 강남구 압구정로71길 14, 2F",
+    "phone": "02-540-4853",
+    "gps_x": "127.0458995688731",
+    "gps_y": "37.52751744302979"
+  },
+  {
+    "id": 1186,
+    "name": "경기도박물관",
+    "name_en": null,
+    "homepage_url": "https://musenet.ggcf.kr/",
+    "address": "경기 용인시 기흥구 상갈로 6",
+    "phone": "031-288-5300",
+    "gps_x": "127.10865284621384",
+    "gps_y": "37.268187679089216"
+  },
+  {
+    "id": 1187,
+    "name": "남산골한옥마을",
+    "name_en": null,
+    "homepage_url": "https://hanokmaeul.co.kr/",
+    "address": "서울 중구 퇴계로34길 28",
+    "phone": "02-6358-5533",
+    "gps_x": "126.99473828260912",
+    "gps_y": "37.55954236008625"
+  },
+  {
+    "id": 1188,
+    "name": "노화랑",
+    "name_en": null,
+    "homepage_url": "https://rhogallery.com/ko/",
+    "address": "서울 종로구 인사동길 54",
+    "phone": "02-732-3558",
+    "gps_x": "126.98406671759403",
+    "gps_y": "37.57485112352579"
+  },
+  {
+    "id": 1189,
+    "name": "서리풀청년아트갤러리",
+    "name_en": null,
+    "homepage_url": "https://seoripulgallery.com/",
+    "address": "서울 서초구 남부순환로323길 1",
+    "phone": "02-3477-2074",
+    "gps_x": "127.01349837217795",
+    "gps_y": "37.48112110675628"
+  },
+  {
+    "id": 1190,
+    "name": "부산영화체험박물관",
+    "name_en": null,
+    "homepage_url": "https://busanbom.kr/",
+    "address": "부산 중구 대청로126번길 12",
+    "phone": "051-715-4200",
+    "gps_x": "129.03375129205247",
+    "gps_y": "35.10167005560038"
+  },
+  {
+    "id": 1191,
+    "name": "화성어린이문화센터",
+    "name_en": null,
+    "homepage_url": "https://childrenjob.hscity.go.kr/index.do",
+    "address": "경기 화성시 효행구 봉담읍 동화길 146",
+    "phone": null,
+    "gps_x": "126.960794716165",
+    "gps_y": "37.2123373769301"
+  },
+  {
+    "id": 1192,
+    "name": "하남역사박물관",
+    "name_en": null,
+    "homepage_url": "https://www.hnart.or.kr/museum/index.do",
+    "address": "경기 하남시 덕풍동로 30",
+    "phone": "031-790-7990",
+    "gps_x": "127.206079249361",
+    "gps_y": "37.5454854794084"
+  },
+  {
+    "id": 1193,
+    "name": "어진박물관",
+    "name_en": null,
+    "homepage_url": "https://jeonju.go.kr/eojinmuseum/index.9is",
+    "address": "전북특별자치도 전주시 완산구 태조로 44",
+    "phone": "063-231-0090",
+    "gps_x": "127.149324318039",
+    "gps_y": "35.8162487545486"
+  },
+  {
+    "id": 1196,
+    "name": "김중업박물관",
+    "name_en": null,
+    "homepage_url": "https://ayac.or.kr/museum/main/view",
+    "address": "경기 안양시 만안구 예술공원로103번길 37",
+    "phone": "031-474-7801",
+    "gps_x": "126.917292974688",
+    "gps_y": "37.4189869698339"
+  },
+  {
+    "id": 1197,
+    "name": "실학박물관",
+    "name_en": null,
+    "homepage_url": "https://www.instagram.com/seuldoart/",
+    "address": "경기 남양주시 조안면 다산로747번길 16",
+    "phone": "031-579-6000",
+    "gps_x": "127.30066720608136",
+    "gps_y": "37.51596944356303"
+  },
+  {
+    "id": 1198,
+    "name": "서울기록원",
+    "name_en": null,
+    "homepage_url": "https://archives.seoul.go.kr/main",
+    "address": "서울 은평구 통일로62길 7",
+    "phone": "02-350-5600",
+    "gps_x": "126.93485735018501",
+    "gps_y": "37.60749969144621"
+  },
+  {
+    "id": 1199,
+    "name": "부산해양자연사박물관",
+    "name_en": null,
+    "homepage_url": "https://www.busan.go.kr/sea/index",
+    "address": "부산 동래구 우장춘로 175",
+    "phone": "051-553-4944",
+    "gps_x": "129.075839921274",
+    "gps_y": "35.2218081163841"
+  },
+  {
+    "id": 1201,
+    "name": "종로구립 고희동미술관",
+    "name_en": null,
+    "homepage_url": "https://www.jfac.or.kr/site/main/content/gohd01",
+    "address": "서울 종로구 창덕궁5길 40",
+    "phone": "02-741-8424",
+    "gps_x": "126.98897056989716",
+    "gps_y": "37.583131818761565"
+  },
+  {
+    "id": 1202,
+    "name": "종로구립 박노수미술관",
+    "name_en": null,
+    "homepage_url": "https://www.jfac.or.kr/site/main/content/parkns01",
+    "address": "서울 종로구 옥인1길 34",
+    "phone": "02-2148-4171",
+    "gps_x": "126.966783450397",
+    "gps_y": "37.5813184655898"
+  },
+  {
+    "id": 1203,
+    "name": "짜장면박물관",
+    "name_en": null,
+    "homepage_url": "https://www.jcf.or.kr/main/space/museum4.jsp",
+    "address": "인천 제물포구 차이나타운로 56-14",
+    "phone": "032-773-9812",
+    "gps_x": "126.618188998904",
+    "gps_y": "37.4748349467982"
+  },
+  {
+    "id": 1207,
+    "name": "해동문화예술촌",
+    "name_en": null,
+    "homepage_url": "https://www.instagram.com/dambit.haedong/",
+    "address": "전남광주통합특별시 담양군 담양읍 지침1길 6",
+    "phone": "061-383-8246",
+    "gps_x": "126.98383444458814",
+    "gps_y": "35.31755805485914"
+  },
+  {
+    "id": 1208,
+    "name": "성북구립 최만린미술관",
+    "name_en": null,
+    "homepage_url": "https://sma.sbculture.or.kr/cml/index.do",
+    "address": "서울 성북구 솔샘로7길 23",
+    "phone": "02-6952-5016",
+    "gps_x": "127.004290174029",
+    "gps_y": "37.6106593423435"
+  },
+  {
+    "id": 1210,
+    "name": "김중업 건축문화의 집",
+    "name_en": null,
+    "homepage_url": "https://sma.sbculture.or.kr/kcu/index.do",
+    "address": "서울 성북구 장위로21나길 11",
+    "phone": null,
+    "gps_x": "127.044086694389",
+    "gps_y": "37.6149831396228"
+  },
+  {
+    "id": 1211,
+    "name": "서울공예박물관",
+    "name_en": null,
+    "homepage_url": "https://www.instagram.com/seoulmuseumofcraftart/",
+    "address": "서울 종로구 율곡로3길 4",
+    "phone": "02-6450-7000",
+    "gps_x": "126.98329088000075",
+    "gps_y": "37.57663678742704"
+  },
+  {
+    "id": 1212,
+    "name": "광명업사이클아트센터",
+    "name_en": null,
+    "homepage_url": "https://upcycle.gm.go.kr/ko/index.do",
+    "address": "경기 광명시 오리로 703",
+    "phone": "02-2680-2086",
+    "gps_x": "126.87035457817481",
+    "gps_y": "37.463725233869404"
+  },
+  {
+    "id": 1216,
+    "name": "숙명여자대학교 정영양자수박물관",
+    "name_en": null,
+    "homepage_url": "n",
+    "address": "서울 용산구 청파로47길 99",
+    "phone": "02-710-9134",
+    "gps_x": "126.964106554345",
+    "gps_y": "37.544722810546"
+  },
+  {
+    "id": 1217,
+    "name": "한국영화박물관",
+    "name_en": null,
+    "homepage_url": "https://www.koreafilm.or.kr/museum/main",
+    "address": "서울 마포구 월드컵북로 400",
+    "phone": "02-3153-2072",
+    "gps_x": "126.889632572273",
+    "gps_y": "37.5805291256918"
+  },
+  {
+    "id": 1218,
+    "name": "광명문화재단",
+    "name_en": null,
+    "homepage_url": "https://www.gmcf.or.kr/Main/Index",
+    "address": "경기 광명시 시청로 20",
+    "phone": "02-2621-8800",
+    "gps_x": "126.86376863337",
+    "gps_y": "37.4770996252287"
+  },
+  {
+    "id": 1219,
+    "name": "서울생활사박물관",
+    "name_en": null,
+    "homepage_url": "https://museum.seoul.go.kr/sulm/index.do",
+    "address": "서울 노원구 동일로174길 27",
+    "phone": "02-3399-2900",
+    "gps_x": "127.07701499863",
+    "gps_y": "37.6197018366411"
+  },
+  {
+    "id": 1220,
+    "name": "국립해양박물관",
+    "name_en": null,
+    "homepage_url": "https://www.mmk.or.kr/",
+    "address": "부산 영도구 해양로301번길 45",
+    "phone": "051-309-1900",
+    "gps_x": "129.08028722464732",
+    "gps_y": "35.078517720104706"
+  },
+  {
+    "id": 1222,
+    "name": "종로문화재단",
+    "name_en": null,
+    "homepage_url": "https://www.jfac.or.kr/site/main/home",
+    "address": "서울 종로구 새문안로 41",
+    "phone": "02-6203-1155",
+    "gps_x": "126.96964594182329",
+    "gps_y": "37.56898191732289"
+  },
+  {
+    "id": 1223,
+    "name": "기형도문학관",
+    "name_en": null,
+    "homepage_url": "http://www.kihyungdo.co.kr/",
+    "address": "경기 광명시 오리로 268",
+    "phone": "02-2621-8860",
+    "gps_x": "126.881534913719",
+    "gps_y": "37.426420574376"
+  },
+  {
+    "id": 1224,
+    "name": "충무아트센터 갤러리",
+    "name_en": null,
+    "homepage_url": "https://www.instagram.com/gallery_chungmu/",
+    "address": "서울 중구 퇴계로 387",
+    "phone": "02-2230-6600",
+    "gps_x": "127.01479043704212",
+    "gps_y": "37.565941329222"
+  },
+  {
+    "id": 1225,
+    "name": "춘천문화원",
+    "name_en": null,
+    "homepage_url": "https://cccc.or.kr/",
+    "address": "강원특별자치도 춘천시 퇴계농공로 40",
+    "phone": "033-254-5105",
+    "gps_x": "127.74364373762",
+    "gps_y": "37.8496994024102"
+  },
+  {
+    "id": 1226,
+    "name": "대한민국역사박물관",
+    "name_en": null,
+    "homepage_url": "https://www.much.go.kr/",
+    "address": "서울 종로구 세종대로 198",
+    "phone": "02-3703-9200",
+    "gps_x": "126.97785780450153",
+    "gps_y": "37.573986969296435"
+  },
+  {
+    "id": 1227,
+    "name": "청계천박물관",
+    "name_en": null,
+    "homepage_url": "https://museum.seoul.go.kr/cgcm/index.do",
+    "address": "서울 성동구 청계천로 530",
+    "phone": "02-2286-3410",
+    "gps_x": "127.03510702262219",
+    "gps_y": "37.57129886065509"
+  },
+  {
+    "id": 1228,
+    "name": "한밭교육박물관",
+    "name_en": null,
+    "homepage_url": "https://www.hbem.or.kr/kor.do",
+    "address": "대전 동구 우암로 96",
+    "phone": "042-670-2200",
+    "gps_x": "127.428847699021",
+    "gps_y": "36.3374445835327"
+  },
+  {
+    "id": 1230,
+    "name": "국립나주박물관",
+    "name_en": null,
+    "homepage_url": "https://naju.museum.go.kr/kor/index.do",
+    "address": "전남광주통합특별시 나주시 반남면 고분로 747",
+    "phone": "061-330-7800",
+    "gps_x": "126.65904984153671",
+    "gps_y": "34.91481918423412"
+  },
+  {
+    "id": 1231,
+    "name": "김포문화재단",
+    "name_en": null,
+    "homepage_url": "https://www.gcf.or.kr/main/main.do",
+    "address": "경기 김포시 돌문로 26",
+    "phone": "031-999-3927",
+    "gps_x": "126.72016801009278",
+    "gps_y": "37.61891404614077"
+  },
+  {
+    "id": 1232,
+    "name": "사상생활사박물관",
+    "name_en": null,
+    "homepage_url": "https://www.sasang.go.kr/lmuseum/index.sasang",
+    "address": "부산 사상구 낙동대로1258번길 36",
+    "phone": "051-310-5136",
+    "gps_x": "128.97874704660512",
+    "gps_y": "35.17202285096135"
+  },
+  {
+    "id": 1235,
+    "name": "울산북구문화예술회관",
+    "name_en": null,
+    "homepage_url": "https://www.instagram.com/ulsan__bukgu.artcenter/",
+    "address": "울산 북구 산업로 1000",
+    "phone": "052-241-7350",
+    "gps_x": "129.361410194589",
+    "gps_y": "35.5813542175404"
+  },
+  {
+    "id": 1236,
+    "name": "순천창작예술촌 장안창작마당",
+    "name_en": null,
+    "homepage_url": "https://blog.naver.com/scartvillage",
+    "address": "전남광주통합특별시 순천시 금곡길 43",
+    "phone": "061-752-4371",
+    "gps_x": "127.480444313008",
+    "gps_y": "34.9547332915203"
+  },
+  {
+    "id": 1237,
+    "name": "루나아틀리에",
+    "name_en": null,
+    "homepage_url": "https://www.lunaatelier.co.kr/",
+    "address": "대구 동구 이노밸리로 322",
+    "phone": "010-3452-8763",
+    "gps_x": "128.732152850634",
+    "gps_y": "35.8772423297866"
+  },
+  {
+    "id": 1238,
+    "name": "서울시립과학관",
+    "name_en": null,
+    "homepage_url": "https://science.seoul.go.kr/main",
+    "address": "서울 노원구 한글비석로 160",
+    "phone": "02-970-4500",
+    "gps_x": "127.0775057868646",
+    "gps_y": "37.64183333311373"
+  },
+  {
+    "id": 1239,
+    "name": "울산암각화박물관",
+    "name_en": null,
+    "homepage_url": "https://www.ulsan.go.kr/s/bangudae/main.ulsan",
+    "address": "울산 울주군 두동면 반구대안길 254",
+    "phone": "052-229-4797",
+    "gps_x": "129.17055377077034",
+    "gps_y": "35.60806045523625"
+  },
+  {
+    "id": 1240,
+    "name": "북서울 꿈의숲 상상톡톡미술관",
+    "name_en": null,
+    "homepage_url": "https://www.sejongpac.or.kr/dfac/main/contents.do?menuNo=1200025",
+    "address": "서울 강북구 월계로 173",
+    "phone": "02-2289-5401",
+    "gps_x": "127.041390667983",
+    "gps_y": "37.6225163748567"
+  },
+  {
+    "id": 1241,
+    "name": "부천시립박물관",
+    "name_en": null,
+    "homepage_url": "https://www.bcmuseum.or.kr/ko",
+    "address": "경기 부천시 오정구 소사로 638",
+    "phone": "032-684-9057",
+    "gps_x": "126.80183293000049",
+    "gps_y": "37.51377841007022"
+  },
+  {
+    "id": 1242,
+    "name": "국립중앙도서관",
+    "name_en": null,
+    "homepage_url": "https://www.nl.go.kr/",
+    "address": "서울 용산구 서빙고로 137",
+    "phone": "02-2077-9000",
+    "gps_x": "126.98018716127058",
+    "gps_y": "37.52392249364415"
+  },
+  {
+    "id": 1243,
+    "name": "성북선잠박물관",
+    "name_en": null,
+    "homepage_url": "https://museum.sb.go.kr/",
+    "address": "서울 성북구 성북로 96",
+    "phone": "02-744-0025",
+    "gps_x": "126.998220015637",
+    "gps_y": "37.5932342500526"
+  },
+  {
+    "id": 1244,
+    "name": "양구인문학박물관",
+    "name_en": null,
+    "homepage_url": "https://www.ymunhak.or.kr/",
+    "address": "강원특별자치도 양구군 양구읍 파로호로869번길 101",
+    "phone": "033-482-9800",
+    "gps_x": "127.98127235957",
+    "gps_y": "38.121998130888"
+  },
+  {
+    "id": 1245,
+    "name": "김포아트빌리지 아트센터",
+    "name_en": null,
+    "homepage_url": "https://www.gcf.or.kr/main/content/view.do?sn=42'",
+    "address": "경기 김포시 모담공원로 170",
+    "phone": "031-999-3968",
+    "gps_x": "126.696284961976",
+    "gps_y": "37.6465349796646"
+  },
+  {
+    "id": 1246,
+    "name": "아리랑박물관",
+    "name_en": null,
+    "homepage_url": "https://museum.jacf.or.kr/museum/index.php",
+    "address": "강원특별자치도 정선군 정선읍 애산로 51",
+    "phone": "033-560-3031",
+    "gps_x": "128.671535894275",
+    "gps_y": "37.3763828455517"
+  },
+  {
+    "id": 1247,
+    "name": "천안문화재단",
+    "name_en": null,
+    "homepage_url": "https://cfac.or.kr/",
+    "address": "충남 천안시 서북구 성정8길 5",
+    "phone": "1566-0155",
+    "gps_x": "127.14145823484643",
+    "gps_y": "36.81790563534636"
+  },
+  {
+    "id": 1248,
+    "name": "화성시생활문화센터",
+    "name_en": null,
+    "homepage_url": "https://living.hcf.or.kr/index.asp",
+    "address": "경기 화성시 만세구 향남읍 향남로 470",
+    "phone": "031-8059-1783",
+    "gps_x": "126.92492984883302",
+    "gps_y": "37.13828214970523"
+  },
+  {
+    "id": 1249,
+    "name": "서울시립사진미술관",
+    "name_en": null,
+    "homepage_url": "https://sema.seoul.go.kr/kr/visit/photosema",
+    "address": "서울 도봉구 마들로13길 68",
+    "phone": "02-2124-7600",
+    "gps_x": "127.04894736120839",
+    "gps_y": "37.65551475245142"
+  },
+  {
+    "id": 1250,
+    "name": "오창전시관",
+    "name_en": null,
+    "homepage_url": "https://cmoa.cheongju.go.kr/ochang/index.do",
+    "address": "충북 청주시 청원구 오창읍 오창공원로 102",
+    "phone": "043-201-0957",
+    "gps_x": "127.424097971718",
+    "gps_y": "36.712947943242"
+  },
+  {
+    "id": 1251,
+    "name": "국립민속박물관 파주",
+    "name_en": null,
+    "homepage_url": "https://www.nfm.go.kr/paju/main",
+    "address": "경기 파주시 탄현면 헤이리로 30",
+    "phone": "031-580-5800",
+    "gps_x": "126.69390291419329",
+    "gps_y": "37.786636820364585"
+  },
+  {
+    "id": 1252,
+    "name": "우란문화재단",
+    "name_en": null,
+    "homepage_url": "https://wooranfdn.org/main.jsp",
+    "address": "서울 성동구 연무장7길 11",
+    "phone": "02-465-1418",
+    "gps_x": "127.05428078521324",
+    "gps_y": "37.54376433464276"
+  },
+  {
+    "id": 1253,
+    "name": "국립전주박물관",
+    "name_en": null,
+    "homepage_url": "https://jeonju.museum.go.kr/",
+    "address": "전북특별자치도 전주시 완산구 쑥고개로 249",
+    "phone": "063-223-5651",
+    "gps_x": "127.089656577339",
+    "gps_y": "35.8012858270163"
+  },
+  {
+    "id": 1255,
+    "name": "KF갤러리",
+    "name_en": null,
+    "homepage_url": "https://www.kf.or.kr/kf/ru/list.do?mi=1660",
+    "address": "서울 중구 을지로5길 26",
+    "phone": "",
+    "gps_x": "126.985475302407",
+    "gps_y": "37.5672559152847"
+  },
+  {
+    "id": 1256,
+    "name": "정읍시립박물관",
+    "name_en": null,
+    "homepage_url": "https://www.instagram.com/jeongeup_city__museum/",
+    "address": "전북특별자치도 정읍시 내장산로 370-12",
+    "phone": "063-539-6791",
+    "gps_x": "126.894388139733",
+    "gps_y": "35.5277909505957"
+  },
+  {
+    "id": 1258,
+    "name": "경기창작센터",
+    "name_en": null,
+    "homepage_url": "https://gcc.ggcf.kr/",
+    "address": "경기도 안산시 단원구 선감로 101-19",
+    "phone": "032-890-4800",
+    "gps_x": "126.632543881791",
+    "gps_y": "37.2273137721797"
+  },
+  {
+    "id": 1259,
+    "name": "포스코미술관 광양",
+    "name_en": null,
+    "homepage_url": "https://park1538.posco.com:8243/S91/S91G10/web/user/kor/main/KP-K00-00.do",
+    "address": "전남광주통합특별시 광양시 금호로 187-7",
+    "phone": "061-790-1538",
+    "gps_x": "127.721940101844",
+    "gps_y": "34.9425818721429"
+  },
+  {
+    "id": 1260,
+    "name": "그림책정원1937",
+    "name_en": null,
+    "homepage_url": "https://picturebookgarden1937.chungbuk.go.kr/home/main.php",
+    "address": "충북 청주시 상당구 상당로 82",
+    "phone": "043-299-9366",
+    "gps_x": "127.49142843927646",
+    "gps_y": "36.6353871512577"
+  },
+  {
+    "id": 1261,
+    "name": "작은미술관 보구곶",
+    "name_en": null,
+    "homepage_url": "https://www.instagram.com/bogugot/",
+    "address": "경기 김포시 월곶면 문수산로 373",
+    "phone": "031-982-7345",
+    "gps_x": "126.529824080076",
+    "gps_y": "37.7575756254572"
+  },
+  {
+    "id": 1263,
+    "name": "수원시립만석전시관",
+    "name_en": null,
+    "homepage_url": "https://suma.suwon.go.kr/views/intro.do?gubun=6",
+    "address": "경기 수원시 장안구 송정로 19",
+    "phone": "031-5191-4118",
+    "gps_x": "126.9994473532262",
+    "gps_y": "37.297034752944064"
+  },
+  {
+    "id": 1264,
+    "name": "국립민속박물관",
+    "name_en": null,
+    "homepage_url": "nfm.go.kr",
+    "address": "서울 종로구 삼청로 37",
+    "phone": "02-3704-3114",
+    "gps_x": "126.9790159546164",
+    "gps_y": "37.581699691218866"
+  },
+  {
+    "id": 1265,
+    "name": "프로젝트 아이",
+    "name_en": null,
+    "homepage_url": "https://www.instagram.com/hi.aaay/",
+    "address": "경남 창원시 성산구 외동반림로262번길 13",
+    "phone": "0503-7152-4224",
+    "gps_x": "128.681687378011",
+    "gps_y": "35.2395621541165"
+  },
+  {
+    "id": 1266,
+    "name": "인천아트플랫폼",
+    "name_en": null,
+    "homepage_url": "https://inartplatform.kr/home/home",
+    "address": "인천 제물포구 제물량로218번길 3",
+    "phone": null,
+    "gps_x": "126.61977248447702",
+    "gps_y": "37.47289748636896"
+  },
+  {
+    "id": 1267,
+    "name": "독도박물관",
+    "name_en": null,
+    "homepage_url": "https://www.much.go.kr/cooperation/net/dok.do",
+    "address": "경북 울릉군 울릉읍 약수터길 90-17",
+    "phone": "054-790-6597",
+    "gps_x": "130.90089072082813",
+    "gps_y": "37.483412537258474"
+  },
+  {
+    "id": 1268,
+    "name": "아마도 예술 공간(Amado Art Space)",
+    "name_en": null,
+    "homepage_url": "https://amadoart.org/",
+    "address": "서울 용산구 이태원로54길 8",
+    "phone": "02-790-1178",
+    "gps_x": "127.00185560638796",
+    "gps_y": "37.53783199857728"
+  },
+  {
+    "id": 1269,
+    "name": "서울역사박물관",
+    "name_en": null,
+    "homepage_url": "https://museum.seoul.go.kr/www/NR_index.do?sso=ok",
+    "address": "서울 종로구 새문안로 55",
+    "phone": "02-724-0274",
+    "gps_x": "126.970546366796",
+    "gps_y": "37.5705003227005"
+  },
+  {
+    "id": 1270,
+    "name": "비커밍갤러리",
+    "name_en": null,
+    "homepage_url": "https://www.instagram.com/becoming.gallery/",
+    "address": "서울 강서구 등촌로39마길 5",
+    "phone": "02-2666-7579",
+    "gps_x": "126.859790342441",
+    "gps_y": "37.5465731619224"
+  },
+  {
+    "id": 1271,
+    "name": "충주문화관광재단",
+    "name_en": null,
+    "homepage_url": "https://cjcf.or.kr/new/",
+    "address": "충북 충주시 중앙로 128",
+    "phone": "043-851-7981",
+    "gps_x": "127.93724666872669",
+    "gps_y": "36.9706381217148"
+  },
+  {
+    "id": 1273,
+    "name": "더 갤러리 호수",
+    "name_en": null,
+    "homepage_url": "https://www.instagram.com/thegalleryhosu/",
+    "address": "서울 송파구 송파나루길 166",
+    "phone": "02-2147-3275",
+    "gps_x": "127.10761788449908",
+    "gps_y": "37.51229633634649"
+  },
+  {
+    "id": 1275,
+    "name": "갤러리JJ",
+    "name_en": null,
+    "homepage_url": "https://www.galleryjj.org/",
+    "address": "서울 강남구 압구정로30길 63",
+    "phone": "02-322-3979",
+    "gps_x": "127.02915789235401",
+    "gps_y": "37.523249309421615"
+  },
+  {
+    "id": 1277,
+    "name": "청주시립도서관 청주미술창작스튜디오",
+    "name_en": null,
+    "homepage_url": "https://cmoa.cheongju.go.kr/cjas/index.do",
+    "address": "충북 청주시 상당구 용암로 55",
+    "phone": "043-201-4057",
+    "gps_x": "127.5062295951",
+    "gps_y": "36.612058018981"
+  },
+  {
+    "id": 1278,
+    "name": "갤러리세줄",
+    "name_en": null,
+    "homepage_url": "https://sejul.com/",
+    "address": "서울 종로구 평창30길 40",
+    "phone": "02-391-9171",
+    "gps_x": "126.975164094581",
+    "gps_y": "37.6134174371448"
+  },
+  {
+    "id": 1279,
+    "name": "갤러리 예 (예화랑)",
+    "name_en": null,
+    "homepage_url": "https://www.galleryyeh.com/",
+    "address": "서울 종로구 창덕궁길 100",
+    "phone": "02-542-5543",
+    "gps_x": "126.989518703005",
+    "gps_y": "37.5819101215137"
+  },
+  {
+    "id": 1280,
+    "name": "취미인간",
+    "name_en": null,
+    "homepage_url": "https://www.instagram.com/chwimi_ingan/",
+    "address": "대구 남구 중앙대로31길 124",
+    "phone": "0507-1348-7563",
+    "gps_x": "128.58675076734",
+    "gps_y": "35.8506915563494"
+  },
+  {
+    "id": 1281,
+    "name": "용산문화재단",
+    "name_en": null,
+    "homepage_url": "https://yongsanculture.or.kr/site/main/home",
+    "address": "서울 용산구 이태원로 274",
+    "phone": "02-794-2740",
+    "gps_x": "127.00207514417924",
+    "gps_y": "37.53902762224669"
+  },
+  {
+    "id": 1282,
+    "name": "애니메이션박물관",
+    "name_en": null,
+    "homepage_url": "https://www.gica.or.kr/Ani/index",
+    "address": "강원특별자치도 춘천시 서면 박사로 854",
+    "phone": "033-245-6470",
+    "gps_x": "127.69192476486958",
+    "gps_y": "37.89302159155976"
+  },
+  {
+    "id": 1283,
+    "name": "네오아트센터",
+    "name_en": null,
+    "homepage_url": "https://www.neoartcenter.com/main/index.do",
+    "address": "충북 청주시 상당구 수암로 37",
+    "phone": "043-278-2700",
+    "gps_x": "127.494510137793",
+    "gps_y": "36.64555893991"
+  },
+  {
+    "id": 1285,
+    "name": "아케이드서울",
+    "name_en": null,
+    "homepage_url": "https://www.instagram.com/arcade.seoul/?hl=ko",
+    "address": "서울 영등포구 도림로128길 23",
+    "phone": null,
+    "gps_x": "126.894540211527",
+    "gps_y": "37.5155166677315"
+  },
+  {
+    "id": 1286,
+    "name": "관천로 문화플랫폼 S1472",
+    "name_en": null,
+    "homepage_url": "https://www.google.com/search?q=%EA%B4%80%EC%B2%9C%EB%A1%9C+%EB%AC%B8%ED%99%94%ED%94%8C%EB%9E%AB%ED%8F%BC+S1472&oq=%EA%B4%80%EC%B2%9C%EB%A1%9C+%EB%AC%B8%ED%99%94%ED%94%8C%EB%9E%AB%ED%8F%BC+S1472&gs_lcrp=EgZjaHJvbWUyDAgAEEUYORjjAhiABDINCAEQLhivARjHARiABDIHCAIQABjvBTIGCAMQRRg90gEHODgwajBqNKgCALACAA&sourceid=chrome&source=chrome.ob&ie=UTF-8",
+    "address": "서울 관악구 관천로 53",
+    "phone": "02-6357-5000",
+    "gps_x": "126.925778054302",
+    "gps_y": "37.4841043299874"
+  },
+  {
+    "id": 1287,
+    "name": "한국만화박물관",
+    "name_en": null,
+    "homepage_url": "https://www.komacon.kr/comicsmuseum_m/",
+    "address": "경기 부천시 원미구 길주로 1",
+    "phone": "032-310-3090",
+    "gps_x": "126.742139781118",
+    "gps_y": "37.5086301809277"
+  },
+  {
+    "id": 1288,
+    "name": "동작아트갤러리",
+    "name_en": null,
+    "homepage_url": "https://www.instagram.com/djartgallery_/",
+    "address": "서울 동작구 보라매로5길 28",
+    "phone": "070-7204-3257",
+    "gps_x": "126.92313711636",
+    "gps_y": "37.493767750016"
+  },
+  {
+    "id": 1289,
+    "name": "세종이야기",
+    "name_en": null,
+    "homepage_url": "https://www.sejongpac.or.kr/portal/main/contents.do?menuNo=200367",
+    "address": "광화문 광장 지하",
+    "phone": null,
+    "gps_x": "126.976916",
+    "gps_y": "37.572603"
+  },
+  {
+    "id": 1290,
+    "name": "안양문화예술재단",
+    "name_en": null,
+    "homepage_url": "https://ayac.or.kr/base/ayac/performance/calendarList?menuLevel=2&menuNo=1",
+    "address": "경기 안양시 동안구 평촌대로 76",
+    "phone": "031-687-0555",
+    "gps_x": "126.963981982121",
+    "gps_y": "37.3799781649692"
+  },
+  {
+    "id": 1291,
+    "name": "갤러리CNK",
+    "name_en": null,
+    "homepage_url": "https://www.gallerycnk.com/",
+    "address": "대구 중구 이천로 206",
+    "phone": "053-424-0606",
+    "gps_x": "128.59904882058",
+    "gps_y": "35.8595976067033"
+  },
+  {
+    "id": 1292,
+    "name": "오에이오에이",
+    "name_en": null,
+    "homepage_url": "https://oaoagallery.com/",
+    "address": "서울 강남구 삼성로63길 32-11",
+    "phone": "02-6207-3211",
+    "gps_x": "127.057069579365",
+    "gps_y": "37.5000463707361"
+  },
+  {
+    "id": 1293,
+    "name": "호반아트리움",
+    "name_en": null,
+    "homepage_url": "https://hobanartrium.co.kr/",
+    "address": "경기 과천시 사기막길 71-7",
+    "phone": "02-6337-7300",
+    "gps_x": "127.001146629459",
+    "gps_y": "37.4194745132728"
+  },
+  {
+    "id": 1294,
+    "name": "씨스퀘어",
+    "name_en": null,
+    "homepage_url": "https://www.instagram.com/c_square_culture/",
+    "address": "서울 강남구 영동대로 326",
+    "phone": null,
+    "gps_x": "127.06684276916954",
+    "gps_y": "37.503829973898235"
+  },
+  {
+    "id": 1295,
+    "name": "로컬플랫폼 모이장",
+    "name_en": null,
+    "homepage_url": "google.com/search?q=로컬플랫폼+모이장&oq=로컬플랫폼+모이장&gs_lcrp=EgZjaHJvbWUyBggAEEUYOTIICAEQABgKGB4yBwgCEAAY7wUyBwgDEAAY7wUyBwgEEAAY7wUyBwgFEAAY7wXSAQcyOTlqMGo0qAIAsAIA&sourceid=chrome&source=chrome.ob&ie=UTF-8",
+    "address": "전북특별자치도 전주시 완산구 풍남문1길 9-5",
+    "phone": "010-9017-9001",
+    "gps_x": "127.147830342605",
+    "gps_y": "35.8119849337377"
+  },
+  {
+    "id": 1296,
+    "name": "서울시립미술아카이브",
+    "name_en": null,
+    "homepage_url": "https://sema.seoul.go.kr/semaaa/front/main.do",
+    "address": "서울 종로구 평창문화로 101",
+    "phone": "02-2124-7400",
+    "gps_x": "126.97193826762",
+    "gps_y": "37.60778643279106"
+  },
+  {
+    "id": 1297,
+    "name": "슈페리어갤러리",
+    "name_en": null,
+    "homepage_url": "https://www.instagram.com/superior_gallery/",
+    "address": "서울 강남구 테헤란로 528",
+    "phone": "02-2192-3366",
+    "gps_x": "127.061911972833",
+    "gps_y": "37.5081349603021"
+  },
+  {
+    "id": 1298,
+    "name": "수원시립아트스페이스광교",
+    "name_en": null,
+    "homepage_url": "https://suma.suwon.go.kr/views/intro.do?gubun=10",
+    "address": "경기 수원시 영통구 광교중앙로 140",
+    "phone": "031-5191-4195",
+    "gps_x": "127.05982375278026",
+    "gps_y": "37.28602697366445"
+  },
+  {
+    "id": 1299,
+    "name": "금산갤러리",
+    "name_en": null,
+    "homepage_url": "http://www.keumsangallery.com/",
+    "address": "서울 중구 소공로 46",
+    "phone": "02-3789-6317",
+    "gps_x": "126.98295295586475",
+    "gps_y": "37.55927905654241"
+  },
+  {
+    "id": 1300,
+    "name": "임시공간",
+    "name_en": null,
+    "homepage_url": "https://www.instagram.com/spaceimsi/",
+    "address": "인천 제물포구 신포로23번길 48",
+    "phone": "070-8161-0630",
+    "gps_x": "126.62267365496712",
+    "gps_y": "37.472376995345535"
+  },
+  {
+    "id": 1301,
+    "name": "우진문화공간 갤러리",
+    "name_en": null,
+    "homepage_url": "http://woojin.or.kr/",
+    "address": "전북 전주시 덕진구 전주천동로 376 우진문화공간",
+    "phone": null,
+    "gps_x": "127.130411865596",
+    "gps_y": "35.8275126242841"
+  },
+  {
+    "id": 1302,
+    "name": "갤러리위",
+    "name_en": null,
+    "homepage_url": "http://www.gallerywe.com/",
+    "address": "경기 용인시 수지구 호수로52번길 25-17",
+    "phone": "031-266-3266",
+    "gps_x": "127.06892585252054",
+    "gps_y": "37.352103827353965"
+  },
+  {
+    "id": 1304,
+    "name": "인천수봉문화회관",
+    "name_en": null,
+    "homepage_url": "https://www.instagram.com/subongcentre/",
+    "address": "인천 미추홀구 수봉안길 78",
+    "phone": "032-868-7196",
+    "gps_x": "126.66223182724583",
+    "gps_y": "37.46143503157862"
+  },
+  {
+    "id": 1309,
+    "name": "함석헌기념관",
+    "name_en": null,
+    "homepage_url": "https://www.instagram.com/hamsokhon_memorial.hall/",
+    "address": "서울 도봉구 도봉로123길 33-6",
+    "phone": "02-905-7007",
+    "gps_x": "127.034812274366",
+    "gps_y": "37.6529753961546"
+  },
+  {
+    "id": 1310,
+    "name": "예술공간 의식주",
+    "name_en": null,
+    "homepage_url": "https://www.instagram.com/the_necessaries/",
+    "address": "서울 서대문구 홍연길 80",
+    "phone": null,
+    "gps_x": "126.93094712844056",
+    "gps_y": "37.57645649582193"
+  },
+  {
+    "id": 1311,
+    "name": "유엠 갤러리",
+    "name_en": null,
+    "homepage_url": "https://www.umgallery.co.kr/",
+    "address": "서울 강남구 도산대로25길 35",
+    "phone": "02-515-3970",
+    "gps_x": "127.02626704822707",
+    "gps_y": "37.521800274448445"
+  },
+  {
+    "id": 1312,
+    "name": "양주시립미술창작스튜디오",
+    "name_en": null,
+    "homepage_url": "https://www.instagram.com/yj_artstudio/?hl=ko",
+    "address": "경기 양주시 장흥면 권율로 103-1",
+    "phone": "031-8082-4245",
+    "gps_x": "126.9481626136638",
+    "gps_y": "37.724265268562434"
+  },
+  {
+    "id": 1313,
+    "name": "문화공간 스페이스다온",
+    "name_en": null,
+    "homepage_url": "https://www.spacedaon.com/",
+    "address": "서울 서초구 효령로 423",
+    "phone": "02-523-5844",
+    "gps_x": "127.029948648913",
+    "gps_y": "37.4893127532142"
+  },
+  {
+    "id": 1314,
+    "name": "갤러리508",
+    "name_en": null,
+    "homepage_url": "https://gallery-508.com/",
+    "address": "서울 강남구 도산대로67길 14",
+    "phone": null,
+    "gps_x": "127.044707917497",
+    "gps_y": "37.5249842824061"
+  },
+  {
+    "id": 1315,
+    "name": "복사골문화센터",
+    "name_en": null,
+    "homepage_url": "https://www.bcf.or.kr/base/contents/view?contentsNo=54&menuLevel=2&menuNo=26",
+    "address": "경기 부천시 원미구 장말로 107",
+    "phone": "032-320-6481",
+    "gps_x": "126.754318253636",
+    "gps_y": "37.4949428624938"
+  },
+  {
+    "id": 1317,
+    "name": "대전광역시 서예진흥원",
+    "name_en": null,
+    "homepage_url": "https://www.daejeon.go.kr/djseoye",
+    "address": "대전 중구 중앙로 119",
+    "phone": "042-710-2174",
+    "gps_x": "127.422870682266",
+    "gps_y": "36.3279458558892"
+  },
+  {
+    "id": 1319,
+    "name": "예술곶산양",
+    "name_en": null,
+    "homepage_url": "https://www.instagram.com/artlab.sanyang/",
+    "address": "제주특별자치도 제주시 한경면 중산간서로 3181",
+    "phone": "064-800-9381",
+    "gps_x": "126.23352557228",
+    "gps_y": "33.295283495176"
+  },
+  {
+    "id": 1320,
+    "name": "하슬라아트월드",
+    "name_en": null,
+    "homepage_url": "https://www.museumhaslla.com/",
+    "address": "강원특별자치도 강릉시 강동면 율곡로 1441",
+    "phone": "033-644-9411",
+    "gps_x": "129.01214665686607",
+    "gps_y": "37.70620764622019"
+  },
+  {
+    "id": 1321,
+    "name": "오션갤러리",
+    "name_en": null,
+    "homepage_url": "https://www.oceangallery.kr/",
+    "address": "부산 해운대구 청사포로 139-4",
+    "phone": null,
+    "gps_x": "129.193678129535",
+    "gps_y": "35.1611665305794"
+  },
+  {
+    "id": 1322,
+    "name": "아트 포 랩",
+    "name_en": null,
+    "homepage_url": "https://www.art-for-lab.space/",
+    "address": "경기 안양시 동안구 신기대로33번길 22",
+    "phone": "0507-1410-2047",
+    "gps_x": "126.95828400093",
+    "gps_y": "37.3810358969699"
+  },
+  {
+    "id": 1323,
+    "name": "마리나갤러리",
+    "name_en": null,
+    "homepage_url": "https://marinagallery.co.kr/",
+    "address": "경기 고양시 일산서구 호수로 817",
+    "phone": "031-915-8858",
+    "gps_x": "126.751640788589",
+    "gps_y": "37.6679798844846"
+  },
+  {
+    "id": 1324,
+    "name": "슬도아트",
+    "name_en": null,
+    "homepage_url": "https://www.instagram.com/seuldoart/",
+    "address": "울산 동구 성끝길 103",
+    "phone": "052-234-1033",
+    "gps_x": "129.432763643336",
+    "gps_y": "35.4809103015237"
+  },
+  {
+    "id": 1325,
+    "name": "광주비엔날레",
+    "name_en": null,
+    "homepage_url": "https://www.gwangjubiennale.org/gb/index.do",
+    "address": "전남광주통합특별시 북구 비엔날레로 111",
+    "phone": "062-608-4114",
+    "gps_x": "126.8891256333192",
+    "gps_y": "35.18246869881473"
+  },
+  {
+    "id": 1327,
+    "name": "영등포아트스퀘어",
+    "name_en": null,
+    "homepage_url": "https://www.ydpartsquare.com/",
+    "address": "서울 영등포구 영중로 15",
+    "phone": "02-3457-7751",
+    "gps_x": "126.90305708076237",
+    "gps_y": "37.517681867753446"
+  },
+  {
+    "id": 1328,
+    "name": "천안예술의전당 문화센터",
+    "name_en": null,
+    "homepage_url": "https://www.cnac.or.kr/",
+    "address": "충남 천안시 동남구 성남면 종합휴양지로 185",
+    "phone": null,
+    "gps_x": "127.224888572574",
+    "gps_y": "36.7561302834083"
+  },
+  {
+    "id": 1329,
+    "name": "서울아트센터 도암갤러리",
+    "name_en": null,
+    "homepage_url": "https://culture.seoul.go.kr/culture/culture/cultureSpace/view.do?facCode=102261&menuNo=200119",
+    "address": "서울 종로구 평창문화로 70",
+    "phone": "02-2287-0462",
+    "gps_x": "126.96916202995844",
+    "gps_y": "37.60605133475969"
+  },
+  {
+    "id": 1330,
+    "name": "갤러리 머지",
+    "name_en": null,
+    "homepage_url": "https://www.instagram.com/openarts_merge/",
+    "address": "부산 금정구 부산대학로50번길 49 (장전동)",
+    "phone": null,
+    "gps_x": "129.086382076306",
+    "gps_y": "35.2335553081098"
+  },
+  {
+    "id": 1344,
+    "name": "화이트블럭",
+    "name_en": null,
+    "homepage_url": "https://www.whiteblock.org/",
+    "address": "경기 파주시 탄현면 헤이리마을길 72",
+    "phone": "031-942-4401",
+    "gps_x": "126.69935775139702",
+    "gps_y": "37.7888834413937"
+  },
+  {
+    "id": 1345,
+    "name": "엄뮤지엄",
+    "name_en": null,
+    "homepage_url": "http://www.ummuseum.com/",
+    "address": "경기 화성시 봉담읍 오궁길 37",
+    "phone": null,
+    "gps_x": "126.979381222568",
+    "gps_y": "37.2055371564051"
+  },
+  {
+    "id": 1346,
+    "name": "의재미술관",
+    "name_en": null,
+    "homepage_url": "https://www.uijae.org/",
+    "address": "전남광주통합특별시 동구 증심사길 155",
+    "phone": "062-222-3040",
+    "gps_x": "126.967462562062",
+    "gps_y": "35.1293889058934"
+  },
+  {
+    "id": 1347,
+    "name": "전북도립미술관 서울분관",
+    "name_en": null,
+    "homepage_url": "https://www.jma.go.kr/web/page.php?pcode=AA03&s_ecate=2",
+    "address": "서울 종로구 율곡로3길 74-9",
+    "phone": "02-720-4354",
+    "gps_x": "126.98268467709873",
+    "gps_y": "37.57902883969337"
+  },
+  {
+    "id": 1349,
+    "name": "갤러리 조은",
+    "name_en": null,
+    "homepage_url": "https://galleryjoeun.com/kor/main/",
+    "address": "서울 용산구 이태원로55가길 3",
+    "phone": "02-790-5889",
+    "gps_x": "127.000717125864",
+    "gps_y": "37.5380286092429"
+  },
+  {
+    "id": 1350,
+    "name": "한솥아트스페이스",
+    "name_en": null,
+    "homepage_url": "https://www.instagram.com/hansot_artspace/",
+    "address": "서울 강남구 압구정로 459, 지하 1층",
+    "phone": "02-2033-9642",
+    "gps_x": "127.047047944745",
+    "gps_y": "37.525506765589"
+  },
+  {
+    "id": 1351,
+    "name": "갤러리 나우",
+    "name_en": null,
+    "homepage_url": "https://gallery-now.com/",
+    "address": "서울 강남구 언주로152길 16",
+    "phone": "02-725-2930",
+    "gps_x": "127.034970463533",
+    "gps_y": "37.5227599286117"
+  },
+  {
+    "id": 1352,
+    "name": "아난티 컬쳐클럽",
+    "name_en": null,
+    "homepage_url": "https://ananti.kr/ko/village/board/cultureclub/PA0801",
+    "address": "부산 기장군 기장읍 기장해안로 267-7, 빌라쥬 드 아난티 엘.피. 크리스탈",
+    "phone": null,
+    "gps_x": "129.220640833067",
+    "gps_y": "35.2003544154888"
+  },
+  {
+    "id": 1353,
+    "name": "청주 갤러리원",
+    "name_en": null,
+    "homepage_url": "https://www.instagram.com/cheongju_gallery_one/",
+    "address": "청주 상당구 상당로 81번길 63, CGV 청주서문점 1층",
+    "phone": "043-221-5985",
+    "gps_x": "126.98046708876845",
+    "gps_y": "37.5826856271857"
+  },
+  {
+    "id": 1354,
+    "name": "강북문화예술회관",
+    "name_en": null,
+    "homepage_url": "https://www.gbcf.or.kr/load.asp?subPage=210",
+    "address": "서울 강북구 삼각산로 85, 강북문화예술회관 3",
+    "phone": "02-944-3060",
+    "gps_x": "127.013165783141",
+    "gps_y": "37.640846251332"
+  },
+  {
+    "id": 1355,
+    "name": "갤러리 다선",
+    "name_en": null,
+    "homepage_url": "https://www.gallerydasun.com",
+    "address": "경기 과천시 양지마을4로 44-18 ",
+    "phone": "02-502-6535",
+    "gps_x": "126.99300409869684",
+    "gps_y": "37.45338944912357"
+  },
+  {
+    "id": 1356,
+    "name": "갤러리 조이",
+    "name_en": null,
+    "homepage_url": "https://galleryjoy.com/",
+    "address": "부산 해운대구 달맞이길65번길 56",
+    "phone": "051-746-5030",
+    "gps_x": "129.174635465937",
+    "gps_y": "35.1597726062839"
+  },
+  {
+    "id": 1357,
+    "name": "갤러리 소헌 & 소헌 컨템포러리",
+    "name_en": null,
+    "homepage_url": "http://www.gallerysoheon.com/main/index.html",
+    "address": "대구 중구 동덕로 18 (대봉동), 2층",
+    "phone": "053-426-0621",
+    "gps_x": "127.00992210754978",
+    "gps_y": "37.53133538031085"
+  },
+  {
+    "id": 1358,
+    "name": "갤러리 오로라",
+    "name_en": null,
+    "homepage_url": "http://www.spacenamu.com/board/bbs/board.php?bo_table=exhibition",
+    "address": "경남 양산시 하북면 충렬로 1733",
+    "phone": "02-424-2332",
+    "gps_x": "127.10334194102775",
+    "gps_y": "37.50704279486824"
+  },
+  {
+    "id": 1359,
+    "name": "두루 아트스페이스",
+    "name_en": null,
+    "homepage_url": "http://www.duruartspace.co.kr/",
+    "address": "서울 종로구 자하문로45길 5 (홍지동)",
+    "phone": null,
+    "gps_x": "126.918113288303",
+    "gps_y": "35.150237557145"
+  },
+  {
+    "id": 1360,
+    "name": "마루아트센터",
+    "name_en": null,
+    "homepage_url": "https://www.maruartcenter.co.kr/default/",
+    "address": "서울 종로구 인사동길 35-4, 35-6",
+    "phone": "02-2223-2533",
+    "gps_x": "126.98484015696",
+    "gps_y": "37.5735447829743"
+  },
+  {
+    "id": 1361,
+    "name": "복합문화예술공간MERGE",
+    "name_en": null,
+    "homepage_url": "https://www.instagram.com/openarts_merge/",
+    "address": "부산 금정구 부산대학로50번길 49 (장전동) 1층",
+    "phone": null,
+    "gps_x": null,
+    "gps_y": null
+  },
+  {
+    "id": 1362,
+    "name": "어반플루토",
+    "name_en": null,
+    "homepage_url": "https://www.urbanpluto.com/",
+    "address": "서울 영등포구 양평로22나길 3-2, 2층",
+    "phone": "02-2633-1343",
+    "gps_x": "126.894007294906",
+    "gps_y": "37.5388133883061"
+  },
+  {
+    "id": 1363,
+    "name": "원주 갤러리 원",
+    "name_en": null,
+    "homepage_url": "https://www.instagram.com/wonju_gallery_one/",
+    "address": "강원 원주시 능라동길 59 (무실동), 정한프라자 4층",
+    "phone": "033-745-9994",
+    "gps_x": "127.9308183795",
+    "gps_y": "37.3344205492337"
+  },
+  {
+    "id": 1364,
+    "name": "인가희갤러리",
+    "name_en": null,
+    "homepage_url": "https://ingahee.com/",
+    "address": "서울 용산구 소월로44길 29, 102호",
+    "phone": "010-4200-2980",
+    "gps_x": "126.993020759802",
+    "gps_y": "37.5415853731323"
+  },
+  {
+    "id": 1365,
+    "name": "챔버(CHMBR)",
+    "name_en": null,
+    "homepage_url": "https://www.instagram.com/chamber26_6/",
+    "address": "서울 성북구 동소문로 26-6",
+    "phone": "031-357-7473",
+    "gps_x": "126.78891498823427",
+    "gps_y": "37.19561251521197"
+  },
+  {
+    "id": 1367,
+    "name": "청화랑",
+    "name_en": null,
+    "homepage_url": "https://www.chungartgallery.com/",
+    "address": "서울 강남구 삼성로147길 4",
+    "phone": "02-543-1663",
+    "gps_x": "127.04766135322188",
+    "gps_y": "37.52270539341601"
+  },
+  {
+    "id": 1368,
+    "name": "프로젝트 스페이스 코스모스",
+    "name_en": null,
+    "homepage_url": "https://www.instagram.com/project_space_kosmos/",
+    "address": "인천 중구 우현로67번길 13",
+    "phone": null,
+    "gps_x": "126.629264284706",
+    "gps_y": "37.4737565734853"
+  },
+  {
+    "id": 1369,
+    "name": "히든엠갤러리",
+    "name_en": null,
+    "homepage_url": "http://hiddenmgallery.com/",
+    "address": "서울 강남구 논현로86길 16",
+    "phone": "02-539-2346",
+    "gps_x": "127.0389253307441",
+    "gps_y": "37.499776232890405"
+  },
+  {
+    "id": 1374,
+    "name": "수주문학관",
+    "name_en": null,
+    "homepage_url": "https://www.bcmuseum.or.kr/ko/pages/exhi_permanent04",
+    "address": "경기 부천시 오정구 고리울로8번길 77",
+    "phone": "032-320-6433",
+    "gps_x": "126.817009445058",
+    "gps_y": "37.5242220842853"
+  },
+  {
+    "id": 1375,
+    "name": "수원시미디어센터",
+    "name_en": null,
+    "homepage_url": "https://www.swmedia.or.kr/",
+    "address": "경기 수원시 팔달구 창룡대로 64",
+    "phone": "031-215-3610",
+    "gps_x": "127.022302807489",
+    "gps_y": "37.2840919437115"
+  },
+  {
+    "id": 1376,
+    "name": "뮤지엄 원",
+    "name_en": null,
+    "homepage_url": "https://museum1.co.kr/",
+    "address": "부산 해운대구 센텀서로 20",
+    "phone": "051-731-3302",
+    "gps_x": "129.128981349225",
+    "gps_y": "35.1713219242054"
+  },
+  {
+    "id": 1377,
+    "name": "부산시민공원 역사관",
+    "name_en": null,
+    "homepage_url": "https://www.busan.go.kr/citizenpark/index",
+    "address": "부산 부산진구 시민공원로 73",
+    "phone": "051-850-6061",
+    "gps_x": "129.054384104229",
+    "gps_y": "35.1671531481414"
+  },
+  {
+    "id": 1378,
+    "name": "갤러리 팔조",
+    "name_en": null,
+    "homepage_url": "https://www.gallerypalzo.com/",
+    "address": "경북 청도군 이서면 팔조길 17-17",
+    "phone": "054-373-6802",
+    "gps_x": "128.6849650363192",
+    "gps_y": "35.69750426488403"
+  },
+  {
+    "id": 1379,
+    "name": "국토발전전시관",
+    "name_en": null,
+    "homepage_url": "https://www.molit.go.kr/molitum/intro.do",
+    "address": "서울 중구 정동길 18",
+    "phone": "02-3425-8900",
+    "gps_x": "126.97008485950151",
+    "gps_y": "37.56683765958173"
+  },
+  {
+    "id": 1380,
+    "name": "국립극장 무대예술지원센터",
+    "name_en": null,
+    "homepage_url": "https://www.ntok.go.kr/sasc",
+    "address": "경기 파주시 탄현면 헤이리로 16",
+    "phone": "031-870-9110",
+    "gps_x": "126.69451251130835",
+    "gps_y": "37.783334584813936"
+  },
+  {
+    "id": 1381,
+    "name": "진천종박물관",
+    "name_en": null,
+    "homepage_url": "https://www.jincheon.go.kr/home/main.do",
+    "address": "충북 진천군 진천읍 백곡로 1504-12",
+    "phone": "043-539-3847",
+    "gps_x": "127.413725763925",
+    "gps_y": "36.8706493924317"
+  },
+  {
+    "id": 1382,
+    "name": "아난티 앳 부산 코브",
+    "name_en": null,
+    "homepage_url": "https://ananti.kr/ko/event?bsns=20",
+    "address": "부산 기장군 기장읍 기장해안로 268-32",
+    "phone": "051-509-1111",
+    "gps_x": "129.2282813828017",
+    "gps_y": "35.1979296425005"
+  },
+  {
+    "id": 1383,
+    "name": "대구방짜유기박물관",
+    "name_en": null,
+    "homepage_url": "https://www.bangjja.or.kr/",
+    "address": "대구 동구 도장길 29",
+    "phone": "053-430-7920",
+    "gps_x": "128.701274464971",
+    "gps_y": "35.9656142001569"
+  },
+  {
+    "id": 1384,
+    "name": "부산근현대역사관",
+    "name_en": null,
+    "homepage_url": "https://www.busan.go.kr/mmch/index",
+    "address": "부산 중구 대청로 104",
+    "phone": "051-607-8000",
+    "gps_x": "129.031218773668",
+    "gps_y": "35.1026632677641"
+  },
+  {
+    "id": 1385,
+    "name": "국립어린이청소년도서관",
+    "name_en": null,
+    "homepage_url": "https://nlcy.go.kr/NLCY/main/index.do",
+    "address": "서울 강남구 테헤란로7길 21",
+    "phone": "02-3413-4800",
+    "gps_x": "127.029702227067",
+    "gps_y": "37.5009321996311"
+  },
+  {
+    "id": 1386,
+    "name": "밀다리마을박물관",
+    "name_en": null,
+    "homepage_url": "https://www.gcf.or.kr/main/exh/list.do?mthd=EXH",
+    "address": "경기 김포시 월곶면 애기봉로456번길 11",
+    "phone": "031-999-3972",
+    "gps_x": "126.591790382954",
+    "gps_y": "37.7303866398116"
+  },
+  {
+    "id": 1388,
+    "name": "원주문화재단",
+    "name_en": null,
+    "homepage_url": "https://www.wcf.or.kr/",
+    "address": "강원특별자치도 원주시 향교길 77",
+    "phone": "033-763-9114",
+    "gps_x": "127.94993359168912",
+    "gps_y": "37.34110177541522"
+  },
+  {
+    "id": 1389,
+    "name": "국립대한민국임시정부기념관",
+    "name_en": null,
+    "homepage_url": "https://www.nmkpg.go.kr/",
+    "address": "서울 서대문구 통일로 279-24",
+    "phone": "02-772-8708",
+    "gps_x": "126.95443515080136",
+    "gps_y": "37.576093084729884"
+  },
+  {
+    "id": 1392,
+    "name": "충북문화재단",
+    "name_en": null,
+    "homepage_url": "https://www.cbfc.or.kr/home/main.php",
+    "address": "충북 청주시 청원구 향군로94번길 7",
+    "phone": "043-222-5314",
+    "gps_x": "127.483123867725",
+    "gps_y": "36.6537824831177"
+  },
+  {
+    "id": 1393,
+    "name": "고흥우주천문과학관",
+    "name_en": null,
+    "homepage_url": "https://star.goheung.go.kr/main",
+    "address": "전남광주통합특별시 고흥군 도양읍 장기산선암길 353",
+    "phone": "061-830-6691",
+    "gps_x": "127.12498044923007",
+    "gps_y": "34.55253694986381"
+  },
+  {
+    "id": 1394,
+    "name": "담빛예술창고",
+    "name_en": null,
+    "homepage_url": "https://www.instagram.com/dambit.haedong/",
+    "address": "전남광주통합특별시 담양군 담양읍 객사7길 77",
+    "phone": null,
+    "gps_x": "126.99358829802372",
+    "gps_y": "35.32344468744849"
+  },
+  {
+    "id": 1395,
+    "name": "갤러리 인사 1010",
+    "name_en": null,
+    "homepage_url": "https://www.insa1010.com/",
+    "address": "서울 종로구 인사동10길 10",
+    "phone": "010-3393-8780",
+    "gps_x": "126.985632476951",
+    "gps_y": "37.5739881715206"
+  },
+  {
+    "id": 1396,
+    "name": "대구섬유박물관",
+    "name_en": null,
+    "homepage_url": "https://www.dtmuseum.org/main",
+    "address": "대구 동구 팔공로 227",
+    "phone": "053-980-1004",
+    "gps_x": "128.640436662654",
+    "gps_y": "35.9188315522762"
+  },
+  {
+    "id": 1397,
+    "name": "강남문화재단",
+    "name_en": null,
+    "homepage_url": "https://www.gangnam.go.kr/office/gfac/main.do",
+    "address": "서울 강남구 테헤란로82길 15",
+    "phone": "02-6712-0523",
+    "gps_x": "127.05822322403705",
+    "gps_y": "37.50603929661906"
+  },
+  {
+    "id": 1398,
+    "name": "창덕궁 낙선재",
+    "name_en": null,
+    "homepage_url": "https://culture.seoul.go.kr/culture/culture/cultureEvent/list.do?searchCate=EXHIBITION&menuNo=200009",
+    "address": "서울 종로구 율곡로 99",
+    "phone": null,
+    "gps_x": "126.993461070464",
+    "gps_y": "37.5787461153804"
+  },
+  {
+    "id": 1399,
+    "name": "서학아트스페이스",
+    "name_en": null,
+    "homepage_url": "https://seohakart.kr/",
+    "address": "전북특별자치도 전주시 완산구 서학로 7",
+    "phone": "063-231-5633",
+    "gps_x": "127.150370155941",
+    "gps_y": "35.8098809437759"
+  },
+  {
+    "id": 1400,
+    "name": "아트코드갤러리",
+    "name_en": null,
+    "homepage_url": "https://www.artcode.co.kr/",
+    "address": "경기 광명시 양지로 16",
+    "phone": null,
+    "gps_x": "126.88170479733935",
+    "gps_y": "37.416102290327274"
+  },
+  {
+    "id": 1401,
+    "name": "노들섬",
+    "name_en": null,
+    "homepage_url": "https://nodeul.org/types/exhibit/",
+    "address": "서울 용산구 양녕로 445",
+    "phone": "02-749-4500",
+    "gps_x": "126.95803386590158",
+    "gps_y": "37.51766013568054"
+  },
+  {
+    "id": 1402,
+    "name": "광화문광장",
+    "name_en": null,
+    "homepage_url": "https://gwanghwamun.seoul.go.kr/ghm/main.do",
+    "address": "서울 종로구 세종로 1-68",
+    "phone": null,
+    "gps_x": "126.97691639601517",
+    "gps_y": "37.572602860810186"
+  },
+  {
+    "id": 1403,
+    "name": "SETEC",
+    "name_en": null,
+    "homepage_url": "https://www.setec.or.kr/front/schedule/calendar.do",
+    "address": "서울 강남구 남부순환로 3104",
+    "phone": null,
+    "gps_x": "127.071558573704",
+    "gps_y": "37.4952487331016"
+  },
+  {
+    "id": 1404,
+    "name": "공간일리",
+    "name_en": null,
+    "homepage_url": "https://www.instagram.com/space_illi_1and2/",
+    "address": "서울 종로구 세검정로9길 19",
+    "phone": "010-3840-3881",
+    "gps_x": "126.96121302516381",
+    "gps_y": "37.603848772371144"
+  },
+  {
+    "id": 1405,
+    "name": "산아가든 프로젝트",
+    "name_en": null,
+    "homepage_url": "https://www.instagram.com/space_sanagarden/",
+    "address": "전북특별자치도 고창군 부안면 복분자로 307",
+    "phone": "0503-7151-8867",
+    "gps_x": "126.62642477146315",
+    "gps_y": "35.50269462063986"
+  },
+  {
+    "id": 1406,
+    "name": "인사아트센터",
+    "name_en": null,
+    "homepage_url": "https://www.insaartcenter.com/",
+    "address": "서울 종로구 인사동길 41-1",
+    "phone": "02-736-1020",
+    "gps_x": "126.98460576893604",
+    "gps_y": "37.573848387905215"
+  },
+  {
+    "id": 1407,
+    "name": "서호미술관",
+    "name_en": null,
+    "homepage_url": "http://www.seohoart.com/",
+    "address": "경기 남양주시 화도읍 북한강로 1344",
+    "phone": "031-592-1864",
+    "gps_x": "127.35148193163441",
+    "gps_y": "37.63272725571093"
+  },
+  {
+    "id": 1408,
+    "name": "부산문화재단",
+    "name_en": null,
+    "homepage_url": "https://www.bscf.or.kr/index.do",
+    "address": "부산 남구 우암로 84-1",
+    "phone": "051-744-7707",
+    "gps_x": "129.081356231823",
+    "gps_y": "35.1184588590327"
+  },
+  {
+    "id": 1409,
+    "name": "서울주문화센터",
+    "name_en": null,
+    "homepage_url": "https://www.instagram.com/wucc2021/",
+    "address": "울산 울주군 언양읍 언양로 40-7",
+    "phone": "052-980-2240",
+    "gps_x": "129.13136404329657",
+    "gps_y": "35.56124929138358"
+  },
+  {
+    "id": 1410,
+    "name": "주석모음집",
+    "name_en": null,
+    "homepage_url": "https://www.instagram.com/footnote_unit/",
+    "address": "서울 종로구 낙산성곽동길 53",
+    "phone": null,
+    "gps_x": "127.009079144825",
+    "gps_y": "37.5772142572035"
+  },
+  {
+    "id": 1411,
+    "name": "키다리 갤러리",
+    "name_en": null,
+    "homepage_url": "https://www.kidarigallery.com/",
+    "address": "대구 동구 신서로21길 3-5",
+    "phone": "070-7566-5995",
+    "gps_x": "128.72379046045796",
+    "gps_y": "35.87736535995135"
+  },
+  {
+    "id": 1412,
+    "name": "프린트아트리서치센터",
+    "name_en": null,
+    "homepage_url": "https://parc.imweb.me/",
+    "address": "서울 종로구 율곡로19길 33-13",
+    "phone": "070-4144-5954",
+    "gps_x": "127.00626030358312",
+    "gps_y": "37.57716038068643"
+  },
+  {
+    "id": 1413,
+    "name": "관악문화재단 관악아트홀",
+    "name_en": null,
+    "homepage_url": "https://gfac.or.kr/site/main/content/artHall",
+    "address": "서울 관악구 신림로3길 35",
+    "phone": "02-828-5714",
+    "gps_x": "126.944833718578",
+    "gps_y": "37.4677551310373"
+  },
+  {
+    "id": 1414,
+    "name": "필 갤러리",
+    "name_en": null,
+    "homepage_url": "https://www.instagram.com/fillgallery/",
+    "address": "서울 용산구 유엔빌리지길 24",
+    "phone": "02-795-0046",
+    "gps_x": "127.009784371472",
+    "gps_y": "37.5335626666766"
+  },
+  {
+    "id": 1415,
+    "name": "소월아트홀(성동문화회관)",
+    "name_en": null,
+    "homepage_url": "https://www.sdfac.or.kr/",
+    "address": "서울 성동구 왕십리로 281",
+    "phone": "02-2204-6400",
+    "gps_x": "127.036122300081",
+    "gps_y": "37.5593657621977"
+  },
+  {
+    "id": 1416,
+    "name": "강원문화재단",
+    "name_en": null,
+    "homepage_url": "https://gwcf.or.kr/ko",
+    "address": "강원특별자치도 춘천시 안마산로 85",
+    "phone": "033-240-1337",
+    "gps_x": "127.72547088211395",
+    "gps_y": "37.85566883692484"
+  },
+  {
+    "id": 1417,
+    "name": "알지비큐브",
+    "name_en": null,
+    "homepage_url": "https://www.urbanpluto.com/exhibition/rgbcube",
+    "address": "서울 마포구 와우산로29라길 26",
+    "phone": null,
+    "gps_x": "126.926664300934",
+    "gps_y": "37.5548020805179"
+  },
+  {
+    "id": 1418,
+    "name": "강릉아트센터",
+    "name_en": null,
+    "homepage_url": "https://www.gn.go.kr/artscenter/index.do",
+    "address": "강원특별자치도 강릉시 종합운동장길 84",
+    "phone": "033-660-6800",
+    "gps_x": "128.89534016652",
+    "gps_y": "37.7717128602944"
+  },
+  {
+    "id": 1419,
+    "name": "부산북구문화예술회관 (구.북구문화빙상센터)",
+    "name_en": null,
+    "homepage_url": "https://www.bsbukgu.go.kr/index.bsbukgu?menuCd=DOM_000000402003001002",
+    "address": "부산 북구 금곡대로46번길 50",
+    "phone": "051-309-4082",
+    "gps_x": "129.005765083316",
+    "gps_y": "35.2134375699469"
+  },
+  {
+    "id": 1420,
+    "name": "부평역사박물관",
+    "name_en": null,
+    "homepage_url": "https://portal.icbp.go.kr/bphm/",
+    "address": "인천 부평구 굴포로 151",
+    "phone": "032-515-6471",
+    "gps_x": "126.737811437674",
+    "gps_y": "37.512163393055"
+  },
+  {
+    "id": 1422,
+    "name": "경운박물관",
+    "name_en": null,
+    "homepage_url": "https://kwmuseum.org/",
+    "address": "서울 강남구 삼성로 29",
+    "phone": "02-3463-1336",
+    "gps_x": "127.066056241204",
+    "gps_y": "37.4878384500901"
+  },
+  {
+    "id": 1423,
+    "name": "의정부예술의전당",
+    "name_en": null,
+    "homepage_url": "https://www.uac.or.kr/uac.php",
+    "address": "경기 의정부시 의정로 1",
+    "phone": "031-828-5841",
+    "gps_x": "127.034178367299",
+    "gps_y": "37.7335300891832"
+  },
+  {
+    "id": 1424,
+    "name": "소울아트스페이스",
+    "name_en": null,
+    "homepage_url": "http://www.soulartspace.com/",
+    "address": "부산 해운대구 해운대해변로 30",
+    "phone": "051-731-5878",
+    "gps_x": "129.137445491787",
+    "gps_y": "35.1631237684674"
+  },
+  {
+    "id": 1425,
+    "name": "부천활박물관",
+    "name_en": null,
+    "homepage_url": "https://www.bcmuseum.or.kr/ko",
+    "address": "경기 부천시 원미구 소사로 482",
+    "phone": "032-614-2678",
+    "gps_x": "126.79742046625258",
+    "gps_y": "37.50081629591138"
+  },
+  {
+    "id": 1427,
+    "name": "남도향토음식박물관",
+    "name_en": null,
+    "homepage_url": "https://gbfmc.or.kr/namdofood/",
+    "address": "전남광주통합특별시 북구 설죽로 477",
+    "phone": "062-574-0756",
+    "gps_x": "126.89867296298976",
+    "gps_y": "35.20175162412322"
+  },
+  {
+    "id": 1428,
+    "name": "경기생활도자미술관",
+    "name_en": null,
+    "homepage_url": "https://www.gmocca.org/info/yeoju-museum",
+    "address": "경기 여주시 신륵사길 7",
+    "phone": "031-887-8250",
+    "gps_x": "127.6569475633206",
+    "gps_y": "37.30078434351794"
+  },
+  {
+    "id": 1429,
+    "name": "경기도자미술관",
+    "name_en": null,
+    "homepage_url": "https://www.gmocca.org/",
+    "address": "경기 이천시 경충대로2697번길 231",
+    "phone": "031-645-0730",
+    "gps_x": "127.42345332386132",
+    "gps_y": "37.275409340574"
+  },
+  {
+    "id": 1430,
+    "name": "양재 aT센터",
+    "name_en": null,
+    "homepage_url": "https://www.instagram.com/at_center/",
+    "address": "서울 서초구 강남대로 27",
+    "phone": "02-6300-1114",
+    "gps_x": "127.03924802821535",
+    "gps_y": "37.46810567643863"
+  },
+  {
+    "id": 1431,
+    "name": "해운대문화회관",
+    "name_en": null,
+    "homepage_url": "https://www.haeundae.go.kr/culture/index.do",
+    "address": "부산 해운대구 양운로 97",
+    "phone": "051-749-7651",
+    "gps_x": "129.173889266706",
+    "gps_y": "35.1711475607439"
+  },
+  {
+    "id": 1432,
+    "name": "젊은달와이파크",
+    "name_en": null,
+    "homepage_url": "https://ypark.kr/",
+    "address": "강원특별자치도 영월군 주천면 송학주천로 1467-9",
+    "phone": "033-372-9411",
+    "gps_x": "128.26929461888022",
+    "gps_y": "37.27387552851372"
+  },
+  {
+    "id": 1433,
+    "name": "성수아트홀(성수문화복지회관)",
+    "name_en": null,
+    "homepage_url": "https://www.sdfac.or.kr/kor/sdfac/sub/contents.do?gotoMenuNo=01020100",
+    "address": "서울 성동구 뚝섬로1길 43",
+    "phone": "02-2204-7571",
+    "gps_x": "127.04684642882921",
+    "gps_y": "37.54552807047959"
+  },
+  {
+    "id": 1434,
+    "name": "국립무형유산원",
+    "name_en": null,
+    "homepage_url": "https://www.nihc.go.kr/",
+    "address": "전북특별자치도 전주시 완산구 서학로 95",
+    "phone": "063-280-1400",
+    "gps_x": "127.159659394825",
+    "gps_y": "35.8096526631434"
+  },
+  {
+    "id": 1435,
+    "name": "갤러리 이마주",
+    "name_en": null,
+    "homepage_url": "http://www.imazoo.com/index.htm",
+    "address": "서울 강남구 테헤란로20길 12",
+    "phone": "02-557-1950",
+    "gps_x": "127.034209101595",
+    "gps_y": "37.4988856966405"
+  },
+  {
+    "id": 1436,
+    "name": "밀양아리랑아트센터 대공연장",
+    "name_en": null,
+    "homepage_url": "https://www.miryang.go.kr/tur/index.do?mnNo=30404000000",
+    "address": "경남 밀양시 밀양대공원로 112",
+    "phone": "055-359-4500",
+    "gps_x": "128.758376253183",
+    "gps_y": "35.5043636021958"
+  },
+  {
+    "id": 1437,
+    "name": "디크레센도",
+    "name_en": null,
+    "homepage_url": "https://www.instagram.com/cafe_decr/",
+    "address": "서울 양천구 곰달래로14길 16-2",
+    "phone": "070-4639-2200",
+    "gps_x": "126.83823044621",
+    "gps_y": "37.5285580406055"
+  },
+  {
+    "id": 1438,
+    "name": "어피스어피스",
+    "name_en": null,
+    "homepage_url": "https://www.instagram.com/apiece_apeace/",
+    "address": "서울 종로구 필운대로 48",
+    "phone": "0502-5552-3896",
+    "gps_x": "126.96876282634928",
+    "gps_y": "37.580309892988204"
+  },
+  {
+    "id": 1439,
+    "name": "CN갤러리",
+    "name_en": null,
+    "homepage_url": "https://cngallery.kr/",
+    "address": "서울 종로구 북촌로5길 56-7",
+    "phone": "02-739-6405",
+    "gps_x": "126.981945178203",
+    "gps_y": "37.5800387431225"
+  },
+  {
+    "id": 1440,
+    "name": "김만덕기념관",
+    "name_en": null,
+    "homepage_url": "http://www.mandukmuseum.or.kr/",
+    "address": "제주특별자치도 제주시 산지로 7",
+    "phone": "064-759-6090",
+    "gps_x": "126.53039086992835",
+    "gps_y": "33.51587533489506"
+  },
+  {
+    "id": 1441,
+    "name": "스페이스 카다로그",
+    "name_en": null,
+    "homepage_url": "https://www.instagram.com/cadalogs_space/",
+    "address": "서울 중구 수표로 58-1",
+    "phone": null,
+    "gps_x": "126.98984685591486",
+    "gps_y": "37.56645628781836"
+  },
+  {
+    "id": 1442,
+    "name": "와이아트갤러리",
+    "name_en": null,
+    "homepage_url": "https://www.instagram.com/yart_gallery/",
+    "address": "충남 당진시 고대면 삼선산수목원길 77-5",
+    "phone": null,
+    "gps_x": "126.587932295866",
+    "gps_y": "36.9102275303568"
+  },
+  {
+    "id": 1443,
+    "name": "표갤러리",
+    "name_en": null,
+    "homepage_url": "https://www.pyogallery.com/",
+    "address": "서울 종로구 자하문로5길 18-4",
+    "phone": "02-543-7337",
+    "gps_x": "126.97082873644398",
+    "gps_y": "37.57789575768786"
+  },
+  {
+    "id": 1444,
+    "name": "갤러리 조선",
+    "name_en": null,
+    "homepage_url": "https://www.gallerychosun.com/",
+    "address": "서울 종로구 북촌로 5길 64",
+    "phone": "02-723-7133",
+    "gps_x": "126.98148444712518",
+    "gps_y": "37.57989361173486"
+  },
+  {
+    "id": 1445,
+    "name": "간송미술관",
+    "name_en": null,
+    "homepage_url": "https://kansong.org/seoul/",
+    "address": "서울 성북구 성북로 102-11",
+    "phone": "02-744-7830",
+    "gps_x": "126.99696540704932",
+    "gps_y": "37.59357930433219"
+  },
+  {
+    "id": 1446,
+    "name": "서울문화재단 본관",
+    "name_en": null,
+    "homepage_url": null,
+    "address": "서울 종로구 대학로12길 31",
+    "phone": null,
+    "gps_x": "127.003613813011",
+    "gps_y": "37.5827610694208"
+  },
+  {
+    "id": 1447,
+    "name": "여의도 한강공원",
+    "name_en": null,
+    "homepage_url": null,
+    "address": "서울 영등포구 여의도동 85",
+    "phone": "02-3780-0561",
+    "gps_x": "126.93512931714196",
+    "gps_y": "37.52638860108943"
+  },
+  {
+    "id": 1448,
+    "name": "강화자연사박물관",
+    "name_en": null,
+    "homepage_url": null,
+    "address": "인천 강화군 하점면 강화대로 994-33",
+    "phone": "032-930-7090",
+    "gps_x": "126.43479695285467",
+    "gps_y": "37.774506983399334"
+  },
+  {
+    "id": 1449,
+    "name": "예술의전당 서예박물관",
+    "name_en": null,
+    "homepage_url": null,
+    "address": "경기 수원시 영통구 창룡대로 265",
+    "phone": "031-228-4150",
+    "gps_x": "127.035901984147",
+    "gps_y": "37.2975519105655"
+  },
+  {
+    "id": 1450,
+    "name": "태릉선수촌",
+    "name_en": null,
+    "homepage_url": null,
+    "address": "서울 노원구 화랑로 727",
+    "phone": "02-970-0114",
+    "gps_x": "127.10298664944588",
+    "gps_y": "37.63681518035892"
+  },
+  {
+    "id": 1451,
+    "name": "더컬럼스 갤러리",
+    "name_en": null,
+    "homepage_url": null,
+    "address": "경기 성남시 분당구 운중로137번길 14",
+    "phone": "02-3442-6301",
+    "gps_x": "127.07860972567269",
+    "gps_y": "37.39307642249988"
+  },
+  {
+    "id": 1452,
+    "name": "홍티예술촌",
+    "name_en": null,
+    "homepage_url": null,
+    "address": "부산 사하구 홍티로 76",
+    "phone": null,
+    "gps_x": "128.961082022198",
+    "gps_y": "35.0612787043734"
+  },
+  {
+    "id": 1453,
+    "name": "갤러리 플레이리스트",
+    "name_en": null,
+    "homepage_url": null,
+    "address": "부산 중구 대청로138번길 3",
+    "phone": null,
+    "gps_x": "129.035167633999",
+    "gps_y": "35.1025357380008"
+  },
+  {
+    "id": 1454,
+    "name": "021갤러리",
+    "name_en": null,
+    "homepage_url": null,
+    "address": "대구 동구 안심로 54",
+    "phone": "053-743-0217",
+    "gps_x": "128.6916405603562",
+    "gps_y": "35.87026207221869"
+  },
+  {
+    "id": 1455,
+    "name": "부산시민회관",
+    "name_en": null,
+    "homepage_url": null,
+    "address": "부산 동구 자성로133번길 16",
+    "phone": "051-630-5200",
+    "gps_x": "129.06537925439048",
+    "gps_y": "35.138943584942254"
+  },
+  {
+    "id": 1456,
+    "name": "홍티아트센터",
+    "name_en": null,
+    "homepage_url": null,
+    "address": "부산 사하구 다산로106번길 6",
+    "phone": "051-263-8661",
+    "gps_x": "128.958709018746",
+    "gps_y": "35.0621461582434"
+  },
+  {
+    "id": 1457,
+    "name": "갤러리바톤",
+    "name_en": null,
+    "homepage_url": null,
+    "address": "서울 용산구 이태원로 223-9",
+    "phone": "02-597-5701",
+    "gps_x": "126.99840467326382",
+    "gps_y": "37.53585250429426"
+  },
+  {
+    "id": 1458,
+    "name": "한국이민사박물관",
+    "name_en": null,
+    "homepage_url": null,
+    "address": "인천 제물포구 월미로 329",
+    "phone": "032-440-4710",
+    "gps_x": "126.60018449635358",
+    "gps_y": "37.470165856868896"
+  },
+  {
+    "id": 1459,
+    "name": "비디 갤러리",
+    "name_en": null,
+    "homepage_url": null,
+    "address": "서울 중구 퇴계로18길 9",
+    "phone": "02-3789-3872",
+    "gps_x": "126.985630554983",
+    "gps_y": "37.5604227779338"
+  },
+  {
+    "id": 1460,
+    "name": "갤러리 메일란",
+    "name_en": null,
+    "homepage_url": null,
+    "address": "서울 종로구 자하문로 269",
+    "phone": null,
+    "gps_x": "126.96235194983602",
+    "gps_y": "37.59777466219882"
+  },
+  {
+    "id": 1461,
+    "name": "한국민화뮤지엄",
+    "name_en": null,
+    "homepage_url": null,
+    "address": "전남광주통합특별시 강진군 대구면 청자촌길 61-5",
+    "phone": "061-433-9770",
+    "gps_x": "126.804108712354",
+    "gps_y": "34.5086801219013"
+  },
+  {
+    "id": 1462,
+    "name": "인천서해구문화회관",
+    "name_en": null,
+    "homepage_url": null,
+    "address": "인천 서해구 서달로 190",
+    "phone": "032-579-1150",
+    "gps_x": "126.680002281745",
+    "gps_y": "37.5158411687253"
+  },
+  {
+    "id": 1463,
+    "name": "통의동 보안여관",
+    "name_en": null,
+    "homepage_url": null,
+    "address": "서울 종로구 효자로 33",
+    "phone": "02-720-8409",
+    "gps_x": "126.97362679381301",
+    "gps_y": "37.57910825301889"
+  },
+  {
+    "id": 1464,
+    "name": "콤플렉스",
+    "name_en": null,
+    "homepage_url": null,
+    "address": "서울 용산구 후암로 59",
+    "phone": "0507-1494-2094",
+    "gps_x": "126.976917371923",
+    "gps_y": "37.5510969720318"
+  },
+  {
+    "id": 1465,
+    "name": "고려대학교박물관",
+    "name_en": null,
+    "homepage_url": null,
+    "address": "서울 성북구 안암로 145",
+    "phone": "02-3290-1517",
+    "gps_x": "127.03435018790692",
+    "gps_y": "37.58953970242364"
+  },
+  {
+    "id": 1466,
+    "name": "이천아트홀",
+    "name_en": null,
+    "homepage_url": null,
+    "address": "경기 이천시 부악로 40",
+    "phone": null,
+    "gps_x": "127.43428828396462",
+    "gps_y": "37.27139652836539"
+  },
+  {
+    "id": 1467,
+    "name": "갤러리진선",
+    "name_en": null,
+    "homepage_url": null,
+    "address": "서울 종로구 삼청로 59",
+    "phone": "02-723-3340",
+    "gps_x": "126.98046856127404",
+    "gps_y": "37.5813827907419"
+  },
+  {
+    "id": 1468,
+    "name": "갤러리 가이아",
+    "name_en": null,
+    "homepage_url": null,
+    "address": "부산 남구 황령대로492번길 18",
+    "phone": "051-627-3373",
+    "gps_x": "129.106548976804",
+    "gps_y": "35.1377903522042"
+  },
+  {
+    "id": 1469,
+    "name": "한국소리문화의전당 전시장",
+    "name_en": null,
+    "homepage_url": null,
+    "address": "전북특별자치도 전주시 덕진구 소리로 31",
+    "phone": null,
+    "gps_x": "127.137697694609",
+    "gps_y": "35.8551501008568"
+  },
+  {
+    "id": 1470,
+    "name": "연수문화재단",
+    "name_en": null,
+    "homepage_url": null,
+    "address": "인천 연수구 비류대로 299",
+    "phone": "032-822-1000",
+    "gps_x": "126.667662435084",
+    "gps_y": "37.42629749575945"
+  },
+  {
+    "id": 1471,
+    "name": "MG삼척중앙새마을금고 우리동네 MG갤러리",
+    "name_en": null,
+    "homepage_url": null,
+    "address": "강원특별자치도 삼척시 진주로 28-41",
+    "phone": null,
+    "gps_x": "129.164620047219",
+    "gps_y": "37.4426421944724"
+  },
+  {
+    "id": 1472,
+    "name": "은평문화예술회관",
+    "name_en": null,
+    "homepage_url": null,
+    "address": "서울 은평구 녹번로 16",
+    "phone": "02-351-3736",
+    "gps_x": "126.92780884732541",
+    "gps_y": "37.6036618787743"
+  },
+  {
+    "id": 1473,
+    "name": "중랑아트센터",
+    "name_en": null,
+    "homepage_url": null,
+    "address": "서울 중랑구 망우로 353",
+    "phone": "02-3407-6541",
+    "gps_x": "127.09151902362147",
+    "gps_y": "37.5982127985855"
+  },
+  {
+    "id": 1474,
+    "name": "성북예술창작터",
+    "name_en": null,
+    "homepage_url": null,
+    "address": "서울 성북구 성북로 23",
+    "phone": "02-2038-9989",
+    "gps_x": "127.00412141540343",
+    "gps_y": "37.590026659613066"
+  },
+  {
+    "id": 1475,
+    "name": "노원문화원",
+    "name_en": null,
+    "homepage_url": null,
+    "address": "서울 노원구 동일로197길 24",
+    "phone": "02-6380-0022",
+    "gps_x": "127.069814964677",
+    "gps_y": "37.6288026802774"
+  },
+  {
+    "id": 1476,
+    "name": "경춘선숲길 갤러리",
+    "name_en": null,
+    "homepage_url": null,
+    "address": "서울 노원구 화랑로 620",
+    "phone": "02-2289-3440",
+    "gps_x": "127.09361931026154",
+    "gps_y": "37.6250948531682"
+  },
+  {
+    "id": 1477,
+    "name": "트라이보울",
+    "name_en": null,
+    "homepage_url": null,
+    "address": "인천 연수구 인천타워대로 250",
+    "phone": "032-832-7996",
+    "gps_x": "126.635009329215",
+    "gps_y": "37.3942043410562"
+  },
+  {
+    "id": 1478,
+    "name": "울산박물관",
+    "name_en": null,
+    "homepage_url": null,
+    "address": "울산 남구 두왕로 277",
+    "phone": "052-222-8501",
+    "gps_x": "129.30874190982198",
+    "gps_y": "35.52722559157376"
+  },
+  {
+    "id": 1479,
+    "name": "제주항일기념관",
+    "name_en": null,
+    "homepage_url": null,
+    "address": "제주특별자치도 제주시 조천읍 신북로 303",
+    "phone": "064-783-2008",
+    "gps_x": "126.642831699358",
+    "gps_y": "33.5415673046978"
+  },
+  {
+    "id": 1480,
+    "name": "MG초읍동새마을금고 본점 우리동네MG갤러리",
+    "name_en": null,
+    "homepage_url": null,
+    "address": "경기 화성시 효행구 봉담읍 상리중심상가길 28-18",
+    "phone": null,
+    "gps_x": "126.945473434148",
+    "gps_y": "37.2275428206339"
+  },
+  {
+    "id": 1481,
+    "name": "올림픽공원",
+    "name_en": null,
+    "homepage_url": null,
+    "address": "서울 송파구 올림픽로 424",
+    "phone": "02-2180-3518",
+    "gps_x": "127.125014546617",
+    "gps_y": "37.516745478832"
+  },
+  {
+    "id": 1482,
+    "name": "부천시민회관",
+    "name_en": null,
+    "homepage_url": null,
+    "address": "경기 부천시 원미구 부일로 365",
+    "phone": "032-652-5848",
+    "gps_x": "126.770391362396",
+    "gps_y": "37.4884014589488"
+  },
+  {
+    "id": 1483,
+    "name": "김근태기념도서관",
+    "name_en": null,
+    "homepage_url": null,
+    "address": "서울 도봉구 도봉산길 14",
+    "phone": "02-956-3100",
+    "gps_x": "127.04401177464752",
+    "gps_y": "37.68766726029315"
+  },
+  {
+    "id": 1484,
+    "name": "KR 갤러리",
+    "name_en": null,
+    "homepage_url": "https://www.instagram.com/krgallery__/",
+    "address": "전남 목포시 평화로38 6층",
+    "phone": null,
+    "gps_x": null,
+    "gps_y": null
+  },
+  {
+    "id": 1485,
+    "name": "LDK.DT 복합 문화 공간",
+    "name_en": null,
+    "homepage_url": "https://www.instagram.com/p/DeN7QRej3C_/?hl=en",
+    "address": "서울 용산구 대사관로20길 8",
+    "phone": null,
+    "gps_x": null,
+    "gps_y": null
+  },
+  {
+    "id": 1486,
+    "name": "띠오 THEO",
+    "name_en": null,
+    "homepage_url": "https://gallerytheo.com",
+    "address": "서울 강남구 봉은사로68길 55-3 B1F",
+    "phone": null,
+    "gps_x": null,
+    "gps_y": null
+  }
+]

@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { FlatList, View } from 'react-native';
@@ -20,6 +21,8 @@ const FILTER_OPTIONS: { value: FilterOption; label: string }[] = [
 ];
 
 export function BookmarkedExhibitionList() {
+	const { t } = useTranslation();
+
 	const router = useRouter();
 	const [activeFilter, setActiveFilter] = useState<FilterOption>('all');
 	const { data, isLoading, error } = useBookmarkedExhibitions();
@@ -47,7 +50,7 @@ export function BookmarkedExhibitionList() {
 				icon="cloud-offline-outline"
 				illustration={<ErrorIllustration width={200} />}
 				tone="danger"
-				title="전시 정보를 불러오지 못했어요"
+				title={t('exhibitions.load_error_title')}
 			/>
 		);
 	}
@@ -57,7 +60,7 @@ export function BookmarkedExhibitionList() {
 			<Result
 				icon="bookmark-outline"
 				illustration={<BookmarkEmptyIllustration />}
-				title="관심 있는 전시가 없어요"
+				title={t('bookmark.no_exhibitions')}
 				description={'전시를 탐색하고 북마크해보세요'}
 				className="mb-20"
 			/>
@@ -70,10 +73,14 @@ export function BookmarkedExhibitionList() {
 				{FILTER_OPTIONS.map((option) => (
 					<Chip
 						key={option.value}
-						label={option.label}
+						label={
+							option.value === 'all' ? t('search.all_section') : t(`exhibitions.${option.value}`)
+						}
 						active={activeFilter === option.value}
 						onPress={() => setActiveFilter(option.value)}
-						accessibilityLabel={`${option.label} 필터`}
+						accessibilityLabel={
+							option.value === 'all' ? t('search.all_section') : t(`exhibitions.${option.value}`)
+						}
 					/>
 				))}
 			</View>

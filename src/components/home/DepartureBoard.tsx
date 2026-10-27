@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { Pressable, Text, View } from 'react-native';
@@ -28,27 +29,29 @@ interface DepartureBoardProps {
 	onPress: (id: string) => void;
 }
 
-/** 1 → "내일", 2 → "모레", 그 외 → "n일 뒤" */
-const toDayWord = (days: number) => {
-	if (days === 1) return '내일';
-	if (days === 2) return '모레';
-	return `${days}일 뒤`;
-};
-
-const getStatusLabel = (row: DepartureRow<ExhibitionSummary>) => {
-	if (row.departure === 'last-call') return `${toDayWord(row.days)} 떠나요`;
-	if (row.departure === 'boarding') return '머무는 중';
-	return '곧 도착해요';
-};
-
 /** 곧 떠나는 전시 — 큰 D-day 플랩 + 마감 임박 3 · 진행 중 3 · 개막 예정 2 목록. 대상이 없으면 숨긴다 */
 export function DepartureBoard({ index, rows, nearest, status, onPress }: DepartureBoardProps) {
+	const { t } = useTranslation();
+
 	const router = useRouter();
 	// 플랩이 다 넘어간 뒤 'N개'가 0부터 올라간다
 	const nearestCount = useCountUp(nearest?.count ?? 0, { delay: FLAP_STAGGER_MS * 3 });
 
 	const isLoading = rows.length === 0 && status === 'loading';
 	const today = new Date();
+	const toDayWord = (days: number) => {
+		if (days === 0) return t('common.today').toLocaleLowerCase();
+		if (days === 1) return t('departures.day_tomorrow');
+		if (days === 2) return t('departures.day_after_tomorrow');
+		return t('departures.days_from_now', { days });
+	};
+	const getStatusLabel = (row: DepartureRow<ExhibitionSummary>) => {
+		if (row.departure === 'last-call') {
+			return t('departures.status_last_call', { dayWord: toDayWord(row.days) });
+		}
+		if (row.departure === 'boarding') return t('departures.status_boarding');
+		return t('departures.status_arriving');
+	};
 
 	return (
 		(isLoading || rows.length > 0) && (
@@ -69,7 +72,10 @@ export function DepartureBoard({ index, rows, nearest, status, onPress }: Depart
 						className="flex-row items-center gap-[18px]"
 						style={{ paddingHorizontal: HOME_SIDE_PADDING }}
 						accessible
-						accessibilityLabel={`${toDayWord(nearest.daysLeft)} 떠나는 전시가 ${nearest.count}개 있어요`}
+						accessibilityLabel={t('departures.nearest_a11y', {
+							count: nearest.count,
+							dayWord: toDayWord(nearest.daysLeft),
+						})}
 					>
 						<View className="flex-row gap-1">
 							{`D-${nearest.daysLeft}`.split('').map((char, i) => (
@@ -77,7 +83,7 @@ export function DepartureBoard({ index, rows, nearest, status, onPress }: Depart
 							))}
 						</View>
 						<Text className="flex-1 text-gray900 text-[18px] leading-[26px] font-pretendard-semibold">
-							{`곧 떠나는\n전시가 ${nearestCount}개 있어요`}
+							{t('departures.hero_text', { count: nearestCount })}
 						</Text>
 					</View>
 				)}
@@ -98,7 +104,7 @@ export function DepartureBoard({ index, rows, nearest, status, onPress }: Depart
 							))
 						: rows.map((row, i) => {
 								const title = row.title.trim();
-								const venue = row.venue.trim() || '장소 정보 없음';
+								const venue = row.venue.trim() || t('common.no_venue_info');
 								const statusLabel = getStatusLabel(row);
 								const isLastCall = row.departure === 'last-call';
 								return (
@@ -144,14 +150,16 @@ export function DepartureBoard({ index, rows, nearest, status, onPress }: Depart
 					onPress={() => router.push({ pathname: '/search', params: { closing: '1' } })}
 					hitSlop={8}
 					accessibilityRole="button"
-					accessibilityLabel="곧 막을 내리는 전시 전체 보기"
+					accessibilityLabel={t('home.see_all_closing_soon_a11y')}
 					className="mt-3 flex-row items-center self-start ml-6"
 					style={({ pressed }) => ({
 						marginRight: HOME_SIDE_PADDING,
 						opacity: pressed ? 0.6 : 1,
 					})}
 				>
-					<Text className="mr-0.5 text-gray700 text-[13px] font-pretendard-medium">전체 보기</Text>
+					<Text className="mr-0.5 text-gray700 text-[13px] font-pretendard-medium">
+						{t('home.see_all_label')}
+					</Text>
 					<Ionicons name="chevron-forward" size={14} className="text-gray700" />
 				</Pressable>
 			</View>

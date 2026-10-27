@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Image, Linking, Text, View } from 'react-native';
 import * as Notifications from 'expo-notifications';
 import Animated, { FadeInDown, useReducedMotion } from 'react-native-reanimated';
@@ -13,6 +14,8 @@ interface NotificationPermissionPageProps {
 export function NotificationPermissionPage({
 	onPermissionRequested,
 }: NotificationPermissionPageProps) {
+	const { t } = useTranslation();
+
 	const reduceMotion = useReducedMotion();
 
 	const handleEnablePress = async () => {
@@ -35,7 +38,7 @@ export function NotificationPermissionPage({
 		<Screen variant="warm" className="px-0">
 			<Screen.Header fullBleed>
 				<Screen.Header.Back />
-				<Screen.Header.Center className="mb-1">알림</Screen.Header.Center>
+				<Screen.Header.Center className="mb-1">{t('notifications.title')}</Screen.Header.Center>
 			</Screen.Header>
 
 			<View className="flex-1 px-7 pb-8 pt-5">

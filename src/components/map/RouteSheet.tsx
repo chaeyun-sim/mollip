@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { useCallback, useMemo, useState } from 'react';
 import { Text, View } from 'react-native';
@@ -42,6 +43,8 @@ export function RouteSheet({
 	originName,
 	bottomInset,
 }: RouteSheetProps) {
+	const { t } = useTranslation();
+
 	// 버스 후보 카드 중 상세 타임라인이 펼쳐진 카드 — 아코디언이라 한 번에 하나만 열린다.
 	const [expandedIndex, setExpandedIndex] = useState<number | null>(0);
 	const [sortCriterion, setSortCriterion] = useState<SortCriterion>('time');
@@ -118,7 +121,8 @@ export function RouteSheet({
 					<View className="pb-8">
 						<View className="mb-3 gap-2.5">
 							<Text className="text-black/40 text-[11px] font-pretendard-bold tracking-[1.2px]">
-								경로 {routes.length}개
+								{t('map.route')}
+								{routes.length}개
 							</Text>
 							<SortChips criterion={sortCriterion} onChangeCriterion={handleChangeCriterion} />
 						</View>

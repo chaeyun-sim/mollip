@@ -1,3 +1,5 @@
+import { trackLogin } from '@/src/lib/analytics';
+import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { useLocalSearchParams, useRouter } from 'expo-router';
@@ -19,6 +21,8 @@ function safeReturnTo(raw: string | string[] | undefined): string {
 }
 
 export default function LoginScreen() {
+	const { t } = useTranslation();
+
 	const router = useRouter();
 	const insets = useSafeAreaInsets();
 	const { returnTo } = useLocalSearchParams<{ returnTo?: string }>();
@@ -60,9 +64,10 @@ export default function LoginScreen() {
 		try {
 			if (provider === 'kakao') await signInWithKakao();
 			else await signInWithApple();
+			void trackLogin(provider);
 			await finish();
 		} catch (e) {
-			const message = e instanceof Error ? e.message : '로그인에 실패했습니다';
+			const message = e instanceof Error ? e.message : t('auth.login_failed');
 			if (!message.includes('취소')) setError(message);
 		} finally {
 			setBusy(null);
@@ -79,7 +84,7 @@ export default function LoginScreen() {
 						onPress={() => router.back()}
 						hitSlop={12}
 						accessibilityRole="button"
-						accessibilityLabel="닫기"
+						accessibilityLabel={t('common.close')}
 						className="w-10 h-10 rounded-full items-center justify-center border border-white/85 bg-white/55"
 						style={({ pressed }) => (pressed ? { opacity: 0.7 } : undefined)}
 					>
@@ -92,13 +97,13 @@ export default function LoginScreen() {
 				<View className="items-center mt-4 mb-9 flex-1 justify-center">
 					<ScreenHeader.Logo fontSize={56} />
 					<Text className="text-[15px] leading-[22px] text-description text-center max-w-[280px] font-pretendard-regular">
-						{`예술에 몰입하는 가장 조용한 방법`}
+						{t('auth.tagline')}
 					</Text>
 				</View>
 
 				<View className="gap-3 pb-7 mt-12">
 					<SocialPill
-						label="카카오로 시작하기"
+						label={t('auth.login_with_kakao')}
 						variant="kakao"
 						disabled={busyAny}
 						loading={busy === 'kakao'}
@@ -114,7 +119,7 @@ export default function LoginScreen() {
 
 					{Platform.OS === 'ios' && (
 						<SocialPill
-							label="Apple로 시작하기"
+							label={t('auth.login_with_apple')}
 							variant="apple"
 							disabled={busyAny}
 							loading={busy === 'apple'}
@@ -134,27 +139,27 @@ export default function LoginScreen() {
 						style={{ marginBottom: insets.bottom + 12 }}
 					>
 						<Text className="text-[11px] leading-[16px] text-gray500 text-center font-pretendard-regular">
-							회원가입 시 서비스의 필수 동의 항목인
+							{t('auth.legal_agreement_prefix')}
 						</Text>
 						<View className="flex-row gap-1 justify-center">
 							<View className="flex-row">
 								<Pressable onPress={() => void openLegalDocument('privacy')}>
 									<Text className="text-[11px] leading-[16px] text-black/70 text-center font-pretendard-medium">
-										개인정보처리방침
+										{t('auth.privacy_policy')}
 									</Text>
 								</Pressable>
 								<Text className="text-[11px] leading-[16px] text-gray500 text-center font-pretendard-regular">
-									과
+									{t('auth.legal_and')}
 								</Text>
 							</View>
 							<View className="flex-row">
 								<Pressable onPress={() => void openLegalDocument('terms')}>
 									<Text className="text-[11px] leading-[16px] text-black/70 text-center font-pretendard-medium">
-										서비스 이용약관
+										{t('auth.terms_of_service')}
 									</Text>
 								</Pressable>
 								<Text className="text-[11px] leading-[16px] text-gray500 text-center font-pretendard-regular">
-									에 동의한 것으로 간주됩니다.
+									{t('auth.legal_agreement_suffix')}
 								</Text>
 							</View>
 						</View>

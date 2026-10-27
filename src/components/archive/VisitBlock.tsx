@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Dimensions, Modal, Pressable, Text, View } from 'react-native';
@@ -48,6 +49,8 @@ export function VisitBlock({
 	heroTopInset = 0,
 	onHeroPhotoChange,
 }: VisitBlockProps) {
+	const { t } = useTranslation();
+
 	const dotsRef = useRef<View>(null);
 	const [menuOpen, setMenuOpen] = useState(false);
 	const [menuAnchor, setMenuAnchor] = useState({ top: 0, right: 0 });
@@ -308,7 +311,9 @@ export function VisitBlock({
 							style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
 						>
 							<Ionicons name="pencil-outline" size={16} color={colors.ink} />
-							<Text className="font-pretendard-medium text-[14px] text-ink">수정</Text>
+							<Text className="font-pretendard-medium text-[14px] text-ink">
+								{t('common.edit')}
+							</Text>
 						</Pressable>
 						<View className="h-hairline bg-divider" />
 						<Pressable
@@ -319,7 +324,9 @@ export function VisitBlock({
 							style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
 						>
 							<Ionicons name="trash-outline" size={16} color={colors.error} />
-							<Text className="font-pretendard-medium text-[14px] text-error">삭제</Text>
+							<Text className="font-pretendard-medium text-[14px] text-error">
+								{t('common.delete')}
+							</Text>
 						</Pressable>
 					</View>
 				</View>

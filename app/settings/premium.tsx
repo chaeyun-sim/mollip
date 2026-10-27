@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
 import { Stack, useRouter } from 'expo-router';
 import { ImageBackground, Pressable, Text, View } from 'react-native';
@@ -42,6 +43,8 @@ const BENEFITS = [
 ];
 
 export default function PremiumScreen() {
+	const { t } = useTranslation();
+
 	const router = useRouter();
 	const { showToast } = useToast();
 
@@ -191,7 +194,9 @@ export default function PremiumScreen() {
 									accessibilityLabel="상품 정보 다시 불러오기"
 									className="min-h-11 items-center justify-center rounded-full bg-white/10 px-6"
 								>
-									<Text className="font-pretendard-bold text-[13px] text-white">다시 시도</Text>
+									<Text className="font-pretendard-bold text-[13px] text-white">
+										{t('common.retry')}
+									</Text>
 								</Pressable>
 							</View>
 						)}
@@ -334,7 +339,9 @@ export default function PremiumScreen() {
 							hitSlop={8}
 							className={cn('min-h-11 justify-center', isRestoreDisabled && 'opacity-40')}
 						>
-							<Text className="font-pretendard-medium text-xs text-white/65">구매 복원</Text>
+							<Text className="font-pretendard-medium text-xs text-white/65">
+								{t('settings.restore_purchase')}
+							</Text>
 						</Pressable>
 						<Pressable
 							onPress={() => void openLegalDocument('terms')}

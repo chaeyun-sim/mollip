@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { ReactNode } from 'react';
@@ -126,6 +127,7 @@ function Back({
 	className?: string;
 }) {
 	const router = useRouter();
+	const { t } = useTranslation();
 	const colorClass =
 		color === 'muted'
 			? 'text-gray600'
@@ -139,7 +141,7 @@ function Back({
 		<Pressable
 			onPress={onPress ?? (() => router.back())}
 			hitSlop={8}
-			accessibilityLabel="뒤로 가기"
+			accessibilityLabel={t('common.back')}
 			accessibilityRole="button"
 			style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
 		>

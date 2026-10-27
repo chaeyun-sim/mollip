@@ -1,0 +1,11 @@
+{
+  "rows": 474,
+  "closure_translated": 365,
+  "hours_translated": 439,
+  "closure_original_null": 88,
+  "closure_null_preserved": 88,
+  "closure_blank_preserved": 21,
+  "mismatches": [],
+  "original_changes_since_snapshot": [],
+  "address_pending": 474
+}

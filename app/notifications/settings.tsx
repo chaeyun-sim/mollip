@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Alert, AppState, Linking, View } from 'react-native';
 import * as Location from 'expo-location';
@@ -31,6 +32,8 @@ const DEFAULT_PREFS: NotificationPrefs = {
 };
 
 export default function NotificationSettingsScreen() {
+	const { t } = useTranslation();
+
 	const { userId } = useAuthStore(useShallow((s) => ({ userId: s.user?.id })));
 	const [prefs, setPrefs] = useState<NotificationPrefs>(DEFAULT_PREFS);
 	const [nearbyEnabled, setNearbyEnabled] = useState(false);
@@ -118,7 +121,7 @@ export default function NotificationSettingsScreen() {
 				'근처 전시 알림을 켤까요?',
 				'주변 전시에 도착했을 때 알려드리려면 알림과 백그라운드 위치 접근이 필요해요. 위치 이동 경로는 저장하거나 전송하지 않아요.',
 				[
-					{ text: '취소', style: 'cancel' },
+					{ text: t('common.cancel'), style: 'cancel' },
 					{
 						text: '계속하기',
 						onPress: () => {
@@ -175,10 +178,10 @@ export default function NotificationSettingsScreen() {
 										message,
 										needsSettings
 											? [
-													{ text: '취소', style: 'cancel' },
+													{ text: t('common.cancel'), style: 'cancel' },
 													{ text: '설정 열기', onPress: () => void Linking.openSettings() },
 												]
-											: [{ text: '확인' }],
+											: [{ text: t('common.confirm') }],
 									);
 									console.warn('[nearby-alert] 활성화 실패:', error);
 								})
@@ -188,7 +191,7 @@ export default function NotificationSettingsScreen() {
 				],
 			);
 		},
-		[nearbyBusy, setNearbyBusy],
+		[nearbyBusy, setNearbyBusy, t],
 	);
 
 	return (

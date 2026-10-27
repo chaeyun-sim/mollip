@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { useEffect, useRef } from 'react';
 import { AccessibilityInfo, findNodeHandle, Pressable, Text, View } from 'react-native';
 import { cn } from '@/src/lib/cn';
@@ -10,6 +11,8 @@ interface OnboardingSaveErrorBarProps {
 
 /** 저장 실패 시 확인 화면 위에 얹는 오류 바 — 즉시 알림 + 다시 시도로 포커스 이동 (AC-5, AC-7). */
 export function OnboardingSaveErrorBar({ onRetry, onSkipSave, busy }: OnboardingSaveErrorBarProps) {
+	const { t } = useTranslation();
+
 	const retryRef = useRef<View>(null);
 
 	useEffect(() => {
@@ -35,7 +38,7 @@ export function OnboardingSaveErrorBar({ onRetry, onSkipSave, busy }: Onboarding
 					onPress={onRetry}
 					disabled={busy}
 					accessibilityRole="button"
-					accessibilityLabel="다시 시도"
+					accessibilityLabel={t('common.retry')}
 					accessibilityState={{ busy, disabled: busy }}
 					className={cn(
 						'flex-1 min-h-11 items-center justify-center rounded-full',
@@ -45,7 +48,7 @@ export function OnboardingSaveErrorBar({ onRetry, onSkipSave, busy }: Onboarding
 					<Text
 						className={cn('text-[14px] font-pretendard-semibold', busy ? 'text-ink' : 'text-white')}
 					>
-						다시 시도
+						{t('common.retry')}
 					</Text>
 				</Pressable>
 				<Pressable

@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 import { ScreenHeader } from '../layout/ScreenHeader';
 import { LoginRequiredPressable } from '../auth/LoginRequiredPressable';
@@ -9,6 +10,8 @@ interface CommonHeaderProps {
 }
 
 export function CommonHeader({ fullBleed = false }: CommonHeaderProps) {
+	const { t } = useTranslation();
+
 	return (
 		<ScreenHeader fullBleed={fullBleed}>
 			<ScreenHeader.Left>
@@ -20,7 +23,7 @@ export function CommonHeader({ fullBleed = false }: CommonHeaderProps) {
 						onPress={() => router.push('/bookmark')}
 						hitSlop={8}
 						accessibilityRole="button"
-						accessibilityLabel="북마크"
+						accessibilityLabel={t('exhibitions.bookmark')}
 						style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
 						returnTo="/bookmark"
 					>
@@ -30,7 +33,7 @@ export function CommonHeader({ fullBleed = false }: CommonHeaderProps) {
 						onPress={() => router.push('/notifications')}
 						hitSlop={8}
 						accessibilityRole="button"
-						accessibilityLabel="알림"
+						accessibilityLabel={t('diary.notifications_a11y')}
 						style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
 						returnTo="/notifications"
 					>

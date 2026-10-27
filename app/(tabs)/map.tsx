@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
 import BottomSheet, { BottomSheetBackdrop, BottomSheetModal } from '@gorhom/bottom-sheet';
 import { NaverMapView } from '@mj-studio/react-native-naver-map';
@@ -36,6 +37,8 @@ const CAMERA_ANIM_DURATION = 300;
 const ROUTE_SNAP_FRACTIONS = [0.24, 0.5, 0.85] as const;
 
 export default function MapScreen() {
+	const { t } = useTranslation();
+
 	const router = useRouter();
 	const insets = useSafeAreaInsets();
 	const { height: screenHeight } = useWindowDimensions();
@@ -503,7 +506,7 @@ export default function MapScreen() {
 						elevation: 4,
 					}}
 					hitSlop={6}
-					accessibilityLabel="길찾기 닫기"
+					accessibilityLabel={t('map.close_directions_a11y')}
 					accessibilityRole="button"
 				>
 					<Ionicons name="close" size={22} className="text-gray900" />

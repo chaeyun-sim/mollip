@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { useState } from 'react';
@@ -15,6 +16,8 @@ interface GalleryPhotoProps {
 
 /** 갤러리 한 장 — 영역을 꽉 채우는 cover, 로드 실패는 이 장에만 보이고 다시 시도할 수 있다 */
 export function GalleryPhoto({ uri, width, height, accessibilityLabel }: GalleryPhotoProps) {
+	const { t } = useTranslation();
+
 	const [hasError, setHasError] = useState(false);
 	const [isLoading, setIsLoading] = useState(true);
 	// 다시 시도할 때마다 올려서 같은 URL이어도 이미지를 새로 요청한다
@@ -44,7 +47,7 @@ export function GalleryPhoto({ uri, width, height, accessibilityLabel }: Gallery
 						onPress={handleRetry}
 						accessibilityLabel="사진 다시 불러오기"
 					>
-						다시 시도
+						{t('common.retry')}
 					</Button>
 				</View>
 			) : (

@@ -1,0 +1,13 @@
+{
+  "rows": 473,
+  "addresses_verified": 473,
+  "address_null": 0,
+  "closure_translated": 364,
+  "hours_translated": 438,
+  "closure_null_preserved": 88,
+  "mismatches": [],
+  "other_changes_since_latest_snapshot": [],
+  "deleted_since_research": [
+    1393
+  ]
+}

@@ -1,0 +1,279 @@
+{"id": 10, "name": "미메시스 아트 뮤지엄", "name_en": "Mimesis Art Museum", "status": "updated"}
+{"id": 5, "name": "이응노미술관", "name_en": "Lee Ungno Museum", "status": "updated"}
+{"id": 1, "name": "갤러리 topohaus", "name_en": "TOPOHAUS", "status": "updated"}
+{"id": 11, "name": "유나이티드 갤러리", "name_en": "United Gallery", "status": "updated"}
+{"id": 3, "name": "경인미술관", "name_en": "Kyung-In Museum of Fine Art", "status": "updated"}
+{"id": 4, "name": "사비나미술관", "name_en": "Savina Museum of Contemporary Art", "status": "updated"}
+{"id": 16, "name": "제주도립미술관", "name_en": "Jeju Museum of Art", "status": "updated"}
+{"id": 14, "name": "우양미술관", "name_en": "Wooyang Art Museum", "status": "updated"}
+{"id": 13, "name": "송암미술관", "name_en": "Songam Art Museum", "status": "updated"}
+{"id": 12, "name": "서울시립북서울미술관", "name_en": "Buk-Seoul Museum of Art", "status": "updated"}
+{"id": 20, "name": "아모레퍼시픽미술관", "name_en": "Amorepacific Museum of Art", "status": "updated"}
+{"id": 17, "name": "성곡미술관", "name_en": "Sungkok Art Museum", "status": "updated"}
+{"id": 23, "name": "한원미술관", "name_en": "Hanwon Museum", "status": "updated"}
+{"id": 19, "name": "가나아트파크", "name_en": "Gana ArtPark", "status": "updated"}
+{"id": 32, "name": "솔거미술관", "name_en": "Solgeo Art Museum", "status": "updated"}
+{"id": 30, "name": "아줄레주 갤러리", "name_en": "Azulejo Gallery", "status": "updated"}
+{"id": 21, "name": "아트선재센터", "name_en": "Art Sonje Center", "status": "updated"}
+{"id": 25, "name": "백남준아트센터", "name_en": "Nam June Paik Art Center", "status": "updated"}
+{"id": 27, "name": "JCC 아트센터", "name_en": "JCC Art Center", "status": "updated"}
+{"id": 55, "name": "창원시립마산문신미술관", "name_en": "Changwon City Masan Moonshin Art Museum", "status": "updated"}
+{"id": 33, "name": "두산갤러리", "name_en": "DOOSAN Gallery", "status": "updated"}
+{"id": 40, "name": "국립현대미술관 덕수궁관", "name_en": "MMCA Deoksugung", "status": "updated"}
+{"id": 35, "name": "임립미술관", "name_en": "Limlip Art Museum", "status": "updated"}
+{"id": 53, "name": "국립현대미술관 과천관", "name_en": "MMCA Gwacheon", "status": "updated"}
+{"id": 56, "name": "플랫폼-엘 컨템포러리 아트센터", "name_en": "Platform-L Contemporary Art Center", "status": "updated"}
+{"id": 63, "name": "국립현대미술관 서울관", "name_en": "MMCA Seoul", "status": "updated"}
+{"id": 67, "name": "국제갤러리", "name_en": "Kukje Gallery", "status": "updated"}
+{"id": 57, "name": "안상철미술관", "name_en": "Ahn Sang Chul Museum", "status": "updated"}
+{"id": 62, "name": "경기도미술관", "name_en": "Gyeonggi Museum of Modern Art", "status": "updated"}
+{"id": 68, "name": "이천시립월전미술관", "name_en": "Woljeon Museum of Art Icheon", "status": "updated"}
+{"id": 71, "name": "서울시립미술관", "name_en": "Seoul Museum of Art", "status": "updated"}
+{"id": 74, "name": "갤러리SP", "name_en": "Gallery SP", "status": "updated"}
+{"id": 65, "name": "코리아나미술관", "name_en": "Coreana Museum of Art", "status": "updated"}
+{"id": 79, "name": "비트리갤러리", "name_en": "B-tree Gallery", "status": "updated"}
+{"id": 70, "name": "갤러리현대", "name_en": "Gallery Hyundai", "status": "updated"}
+{"id": 77, "name": "남송미술관", "name_en": "Namsong Art Museum", "status": "updated"}
+{"id": 82, "name": "대림미술관", "name_en": "Daelim Museum", "status": "updated"}
+{"id": 80, "name": "갤러리 라메르", "name_en": "Gallery Lamer", "status": "updated"}
+{"id": 136, "name": "뮤지엄산미술관", "name_en": "Museum SAN", "status": "updated"}
+{"id": 100, "name": "전남도립미술관", "name_en": "Jeonnam Museum of Art", "status": "updated"}
+{"id": 151, "name": "한향림도자미술관", "name_en": "Hanhyanglim Ceramic Museum", "status": "updated"}
+{"id": 164, "name": "블루메미술관", "name_en": "Blume Museum of Contemporary Art", "status": "updated"}
+{"id": 183, "name": "수원시립미술관", "name_en": "Suwon Museum of Art", "status": "updated"}
+{"id": 83, "name": "소다미술관", "name_en": "Museum Soda", "status": "updated"}
+{"id": 218, "name": "모산조형미술관", "name_en": "Mosan Art Museum", "status": "updated"}
+{"id": 196, "name": "우리미술관", "name_en": "Woori Museum of Art", "status": "updated"}
+{"id": 331, "name": "닻미술관", "name_en": "Datz Museum", "status": "updated"}
+{"id": 332, "name": "영은미술관", "name_en": "Youngeun Museum of Contemporary Art", "status": "updated"}
+{"id": 334, "name": "엄미술관", "name_en": "Um Museum", "status": "updated"}
+{"id": 340, "name": "예술의전당 한가람미술관", "name_en": "Hangaram Art Museum", "status": "updated"}
+{"id": 350, "name": "김세중미술관", "name_en": "Kimsechoong Museum", "status": "updated"}
+{"id": 342, "name": "(재)한원미술관", "name_en": "Hanwon Museum", "status": "updated"}
+{"id": 352, "name": "리움미술관", "name_en": "Leeum Museum of Art", "status": "updated"}
+{"id": 365, "name": "클레이아크 김해미술관", "name_en": "Clayarch Gimhae Museum", "status": "updated"}
+{"id": 407, "name": "아르코미술관", "name_en": "ARKO Art Center", "status": "updated"}
+{"id": 409, "name": "세종문화회관 미술관(세종미술관)", "name_en": "Sejong Museum of Art", "status": "updated"}
+{"id": 442, "name": "환기미술관", "name_en": "Whanki Museum", "status": "updated"}
+{"id": 443, "name": "학아재미술관", "name_en": "Hagajae Museum", "status": "updated"}
+{"id": 412, "name": "금호미술관", "name_en": "Kumho Museum of Art", "status": "updated"}
+{"id": 414, "name": "OCI 미술관", "name_en": "OCI Museum of Art", "status": "updated"}
+{"id": 446, "name": "일민미술관", "name_en": "Ilmin Museum of Art", "status": "updated"}
+{"id": 445, "name": "자하미술관", "name_en": "Zaha Museum", "status": "updated"}
+{"id": 451, "name": "진주시립 이성자미술관", "name_en": "Rhee Seund Ja Jinju Art Museum", "status": "updated"}
+{"id": 441, "name": "세화미술관", "name_en": "Sehwa Museum of Art", "status": "updated"}
+{"id": 483, "name": "대구미술관", "name_en": "Daegu Art Museum", "status": "updated"}
+{"id": 485, "name": "대구간송미술관", "name_en": "Kansong Art Museum Daegu", "status": "updated"}
+{"id": 444, "name": "토탈미술관", "name_en": "Total Museum of Contemporary Art", "status": "updated"}
+{"id": 509, "name": "천안시립미술관", "name_en": "Cheonan Museum of Art", "status": "updated"}
+{"id": 453, "name": "시안미술관", "name_en": "Cian Museum of Art", "status": "updated"}
+{"id": 607, "name": "경주솔거미술관", "name_en": "Solgeo Art Museum", "status": "updated"}
+{"id": 593, "name": "양주시립장욱진미술관", "name_en": "Yangju City Chang Ucchin Museum of Art", "status": "updated"}
+{"id": 508, "name": "리각미술관", "name_en": "Ligak Museum", "status": "updated"}
+{"id": 636, "name": "유동룡미술관", "name_en": "Itami Jun Museum", "status": "updated"}
+{"id": 524, "name": "경남도립미술관", "name_en": "Gyeongnam Art Museum", "status": "updated"}
+{"id": 611, "name": "한라디지털아트뮤지엄", "name_en": "Halla Digital Art Museum", "status": "updated"}
+{"id": 655, "name": "제주 현대미술관", "name_en": "Jeju Museum of Contemporary Art", "status": "updated"}
+{"id": 653, "name": "제주도립 김창열미술관", "name_en": "Kim Tschang-Yeul Art Museum Jeju", "status": "updated"}
+{"id": 645, "name": "유민 아르누보 뮤지엄", "name_en": "Yumin Art Nouveau Museum", "status": "updated"}
+{"id": 657, "name": "김영갑갤러리 두모악", "name_en": "Kimyounggap Gallery Dumoak", "status": "updated"}
+{"id": 658, "name": "이중섭미술관", "name_en": "Lee Jung-seop Art Museum", "status": "updated"}
+{"id": 659, "name": "기당미술관", "name_en": "Gidang Art Museum", "status": "updated"}
+{"id": 706, "name": "성남큐브미술관", "name_en": "Seongnam Cube Art Museum", "status": "updated"}
+{"id": 686, "name": "울산시립미술관", "name_en": "Ulsan Art Museum", "status": "updated"}
+{"id": 722, "name": "밀알미술관", "name_en": "Milal Museum of Art", "status": "updated"}
+{"id": 726, "name": "서울대학교 미술관", "name_en": "Seoul National University Museum of Art", "status": "updated"}
+{"id": 743, "name": "진천군립 생거판화미술관", "name_en": "Jincheon County Museum of Prints and Printmaking", "status": "updated"}
+{"id": 744, "name": "이강하미술관", "name_en": "Lee Kang Ha Art Museum", "status": "updated"}
+{"id": 784, "name": "성북구립미술관", "name_en": "Seongbuk Museum of Art", "status": "updated"}
+{"id": 819, "name": "전북도립미술관", "name_en": "Jeonbuk Museum of Art", "status": "updated"}
+{"id": 825, "name": "뮤지엄한미 삼청\n", "name_en": "Museum Hanmi Samcheong", "status": "updated"}
+{"id": 727, "name": "서울시립남서울미술관", "name_en": "Nam-Seoul Museum of Art", "status": "updated"}
+{"id": 833, "name": "주안미술관", "name_en": "JuAn Art Museum", "status": "updated"}
+{"id": 842, "name": "호암미술관", "name_en": "Hoam Museum of Art", "status": "updated"}
+{"id": 828, "name": "소마미술관", "name_en": "Seoul Olympic Museum of Art", "status": "updated"}
+{"id": 832, "name": "드영미술관", "name_en": "De Young Museum", "status": "updated"}
+{"id": 849, "name": "양평군립미술관", "name_en": "Yangpyeong Museum of Art", "status": "updated"}
+{"id": 867, "name": "쉐마미술관", "name_en": "Schema Art Museum", "status": "updated"}
+{"id": 872, "name": "광주시립미술관", "name_en": "Gwangju Museum of Art", "status": "updated"}
+{"id": 869, "name": "청주시립대청호미술관", "name_en": "Dacheongho Museum of Art", "status": "updated"}
+{"id": 858, "name": "문아트그라운드 뮤지엄", "name_en": "Moon Art Grounds Museum", "status": "updated"}
+{"id": 883, "name": "노적봉예술공원미술관", "name_en": "Nojeokbong Art Park Art Museum", "status": "updated"}
+{"id": 996, "name": "포항시립미술관", "name_en": "Pohang Museum of Steel Art", "status": "updated"}
+{"id": 988, "name": "전혁림미술관", "name_en": "Chun Hyuck Lim Art Museum", "status": "updated"}
+{"id": 892, "name": "청주시립미술관", "name_en": "Cheongju Museum of Art", "status": "updated"}
+{"id": 856, "name": "안젤리미술관", "name_en": "KwonSookJa Angeli Art Museum", "status": "updated"}
+{"id": 1013, "name": "고은사진미술관", "name_en": "Goeun Museum of Photography", "status": "updated"}
+{"id": 1014, "name": "부산시립미술관", "name_en": "Busan Museum of Art", "status": "updated"}
+{"id": 1054, "name": "양구군립박수근미술관", "name_en": "Park Soo Keun Museum", "status": "updated"}
+{"id": 1074, "name": "부산현대미술관", "name_en": "Museum of Contemporary Art Busan", "status": "updated"}
+{"id": 1057, "name": "정선507미술관", "name_en": "507 Art Museum", "status": "updated"}
+{"id": 972, "name": "포스코미술관", "name_en": "POSCO Art Museum", "status": "updated"}
+{"id": 1097, "name": "대전시립미술관", "name_en": "Daejeon Museum of Art", "status": "updated"}
+{"id": 1102, "name": "CICA미술관", "name_en": "CICA Museum", "status": "updated"}
+{"id": 1124, "name": "국립청주박물관", "name_en": "Cheongju National Museum", "status": "updated"}
+{"id": 1123, "name": "국립공주박물관", "name_en": "Gongju National Museum", "status": "updated"}
+{"id": 1122, "name": "국립부여박물관", "name_en": "Buyeo National Museum", "status": "updated"}
+{"id": 1121, "name": "국립경주박물관", "name_en": "Gyeongju National Museum", "status": "updated"}
+{"id": 1132, "name": "국립진주박물관", "name_en": "Jinju National Museum", "status": "updated"}
+{"id": 1125, "name": "국립춘천박물관", "name_en": "Chuncheon National Museum", "status": "updated"}
+{"id": 1131, "name": "국립제주박물관", "name_en": "Jeju National Museum", "status": "updated"}
+{"id": 1127, "name": "국립대구박물관", "name_en": "Daegu National Museum", "status": "updated"}
+{"id": 1126, "name": "국립광주박물관", "name_en": "Gwangju National Museum", "status": "updated"}
+{"id": 1135, "name": "포도뮤지엄", "name_en": "PODO Museum", "status": "updated"}
+{"id": 1133, "name": "국립김해박물관", "name_en": "Gimhae National Museum", "status": "updated"}
+{"id": 1141, "name": "롯데뮤지엄", "name_en": "Lotte Museum of Art", "status": "updated"}
+{"id": 1142, "name": "화이트 큐브 서울", "name_en": "White Cube Seoul", "status": "updated"}
+{"id": 1143, "name": "송은", "name_en": "SONGEUN", "status": "updated"}
+{"id": 1130, "name": "국립중앙박물관", "name_en": "National Museum of Korea", "status": "updated"}
+{"id": 1152, "name": "문화역 서울 284", "name_en": "Culture Station Seoul 284", "status": "updated"}
+{"id": 1149, "name": "국립아시아문화전당", "name_en": "Asia Culture Center", "status": "updated"}
+{"id": 1150, "name": "예술의전당 서울서예박물관", "name_en": "Seoul Calligraphy Art Museum", "status": "updated"}
+{"id": 1153, "name": "마이아트뮤지엄", "name_en": "My Art Museum", "status": "updated"}
+{"id": 1154, "name": "아라리오뮤지엄 서울 (인스페이스)", "name_en": "ARARIO Museum in SPACE", "status": "updated"}
+{"id": 1157, "name": "국립현대미술관 청주관", "name_en": "MMCA Cheongju", "status": "updated"}
+{"id": 1155, "name": "아라리오뮤지엄 제주 (탑동)", "name_en": "ARARIO Museum Tapdong Cinema", "status": "updated"}
+{"id": 1148, "name": "미들맨 갤러리", "name_en": "Middleman", "status": "updated"}
+{"id": 1156, "name": "아라리오뮤지엄 제주 (동문모텔 I, II)", "name_en": "ARARIO Museum Dongmun Motel I, II", "status": "updated"}
+{"id": 1160, "name": "디뮤지엄", "name_en": "D Museum", "status": "updated"}
+{"id": 1159, "name": "예술의전당 한가람디자인미술관", "name_en": "Hangaram Design Museum", "status": "updated"}
+{"id": 1165, "name": "광주시립미술관 하정웅미술관", "name_en": "Ha Jung-woong Museum of Art", "status": "updated"}
+{"id": 1172, "name": "갤러리 그라프", "name_en": "Gallery Grappe", "status": "updated"}
+{"id": 1169, "name": "그라운드 시소 한남", "name_en": "Groundseesaw Hannam", "status": "updated"}
+{"id": 1164, "name": "서울시립서서울미술관", "name_en": "Seo-Seoul Museum of Art", "status": "updated"}
+{"id": 1168, "name": "그라운드 시소 이스트", "name_en": "Groundseesaw East", "status": "updated"}
+{"id": 1177, "name": "DMZ 박물관", "name_en": "DMZ Museum", "status": "updated"}
+{"id": 1175, "name": "16아카이브", "name_en": "16AKAIV", "status": "updated"}
+{"id": 1179, "name": "PS센터", "name_en": "PS Center", "status": "updated"}
+{"id": 1178, "name": "K-ARTS Space", "name_en": "K-Arts Space", "status": "updated"}
+{"id": 1176, "name": "갤러리박 (BHAK)", "name_en": "BHAK", "status": "updated"}
+{"id": 1167, "name": "그라운드 시소 센트럴", "name_en": "Groundseesaw Central", "status": "updated"}
+{"id": 1181, "name": "갤러리 그림손", "name_en": "Gallery Grimson", "status": "updated"}
+{"id": 1180, "name": "가나아트센터", "name_en": "Gana Art Center", "status": "updated"}
+{"id": 1184, "name": "갤러리 지하", "name_en": "Gallery JIHA", "status": "updated"}
+{"id": 1182, "name": "갤러리 스페이스포포", "name_en": "spaceFOFO Photo Gallery", "status": "updated"}
+{"id": 1185, "name": "갤러리 플래닛", "name_en": "Gallery Planet", "status": "updated"}
+{"id": 1186, "name": "경기도박물관", "name_en": "Gyeonggi Provincial Museum", "status": "updated"}
+{"id": 1187, "name": "남산골한옥마을", "name_en": "Namsangol Hanok Village", "status": "updated"}
+{"id": 1190, "name": "부산영화체험박물관", "name_en": "Busan Museum of Movies", "status": "updated"}
+{"id": 1193, "name": "어진박물관", "name_en": "Royal Portrait Museum", "status": "updated"}
+{"id": 1189, "name": "서리풀청년아트갤러리", "name_en": "Seoripul Gallery", "status": "updated"}
+{"id": 1198, "name": "서울기록원", "name_en": "Seoul Metropolitan Archives", "status": "updated"}
+{"id": 1197, "name": "실학박물관", "name_en": "The Museum of Silhak", "status": "updated"}
+{"id": 1212, "name": "광명업사이클아트센터", "name_en": "Gwangmyeong Upcycle Art Center", "status": "updated"}
+{"id": 1216, "name": "숙명여자대학교 정영양자수박물관", "name_en": "The Chung Young Yang Embroidery Museum", "status": "updated"}
+{"id": 1210, "name": "김중업 건축문화의 집", "name_en": "Kim Chungup Architectural Culture House", "status": "updated"}
+{"id": 1201, "name": "종로구립 고희동미술관", "name_en": "Jongno Ko Huidong Art Museum", "status": "updated"}
+{"id": 1211, "name": "서울공예박물관", "name_en": "Seoul Museum of Craft Art", "status": "updated"}
+{"id": 1217, "name": "한국영화박물관", "name_en": "Korean Film Museum", "status": "updated"}
+{"id": 1219, "name": "서울생활사박물관", "name_en": "Seoul Urban Life Museum", "status": "updated"}
+{"id": 1220, "name": "국립해양박물관", "name_en": "National Maritime Museum of Korea", "status": "updated"}
+{"id": 1226, "name": "대한민국역사박물관", "name_en": "National Museum of Korean Contemporary History", "status": "updated"}
+{"id": 1227, "name": "청계천박물관", "name_en": "Cheonggyecheon Museum", "status": "updated"}
+{"id": 1208, "name": "성북구립 최만린미술관", "name_en": "Choi Man Lin Museum", "status": "updated"}
+{"id": 1228, "name": "한밭교육박물관", "name_en": "Hanbat Museum of Education", "status": "updated"}
+{"id": 1230, "name": "국립나주박물관", "name_en": "Naju National Museum", "status": "updated"}
+{"id": 1231, "name": "김포문화재단", "name_en": "Gimpo Cultural Foundation", "status": "updated"}
+{"id": 1238, "name": "서울시립과학관", "name_en": "Seoul Science Center", "status": "updated"}
+{"id": 1237, "name": "루나아틀리에", "name_en": "LUNA Atelier", "status": "updated"}
+{"id": 1239, "name": "울산암각화박물관", "name_en": "Ulsan Petroglyph Museum of Bangudae", "status": "updated"}
+{"id": 1249, "name": "서울시립사진미술관", "name_en": "Photography Seoul Museum of Art", "status": "updated"}
+{"id": 1241, "name": "부천시립박물관", "name_en": "Bucheon Museum", "status": "updated"}
+{"id": 1247, "name": "천안문화재단", "name_en": "Cheonan Foundation for Arts and Culture", "status": "updated"}
+{"id": 1242, "name": "국립중앙도서관", "name_en": "National Library of Korea", "status": "updated"}
+{"id": 1244, "name": "양구인문학박물관", "name_en": "Yanggu Humanities Museum", "status": "updated"}
+{"id": 1250, "name": "오창전시관", "name_en": "Ochang Gallery", "status": "updated"}
+{"id": 1258, "name": "경기창작센터", "name_en": "Gyeonggi Creation Center", "status": "updated"}
+{"id": 1260, "name": "그림책정원1937", "name_en": "Picture Book Garden 1937", "status": "updated"}
+{"id": 1255, "name": "KF갤러리", "name_en": "KF Gallery", "status": "updated"}
+{"id": 1251, "name": "국립민속박물관 파주", "name_en": "National Folk Museum of Korea Paju", "status": "updated"}
+{"id": 1252, "name": "우란문화재단", "name_en": "Wooran Foundation", "status": "updated"}
+{"id": 1261, "name": "작은미술관 보구곶", "name_en": "Small Museum Bogugot", "status": "updated"}
+{"id": 1263, "name": "수원시립만석전시관", "name_en": "Suwon Manseok Gallery", "status": "updated"}
+{"id": 1268, "name": "아마도 예술 공간(Amado Art Space)", "name_en": "Amado Art Space", "status": "updated"}
+{"id": 1266, "name": "인천아트플랫폼", "name_en": "Incheon Art Platform", "status": "updated"}
+{"id": 1264, "name": "국립민속박물관", "name_en": "National Folk Museum of Korea", "status": "updated"}
+{"id": 1253, "name": "국립전주박물관", "name_en": "Jeonju National Museum", "status": "updated"}
+{"id": 1269, "name": "서울역사박물관", "name_en": "Seoul Museum of History", "status": "updated"}
+{"id": 1278, "name": "갤러리세줄", "name_en": "Gallery Sejul", "status": "updated"}
+{"id": 1275, "name": "갤러리JJ", "name_en": "Gallery JJ", "status": "updated"}
+{"id": 1277, "name": "청주시립도서관 청주미술창작스튜디오", "name_en": "Cheongju Art Studio", "status": "updated"}
+{"id": 1279, "name": "갤러리 예 (예화랑)", "name_en": "Gallery Yeh", "status": "updated"}
+{"id": 1280, "name": "취미인간", "name_en": "chwimi_ingan", "status": "updated"}
+{"id": 1287, "name": "한국만화박물관", "name_en": "Korea Manhwa Museum", "status": "updated"}
+{"id": 1291, "name": "갤러리CNK", "name_en": "Gallery CNK", "status": "updated"}
+{"id": 1281, "name": "용산문화재단", "name_en": "Yongsan Foundation for Arts & Culture", "status": "updated"}
+{"id": 1292, "name": "오에이오에이", "name_en": "OAOA Gallery", "status": "updated"}
+{"id": 1296, "name": "서울시립미술아카이브", "name_en": "Art Archives Seoul Museum of Art", "status": "updated"}
+{"id": 1298, "name": "수원시립아트스페이스광교", "name_en": "Suwon Art Space Gwanggyo", "status": "updated"}
+{"id": 1311, "name": "유엠 갤러리", "name_en": "UM Gallery", "status": "updated"}
+{"id": 1302, "name": "갤러리위", "name_en": "Gallery We", "status": "updated"}
+{"id": 1320, "name": "하슬라아트월드", "name_en": "Haslla Art World", "status": "updated"}
+{"id": 1299, "name": "금산갤러리", "name_en": "Keumsan Gallery", "status": "updated"}
+{"id": 1317, "name": "대전광역시 서예진흥원", "name_en": "Daejeon Calligraphy Promotion Agency", "status": "updated"}
+{"id": 1314, "name": "갤러리508", "name_en": "Gallery 508", "status": "updated"}
+{"id": 1322, "name": "아트 포 랩", "name_en": "Art For Lab.", "status": "updated"}
+{"id": 1321, "name": "오션갤러리", "name_en": "Ocean Gallery", "status": "updated"}
+{"id": 1345, "name": "엄뮤지엄", "name_en": "Um Museum", "status": "updated"}
+{"id": 1325, "name": "광주비엔날레", "name_en": "Gwangju Biennale", "status": "updated"}
+{"id": 1344, "name": "화이트블럭", "name_en": "White Block", "status": "updated"}
+{"id": 1349, "name": "갤러리 조은", "name_en": "Gallery Joeun", "status": "updated"}
+{"id": 1346, "name": "의재미술관", "name_en": "Uijae Museum of Korean Art", "status": "updated"}
+{"id": 1350, "name": "한솥아트스페이스", "name_en": "Hansot ArtSpace", "status": "updated"}
+{"id": 1351, "name": "갤러리 나우", "name_en": "Gallery NoW", "status": "updated"}
+{"id": 1352, "name": "아난티 컬쳐클럽", "name_en": "Ananti Culture Club", "status": "updated"}
+{"id": 1323, "name": "마리나갤러리", "name_en": "Marina Gallery", "status": "updated"}
+{"id": 1355, "name": "갤러리 다선", "name_en": "Gallery Dasun", "status": "updated"}
+{"id": 1364, "name": "인가희갤러리", "name_en": "ingahee", "status": "updated"}
+{"id": 1360, "name": "마루아트센터", "name_en": "Maru Art Center", "status": "updated"}
+{"id": 1362, "name": "어반플루토", "name_en": "urbanpluto", "status": "updated"}
+{"id": 1357, "name": "갤러리 소헌 & 소헌 컨템포러리", "name_en": "Gallery Soheon & Soheon Contemporary", "status": "updated"}
+{"id": 1365, "name": "챔버(CHMBR)", "name_en": "CHMBR", "status": "updated"}
+{"id": 1381, "name": "진천종박물관", "name_en": "Jincheon Bell Museum", "status": "updated"}
+{"id": 1369, "name": "히든엠갤러리", "name_en": "Hidden M Gallery", "status": "updated"}
+{"id": 1367, "name": "청화랑", "name_en": "Chung Art Gallery", "status": "updated"}
+{"id": 1382, "name": "아난티 앳 부산 코브", "name_en": "Ananti at Busan Cove", "status": "updated"}
+{"id": 1375, "name": "수원시미디어센터", "name_en": "Suwon Media Center", "status": "updated"}
+{"id": 1383, "name": "대구방짜유기박물관", "name_en": "Daegu Bangjja Yugi (Korean Bronzeware) Museum", "status": "updated"}
+{"id": 1384, "name": "부산근현대역사관", "name_en": "Busan Modern and Contemporary History Museum", "status": "updated"}
+{"id": 1388, "name": "원주문화재단", "name_en": "Wonju Cultural Foundation", "status": "updated"}
+{"id": 1389, "name": "국립대한민국임시정부기념관", "name_en": "National Memorial of the Korean Provisional Government", "status": "updated"}
+{"id": 1385, "name": "국립어린이청소년도서관", "name_en": "National Library for Children and Young Adults", "status": "updated"}
+{"id": 1376, "name": "뮤지엄 원", "name_en": "Museum 1", "status": "updated"}
+{"id": 1395, "name": "갤러리 인사 1010", "name_en": "INSA1010", "status": "updated"}
+{"id": 1396, "name": "대구섬유박물관", "name_en": "Daegu Textile Museum", "status": "updated"}
+{"id": 1392, "name": "충북문화재단", "name_en": "Chungcheongbuk-do Cultural Foundation", "status": "updated"}
+{"id": 1400, "name": "아트코드갤러리", "name_en": "Artcode Gallery", "status": "updated"}
+{"id": 1401, "name": "노들섬", "name_en": "Nodeul Island", "status": "updated"}
+{"id": 1403, "name": "SETEC", "name_en": "SETEC", "status": "updated"}
+{"id": 1412, "name": "프린트아트리서치센터", "name_en": "PARC", "status": "updated"}
+{"id": 1404, "name": "공간일리", "name_en": "Space Illi", "status": "updated"}
+{"id": 1410, "name": "주석모음집", "name_en": "Footnote Unit", "status": "updated"}
+{"id": 1408, "name": "부산문화재단", "name_en": "Busan Cultural Foundation", "status": "updated"}
+{"id": 1414, "name": "필 갤러리", "name_en": "Fill Gallery", "status": "updated"}
+{"id": 1411, "name": "키다리 갤러리", "name_en": "Kidari Gallery", "status": "updated"}
+{"id": 1422, "name": "경운박물관", "name_en": "Kyungwoon Museum", "status": "updated"}
+{"id": 1420, "name": "부평역사박물관", "name_en": "Bupyeong History Museum", "status": "updated"}
+{"id": 1424, "name": "소울아트스페이스", "name_en": "Soul Art Space", "status": "updated"}
+{"id": 1428, "name": "경기생활도자미술관", "name_en": "Gyeonggi Museum of Ceramic Design", "status": "updated"}
+{"id": 1416, "name": "강원문화재단", "name_en": "Gangwon Art & Culture Foundation", "status": "updated"}
+{"id": 1429, "name": "경기도자미술관", "name_en": "Gyeonggi Museum of Contemporary Ceramic Art", "status": "updated"}
+{"id": 1438, "name": "어피스어피스", "name_en": "a piece a peace", "status": "updated"}
+{"id": 1434, "name": "국립무형유산원", "name_en": "National Intangible Heritage Center", "status": "updated"}
+{"id": 1435, "name": "갤러리 이마주", "name_en": "Gallery Imazoo", "status": "updated"}
+{"id": 1440, "name": "김만덕기념관", "name_en": "Kim Man-duk Memorial Hall", "status": "updated"}
+{"id": 1423, "name": "의정부예술의전당", "name_en": "Uijeongbu Arts Center", "status": "updated"}
+{"id": 1444, "name": "갤러리 조선", "name_en": "Gallery Chosun", "status": "updated"}
+{"id": 1447, "name": "여의도 한강공원", "name_en": "Yeouido Hangang River Park", "status": "updated"}
+{"id": 1445, "name": "간송미술관", "name_en": "Kansong Art Museum", "status": "updated"}
+{"id": 1454, "name": "021갤러리", "name_en": "021 Gallery", "status": "updated"}
+{"id": 1443, "name": "표갤러리", "name_en": "PYO Gallery", "status": "updated"}
+{"id": 1465, "name": "고려대학교박물관", "name_en": "Korea University Museum", "status": "updated"}
+{"id": 1457, "name": "갤러리바톤", "name_en": "Gallery Baton", "status": "updated"}
+{"id": 1477, "name": "트라이보울", "name_en": "Tri-Bowl", "status": "updated"}
+{"id": 1467, "name": "갤러리진선", "name_en": "Gallery Jinsun", "status": "updated"}
+{"id": 1458, "name": "한국이민사박물관", "name_en": "The Museum of Korea Emigration History", "status": "updated"}
+{"id": 1456, "name": "홍티아트센터", "name_en": "Hong-Ti Art Center", "status": "updated"}
+{"id": 1478, "name": "울산박물관", "name_en": "Ulsan Museum", "status": "updated"}
+{"id": 1486, "name": "띠오 THEO", "name_en": "THEO", "status": "updated"}
+{"id": 1481, "name": "올림픽공원", "name_en": "Olympic Park", "status": "updated"}

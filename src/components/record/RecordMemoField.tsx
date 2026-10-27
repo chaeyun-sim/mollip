@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
 import { useEffect, useRef } from 'react';
 import { Alert, Pressable, Text, View } from 'react-native';
@@ -23,6 +24,8 @@ export function RecordMemoField({
 	listenedTitles,
 	maxLength,
 }: RecordMemoFieldProps) {
+	const { t } = useTranslation();
+
 	const { stage, text, generate, cancel } = useEssayStream();
 	// 스트리밍 효과가 부모의 새 콜백마다 다시 돌지 않게 최신 콜백만 ref로 들고 있는다
 	const onChangeRef = useRef(onChange);
@@ -62,7 +65,7 @@ export function RecordMemoField({
 			'AI로 다시 써볼까요?',
 			'지금 쓴 글을 바탕으로 AI가 새로 써요. 현재 글은 바뀌어요.',
 			[
-				{ text: '취소', style: 'cancel' },
+				{ text: t('common.cancel'), style: 'cancel' },
 				{ text: '써보기', onPress: runGenerate },
 			],
 		);

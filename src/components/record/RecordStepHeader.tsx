@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Text } from 'react-native';
 import { ScreenHeader } from '@/src/components/layout/ScreenHeader';
 
@@ -10,10 +11,12 @@ interface RecordStepHeaderProps {
 
 /** 기록하기 공용 헤더 — 뒤로 · 기록하기 · n/N */
 export function RecordStepHeader({ step, total = 3, onBack }: RecordStepHeaderProps) {
+	const { t } = useTranslation();
+
 	return (
 		<ScreenHeader>
 			<ScreenHeader.Back onPress={onBack} />
-			<ScreenHeader.Center>기록하기</ScreenHeader.Center>
+			<ScreenHeader.Center>{t('diary.record_button')}</ScreenHeader.Center>
 			<ScreenHeader.Right className="top-0 bottom-0 justify-center">
 				<Text
 					accessibilityLabel={`${total}단계 중 ${step}단계`}

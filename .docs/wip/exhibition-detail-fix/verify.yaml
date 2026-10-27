@@ -1,0 +1,23 @@
+appId: com.simune.mollip
+---
+- tapOn:
+    text: 'Continue'
+    optional: true
+- tapOn:
+    point: '91%,47%'
+    optional: true
+- openLink: 'mollip:///(explore)/10035'
+- extendedWaitUntil:
+    visible: '고려명 개인전 : Podo'
+    timeout: 30000
+- takeScreenshot: .docs/wip/exhibition-detail-fix/evidence/imaju-detail
+- swipe:
+    direction: UP
+- takeScreenshot: .docs/wip/exhibition-detail-fix/evidence/imaju-scrolled
+- tapOn: '뒤로가기'
+- takeScreenshot: .docs/wip/exhibition-detail-fix/evidence/back
+- openLink: 'mollip:///(explore)/10074'
+- extendedWaitUntil:
+    visible: '상서箱書: 컬렉션을 읽다'
+    timeout: 30000
+- takeScreenshot: .docs/wip/exhibition-detail-fix/evidence/other-detail

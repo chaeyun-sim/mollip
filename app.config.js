@@ -2,6 +2,11 @@ const { readFileSync } = require('fs');
 const { resolve } = require('path');
 const { withInfoPlist, withPodfile } = require('@expo/config-plugins');
 
+// 로컬·내부 배포는 개발 이름, 명시적인 스토어 빌드만 정식 이름을 사용한다.
+const isProductionBuild =
+	process.env.APP_VARIANT === 'production' || process.env.EAS_BUILD_PROFILE === 'production';
+const appDisplayName = isProductionBuild ? '몰립' : '몰립 개발';
+
 // .env 파일을 prebuild 시에도 로드
 try {
 	const envFile = readFileSync(resolve(process.cwd(), '.env'), 'utf-8');
@@ -18,29 +23,34 @@ try {
 	console.warn('app.config.js: .env 로드 실패', e.message);
 }
 
+const analyticsEnabled = isProductionBuild || process.env.EXPO_PUBLIC_ANALYTICS_DEBUG === 'true';
+
 const NAVER_CLIENT_ID = process.env.EXPO_PUBLIC_NAVER_CLIENT_ID;
 console.log('[app.config.js] NAVER_CLIENT_ID:', NAVER_CLIENT_ID ? '✓ 로드됨' : '✗ undefined');
 
 module.exports = {
 	expo: {
-		name: 'mollip',
+		name: appDisplayName,
 		slug: 'mollip',
 		scheme: 'mollip',
 		owner: 'simune',
-		version: '1.0.0',
+		version: '1.0.1',
 		orientation: 'portrait',
 		icon: './assets/images/logo/icon.png',
 		userInterfaceStyle: 'light',
 		ios: {
 			supportsTablet: false,
 			bundleIdentifier: 'com.simune.mollip',
+			googleServicesFile: './GoogleService-Info.plist',
 			usesAppleSignIn: true,
 			config: {
 				usesNonExemptEncryption: false,
 			},
 			infoPlist: {
-				CFBundleDisplayName: '몰립',
-				CFBundleName: '몰립',
+				CFBundleDevelopmentRegion: 'ko',
+				FIREBASE_ANALYTICS_COLLECTION_DEACTIVATED: !analyticsEnabled,
+				CFBundleDisplayName: appDisplayName,
+				CFBundleName: appDisplayName,
 				// 사진·카메라·위치 권한 문구는 아래 expo-image-picker / expo-location 플러그인에서 지정한다
 				NMFClientId: NAVER_CLIENT_ID,
 				// 문화포털(culture.go.kr) 전시 썸네일이 HTTP로만 제공되어 ATS 예외 필요
@@ -71,6 +81,7 @@ module.exports = {
 				'expo-build-properties',
 				{
 					ios: {
+						useFrameworks: 'static',
 						usePrecompiledModules: false,
 						buildReactNativeFromSource: true,
 					},
@@ -97,7 +108,9 @@ module.exports = {
 					client_id: NAVER_CLIENT_ID,
 				},
 			],
+			'./plugins/withFirebaseIos',
 			'expo-router',
+			['expo-localization', { supportedLocales: ['ko', 'en'] }],
 			'expo-status-bar',
 			[
 				'expo-image-picker',
@@ -185,6 +198,7 @@ module.exports = {
 				}),
 		],
 		extra: {
+			analyticsEnabled,
 			eas: {
 				projectId: '9673e3b0-68ac-4c39-8517-0296ed8f9733',
 			},

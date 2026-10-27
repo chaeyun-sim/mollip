@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
 import { Modal, Pressable, Text, View } from 'react-native';
 import { useCallback } from 'react';
@@ -16,6 +17,8 @@ interface ExternalMapSheetProps {
 
 // 위치를 외부 지도 앱(네이버/카카오/구글)에서 열기 위한 액션시트.
 export function ExternalMapSheet({ target, onClose }: ExternalMapSheetProps) {
+	const { t } = useTranslation();
+
 	const handlePick = useCallback(
 		(app: (typeof EXTERNAL_MAP_APPS)[number]['key']) => {
 			onClose();
@@ -29,7 +32,7 @@ export function ExternalMapSheet({ target, onClose }: ExternalMapSheetProps) {
 			<Pressable
 				className="flex-1 justify-end bg-black/35"
 				onPress={onClose}
-				accessibilityLabel="닫기"
+				accessibilityLabel={t('common.close')}
 				accessibilityRole="button"
 			>
 				<Pressable

@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { useRouter } from 'expo-router';
@@ -9,6 +10,8 @@ import { CardRow, SettingsCard } from '@/src/components/mypage';
 import { useAuthStore } from '@/src/store/authStore';
 
 export default function AccountScreen() {
+	const { t } = useTranslation();
+
 	const router = useRouter();
 	const user = useAuthStore((s) => s.user);
 	const [showWithdrawWarning, setShowWithdrawWarning] = useState(false);
@@ -89,9 +92,11 @@ export default function AccountScreen() {
 								className="flex-1 rounded-2xl border border-secondary bg-transparent items-center justify-center py-[14px]"
 								style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
 								accessibilityRole="button"
-								accessibilityLabel="닫기"
+								accessibilityLabel={t('common.close')}
 							>
-								<Text className="font-pretendard-semibold text-[15px] text-secondary">닫기</Text>
+								<Text className="font-pretendard-semibold text-[15px] text-secondary">
+									{t('common.close')}
+								</Text>
 							</Pressable>
 							<Button
 								onPress={() => {

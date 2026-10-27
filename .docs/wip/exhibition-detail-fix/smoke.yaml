@@ -1,0 +1,9 @@
+appId: com.simune.mollip
+---
+- openLink: 'mollip:///(explore)/10074'
+- extendedWaitUntil:
+    visible: '관람 정보'
+    timeout: 30000
+- takeScreenshot: .docs/wip/exhibition-detail-fix/evidence/detail
+- tapOn: '뒤로가기'
+- takeScreenshot: .docs/wip/exhibition-detail-fix/evidence/list-after

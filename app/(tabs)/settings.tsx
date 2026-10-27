@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { useRouter } from 'expo-router';
@@ -16,6 +17,8 @@ import { CommonHeader } from '@/src/components/common/CommonHeader';
 import { openLegalDocument } from '@/src/utils/openLegalDocument';
 
 export default function MyPageScreen() {
+	const { t } = useTranslation();
+
 	const router = useRouter();
 	const { session, user, authLoading, signOut } = useAuthStore(
 		useShallow((s) => ({
@@ -168,7 +171,7 @@ export default function MyPageScreen() {
 								<SettingsCard locked={!isPremium}>
 									<CardRow
 										icon="headset-outline"
-										label="해설 설정"
+										label={t('settings.description')}
 										onPress={() => router.push('/settings/narration')}
 										disabled={!isPremium}
 									/>
@@ -184,7 +187,7 @@ export default function MyPageScreen() {
 						<SettingsCard>
 							<CardRow
 								icon="megaphone-outline"
-								label="공지사항"
+								label={t('settings.notice')}
 								onPress={() => router.push('/settings/notice')}
 							/>
 							<CardRow
@@ -203,7 +206,7 @@ export default function MyPageScreen() {
 						<SettingsCard>
 							<CardRow
 								icon="document-text-outline"
-								label="서비스 이용약관"
+								label={t('auth.terms_of_service')}
 								onPress={() => void openLegalDocument('terms')}
 							/>
 							<CardRow
@@ -216,7 +219,11 @@ export default function MyPageScreen() {
 								label="오픈소스 라이선스"
 								onPress={() => router.push('/settings/open-source-licenses')}
 							/>
-							<CardRow icon="information-circle-outline" label="버전" value={APP_VERSION} />
+							<CardRow
+								icon="information-circle-outline"
+								label={t('settings.version')}
+								value={APP_VERSION}
+							/>
 						</SettingsCard>
 					</View>
 
@@ -224,14 +231,16 @@ export default function MyPageScreen() {
 						<Pressable
 							onPress={signingOut ? undefined : handleSignOut}
 							accessibilityRole="button"
-							accessibilityLabel="로그아웃"
+							accessibilityLabel={t('auth.logout')}
 							style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
 							className="h-14 items-center justify-center"
 						>
 							{signingOut ? (
 								<ActivityIndicator size="small" className="text-gray600" />
 							) : (
-								<Text className="font-pretendard-medium text-error text-[15px]">로그아웃</Text>
+								<Text className="font-pretendard-medium text-error text-[15px]">
+									{t('auth.logout')}
+								</Text>
 							)}
 						</Pressable>
 					)}

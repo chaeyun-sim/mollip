@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import { useLocalSearchParams, useRouter } from 'expo-router';
@@ -43,6 +44,8 @@ import { uploadTicketVisitPhotos } from '@/src/utils/visitPhotos';
 const MAX_VENUE_PHOTOS = 9;
 
 export default function DiaryDateScreen() {
+	const { t } = useTranslation();
+
 	const router = useRouter();
 	const params = useLocalSearchParams<{ date?: string; visit?: string }>();
 	const insets = useSafeAreaInsets();
@@ -258,9 +261,9 @@ export default function DiaryDateScreen() {
 			return;
 		}
 		Alert.alert('기록 삭제', '이 기록을 삭제할까요?', [
-			{ text: '닫기', style: 'cancel' },
+			{ text: t('common.close'), style: 'cancel' },
 			{
-				text: '삭제',
+				text: t('common.delete'),
 				style: 'destructive',
 				onPress: async () => {
 					const isLastEntry = dayVisitEntries.length <= 1;
@@ -405,7 +408,7 @@ export default function DiaryDateScreen() {
 									onPress={handleCloseEditor}
 									hitSlop={8}
 									disabled={savingPhotos}
-									accessibilityLabel="닫기"
+									accessibilityLabel={t('common.close')}
 									accessibilityRole="button"
 									style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
 								>

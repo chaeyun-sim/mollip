@@ -1,0 +1,255 @@
+﻿field,source,english
+rstdeInfo,,
+rstdeInfo,11/1,Nov 1
+rstdeInfo,3월/11월 첫 번째 월요일,First Mon in Mar/Nov
+rstdeInfo,4월/11월 첫번째 주 월요일,First Mon in Apr/Nov
+rstdeInfo,dnjf,Mon
+rstdeInfo,매월 첫 번째 월요일,First Mon of each month
+rstdeInfo,"매주 월요일, 1월 1일, 설·추석 당일, 기타 박물관장이 지정한 날","Every Mon, Jan 1, Seollal and Chuseok days, and other days designated by the museum director"
+rstdeInfo,목,Thu
+rstdeInfo,월,Mon
+rstdeInfo,월(월요일이 공휴일인 경우 정상 개관),Mon (open if Mon is a public holiday)
+rstdeInfo,"월, 12/31","Mon, Dec 31"
+rstdeInfo,"월, 12~1월","Mon, Dec–Jan"
+rstdeInfo,월/목,Mon/Thu
+rstdeInfo,월/화,Mon/Tue
+rstdeInfo,월/화/수,Mon/Tue/Wed
+rstdeInfo,월요일,Mon
+rstdeInfo,일,Sun
+rstdeInfo,일/월,Sun/Mon
+rstdeInfo,"일/월(매월 둘째, 넷째)",Sun/Mon (2nd and 4th of each month)
+rstdeInfo,"일/월, 화 (사전 예약제)","Sun/Mon, Tue (advance reservation required)"
+rstdeInfo,일/월/화,Sun/Mon/Tue
+rstdeInfo,일요일,Sun
+rstdeInfo,토/일,Sat/Sun
+rstdeInfo,토/일/월,Sat/Sun/Mon
+rstdeInfo,화,Tue
+open_hours,,
+open_hours,00:00-24:00,00:00-24:00
+open_hours,08:00-22:00,08:00-22:00
+open_hours,09:00-18:00,09:00-18:00
+open_hours,09:00-18:00 (동절기 17시까지),09:00-18:00 (Winter until 17:00)
+open_hours,09:00-18:00 (변동),09:00-18:00 (subject to change)
+open_hours,09:00-18:00 (입장마감 17:00),09:00-18:00 (last admission 17:00)
+open_hours,09:00-18:00 (입장마감 17:30),09:00-18:00 (last admission 17:30)
+open_hours,09:00-18:00 (하절기 20시까지),09:00-18:00 (Summer until 20:00)
+open_hours,09:00-20:00,09:00-20:00
+open_hours,09:00-21:00,09:00-21:00
+open_hours,09:00-22:00,09:00-22:00
+open_hours,09:30-17:00,09:30-17:00
+open_hours,09:30-17:30,09:30-17:30
+open_hours,09:30-18:00 (입장마감 17:00),09:30-18:00 (last admission 17:00)
+open_hours,09:30-18:00 (입장마감 17:30),09:30-18:00 (last admission 17:30)
+open_hours,10:00 - 19:00 (입장 마감 18:00),10:00 - 19:00 (last admission 18:00)
+open_hours,10:00 ~ 18:00,10:00-18:00
+open_hours,10:00-09:00,
+open_hours,10:00-16:00,10:00-16:00
+open_hours,10:00-17:00,10:00-17:00
+open_hours,10:00-17:00 (12시부터 점심시간),10:00-17:00 (lunch break from 12:00)
+open_hours,10:00-18:00,10:00-18:00
+open_hours,"10:00-18:00
+금 10:00 ~ 21:00","10:00-18:00
+Fri 10:00-21:00"
+open_hours,10:00-18:00 ,10:00-18:00
+open_hours,10:00-18:00 (5~9월 19시까지),10:00-18:00 (May–Sep until 19:00)
+open_hours,10:00-18:00 (동절기 17시까지),10:00-18:00 (Winter until 17:00)
+open_hours,10:00-18:00 (변동),10:00-18:00 (subject to change)
+open_hours,10:00-18:00 (변동)),10:00-18:00 (subject to change)
+open_hours,10:00-18:00 (수/토는 21시까지),10:00-18:00 (Wed/Sat until 21:00)
+open_hours,10:00-18:00 (입장 마감 17:30),10:00-18:00 (last admission 17:30)
+open_hours,10:00-18:00 (입장마감 17:00),10:00-18:00 (last admission 17:00)
+open_hours,10:00-18:00 (입장마감 17:30),10:00-18:00 (last admission 17:30)
+open_hours,10:00-18:30,10:00-18:30
+open_hours,10:00-18:30 (토요일은 17시까지),10:00-18:30 (Sat until 17:00)
+open_hours,10:00-19:00,10:00-19:00
+open_hours,10:00-19:00 (동절기 18시까지),10:00-19:00 (Winter until 18:00)
+open_hours,10:00-19:00 (입장 마감 18:00),10:00-19:00 (last admission 18:00)
+open_hours,10:00-19:30 (브레이크타임 14:00-15:00),10:00-19:30 (break 14:00-15:00)
+open_hours,10:00-20:00,10:00-20:00
+open_hours,10:00-21:00,10:00-21:00
+open_hours,10:00-22:00,10:00-22:00
+open_hours,10:00~18:00,10:00-18:00
+open_hours,10:00~18:00 (입장 마감 17:30) / 야간연장개관 18:00~20:00 (3월~10월 매주 토요일),"10:00-18:00 (last admission 17:30) / extended evening hours 18:00-20:00 (every Sat, Mar–Oct)"
+open_hours,10:00~22:00,10:00-22:00
+open_hours,10:00–19:00 (입장 마감 18:00),10:00-19:00 (last admission 18:00)
+open_hours,10:30-18:00,10:30-18:00
+open_hours,10:30-18:30,10:30-18:30
+open_hours,10:30-18:30 (점심시간 12:30-13:30),10:30-18:30 (lunch break 12:30-13:30)
+open_hours,10:30-19:00,10:30-19:00
+open_hours,10:30~17:30,10:30-17:30
+open_hours,11:00-17:00,11:00-17:00
+open_hours,11:00-18:00,11:00-18:00
+open_hours,11:00-18:00 (프로그램에 따라 다름),11:00-18:00 (varies by program)
+open_hours,11:00-18:30,11:00-18:30
+open_hours,11:00-19:00,11:00-19:00
+open_hours,11:00-19:00 (변동),11:00-19:00 (subject to change)
+open_hours,11:00-19:00 (입장마감 18:00),11:00-19:00 (last admission 18:00)
+open_hours,11:00-19:00 (프로그램에 따라 유동적),11:00-19:00 (varies by program)
+open_hours,11:00-20:00,11:00-20:00
+open_hours,12:00-17:30,12:00-17:30
+open_hours,12:00-18:00,12:00-18:00
+open_hours,12:00-18:00 (유동적),12:00-18:00 (subject to change)
+open_hours,12:00-19:00,12:00-19:00
+open_hours,12:00-20:00,12:00-20:00
+open_hours,12:00-21:00,12:00-21:00
+open_hours,12:30-21:00,12:30-21:00
+open_hours,13:00-18:00,13:00-18:00
+open_hours,13:00-19:00,13:00-19:00
+open_hours,13:00-21:00,13:00-21:00
+open_hours,14:00-22:00,14:00-22:00
+open_hours,"1회차 09:30-13:30
+2회차 14:00-18:00","Session 1 09:30-13:30
+Session 2 14:00-18:00"
+open_hours,"3~10월 09:00-18:00
+11~2월 09:00-17:00","Mar–Oct 09:00-18:00
+Nov–Feb 09:00-17:00"
+open_hours,"3~10월 10:00-18:00
+11~2월 10:00-17:00","Mar–Oct 10:00-18:00
+Nov–Feb 10:00-17:00"
+open_hours,"3월~10월 09:00-18:00
+11월~2월 09:00-17:00","Mar–Oct 09:00-18:00
+Nov–Feb 09:00-17:00"
+open_hours,"4~10월 09:00-21:00
+11~3월 09:00-20:00","Apr–Oct 09:00-21:00
+Nov–Mar 09:00-20:00"
+open_hours,"동절기(11~2월) 10:00-18:00
+하절기(3~10월) 10:00-19:00","Winter(Nov–Feb) 10:00-18:00
+Summer(Mar–Oct) 10:00-19:00"
+open_hours,상시 개방,Always open
+open_hours,"월,화,목,금,일: 9:30-17:30
+수,토: 9:30-21:00","Mon,Tue,Thu,Fri,Sun: 9:30-17:30
+Wed,Sat: 9:30-21:00"
+open_hours,"월~금: 10:00-18:00
+일: 10:00-17:00","Mon–Fri: 10:00-18:00
+Sun: 10:00-17:00"
+open_hours,"월~목, 주말: 10:00-20:00
+금: 10:00-21:00
+(하절기 주말 19시까지, 동절기 주말 18시까지)","Mon–Thu, Weekends: 10:00-20:00
+Fri: 10:00-21:00
+(Summer Weekends until 19:00, Winter Weekends until 18:00)"
+open_hours,"월~화,목~금,일: 10:00-18:00
+수,토: 10:00-21:00","Mon–Tue,Thu–Fri,Sun: 10:00-18:00
+Wed,Sat: 10:00-21:00"
+open_hours,전시 일정에 따라 변동,Hours vary by exhibition
+open_hours,전시·행사 일정에 따라 운영,Hours depend on exhibition/event schedules
+open_hours,"평일 09:00-18:00
+주말 09:00-19:00","Weekdays 09:00-18:00
+Weekends 09:00-19:00"
+open_hours,"평일 09:00-21:00
+주말 09:00-20:00","Weekdays 09:00-21:00
+Weekends 09:00-20:00"
+open_hours,"평일 09:00-21:00
+토요일 09:00-18:00","Weekdays 09:00-21:00
+Sat 09:00-18:00"
+open_hours,평일 09:00~18:00,Weekdays 09:00-18:00
+open_hours,평일 09:00~19:00,Weekdays 09:00-19:00
+open_hours,평일 09:30~17:00,Weekdays 09:30-17:00
+open_hours,평일 09:30~18:00,Weekdays 09:30-18:00
+open_hours,평일 09:30~18:30,Weekdays 09:30-18:30
+open_hours,평일 09:30~19:00,Weekdays 09:30-19:00
+open_hours,평일 10:00-18:00,Weekdays 10:00-18:00
+open_hours,"평일 10:00-18:00
+토요일 10:00-16:00","Weekdays 10:00-18:00
+Sat 10:00-16:00"
+open_hours,"평일 10:00-18:00
+토요일 11:00-17:00","Weekdays 10:00-18:00
+Sat 11:00-17:00"
+open_hours,"평일 10:00-18:30
+토 11:00-18:30","Weekdays 10:00-18:30
+Sat 11:00-18:30"
+open_hours,"평일 10:00-18:30
+토요일 10:00-18:00","Weekdays 10:00-18:30
+Sat 10:00-18:00"
+open_hours,평일 10:00-19:00,Weekdays 10:00-19:00
+open_hours,"평일 10:00-19:00
+주말 10:00-18:00","Weekdays 10:00-19:00
+Weekends 10:00-18:00"
+open_hours,"평일 10:00-19:00
+주말 10:00-20:00","Weekdays 10:00-19:00
+Weekends 10:00-20:00"
+open_hours,"평일 10:00-19:00
+토요일 10:00-17:00","Weekdays 10:00-19:00
+Sat 10:00-17:00"
+open_hours,평일 10:00-20:00 / 주말 10:00-19:00,Weekdays 10:00-20:00 / Weekends 10:00-19:00
+open_hours,"평일 10:00-21:00
+공휴일 10:00-22:00","Weekdays 10:00-21:00
+Public holidays 10:00-22:00"
+open_hours,평일 10:00~17:00,Weekdays 10:00-17:00
+open_hours,평일 10:00~17:30,Weekdays 10:00-17:30
+open_hours,평일 10:00~18:00,Weekdays 10:00-18:00
+open_hours,평일 10:00~19:00,Weekdays 10:00-19:00
+open_hours,평일 10:00~20:00,Weekdays 10:00-20:00
+open_hours,"평일 10:30-17:30
+토요일 12:00-17:00","Weekdays 10:30-17:30
+Sat 12:00-17:00"
+open_hours,"평일 10:30-20:00
+금/토/일 10:30-20:30","Weekdays 10:30-20:00
+Fri/Sat/Sun 10:30-20:30"
+open_hours,"평일 10:30-20:00
+주말 11:00-20:00","Weekdays 10:30-20:00
+Weekends 11:00-20:00"
+open_hours,평일 10:30~18:00,Weekdays 10:30-18:00
+open_hours,평일 10:30~18:30,Weekdays 10:30-18:30
+open_hours,평일 10:30~20:00,Weekdays 10:30-20:00
+open_hours,"평일 11:00-18:00
+주말 11:00-18:30","Weekdays 11:00-18:00
+Weekends 11:00-18:30"
+open_hours,"평일 11:00-18:00
+주밀 11:00-18:30","Weekdays 11:00-18:00
+Weekends 11:00-18:30"
+open_hours,"평일 11:00-18:00
+토 11:00-17:00","Weekdays 11:00-18:00
+Sat 11:00-17:00"
+open_hours,"평일 11:00-18:00
+토요일 11:00-17:00","Weekdays 11:00-18:00
+Sat 11:00-17:00"
+open_hours,"평일 11:00-19:00
+주말 12:00-18:00","Weekdays 11:00-19:00
+Weekends 12:00-18:00"
+open_hours,평일 11:00~17:00,Weekdays 11:00-17:00
+open_hours,평일 11:00~18:00,Weekdays 11:00-18:00
+open_hours,평일 11:00~19:00,Weekdays 11:00-19:00
+open_hours,평일 11:00~20:00,Weekdays 11:00-20:00
+open_hours,"평일 13:00-19:00
+주말 13:00-18:00","Weekdays 13:00-19:00
+Weekends 13:00-18:00"
+open_hours,"평일 및 토요일 06:00-22:00
+일 09:00-18:00","Weekdays and Sat 06:00-22:00
+Sun 09:00-18:00"
+open_hours,"평일 및 토요일 10:00-21:00
+일요일 10:00-18:00","Weekdays and Sat 10:00-21:00
+Sun 10:00-18:00"
+open_hours,"평일 및 토요일 10:30-17:30
+수요일 13:00-17:30","Weekdays and Sat 10:30-17:30
+Wed 13:00-17:30"
+open_hours,평일 및 토요일 10:30-18:30 (12시~13시 제외),Weekdays and Sat 10:30-18:30 (closed 12:00-13:00)
+open_hours,평일 및 토요일 12:00-17:00,Weekdays and Sat 12:00-17:00
+open_hours,"하절기 (3월~10월) 09:00-18:00
+동절기 (11월~2월) 09:00-17:00","Summer (Mar–Oct) 09:00-18:00
+Winter (Nov–Feb) 09:00-17:00"
+open_hours,"화,목,금,일: 10:00-18:00
+수,토: 10:00-21:00","Tue,Thu,Fri,Sun: 10:00-18:00
+Wed,Sat: 10:00-21:00"
+open_hours,"화~금 11:00-18:30
+토 12:00-17:00","Tue–Fri 11:00-18:30
+Sat 12:00-17:00"
+open_hours,"화~금: 10:00-18:00
+토: 11:00-18:00","Tue–Fri: 10:00-18:00
+Sat: 11:00-18:00"
+open_hours,"화~목,일 11:00 ~ 18:00
+금,토 11:00 ~ 19:00","Tue–Thu,Sun 11:00-18:00
+Fri,Sat 11:00-19:00"
+open_hours,"화~목: 10:00-20:00
+금: 10:00-21:00
+주말: 10:00-19:00","Tue–Thu: 10:00-20:00
+Fri: 10:00-21:00
+Weekends: 10:00-19:00"
+open_hours,"화~토 09:00-22:00
+일 09:00-18:00","Tue–Sat 09:00-22:00
+Sun 09:00-18:00"
+open_hours,"화~토: 09:30-15:30
+일: 09:30-18:00","Tue–Sat: 09:30-15:30
+Sun: 09:30-18:00"
+open_hours,"화~토: 09:30-18:00
+일: 10:30-18:00","Tue–Sat: 09:30-18:00
+Sun: 10:30-18:00"

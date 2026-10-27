@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
 import { Alert } from 'react-native';
@@ -11,6 +12,8 @@ import { EMPTY_PREFERRED_TASTE, type PreferredTasteDetails } from '@/src/utils/p
 import { supabase } from '@/src/utils/supabase';
 
 export default function PreferencesChipsScreen() {
+	const { t } = useTranslation();
+
 	const router = useRouter();
 	const { from } = useLocalSearchParams<{ from?: string }>();
 	const queryClient = useQueryClient();
@@ -53,9 +56,9 @@ export default function PreferencesChipsScreen() {
 			'추가 취향 초기화',
 			'그림 분위기, 전시장 규모, 미술사조와 관심 작가를 지울까요? 벽에서 고른 장르는 유지돼요.',
 			[
-				{ text: '취소', style: 'cancel' },
+				{ text: t('common.cancel'), style: 'cancel' },
 				{
-					text: '초기화',
+					text: t('onboarding.reset'),
 					style: 'destructive',
 					onPress: async () => {
 						if (!userId || saving) return;
@@ -88,7 +91,7 @@ export default function PreferencesChipsScreen() {
 				},
 			],
 		);
-	}, [userId, saving, queryClient]);
+	}, [userId, saving, queryClient, t]);
 
 	const handleSave = useCallback(async () => {
 		if (!userId || saving) return;

@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
 import { useState } from 'react';
 import { KeyboardAvoidingView, Modal, Platform, Pressable, Text, View } from 'react-native';
@@ -21,6 +22,8 @@ export function ExcludeWordsModal({
 	onClearAll,
 	onDismiss,
 }: ExcludeWordsModalProps) {
+	const { t } = useTranslation();
+
 	const insets = useSafeAreaInsets();
 	const [input, setInput] = useState('');
 
@@ -45,7 +48,9 @@ export function ExcludeWordsModal({
 								<View className="w-9 h-1 rounded-full bg-black/15" />
 							</View>
 
-							<Text className="text-gray900 text-lg mb-1 font-pretendard-bold">제외할 검색어</Text>
+							<Text className="text-gray900 text-lg mb-1 font-pretendard-bold">
+								{t('search.exclude_words')}
+							</Text>
 							<Text className="text-gray600 text-[13px] mb-4 font-pretendard-regular">
 								입력한 단어가 포함된 전시는 결과에서 빠집니다
 							</Text>
@@ -98,12 +103,14 @@ export function ExcludeWordsModal({
 
 							<Pressable
 								onPress={onDismiss}
-								accessibilityLabel="완료"
+								accessibilityLabel={t('common.done')}
 								accessibilityRole="button"
 								className="items-center rounded-2xl bg-secondary py-3.5 mt-2"
 								style={({ pressed }) => ({ opacity: pressed ? 0.85 : 1 })}
 							>
-								<Text className="text-white text-[15px] font-pretendard-semibold">완료</Text>
+								<Text className="text-white text-[15px] font-pretendard-semibold">
+									{t('common.done')}
+								</Text>
 							</Pressable>
 						</View>
 					</Pressable>

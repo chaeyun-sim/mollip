@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Pressable, Text, View } from 'react-native';
 import { Screen } from '@/src/components/layout/Screen';
 
@@ -14,11 +15,18 @@ export function OnboardingEnter({
 	onPress,
 	disabled = false,
 }: OnboardingEnterProps) {
+	const { t } = useTranslation();
 	const hasGenres = genres.length > 0;
-	const title = hasGenres ? `${genres.join(', ')}를 담았어요` : '다음에 정해도 괜찮아요';
+	const title = hasGenres
+		? t('onboarding.enter_title_with_genres', {
+				genres: genres
+					.map((genre) => t(`recommendations.labels.${genre}`, { defaultValue: genre }))
+					.join(', '),
+			})
+		: t('onboarding.enter_title_no_genres');
 	const body = hasGenres
-		? '이 결의 전시를 먼저 보여 드릴게요'
-		: '홈에서 지금 열리는 전시를 보여 드릴게요';
+		? t('onboarding.enter_body_with_genres')
+		: t('onboarding.enter_body_no_genres');
 
 	return (
 		<>

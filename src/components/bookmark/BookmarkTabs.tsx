@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import * as Haptics from 'expo-haptics';
 import { useEffect, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
@@ -20,6 +21,7 @@ const TABS = [
 const INDICATOR_HEIGHT = 2;
 
 export function BookmarkTabs({ tab, onChangeTab, className }: BookmarkTabsProps) {
+	const { t } = useTranslation();
 	const [trackWidth, setTrackWidth] = useState(0);
 	const tabIndex = tab === 'exhibition' ? 0 : 1;
 	const slideIndex = useSharedValue(tabIndex);
@@ -45,7 +47,8 @@ export function BookmarkTabs({ tab, onChangeTab, className }: BookmarkTabsProps)
 			className={cn('w-full flex-row border-b border-gray300 mt-1 mb-4', className)}
 			accessibilityRole="tablist"
 		>
-			{TABS.map(({ key, label }) => {
+			{TABS.map(({ key }) => {
+				const label = t(key === 'audio' ? 'bookmark.audio_tab' : 'bookmark.exhibition_tab');
 				const selected = tab === key;
 				return (
 					<Pressable

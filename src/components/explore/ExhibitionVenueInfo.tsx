@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
 import * as Clipboard from 'expo-clipboard';
 import { useCallback, useMemo, useState } from 'react';
@@ -18,6 +19,8 @@ interface ExhibitionVenueInfoProps extends Exhibition {
 }
 
 export function ExhibitionVenueInfo({ hasTopSpacing, ...exhibition }: ExhibitionVenueInfoProps) {
+	const { t } = useTranslation();
+
 	const [copiedAddress, setCopiedAddress] = useState(false);
 	const [copiedPhone, setCopiedPhone] = useState(false);
 	const [showHours, setShowHours] = useState(false);
@@ -62,7 +65,7 @@ export function ExhibitionVenueInfo({ hasTopSpacing, ...exhibition }: Exhibition
 			style={{ zIndex: 100, elevation: 100 }}
 		>
 			<View className="bg-gray100 rounded-2xl" style={{ zIndex: 100, elevation: 100 }}>
-				<ExhibitionInfoRow label="기간">
+				<ExhibitionInfoRow label={t('exhibitions.period')}>
 					{exhibition.startDate} ~ {exhibition.endDate}{' '}
 					{/* getDdayLabel이 이미 'D-n' / '오늘 마감' 형태로 돌려준다 — 접두사를 다시 붙이지 않는다 */}
 					{ddayLabel && <Text className="text-error">{ddayLabel}</Text>}
@@ -144,7 +147,7 @@ export function ExhibitionVenueInfo({ hasTopSpacing, ...exhibition }: Exhibition
 						)}
 					</View>
 				</View>
-				<ExhibitionInfoRow label="관람료" isLast={!exhibition.museum?.parking}>
+				<ExhibitionInfoRow label={t('exhibitions.admission')} isLast={!exhibition.museum?.parking}>
 					{exhibition.admission}
 				</ExhibitionInfoRow>
 				{exhibition.museum?.parking && (

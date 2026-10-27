@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { Stack, useNavigation, useRouter } from 'expo-router';
@@ -60,6 +61,8 @@ function extractFallbackTitle(text: string): string {
 }
 
 export default function DescriptionScreen() {
+	const { t } = useTranslation();
+
 	const router = useRouter();
 	const navigation = useNavigation();
 	const insets = useSafeAreaInsets();
@@ -399,7 +402,7 @@ export default function DescriptionScreen() {
 					<Pressable
 						onPress={() => setImageModalVisible(false)}
 						hitSlop={12}
-						accessibilityLabel="닫기"
+						accessibilityLabel={t('common.close')}
 						accessibilityRole="button"
 						className="absolute top-[56px] right-5 z-[10]"
 						style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}

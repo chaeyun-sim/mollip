@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Pressable, Text, View } from 'react-native';
 import { HOME_SIDE_PADDING } from '@/src/components/home/HomeSectionHeader';
 
@@ -16,10 +17,12 @@ export function HomeSectionMessage({
 	emptyText,
 	onRetry,
 }: HomeSectionMessageProps) {
+	const { t } = useTranslation();
+
 	return kind === 'error' ? (
 		<View className="items-center justify-center gap-2 py-8">
 			<Text className="text-gray700 text-[13px] font-pretendard-regular">
-				전시 정보를 불러오지 못했어요
+				{t('exhibitions.load_error_title')}
 			</Text>
 			<Pressable
 				onPress={onRetry}
@@ -27,7 +30,9 @@ export function HomeSectionMessage({
 				accessibilityRole="button"
 				hitSlop={8}
 			>
-				<Text className="text-gray900 text-[13px] font-pretendard-semibold">다시 시도</Text>
+				<Text className="text-gray900 text-[13px] font-pretendard-semibold">
+					{t('common.retry')}
+				</Text>
 			</Pressable>
 		</View>
 	) : (

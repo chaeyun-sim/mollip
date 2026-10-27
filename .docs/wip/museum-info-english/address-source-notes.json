@@ -1,0 +1,13 @@
+{
+  "5": {"reason": "Official museum address is Dunsan-daero 157; source Korean number is 152. Korean source preserved.", "url": "https://www.leeungnomuseum.or.kr/Menu.do?menuId=0402"},
+  "14": {"reason": "Official museum number is 484-7; source Korean number is 484-79. Korean source preserved.", "url": "https://wooyangmuseum.org/main"},
+  "44": {"reason": "Official city tourism map identifies Namsangongwon-gil 90-14; source Korean street is Haksadae-gil. Korean source preserved.", "url": "https://www.gc.go.kr/design/culture/file/tourMap_2024.pdf"},
+  "51": {"reason": "Corrected 효령료 to 효령로 in API lookup only; street and building confirmed by JUSO."},
+  "83": {"reason": "Corrected 번기 to 번길 in API lookup only; JUSO identifies the new Byeongjeom-gu district."},
+  "196": {"reason": "Legacy Dong-gu lookup changed to Jemulpo-gu; same road and building number confirmed by JUSO."},
+  "641": {"reason": "Corrected 조첩읍 to 조천읍 in API lookup only; street and building confirmed by JUSO."},
+  "878": {"reason": "Official English campus postal address is used because no exact building-level JUSO record exists.", "url": "https://eng.chosun.ac.kr/eng/1853/subview.do"},
+  "1354": {"reason": "Trailing source detail 3 means 3F, explicitly confirmed by the foundation's own address.", "url": "https://www.gbcf.or.kr/load.asp?cate=&idx=1716&page=3&searchType=&searchValue=&subPage=510.view"},
+  "1368": {"reason": "Legacy Jung-gu lookup changed to Jemulpo-gu; the cultural foundation confirms the same street and building.", "url": "https://www.ifac.or.kr/culturalInfo/cuturalEvents/performanceSrch/view.do?eventSn=13801&key=m2501152621396"},
+  "1447": {"reason": "Official park representative road address Yeouidong-ro 330 is used instead of source lot 85. Korean source preserved.", "url": "https://hangang.seoul.go.kr/www/contents/669.do?lt=&mid=473"}
+}

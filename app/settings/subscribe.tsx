@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
@@ -23,6 +24,8 @@ const BENEFITS = [
 ];
 
 export default function SubscribeScreen() {
+	const { t } = useTranslation();
+
 	const { productIdentifier, expirationDate, willRenew } = useSubscriptionStore();
 
 	const planTitle = productIdentifier ? (PLAN_NAMES[productIdentifier] ?? productIdentifier) : '-';
@@ -118,7 +121,9 @@ export default function SubscribeScreen() {
 						accessibilityRole="button"
 						accessibilityLabel="구독 관련 문의하기"
 					>
-						<Text className="underline text-[11px] text-secondary text-center">문의하기</Text>
+						<Text className="underline text-[11px] text-secondary text-center">
+							{t('settings.inquiry')}
+						</Text>
 					</Pressable>
 				</View>
 			</View>

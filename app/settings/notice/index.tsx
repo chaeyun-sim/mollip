@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
 import { useEffect, useState } from 'react';
 import { Pressable, ScrollView, Text, View } from 'react-native';
@@ -12,6 +13,8 @@ function formatDate(isoDate: string): string {
 }
 
 export default function NoticeScreen() {
+	const { t } = useTranslation();
+
 	const [notices, setNotices] = useState<Notice[] | null>(null);
 
 	useEffect(() => {
@@ -33,7 +36,7 @@ export default function NoticeScreen() {
 		<Screen variant="warm">
 			<Screen.Header>
 				<Screen.Header.Back />
-				<Screen.Header.Center>공지사항</Screen.Header.Center>
+				<Screen.Header.Center>{t('settings.notice')}</Screen.Header.Center>
 			</Screen.Header>
 
 			{notices === null && (

@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
 import { BottomSheetScrollView, BottomSheetTextInput } from '@gorhom/bottom-sheet';
 import { type ComponentRef, useRef, useState } from 'react';
@@ -34,6 +35,8 @@ const toBoardDate = (date: Date) =>
 
 /** 검색에 없는 전시를 같은 화면에서 바로 적는다 — 이름만 필수, 장소·방문일·포스터는 선택 */
 export function ManualRecordForm({ initialTitle, onSubmit }: ManualRecordFormProps) {
+	const { t } = useTranslation();
+
 	const insets = useSafeAreaInsets();
 	const venueRef = useRef<ComponentRef<typeof BottomSheetTextInput>>(null);
 	const [focusedField, setFocusedField] = useState<'title' | 'venue' | null>(null);
@@ -136,7 +139,7 @@ export function ManualRecordForm({ initialTitle, onSubmit }: ManualRecordFormPro
 					/>
 				</RecordFormSection>
 
-				<RecordFormSection label="장소" hint="선택" className="mt-5">
+				<RecordFormSection label={t('exhibitions.venue')} hint="선택" className="mt-5">
 					<BottomSheetTextInput
 						ref={venueRef}
 						value={venue}

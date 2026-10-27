@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import * as Haptics from 'expo-haptics';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
@@ -22,6 +23,8 @@ const CATEGORY_OPTIONS: { value: Category; label: string; emoji: string }[] = [
 ];
 
 export default function InquiryScreen() {
+	const { t } = useTranslation();
+
 	const router = useRouter();
 	const { category: initialCategory } = useLocalSearchParams();
 
@@ -61,7 +64,7 @@ export default function InquiryScreen() {
 			<Screen variant="warm">
 				<Screen.Header>
 					<Screen.Header.Back onPress={() => router.back()} />
-					<Screen.Header.Center>문의하기</Screen.Header.Center>
+					<Screen.Header.Center>{t('settings.inquiry')}</Screen.Header.Center>
 				</Screen.Header>
 
 				<Result
@@ -70,7 +73,7 @@ export default function InquiryScreen() {
 					iconBackground
 					title="문의가 접수됐어요"
 					description={'확인 후 남겨주신 연락처로\n답변드릴게요'}
-					actionLabel="확인"
+					actionLabel={t('common.confirm')}
 					onAction={() => router.back()}
 				/>
 			</Screen>
@@ -81,7 +84,7 @@ export default function InquiryScreen() {
 		<Screen variant="warm">
 			<Screen.Header>
 				<Screen.Header.Back onPress={() => router.back()} />
-				<Screen.Header.Center>문의하기</Screen.Header.Center>
+				<Screen.Header.Center>{t('settings.inquiry')}</Screen.Header.Center>
 			</Screen.Header>
 
 			<KeyboardAvoidingView

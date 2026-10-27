@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
 import { Modal, Pressable, ScrollView, Text, View } from 'react-native';
 
@@ -9,6 +10,8 @@ interface PlaylistModalProps {
 
 // 해당 관람에서 오디오로 들은 작품 목록 모달 (해설 본문은 노출하지 않음)
 export function PlaylistModal({ visible, titles, onClose }: PlaylistModalProps) {
+	const { t } = useTranslation();
+
 	return (
 		<Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
 			<Pressable
@@ -42,7 +45,7 @@ export function PlaylistModal({ visible, titles, onClose }: PlaylistModalProps) 
 						<Pressable
 							onPress={onClose}
 							hitSlop={8}
-							accessibilityLabel="닫기"
+							accessibilityLabel={t('common.close')}
 							accessibilityRole="button"
 							style={({ pressed }) => ({ opacity: pressed ? 0.5 : 1 })}
 						>

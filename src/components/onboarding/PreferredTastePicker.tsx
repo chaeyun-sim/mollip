@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { useEffect, useRef, useState } from 'react';
 import { Keyboard, KeyboardAvoidingView, Platform, ScrollView, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -39,6 +40,8 @@ export function PreferredTastePicker({
 	onConfirm,
 	onReset,
 }: PreferredTastePickerProps) {
+	const { t } = useTranslation();
+
 	const insets = useSafeAreaInsets();
 	const [artistInput, setArtistInput] = useState('');
 	const scrollViewRef = useRef<ScrollView>(null);
@@ -165,7 +168,9 @@ export function PreferredTastePicker({
 						size="large"
 						className="min-h-[52px] flex-1 items-center justify-center rounded-[18px] border border-gray300 bg-white px-3"
 					>
-						<Text className="font-pretendard-semibold text-base text-gray800">초기화</Text>
+						<Text className="font-pretendard-semibold text-base text-gray800">
+							{t('onboarding.reset')}
+						</Text>
 					</Button>
 					<Button
 						testID="taste-save"

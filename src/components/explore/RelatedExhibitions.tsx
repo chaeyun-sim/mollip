@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import * as Haptics from 'expo-haptics';
@@ -16,12 +17,16 @@ interface RelatedExhibitionsProps {
 }
 
 export function RelatedExhibitions({ exhibitions }: RelatedExhibitionsProps) {
+	const { t } = useTranslation();
+
 	const router = useRouter();
 	const related = exhibitions.slice(0, 6);
 
 	return (
 		<View className="mt-12">
-			<Text className="font-pretendard-semibold text-lg text-gray-900 mb-4 px-6">관련 전시</Text>
+			<Text className="font-pretendard-semibold text-lg text-gray-900 mb-4 px-6">
+				{t('exhibitions.related')}
+			</Text>
 			<ScrollView
 				horizontal
 				showsHorizontalScrollIndicator={false}

@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
 import * as Clipboard from 'expo-clipboard';
 import { useCallback, useState } from 'react';
@@ -51,6 +52,8 @@ interface ChatMessageProps {
 }
 
 export function ChatMessage({ item, onRetry }: ChatMessageProps) {
+	const { t } = useTranslation();
+
 	const isUser = item.role === 'user';
 	const { fontSize } = useSettingsStore();
 
@@ -136,7 +139,7 @@ export function ChatMessage({ item, onRetry }: ChatMessageProps) {
 				<Pressable
 					className="flex-row items-center gap-1.5"
 					onPress={() => onRetry(item)}
-					accessibilityLabel="다시 시도"
+					accessibilityLabel={t('common.retry')}
 					accessibilityRole="button"
 					style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
 				>
@@ -179,7 +182,7 @@ export function ChatMessage({ item, onRetry }: ChatMessageProps) {
 					<View className="absolute bottom-0 left-0 right-0 bg-white rounded-t-[24px] overflow-hidden pb-10">
 						<View className="w-10 h-1 rounded-full bg-black/10 self-center mt-3 mb-1" />
 						{[
-							{ label: '복사', onPress: handleCopy },
+							{ label: t('common.copy'), onPress: handleCopy },
 							{ label: '선택 복사', onPress: handleSelectCopy },
 						].map((action, i) => (
 							<View key={action.label}>
@@ -251,7 +254,7 @@ export function ChatMessage({ item, onRetry }: ChatMessageProps) {
 						<Pressable
 							onPress={() => setImageModalVisible(false)}
 							hitSlop={12}
-							accessibilityLabel="닫기"
+							accessibilityLabel={t('common.close')}
 							accessibilityRole="button"
 							style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
 						>

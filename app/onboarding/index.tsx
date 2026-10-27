@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { useRouter } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { Alert, View } from 'react-native';
@@ -21,6 +22,8 @@ interface PreferenceSelection {
 }
 
 export default function OnboardingScreen() {
+	const { t } = useTranslation();
+
 	useMarkInteractive();
 	const router = useRouter();
 	const { userId, setOnboardingCompleted } = useAuthStore(
@@ -50,15 +53,11 @@ export default function OnboardingScreen() {
 	}, [userId, router, setOnboardingCompleted]);
 
 	const handleSkip = useCallback(() => {
-		Alert.alert(
-			'지금 건너뛸까요?',
-			'취향을 고르지 않으면 취향에 맞는 전시를 추천해드리기 어려워요.',
-			[
-				{ text: '취소', style: 'cancel' },
-				{ text: '건너뛰기', style: 'destructive', onPress: performSkip },
-			],
-		);
-	}, [performSkip]);
+		Alert.alert(t('onboarding.skip_confirm'), t('onboarding.skip_confirm_description'), [
+			{ text: t('common.cancel'), style: 'cancel' },
+			{ text: t('onboarding.skip_action'), style: 'destructive', onPress: performSkip },
+		]);
+	}, [performSkip, t]);
 
 	// 벽/칩 경로 모두 같은 taxonomy 검증·저장·재시도 흐름을 사용한다.
 	const handleSaveSelection = useCallback(
@@ -137,7 +136,7 @@ export default function OnboardingScreen() {
 			<Screen.Header>
 				<Screen.Header.Back onPress={() => setStep('prologue')} />
 				<Screen.Header.Center>
-					{step === 'wall' ? '내 전시 벽 만들기' : '취향 장르 고르기'}
+					{step === 'wall' ? t('onboarding.create_wall_title') : t('onboarding.select_genre_title')}
 				</Screen.Header.Center>
 				<Screen.Header.Right className="-mr-2">
 					<OnboardingSkipAction onPress={handleSkip} />

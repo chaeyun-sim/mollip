@@ -1,3 +1,5 @@
+import { trackExhibitionSelection, trackSearchSubmitted } from '@/src/lib/analytics';
+import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useCallback, useEffect, useMemo, useState } from 'react';
@@ -31,6 +33,8 @@ const ITEM_LAYOUT = LinearTransition.duration(200);
 type ResultListItem = { kind: 'section'; label: string } | { kind: 'result'; result: SearchResult };
 
 export default function SearchScreen() {
+	const { t } = useTranslation();
+
 	const router = useRouter();
 	const { q, closing } = useLocalSearchParams<{ q?: string; closing?: string }>();
 	const [showDatePicker, setShowDatePicker] = useState(false);
@@ -85,9 +89,9 @@ export default function SearchScreen() {
 	// 검색어가 없어도 마감 임박 필터가 켜져 있으면 결과 목록을 보여준다
 	const isBrowsing = Boolean(debouncedSearchText) || closingSoonOnly;
 	const resolveSortLabel = () => {
-		if (closingSoonOnly) return ' · 마감 빠른 순';
+		if (closingSoonOnly) return t('search.sort_closing_soon');
 
-		if (hasLocation) return ' · 가까운 순';
+		if (hasLocation) return t('search.sort_nearest');
 
 		return '';
 	};
@@ -101,12 +105,16 @@ export default function SearchScreen() {
 	}, [debouncedSearchText, statusFilters, filterDate, freeOnly, closingSoonOnly]);
 
 	const handlePressExhibition = useCallback(
-		(id: string) => router.push(`/(explore)/${id}`),
+		(id: string) => {
+			void trackExhibitionSelection(id);
+			router.push(`/(explore)/${id}`);
+		},
 		[router],
 	);
 
 	const handleSubmitSearch = useCallback(() => {
 		addRecent(searchText);
+		if (searchText.trim()) void trackSearchSubmitted(searchText.trim().length);
 	}, [addRecent, searchText]);
 
 	const handlePressRecent = useCallback(
@@ -168,13 +176,15 @@ export default function SearchScreen() {
 		return [
 			{
 				kind: 'section',
-				label: displayName ? `${displayName}님이 관심있어할 것 같아요!` : '취향 맞춤 전시',
+				label: displayName
+					? t('search.personalized_section', { name: displayName })
+					: t('search.taste_section'),
 			},
 			...preferredResults.map((r) => ({ kind: 'result' as const, result: r })),
-			{ kind: 'section', label: '전체' },
+			{ kind: 'section', label: t('search.all_section') },
 			...otherResults.slice(0, visibleCount).map((r) => ({ kind: 'result' as const, result: r })),
 		];
-	}, [showSections, results, visibleCount, preferredResults, otherResults, displayName]);
+	}, [showSections, results, visibleCount, preferredResults, otherResults, displayName, t]);
 
 	const hasMore = showSections ? visibleCount < otherResults.length : visibleCount < results.length;
 
@@ -212,7 +222,7 @@ export default function SearchScreen() {
 						value={searchText}
 						onChangeText={setSearchText}
 						onSubmitEditing={handleSubmitSearch}
-						placeholder="전시·미술관·작가 검색"
+						placeholder={t('search.search_exhibitions_placeholder')}
 						variant="tonal"
 						autoFocus
 					/>
@@ -245,13 +255,15 @@ export default function SearchScreen() {
 						keyboardDismissMode="on-drag"
 					>
 						<View className="mt-7">
-							<Text className="text-gray900 text-[16px] mb-3 font-pretendard-bold">추천 태그</Text>
+							<Text className="text-gray900 text-[16px] mb-3 font-pretendard-bold">
+								{t('search.recommended_tags')}
+							</Text>
 							<View className="flex-row flex-wrap gap-2">
 								{FIXED_TAGS.map((tag) => (
 									<Pressable
 										key={tag}
 										onPress={() => handlePressTag(tag)}
-										accessibilityLabel={`${tag} 태그로 검색`}
+										accessibilityLabel={t('search.search_tag_a11y', { tag })}
 										accessibilityRole="button"
 										className="rounded-full border border-secondary/25 bg-transparent px-3.5 py-2"
 										style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
@@ -265,15 +277,17 @@ export default function SearchScreen() {
 						{recentWords.length > 0 && (
 							<View className="mt-7">
 								<View className="flex-row items-center justify-between mb-2">
-									<Text className="text-gray900 text-[16px] font-pretendard-bold">최근 검색</Text>
+									<Text className="text-gray900 text-[16px] font-pretendard-bold">
+										{t('search.recent_searches')}
+									</Text>
 									<Pressable
 										onPress={clearRecent}
 										hitSlop={8}
-										accessibilityLabel="최근 검색어 전체 삭제"
+										accessibilityLabel={t('search.clear_all_recent_a11y')}
 										accessibilityRole="button"
 									>
 										<Text className="text-gray500 text-[13px] font-pretendard-regular">
-											전체 삭제
+											{t('search.clear_recent')}
 										</Text>
 									</Pressable>
 								</View>
@@ -282,7 +296,7 @@ export default function SearchScreen() {
 										<Ionicons name="time-outline" size={15} className="text-gray500" />
 										<Pressable
 											onPress={() => handlePressRecent(word)}
-											accessibilityLabel={`${word} 검색`}
+											accessibilityLabel={t('search.search_word_a11y', { word })}
 											accessibilityRole="button"
 											className="flex-1"
 										>
@@ -293,7 +307,7 @@ export default function SearchScreen() {
 										<Pressable
 											onPress={() => removeRecent(word)}
 											hitSlop={8}
-											accessibilityLabel={`최근 검색어 ${word} 삭제`}
+											accessibilityLabel={t('search.delete_recent_word_a11y', { word })}
 											accessibilityRole="button"
 										>
 											<Ionicons name="close" size={15} color="#D6D3D1" />
@@ -326,7 +340,8 @@ export default function SearchScreen() {
 						ListHeaderComponent={
 							<View className="flex-row items-end justify-between mb-4">
 								<Text className="text-gray500 text-[13px] font-pretendard-regular">
-									{results.length}건{sortLabel}
+									{t('search.count_results', { count: results.length })}
+									{sortLabel}
 								</Text>
 							</View>
 						}
@@ -334,8 +349,8 @@ export default function SearchScreen() {
 							<Result
 								icon="search-outline"
 								illustration={<SearchEmptyIllustration width={200} />}
-								title="조건에 맞는 전시가 없어요"
-								description={'검색어나 필터를 조정해 보세요'}
+								title={t('search.no_matching_exhibitions')}
+								description={t('search.adjust_filters')}
 								className="flex-none py-16"
 							/>
 						}
@@ -349,7 +364,7 @@ export default function SearchScreen() {
 				onChange={setFilterDate}
 				onDismiss={() => setShowDatePicker(false)}
 				onReset={() => setFilterDate(null)}
-				resetLabel="날짜 필터 해제"
+				resetLabel={t('search.clear_date_filter')}
 			/>
 
 			<ExcludeWordsModal

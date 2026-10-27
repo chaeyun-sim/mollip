@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
 import { Pressable, Text, View, type PressableProps } from 'react-native';
 import { Divider } from '@/src/components/common/Divider';
@@ -14,7 +15,7 @@ interface ListFooterProps extends Omit<PressableProps, 'children'> {
 }
 
 export function ListFooter({
-	title = '더 보기',
+	title,
 	borderType = 'full',
 	icon = 'chevron-down',
 	loading = false,
@@ -23,6 +24,8 @@ export function ListFooter({
 	style,
 	...rest
 }: ListFooterProps) {
+	const { t } = useTranslation();
+
 	const isDisabled = disabled || loading;
 
 	return (
@@ -43,7 +46,9 @@ export function ListFooter({
 					<Indicator color="gray600" />
 				) : (
 					<>
-						<Text className="text-[14px] font-pretendard-medium text-gray600">{title}</Text>
+						<Text className="text-[14px] font-pretendard-medium text-gray600">
+							{title ?? t('common.more')}
+						</Text>
 						<Ionicons name={icon} size={16} className="text-gray600" />
 					</>
 				)}

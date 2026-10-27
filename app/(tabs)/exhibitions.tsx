@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { useCallback } from 'react';
 import { useRouter } from 'expo-router';
 import { FlatList, Text, View, useWindowDimensions } from 'react-native';
@@ -18,6 +19,8 @@ const HORIZONTAL_PADDING = 24;
 const ROW_GAP = 16;
 
 export default function ExhibitionsScreen() {
+	const { t } = useTranslation();
+
 	const router = useRouter();
 	const insets = useSafeAreaInsets();
 	const { width: windowWidth } = useWindowDimensions();
@@ -48,18 +51,18 @@ export default function ExhibitionsScreen() {
 
 	function renderFooterContent() {
 		if (isLoadingMore) {
-			return <ListFooter loading accessibilityLabel="전시 목록을 더 불러오는 중" />;
+			return <ListFooter loading accessibilityLabel={t('exhibitions.loading_more_a11y')} />;
 		}
 
 		if (!hasMore) {
 			return (
 				<Text className="text-gray500 text-[12px] font-pretendard-regular">
-					모든 전시를 불러왔어요
+					{t('exhibitions.all_loaded')}
 				</Text>
 			);
 		}
 
-		return <ListFooter onPress={loadMore} accessibilityLabel="전시 목록 더 보기" />;
+		return <ListFooter onPress={loadMore} accessibilityLabel={t('exhibitions.load_more_a11y')} />;
 	}
 
 	const renderFooter = useCallback(() => {
@@ -71,7 +74,7 @@ export default function ExhibitionsScreen() {
 			</View>
 		);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [items.length, isLoadingMore, hasMore]);
+	}, [items.length, isLoadingMore, hasMore, loadMore, t]);
 
 	const renderEmpty = useCallback(() => {
 		if (status === 'loading') {
@@ -94,8 +97,8 @@ export default function ExhibitionsScreen() {
 					icon="cloud-offline-outline"
 					illustration={<ErrorIllustration />}
 					tone="danger"
-					title="전시 정보를 불러오지 못했어요"
-					actionLabel="다시 시도"
+					title={t('exhibitions.load_error_title')}
+					actionLabel={t('common.retry')}
 					onAction={refetch}
 					className="py-24"
 				/>
@@ -103,7 +106,7 @@ export default function ExhibitionsScreen() {
 		}
 
 		return null;
-	}, [status, refetch, columnWidth]);
+	}, [status, refetch, columnWidth, t]);
 
 	return (
 		<Screen variant="warm">

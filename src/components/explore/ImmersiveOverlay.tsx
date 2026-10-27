@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useEffect, useState } from 'react';
@@ -26,6 +27,8 @@ const TITLE_DURATION = 650;
  * 테두리만 서서히 어두워지는 비네트 + 옅은 black/5 스크림을 깐 다음 중앙에 전시 제목이
  * 천천히 fade-in 된다. 닫을 때는 역순(제목 fade-out → 비네트/스크림 fade-out). */
 export function ImmersiveOverlay({ visible, title, onStart, onClose }: ImmersiveOverlayProps) {
+	const { t } = useTranslation();
+
 	const insets = useSafeAreaInsets();
 
 	const [mounted, setMounted] = useState(visible);
@@ -155,7 +158,7 @@ export function ImmersiveOverlay({ visible, title, onStart, onClose }: Immersive
 						onPress={handleStartPress}
 						className="mt-8 rounded-full px-6 py-3 bg-white/15 border-[1.5px] border-white/35"
 						accessibilityRole="button"
-						accessibilityLabel="시작하기"
+						accessibilityLabel={t('onboarding.start')}
 					>
 						<Text className="text-white font-pretendard-semibold text-[15px]">
 							셀프 가이드 시작하기
@@ -171,7 +174,7 @@ export function ImmersiveOverlay({ visible, title, onStart, onClose }: Immersive
 					hitSlop={8}
 					className="w-9 h-9 rounded-full items-center justify-center bg-white/10"
 					accessibilityRole="button"
-					accessibilityLabel="닫기"
+					accessibilityLabel={t('common.close')}
 				>
 					<Ionicons name="close" size={18} color="rgba(255,255,255,0.85)" />
 				</Pressable>

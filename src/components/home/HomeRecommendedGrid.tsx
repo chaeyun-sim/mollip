@@ -1,11 +1,11 @@
+import { useTranslation } from 'react-i18next';
 import { Text, useWindowDimensions, View } from 'react-native';
 import { FadeInView } from '@/src/components/common/FadeInView';
 import { ImageFallback } from '@/src/components/common/ImageFallback';
 import { ScalePressable } from '@/src/components/common/ScalePressable';
 import { SkeletonBox } from '@/src/components/layout/Loading/SkeletonBox';
 import { HOME_SIDE_PADDING, HomeSectionHeader } from '@/src/components/home/HomeSectionHeader';
-import { FEATURED_TAGLINES, type FeaturedPick } from '@/src/hooks/queries/useFeaturedTrio';
-import { STATUS_LABELS } from '@/src/utils/exhibitionSearch';
+import { type FeaturedPick } from '@/src/hooks/queries/useFeaturedTrio';
 import { getGridColumnWidth } from '@/src/utils/homeLayout';
 
 const COLUMNS = 2;
@@ -30,10 +30,12 @@ export function HomeRecommendedGrid({
 	isLoading,
 	onPress,
 }: HomeRecommendedGridProps) {
+	const { t } = useTranslation();
+
 	const { width: windowWidth } = useWindowDimensions();
 
 	const columnWidth = getGridColumnWidth(windowWidth, HOME_SIDE_PADDING, COLUMN_GAP, COLUMNS);
-	const header = <HomeSectionHeader index={index} title="추천 전시" />;
+	const header = <HomeSectionHeader index={index} title={t('home.recommended')} />;
 	const gridStyle = {
 		paddingHorizontal: HOME_SIDE_PADDING,
 		columnGap: COLUMN_GAP,
@@ -65,7 +67,7 @@ export function HomeRecommendedGrid({
 					className="text-gray600 text-[14px] font-pretendard-regular"
 					style={{ paddingHorizontal: HOME_SIDE_PADDING }}
 				>
-					지금 소개할 전시가 없어요
+					{t('home.no_exhibitions_to_recommend')}
 				</Text>
 			</View>
 		);
@@ -81,13 +83,13 @@ export function HomeRecommendedGrid({
 			<View className="flex-row flex-wrap" style={gridStyle}>
 				{visible.map((item, i) => {
 					const title = item.title.trim();
-					const venue = item.venue.trim() || '장소 정보 없음';
+					const venue = item.venue.trim() || t('common.no_venue_info');
 					return (
 						<FadeInView key={item.id} delay={i * ITEM_STAGGER_MS}>
 							<ScalePressable
 								onPress={() => onPress(item.id)}
 								accessibilityRole="button"
-								accessibilityLabel={`${FEATURED_TAGLINES[item.badge]}, ${title}, ${venue}, ${STATUS_LABELS[item.status]}`}
+								accessibilityLabel={`${t(`home.featured.${item.badge}`)}, ${title}, ${venue}, ${t(`exhibitions.${item.status}`)}`}
 							>
 								{/* 캡션이 열 폭 안에서 줄바꿈되도록 폭을 View에 고정한다 */}
 								<View style={{ width: columnWidth }}>
@@ -100,7 +102,7 @@ export function HomeRecommendedGrid({
 										useImageProxy
 									/>
 									<Text className="mt-2.5 text-gray600 text-[11px] font-pretendard-medium">
-										{FEATURED_TAGLINES[item.badge]}
+										{t(`home.featured.${item.badge}`)}
 									</Text>
 									<Text
 										numberOfLines={2}

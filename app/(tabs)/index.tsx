@@ -1,3 +1,5 @@
+import { trackExhibitionSelection } from '@/src/lib/analytics';
+import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useCallback, useMemo } from 'react';
@@ -28,6 +30,8 @@ const GRID_ITEM_COUNT = 4;
 const BOARD_ENTER_DELAY_MS = 280;
 
 export default function ExploreScreen() {
+	const { t } = useTranslation();
+
 	useMarkInteractive();
 	const router = useRouter();
 	const insets = useSafeAreaInsets();
@@ -86,7 +90,13 @@ export default function ExploreScreen() {
 	);
 	const departuresStatus = toAsyncStatus(cultureQuery.isLoading || kcisaQuery.isLoading, false);
 
-	const openExhibition = useCallback((id: string) => router.push(`/(explore)/${id}`), [router]);
+	const openExhibition = useCallback(
+		(id: string) => {
+			void trackExhibitionSelection(id);
+			router.push(`/(explore)/${id}`);
+		},
+		[router],
+	);
 
 	const handleDocentPress = () => {
 		// 프리미엄 여부를 아직 모르는 동안에는 구독자를 결제 화면으로 보내지 않는다.
@@ -109,7 +119,7 @@ export default function ExploreScreen() {
 							<Pressable
 								onPress={() => router.push('/search')}
 								accessibilityRole="button"
-								accessibilityLabel="전시·미술관·작가 검색"
+								accessibilityLabel={t('home.search_placeholder')}
 								className="flex-1"
 								style={({ pressed }) => ({ opacity: pressed ? 0.85 : 1 })}
 							>
@@ -118,13 +128,13 @@ export default function ExploreScreen() {
 										variant="tonal"
 										editable={false}
 										pointerEvents="none"
-										placeholder="전시·미술관·작가 검색"
+										placeholder={t('home.search_placeholder')}
 									/>
 								</Animated.View>
 							</Pressable>
 							<IconButton
 								onPress={() => router.push('/(tabs)/map')}
-								accessibilityLabel="지도에서 전시 찾기"
+								accessibilityLabel={t('home.map_a11y_label')}
 								icon="map-outline"
 								iconSize={22}
 								variant="solid"
@@ -157,7 +167,9 @@ export default function ExploreScreen() {
 				{/* 선호 장르에 맞는 실제 추천 결과가 있을 때만 보여준다. */}
 				{showRecommended && (
 					<RecommendedIndex
-						title={name ? `${name}님의 취향 저격!` : '취향 맞춤 추천'}
+						title={
+							name ? t('home.personalized_title', { name }) : t('home.default_recommendation_title')
+						}
 						items={homeRecommended}
 						preferredGenres={preferredGenres}
 						onPress={openExhibition}
@@ -182,13 +194,15 @@ export default function ExploreScreen() {
 					onPress={handleDocentPress}
 					returnTo="/(guide)/create-description"
 					accessibilityRole="button"
-					accessibilityLabel="AI 도슨트로 작품 해설 만들기"
-					accessibilityHint="카메라로 작품을 촬영하거나 직접 입력하여 AI 해설을 받을 수 있어요"
+					accessibilityLabel={t('home.docent_fab_a11y_label')}
+					accessibilityHint={t('home.docent_fab_a11y_hint')}
 					className="h-[52px] flex-row items-center gap-2 rounded-full bg-brand px-5"
 					style={({ pressed }) => ({ opacity: pressed ? 0.88 : 1 })}
 				>
 					<Ionicons name="camera" size={22} className="text-white" />
-					<Text className="text-white text-[15px] font-pretendard-semibold">AI 도슨트</Text>
+					<Text className="text-white text-[15px] font-pretendard-semibold">
+						{t('home.docent_fab_label')}
+					</Text>
 				</LoginRequiredPressable>
 			</View>
 		</Screen>

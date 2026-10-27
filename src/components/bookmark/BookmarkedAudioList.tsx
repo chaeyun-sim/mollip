@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
 import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import * as Haptics from 'expo-haptics';
@@ -31,6 +32,8 @@ import { formatOfflineAudioSize, getOfflineAudioTotalSizeBytes } from '@/src/uti
 import { fetchWikidataImage } from '@/src/utils/wikidataImage';
 
 export function BookmarkedAudioList() {
+	const { t } = useTranslation();
+
 	const router = useRouter();
 
 	// 상태 관리
@@ -132,15 +135,15 @@ export function BookmarkedAudioList() {
 			'다운로드한 해설 삭제',
 			`저장된 오디오 ${doneIds.length}개를 모두 삭제해요. 다시 들으려면 네트워크가 필요해요`,
 			[
-				{ text: '취소', style: 'cancel' },
+				{ text: t('common.cancel'), style: 'cancel' },
 				{
-					text: '삭제',
+					text: t('common.delete'),
 					style: 'destructive',
 					onPress: () => deleteAllDownloads(downloadTargetIds),
 				},
 			],
 		);
-	}, [deleteAllDownloads, doneIds.length, downloadTargetIds]);
+	}, [deleteAllDownloads, doneIds.length, downloadTargetIds, t]);
 
 	const handleDeleteSingleDownload = useCallback(
 		(item: HistoryItem) => {
@@ -149,9 +152,9 @@ export function BookmarkedAudioList() {
 				'다운로드 삭제',
 				`"${item.title}" 다운로드 파일을 삭제해요. 다시 들으려면 네트워크가 필요해요`,
 				[
-					{ text: '취소', style: 'cancel' },
+					{ text: t('common.cancel'), style: 'cancel' },
 					{
-						text: '삭제',
+						text: t('common.delete'),
 						style: 'destructive',
 						onPress: () => {
 							const cacheKey = computeCacheKey(item.text, voiceId, voiceSpeed);
@@ -161,7 +164,7 @@ export function BookmarkedAudioList() {
 				],
 			);
 		},
-		[deleteDownload, voiceId, voiceSpeed],
+		[deleteDownload, voiceId, voiceSpeed, t],
 	);
 
 	const handleCardPress = useCallback(
@@ -177,7 +180,7 @@ export function BookmarkedAudioList() {
 		(item: HistoryItem) => {
 			Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
 			Alert.alert('저장 취소', `"${item.title}"을 저장 목록에서 지울까요?`, [
-				{ text: '닫기', style: 'cancel' },
+				{ text: t('common.close'), style: 'cancel' },
 				{
 					text: '지우기',
 					style: 'destructive',
@@ -185,7 +188,7 @@ export function BookmarkedAudioList() {
 				},
 			]);
 		},
-		[toggleBookmark],
+		[toggleBookmark, t],
 	);
 
 	const handleSheetClose = useCallback(() => {
@@ -207,7 +210,7 @@ export function BookmarkedAudioList() {
 			<Result
 				icon="lock-closed-outline"
 				iconSize={36}
-				title="로그인이 필요해요"
+				title={t('auth.login_required')}
 				description={'로그인해야 저장한 오디오가 보관돼요'}
 				actionLabel="로그인하기"
 				onAction={() => router.push({ pathname: '/auth/login', params: { returnTo: '/bookmark' } })}
@@ -282,7 +285,9 @@ export function BookmarkedAudioList() {
 						>
 							<View className="flex-row items-center gap-1.5">
 								<Ionicons name="trash-outline" size={14} className="text-error" />
-								<Text className="font-pretendard-semibold text-gray900 text-[13px]">전체 삭제</Text>
+								<Text className="font-pretendard-semibold text-gray900 text-[13px]">
+									{t('search.clear_recent')}
+								</Text>
 							</View>
 						</Pressable>
 					</View>
@@ -410,7 +415,7 @@ export function BookmarkedAudioList() {
 								)}
 								<IconButton
 									onPress={handleSheetClose}
-									accessibilityLabel="닫기"
+									accessibilityLabel={t('common.close')}
 									variant="bare"
 									icon="close"
 									iconSize={22}

@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { Stack, useNavigation, useRouter } from 'expo-router';
@@ -17,6 +18,8 @@ import { cn } from '@/src/lib/cn';
 import { useMarkInteractive } from '@/src/hooks/useMarkInteractive';
 
 export default function PlaylistScreen() {
+	const { t } = useTranslation();
+
 	useMarkInteractive();
 	const router = useRouter();
 	const navigation = useNavigation();
@@ -42,9 +45,9 @@ export default function PlaylistScreen() {
 
 	const confirmExit = useCallback(() => {
 		Alert.alert('전시 관람 종료', '재생목록이 초기화돼요', [
-			{ text: '닫기', style: 'cancel' },
+			{ text: t('common.close'), style: 'cancel' },
 			{
-				text: '종료',
+				text: t('exhibitions.ended'),
 				style: 'destructive',
 				onPress: () => {
 					// exitImmersive()가 exhibitionId를 지우기 전에 route param으로 넘긴다 —
@@ -61,7 +64,7 @@ export default function PlaylistScreen() {
 				},
 			},
 		]);
-	}, [exhibitionId, exitImmersive, router]);
+	}, [exhibitionId, exitImmersive, router, t]);
 
 	// 몰입 모드의 홈 화면 — 헤더 버튼뿐 아니라 스와이프 제스처/하드웨어 back까지
 	// 전부 가로채서, 확인 없이 메인 서비스로 빠져나가지 못하게 막는다.

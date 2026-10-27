@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
 import { Text, View } from 'react-native';
 import { ImageFallback } from '@/src/components/common/ImageFallback';
@@ -14,16 +15,20 @@ export function PersonalizedRecommendationCard({
 	item,
 	onPress,
 }: PersonalizedRecommendationCardProps) {
+	const { t } = useTranslation();
+
 	const title = item.title.trim();
-	const venue = item.venue.trim() || '장소 정보 없음';
-	const tags = item.recommendationTags ?? [];
+	const venue = item.venue.trim() || t('common.no_venue_info');
+	const tags = (item.recommendationTags ?? []).map((tag) =>
+		t(`recommendations.labels.${tag}`, { defaultValue: tag }),
+	);
 
 	return (
 		<ScalePressable
 			className="w-full"
 			onPress={() => onPress(item.id)}
 			accessibilityRole="button"
-			accessibilityLabel={`${title}, ${venue}${tags.length > 0 ? `. 취향 태그: ${tags.join(', ')}` : ''}`}
+			accessibilityLabel={`${title}, ${venue}${tags.length > 0 ? t('recommendations.taste_tags_a11y', { tags: tags.join(', ') }) : ''}`}
 		>
 			<View className="w-full flex-row gap-3 rounded-2xl border border-ink/10 bg-white p-3">
 				<ImageFallback

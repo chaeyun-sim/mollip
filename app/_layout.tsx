@@ -1,3 +1,7 @@
+import { useAnalyticsScreenTracking } from '@/src/hooks/useAnalyticsScreenTracking';
+import { useTranslation } from 'react-i18next';
+import '@/src/i18n';
+import { useSyncDeviceLanguage } from '@/src/hooks/useSyncDeviceLanguage';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import '../global.css';
 import '../src/lib/iconInterop';
@@ -70,6 +74,8 @@ import {
 
 // 렌더링 중 처리되지 않은 예외를 흰 화면/크래시 대신 이 화면으로 잡는다 (웹의 500 페이지에 해당).
 export function ErrorBoundary({ error, retry }: ErrorBoundaryProps) {
+	const { t } = useTranslation();
+
 	useEffect(() => {
 		Sentry.captureException(error);
 	}, [error]);
@@ -79,9 +85,9 @@ export function ErrorBoundary({ error, retry }: ErrorBoundaryProps) {
 			<Result
 				icon="ice-cream-outline"
 				illustration={<ErrorIllustration />}
-				title="문제가 발생했어요"
-				description={'화면을 불러오지 못했어요. 다시 시도해 주세요.'}
-				actionLabel="다시 시도하기"
+				title={t('errors.generic_title')}
+				description={t('errors.generic_description')}
+				actionLabel={t('common.retry')}
 				onAction={retry}
 			/>
 		</Screen>
@@ -117,6 +123,7 @@ function BootSplash() {
 }
 
 function RootLayout() {
+	useSyncDeviceLanguage();
 	const [fontsLoaded] = useFonts({
 		'Pretendard-Light': require('../assets/fonts/Pretendard-Light.otf'),
 		'Pretendard-Regular': require('../assets/fonts/Pretendard-Regular.otf'),
@@ -312,6 +319,7 @@ function RootLayout() {
 
 	// 알림 탭 딥링크 처리 — 부트스트랩(폰트·온보딩·몰입 복원 replace)이 끝난 뒤에만 이동한다.
 	const bootReady = !bootCovered;
+	useAnalyticsScreenTracking(bootReady);
 	const handledResponsesRef = useRef(new Set<string>());
 	useEffect(() => {
 		if (!bootReady) return;
@@ -433,7 +441,6 @@ function RootLayout() {
 								<Stack.Screen name="settings" options={{ headerShown: false }} />
 								<Stack.Screen name="bookmark" options={{ headerShown: false }} />
 								<Stack.Screen name="notifications" options={{ headerShown: false }} />
-								<Stack.Screen name="recommendations" options={{ headerShown: false }} />
 								<Stack.Screen
 									name="search"
 									options={{ headerShown: false, animation: 'fade', animationDuration: 130 }}

@@ -1,0 +1,284 @@
+﻿id,name,name_en,source_url,address
+1,갤러리 topohaus,TOPOHAUS,https://www.topohaus.com/,"서울 종로구 인사동11길 6
+"
+3,경인미술관,Kyung-In Museum of Fine Art,https://english.visitkorea.or.kr/svc/contents/contentsView.do?vcontsId=111088,서울 종로구 인사동10길 11-4
+4,사비나미술관,Savina Museum of Contemporary Art,http://www.savinamuseum.com/kor/about/direction.jsp,서울 은평구 진관1로 93
+5,이응노미술관,Lee Ungno Museum,https://www.leeungnomuseum.or.kr/,대전 서구 둔산대로 152
+10,미메시스 아트 뮤지엄,Mimesis Art Museum,https://mimesisartmuseum.co.kr/,경기 파주 문발로 253
+11,유나이티드 갤러리,United Gallery,https://www.unitedgallery.co.kr/index.asp,서울 강남구 강남대로102길 41
+12,서울시립북서울미술관,Buk-Seoul Museum of Art,https://sema.seoul.go.kr/en/index,서울 노원구 동일로 1238
+13,송암미술관,Songam Art Museum,https://www.incheon.go.kr/museum/MU020501,인천 미추홀구 비류대로55번길 68
+14,우양미술관,Wooyang Art Museum,https://wooyangmuseum.org/main,경북 경주시 보문로 484-79
+16,제주도립미술관,Jeju Museum of Art,https://www.jeju.go.kr/jmoa/,제주 제주시 1100로 2894-78
+17,성곡미술관,Sungkok Art Museum,http://www.sungkokmuseum.org/main/,서울 종로구 경희궁길 42
+19,가나아트파크,Gana ArtPark,http://www.artpark.co.kr/about/facilities,경기 양주시 장흥면 권율로 117
+20,아모레퍼시픽미술관,Amorepacific Museum of Art,https://apma.amorepacific.com/index.do,서울 용산구 한강대로 100
+21,아트선재센터,Art Sonje Center,https://artsonje.org/,서울 종로구 율곡로3길 87
+23,한원미술관,Hanwon Museum,http://www.hanwon.org/,서울 서초구 남부순환로 2423
+25,백남준아트센터,Nam June Paik Art Center,https://njp.ggcf.kr/,경기 용인시 기흥구 백남준로 10
+27,JCC 아트센터,JCC Art Center,https://culture.seoul.go.kr/culture/culture/cultureSpace/view.do?facCode=100931&menuNo=200119,서울 종로구 창경궁로35길 29
+30,아줄레주 갤러리,Azulejo Gallery,https://azulejogallery.com/,서울 강남구 삼성로149길 10
+32,솔거미술관,Solgeo Art Museum,https://www.gjsam.or.kr/programs/page/page.aspx?mnu_uid=83,경북 경주시 경감로 614
+33,두산갤러리,DOOSAN Gallery,https://www.doosangallery.com/,서울 종로구 종로33길 15
+35,임립미술관,Limlip Art Museum,http://www.limlipmuseum.org/,충남 공주 계룡면 봉곡길 77-13
+40,국립현대미술관 덕수궁관,MMCA Deoksugung,https://www.mmca.go.kr/eng/visitingInfo/deoksugungInfo.do,서울 중구 세종대로 99
+53,국립현대미술관 과천관,MMCA Gwacheon,https://m.mmca.go.kr/eng/about/introduction.do,경기 과천시 광명로 313
+55,창원시립마산문신미술관,Changwon City Masan Moonshin Art Museum,https://changwon.go.kr/moonshin/,경남 창원시 마산합포구 문신길 147
+56,플랫폼-엘 컨템포러리 아트센터,Platform-L Contemporary Art Center,https://platform-l.org/,서울 강남구 언주로133길 11
+57,안상철미술관,Ahn Sang Chul Museum,https://www.ahnsangchul.co.kr/,경기 양주시 백석읍 권율로 905
+62,경기도미술관,Gyeonggi Museum of Modern Art,https://gmoma.ggcf.kr/,경기 안산시 단원구 동산로 268
+63,국립현대미술관 서울관,MMCA Seoul,https://m.mmca.go.kr/eng/about/introduction.do,서울 종로구 삼청로 30
+65,코리아나미술관,Coreana Museum of Art,http://www.spacec.co.kr/,서울 강남구 언주로 827
+67,국제갤러리,Kukje Gallery,https://www.kukjegallery.com/,서울 종로구 삼청로 54
+68,이천시립월전미술관,Woljeon Museum of Art Icheon,https://www.iwoljeon.co.kr/main/main.php,경기 이천시 경충대로 2709번길 185
+70,갤러리현대,Gallery Hyundai,https://www.galleryhyundai.com/main,서울 종로구 삼청로 14
+71,서울시립미술관,Seoul Museum of Art,https://sema.seoul.go.kr/,서울 중구 덕수궁길 61
+74,갤러리SP,Gallery SP,https://www.gallerysp.com/,서울 용산구 회나무로44가길 30
+77,남송미술관,Namsong Art Museum,https://english1.visitkorea.or.kr/enu/nphotogallery/photo.kto?func_name=photo_view&newphotoDTO.photo_code=3111014200801014k&newphotoDTO.sub_menu=contest,경기 가평군 북면 백둔로 322
+79,비트리갤러리,B-tree Gallery,https://ko.b-treegallery.com/,서울 마포구 와우산로 94 홍익대학교 홍문관
+80,갤러리 라메르,Gallery Lamer,http://www.gallerylamer.com/about-us/,서울 종로구 인사동 5길 26
+82,대림미술관,Daelim Museum,https://daelimmuseum.org/,서울 종로구 자하문로4길 21
+83,소다미술관,Museum Soda,https://www.museumsoda.org/,경기 화성시 효행로707번기 30
+100,전남도립미술관,Jeonnam Museum of Art,https://en.artmuseum.jeonnam.go.kr/www/29,전라남도 광양시 광양읍 순광로 660
+136,뮤지엄산미술관,Museum SAN,https://www.museumsan.org,강원특별자치도 원주시 지정면 오크밸리2길 260
+151,한향림도자미술관,Hanhyanglim Ceramic Museum,https://hhlceramicmuseum.com/,경기도 파주시 탄현면 헤이리마을길 76-101
+164,블루메미술관,Blume Museum of Contemporary Art,https://bmca.or.kr,경기도 파주시 탄현면 헤이리마을길 59-30
+183,수원시립미술관,Suwon Museum of Art,https://suma.suwon.go.kr/main/main.do?lang=en,경기도 수원시 팔달구 정조로 833
+196,우리미술관,Woori Museum of Art,https://itour.incheon.go.kr/upload/guide/guidebook_vintage.pdf,인천광역시 동구 화도진로 198번길 6
+218,모산조형미술관,Mosan Art Museum,http://mosanmuseum.com/,충청남도 보령시 성주면 성주산로 673-24
+331,닻미술관,Datz Museum,https://www.datzmuseum.org,경기도 광주시 초월읍 진새골길 184
+332,영은미술관,Youngeun Museum of Contemporary Art,https://www.youngeunmuseum.org/main/,경기도 광주시 청석로 300(쌍령동)
+334,엄미술관,Um Museum,http://www.ummuseum.com/,경기도 화성시 효행구 봉담읍 오궁길 37
+340,예술의전당 한가람미술관,Hangaram Art Museum,https://www.sac.or.kr/site/eng/content/exhibitionHallMain,서울 서초구 남부순환로 2406 예술의전당 한가람미술관
+342,(재)한원미술관,Hanwon Museum,http://www.hanwon.org/,서울특별시 서초구 남부순환로 2423
+350,김세중미술관,Kimsechoong Museum,http://www.kimsechoong.com/main.php,서울특별시 용산구 효창원로70길 35
+352,리움미술관,Leeum Museum of Art,https://www.leeumhoam.org/leeum,서울특별시 용산구 이태원로55길 60-16
+365,클레이아크 김해미술관,Clayarch Gimhae Museum,https://clayarch.ghct.or.kr/home/main,경상남도 김해시 진례면 분청로 21
+407,아르코미술관,ARKO Art Center,https://www.arko.or.kr/artcenter/assets/download/2026_arko_art_center.pdf,서울특별시 종로구 동숭길 3
+409,세종문화회관 미술관(세종미술관),Sejong Museum of Art,https://www.sejongpac.or.kr/eng/main/main.do,서울특별시 종로구 세종대로 175
+412,금호미술관,Kumho Museum of Art,http://www.kumhomuseum.com/eng/,서울특별시 종로구 삼청로 18
+414,OCI 미술관,OCI Museum of Art,https://www.ocimuseum.org/en,서울특별시 종로구 우정국로 45-14
+441,세화미술관,Sehwa Museum of Art,https://sehwamuseum.org/,"서울특별시 종로구 새문안로 68, 3층"
+442,환기미술관,Whanki Museum,http://whankimuseum.org/,서울특별시 종로구 자하문로 40길 63
+443,학아재미술관,Hagajae Museum,http://www.seoulscm.com/museum/345,서울특별시 종로구 돈화문로 98
+444,토탈미술관,Total Museum of Contemporary Art,https://totalmuseum.org/wp-content/uploads/2020/03/MondaySalon2017.pdf,서울특별시 종로구 평창32길 8
+445,자하미술관,Zaha Museum,https://www.zahamuseum.org/,서울특별시 종로구 창의문로5가길 46
+446,일민미술관,Ilmin Museum of Art,https://ilmin.org/,서울특별시 종로구 세종대로 152
+451,진주시립 이성자미술관,Rhee Seund Ja Jinju Art Museum,https://www.jinju.go.kr/rheesjmuseum/,경상남도 진주시 에나로 128번길 14
+453,시안미술관,Cian Museum of Art,https://cianmuseum.org/,경상북도 영천시 화산면 가래실로 364
+483,대구미술관,Daegu Art Museum,https://daeguartmuseum.or.kr,대구광역시 수성구 미술관로 40
+485,대구간송미술관,Kansong Art Museum Daegu,https://kansong.org/daegu/,대구광역시 수성구 미술관로 70
+508,리각미술관,Ligak Museum,http://ligakmuseum.co.kr/,충청남도 천안시 동남구 태조산길 245
+509,천안시립미술관,Cheonan Museum of Art,https://www.camoa.or.kr/,충청남도 천안시 동남구 성남면 종합휴양지로 185
+524,경남도립미술관,Gyeongnam Art Museum,https://www.gyeongnam.go.kr/gam/index.gyeong,경상남도 창원시 의창구 용지로 296(경남도립미술관)
+593,양주시립장욱진미술관,Yangju City Chang Ucchin Museum of Art,https://www.yangju.go.kr/changucchin/contents.do?key=1990,경기도 양주시 장흥면 권율로 193
+607,경주솔거미술관,Solgeo Art Museum,https://www.gjsam.or.kr/programs/page/page.aspx?mnu_uid=83,경상북도 경주시 경감로614
+611,한라디지털아트뮤지엄,Halla Digital Art Museum,https://halladigitalartmuseum.com/eng/index.htm,제주특별자치도 제주시 한라대학로38
+636,유동룡미술관,Itami Jun Museum,https://www.itamijunmuseum.com,제주특별자치도 제주시 한림읍 용금로906-10
+645,유민 아르누보 뮤지엄,Yumin Art Nouveau Museum,https://phoenixhnr.co.kr/en/page/main/jeju,제주특별자치도 서귀포시 성산읍 섭지코지로 107
+653,제주도립 김창열미술관,Kim Tschang-Yeul Art Museum Jeju,https://kimtschang-yeul.jeju.go.kr/,제주특별자치도 제주시 한림읍 용금로 883-5
+655,제주 현대미술관,Jeju Museum of Contemporary Art,https://m.visitjeju.net/en/detail/view?contentsid=CONT_000000000500583,제주특별자치도 제주시 한경면 저지14길 35
+657,김영갑갤러리 두모악,Kimyounggap Gallery Dumoak,http://www.dumoak.com/,제주특별자치도 서귀포시 성산읍 삼달로 137
+658,이중섭미술관,Lee Jung-seop Art Museum,https://www.visitjeju.net/en/detail/view?contentsid=CONT_000000000500509,제주특별자치도 서귀포시 이중섭로 27-3
+659,기당미술관,Gidang Art Museum,https://www.visitjeju.net/en/detail/view?contentsid=CONT_000000000500326,제주특별자치도 서귀포시 남성중로 153번길 15
+686,울산시립미술관,Ulsan Art Museum,https://www.ulsan.go.kr/s/uam/main.ulsan,울산광역시 중구 미술관길 72
+706,성남큐브미술관,Seongnam Cube Art Museum,https://museum.snart.or.kr/,경기도 성남시 분당구 성남대로 808
+722,밀알미술관,Milal Museum of Art,http://www.milalmuseum.or.kr/,서울특별시 강남구 일원로 90
+726,서울대학교 미술관,Seoul National University Museum of Art,http://www.snumoa.org/en/,서울특별시 관악구 관악로 1
+727,서울시립남서울미술관,Nam-Seoul Museum of Art,https://sema.seoul.go.kr/en/index,서울특별시 관악구 남부순환로 2076
+743,진천군립 생거판화미술관,Jincheon County Museum of Prints and Printmaking,https://www.jincheon.go.kr/sisul/sub.do?menukey=784,충청북도 진천군 진천읍 백곡로 1504-10
+744,이강하미술관,Lee Kang Ha Art Museum,https://www.gwangjubiennale.org/en/index.do?sellan=en,광주광역시 남구 3·1만세운동길 6
+784,성북구립미술관,Seongbuk Museum of Art,https://sma.sbculture.or.kr/sma/index.do,서울특별시 성북구 성북로 134
+819,전북도립미술관,Jeonbuk Museum of Art,https://www.jeonbuk.go.kr/index.jeonbuk?menuCd=DOM_000000104016000000,전북특별자치도 완주군 구이면 모악산길 111-6
+825,"뮤지엄한미 삼청
+",Museum Hanmi Samcheong,https://museumhanmi.or.kr/en/,서울 종로구 삼청로9길 45
+828,소마미술관,Seoul Olympic Museum of Art,https://soma.kspo.or.kr/main,서울특별시 송파구 위례성대로 51
+832,드영미술관,De Young Museum,http://www.deyoungmuseum.co.kr/,광주광역시 동구 성촌길 6(운림동)
+833,주안미술관,JuAn Art Museum,https://juanartmuseum.org/,광주광역시 동구 제봉로 197(대인동)
+842,호암미술관,Hoam Museum of Art,https://english.visitkorea.or.kr/svc/whereToGo/locIntrdn/rgnContentsView.do?vcontsId=111430,경기도 용인시 처인구 포곡읍 에버랜드로562번길 38
+849,양평군립미술관,Yangpyeong Museum of Art,http://www.ymuseum.org/home/,경기도 양평군 양평읍 문화복지길 2
+856,안젤리미술관,KwonSookJa Angeli Art Museum,https://www.angeliartmuseum.net/,경기도 용인시 처인구 이동읍 이원로 244
+858,문아트그라운드 뮤지엄,Moon Art Grounds Museum,https://magmuseum.com/,경기도 용인시 처인구 모현읍 문형동림로101번길 37
+867,쉐마미술관,Schema Art Museum,https://schemaartmuseum.com,충청북도 청주시 청원구 내수읍 내수로 241
+869,청주시립대청호미술관,Dacheongho Museum of Art,https://cmoa.cheongju.go.kr/daecheongho/index.do,충청북도 청주시 상당구 문의면 대청호반로 721
+872,광주시립미술관,Gwangju Museum of Art,https://gjartmuse.jeonnam-gwangju.go.kr/,광주광역시 북구 하서로 52
+883,노적봉예술공원미술관,Nojeokbong Art Park Art Museum,https://www.mokpo.go.kr/artmuseum,전라남도 목포시 유달로 116
+892,청주시립미술관,Cheongju Museum of Art,https://cmoa.cheongju.go.kr/www/index.do,충청북도 청주시 서원구 충렬로18번길 50(사직동)
+972,포스코미술관,POSCO Art Museum,https://www.poscoartmuseum.org:443/S91_010/S91_010010/front/main.do,서울특별시 강남구 테헤란로 440
+988,전혁림미술관,Chun Hyuck Lim Art Museum,https://www.utour.go.kr/eng.web,경상남도 통영시 봉수1길 10(봉평동)
+996,포항시립미술관,Pohang Museum of Steel Art,https://english.visitkorea.or.kr/svc/whereToGo/locIntrdn/rgnContentsView.do?vcontsId=219525,경상북도 포항시 북구 환호공원길 10
+1013,고은사진미술관,Goeun Museum of Photography,https://www.goeunmuseum.kr/,부산광역시 해운대구 해운대로452번길 16
+1014,부산시립미술관,Busan Museum of Art,https://english.visitkorea.or.kr/svc/contents/contentsView.do?vcontsId=91156,부산광역시 해운대구 APEC로 58
+1054,양구군립박수근미술관,Park Soo Keun Museum,https://english.visitkorea.or.kr/svc/contents/contentsView.do?vcontsId=84250,강원특별자치도양구군 양구읍 박수근로 265-15
+1057,정선507미술관,507 Art Museum,https://www.museum507.org/,강원특별자치도 정선군 정선읍 동강로 2914
+1074,부산현대미술관,Museum of Contemporary Art Busan,https://www.busan.go.kr/moca_en/index,부산광역시 사하구 낙동남로 1191(하단동)
+1097,대전시립미술관,Daejeon Museum of Art,https://www.daejeon.go.kr/dmae/index.do,대전광역시 서구 둔산대로 155
+1102,CICA미술관,CICA Museum,https://cicamuseum.com/,경기도 김포시 양촌읍 삼도로 196-30
+1121,국립경주박물관,Gyeongju National Museum,https://gyeongju.museum.go.kr/,경상북도 경주시 일정로 186
+1122,국립부여박물관,Buyeo National Museum,https://buyeo.museum.go.kr/index.do,충청남도 부여군 부여읍 금성로 5
+1123,국립공주박물관,Gongju National Museum,https://gongju.museum.go.kr/kor/index.do,충청남도 공주시 관광단지길 34
+1124,국립청주박물관,Cheongju National Museum,https://cheongju.museum.go.kr/www/index.do,충청북도 청주시 상당구 명암로 143
+1125,국립춘천박물관,Chuncheon National Museum,https://chuncheon.museum.go.kr/kor/index.do,강원특별자치도 춘천시 우석로 70
+1126,국립광주박물관,Gwangju National Museum,https://gwangju.museum.go.kr/,광주광역시 북구 하서로 110
+1127,국립대구박물관,Daegu National Museum,https://daegu.museum.go.kr/,대구광역시 수성구 청호로 321
+1130,국립중앙박물관,National Museum of Korea,https://www.museum.go.kr/MUSEUM/main/index.do,서울특별시 용산구 서빙고로 137
+1131,국립제주박물관,Jeju National Museum,https://jeju.museum.go.kr/html/kr/index.html,제주특별자치도 제주시 일주동로 17
+1132,국립진주박물관,Jinju National Museum,https://jinju.museum.go.kr/kor/,경상남도 진주시 남강로 626-35
+1133,국립김해박물관,Gimhae National Museum,https://gimhae.museum.go.kr/kr/,경상남도 김해시 가야의길 190
+1135,포도뮤지엄,PODO Museum,https://www.podomuseum.com/,제주특별자치도 서귀포시 안덕면 산록남로 788
+1141,롯데뮤지엄,Lotte Museum of Art,https://www.lottemuseum.com/,서울 송파구 올림픽로 300 롯데월드타워7층 롯데뮤지엄
+1142,화이트 큐브 서울,White Cube Seoul,https://www.whitecube.com/locations/white-cube-seoul,서울 강남구 도산대로 45길 6
+1143,송은,SONGEUN,https://songeun.or.kr/,서울 도산대로 441
+1148,미들맨 갤러리,Middleman,https://iammiddleman.org,부산 해운대구 좌동로 14번길 54
+1149,국립아시아문화전당,Asia Culture Center,https://www.acc.go.kr/en/index.do,전남광주통합특별시 동구 문화전당로 38
+1150,예술의전당 서울서예박물관,Seoul Calligraphy Art Museum,https://www.sac.or.kr/site/eng/content/exhibitionHallMain,서울 서초구 남부순환로 2406 예술의전당 서울서예박물관
+1152,문화역 서울 284,Culture Station Seoul 284,https://www.seoul284.org/eng,서울 중구 통일로 1 서울역(본옥) 문화역서울284
+1153,마이아트뮤지엄,My Art Museum,https://visitgangnam.net/en/places/my-art-museum,서울 강남구 테헤란로 518 섬유센터빌딩 B1 (대치동994-31)
+1154,아라리오뮤지엄 서울 (인스페이스),ARARIO Museum in SPACE,https://www.arario.com/images/아라리오회사소개서.pdf,서울 종로구 율곡로 83
+1155,아라리오뮤지엄 제주 (탑동),ARARIO Museum Tapdong Cinema,https://www.arario.com/images/아라리오회사소개서.pdf,제주 제주시 탑동로 14
+1156,"아라리오뮤지엄 제주 (동문모텔 I, II)","ARARIO Museum Dongmun Motel I, II",https://www.visitjeju.net/en/detail/view?contentsid=CNTS_000000000020607&menuId=DOM_000001817000000003,제주 제주시 산지로 37-5/제주 제주시 산지로 23
+1157,국립현대미술관 청주관,MMCA Cheongju,https://www.mmca.go.kr/upload/artInfo/2022/06/2022061703590101216091.pdf,충북 청주시 청원구 상당로 314
+1159,예술의전당 한가람디자인미술관,Hangaram Design Museum,https://www.sac.or.kr/site/eng/content/exhibitionHallMain,서울 서초구 남부순환로 2406 예술의전당 한가람디자인미술관
+1160,디뮤지엄,D Museum,https://www.daelimmuseum.org/,서울특별시 성동구 왕십리로 83-21
+1164,서울시립서서울미술관,Seo-Seoul Museum of Art,https://sema.seoul.go.kr/en/index,서울 금천구 시흥대로79길 65 (독산동)
+1165,광주시립미술관 하정웅미술관,Ha Jung-woong Museum of Art,https://gjartmuse.jeonnam-gwangju.go.kr/?site=english,전남광주통합특별시 서구 상무대로 1165 
+1167,그라운드 시소 센트럴,Groundseesaw Central,https://en.groundseesaw.co.kr/,서울특별시 중구 세종대로 14 그랜드센트럴 3F
+1168,그라운드 시소 이스트,Groundseesaw East,https://en.groundseesaw.co.kr/,서울특별시 광진구 아차산로 402 이스트폴 2F
+1169,그라운드 시소 한남,Groundseesaw Hannam,https://groundseesaw.co.kr/,서울특별시 용산구 한남대로 91 고메이494 한남 B층
+1172,갤러리 그라프,Gallery Grappe,https://ggrappe.com,서울특별시 강남구 삼성로 149길 10 (청담동)
+1175,16아카이브,16AKAIV,https://16akaiv.com,"서울 중구 퇴계로45길 31-15, 2층
+"
+1176,갤러리박 (BHAK),BHAK,https://galeriebhak.com,"서울 용산구 한남대로40길 19, 1F"
+1177,DMZ 박물관,DMZ Museum,https://www.dmzmuseum.com/,강원 고성군 현내면 통일전망대로 369
+1178,K-ARTS Space,K-Arts Space,https://www.instagram.com/karts.space/?hl=en,"서울시 성북구 돌곶이로 34 (2층, 3층)
+"
+1179,PS센터,PS Center,https://ps-center.kr,서울시 중구 창경궁로5다길 18 3층
+1180,가나아트센터,Gana Art Center,https://www.ganaart.com/about/,"서울 종로구 평창30길 28(평창동, 가나아트센터)"
+1181,갤러리 그림손,Gallery Grimson,https://www.grimson.co.kr,서울 종로구 인사동 10길 22
+1182,갤러리 스페이스포포,spaceFOFO Photo Gallery,http://spacefofo.kr/wp/,부산광역시 금정구 금정로 79 3층 (눈사랑안경 3층)
+1184,갤러리 지하,Gallery JIHA,https://galleryjiha.com,서울 마포구 서강로11길 15 지하
+1185,갤러리 플래닛,Gallery Planet,http://galleryplanet.co.kr/,"서울 강남구 압구정로71길 14, 2F"
+1186,경기도박물관,Gyeonggi Provincial Museum,https://njpart.ggcf.kr/,경기 용인시 기흥구 상갈로 6
+1187,남산골한옥마을,Namsangol Hanok Village,https://hanokmaeul.co.kr/,서울 중구 퇴계로34길 28
+1189,서리풀청년아트갤러리,Seoripul Gallery,https://seoripulgallery.com/,서울 서초구 남부순환로323길 1
+1190,부산영화체험박물관,Busan Museum of Movies,https://busanbom.kr/,부산 중구 대청로126번길 12
+1193,어진박물관,Royal Portrait Museum,https://jeonju.go.kr/eojinmuseum/index.9is,전북특별자치도 전주시 완산구 태조로 44
+1197,실학박물관,The Museum of Silhak,https://english.gg.go.kr/blog/faq-category/silhak-museum/,경기 남양주시 조안면 다산로747번길 16
+1198,서울기록원,Seoul Metropolitan Archives,https://archives.seoul.go.kr/,서울 은평구 통일로62길 7
+1201,종로구립 고희동미술관,Jongno Ko Huidong Art Museum,https://culture.seoul.go.kr/culture/culture/cultureEvent/view.do?cultcode=155839&menuNo=200011,서울 종로구 창덕궁5길 40
+1208,성북구립 최만린미술관,Choi Man Lin Museum,https://sma.sbculture.or.kr/cml/index.do,서울 성북구 솔샘로7길 23
+1210,김중업 건축문화의 집,Kim Chungup Architectural Culture House,https://sma.sbculture.or.kr/kcu/index.do,서울 성북구 장위로21나길 11
+1211,서울공예박물관,Seoul Museum of Craft Art,https://english.visitkorea.or.kr/svc/contents/contentsView.do?vcontsId=186458,서울 종로구 율곡로3길 4
+1212,광명업사이클아트센터,Gwangmyeong Upcycle Art Center,https://upcycle.gm.go.kr/ko/index.do,경기 광명시 오리로 703
+1216,숙명여자대학교 정영양자수박물관,The Chung Young Yang Embroidery Museum,https://www.chungyoungyang.com/chungyoungyang/6787/subview.do,서울 용산구 청파로47길 99
+1217,한국영화박물관,Korean Film Museum,https://eng.koreafilm.or.kr/pages/PC_00000104,서울 마포구 월드컵북로 400
+1219,서울생활사박물관,Seoul Urban Life Museum,https://museum.seoul.go.kr/eng/about/org.jsp,서울 노원구 동일로174길 27
+1220,국립해양박물관,National Maritime Museum of Korea,https://www.mmk.or.kr/,부산 영도구 해양로301번길 45
+1226,대한민국역사박물관,National Museum of Korean Contemporary History,https://www.much.go.kr/,서울 종로구 세종대로 198
+1227,청계천박물관,Cheonggyecheon Museum,https://museum.seoul.go.kr/eng/about/org.jsp,서울 성동구 청계천로 530
+1228,한밭교육박물관,Hanbat Museum of Education,https://www.hbem.or.kr/kor.do,대전 동구 우암로 96
+1230,국립나주박물관,Naju National Museum,https://naju.museum.go.kr/kor/index.do,전남광주통합특별시 나주시 반남면 고분로 747
+1231,김포문화재단,Gimpo Cultural Foundation,https://www.gcf.or.kr/main/main.do,경기 김포시 돌문로 26
+1237,루나아틀리에,LUNA Atelier,https://www.lunaatelier.co.kr/,대구 동구 이노밸리로 322
+1238,서울시립과학관,Seoul Science Center,https://science.seoul.go.kr/main,서울 노원구 한글비석로 160
+1239,울산암각화박물관,Ulsan Petroglyph Museum of Bangudae,https://www.ulsan.go.kr/s/bangudae/main.ulsan,울산 울주군 두동면 반구대안길 254
+1241,부천시립박물관,Bucheon Museum,https://www.bcmuseum.or.kr/ko,경기 부천시 오정구 소사로 638
+1242,국립중앙도서관,National Library of Korea,https://www.nl.go.kr/EN/main/index.do,서울 용산구 서빙고로 137
+1244,양구인문학박물관,Yanggu Humanities Museum,https://www.ymunhak.or.kr/,강원특별자치도 양구군 양구읍 파로호로869번길 101
+1247,천안문화재단,Cheonan Foundation for Arts and Culture,https://cfac.or.kr/,충남 천안시 서북구 성정8길 5
+1249,서울시립사진미술관,Photography Seoul Museum of Art,https://sema.seoul.go.kr/en/index,서울 도봉구 마들로13길 68
+1250,오창전시관,Ochang Gallery,https://cmoa.cheongju.go.kr/ochang/index.do,충북 청주시 청원구 오창읍 오창공원로 102
+1251,국립민속박물관 파주,National Folk Museum of Korea Paju,https://nfm.go.kr/english/index.do,경기 파주시 탄현면 헤이리로 30
+1252,우란문화재단,Wooran Foundation,https://wooranfdn.org/en/about/about.jsp,서울 성동구 연무장7길 11
+1253,국립전주박물관,Jeonju National Museum,https://jeonju.museum.go.kr/,전북특별자치도 전주시 완산구 쑥고개로 249
+1255,KF갤러리,KF Gallery,https://www.kf.or.kr/kfEng/main.do?langTy=ENG,서울 중구 을지로5길 26
+1258,경기창작센터,Gyeonggi Creation Center,https://artsandculture.google.com/partner/gyeonggi-cultural-foundation,경기도 안산시 단원구 선감로 101-19
+1260,그림책정원1937,Picture Book Garden 1937,https://picturebookgarden1937.chungbuk.go.kr/home/main.php,충북 청주시 상당구 상당로 82
+1261,작은미술관 보구곶,Small Museum Bogugot,https://www.gcf.or.kr/eng/main.do,경기 김포시 월곶면 문수산로 373
+1263,수원시립만석전시관,Suwon Manseok Gallery,https://suma.suwon.go.kr/main/main.do?lang=en,경기 수원시 장안구 송정로 19
+1264,국립민속박물관,National Folk Museum of Korea,https://nfm.go.kr/english/index.do,서울 종로구 삼청로 37
+1266,인천아트플랫폼,Incheon Art Platform,https://inartplatform.kr/home/home,인천 제물포구 제물량로218번길 3
+1268,아마도 예술 공간(Amado Art Space),Amado Art Space,https://amadoart.org/,서울 용산구 이태원로54길 8
+1269,서울역사박물관,Seoul Museum of History,https://museum.seoul.go.kr/eng/visit/floor/floor1st.jsp,서울 종로구 새문안로 55
+1275,갤러리JJ,Gallery JJ,https://www.galleryjj.org/,서울 강남구 압구정로30길 63
+1277,청주시립도서관 청주미술창작스튜디오,Cheongju Art Studio,https://cmoa.cheongju.go.kr/cjas/index.do,충북 청주시 상당구 용암로 55
+1278,갤러리세줄,Gallery Sejul,https://sejul.com/,서울 종로구 평창30길 40
+1279,갤러리 예 (예화랑),Gallery Yeh,https://www.galleryyeh.com/,서울 종로구 창덕궁길 100
+1280,취미인간,chwimi_ingan,https://www.instagram.com/chwimi_ingan/,대구 남구 중앙대로31길 124
+1281,용산문화재단,Yongsan Foundation for Arts & Culture,https://yongsanculture.or.kr/site/main/home,서울 용산구 이태원로 274
+1287,한국만화박물관,Korea Manhwa Museum,https://english.visitkorea.or.kr/svc/contents/contentsView.do?menuSn=351&vcontsId=215510,경기 부천시 원미구 길주로 1
+1291,갤러리CNK,Gallery CNK,https://www.gallerycnk.com/,대구 중구 이천로 206
+1292,오에이오에이,OAOA Gallery,https://oaoagallery.com/,서울 강남구 삼성로63길 32-11
+1296,서울시립미술아카이브,Art Archives Seoul Museum of Art,https://sema.seoul.go.kr/semaaa/front/main.do,서울 종로구 평창문화로 101
+1298,수원시립아트스페이스광교,Suwon Art Space Gwanggyo,https://suma.suwon.go.kr/main/main.do?lang=en,경기 수원시 영통구 광교중앙로 140
+1299,금산갤러리,Keumsan Gallery,http://www.keumsangallery.com/,서울 중구 소공로 46
+1302,갤러리위,Gallery We,http://www.gallerywe.com/,경기 용인시 수지구 호수로52번길 25-17
+1311,유엠 갤러리,UM Gallery,https://www.umgallery.co.kr/,서울 강남구 도산대로25길 35
+1314,갤러리508,Gallery 508,https://gallery-508.com/,서울 강남구 도산대로67길 14
+1317,대전광역시 서예진흥원,Daejeon Calligraphy Promotion Agency,https://www.daejeon.go.kr/djseoye,대전 중구 중앙로 119
+1320,하슬라아트월드,Haslla Art World,https://www.museumhaslla.com/,강원특별자치도 강릉시 강동면 율곡로 1441
+1321,오션갤러리,Ocean Gallery,https://www.oceangallery.kr/,부산 해운대구 청사포로 139-4
+1322,아트 포 랩,Art For Lab.,https://www.art-for-lab.space/,경기 안양시 동안구 신기대로33번길 22
+1323,마리나갤러리,Marina Gallery,https://marinagallery.co.kr/,경기 고양시 일산서구 호수로 817
+1325,광주비엔날레,Gwangju Biennale,https://www.gwangjubiennale.org/gb/index.do,전남광주통합특별시 북구 비엔날레로 111
+1344,화이트블럭,White Block,https://www.whiteblock.org/,경기 파주시 탄현면 헤이리마을길 72
+1345,엄뮤지엄,Um Museum,http://www.ummuseum.com/,경기 화성시 봉담읍 오궁길 37
+1346,의재미술관,Uijae Museum of Korean Art,https://www.uijae.org/,전남광주통합특별시 동구 증심사길 155
+1349,갤러리 조은,Gallery Joeun,https://galleryjoeun.com/kor/main/,서울 용산구 이태원로55가길 3
+1350,한솥아트스페이스,Hansot ArtSpace,https://www.instagram.com/hansot_artspace/,"서울 강남구 압구정로 459, 지하 1층"
+1351,갤러리 나우,Gallery NoW,https://gallery-now.com/,서울 강남구 언주로152길 16
+1352,아난티 컬쳐클럽,Ananti Culture Club,https://ananti.kr/ko/village/board/cultureclub/PA0801,"부산 기장군 기장읍 기장해안로 267-7, 빌라쥬 드 아난티 엘.피. 크리스탈"
+1355,갤러리 다선,Gallery Dasun,https://www.gallerydasun.com,경기 과천시 양지마을4로 44-18 
+1357,갤러리 소헌 & 소헌 컨템포러리,Gallery Soheon & Soheon Contemporary,http://www.gallerysoheon.com/main/index.html,"대구 중구 동덕로 18 (대봉동), 2층"
+1360,마루아트센터,Maru Art Center,https://www.maruartcenter.co.kr/default/,"서울 종로구 인사동길 35-4, 35-6"
+1362,어반플루토,urbanpluto,https://www.urbanpluto.com/,"서울 영등포구 양평로22나길 3-2, 2층"
+1364,인가희갤러리,ingahee,https://ingahee.com/,"서울 용산구 소월로44길 29, 102호"
+1365,챔버(CHMBR),CHMBR,https://www.instagram.com/chamber26_6/,서울 성북구 동소문로 26-6
+1367,청화랑,Chung Art Gallery,https://www.chungartgallery.com/,서울 강남구 삼성로147길 4
+1369,히든엠갤러리,Hidden M Gallery,http://hiddenmgallery.com/,서울 강남구 논현로86길 16
+1375,수원시미디어센터,Suwon Media Center,https://www.swmedia.or.kr/,경기 수원시 팔달구 창룡대로 64
+1376,뮤지엄 원,Museum 1,https://museum1.co.kr/,부산 해운대구 센텀서로 20
+1381,진천종박물관,Jincheon Bell Museum,https://www.jincheon.go.kr/site/eng/main.do,충북 진천군 진천읍 백곡로 1504-12
+1382,아난티 앳 부산 코브,Ananti at Busan Cove,https://ananti.kr/ko/event?bsns=20,부산 기장군 기장읍 기장해안로 268-32
+1383,대구방짜유기박물관,Daegu Bangjja Yugi (Korean Bronzeware) Museum,https://www.bangjja.or.kr/,대구 동구 도장길 29
+1384,부산근현대역사관,Busan Modern and Contemporary History Museum,https://www.busan.go.kr/eng/bsfacility01,부산 중구 대청로 104
+1385,국립어린이청소년도서관,National Library for Children and Young Adults,https://nlcy.go.kr/,서울 강남구 테헤란로7길 21
+1388,원주문화재단,Wonju Cultural Foundation,https://www.wcf.or.kr/,강원특별자치도 원주시 향교길 77
+1389,국립대한민국임시정부기념관,National Memorial of the Korean Provisional Government,https://www.nmkpg.go.kr/,서울 서대문구 통일로 279-24
+1392,충북문화재단,Chungcheongbuk-do Cultural Foundation,https://www.cbfc.or.kr/home/main.php,충북 청주시 청원구 향군로94번길 7
+1395,갤러리 인사 1010,INSA1010,https://www.insa1010.com/,서울 종로구 인사동10길 10
+1396,대구섬유박물관,Daegu Textile Museum,https://www.dtmuseum.org/main,대구 동구 팔공로 227
+1400,아트코드갤러리,Artcode Gallery,https://www.artcode.co.kr/,경기 광명시 양지로 16
+1401,노들섬,Nodeul Island,https://nodeul.org/types/exhibit/,서울 용산구 양녕로 445
+1403,SETEC,SETEC,https://www.setec.or.kr/front/schedule/calendar.do,서울 강남구 남부순환로 3104
+1404,공간일리,Space Illi,https://www.instagram.com/space_illi_1and2/,서울 종로구 세검정로9길 19
+1408,부산문화재단,Busan Cultural Foundation,https://www.bscf.or.kr/index.do,부산 남구 우암로 84-1
+1410,주석모음집,Footnote Unit,https://www.instagram.com/footnote_unit/,서울 종로구 낙산성곽동길 53
+1411,키다리 갤러리,Kidari Gallery,https://www.kidarigallery.com/,대구 동구 신서로21길 3-5
+1412,프린트아트리서치센터,PARC,https://parc.imweb.me/,서울 종로구 율곡로19길 33-13
+1414,필 갤러리,Fill Gallery,https://www.instagram.com/fillgallery/,서울 용산구 유엔빌리지길 24
+1416,강원문화재단,Gangwon Art & Culture Foundation,https://gwcf.or.kr/ko,강원특별자치도 춘천시 안마산로 85
+1420,부평역사박물관,Bupyeong History Museum,https://portal.icbp.go.kr/bphm/,인천 부평구 굴포로 151
+1422,경운박물관,Kyungwoon Museum,https://kwmuseum.org/,서울 강남구 삼성로 29
+1423,의정부예술의전당,Uijeongbu Arts Center,https://www.uac.or.kr/uac.php,경기 의정부시 의정로 1
+1424,소울아트스페이스,Soul Art Space,http://www.soulartspace.com/,부산 해운대구 해운대해변로 30
+1428,경기생활도자미술관,Gyeonggi Museum of Ceramic Design,https://www.gmocca.org/eng,경기 여주시 신륵사길 7
+1429,경기도자미술관,Gyeonggi Museum of Contemporary Ceramic Art,https://www.gmocca.org/,경기 이천시 경충대로2697번길 231
+1434,국립무형유산원,National Intangible Heritage Center,https://www.ihf.kr/about,전북특별자치도 전주시 완산구 서학로 95
+1435,갤러리 이마주,Gallery Imazoo,http://www.imazoo.com/index.htm,서울 강남구 테헤란로20길 12
+1438,어피스어피스,a piece a peace,https://www.instagram.com/apiece_apeace/,서울 종로구 필운대로 48
+1440,김만덕기념관,Kim Man-duk Memorial Hall,http://www.mandukmuseum.or.kr/index.php/eng,제주특별자치도 제주시 산지로 7
+1443,표갤러리,PYO Gallery,https://www.pyogallery.com/,서울 종로구 자하문로5길 18-4
+1444,갤러리 조선,Gallery Chosun,https://www.gallerychosun.com/,서울 종로구 북촌로 5길 64
+1445,간송미술관,Kansong Art Museum,https://kansong.org/seoul/index.do,서울 성북구 성북로 102-11
+1447,여의도 한강공원,Yeouido Hangang River Park,https://hangang.seoul.go.kr/www/contents/669.do?mid=473&tr_code=sweb,서울 영등포구 여의도동 85
+1454,021갤러리,021 Gallery,https://gadg.or.kr/gallery/view-gallery-021g.html,대구 동구 안심로 54
+1456,홍티아트센터,Hong-Ti Art Center,https://hongti.bscf.or.kr/intro/ci.php,부산 사하구 다산로106번길 6
+1457,갤러리바톤,Gallery Baton,https://gallerybaton.com/exhibitions/,서울 용산구 이태원로 223-9
+1458,한국이민사박물관,The Museum of Korea Emigration History,https://datalab.visitkorea.or.kr/common/board/Download.do?bcIdx=299505&cbIdx=1129&streFileNm=1b9f0b02-844f-4eac-917b-0cc2cb3e9077.pdf,인천 제물포구 월미로 329
+1465,고려대학교박물관,Korea University Museum,https://www.korea.ac.kr/ko/501/subview.do,서울 성북구 안암로 145
+1467,갤러리진선,Gallery Jinsun,https://www.galleryjinsun.com/,서울 종로구 삼청로 59
+1477,트라이보울,Tri-Bowl,https://tribowl.kr/_NBoard/page.php?hid=sub_0102,인천 연수구 인천타워대로 250
+1478,울산박물관,Ulsan Museum,https://ulsan.go.kr/u/english/contents.ulsan?mId=001005001005000000,울산 남구 두왕로 277
+1481,올림픽공원,Olympic Park,https://soma.kspo.or.kr/eng/ucms/contents/600042,서울 송파구 올림픽로 424
+1486,띠오 THEO,THEO,https://gallerytheo.com,서울 강남구 봉은사로68길 55-3 B1F

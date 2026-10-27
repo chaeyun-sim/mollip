@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
@@ -24,6 +25,8 @@ const DISMISS_SETTLE_MS = 600;
 
 /** 기록하기 3단계(마지막) — 확인: 어떻게 저장될지 보여주고, 고칠 곳은 뒤로 돌아가 수정한다. 남기면 벽에 걸린다 */
 export default function RecordCaptionScreen() {
+	const { t } = useTranslation();
+
 	const router = useRouter();
 	const [isSaving, setIsSaving] = useState(false);
 	const [isHung, setIsHung] = useState(false);
@@ -54,8 +57,8 @@ export default function RecordCaptionScreen() {
 
 	const summaryRows = [
 		{ label: '방문일', value: toPassDate(dateKey) },
-		{ label: '별점', value: `${rating.toFixed(1)} / 5` },
-		{ label: '사진', value: photos.length > 0 ? `${photos.length}장` : '없음' },
+		{ label: t('diary.rating'), value: `${rating.toFixed(1)} / 5` },
+		{ label: t('diary.photo'), value: photos.length > 0 ? `${photos.length}장` : '없음' },
 		{ label: '재방문', value: draft.isRevisit ? '또 갈 거예요' : '다시 안 갈 거예요' },
 		{ label: '캡션', value: memo.trim() || '없음' },
 	];

@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
 import { Text, View } from 'react-native';
 import type { RecommendableItem } from '@/src/components/explore/RecommendableItem.types';
@@ -26,15 +27,21 @@ export function RecommendedIndex({
 	isError,
 	hasPreferences,
 }: RecommendedIndexProps) {
+	const { t } = useTranslation();
+
 	const visible = items.slice(0, PREVIEW_LIMIT);
 	const preferenceDescription =
 		preferredGenres.length > 0
-			? `${preferredGenres.join(' · ')} 취향에서 골랐어요`
-			: '저장한 취향을 바탕으로 골랐어요';
-	let emptyMessage = '저장된 취향이 없어요.';
-	if (hasPreferences) emptyMessage = '아직 취향에 맞는 전시가 없어요.';
-	if (isError) emptyMessage = '추천 전시를 불러오지 못했어요.';
-	if (isLoading) emptyMessage = '취향에 맞는 전시를 찾고 있어요.';
+			? t('recommendations.picked_from_genres', {
+					genres: preferredGenres
+						.map((genre) => t(`recommendations.labels.${genre}`, { defaultValue: genre }))
+						.join(' · '),
+				})
+			: t('recommendations.picked_from_saved');
+	let emptyMessage = t('recommendations.no_preferences');
+	if (hasPreferences) emptyMessage = t('recommendations.no_matching');
+	if (isError) emptyMessage = t('recommendations.load_error');
+	if (isLoading) emptyMessage = t('recommendations.finding');
 
 	return (
 		<View className="mt-7">

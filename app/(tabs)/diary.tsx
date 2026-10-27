@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useEffect, useMemo } from 'react';
@@ -23,6 +24,8 @@ import { ARCHIVE_STAT_ACCENTS } from '@/src/constants/archivePalette';
 import { buildWallMonths, pendingDaysLeft, toWallItem } from '@/src/utils/museumWall';
 
 export default function DiaryScreen() {
+	const { t } = useTranslation();
+
 	const router = useRouter();
 	const insets = useSafeAreaInsets();
 	const { session, authLoading } = useAuthStore(
@@ -104,7 +107,7 @@ export default function DiaryScreen() {
 								onPress={() => router.push('/bookmark')}
 								hitSlop={8}
 								accessibilityRole="button"
-								accessibilityLabel="북마크"
+								accessibilityLabel={t('diary.bookmark_a11y')}
 								style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
 								returnTo="/bookmark"
 							>
@@ -114,7 +117,7 @@ export default function DiaryScreen() {
 								onPress={() => router.push('/notifications')}
 								hitSlop={8}
 								accessibilityRole="button"
-								accessibilityLabel="알림"
+								accessibilityLabel={t('diary.notifications_a11y')}
 								style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
 								returnTo="/notifications"
 							>
@@ -128,22 +131,24 @@ export default function DiaryScreen() {
 						<Ionicons name="lock-closed-outline" size={28} color={ARCHIVE_STAT_ACCENTS.visitDays} />
 					</View>
 					<Text className="text-[20px] text-center mb-2 font-hahmlet-bold text-gray900">
-						로그인하고 관람을 기록해요
+						{t('diary.login_prompt_title')}
 					</Text>
 					<Text className="text-[14px] text-center leading-[21px] mb-8 font-pretendard-regular text-gray700">
-						북마크와 관람 다이어리는 계정에 저장돼요
+						{t('diary.login_prompt_description')}
 					</Text>
 					<LoginRequiredPressable
 						className="w-full rounded-full py-4 items-center bg-secondary"
 						accessibilityRole="button"
-						accessibilityLabel="로그인하기"
+						accessibilityLabel={t('diary.login_button')}
 						style={({ pressed }) => ({
 							opacity: pressed ? 0.9 : 1,
 						})}
 						onPress={() => router.push('/(tabs)/diary')}
 						returnTo="/(tabs)/diary"
 					>
-						<Text className="text-white text-[15px] font-pretendard-semibold">로그인하기</Text>
+						<Text className="text-white text-[15px] font-pretendard-semibold">
+							{t('diary.login_button')}
+						</Text>
 					</LoginRequiredPressable>
 				</View>
 			</Screen>
@@ -171,7 +176,7 @@ export default function DiaryScreen() {
 							<View className="mb-4 flex-row items-baseline justify-between">
 								<Text className="font-pretendard-bold text-[18px] text-ink">{month.label}</Text>
 								<Text className="font-pretendard-regular text-[12px] text-gray600">
-									{`${month.count}점`}
+									{t('common.count_pieces', { count: month.count })}
 								</Text>
 							</View>
 							<View className="flex-row gap-3">
@@ -188,12 +193,18 @@ export default function DiaryScreen() {
 				) : (
 					<View className="mt-20 items-center px-4">
 						<EmptyWallIllustration />
-						<Text className="font-hahmlet-bold text-[20px] text-ink">첫 전시를 걸어보세요</Text>
-						<Text className="mt-2 mb-8 text-center font-pretendard-regular text-[14px] leading-[21px] text-gray600">
-							다녀온 전시를 기록하면 이곳에 액자로 걸려요
+						<Text className="font-hahmlet-bold text-[20px] text-ink">
+							{t('diary.empty_wall_title')}
 						</Text>
-						<Button onPress={handlePressRecord} accessibilityLabel="기록하기" block={false}>
-							기록하기
+						<Text className="mt-2 mb-8 text-center font-pretendard-regular text-[14px] leading-[21px] text-gray600">
+							{t('diary.empty_wall_description')}
+						</Text>
+						<Button
+							onPress={handlePressRecord}
+							accessibilityLabel={t('diary.record_button')}
+							block={false}
+						>
+							{t('diary.record_button')}
 						</Button>
 					</View>
 				)}
@@ -212,13 +223,15 @@ export default function DiaryScreen() {
 					<Pressable
 						onPress={handlePressRecord}
 						accessibilityRole="button"
-						accessibilityLabel="기록하기"
-						accessibilityHint="다녀온 전시를 골라 다이어리에 기록을 남겨요"
+						accessibilityLabel={t('diary.record_button')}
+						accessibilityHint={t('diary.record_a11y_hint')}
 						className="h-[52px] flex-row items-center gap-2 rounded-full bg-brand px-5"
 						style={({ pressed }) => ({ opacity: pressed ? 0.88 : 1 })}
 					>
 						<Ionicons name="create-outline" size={20} className="text-white" />
-						<Text className="text-white text-[15px] font-pretendard-semibold">기록하기</Text>
+						<Text className="text-white text-[15px] font-pretendard-semibold">
+							{t('diary.record_button')}
+						</Text>
 					</Pressable>
 				</View>
 			)}

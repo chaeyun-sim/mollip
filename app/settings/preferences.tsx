@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { useRouter } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
 import { ActivityIndicator, Alert, Pressable, Text, View } from 'react-native';
@@ -15,6 +16,8 @@ import { EMPTY_PREFERRED_TASTE } from '@/src/utils/preferredTaste';
 import { supabase } from '@/src/utils/supabase';
 
 export default function PreferencesScreen() {
+	const { t } = useTranslation();
+
 	const router = useRouter();
 	const queryClient = useQueryClient();
 	const userId = useAuthStore((s) => s.user?.id);
@@ -71,7 +74,7 @@ export default function PreferencesScreen() {
 
 	const handleClearPreferences = useCallback(() => {
 		Alert.alert('내 취향 지우기', '저장된 취향을 모두 지울까요?', [
-			{ text: '취소', style: 'cancel' },
+			{ text: t('common.cancel'), style: 'cancel' },
 			{
 				text: '지우기',
 				style: 'destructive',
@@ -113,7 +116,7 @@ export default function PreferencesScreen() {
 				},
 			},
 		]);
-	}, [userId, initializeWall, queryClient]);
+	}, [userId, initializeWall, queryClient, t]);
 
 	if (preferences.status === 'error') {
 		return (
@@ -133,7 +136,9 @@ export default function PreferencesScreen() {
 						onPress={loadPreferences}
 						className="min-h-11 justify-center px-4"
 					>
-						<Text className="font-pretendard-semibold text-base text-brand">다시 시도</Text>
+						<Text className="font-pretendard-semibold text-base text-brand">
+							{t('common.retry')}
+						</Text>
 					</Pressable>
 				</View>
 			</Screen>

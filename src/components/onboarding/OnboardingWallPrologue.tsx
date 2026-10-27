@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Image, Text, View } from 'react-native';
 import { Button } from '@/src/components/common/Button';
 import { Screen } from '@/src/components/layout/Screen';
@@ -15,6 +16,8 @@ export function OnboardingWallPrologue({
 	onStartChips,
 	onSkip,
 }: OnboardingWallPrologueProps) {
+	const { t } = useTranslation();
+
 	return (
 		<>
 			<Screen.Header>
@@ -25,10 +28,10 @@ export function OnboardingWallPrologue({
 			</Screen.Header>
 			<View className="gap-2">
 				<Text className="text-3xl text-gray900 mb-2 font-pretendard-bold">
-					마음이 머무는 방식으로{'\n'}취향을 골라볼까요?
+					{t('onboarding.prologue_title')}
 				</Text>
 				<Text className="text-md leading-6 text-gray700">
-					좋아하는 장르를 알려주시면 취향에 맞는 전시를 추천해드려요.
+					{t('onboarding.prologue_description')}
 				</Text>
 			</View>
 			<View className="mb-8 w-full flex-1 items-center justify-center">
@@ -44,8 +47,8 @@ export function OnboardingWallPrologue({
 				</View>
 			</View>
 			<Screen.Bottom className="bottom-10 gap-2">
-				<Button onPress={onStartWall} accessibilityLabel="작품을 골라 전시 벽 만들기">
-					작품을 골라 전시 벽 만들기
+				<Button onPress={onStartWall} accessibilityLabel={t('onboarding.build_wall_button')}>
+					{t('onboarding.build_wall_button')}
 				</Button>
 			</Screen.Bottom>
 		</>

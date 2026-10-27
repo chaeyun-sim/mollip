@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Pressable, Text, View } from 'react-native';
 import { cn } from '@/src/lib/cn';
 
@@ -12,6 +13,8 @@ export function OnboardingFlowHeader({
 	stepCount = 3,
 	onSkip,
 }: OnboardingFlowHeaderProps) {
+	const { t } = useTranslation();
+
 	return (
 		<View className="pt-1 pb-3">
 			<View className="flex-row justify-start min-h-[44px] items-center">
@@ -20,10 +23,12 @@ export function OnboardingFlowHeader({
 						onPress={onSkip}
 						hitSlop={12}
 						accessibilityRole="button"
-						accessibilityLabel="건너뛰기"
+						accessibilityLabel={t('onboarding.skip_action')}
 						style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
 					>
-						<Text className="text-secondary text-[15px] font-pretendard-medium">건너뛰기</Text>
+						<Text className="text-secondary text-[15px] font-pretendard-medium">
+							{t('onboarding.skip_action')}
+						</Text>
 					</Pressable>
 				)}
 			</View>
