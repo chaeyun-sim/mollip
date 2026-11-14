@@ -40,13 +40,11 @@ export type MuseumJoinRow = Pick<
 	| 'homepage_url'
 	| 'open_hours'
 	| 'rstdeInfo'
-	| 'description'
 	| 'amenities'
 	| 'parking'
 	| 'notes'
 	| 'gps_x'
 	| 'gps_y'
-	| 'venue_group_name'
 	| 'accessibility'
 >;
 
@@ -120,18 +118,15 @@ export function mapExhibitionRowToExhibition(
 					homepageUrl: museum.homepage_url?.trim() || undefined,
 					openHours: museum.open_hours?.trim() || undefined,
 					closedDays: museum.rstdeInfo?.trim() || undefined,
-					description: museum.description?.trim() || undefined,
 					amenities: museum.amenities?.trim() || undefined,
 					parking: museum.parking?.trim() || undefined,
 					notes: museum.notes?.trim() || undefined,
-					venueGroupName: museum.venue_group_name?.trim() || undefined,
 					coordinates,
 					accessibility: (museum.accessibility as Exhibition['accessibility']) ?? undefined,
 				}
 			: null,
 		eventSite: row.event_site?.trim() || undefined,
 		venueAddress: museum?.address?.trim() || institutionInfo?.address,
-		venueGroupName: museum?.venue_group_name?.trim() || undefined,
 		// artist는 DB exhibitions 테이블에 없음 — 필요 시 museums 조인 또는 별도 소스에서 주입
 		coordinates,
 		startDate: row.start_date,

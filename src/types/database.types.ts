@@ -4,42 +4,87 @@ export type Database = {
 	// Allows to automatically instantiate createClient with right options
 	// instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
 	__InternalSupabase: {
-		PostgrestVersion: '14.5';
+		PostgrestVersion: '14.15';
 	};
 	public: {
 		Tables: {
-			venue_follows: {
+			account_deletion_feedback: {
 				Row: {
 					created_at: string;
-					museum_id: number;
-					user_id: string;
+					detail: string | null;
+					id: string;
+					reason: string;
 				};
 				Insert: {
 					created_at?: string;
-					museum_id: number;
-					user_id: string;
+					detail?: string | null;
+					id?: string;
+					reason: string;
 				};
 				Update: {
 					created_at?: string;
-					museum_id?: number;
-					user_id?: string;
+					detail?: string | null;
+					id?: string;
+					reason?: string;
 				};
-				Relationships: [
-					{
-						foreignKeyName: 'venue_follows_museum_id_fkey';
-						columns: ['museum_id'];
-						isOneToOne: false;
-						referencedRelation: 'museums';
-						referencedColumns: ['id'];
-					},
-					{
-						foreignKeyName: 'venue_follows_user_id_fkey';
-						columns: ['user_id'];
-						isOneToOne: false;
-						referencedRelation: 'users';
-						referencedColumns: ['id'];
-					},
-				];
+				Relationships: [];
+			};
+			app_min_version: {
+				Row: {
+					min_version: string;
+					platform: string;
+					store_url: string | null;
+					updated_at: string;
+				};
+				Insert: {
+					min_version: string;
+					platform: string;
+					store_url?: string | null;
+					updated_at?: string;
+				};
+				Update: {
+					min_version?: string;
+					platform?: string;
+					store_url?: string | null;
+					updated_at?: string;
+				};
+				Relationships: [];
+			};
+			artist_artworks: {
+				Row: {
+					artist: string;
+					artworks: Json;
+					updated_at: string;
+				};
+				Insert: {
+					artist: string;
+					artworks?: Json;
+					updated_at?: string;
+				};
+				Update: {
+					artist?: string;
+					artworks?: Json;
+					updated_at?: string;
+				};
+				Relationships: [];
+			};
+			artist_intros: {
+				Row: {
+					artist: string;
+					intro: string;
+					updated_at: string;
+				};
+				Insert: {
+					artist: string;
+					intro: string;
+					updated_at?: string;
+				};
+				Update: {
+					artist?: string;
+					intro?: string;
+					updated_at?: string;
+				};
+				Relationships: [];
 			};
 			audio_guides: {
 				Row: {
@@ -72,71 +117,52 @@ export type Database = {
 					title?: string;
 					user_id?: string;
 				};
+				Relationships: [];
+			};
+			bookmark_audio: {
+				Row: {
+					audio_guide_id: string | null;
+					created_at: string;
+					id: string;
+					user_id: string;
+				};
+				Insert: {
+					audio_guide_id?: string | null;
+					created_at?: string;
+					id?: string;
+					user_id: string;
+				};
+				Update: {
+					audio_guide_id?: string | null;
+					created_at?: string;
+					id?: string;
+					user_id?: string;
+				};
 				Relationships: [
 					{
-						foreignKeyName: 'audio_guides_user_id_fkey';
-						columns: ['user_id'];
+						foreignKeyName: 'bookmark_audio_audio_guide_id_fkey';
+						columns: ['audio_guide_id'];
 						isOneToOne: false;
-						referencedRelation: 'users';
+						referencedRelation: 'audio_guides';
 						referencedColumns: ['id'];
 					},
 				];
 			};
-			account_deletion_feedback: {
+			bookmark_exhibitions: {
 				Row: {
 					created_at: string;
-					detail: string | null;
-					id: string;
-					reason: string;
+					exhibition_id: string;
+					user_id: string;
 				};
 				Insert: {
 					created_at?: string;
-					detail?: string | null;
-					id?: string;
-					reason: string;
+					exhibition_id: string;
+					user_id: string;
 				};
 				Update: {
 					created_at?: string;
-					detail?: string | null;
-					id?: string;
-					reason?: string;
-				};
-				Relationships: [];
-			};
-			// [수동 보강] 타입 재생성 전까지 유지 — supabase gen types 실행 시 자동 생성분으로 대체됨
-			artist_intros: {
-				Row: {
-					artist: string;
-					intro: string;
-					updated_at: string;
-				};
-				Insert: {
-					artist: string;
-					intro: string;
-					updated_at?: string;
-				};
-				Update: {
-					artist?: string;
-					intro?: string;
-					updated_at?: string;
-				};
-				Relationships: [];
-			};
-			artist_artworks: {
-				Row: {
-					artist: string;
-					artworks: Json;
-					updated_at: string;
-				};
-				Insert: {
-					artist: string;
-					artworks?: Json;
-					updated_at?: string;
-				};
-				Update: {
-					artist?: string;
-					artworks?: Json;
-					updated_at?: string;
+					exhibition_id?: string;
+					user_id?: string;
 				};
 				Relationships: [];
 			};
@@ -154,98 +180,6 @@ export type Database = {
 					synced_at?: string;
 				};
 				Relationships: [];
-			};
-			exhibitions: {
-				Row: {
-					admission: string | null;
-					// [수동 보강] DB에는 존재하지만 타입 스냅샷이 오래되어 누락된 컬럼
-					artist: string | null;
-					closed_days: string | null;
-					collected_date: string | null;
-					created_at: string;
-					description: string;
-					end_date: string | null;
-					event_site: string | null;
-					genre: string | null;
-					id: number;
-					image_url: string | null;
-					museum_id: number | null;
-					note: string | null;
-					open_hours: string;
-					source: string;
-					start_date: string;
-					synced_at: string | null;
-					tags: string | null;
-					ticket_url: string | null;
-					title: string;
-					type: string | null;
-					updated_at: string;
-					venue_name_fallback: string;
-					web_site: string | null;
-				};
-				Insert: {
-					admission?: string | null;
-					// [수동 보강] DB에는 존재하지만 타입 스냅샷이 오래되어 누락된 컬럼
-					artist?: string | null;
-					closed_days?: string | null;
-					collected_date?: string | null;
-					created_at?: string;
-					description?: string;
-					end_date?: string | null;
-					event_site?: string | null;
-					genre?: string | null;
-					id?: number;
-					image_url?: string | null;
-					museum_id?: number | null;
-					note?: string | null;
-					open_hours?: string;
-					source?: string;
-					start_date: string;
-					synced_at?: string | null;
-					tags?: string | null;
-					ticket_url?: string | null;
-					title: string;
-					type?: string | null;
-					updated_at?: string;
-					venue_name_fallback: string;
-					web_site?: string | null;
-				};
-				Update: {
-					admission?: string | null;
-					// [수동 보강] DB에는 존재하지만 타입 스냅샷이 오래되어 누락된 컬럼
-					artist?: string | null;
-					closed_days?: string | null;
-					collected_date?: string | null;
-					created_at?: string;
-					description?: string;
-					end_date?: string | null;
-					event_site?: string | null;
-					genre?: string | null;
-					id?: number;
-					image_url?: string | null;
-					museum_id?: number | null;
-					note?: string | null;
-					open_hours?: string;
-					source?: string;
-					start_date?: string;
-					synced_at?: string | null;
-					tags?: string | null;
-					ticket_url?: string | null;
-					title?: string;
-					type?: string | null;
-					updated_at?: string;
-					venue_name_fallback?: string;
-					web_site?: string | null;
-				};
-				Relationships: [
-					{
-						foreignKeyName: 'exhibitions_museum_id_fkey';
-						columns: ['museum_id'];
-						isOneToOne: false;
-						referencedRelation: 'museums';
-						referencedColumns: ['id'];
-					},
-				];
 			};
 			exhibition_views: {
 				Row: {
@@ -266,12 +200,99 @@ export type Database = {
 					user_id?: string;
 					viewed_date?: string;
 				};
+				Relationships: [];
+			};
+			exhibitions: {
+				Row: {
+					admission: string | null;
+					artist: string | null;
+					closed_days: string | null;
+					collected_date: string | null;
+					created_at: string;
+					description: string;
+					description_en: string | null;
+					end_date: string | null;
+					event_site: string | null;
+					genre: string | null;
+					id: number;
+					image_url: string | null;
+					museum_id: number | null;
+					note: string | null;
+					open_hours: string;
+					source: string;
+					start_date: string;
+					synced_at: string | null;
+					tags: string | null;
+					ticket_url: string | null;
+					title: string;
+					title_en: string | null;
+					type: string | null;
+					updated_at: string;
+					venue_name_fallback: string;
+					web_site: string | null;
+				};
+				Insert: {
+					admission?: string | null;
+					artist?: string | null;
+					closed_days?: string | null;
+					collected_date?: string | null;
+					created_at?: string;
+					description?: string;
+					description_en?: string | null;
+					end_date?: string | null;
+					event_site?: string | null;
+					genre?: string | null;
+					id?: number;
+					image_url?: string | null;
+					museum_id?: number | null;
+					note?: string | null;
+					open_hours?: string;
+					source?: string;
+					start_date: string;
+					synced_at?: string | null;
+					tags?: string | null;
+					ticket_url?: string | null;
+					title: string;
+					title_en?: string | null;
+					type?: string | null;
+					updated_at?: string;
+					venue_name_fallback: string;
+					web_site?: string | null;
+				};
+				Update: {
+					admission?: string | null;
+					artist?: string | null;
+					closed_days?: string | null;
+					collected_date?: string | null;
+					created_at?: string;
+					description?: string;
+					description_en?: string | null;
+					end_date?: string | null;
+					event_site?: string | null;
+					genre?: string | null;
+					id?: number;
+					image_url?: string | null;
+					museum_id?: number | null;
+					note?: string | null;
+					open_hours?: string;
+					source?: string;
+					start_date?: string;
+					synced_at?: string | null;
+					tags?: string | null;
+					ticket_url?: string | null;
+					title?: string;
+					title_en?: string | null;
+					type?: string | null;
+					updated_at?: string;
+					venue_name_fallback?: string;
+					web_site?: string | null;
+				};
 				Relationships: [
 					{
-						foreignKeyName: 'exhibition_views_user_id_fkey';
-						columns: ['user_id'];
+						foreignKeyName: 'exhibitions_museum_id_fkey';
+						columns: ['museum_id'];
 						isOneToOne: false;
-						referencedRelation: 'users';
+						referencedRelation: 'museums';
 						referencedColumns: ['id'];
 					},
 				];
@@ -302,64 +323,169 @@ export type Database = {
 			};
 			museums: {
 				Row: {
-					accessibility: Json | null;
+					accessibility: string | null;
 					address: string | null;
+					address_en: string | null;
+					admission: string | null;
 					amenities: string | null;
 					created_at: string;
-					description: string | null;
 					gps_x: string | null;
 					gps_y: string | null;
 					homepage_url: string | null;
 					id: number;
 					name: string;
+					name_en: string | null;
 					notes: string | null;
 					open_hours: string | null;
+					open_hours_en: string | null;
 					parking: string | null;
 					phone: string | null;
 					rstdeInfo: string | null;
+					rstdeInfo_en: string | null;
 					synced_at: string | null;
 					updated_at: string;
-					venue_group_name: string | null;
 				};
 				Insert: {
-					accessibility?: Json | null;
+					accessibility?: string | null;
 					address?: string | null;
+					address_en?: string | null;
+					admission?: string | null;
 					amenities?: string | null;
 					created_at?: string;
-					description?: string | null;
 					gps_x?: string | null;
 					gps_y?: string | null;
 					homepage_url?: string | null;
 					id?: number;
 					name: string;
+					name_en?: string | null;
 					notes?: string | null;
 					open_hours?: string | null;
+					open_hours_en?: string | null;
 					parking?: string | null;
 					phone?: string | null;
 					rstdeInfo?: string | null;
+					rstdeInfo_en?: string | null;
 					synced_at?: string | null;
 					updated_at?: string;
-					venue_group_name?: string | null;
 				};
 				Update: {
-					accessibility?: Json | null;
+					accessibility?: string | null;
 					address?: string | null;
+					address_en?: string | null;
+					admission?: string | null;
 					amenities?: string | null;
 					created_at?: string;
-					description?: string | null;
 					gps_x?: string | null;
 					gps_y?: string | null;
 					homepage_url?: string | null;
 					id?: number;
 					name?: string;
+					name_en?: string | null;
 					notes?: string | null;
 					open_hours?: string | null;
+					open_hours_en?: string | null;
 					parking?: string | null;
 					phone?: string | null;
 					rstdeInfo?: string | null;
+					rstdeInfo_en?: string | null;
 					synced_at?: string | null;
 					updated_at?: string;
-					venue_group_name?: string | null;
+				};
+				Relationships: [];
+			};
+			notices: {
+				Row: {
+					body: string;
+					category: string;
+					created_at: string;
+					id: string;
+					title: string;
+				};
+				Insert: {
+					body: string;
+					category?: string;
+					created_at?: string;
+					id?: string;
+					title: string;
+				};
+				Update: {
+					body?: string;
+					category?: string;
+					created_at?: string;
+					id?: string;
+					title?: string;
+				};
+				Relationships: [];
+			};
+			notification_jobs: {
+				Row: {
+					attempts: number;
+					created_at: string;
+					dedupe_key: string;
+					id: string;
+					kind: string;
+					last_error: string | null;
+					payload: Json;
+					processed_at: string | null;
+					send_at: string;
+					status: string;
+				};
+				Insert: {
+					attempts?: number;
+					created_at?: string;
+					dedupe_key: string;
+					id?: string;
+					kind: string;
+					last_error?: string | null;
+					payload: Json;
+					processed_at?: string | null;
+					send_at: string;
+					status?: string;
+				};
+				Update: {
+					attempts?: number;
+					created_at?: string;
+					dedupe_key?: string;
+					id?: string;
+					kind?: string;
+					last_error?: string | null;
+					payload?: Json;
+					processed_at?: string | null;
+					send_at?: string;
+					status?: string;
+				};
+				Relationships: [];
+			};
+			notification_logs: {
+				Row: {
+					body: string;
+					created_at: string;
+					data: Json | null;
+					id: string;
+					read_at: string | null;
+					title: string;
+					type: string;
+					user_id: string;
+				};
+				Insert: {
+					body: string;
+					created_at?: string;
+					data?: Json | null;
+					id?: string;
+					read_at?: string | null;
+					title?: string;
+					type: string;
+					user_id: string;
+				};
+				Update: {
+					body?: string;
+					created_at?: string;
+					data?: Json | null;
+					id?: string;
+					read_at?: string | null;
+					title?: string;
+					type?: string;
+					user_id?: string;
 				};
 				Relationships: [];
 			};
@@ -374,8 +500,8 @@ export type Database = {
 					onboarding_completed: boolean;
 					preferred_artists: string[];
 					preferred_genres: string[];
-					preferred_wall_piece_ids: string[];
 					preferred_taste_details: Json;
+					preferred_wall_piece_ids: string[];
 					push_token: string | null;
 					updated_at: string;
 				};
@@ -389,8 +515,8 @@ export type Database = {
 					onboarding_completed?: boolean;
 					preferred_artists?: string[];
 					preferred_genres?: string[];
-					preferred_wall_piece_ids?: string[];
 					preferred_taste_details?: Json;
+					preferred_wall_piece_ids?: string[];
 					push_token?: string | null;
 					updated_at?: string;
 				};
@@ -404,123 +530,35 @@ export type Database = {
 					onboarding_completed?: boolean;
 					preferred_artists?: string[];
 					preferred_genres?: string[];
-					preferred_wall_piece_ids?: string[];
 					preferred_taste_details?: Json;
+					preferred_wall_piece_ids?: string[];
 					push_token?: string | null;
 					updated_at?: string;
 				};
 				Relationships: [];
 			};
-			app_min_version: {
+			venue_follows: {
 				Row: {
-					platform: string;
-					min_version: string;
-					store_url: string | null;
-					updated_at: string;
-				};
-				Insert: {
-					platform: string;
-					min_version: string;
-					store_url?: string | null;
-					updated_at?: string;
-				};
-				Update: {
-					platform?: string;
-					min_version?: string;
-					store_url?: string | null;
-					updated_at?: string;
-				};
-				Relationships: [];
-			};
-			notices: {
-				Row: {
-					id: string;
-					title: string;
-					body: string;
-					category: string;
 					created_at: string;
-				};
-				Insert: {
-					id?: string;
-					title: string;
-					body: string;
-					category?: string;
-					created_at?: string;
-				};
-				Update: {
-					id?: string;
-					title?: string;
-					body?: string;
-					category?: string;
-					created_at?: string;
-				};
-				Relationships: [];
-			};
-			notification_logs: {
-				Row: {
-					id: string;
-					user_id: string;
-					type: string;
-					title: string;
-					body: string;
-					data: Json | null;
-					read_at: string | null;
-					created_at: string;
-				};
-				Insert: {
-					id?: string;
-					user_id: string;
-					type: string;
-					title?: string;
-					body: string;
-					data?: Json | null;
-					read_at?: string | null;
-					created_at?: string;
-				};
-				Update: {
-					id?: string;
-					user_id?: string;
-					type?: string;
-					title?: string;
-					body?: string;
-					data?: Json | null;
-					read_at?: string | null;
-					created_at?: string;
-				};
-				Relationships: [];
-			};
-			bookmark_audio: {
-				Row: {
-					audio_guide_id: string | null;
-					created_at: string;
-					id: string;
+					museum_id: number;
 					user_id: string;
 				};
 				Insert: {
-					audio_guide_id?: string | null;
 					created_at?: string;
-					id?: string;
+					museum_id: number;
 					user_id: string;
 				};
 				Update: {
-					audio_guide_id?: string | null;
 					created_at?: string;
-					id?: string;
+					museum_id?: number;
 					user_id?: string;
 				};
 				Relationships: [
 					{
-						foreignKeyName: 'bookmark_audio_user_id_fkey';
-						columns: ['user_id'];
+						foreignKeyName: 'venue_follows_museum_id_fkey';
+						columns: ['museum_id'];
 						isOneToOne: false;
-						referencedRelation: 'users';
-						referencedColumns: ['id'];
-					},
-					{
-						foreignKeyName: 'bookmark_audio_audio_guide_id_fkey';
-						columns: ['audio_guide_id'];
-						isOneToOne: false;
-						referencedRelation: 'audio_guides';
+						referencedRelation: 'museums';
 						referencedColumns: ['id'];
 					},
 				];
@@ -535,10 +573,10 @@ export type Database = {
 					user_id: string;
 					venue: string | null;
 					venue_photo_urls: string[];
+					visit_ended_at: string | null;
 					visit_key: string;
 					visit_started_at: string | null;
-					visit_ended_at: string | null;
-					visit_status: 'recorded' | 'ended' | 'confirmed';
+					visit_status: string;
 				};
 				Insert: {
 					date: string;
@@ -549,10 +587,10 @@ export type Database = {
 					user_id: string;
 					venue?: string | null;
 					venue_photo_urls?: string[];
+					visit_ended_at?: string | null;
 					visit_key: string;
 					visit_started_at?: string | null;
-					visit_ended_at?: string | null;
-					visit_status?: 'recorded' | 'ended' | 'confirmed';
+					visit_status?: string;
 				};
 				Update: {
 					date?: string;
@@ -563,19 +601,12 @@ export type Database = {
 					user_id?: string;
 					venue?: string | null;
 					venue_photo_urls?: string[];
+					visit_ended_at?: string | null;
 					visit_key?: string;
 					visit_started_at?: string | null;
-					visit_ended_at?: string | null;
-					visit_status?: 'recorded' | 'ended' | 'confirmed';
+					visit_status?: string;
 				};
 				Relationships: [
-					{
-						foreignKeyName: 'visits_user_id_fkey';
-						columns: ['user_id'];
-						isOneToOne: false;
-						referencedRelation: 'users';
-						referencedColumns: ['id'];
-					},
 					{
 						foreignKeyName: 'visits_exhibition_id_fkey';
 						columns: ['exhibition_id'];
@@ -585,47 +616,22 @@ export type Database = {
 					},
 				];
 			};
-			bookmark_exhibitions: {
-				Row: {
-					created_at: string;
-					exhibition_id: string;
-					user_id: string;
-				};
-				Insert: {
-					created_at?: string;
-					exhibition_id: string;
-					user_id: string;
-				};
-				Update: {
-					created_at?: string;
-					exhibition_id?: string;
-					user_id?: string;
-				};
-				Relationships: [
-					{
-						foreignKeyName: 'user_bookmarks_user_id_fkey';
-						columns: ['user_id'];
-						isOneToOne: false;
-						referencedRelation: 'users';
-						referencedColumns: ['id'];
-					},
-				];
-			};
 		};
 		Views: {
 			[_ in never]: never;
 		};
 		Functions: {
-			is_allowed_web_url: { Args: { raw: string }; Returns: boolean };
 			get_popular_exhibitions: {
 				Args: { p_limit?: number };
 				Returns: {
-					exhibition_id: string;
 					bookmark_count: number;
-					view_count: number;
+					exhibition_id: string;
 					score: number;
+					view_count: number;
 				}[];
 			};
+			is_allowed_web_url: { Args: { raw: string }; Returns: boolean };
+			sync_exhibitions_batch: { Args: { p_rows: Json }; Returns: number };
 		};
 		Enums: {
 			[_ in never]: never;
