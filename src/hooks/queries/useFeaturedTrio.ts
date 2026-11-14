@@ -37,18 +37,22 @@ function addDays(base: Date, days: number): Date {
 interface ExhibitionRow {
 	id: number;
 	title: string;
+	title_en: string | null;
 	venue_name_fallback: string | null;
 	event_site: string | null;
 	image_url: string | null;
 	start_date: string;
 	end_date: string;
+	museums: { name_en: string | null } | null;
 }
 
 function mapRow(row: ExhibitionRow): ExhibitionSummary {
 	return {
 		id: String(row.id),
 		title: row.title,
+		titleEn: row.title_en,
 		venue: [row.venue_name_fallback, row.event_site].filter(Boolean).join(' '),
+		venueEn: row.museums?.name_en ?? null,
 		thumbnail: row.image_url,
 		status: getExhibitionStatus({ startDate: row.start_date, endDate: row.end_date }),
 	};
@@ -67,7 +71,9 @@ async function fetchFeaturedTrioPools(): Promise<FeaturedTrioPools> {
 		applyExhibitionDateFilters(
 			supabase
 				.from('exhibitions')
-				.select('id, title, venue_name_fallback, event_site, image_url, start_date, end_date')
+				.select(
+					'id, title, title_en, venue_name_fallback, event_site, image_url, start_date, end_date, museums(name_en)',
+				)
 				.eq('type', '특별전')
 				.lte('start_date', today)
 				.gte('end_date', today)
@@ -77,7 +83,9 @@ async function fetchFeaturedTrioPools(): Promise<FeaturedTrioPools> {
 		applyExhibitionDateFilters(
 			supabase
 				.from('exhibitions')
-				.select('id, title, venue_name_fallback, event_site, image_url, start_date, end_date')
+				.select(
+					'id, title, title_en, venue_name_fallback, event_site, image_url, start_date, end_date, museums(name_en)',
+				)
 				.gt('start_date', today)
 				.lte('start_date', upcomingUntil)
 				.order('start_date', { ascending: true })

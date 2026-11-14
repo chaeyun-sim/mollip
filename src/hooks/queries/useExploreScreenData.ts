@@ -10,7 +10,9 @@ import type { ExhibitionStatus } from '@/src/utils/exhibitionSearch';
 export type ExhibitionSummary = {
 	id: string;
 	title: string;
+	titleEn?: string | null;
 	venue: string;
+	venueEn?: string | null;
 	thumbnail: string | null;
 	status: ExhibitionStatus;
 	/** YYYY.MM.DD — 홈 카드의 D-day·기간 라벨용 (소스에 없으면 생략) */

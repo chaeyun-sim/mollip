@@ -30,7 +30,7 @@ export function HomeRecommendedGrid({
 	isLoading,
 	onPress,
 }: HomeRecommendedGridProps) {
-	const { t } = useTranslation();
+	const { t, i18n } = useTranslation();
 
 	const { width: windowWidth } = useWindowDimensions();
 
@@ -82,8 +82,10 @@ export function HomeRecommendedGrid({
 			{header}
 			<View className="flex-row flex-wrap" style={gridStyle}>
 				{visible.map((item, i) => {
-					const title = item.title.trim();
-					const venue = item.venue.trim() || t('common.no_venue_info');
+					const title = (i18n.language === 'en' && item.titleEn ? item.titleEn : item.title).trim();
+					const venue =
+						(i18n.language === 'en' && item.venueEn ? item.venueEn : item.venue).trim() ||
+						t('common.no_venue_info');
 					return (
 						<FadeInView key={item.id} delay={i * ITEM_STAGGER_MS}>
 							<ScalePressable

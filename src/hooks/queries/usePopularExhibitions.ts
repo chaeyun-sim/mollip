@@ -47,7 +47,9 @@ async function fetchPopularExhibitions(): Promise<PopularQueryData> {
 	const { data: rows, error: rowsError } = await applyExhibitionDateFilters(
 		supabase
 			.from('exhibitions')
-			.select('id, title, venue_name_fallback, event_site, image_url, start_date, end_date')
+			.select(
+				'id, title, title_en, venue_name_fallback, event_site, image_url, start_date, end_date, museums(name_en)',
+			)
 			.in('id', numericIds)
 			.gte('end_date', todayExhibitionDateString()),
 	);
@@ -60,7 +62,9 @@ async function fetchPopularExhibitions(): Promise<PopularQueryData> {
 			{
 				id: String(row.id),
 				title: row.title,
+				titleEn: row.title_en,
 				venue: [row.venue_name_fallback, row.event_site].filter(Boolean).join(' '),
+				venueEn: row.museums?.name_en ?? null,
 				thumbnail: row.image_url,
 				status: getExhibitionStatus({
 					startDate: row.start_date ?? '',
