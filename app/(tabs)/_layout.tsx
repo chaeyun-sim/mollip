@@ -22,7 +22,7 @@ export default function TabsLayout() {
 				tabBarInactiveTintColor: '#9CA3AF',
 				tabBarLabelStyle: {
 					fontFamily: 'Pretendard-Medium',
-					fontSize: 12,
+					fontSize: 10,
 				},
 				tabBarStyle: {
 					backgroundColor: '#FFFFFF',
