@@ -13,10 +13,11 @@ interface MuseumRow {
 	gps_y: string;
 	open_hours: string | null;
 	rstdeInfo: string | null;
-	description: string | null;
+	// 운영 DB에 없을 수 있는 컬럼 — 스키마 드리프트에 대비해 optional
+	description?: string | null;
 	amenities: string | null;
 	parking: string | null;
-	venue_group_name: string | null;
+	venue_group_name?: string | null;
 }
 
 function rowToVenueGroup(row: MuseumRow): VenueGroup | null {
@@ -89,9 +90,6 @@ function groupByVenueGroupName(
 	return [...ungrouped, ...parents];
 }
 
-const BASE_COLUMNS =
-	'id, name, address, phone, homepage_url, gps_x, gps_y, open_hours, rstdeInfo, description, amenities, parking';
-
 // Supabase museums(전국박물관미술관정보표준데이터 + 수동 보강) → 지도 마커 VenueGroup
 export function useMuseums(): VenueGroup[] {
 	const [museumVenues, setMuseumVenues] = useState<VenueGroup[]>([]);
@@ -99,26 +97,18 @@ export function useMuseums(): VenueGroup[] {
 	useEffect(() => {
 		let cancelled = false;
 		(async () => {
-			// venue_group_name 컬럼을 포함해 조회 — 마이그레이션이 아직 적용 안 됐으면
-			// error가 반환되므로 fallback으로 컬럼 없이 재조회해 핀이 사라지는 걸 방지한다.
-			const { data, error } = await supabase
-				.from('museums')
-				.select(`${BASE_COLUMNS}, venue_group_name`);
+			// 컬럼을 명시하면 운영 DB에 없는 컬럼(description, venue_group_name 등) 하나 때문에
+			// 쿼리 전체가 42703으로 실패해 지도 핀이 전부 사라진다 — '*'로 받아 없는 필드는 undefined로 둔다.
+			const { data, error } = await supabase.from('museums').select('*');
 
 			if (cancelled) return;
 
 			if (error || !data) {
-				// venue_group_name 컬럼이 없는 경우(마이그레이션 미적용) — 그룹핑 없이 개별 핀으로 표시
-				const { data: fallback } = await supabase.from('museums').select(BASE_COLUMNS);
-				if (cancelled || !fallback) return;
-				const mapped = (fallback as MuseumRow[])
-					.map(rowToVenueGroup)
-					.filter((v): v is VenueGroup => v !== null);
-				setMuseumVenues(mapped);
+				console.warn('[museums] 조회 실패:', error?.message);
 				return;
 			}
 
-			const rows = data as MuseumRow[];
+			const rows = data as unknown as MuseumRow[];
 			const mapped = rows.map(rowToVenueGroup);
 			const validPairs = rows
 				.map((row, i) => ({ row, venue: mapped[i] }))
