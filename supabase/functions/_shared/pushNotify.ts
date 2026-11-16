@@ -17,6 +17,36 @@ export interface NotificationRecord {
 	data?: Record<string, unknown>;
 }
 
+/**
+ * 유저별 앱 아이콘 뱃지 값 = 안 읽은 알림 수 + 이번에 보낼 알림 수.
+ * 조회 실패 시 해당 유저는 badge를 생략한다 (푸시 발송은 막지 않음).
+ */
+async function computeBadges(
+	// deno-lint-ignore no-explicit-any
+	supabase: SupabaseClient<any, any, any>,
+	records: NotificationRecord[],
+): Promise<Map<string, number>> {
+	const pendingByUser = new Map<string, number>();
+	for (const r of records) pendingByUser.set(r.userId, (pendingByUser.get(r.userId) ?? 0) + 1);
+
+	const badges = new Map<string, number>();
+	const userIds = [...pendingByUser.keys()];
+	for (let i = 0; i < userIds.length; i += BATCH_SIZE) {
+		await Promise.all(
+			userIds.slice(i, i + BATCH_SIZE).map(async (userId) => {
+				const { count, error } = await supabase
+					.from('notification_logs')
+					.select('id', { count: 'exact', head: true })
+					.eq('user_id', userId)
+					.is('read_at', null);
+				if (error || count === null) return;
+				badges.set(userId, count + (pendingByUser.get(userId) ?? 0));
+			}),
+		);
+	}
+	return badges;
+}
+
 export async function sendAndLog(
 	// deno-lint-ignore no-explicit-any
 	supabase: SupabaseClient<any, any, any>,
@@ -24,13 +54,21 @@ export async function sendAndLog(
 ): Promise<number> {
 	if (records.length === 0) return 0;
 
+	const badgeByUser = await computeBadges(supabase, records);
+
 	for (let i = 0; i < records.length; i += BATCH_SIZE) {
 		const batch = records.slice(i, i + BATCH_SIZE);
 		const response = await fetch(EXPO_PUSH_URL, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
 			body: JSON.stringify(
-				batch.map((r) => ({ to: r.token, title: r.title, body: r.body, data: r.data })),
+				batch.map((r) => ({
+					to: r.token,
+					title: r.title,
+					body: r.body,
+					data: r.data,
+					badge: badgeByUser.get(r.userId),
+				})),
 			),
 		});
 		const result = (await response.json().catch(() => null)) as {
