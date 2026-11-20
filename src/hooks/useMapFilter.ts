@@ -3,8 +3,8 @@ import { venueGroups, type VenueGroup } from '../data/venues';
 import { hasExhibitionOn, isOpenOn } from '../utils/mapUtils';
 
 export const FILTERS = [
-	{ key: 'open', label: '영업 중' },
-	{ key: 'exhibiting', label: '전시 진행 중' },
+	{ key: 'open', labelKey: 'map.filter_open_venue' },
+	{ key: 'exhibiting', labelKey: 'map.filter_exhibiting' },
 ] as const;
 
 export type FilterKey = (typeof FILTERS)[number]['key'];
@@ -39,7 +39,11 @@ export function useMapFilter(
 
 	const mapVenues = useMemo(() => {
 		if (!searchText) return allVenues;
-		return allVenues.filter((v) => v.venueName.includes(searchText));
+		// 영문 이름은 대소문자 구분 없이 찾는다 (nodeul → Nodeul Island)
+		const lowerQuery = searchText.toLowerCase();
+		return allVenues.filter(
+			(v) => v.venueName.includes(searchText) || v.venueNameEn?.toLowerCase().includes(lowerQuery),
+		);
 	}, [searchText, allVenues]);
 
 	const matchesFilters = useCallback(

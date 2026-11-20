@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { ScrollView, View } from 'react-native';
 import { Chip } from '@/src/components/common/Chip';
 import { FILTERS, type FilterKey } from '@/src/hooks/useMapFilter';
@@ -17,6 +18,8 @@ export function FilterChips({
 	toggleFilter,
 	onDatePress,
 }: FilterChipsProps) {
+	const { t } = useTranslation();
+
 	return (
 		<View className="absolute inset-x-0 z-[10]" style={{ top: topOffset }}>
 			<ScrollView
@@ -27,20 +30,20 @@ export function FilterChips({
 				<Chip
 					label={
 						filterDate.toDateString() === new Date().toDateString()
-							? '오늘'
+							? t('common.today')
 							: `${filterDate.getMonth() + 1}/${filterDate.getDate()}`
 					}
 					active={false}
 					onPress={onDatePress}
 					icon="calendar-outline"
 					variant="elevated"
-					accessibilityLabel="날짜 선택"
+					accessibilityLabel={t('map.select_date_a11y')}
 				/>
 
 				{FILTERS.map((f) => (
 					<Chip
 						key={f.key}
-						label={f.label}
+						label={t(f.labelKey)}
 						active={activeFilters.has(f.key)}
 						onPress={() => toggleFilter(f.key)}
 						variant="elevated"

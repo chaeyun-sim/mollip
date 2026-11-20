@@ -1,5 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import { memo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Keyboard, Pressable, ScrollView, Text, View } from 'react-native';
 import { SearchBar } from '@/src/components/common/SearchBar';
 import { cn } from '@/src/lib/cn';
@@ -38,6 +39,9 @@ export const MapTopBar = memo(function MapTopBar({
 	onSelectRecentRoute,
 }: MapTopBarProps) {
 	const [isFocused, setIsFocused] = useState(false);
+	const { t, i18n } = useTranslation();
+
+	const isEn = i18n.language === 'en';
 	const showRecents =
 		isFocused && searchText.length === 0 && (recentRoutes.length > 0 || recentLocations.length > 0);
 
@@ -49,7 +53,7 @@ export const MapTopBar = memo(function MapTopBar({
 					onChangeText={onChangeSearchText}
 					onFocus={() => setIsFocused(true)}
 					onBlur={() => setIsFocused(false)}
-					placeholder="미술관 또는 전시 검색"
+					placeholder={t('map.venue_search_placeholder')}
 				/>
 				{searchText.length > 0 && mapVenues.length > 0 && (
 					<ScrollView
@@ -58,44 +62,49 @@ export const MapTopBar = memo(function MapTopBar({
 						keyboardShouldPersistTaps="handled"
 						showsVerticalScrollIndicator={false}
 					>
-						{mapVenues.slice(0, 8).map((venue, index) => (
-							<Pressable
-								key={venue.venueName}
-								onPress={() => {
-									Keyboard.dismiss();
-									onMarkerPress(
-										venue.venueName,
-										venue.coordinates.latitude,
-										venue.coordinates.longitude,
-									);
-									onChangeSearchText('');
-								}}
-								className={cn(
-									'flex-row items-center px-4 py-3',
-									index < Math.min(mapVenues.length, 8) - 1 && 'border-b border-black/5',
-								)}
-								accessibilityRole="button"
-								accessibilityLabel={`${venue.venueName} 선택`}
-							>
-								<Ionicons name="location-outline" size={15} className="text-gray600" />
-								<View className="ml-2.5 flex-1">
-									<Text
-										className="font-pretendard-medium text-[14px] text-gray900"
-										numberOfLines={1}
-									>
-										{venue.venueName.trim()}
-									</Text>
-									{venue.venueAddress && (
+						{mapVenues.slice(0, 8).map((venue, index) => {
+							// 마커 선택은 한국어 이름(식별자)으로, 표시만 영문 우선
+							const displayName = ((isEn && venue.venueNameEn) || venue.venueName).trim();
+							const displayAddress = (isEn && venue.venueAddressEn) || venue.venueAddress;
+							return (
+								<Pressable
+									key={venue.venueName}
+									onPress={() => {
+										Keyboard.dismiss();
+										onMarkerPress(
+											venue.venueName,
+											venue.coordinates.latitude,
+											venue.coordinates.longitude,
+										);
+										onChangeSearchText('');
+									}}
+									className={cn(
+										'flex-row items-center px-4 py-3',
+										index < Math.min(mapVenues.length, 8) - 1 && 'border-b border-black/5',
+									)}
+									accessibilityRole="button"
+									accessibilityLabel={t('map.select_place_a11y', { name: displayName })}
+								>
+									<Ionicons name="location-outline" size={15} className="text-gray600" />
+									<View className="ml-2.5 flex-1">
 										<Text
-											className="font-pretendard-regular text-[12px] text-gray600 mt-0.5"
+											className="font-pretendard-medium text-[14px] text-gray900"
 											numberOfLines={1}
 										>
-											{venue.venueAddress.trim()}
+											{displayName}
 										</Text>
-									)}
-								</View>
-							</Pressable>
-						))}
+										{displayAddress && (
+											<Text
+												className="font-pretendard-regular text-[12px] text-gray600 mt-0.5"
+												numberOfLines={1}
+											>
+												{displayAddress.trim()}
+											</Text>
+										)}
+									</View>
+								</Pressable>
+							);
+						})}
 					</ScrollView>
 				)}
 
@@ -110,7 +119,7 @@ export const MapTopBar = memo(function MapTopBar({
 						{recentRoutes.length > 0 && (
 							<>
 								<Text className="px-4 pt-3 pb-1 text-[11px] font-pretendard-medium text-black/35">
-									최근 길찾기
+									{t('map.recent_routes')}
 								</Text>
 								{recentRoutes.map((r, index) => (
 									<Pressable
@@ -124,7 +133,10 @@ export const MapTopBar = memo(function MapTopBar({
 											index < recentRoutes.length - 1 && 'border-b border-black/5',
 										)}
 										accessibilityRole="button"
-										accessibilityLabel={`${r.origin.name}에서 ${r.destination.name}까지 다시 길찾기`}
+										accessibilityLabel={t('map.recent_route_a11y', {
+											origin: r.origin.name,
+											destination: r.destination.name,
+										})}
 									>
 										<Ionicons name="navigate-outline" size={15} className="text-gray600" />
 										<Text
@@ -141,7 +153,7 @@ export const MapTopBar = memo(function MapTopBar({
 						{recentLocations.length > 0 && (
 							<>
 								<Text className="px-4 pt-3 pb-1 text-[11px] font-pretendard-medium text-black/35">
-									최근 방문한 곳
+									{t('map.recent_places')}
 								</Text>
 								{recentLocations.map((loc, index) => (
 									<Pressable
@@ -155,7 +167,7 @@ export const MapTopBar = memo(function MapTopBar({
 											index < recentLocations.length - 1 && 'border-b border-black/5',
 										)}
 										accessibilityRole="button"
-										accessibilityLabel={`${loc.name} 선택`}
+										accessibilityLabel={t('map.select_place_a11y', { name: loc.name })}
 									>
 										<Ionicons name="time-outline" size={15} className="text-gray600" />
 										<View className="ml-2.5 flex-1">
@@ -192,7 +204,7 @@ export const MapTopBar = memo(function MapTopBar({
 					}}
 				>
 					<Text className="text-sm font-pretendard-medium text-black/40">
-						&quot;{searchText}&quot;에 해당하는 미술관이 없어요
+						{t('map.no_venue_results', { query: searchText })}
 					</Text>
 				</View>
 			)}
