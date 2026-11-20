@@ -21,6 +21,7 @@ import { useFeaturedTrio } from '@/src/hooks/queries/useFeaturedTrio';
 import { useSubscription } from '@/src/hooks/useSubscription';
 import { useAuthStore } from '@/src/store/authStore';
 import { toAsyncStatus } from '@/src/types/asyncStatus.types';
+import { toDisplayName } from '@/src/utils/displayName';
 import { pickDepartureRows } from '@/src/utils/homeExhibitionMeta';
 import { fillToCount } from '@/src/utils/homeLayout';
 import { CommonHeader } from '@/src/components/common/CommonHeader';
@@ -36,7 +37,7 @@ export default function ExploreScreen() {
 	const router = useRouter();
 	const insets = useSafeAreaInsets();
 
-	const name = useAuthStore((s) => s.user?.user_metadata?.full_name);
+	const fullName = useAuthStore((s) => s.user?.user_metadata?.full_name);
 	const { isPremium, isLoading: isSubscriptionLoading } = useSubscription();
 
 	const {
@@ -106,6 +107,8 @@ export default function ExploreScreen() {
 
 	// 도록 목차처럼 보이는 섹션에만 번호를 이어서 매긴다 (숨겨진 섹션 번호는 건너뛰지 않는다)
 	const showRecommended = isPersonalized || preferencesLoading || preferencesError;
+	// 긴 이름이 제목을 밀어내지 않도록 줄인다 (한글 이름은 그대로, 그 외는 첫 단어만 · 최대 10자)
+	const name = toDisplayName(typeof fullName === 'string' ? fullName : undefined);
 
 	return (
 		<Screen variant="warm" className="px-0">

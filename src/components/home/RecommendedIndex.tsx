@@ -51,7 +51,10 @@ export function RecommendedIndex({
 				right={<Ionicons name="heart" size={14} className="text-gray700" />}
 			/>
 			<View className="mb-4" style={{ paddingHorizontal: HOME_SIDE_PADDING }}>
-				<Text className="font-pretendard-semibold text-gray900 text-[20px] leading-[28px]">
+				<Text
+					numberOfLines={2}
+					className="font-pretendard-semibold text-gray900 text-[20px] leading-[28px]"
+				>
 					{title}
 				</Text>
 				<Text className="mt-1 font-pretendard-regular text-gray600 text-[12px]">
