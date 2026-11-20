@@ -1,5 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Alert, Pressable, Text, View } from 'react-native';
 import { HoursSection } from '@/src/components/map/venue-sheet/HoursSection';
 import type { VenueGroup } from '@/src/data/venues';
@@ -11,16 +12,18 @@ interface VenueHeaderProps {
 }
 
 export function VenueHeader({ activeVenue, filterDate }: VenueHeaderProps) {
+	const { t, i18n } = useTranslation();
 	const [showWeeklyHours, setShowWeeklyHours] = useState(false);
-	const address = activeVenue.venueAddress;
+
+	const isEn = i18n.language === 'en';
+	const address = (isEn && activeVenue.venueAddressEn) || activeVenue.venueAddress;
+	// 편의시설은 영문 데이터가 없어 영어 설정에서는 숨긴다
+	const amenities = isEn ? undefined : activeVenue.amenities;
 
 	const handleCallVenue = async () => {
 		const ok = await openPhoneDialer(activeVenue.phone!);
 		if (!ok) {
-			Alert.alert(
-				'전화번호를 확인해 주세요',
-				'기기에서 전화 앱을 사용할 수 없거나 번호 형식이 올바르지 않아요.',
-			);
+			Alert.alert(t('map.venue.phone_error_title'), t('map.venue.phone_error_message'));
 		}
 	};
 
@@ -31,7 +34,7 @@ export function VenueHeader({ activeVenue, filterDate }: VenueHeaderProps) {
 					onPress={() => setShowWeeklyHours((prev) => !prev)}
 					className="flex-row items-center gap-1"
 					accessibilityRole="button"
-					accessibilityLabel="요일별 운영시간 보기"
+					accessibilityLabel={t('map.venue.weekly_toggle_a11y')}
 					accessibilityState={{ expanded: showWeeklyHours }}
 				>
 					<HoursSection
@@ -59,8 +62,8 @@ export function VenueHeader({ activeVenue, filterDate }: VenueHeaderProps) {
 						style={({ pressed }) => (pressed ? { opacity: 0.55 } : undefined)}
 						className="flex-row items-start gap-1.5"
 						accessibilityRole="button"
-						accessibilityHint="탭하면 주소가 복사됩니다"
-						accessibilityLabel={`주소 ${address}`}
+						accessibilityHint={t('map.venue.address_hint')}
+						accessibilityLabel={t('map.venue.address_a11y', { address })}
 					>
 						<Ionicons name="location-outline" size={14} className="mt-0.5 text-gray500" />
 						<Text
@@ -80,8 +83,8 @@ export function VenueHeader({ activeVenue, filterDate }: VenueHeaderProps) {
 					style={({ pressed }) => (pressed ? { opacity: 0.55 } : undefined)}
 					className="flex-row items-center gap-2"
 					accessibilityRole="button"
-					accessibilityLabel={`전화번호 ${activeVenue.phone}`}
-					accessibilityHint="탭하면 전화 앱으로 연결됩니다"
+					accessibilityLabel={t('map.venue.phone_a11y', { phone: activeVenue.phone })}
+					accessibilityHint={t('map.venue.phone_hint')}
 				>
 					<Ionicons name="call-outline" size={14} className="mt-0.5 text-gray500" />
 					<Text
@@ -94,11 +97,11 @@ export function VenueHeader({ activeVenue, filterDate }: VenueHeaderProps) {
 				</Pressable>
 			)}
 
-			{activeVenue.amenities && activeVenue.amenities.length > 0 && (
+			{amenities && amenities.length > 0 && (
 				<View className="flex-row items-start gap-2">
 					<Ionicons name="heart-half-outline" size={16} className="mt-0.5 text-gray600" />
 					<Text className="flex-1 text-[13px] leading-[19px] font-pretendard-medium text-gray700">
-						{activeVenue.amenities.join(', ')}
+						{amenities.join(', ')}
 					</Text>
 				</View>
 			)}

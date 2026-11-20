@@ -4,7 +4,11 @@ export type VenueGroup = {
 	/** museums.id — exhibitions.museum_id 조회용 */
 	museumId?: number;
 	venueName: string;
+	/** museums.name_en — 영어 설정 시 표시 */
+	venueNameEn?: string;
 	venueAddress?: string;
+	/** museums.address_en — 영어 설정 시 표시 */
+	venueAddressEn?: string;
 	coordinates: { latitude: number; longitude: number };
 	openHours: string;
 	closedDays?: string;

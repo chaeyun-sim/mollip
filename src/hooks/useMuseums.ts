@@ -6,7 +6,9 @@ import { formatMuseumClosedDays, formatMuseumOpenHours } from '@/src/utils/forma
 interface MuseumRow {
 	id: number;
 	name: string;
+	name_en: string | null;
 	address: string | null;
+	address_en: string | null;
 	phone: string | null;
 	homepage_url: string | null;
 	gps_x: string;
@@ -26,7 +28,9 @@ function rowToVenueGroup(row: MuseumRow): VenueGroup | null {
 	return {
 		museumId: row.id,
 		venueName: row.name,
+		venueNameEn: row.name_en?.trim() || undefined,
 		venueAddress: row.address || undefined,
+		venueAddressEn: row.address_en?.trim() || undefined,
 		coordinates: { latitude, longitude },
 		openHours: formatMuseumOpenHours(row.open_hours, row.rstdeInfo),
 		closedDays: formatMuseumClosedDays(row.rstdeInfo, null),
@@ -44,7 +48,7 @@ function rowToVenueGroup(row: MuseumRow): VenueGroup | null {
 }
 
 const BASE_COLUMNS =
-	'id, name, address, phone, homepage_url, gps_x, gps_y, open_hours, rstdeInfo, amenities, parking';
+	'id, name, name_en, address, address_en, phone, homepage_url, gps_x, gps_y, open_hours, rstdeInfo, amenities, parking';
 
 // Supabase museums(전국박물관미술관정보표준데이터 + 수동 보강) → 지도 마커 VenueGroup
 export function useMuseums(): VenueGroup[] {

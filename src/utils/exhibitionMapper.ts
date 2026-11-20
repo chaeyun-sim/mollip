@@ -6,7 +6,7 @@ import type { Database } from '@/src/types/database.types';
 
 // live Supabase exhibitions 컬럼 (2026-08 기준)
 export const EXHIBITION_COLUMNS =
-	'id, source, museum_id, venue_name_fallback, event_site, title, start_date, end_date, description, image_url, genre, type, tags, open_hours, closed_days, admission, ticket_url, web_site, note';
+	'id, source, museum_id, venue_name_fallback, event_site, title, title_en, start_date, end_date, description, image_url, genre, type, tags, open_hours, closed_days, admission, ticket_url, web_site, note';
 
 export type ExhibitionRow = Pick<
 	Database['public']['Tables']['exhibitions']['Row'],
@@ -16,6 +16,7 @@ export type ExhibitionRow = Pick<
 	| 'venue_name_fallback'
 	| 'event_site'
 	| 'title'
+	| 'title_en'
 	| 'start_date'
 	| 'end_date'
 	| 'description'
@@ -103,6 +104,7 @@ export function mapExhibitionRowToExhibition(
 		source: row.source,
 		museumId: row.museum_id,
 		title: row.title ? stripHtml(row.title) : '',
+		titleEn: row.title_en ? stripHtml(row.title_en) : undefined,
 		description: row.description ? stripHtml(row.description) : '',
 		genre: displayGenre(row.genre) ?? '',
 		exhibitionType: row.type?.trim() || undefined,

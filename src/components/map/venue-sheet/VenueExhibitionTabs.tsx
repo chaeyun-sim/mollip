@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Pressable, Text, View } from 'react-native';
 import Animated, {
 	Easing,
@@ -24,6 +25,8 @@ export function VenueExhibitionTabs({
 	upcomingCount,
 }: VenueExhibitionTabsProps) {
 	const [trackWidth, setTrackWidth] = useState(0);
+	const { t } = useTranslation();
+
 	const tabIndex = tab === 'active' ? 0 : 1;
 	const slideIndex = useSharedValue(tabIndex);
 
@@ -53,8 +56,8 @@ export function VenueExhibitionTabs({
 			>
 				{(
 					[
-						['active', '진행 중', activeCount],
-						['upcoming', '예정', upcomingCount],
+						['active', t('map.venue.tab_active'), activeCount],
+						['upcoming', t('map.venue.tab_upcoming'), upcomingCount],
 					] as const
 				).map(([key, label, count]) => (
 					<Pressable
@@ -64,7 +67,7 @@ export function VenueExhibitionTabs({
 						style={({ pressed }) => pressed && { opacity: 0.6 }}
 						accessibilityRole="tab"
 						accessibilityState={{ selected: tab === key }}
-						accessibilityLabel={`${label} 전시 ${count}개`}
+						accessibilityLabel={t('map.venue.tab_a11y', { label, count })}
 					>
 						<Text
 							className={cn(

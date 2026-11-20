@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Pressable, Text, View } from 'react-native';
 import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { Ionicons } from '@expo/vector-icons';
@@ -32,12 +33,16 @@ export function VenueSheet({
 	onGoToExhibition,
 	onRequestDirections,
 }: VenueSheetProps) {
+	const { t, i18n } = useTranslation();
 	const [tab, setTab] = useState<VenueExhibitionTab>('active');
 
 	const { showToast } = useToast();
 
 	// 부모 venue(예술의전당 등)면 첫 번째 하위 미술관, 아니면 venue 자체를 사용
 	const activeVenue: VenueGroup = venue.subVenues?.[0] ?? venue;
+	const isEn = i18n.language === 'en';
+	const venueName = (isEn && venue.venueNameEn) || venue.venueName;
+	const activeVenueName = (isEn && activeVenue.venueNameEn) || activeVenue.venueName;
 	const { userId, session } = useAuthStore(
 		useShallow((state) => ({
 			userId: state.user?.id,
@@ -78,10 +83,10 @@ export function VenueSheet({
 							className="text-[26px] leading-[30px] font-hahmlet-bold text-gray900"
 							numberOfLines={2}
 						>
-							{venue.venueName}{' '}
+							{venueName}{' '}
 						</Text>
 						<VenueFollowButton
-							venueName={venue.venueName}
+							venueName={venueName}
 							isFollowed={isVenueFollowed}
 							isLoading={isVenueFollowLoading}
 							isSupported={activeVenue.museumId != null}
@@ -89,7 +94,7 @@ export function VenueSheet({
 								if (session) {
 									toggleVenueFollow();
 								} else {
-									showToast('로그인 후 이용해주세요');
+									showToast(t('map.venue.login_required'));
 								}
 							}}
 						/>
@@ -101,7 +106,7 @@ export function VenueSheet({
 								style={({ pressed }) => (pressed ? { opacity: 0.7 } : undefined)}
 								className="h-11 w-11 items-center justify-center rounded-full bg-brand"
 								accessibilityRole="button"
-								accessibilityLabel={`${activeVenue.venueName}까지 길찾기`}
+								accessibilityLabel={t('map.venue.directions_a11y', { name: activeVenueName })}
 							>
 								<Ionicons name="navigate-outline" size={20} className="text-white" />
 							</Pressable>
@@ -125,11 +130,13 @@ export function VenueSheet({
 						onPress={() => WebBrowser.openBrowserAsync(activeVenue.homepageUrl!)}
 						style={({ pressed }) => (pressed ? { opacity: 0.55 } : undefined)}
 						className="flex-row items-center gap-2 mt-3"
-						accessibilityLabel={`${activeVenue.venueName} 홈페이지로 이동`}
+						accessibilityLabel={t('map.venue.homepage_a11y', { name: activeVenueName })}
 						accessibilityRole="link"
 					>
 						<Ionicons name="globe-outline" size={16} className="text-gray600" />
-						<Text className="text-[13px] font-pretendard-semibold text-gray900">홈페이지</Text>
+						<Text className="text-[13px] font-pretendard-semibold text-gray900">
+							{t('map.venue.homepage')}
+						</Text>
 						<Ionicons name="arrow-up-outline" size={13} className="rotate-45 text-gray700 -ml-1" />
 					</Pressable>
 				)}
@@ -159,7 +166,7 @@ export function VenueSheet({
 					<View className="flex-row items-center gap-2 py-2 mb-8">
 						<Ionicons name="warning-outline" size={16} color="rgba(0,0,0,0.3)" />
 						<Text className="text-black/45 text-sm font-pretendard-regular">
-							{tab === 'active' ? '진행 중인 전시가 없어요' : '예정된 전시가 없어요'}
+							{tab === 'active' ? t('map.venue.empty_active') : t('map.venue.empty_upcoming')}
 						</Text>
 					</View>
 				) : (

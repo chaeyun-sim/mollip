@@ -1,8 +1,9 @@
 import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { cn } from '@/src/lib/cn';
-import { WEEKDAYS } from '@/src/constants/week';
+import { buildWeeklyHours, getOpenStatus } from '@/src/utils/venueOpenStatus';
 
 interface HoursSectionProps {
 	openHours: string;
@@ -17,26 +18,30 @@ export function HoursSection({
 	filterDate,
 	mode = 'summary',
 }: HoursSectionProps) {
-	const todayDayName = WEEKDAYS[filterDate.getDay()];
+	const { t } = useTranslation();
+
+	const todayIndex = filterDate.getDay();
 	const weeklyHours = useMemo(
 		() => buildWeeklyHours(openHours, closedDays),
 		[closedDays, openHours],
 	);
-	const displayLabel = useMemo(
-		() => formatOpenStatus(openHours, closedDays, filterDate),
+	const openStatus = useMemo(
+		() => getOpenStatus(openHours, closedDays, filterDate),
 		[closedDays, filterDate, openHours],
 	);
-	const summaryParts = useMemo(() => parseSummaryLabel(displayLabel), [displayLabel]);
 
 	if (mode === 'weekly') {
 		return (
 			<View className="gap-1.5">
 				<View className="overflow-hidden rounded-xl border border-gray300">
 					{weeklyHours.map((entry, index) => {
-						const isToday = entry.day === todayDayName;
+						const isToday = entry.dayIndex === todayIndex;
+						const hoursLabel = entry.isClosed
+							? t('map.venue.weekly_closed')
+							: (entry.hours ?? t('map.venue.weekly_no_info'));
 						return (
 							<View
-								key={entry.day}
+								key={entry.dayIndex}
 								className={cn(
 									'flex-row items-center px-3 py-2',
 									isToday ? 'bg-[#EDEAE4]' : 'bg-gray100',
@@ -49,19 +54,16 @@ export function HoursSection({
 										isToday ? 'text-gray900' : 'text-gray500',
 									)}
 								>
-									{entry.day}
+									{t(`map.venue.weekday_${entry.dayIndex}`)}
 								</Text>
 								<Text
-									className={cn(
-										'flex-1 text-[12.5px] font-pretendard-medium',
-										entry.hours === '휴관'
-											? 'text-error'
-											: isToday
-												? 'text-gray900'
-												: 'text-gray600',
-									)}
+									className={cn('flex-1 text-[12.5px] font-pretendard-medium', {
+										'text-error': entry.isClosed,
+										'text-gray900': !entry.isClosed && isToday,
+										'text-gray600': !entry.isClosed && !isToday,
+									})}
 								>
-									{entry.hours}
+									{hoursLabel}
 								</Text>
 							</View>
 						);
@@ -71,109 +73,44 @@ export function HoursSection({
 		);
 	}
 
+	const isStatusKind =
+		openStatus.kind === 'open' ||
+		openStatus.kind === 'closed' ||
+		openStatus.kind === 'closed-today';
+	const statusLabel = {
+		open: t('map.venue.status_open'),
+		closed: t('map.venue.status_closed'),
+		'closed-today': t('map.venue.status_closed_today'),
+		'no-info': t('map.venue.hours_no_info'),
+		raw: openStatus.kind === 'raw' ? openStatus.text : '',
+	}[openStatus.kind];
+	const hoursDetail = 'hours' in openStatus ? openStatus.hours : null;
+	const displayLabel = hoursDetail ? `${statusLabel} · ${hoursDetail}` : statusLabel;
+
 	return (
 		<View
 			className="flex-row items-center gap-1.5"
 			accessible
-			accessibilityLabel={`운영시간 ${displayLabel}`}
+			accessibilityLabel={t('map.venue.hours_a11y', { label: displayLabel })}
 		>
 			<Ionicons name="time-outline" size={14} className="text-gray500" />
 			<Text className="text-[13px] leading-[18px] font-pretendard-medium text-gray700">
-				{summaryParts.status ? (
+				{isStatusKind ? (
 					<>
 						<Text
 							className={cn(
 								'font-pretendard-medium',
-								summaryParts.status === '운영 중' ? 'text-[#16A34A]' : 'text-[#DC2626]',
+								openStatus.kind === 'open' ? 'text-[#16A34A]' : 'text-[#DC2626]',
 							)}
 						>
-							{summaryParts.status}
+							{statusLabel}
 						</Text>
-						{summaryParts.detail ? ` · ${summaryParts.detail}` : null}
+						{hoursDetail && ` · ${hoursDetail}`}
 					</>
 				) : (
-					displayLabel
+					statusLabel
 				)}
 			</Text>
 		</View>
 	);
-}
-
-function includesDay(label: string | undefined, dayName: string): boolean {
-	const normalized = label?.replace(/\s/g, '').replace(/요일/g, '') ?? '';
-	if (!normalized || normalized === '없음' || normalized === '-') return false;
-	if (normalized.includes('매일') || normalized.includes('연중무휴')) return true;
-	if (normalized.includes('평일')) return ['월', '화', '수', '목', '금'].includes(dayName);
-	if (normalized.includes('주말')) return ['토', '일'].includes(dayName);
-	return normalized
-		.split(/[,\s·/]+/)
-		.map((item) => item.trim())
-		.some((item) => item.includes(dayName));
-}
-
-function findHoursForDay(openHours: string, dayName: string): string | null {
-	const lines = openHours
-		.split('\n')
-		.map((line) => line.trim())
-		.filter(Boolean);
-
-	for (const line of lines) {
-		const match = line.match(/(\d{1,2}:\d{2})\s*[~–-]\s*(\d{1,2}:\d{2})/);
-		if (!match) continue;
-		const label = line.slice(0, match.index).replace(/[:：]/g, '').trim();
-		if (!label || includesDay(label, dayName)) return `${match[1]}-${match[2]}`;
-	}
-
-	const fallback = openHours.match(/(\d{1,2}:\d{2})\s*[~–-]\s*(\d{1,2}:\d{2})/);
-	return fallback ? `${fallback[1]}-${fallback[2]}` : null;
-}
-
-function formatOpenStatus(openHours: string, closedDays: string | undefined, date: Date): string {
-	const dayName = WEEKDAYS[date.getDay()];
-	if (includesDay(closedDays, dayName)) return '오늘 휴관';
-	if (!openHours || openHours.includes('정보 없음')) return '운영시간 정보 없음';
-	const hours = findHoursForDay(openHours, dayName);
-	if (!hours) return openHours;
-
-	const displayHours = hours.replace('-', '–');
-	return hasClosingTimePassed(hours, date)
-		? `운영 마감 · ${displayHours}`
-		: `운영중 · ${displayHours}`;
-}
-
-function parseSummaryLabel(label: string): {
-	status: '운영 중' | '운영 마감' | '휴관' | null;
-	detail: string | null;
-} {
-	if (label === '오늘 휴관') return { status: '휴관', detail: null };
-	const closedMatch = label.match(/^운영 마감\s*[·•]\s*(.+)$/);
-	if (closedMatch) return { status: '운영 마감', detail: closedMatch[1] };
-	const openMatch = label.match(/^운영중\s*[·•]\s*(.+)$/);
-	if (openMatch) return { status: '운영 중', detail: openMatch[1] };
-	return { status: null, detail: null };
-}
-
-const hasClosingTimePassed = (hours: string, date: Date): boolean => {
-	const now = new Date();
-	const isToday =
-		now.getFullYear() === date.getFullYear() &&
-		now.getMonth() === date.getMonth() &&
-		now.getDate() === date.getDate();
-	if (!isToday) return false;
-
-	const closingTime = hours.split('-')[1];
-	const [closingHour, closingMinute] = closingTime.split(':').map(Number);
-	if (!Number.isFinite(closingHour) || !Number.isFinite(closingMinute)) return false;
-
-	return now.getHours() * 60 + now.getMinutes() >= closingHour * 60 + closingMinute;
-};
-
-function buildWeeklyHours(
-	openHours: string,
-	closedDays: string | undefined,
-): { day: string; hours: string }[] {
-	return ['월', '화', '수', '목', '금', '토', '일'].map((day) => {
-		if (includesDay(closedDays, day)) return { day, hours: '휴관' };
-		return { day, hours: findHoursForDay(openHours, day) ?? '정보 없음' };
-	});
 }

@@ -24,6 +24,8 @@ export interface Exhibition {
 
 	// — 전시 기본 정보
 	title: string;
+	/** exhibitions.title_en — 영어 설정 시 표시 */
+	titleEn?: string;
 	artist?: string;
 	description: string;
 	genre: string;

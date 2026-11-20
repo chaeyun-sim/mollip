@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Pressable, Text, View } from 'react-native';
 import Animated, {
 	useAnimatedStyle,
@@ -16,14 +17,16 @@ interface ExhibitionCardProps {
 }
 
 export function ExhibitionCard({ ex, status, onPress }: ExhibitionCardProps) {
+	const { t, i18n } = useTranslation();
 	const reduceMotion = useReducedMotion();
 	const scale = useSharedValue(1);
 	const animatedStyle = useAnimatedStyle(() => ({
 		transform: [{ scale: scale.value }],
 	}));
 
-	const statusLabel = status === 'active' ? '진행 중' : '예정';
+	const statusLabel = status === 'active' ? t('map.venue.tab_active') : t('map.venue.tab_upcoming');
 	const statusEngLabel = status === 'active' ? 'On View' : 'Opening Soon';
+	const title = ((i18n.language === 'en' && ex.titleEn) || ex.title).trim();
 
 	return (
 		<Pressable
@@ -35,7 +38,12 @@ export function ExhibitionCard({ ex, status, onPress }: ExhibitionCardProps) {
 			}}
 			onPress={() => onPress(ex.id)}
 			accessibilityRole="button"
-			accessibilityLabel={`${ex.title}, ${statusLabel}, ${ex.startDate}부터 ${ex.endDate}까지`}
+			accessibilityLabel={t('map.venue.card_a11y', {
+				title,
+				status: statusLabel,
+				start: ex.startDate,
+				end: ex.endDate,
+			})}
 		>
 			<Animated.View
 				style={animatedStyle}
@@ -65,7 +73,7 @@ export function ExhibitionCard({ ex, status, onPress }: ExhibitionCardProps) {
 						className="text-black text-[14px] font-pretendard-semibold leading-snug"
 						numberOfLines={2}
 					>
-						{ex.title.trim()}
+						{title}
 					</Text>
 					<Text className="text-black/55 text-[11px] font-pretendard-regular">
 						{ex.startDate} - {ex.endDate}

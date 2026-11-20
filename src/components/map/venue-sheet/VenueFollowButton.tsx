@@ -1,4 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, Pressable } from 'react-native';
 
 interface VenueFollowButtonProps {
@@ -16,15 +17,17 @@ export function VenueFollowButton({
 	isSupported,
 	onPress,
 }: VenueFollowButtonProps) {
+	const { t } = useTranslation();
+
 	const isDisabled = !isSupported || isLoading;
 	const accessibilityLabel = isFollowed
-		? `${venueName} 새 전시 알림 받는 중`
-		: `${venueName} 새 전시 알림 받기`;
+		? t('map.venue.follow_on_a11y', { name: venueName })
+		: t('map.venue.follow_off_a11y', { name: venueName });
 	const accessibilityHint = !isSupported
-		? '이 장소는 아직 새 전시 알림을 지원하지 않습니다'
+		? t('map.venue.follow_unsupported_hint')
 		: isFollowed
-			? '두 번 탭하면 새 전시 알림을 해제합니다'
-			: '두 번 탭하면 새 전시 알림을 신청합니다';
+			? t('map.venue.follow_on_hint')
+			: t('map.venue.follow_off_hint');
 
 	return (
 		<Pressable
