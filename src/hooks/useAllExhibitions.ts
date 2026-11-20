@@ -35,7 +35,9 @@ export function useAllExhibitions(): UseAllExhibitionsResult {
 
 		const { data, error } = await supabase
 			.from('exhibitions')
-			.select('id, title, venue_name_fallback, image_url, start_date, end_date')
+			.select(
+				'id, title, title_en, venue_name_fallback, image_url, start_date, end_date, museums(name_en)',
+			)
 			.gte('end_date', todayExhibitionDateString())
 			// synced_at은 같은 배치로 동기화된 행이 전부 동일해 동률이 흔함 — id로 2차 정렬해 페이지 경계를 고정
 			.order('synced_at', { ascending: false })
@@ -53,7 +55,9 @@ export function useAllExhibitions(): UseAllExhibitionsResult {
 		const newItems: RecommendableItem[] = (data ?? []).map((row) => ({
 			id: String(row.id),
 			title: (row.title ?? '').trim(),
+			titleEn: row.title_en,
 			venue: (row.venue_name_fallback ?? '').trim(),
+			venueEn: row.museums?.name_en ?? null,
 			thumbnail: row.image_url ?? null,
 			status: getExhibitionStatus({
 				startDate: row.start_date ?? '',
