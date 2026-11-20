@@ -10,7 +10,9 @@ import { supabase } from '@/src/utils/supabase';
 export interface KcisaExhibitionItem {
 	id: string;
 	title: string;
+	titleEn?: string | null;
 	venue: string;
+	venueEn?: string | null;
 	thumbnail: string | null;
 	status: ExhibitionStatus;
 	startDate?: string | null;
@@ -36,7 +38,9 @@ const fetchKcisaExhibitions = async (): Promise<KcisaExhibitionItem[]> => {
 	const { data, error } = await applyExhibitionDateFilters(
 		supabase
 			.from('exhibitions')
-			.select('id, title, venue_name_fallback, event_site, image_url, start_date, end_date, type')
+			.select(
+				'id, title, title_en, venue_name_fallback, event_site, image_url, start_date, end_date, type, museums(name_en)',
+			)
 			.in('source', ['kcisa', 'kcisa_moca'])
 			.gte('end_date', todayExhibitionDateString())
 			.not('title', 'ilike', `%${PROVISIONAL_TITLE_MARKER}%`)
@@ -52,7 +56,9 @@ const fetchKcisaExhibitions = async (): Promise<KcisaExhibitionItem[]> => {
 			return {
 				id: String(row.id),
 				title: row.title,
+				titleEn: row.title_en,
 				venue,
+				venueEn: row.museums?.name_en ?? null,
 				thumbnail: row.image_url,
 				status: getExhibitionStatus({
 					startDate: row.start_date ?? '',

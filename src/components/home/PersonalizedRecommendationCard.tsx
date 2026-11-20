@@ -4,6 +4,7 @@ import { Text, View } from 'react-native';
 import { ImageFallback } from '@/src/components/common/ImageFallback';
 import { ScalePressable } from '@/src/components/common/ScalePressable';
 import type { RecommendableItem } from '@/src/components/explore/RecommendableItem.types';
+import { localizeExhibition } from '@/src/utils/localizedExhibition';
 
 interface PersonalizedRecommendationCardProps {
 	item: RecommendableItem;
@@ -15,10 +16,11 @@ export function PersonalizedRecommendationCard({
 	item,
 	onPress,
 }: PersonalizedRecommendationCardProps) {
-	const { t } = useTranslation();
+	const { t, i18n } = useTranslation();
 
-	const title = item.title.trim();
-	const venue = item.venue.trim() || t('common.no_venue_info');
+	const localized = localizeExhibition(item, i18n.language);
+	const title = localized.title;
+	const venue = localized.venue || t('common.no_venue_info');
 	const tags = (item.recommendationTags ?? []).map((tag) =>
 		t(`recommendations.labels.${tag}`, { defaultValue: tag }),
 	);

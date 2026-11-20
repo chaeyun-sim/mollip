@@ -7,6 +7,7 @@ import { SkeletonBox } from '@/src/components/layout/Loading/SkeletonBox';
 import { HOME_SIDE_PADDING, HomeSectionHeader } from '@/src/components/home/HomeSectionHeader';
 import { type FeaturedPick } from '@/src/hooks/queries/useFeaturedTrio';
 import { getGridColumnWidth } from '@/src/utils/homeLayout';
+import { localizeExhibition } from '@/src/utils/localizedExhibition';
 
 const COLUMNS = 2;
 const COLUMN_GAP = 14;
@@ -82,10 +83,9 @@ export function HomeRecommendedGrid({
 			{header}
 			<View className="flex-row flex-wrap" style={gridStyle}>
 				{visible.map((item, i) => {
-					const title = (i18n.language === 'en' && item.titleEn ? item.titleEn : item.title).trim();
-					const venue =
-						(i18n.language === 'en' && item.venueEn ? item.venueEn : item.venue).trim() ||
-						t('common.no_venue_info');
+					const localized = localizeExhibition(item, i18n.language);
+					const title = localized.title;
+					const venue = localized.venue || t('common.no_venue_info');
 					return (
 						<FadeInView key={item.id} delay={i * ITEM_STAGGER_MS}>
 							<ScalePressable

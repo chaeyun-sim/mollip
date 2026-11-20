@@ -21,6 +21,7 @@ const RECOMMENDED_STALE_MS = 5 * 60 * 1000;
 interface ExhibitionRow {
 	id: string | number;
 	title: string;
+	title_en: string | null;
 	description: string | null;
 	venue_name_fallback: string;
 	image_url: string | null;
@@ -29,6 +30,7 @@ interface ExhibitionRow {
 	synced_at: string | null;
 	start_date: string;
 	end_date: string;
+	museums: { name_en: string | null } | null;
 }
 
 export function recommendedExhibitionsQueryKey(
@@ -81,7 +83,7 @@ async function fetchExhibitionRows(preferredGenres: string[]): Promise<Exhibitio
 	let query = supabase
 		.from('exhibitions')
 		.select(
-			'id, title, description, venue_name_fallback, image_url, genre, tags, synced_at, start_date, end_date',
+			'id, title, title_en, description, venue_name_fallback, image_url, genre, tags, synced_at, start_date, end_date, museums(name_en)',
 		)
 		.gte('end_date', todayExhibitionDateString())
 		.order('synced_at', { ascending: false })
@@ -115,7 +117,9 @@ function toRecommendableItem(
 	return {
 		id: String(row.id),
 		title: row.title.trim(),
+		titleEn: row.title_en,
 		venue: row.venue_name_fallback.trim(),
+		venueEn: row.museums?.name_en ?? null,
 		thumbnail: row.image_url,
 		status: getExhibitionStatus({ startDate: row.start_date, endDate: row.end_date }),
 		startDate: row.start_date ?? null,

@@ -13,7 +13,9 @@ import { syncCultureExhibitionsIfStale } from '@/src/utils/syncCultureExhibition
 export interface CultureExhibitionItem {
 	id: string;
 	title: string;
+	titleEn?: string | null;
 	venue: string;
+	venueEn?: string | null;
 	startDate: string;
 	endDate: string;
 	thumbnail: string;
@@ -27,10 +29,12 @@ export const cultureExhibitionsQueryKey = () => ['exhibitions', 'culture'] as co
 interface ExhibitionCultureRow {
 	id: number;
 	title: string;
+	title_en: string | null;
 	start_date: string;
 	end_date: string;
 	venue_name_fallback: string;
 	image_url: string | null;
+	museums: { name_en: string | null } | null;
 }
 
 const fetchCultureExhibitions = async (): Promise<CultureExhibitionItem[]> => {
@@ -46,7 +50,9 @@ const fetchCultureExhibitions = async (): Promise<CultureExhibitionItem[]> => {
 	const { data, error } = await applyExhibitionDateFilters(
 		supabase
 			.from('exhibitions')
-			.select('id, title, start_date, end_date, venue_name_fallback, image_url')
+			.select(
+				'id, title, title_en, start_date, end_date, venue_name_fallback, image_url, museums(name_en)',
+			)
 			.eq('source', 'culture')
 			.gte('end_date', todayExhibitionDateString()),
 	);
@@ -61,7 +67,9 @@ const fetchCultureExhibitions = async (): Promise<CultureExhibitionItem[]> => {
 		.map((item) => ({
 			id: String(item.id),
 			title: stripHtml(item.title),
+			titleEn: item.title_en ? stripHtml(item.title_en) : null,
 			venue: item.venue_name_fallback,
+			venueEn: item.museums?.name_en ?? null,
 			startDate: item.start_date,
 			endDate: item.end_date,
 			thumbnail: item.image_url ?? '',

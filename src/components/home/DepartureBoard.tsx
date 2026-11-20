@@ -12,6 +12,7 @@ import { useCountUp } from '@/src/hooks/useCountUp';
 import { cn } from '@/src/lib/cn';
 import type { AsyncStatus } from '@/src/types/asyncStatus.types';
 import type { DepartureRow } from '@/src/utils/homeExhibitionMeta';
+import { localizeExhibition } from '@/src/utils/localizedExhibition';
 
 const SKELETON_ROWS = 3;
 /** 플랩 타일이 하나씩 넘어가는 간격 */
@@ -31,7 +32,7 @@ interface DepartureBoardProps {
 
 /** 곧 떠나는 전시 — 큰 D-day 플랩 + 마감 임박 3 · 진행 중 3 · 개막 예정 2 목록. 대상이 없으면 숨긴다 */
 export function DepartureBoard({ index, rows, nearest, status, onPress }: DepartureBoardProps) {
-	const { t } = useTranslation();
+	const { t, i18n } = useTranslation();
 
 	const router = useRouter();
 	// 플랩이 다 넘어간 뒤 'N개'가 0부터 올라간다
@@ -103,8 +104,9 @@ export function DepartureBoard({ index, rows, nearest, status, onPress }: Depart
 								</View>
 							))
 						: rows.map((row, i) => {
-								const title = row.title.trim();
-								const venue = row.venue.trim() || t('common.no_venue_info');
+								const localized = localizeExhibition(row, i18n.language);
+								const title = localized.title;
+								const venue = localized.venue || t('common.no_venue_info');
 								const statusLabel = getStatusLabel(row);
 								const isLastCall = row.departure === 'last-call';
 								return (
