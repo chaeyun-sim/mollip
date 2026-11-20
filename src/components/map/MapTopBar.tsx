@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import { memo, useState } from 'react';
+import { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Keyboard, Pressable, ScrollView, Text, View } from 'react-native';
 import { SearchBar } from '@/src/components/common/SearchBar';
@@ -41,7 +41,19 @@ export const MapTopBar = memo(function MapTopBar({
 	const [isFocused, setIsFocused] = useState(false);
 	const { t, i18n } = useTranslation();
 
+	// 최근 방문 기록은 한국어 이름(마커 식별자)으로 저장되므로, 표시할 때만 영문 이름으로 바꾼다
+	const venueNameEnByName = useMemo(
+		() =>
+			new Map(
+				mapVenues.flatMap((venue) =>
+					venue.venueNameEn ? [[venue.venueName, venue.venueNameEn] as const] : [],
+				),
+			),
+		[mapVenues],
+	);
+
 	const isEn = i18n.language === 'en';
+	const toDisplayVenueName = (name: string) => (isEn && venueNameEnByName.get(name)) || name;
 	const showRecents =
 		isFocused && searchText.length === 0 && (recentRoutes.length > 0 || recentLocations.length > 0);
 
@@ -167,7 +179,9 @@ export const MapTopBar = memo(function MapTopBar({
 											index < recentLocations.length - 1 && 'border-b border-black/5',
 										)}
 										accessibilityRole="button"
-										accessibilityLabel={t('map.select_place_a11y', { name: loc.name })}
+										accessibilityLabel={t('map.select_place_a11y', {
+											name: toDisplayVenueName(loc.name),
+										})}
 									>
 										<Ionicons name="time-outline" size={15} className="text-gray600" />
 										<View className="ml-2.5 flex-1">
@@ -175,7 +189,7 @@ export const MapTopBar = memo(function MapTopBar({
 												className="font-pretendard-medium text-[14px] text-gray900"
 												numberOfLines={1}
 											>
-												{loc.name}
+												{toDisplayVenueName(loc.name)}
 											</Text>
 											{loc.subtitle && (
 												<Text
