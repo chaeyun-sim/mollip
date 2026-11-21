@@ -2,6 +2,7 @@ import { InteractionManager } from 'react-native';
 import { act } from 'react';
 import { createRoot } from 'test-renderer';
 import Purchases, { PURCHASES_ERROR_CODE } from 'react-native-purchases';
+import i18n from '@/src/i18n';
 import { ENTITLEMENT_ID } from '@/src/lib/subscription';
 import {
 	clearPendingPurchaseReconciliation,
@@ -13,8 +14,8 @@ import { usePurchaseTransactionStore } from '@/src/store/purchaseTransactionStor
 import { useSubscriptionStore } from '@/src/store/subscriptionStore';
 import {
 	PACKAGE_IDS,
-	PURCHASE_NOT_FOUND_MESSAGE,
-	PURCHASE_STILL_PROCESSING_MESSAGE,
+	PURCHASE_NOT_FOUND_MESSAGE_KEY,
+	PURCHASE_STILL_PROCESSING_MESSAGE_KEY,
 	PURCHASE_WAIT_TIMEOUT_MS,
 	usePremiumPurchase,
 } from '../usePremiumPurchase';
@@ -116,6 +117,11 @@ const renderReadyHook = async () => {
 };
 
 const transaction = () => usePurchaseTransactionStore.getState();
+
+// í ì¤í¸ ë¬¸êµ¬ë íêµ­ì´ ê¸°ì¤ì¼ë¡ ê²ì¦íë¤ (jest íê²½ì ê¸°ê¸° ì¸ì´ë en)
+beforeAll(async () => {
+	await i18n.changeLanguage('ko');
+});
 
 beforeEach(() => {
 	jest.clearAllMocks();
@@ -270,7 +276,7 @@ describe('AC-7 — 진행 중 구매와 상태 확인의 경쟁', () => {
 
 		expect(transaction().isPending).toBe(true);
 		expect(mockClear).not.toHaveBeenCalled();
-		expect(showToast).toHaveBeenCalledWith(PURCHASE_STILL_PROCESSING_MESSAGE);
+		expect(showToast).toHaveBeenCalledWith(i18n.t(PURCHASE_STILL_PROCESSING_MESSAGE_KEY));
 
 		await act(async () => {
 			save.resolve(true);
@@ -305,7 +311,7 @@ describe('AC-7 — 진행 중 구매와 상태 확인의 경쟁', () => {
 		expect(transaction().isPending).toBe(true);
 		expect(mockClear).not.toHaveBeenCalled();
 		expect(hookRef.current!.purchaseStatus).toBe('timedOut');
-		expect(showToast).toHaveBeenCalledWith(PURCHASE_STILL_PROCESSING_MESSAGE);
+		expect(showToast).toHaveBeenCalledWith(i18n.t(PURCHASE_STILL_PROCESSING_MESSAGE_KEY));
 
 		await act(async () => {
 			purchase.resolve({ customerInfo: activeCustomerInfo() });
@@ -365,7 +371,7 @@ describe('AC-9 — 재실행 후 남은 pending의 수동 복구', () => {
 
 		expect(transaction().isPending).toBe(false);
 		expect(mockClear).toHaveBeenCalledTimes(1);
-		expect(showToast).toHaveBeenCalledWith(PURCHASE_NOT_FOUND_MESSAGE);
+		expect(showToast).toHaveBeenCalledWith(i18n.t(PURCHASE_NOT_FOUND_MESSAGE_KEY));
 
 		mockMark.mockResolvedValueOnce(true);
 		mockPurchasePackage.mockResolvedValueOnce({ customerInfo: activeCustomerInfo() });
@@ -421,6 +427,6 @@ describe('AC-9 — 재실행 후 남은 pending의 수동 복구', () => {
 		expect(transaction().isPending).toBe(true);
 		expect(transaction().pendingSince).toBe(2_000);
 		expect(mockClear).not.toHaveBeenCalled();
-		expect(showToast).toHaveBeenCalledWith(PURCHASE_STILL_PROCESSING_MESSAGE);
+		expect(showToast).toHaveBeenCalledWith(i18n.t(PURCHASE_STILL_PROCESSING_MESSAGE_KEY));
 	});
 });

@@ -2,6 +2,7 @@ import { InteractionManager } from 'react-native';
 import { act } from 'react';
 import { createRoot } from 'test-renderer';
 import Purchases, { PURCHASES_ERROR_CODE } from 'react-native-purchases';
+import i18n from '@/src/i18n';
 import { ENTITLEMENT_ID } from '@/src/lib/subscription';
 import { usePurchaseLockStore } from '@/src/store/purchaseLockStore';
 import { usePurchaseTransactionStore } from '@/src/store/purchaseTransactionStore';
@@ -10,7 +11,7 @@ import { useSubscriptionStore } from '@/src/store/subscriptionStore';
 import {
 	OFFERINGS_TIMEOUT_MS,
 	PACKAGE_IDS,
-	PURCHASE_RESULT_PENDING_MESSAGE,
+	PURCHASE_RESULT_PENDING_MESSAGE_KEY,
 	PURCHASE_WAIT_TIMEOUT_MS,
 	usePremiumPurchase,
 } from '../usePremiumPurchase';
@@ -103,6 +104,11 @@ async function flush() {
 		await Promise.resolve();
 	});
 }
+
+// í ì¤í¸ ë¬¸êµ¬ë íêµ­ì´ ê¸°ì¤ì¼ë¡ ê²ì¦íë¤ (jest íê²½ì ê¸°ê¸° ì¸ì´ë en)
+beforeAll(async () => {
+	await i18n.changeLanguage('ko');
+});
 
 beforeEach(() => {
 	mockGetOfferings.mockReset();
@@ -790,7 +796,7 @@ describe('구매 — 결과가 불확실한 경우(uncertain) — 취소/네트�
 
 		expect(hookRef.current!.purchaseStatus).toBe('uncertain');
 		expect(navigateAway).not.toHaveBeenCalled();
-		expect(showToast).toHaveBeenCalledWith(PURCHASE_RESULT_PENDING_MESSAGE);
+		expect(showToast).toHaveBeenCalledWith(i18n.t(PURCHASE_RESULT_PENDING_MESSAGE_KEY));
 
 		// uncertain 상태에서 구매를 다시 시도해도 SDK가 또 호출되지 않는다(자동/성급한 재구매 금지).
 		await act(async () => {

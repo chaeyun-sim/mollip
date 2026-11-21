@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { BackHandler, View } from 'react-native';
 import { Indicator } from '@/src/components/common/Indicator';
 import { usePurchaseLockStore } from '@/src/store/purchaseLockStore';
@@ -15,6 +16,7 @@ import { usePurchaseLockStore } from '@/src/store/purchaseLockStore';
  * 루트 Stack과 settings Stack의 gestureEnabled로 막는다.
  */
 export function PurchaseLockOverlay() {
+	const { t } = useTranslation();
 	const isLocked = usePurchaseLockStore((s) => s.isLocked);
 
 	useEffect(() => {
@@ -29,7 +31,7 @@ export function PurchaseLockOverlay() {
 		<View
 			pointerEvents="auto"
 			accessibilityViewIsModal
-			accessibilityLabel="구매 처리 중"
+			accessibilityLabel={t('premium.lock_overlay_a11y')}
 			className="absolute inset-0 z-50 items-center justify-center bg-black/60"
 		>
 			<Indicator color="white" size="large" />

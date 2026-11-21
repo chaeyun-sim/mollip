@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { InteractionManager } from 'react-native';
 import Purchases, { type PurchasesPackage } from 'react-native-purchases';
 import { useShallow } from 'zustand/react/shallow';
+import i18n from '@/src/i18n';
 import { ENTITLEMENT_ID, syncSubscription } from '@/src/lib/subscription';
 import { classifyPurchaseError } from '@/src/lib/purchaseErrors';
 import { usePurchaseLockStore } from '@/src/store/purchaseLockStore';
@@ -29,16 +30,13 @@ const SUPPORTED_PACKAGE_IDS = new Set(Object.values(PACKAGE_IDS));
 export const PLAN_ORDER: PlanId[] = ['sixMonths', 'weekly', 'monthly'];
 
 export const OFFERINGS_TIMEOUT_MS = 10000;
-export const OFFERING_ERROR_MESSAGE = '상품 정보를 불러오지 못했어요. 연결 후 다시 시도해 주세요.';
-export const PURCHASE_RESULT_PENDING_MESSAGE =
-	'구매 결과를 확인하고 있어요. 다시 구매하지 말고 잠시 후 상태를 확인해 주세요.';
+// 토스트 문구는 i18n 키로 두고, 띄우는 시점의 언어로 번역한다
+export const PURCHASE_RESULT_PENDING_MESSAGE_KEY = 'premium.result_pending';
 export const PURCHASE_WAIT_TIMEOUT_MS = 15000;
 /** 상태 확인 시 SDK 구매 응답이 아직 오지 않아 판단을 보류할 때. */
-export const PURCHASE_STILL_PROCESSING_MESSAGE =
-	'결제 처리가 아직 끝나지 않았어요. 잠시 후 다시 확인해 주세요.';
+export const PURCHASE_STILL_PROCESSING_MESSAGE_KEY = 'premium.still_processing';
 /** 명시 확인 결과 활성 구독이 없어 pending을 해제했을 때 — 늦은 승인 가능성이 있어 단정하지 않는다. */
-export const PURCHASE_NOT_FOUND_MESSAGE =
-	'완료된 구매가 확인되지 않았어요. 필요하면 다시 구매해 주세요.';
+export const PURCHASE_NOT_FOUND_MESSAGE_KEY = 'premium.not_found';
 
 /** InteractionManager 콜백이 어떤 이유로든 발화하지 않을 때의 안전망(failsafe) 상한.
  *  정상 경로에서는 InteractionManager가 먼저 실행되므로 이 타이머는 보통 취소된다 —
@@ -215,7 +213,7 @@ export function usePremiumPurchase({ navigateAway, showToast }: UsePremiumPurcha
 		};
 
 		const failsafeId = setTimeout(
-			() => finishOnce('몰립 프리미엄이 시작됐어요!'),
+			() => finishOnce(i18n.t('premium.started')),
 			COMPLETE_TRANSITION_FAILSAFE_MS,
 		);
 
@@ -225,13 +223,13 @@ export function usePremiumPurchase({ navigateAway, showToast }: UsePremiumPurcha
 			// 화면 전환 자체가 실패했다 — 성공 토스트를 띄우면 안 되고, 잠금도 즉시 풀어 사용자가 갇히지 않게 한다.
 			console.error('구매 완료 후 화면 전환 실패:', navError);
 			clearTimeout(failsafeId);
-			finishOnce('결제는 완료됐어요. 화면 전환에 문제가 있었으니 앱을 확인해 주세요.');
+			finishOnce(i18n.t('premium.completed_nav_error'));
 			return;
 		}
 
 		InteractionManager.runAfterInteractions(() => {
 			clearTimeout(failsafeId);
-			finishOnce('몰립 프리미엄이 시작됐어요!');
+			finishOnce(i18n.t('premium.started'));
 		});
 	}, [lockPurchase, navigateAway, showToast, unlockPurchase]);
 
@@ -246,7 +244,7 @@ export function usePremiumPurchase({ navigateAway, showToast }: UsePremiumPurcha
 	const handlePurchase = useCallback(async () => {
 		if (purchaseOpRef.current) return;
 		if (restoreOpRef.current || currentOperation === 'restore') {
-			showToast('구매 복원 중이에요. 잠시만 기다려 주세요.');
+			showToast(i18n.t('premium.restoring'));
 			return;
 		}
 		if (
@@ -257,7 +255,7 @@ export function usePremiumPurchase({ navigateAway, showToast }: UsePremiumPurcha
 		)
 			return;
 		if (!acquireOperation('purchase')) {
-			showToast('구매 처리 중이에요. 잠시만 기다려 주세요.');
+			showToast(i18n.t('premium.purchasing'));
 			return;
 		}
 
@@ -292,7 +290,7 @@ export function usePremiumPurchase({ navigateAway, showToast }: UsePremiumPurcha
 				return;
 			}
 
-			if (isMountedRef.current) enterUncertainStatus(PURCHASE_RESULT_PENDING_MESSAGE);
+			if (isMountedRef.current) enterUncertainStatus(i18n.t(PURCHASE_RESULT_PENDING_MESSAGE_KEY));
 		};
 
 		const handlePurchaseFailure = (error: unknown) => {
@@ -305,7 +303,7 @@ export function usePremiumPurchase({ navigateAway, showToast }: UsePremiumPurcha
 				void clearPendingPurchaseReconciliation();
 				if (isMountedRef.current) {
 					setPurchaseStatus('idle');
-					if (kind === 'other') showToast('결제 중 문제가 발생했어요. 다시 시도해 주세요.');
+					if (kind === 'other') showToast(i18n.t('premium.purchase_failed'));
 				}
 				return;
 			}
@@ -313,8 +311,8 @@ export function usePremiumPurchase({ navigateAway, showToast }: UsePremiumPurcha
 			if (isMountedRef.current) {
 				enterUncertainStatus(
 					kind === 'network'
-						? PURCHASE_RESULT_PENDING_MESSAGE
-						: '결제가 진행 중이에요. 상태를 확인해 주세요.',
+						? i18n.t(PURCHASE_RESULT_PENDING_MESSAGE_KEY)
+						: i18n.t('premium.purchase_in_progress'),
 				);
 			}
 		};
@@ -357,7 +355,7 @@ export function usePremiumPurchase({ navigateAway, showToast }: UsePremiumPurcha
 
 			if (outcome === 'timedOut' && !purchaseResultHandledRef.current && isMountedRef.current) {
 				setPurchaseStatus('timedOut');
-				showToast(PURCHASE_RESULT_PENDING_MESSAGE);
+				showToast(i18n.t(PURCHASE_RESULT_PENDING_MESSAGE_KEY));
 			}
 		} catch (error) {
 			// 여기에 오는 경우는 SDK 호출 전 예외, 동기 throw, 또는 SDK 거부(이미 settle)뿐이다.
@@ -413,7 +411,7 @@ export function usePremiumPurchase({ navigateAway, showToast }: UsePremiumPurcha
 			const transaction = usePurchaseTransactionStore.getState();
 			if (transaction.isPurchaseInFlight || transaction.generation !== expectedGeneration) {
 				if (isMountedRef.current) {
-					showToast(PURCHASE_STILL_PROCESSING_MESSAGE);
+					showToast(i18n.t(PURCHASE_STILL_PROCESSING_MESSAGE_KEY));
 				}
 				return;
 			}
@@ -424,7 +422,7 @@ export function usePremiumPurchase({ navigateAway, showToast }: UsePremiumPurcha
 			void clearPendingPurchaseReconciliation();
 			if (isMountedRef.current) {
 				setPurchaseStatus('idle');
-				showToast(PURCHASE_NOT_FOUND_MESSAGE);
+				showToast(i18n.t(PURCHASE_NOT_FOUND_MESSAGE_KEY));
 			}
 		} catch (error) {
 			console.error('결제 상태 확인 실패:', error);
@@ -439,12 +437,12 @@ export function usePremiumPurchase({ navigateAway, showToast }: UsePremiumPurcha
 	const handleRestore = useCallback(async () => {
 		if (restoreOpRef.current) return;
 		if (purchaseOpRef.current || currentOperation === 'purchase') {
-			showToast('구매 처리 중이에요. 잠시만 기다려 주세요.');
+			showToast(i18n.t('premium.purchasing'));
 			return;
 		}
 		if (purchaseStatus !== 'idle' || isPendingTransaction) return;
 		if (!acquireOperation('restore')) {
-			showToast('구매 복원 중이에요. 잠시만 기다려 주세요.');
+			showToast(i18n.t('premium.restoring'));
 			return;
 		}
 		restoreOpRef.current = true;
@@ -457,14 +455,14 @@ export function usePremiumPurchase({ navigateAway, showToast }: UsePremiumPurcha
 			const entitlement = customerInfo.entitlements.active[ENTITLEMENT_ID];
 
 			if (!entitlement) {
-				showToast('복원할 프리미엄 구독이 없어요.');
+				showToast(i18n.t('premium.restore_none'));
 				return;
 			}
 
-			showToast('구독을 복원했어요!');
+			showToast(i18n.t('premium.restore_done'));
 		} catch (error) {
 			console.error('RevenueCat 구매 복원 실패:', error);
-			showToast('구매 복원 중 문제가 발생했어요.');
+			showToast(i18n.t('premium.restore_failed'));
 		} finally {
 			releaseOperation('restore');
 			restoreOpRef.current = false;
