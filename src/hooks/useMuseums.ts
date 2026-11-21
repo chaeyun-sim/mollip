@@ -15,8 +15,11 @@ interface MuseumRow {
 	gps_y: string;
 	open_hours: string | null;
 	rstdeInfo: string | null;
+	// 운영 DB에 없을 수 있는 컬럼 — 스키마 드리프트에 대비해 optional
+	description?: string | null;
 	amenities: string | null;
 	parking: string | null;
+	venue_group_name?: string | null;
 }
 
 function rowToVenueGroup(row: MuseumRow): VenueGroup | null {
@@ -47,8 +50,48 @@ function rowToVenueGroup(row: MuseumRow): VenueGroup | null {
 	};
 }
 
-const BASE_COLUMNS =
-	'id, name, name_en, address, address_en, phone, homepage_url, gps_x, gps_y, open_hours, rstdeInfo, amenities, parking';
+/** venue_group_name이 같은 행을 하나의 부모 VenueGroup으로 묶는다. */
+function groupByVenueGroupName(
+	rows: MuseumRow[],
+	venues: (VenueGroup & { _groupName?: string })[],
+): VenueGroup[] {
+	const grouped = new Map<string, VenueGroup[]>();
+	const ungrouped: VenueGroup[] = [];
+
+	for (let i = 0; i < rows.length; i++) {
+		const venue = venues[i];
+		if (!venue) continue;
+		const groupName = rows[i].venue_group_name;
+		if (groupName) {
+			const list = grouped.get(groupName) ?? [];
+			list.push(venue);
+			grouped.set(groupName, list);
+		} else {
+			ungrouped.push(venue);
+		}
+	}
+
+	const parents: VenueGroup[] = [];
+	for (const [groupName, members] of grouped) {
+		const first = members[0];
+		parents.push({
+			venueName: groupName,
+			venueAddress: first.venueAddress,
+			coordinates: first.coordinates,
+			openHours: first.openHours,
+			closedDays: first.closedDays,
+			exhibitions: [],
+			phone: first.phone,
+			homepageUrl: first.homepageUrl,
+			description: first.description,
+			amenities: first.amenities,
+			parking: first.parking,
+			subVenues: members,
+		});
+	}
+
+	return [...ungrouped, ...parents];
+}
 
 // Supabase museums(전국박물관미술관정보표준데이터 + 수동 보강) → 지도 마커 VenueGroup
 export function useMuseums(): VenueGroup[] {
@@ -57,13 +100,27 @@ export function useMuseums(): VenueGroup[] {
 	useEffect(() => {
 		let cancelled = false;
 		(async () => {
-			// venue_group_name 컬럼은 DB에서 삭제됨 — 그룹핑 없이 개별 핀으로 표시
-			const { data } = await supabase.from('museums').select(BASE_COLUMNS);
-			if (cancelled || !data) return;
-			const mapped = (data as MuseumRow[])
-				.map(rowToVenueGroup)
-				.filter((v): v is VenueGroup => v !== null);
-			setMuseumVenues(mapped);
+			// 컬럼을 명시하면 운영 DB에 없는 컬럼(description, venue_group_name 등) 하나 때문에
+			// 쿼리 전체가 42703으로 실패해 지도 핀이 전부 사라진다 — '*'로 받아 없는 필드는 undefined로 둔다.
+			const { data, error } = await supabase.from('museums').select('*');
+
+			if (cancelled) return;
+
+			if (error || !data) {
+				console.warn('[museums] 조회 실패:', error?.message);
+				return;
+			}
+
+			const rows = data as unknown as MuseumRow[];
+			const mapped = rows.map(rowToVenueGroup);
+			const validPairs = rows
+				.map((row, i) => ({ row, venue: mapped[i] }))
+				.filter((p): p is { row: MuseumRow; venue: VenueGroup } => p.venue !== null);
+			const grouped = groupByVenueGroupName(
+				validPairs.map((p) => p.row),
+				validPairs.map((p) => p.venue),
+			);
+			setMuseumVenues(grouped);
 		})();
 		return () => {
 			cancelled = true;

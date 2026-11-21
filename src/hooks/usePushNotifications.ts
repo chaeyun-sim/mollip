@@ -12,7 +12,8 @@ try {
 			shouldShowBanner: true,
 			shouldShowList: true,
 			shouldPlaySound: true,
-			shouldSetBadge: false,
+			// 포그라운드 수신 시에도 서버가 보낸 badge 값을 앱 아이콘에 반영
+			shouldSetBadge: true,
 		}),
 	});
 } catch {

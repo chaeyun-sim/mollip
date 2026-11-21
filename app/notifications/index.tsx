@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
+import * as Notifications from 'expo-notifications';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
 import { AppState, Pressable, ScrollView, Text, View } from 'react-native';
@@ -117,7 +118,14 @@ export default function NotificationsScreen() {
 			});
 	}, [userId, loadLogs]);
 
-	const hasUnread = logs?.some((log) => !log.read_at) ?? false;
+	const unreadCount = logs?.filter((log) => !log.read_at).length ?? 0;
+	const hasUnread = unreadCount > 0;
+
+	// 앱 아이콘 뱃지를 알림함의 안 읽은 개수와 맞춘다 (푸시가 올린 뱃지를 읽음 처리에 맞춰 내림)
+	useEffect(() => {
+		if (logs === null) return;
+		Notifications.setBadgeCountAsync(unreadCount).catch(() => {});
+	}, [logs, unreadCount]);
 
 	const iconName = (
 		log: NotificationLog,

@@ -2,8 +2,8 @@ import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { useRouter } from 'expo-router';
-import { useState } from 'react';
-import { ActivityIndicator, Pressable, ScrollView, Text, View } from 'react-native';
+import { useEffect, useState } from 'react';
+import { ActivityIndicator, Image, Pressable, ScrollView, Text, View } from 'react-native';
 import { useShallow } from 'zustand/react/shallow';
 import { Screen } from '@/src/components/layout/Screen';
 import { CardRow, SettingsCard } from '@/src/components/mypage';
@@ -15,6 +15,8 @@ import { formatSubscriptionDate } from '@/src/lib/subscription';
 import { useSubscriptionStore } from '@/src/store/subscriptionStore';
 import { CommonHeader } from '@/src/components/common/CommonHeader';
 import { openLegalDocument } from '@/src/utils/openLegalDocument';
+import { openStoreReview } from '@/src/utils/openStoreReview';
+import { supabase } from '@/src/utils/supabase';
 
 export default function MyPageScreen() {
 	const { t } = useTranslation();
@@ -29,6 +31,32 @@ export default function MyPageScreen() {
 		})),
 	);
 	const [signingOut, setSigningOut] = useState(false);
+	const [avatar, setAvatar] = useState<{ userId: string; url: string | null } | null>(null);
+	const [avatarLoadFailed, setAvatarLoadFailed] = useState(false);
+	const avatarUrl = avatar?.userId === user?.id ? avatar?.url : null;
+	const secureAvatarUrl = avatarUrl?.replace(
+		/^http:\/\/k\.kakaocdn\.net\//,
+		'https://k.kakaocdn.net/',
+	);
+
+	useEffect(() => {
+		if (!user?.id) return;
+		let cancelled = false;
+		setAvatarLoadFailed(false);
+		void supabase
+			.from('profiles')
+			.select('avatar_url')
+			.eq('id', user.id)
+			.maybeSingle()
+			.then(({ data, error }) => {
+				if (cancelled) return;
+				if (error) console.warn('[mypage] 아바타 조회 실패:', error);
+				setAvatar({ userId: user.id, url: data?.avatar_url ?? null });
+			});
+		return () => {
+			cancelled = true;
+		};
+	}, [user?.id]);
 	const { isPremium, isLoading: isSubscriptionLoading } = useSubscription();
 	const { expirationDate, billingIssueDetectedAt } = useSubscriptionStore(
 		useShallow((s) => ({
@@ -105,10 +133,19 @@ export default function MyPageScreen() {
 								style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
 								className="flex-row items-center gap-3.5 mt-3 rounded-2xl bg-brand px-4 py-3.5 shadow-gray900 elevation-[2px]"
 							>
-								<View className="w-10 h-10 rounded-full bg-brand-on-dark items-center justify-center">
-									<Text className="font-pretendard-semibold text-ink text-[18px]">
-										{user?.email?.charAt(0).toUpperCase()}
-									</Text>
+								<View className="w-10 h-10 rounded-full bg-brand-on-dark items-center justify-center overflow-hidden">
+									{secureAvatarUrl && !avatarLoadFailed ? (
+										<Image
+											source={{ uri: secureAvatarUrl }}
+											className="w-10 h-10"
+											accessibilityLabel="프로필 사진"
+											onError={() => setAvatarLoadFailed(true)}
+										/>
+									) : (
+										<Text className="font-pretendard-semibold text-ink text-[18px]">
+											{user.email?.charAt(0).toUpperCase()}
+										</Text>
+									)}
 								</View>
 								<View className="flex-1">
 									<Text className="font-pretendard-semibold text-white text-[17px]">
@@ -195,7 +232,11 @@ export default function MyPageScreen() {
 								label="의견 보내기"
 								onPress={() => router.push('/settings/inquiry')}
 							/>
-							<CardRow icon="star-outline" label="별점 남기기" onPress={() => {}} />
+							<CardRow
+								icon="star-outline"
+								label="별점 남기기"
+								onPress={() => void openStoreReview()}
+							/>
 						</SettingsCard>
 					</View>
 
