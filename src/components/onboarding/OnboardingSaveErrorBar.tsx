@@ -16,12 +16,12 @@ export function OnboardingSaveErrorBar({ onRetry, onSkipSave, busy }: Onboarding
 	const retryRef = useRef<View>(null);
 
 	useEffect(() => {
-		AccessibilityInfo.announceForAccessibility('저장에 실패했어요. 다시 시도해 주세요.');
+		AccessibilityInfo.announceForAccessibility(t('onboarding.save_failed_announce'));
 		const node = retryRef.current;
 		if (!node) return;
 		const tag = findNodeHandle(node);
 		if (tag) AccessibilityInfo.setAccessibilityFocus(tag);
-	}, []);
+	}, [t]);
 
 	return (
 		<View
@@ -30,7 +30,7 @@ export function OnboardingSaveErrorBar({ onRetry, onSkipSave, busy }: Onboarding
 			className="mb-3 gap-2.5 rounded-2xl bg-white border-[0.5px] border-gray300 px-4 py-3"
 		>
 			<Text className="text-gray900 text-[13px] font-pretendard-medium">
-				저장에 실패했어요. 네트워크를 확인하고 다시 시도해 주세요.
+				{t('onboarding.save_failed_body')}
 			</Text>
 			<View className="flex-row gap-3">
 				<Pressable
@@ -55,7 +55,7 @@ export function OnboardingSaveErrorBar({ onRetry, onSkipSave, busy }: Onboarding
 					onPress={onSkipSave}
 					disabled={busy}
 					accessibilityRole="button"
-					accessibilityLabel="취향 저장 없이 시작"
+					accessibilityLabel={t('onboarding.start_without_saving')}
 					accessibilityState={{ busy, disabled: busy }}
 					className="flex-1 min-h-11 items-center justify-center rounded-full border-[0.5px] border-gray300"
 				>
@@ -65,7 +65,7 @@ export function OnboardingSaveErrorBar({ onRetry, onSkipSave, busy }: Onboarding
 							busy ? 'text-gray400' : 'text-gray900',
 						)}
 					>
-						취향 저장 없이 시작
+						{t('onboarding.start_without_saving')}
 					</Text>
 				</Pressable>
 			</View>

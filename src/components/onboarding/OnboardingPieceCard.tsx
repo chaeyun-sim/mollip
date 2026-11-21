@@ -1,4 +1,5 @@
 import { useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Image, Text, View } from 'react-native';
 import { OnboardingDraggable } from '@/src/components/onboarding/OnboardingDraggable';
 import { cn } from '@/src/lib/cn';
@@ -25,6 +26,9 @@ export function OnboardingPieceCard({
 	onSelect,
 	onDrag,
 }: OnboardingPieceCardProps) {
+	const { t, i18n } = useTranslation();
+	const isEn = i18n.language === 'en';
+
 	const handlePress = useCallback(
 		(x: number, y: number) => onSelect(piece, x, y),
 		[piece, onSelect],
@@ -34,11 +38,19 @@ export function OnboardingPieceCard({
 			onDrag(piece, null, x, y, phase),
 		[piece, onDrag],
 	);
+	const pieceLabel = isEn ? piece.labelEn : piece.label;
+	// 카드 폭(88px)에 맞게 현대미술은 짧은 라벨을 쓴다
+	const localizedGenre = isEn
+		? t(`recommendations.labels.${piece.genre}`, { defaultValue: piece.genre })
+		: piece.genre;
+	const genreLabel =
+		piece.genre === '현대미술' ? t('onboarding.genre_contemporary_short') : localizedGenre;
+
 	return (
 		<View className="w-[88px]">
 			<OnboardingDraggable
 				testID={`tray-${piece.id}`}
-				label={`${piece.label}${placed ? ', 배치됨' : ''}`}
+				label={placed ? t('onboarding.piece_placed_a11y', { label: pieceLabel }) : pieceLabel}
 				disabled={disabled}
 				draggable={!placed}
 				onPress={handlePress}
@@ -62,7 +74,7 @@ export function OnboardingPieceCard({
 					)}
 				</View>
 				<Text className="pt-1 text-center font-pretendard-medium text-xs text-gray900">
-					{piece.genre === '현대미술' ? '현대 미술' : piece.genre}
+					{genreLabel}
 				</Text>
 			</OnboardingDraggable>
 		</View>

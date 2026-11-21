@@ -23,7 +23,8 @@ export function OnboardingGalleryWall({
 	onConfirm,
 	onResetPreferences,
 }: OnboardingGalleryWallProps) {
-	const { t } = useTranslation();
+	const { t, i18n } = useTranslation();
+	const isEn = i18n.language === 'en';
 
 	const insets = useSafeAreaInsets();
 	const dimensions = useWindowDimensions();
@@ -166,8 +167,8 @@ export function OnboardingGalleryWall({
 		onConfirm();
 	}, [wall, onConfirm]);
 	const canConfirmWall = wall.count >= 3 && !busy && drag === null;
-	// 취향 수정 화면(초기화 버튼 있음)은 저장, 온보딩은 취향 강화하기로 넘어가므로 다음 문구를 쓴다
-	const confirmLabel = onResetPreferences ? t('onboarding.save_preferences') : t('common.next');
+	// 둘 다 취향 강화하기로 이어진다 — 취향 수정 화면(초기화 버튼 있음)은 '다음 단계', 온보딩은 '다음'
+	const confirmLabel = onResetPreferences ? t('onboarding.next_step') : t('common.next');
 	const busyLabel = onResetPreferences
 		? t('onboarding.saving')
 		: t('onboarding.saving_preferences');
@@ -206,7 +207,9 @@ export function OnboardingGalleryWall({
 									testID={`frame-${index + 1}`}
 									label={t('onboarding.frame_label', {
 										number: index + 1,
-										piece: wall.placements[index]?.label ?? t('onboarding.frame_empty'),
+										piece:
+											(isEn ? wall.placements[index]?.labelEn : wall.placements[index]?.label) ??
+											t('onboarding.frame_empty'),
 									})}
 									selected={wall.selectedFrame === index}
 									disabled={busy}
@@ -232,8 +235,8 @@ export function OnboardingGalleryWall({
 			</View>
 			<Text className="pt-8 pb-2 text-gray700 text-sm font-pretendard-regular">
 				{wall.count < 3
-					? `그림을 누르거나 드래그로 걸어보세요 · 최소 3개 중 ${3 - wall.count}개 더`
-					: `${wall.count}/5개를 걸었어요 · 이대로 시작해도 좋아요`}
+					? t('onboarding.wall_hint_more', { remaining: 3 - wall.count })
+					: t('onboarding.wall_hint_ready', { count: wall.count })}
 			</Text>
 			<View className="rounded-xl bg-gray200 py-2">
 				<ScrollView
