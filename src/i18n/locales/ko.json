@@ -361,6 +361,24 @@
 		"done_body": "계정이 정상적으로 삭제됐어요\n언제든 다시 찾아주세요",
 		"go_home": "메인으로 가기"
 	},
+	"subscribe": {
+		"badge": "몰립 PREMIUM",
+		"next_billing": "다음 결제일",
+		"available_until": "이용 가능 기간",
+		"current_plan": "이용 중인 플랜",
+		"plan_weekly": "1주 정기구독",
+		"plan_monthly": "1개월 정기구독",
+		"plan_six_months": "6개월 정기구독",
+		"plan_unknown": "프리미엄",
+		"manage_in_store": "App Store에서 구독 관리",
+		"benefits_title": "내가 누리고 있는 프리미엄 혜택",
+		"question": "구독 관련 문의가 있으신가요?",
+		"inquiry_a11y": "구독 관련 문의하기",
+		"no_subscription_title": "구독 내역이 없어요",
+		"no_subscription_body": "현재 관리할 구독이 없습니다.",
+		"open_failed_title": "구독 관리",
+		"open_failed_body": "구독 관리 화면을 열지 못했어요."
+	},
 	"inquiry": {
 		"intro": "모든 문의는 익명으로 진행되며 확인 후 남겨주신 연락처로 빠르게 답변드릴게요. 답변은 1일정도 소요될 수 있어요.",
 		"category_label": "유형",

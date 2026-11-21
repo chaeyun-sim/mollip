@@ -361,6 +361,24 @@
 		"done_body": "Your account has been deleted.\nYou’re welcome back anytime.",
 		"go_home": "Go to home"
 	},
+	"subscribe": {
+		"badge": "mollip PREMIUM",
+		"next_billing": "Next billing date",
+		"available_until": "Access until",
+		"current_plan": "Current plan",
+		"plan_weekly": "Weekly plan",
+		"plan_monthly": "Monthly plan",
+		"plan_six_months": "6-month plan",
+		"plan_unknown": "Premium",
+		"manage_in_store": "Manage in App Store",
+		"benefits_title": "Your Premium benefits",
+		"question": "Have a question about your subscription?",
+		"inquiry_a11y": "Contact us about your subscription",
+		"no_subscription_title": "No subscription found",
+		"no_subscription_body": "You don't have a subscription to manage right now.",
+		"open_failed_title": "Manage subscription",
+		"open_failed_body": "We couldn't open subscription management."
+	},
 	"inquiry": {
 		"intro": "Your inquiry will remain anonymous. We'll get back to you at the email address you provide, usually within 24 hours.",
 		"category_label": "Category",
