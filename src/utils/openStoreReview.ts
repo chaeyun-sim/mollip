@@ -1,5 +1,6 @@
 import * as StoreReview from 'expo-store-review';
 import { Alert, Linking, Platform } from 'react-native';
+import i18n from '@/src/i18n';
 
 const IOS_APP_STORE_ID = '6813843152';
 const ANDROID_PACKAGE = 'com.simune.mollip';
@@ -20,7 +21,10 @@ export const openStoreReview = async (): Promise<void> => {
 	} catch (error) {
 		console.warn('[store-review] 리뷰 요청 실패:', error);
 		if (Platform.OS === 'ios') {
-			Alert.alert('App Store를 열 수 없어요', '실제 기기에서 다시 시도해 주세요.');
+			Alert.alert(
+				i18n.t('settings.store_open_failed_title'),
+				i18n.t('settings.store_open_failed_body'),
+			);
 			return;
 		}
 	}

@@ -4,9 +4,9 @@ import { isWithinOfflineAccessWindow } from '@/src/lib/subscriptionVerification'
 
 export const ENTITLEMENT_ID = '몰립_pro';
 
-export const formatSubscriptionDate = (value: string | null | undefined) => {
+export const formatSubscriptionDate = (value: string | null | undefined, locale = 'ko-KR') => {
 	if (!value) return '-';
-	return new Intl.DateTimeFormat('ko-KR', {
+	return new Intl.DateTimeFormat(locale, {
 		year: 'numeric',
 		month: '2-digit',
 		day: '2-digit',

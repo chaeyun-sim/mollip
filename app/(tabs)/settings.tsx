@@ -19,7 +19,7 @@ import { openStoreReview } from '@/src/utils/openStoreReview';
 import { supabase } from '@/src/utils/supabase';
 
 export default function MyPageScreen() {
-	const { t } = useTranslation();
+	const { t, i18n } = useTranslation();
 
 	const router = useRouter();
 	const { session, user, authLoading, signOut } = useAuthStore(
@@ -79,11 +79,17 @@ export default function MyPageScreen() {
 	const showUpgrade = !isSubscriptionLoading && !isPremium;
 	// 결제 문제가 있으면 행에서 바로 보이게 — 없으면 만료일, 만료일도 모르면 이용 중 표시
 	const getSubscriptionValue = () => {
-		if (billingIssueDetectedAt) return '결제 확인 필요';
-		if (expirationDate) return `${formatSubscriptionDate(expirationDate)}까지`;
+		if (billingIssueDetectedAt) return t('settings.billing_issue');
+		if (expirationDate) {
+			const locale = i18n.language === 'en' ? 'en-US' : 'ko-KR';
+			return t('settings.expires_until', {
+				date: formatSubscriptionDate(expirationDate, locale),
+			});
+		}
 		return 'Premium';
 	};
 	const subscriptionValue = getSubscriptionValue();
+	const displayName = t('settings.user_name', { name: user?.email?.split('@')[0] });
 
 	if (authLoading) return <ActivityIndicator style={{ flex: 1 }} />;
 
@@ -101,10 +107,10 @@ export default function MyPageScreen() {
 						<>
 							<View className="mt-4">
 								<Text className="font-pretendard-bold text-gray900 text-[18px] mb-1.5">
-									로그인하고 더 많은 기능을 만나보세요
+									{t('settings.login_prompt_title')}
 								</Text>
 								<Text className="font-pretendard-regular text-gray600 text-[13px] leading-[19px] mb-4">
-									{`몰입모드, 나만의 해설 생성, 취향 기반 추천까지\n로그인하면 모두 이용할 수 있어요`}
+									{t('settings.login_prompt_body')}
 								</Text>
 								<Pressable
 									onPress={() => {
@@ -112,12 +118,12 @@ export default function MyPageScreen() {
 										router.push({ pathname: '/auth/login', params: { returnTo: '/settings' } });
 									}}
 									accessibilityRole="button"
-									accessibilityLabel="로그인하기"
+									accessibilityLabel={t('auth.login')}
 									style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
 									className="self-start rounded-full bg-secondary px-5 py-2.5"
 								>
 									<Text className="font-pretendard-semibold text-white text-[13px]">
-										로그인하기
+										{t('auth.login')}
 									</Text>
 								</Pressable>
 							</View>
@@ -129,7 +135,7 @@ export default function MyPageScreen() {
 							<Pressable
 								onPress={() => router.push('/settings/account')}
 								accessibilityRole="button"
-								accessibilityLabel="계정 정보"
+								accessibilityLabel={t('settings.account_info_a11y')}
 								style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
 								className="flex-row items-center gap-3.5 mt-3 rounded-2xl bg-brand px-4 py-3.5 shadow-gray900 elevation-[2px]"
 							>
@@ -138,7 +144,7 @@ export default function MyPageScreen() {
 										<Image
 											source={{ uri: secureAvatarUrl }}
 											className="w-10 h-10"
-											accessibilityLabel="프로필 사진"
+											accessibilityLabel={t('settings.profile_photo_a11y')}
 											onError={() => setAvatarLoadFailed(true)}
 										/>
 									) : (
@@ -149,9 +155,7 @@ export default function MyPageScreen() {
 								</View>
 								<View className="flex-1">
 									<Text className="font-pretendard-semibold text-white text-[17px]">
-										{isPremium
-											? `✨${user?.email?.split('@')[0]}님✨`
-											: `${user?.email?.split('@')[0]}님`}
+										{isPremium ? `✨${displayName}✨` : displayName}
 									</Text>
 								</View>
 								<Ionicons name="chevron-forward" size={18} className="text-white" />
@@ -162,16 +166,16 @@ export default function MyPageScreen() {
 								<Pressable
 									onPress={() => router.push('/settings/premium')}
 									accessibilityRole="button"
-									accessibilityLabel="프리미엄 이용권 보기"
+									accessibilityLabel={t('settings.premium_view_a11y')}
 									className="flex-row items-center gap-3.5 rounded-2xl bg-secondary px-4 py-4"
 								>
 									<Ionicons name="sparkles" size={20} className="text-brand" />
 									<View className="flex-1">
 										<Text className="font-pretendard-bold text-white text-[15px] mb-0.5">
-											프리미엄으로 업그레이드
+											{t('settings.upgrade_title')}
 										</Text>
 										<Text className="font-pretendard-regular text-white/70 text-[12px] leading-[17px]">
-											무제한 몰입모드와 나만의 해설을 만나보세요
+											{t('settings.upgrade_body')}
 										</Text>
 									</View>
 									<Ionicons name="chevron-forward" size={18} color="#FFFFFF" />
@@ -181,20 +185,20 @@ export default function MyPageScreen() {
 							{session && (
 								<View>
 									<Text className="ml-1 mb-2 font-pretendard-semibold text-gray600 text-[12px] tracking-[1px]">
-										계정 관리
+										{t('settings.section_account')}
 									</Text>
 									<SettingsCard>
 										{isPremium && (
 											<CardRow
 												icon="card-outline"
-												label="구독 관리"
+												label={t('settings.manage_subscription')}
 												value={subscriptionValue}
 												onPress={() => router.push('/settings/subscribe')}
 											/>
 										)}
 										<CardRow
 											icon="color-palette-outline"
-											label="내 취향 수정"
+											label={t('settings.edit_preferences')}
 											onPress={() => router.push('/settings/preferences')}
 										/>
 									</SettingsCard>
@@ -203,7 +207,7 @@ export default function MyPageScreen() {
 
 							<View>
 								<Text className="ml-1 mb-2 font-pretendard-semibold text-gray600 text-[12px] tracking-[1px]">
-									해설
+									{t('settings.section_guide')}
 								</Text>
 								<SettingsCard locked={!isPremium}>
 									<CardRow
@@ -219,7 +223,7 @@ export default function MyPageScreen() {
 
 					<View>
 						<Text className="ml-1 mb-2 font-pretendard-semibold text-gray600 text-[12px] tracking-[1px]">
-							서비스
+							{t('settings.section_service')}
 						</Text>
 						<SettingsCard>
 							<CardRow
@@ -229,12 +233,12 @@ export default function MyPageScreen() {
 							/>
 							<CardRow
 								icon="chatbubble-ellipses-outline"
-								label="의견 보내기"
+								label={t('settings.send_feedback')}
 								onPress={() => router.push('/settings/inquiry')}
 							/>
 							<CardRow
 								icon="star-outline"
-								label="별점 남기기"
+								label={t('settings.rate_app')}
 								onPress={() => void openStoreReview()}
 							/>
 						</SettingsCard>
@@ -242,7 +246,7 @@ export default function MyPageScreen() {
 
 					<View>
 						<Text className="ml-1 mb-2 font-pretendard-semibold text-gray600 text-[12px] tracking-[1px]">
-							앱 정보
+							{t('settings.section_app_info')}
 						</Text>
 						<SettingsCard>
 							<CardRow
@@ -252,12 +256,12 @@ export default function MyPageScreen() {
 							/>
 							<CardRow
 								icon="shield-checkmark-outline"
-								label="개인정보 처리방침"
+								label={t('auth.privacy_policy')}
 								onPress={() => void openLegalDocument('privacy')}
 							/>
 							<CardRow
 								icon="code-slash-outline"
-								label="오픈소스 라이선스"
+								label={t('settings.open_source_licenses')}
 								onPress={() => router.push('/settings/open-source-licenses')}
 							/>
 							<CardRow
