@@ -1,7 +1,8 @@
+import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { useRouter } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { CardRow } from '@/src/components/mypage/CardRow';
 import { DESCRIPTION_LENGTH_OPTIONS, FONT_SIZE_OPTIONS, SPEED_OPTIONS } from '@/src/data/mypage';
@@ -15,13 +16,9 @@ export interface NarrationSettingsFieldsProps {
 	theme?: 'light' | 'dark';
 }
 
-const LABEL_SPEED = '해설 재생 속도';
-const LABEL_LENGTH = '해설 길이';
-const LABEL_VOICE = '해설 음성 선택';
-const LABEL_FOCUS = '해설 강화 항목';
-const LABEL_FONT_SIZE = '해설 텍스트 크기';
-
 export function NarrationSettingsFields({ theme = 'light' }: NarrationSettingsFieldsProps) {
+	const { t } = useTranslation();
+
 	const router = useRouter();
 	const {
 		voiceId,
@@ -45,21 +42,38 @@ export function NarrationSettingsFields({ theme = 'light' }: NarrationSettingsFi
 			.catch(console.error);
 	}, [voiceId]);
 
+	const lengthOptions = useMemo(
+		() => DESCRIPTION_LENGTH_OPTIONS.map(({ value, labelKey }) => ({ value, label: t(labelKey) })),
+		[t],
+	);
+	const fontSizeOptions = useMemo(
+		() => FONT_SIZE_OPTIONS.map(({ value, labelKey }) => ({ value, label: t(labelKey) })),
+		[t],
+	);
+
+	const speedLabel = t('narration.speed');
+	const lengthLabel = t('narration.length');
+	const voiceRowLabel = t('narration.voice');
+	const focusRowLabel = t('narration.focus');
+	const fontSizeLabel = t('narration.font_size');
+
 	const voiceLabel = currentVoiceName ? currentVoiceName.split(' - ')[0] : '';
 	const focusLabel =
-		descriptionFocus.length > 0 ? `${descriptionFocus.length}개 선택` : '선택 안 함';
+		descriptionFocus.length > 0
+			? t('narration.focus_count', { count: descriptionFocus.length })
+			: t('narration.focus_none');
 
 	if (theme === 'dark') {
 		return (
 			<View className="gap-5">
 				<View className="flex-row items-center justify-between">
-					<Text className="text-sm font-pretendard-medium text-on-dark">{LABEL_SPEED}</Text>
+					<Text className="text-sm font-pretendard-medium text-on-dark">{speedLabel}</Text>
 					<SettingPills options={SPEED_OPTIONS} value={voiceSpeed} onPress={setVoiceSpeed} />
 				</View>
 				<View className="flex-row items-center justify-between">
-					<Text className="text-sm font-pretendard-medium text-on-dark">{LABEL_LENGTH}</Text>
+					<Text className="text-sm font-pretendard-medium text-on-dark">{lengthLabel}</Text>
 					<SettingPills
-						options={DESCRIPTION_LENGTH_OPTIONS}
+						options={lengthOptions}
 						value={descriptionLength}
 						onPress={setDescriptionLength}
 					/>
@@ -67,11 +81,11 @@ export function NarrationSettingsFields({ theme = 'light' }: NarrationSettingsFi
 				<Pressable
 					className="flex-row items-center justify-between"
 					onPress={() => router.push('/settings/voice')}
-					accessibilityLabel={LABEL_VOICE}
+					accessibilityLabel={voiceRowLabel}
 					accessibilityRole="button"
 					style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
 				>
-					<Text className="text-sm font-pretendard-medium text-on-dark">{LABEL_VOICE}</Text>
+					<Text className="text-sm font-pretendard-medium text-on-dark">{voiceRowLabel}</Text>
 					<View className="flex-row items-center gap-1.5">
 						<Text className="text-sm font-pretendard-regular text-gray600" numberOfLines={1}>
 							{voiceLabel}
@@ -82,19 +96,19 @@ export function NarrationSettingsFields({ theme = 'light' }: NarrationSettingsFi
 				<Pressable
 					className="flex-row items-center justify-between"
 					onPress={() => router.push('/settings/description')}
-					accessibilityLabel={LABEL_FOCUS}
+					accessibilityLabel={focusRowLabel}
 					accessibilityRole="button"
 					style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
 				>
-					<Text className="text-sm font-pretendard-medium text-on-dark">{LABEL_FOCUS}</Text>
+					<Text className="text-sm font-pretendard-medium text-on-dark">{focusRowLabel}</Text>
 					<View className="flex-row items-center gap-1.5">
 						<Text className="text-sm font-pretendard-regular text-gray600">{focusLabel}</Text>
 						<Ionicons name="chevron-forward" size={16} className="text-gray700" />
 					</View>
 				</Pressable>
 				<View className="flex-row items-center justify-between">
-					<Text className="text-sm font-pretendard-medium text-on-dark">{LABEL_FONT_SIZE}</Text>
-					<SettingPills options={FONT_SIZE_OPTIONS} value={fontSize} onPress={setFontSize} />
+					<Text className="text-sm font-pretendard-medium text-on-dark">{fontSizeLabel}</Text>
+					<SettingPills options={fontSizeOptions} value={fontSize} onPress={setFontSize} />
 				</View>
 			</View>
 		);
@@ -102,24 +116,24 @@ export function NarrationSettingsFields({ theme = 'light' }: NarrationSettingsFi
 
 	return (
 		<View>
-			<CardRow label={LABEL_SPEED} className="py-3.5">
+			<CardRow label={speedLabel} className="py-3.5">
 				<SettingPills options={SPEED_OPTIONS} value={voiceSpeed} onPress={setVoiceSpeed} />
 			</CardRow>
-			<CardRow label={LABEL_LENGTH} className="py-3.5">
+			<CardRow label={lengthLabel} className="py-3.5">
 				<SettingPills
-					options={DESCRIPTION_LENGTH_OPTIONS}
+					options={lengthOptions}
 					value={descriptionLength}
 					onPress={setDescriptionLength}
 				/>
 			</CardRow>
 			<CardRow
-				label={LABEL_VOICE}
+				label={voiceRowLabel}
 				value={voiceLabel || undefined}
 				onPress={() => router.push('/settings/voice')}
 			/>
-			<CardRow label={LABEL_FOCUS} onPress={() => router.push('/settings/description')} />
-			<CardRow label={LABEL_FONT_SIZE} className="py-3.5">
-				<SettingPills options={FONT_SIZE_OPTIONS} value={fontSize} onPress={setFontSize} />
+			<CardRow label={focusRowLabel} onPress={() => router.push('/settings/description')} />
+			<CardRow label={fontSizeLabel} className="py-3.5">
+				<SettingPills options={fontSizeOptions} value={fontSize} onPress={setFontSize} />
 			</CardRow>
 		</View>
 	);

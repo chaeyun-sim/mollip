@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { Pressable, ScrollView, Text, View } from 'react-native';
@@ -9,45 +10,23 @@ import { type DescriptionFocus, useSettingsStore } from '@/src/store/settingsSto
 
 interface FocusOption {
 	key: DescriptionFocus;
-	label: string;
+	labelKey: string;
 }
 
 const FOCUS_OPTIONS: FocusOption[] = [
-	{
-		key: 'aesthetics',
-		label: '구도, 색채, 조형적 특징',
-	},
-	{
-		key: 'art_history',
-		label: '작품의 사조와 역사적 맥락',
-	},
-	{
-		key: 'artist_life',
-		label: '작가의 삶과 이 작품의 연관성',
-	},
-	{
-		key: 'social_context',
-		label: '시대 배경과 사회적 의미',
-	},
-	{
-		key: 'appreciation',
-		label: '직접 느낄 수 있는 감성적 감상 포인트',
-	},
-	{
-		key: 'technique',
-		label: '사용된 재료, 물감 종류, 붓 터치, 제작 기법',
-	},
-	{
-		key: 'symbolism',
-		label: '작품 속 숨겨진 상징, 도상, 알레고리',
-	},
-	{
-		key: 'viewer_gaze',
-		label: '조명, 액자, 구도가 시선을 이끄는 방식',
-	},
+	{ key: 'aesthetics', labelKey: 'narration.focus_aesthetics' },
+	{ key: 'art_history', labelKey: 'narration.focus_art_history' },
+	{ key: 'artist_life', labelKey: 'narration.focus_artist_life' },
+	{ key: 'social_context', labelKey: 'narration.focus_social_context' },
+	{ key: 'appreciation', labelKey: 'narration.focus_appreciation' },
+	{ key: 'technique', labelKey: 'narration.focus_technique' },
+	{ key: 'symbolism', labelKey: 'narration.focus_symbolism' },
+	{ key: 'viewer_gaze', labelKey: 'narration.focus_viewer_gaze' },
 ];
 
 export default function DescriptionSettingsScreen() {
+	const { t } = useTranslation();
+
 	const router = useRouter();
 	const { descriptionFocus, toggleDescriptionFocus } = useSettingsStore(
 		useShallow((s) => ({
@@ -60,12 +39,12 @@ export default function DescriptionSettingsScreen() {
 		<Screen variant="warm">
 			<Screen.Header>
 				<Screen.Header.Back onPress={() => router.back()} />
-				<Screen.Header.Center>해설 강화 항목</Screen.Header.Center>
+				<Screen.Header.Center>{t('narration.focus')}</Screen.Header.Center>
 			</Screen.Header>
 
 			<ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-[60px]">
 				<Text className="text-[13px] font-pretendard-regular text-gray600 mt-4 mb-3">
-					{`선택한 항목을 해설에서 더 깊게 다뤄요.\n여러 개 선택할 수 있어요.`}
+					{t('narration.focus_intro')}
 				</Text>
 
 				<View className="mt-2">
@@ -78,7 +57,7 @@ export default function DescriptionSettingsScreen() {
 									key={option.key}
 									onPress={() => toggleDescriptionFocus(option.key)}
 									accessibilityRole="checkbox"
-									accessibilityLabel={option.label}
+									accessibilityLabel={t(option.labelKey)}
 									accessibilityState={{ checked: isSelected }}
 									style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
 								>
@@ -93,7 +72,7 @@ export default function DescriptionSettingsScreen() {
 										</View>
 										<View className="flex-1">
 											<Text className="text-[14px] font-pretendard-medium text-gray900">
-												{option.label}
+												{t(option.labelKey)}
 											</Text>
 										</View>
 									</View>
