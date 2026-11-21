@@ -8,26 +8,36 @@ import { ExternalMapSheet, type ExternalMapTarget } from '@/src/components/map/E
 import { ExhibitionInfoRow } from './ExhibitionInfoRow';
 import type { Exhibition } from '@/src/data/exhibitions';
 import { getDdayLabel } from '@/src/utils/exhibitionSearch';
-import {
-	buildWeeklyHours,
-	formatTodayOpenStatus,
-	parseParkingAlternatives,
-} from '@/src/utils/exhibitionVenueInfo';
+import { parseParkingAlternatives } from '@/src/utils/exhibitionVenueInfo';
+import { buildWeeklyHours, getOpenStatus } from '@/src/utils/venueOpenStatus';
+
+/** getDdayLabel이 돌려주는 당일 마감 문구 */
+const CLOSES_TODAY_LABEL = '오늘 마감';
+/** 입장료는 "무료"·"없음"만 번역하고 금액 안내 문구는 원문 그대로 둔다 */
+const ADMISSION_LABEL_KEYS: Partial<Record<string, string>> = {
+	무료: 'common.free',
+	없음: 'exhibitions.detail.no_info',
+};
 
 interface ExhibitionVenueInfoProps extends Exhibition {
 	hasTopSpacing: boolean;
 }
 
 export function ExhibitionVenueInfo({ hasTopSpacing, ...exhibition }: ExhibitionVenueInfoProps) {
-	const { t } = useTranslation();
+	const { t, i18n } = useTranslation();
 
 	const [copiedAddress, setCopiedAddress] = useState(false);
 	const [copiedPhone, setCopiedPhone] = useState(false);
 	const [showHours, setShowHours] = useState(false);
 	const [externalMapTarget, setExternalMapTarget] = useState<ExternalMapTarget | null>(null);
 
-	const ddayLabel = getDdayLabel(exhibition);
-	const parking = exhibition.museum?.parking;
+	const isEn = i18n.language === 'en';
+	const rawDdayLabel = getDdayLabel(exhibition);
+	const ddayLabel =
+		rawDdayLabel === CLOSES_TODAY_LABEL ? t('exhibitions.detail.closes_today') : rawDdayLabel;
+	const venueAddress = (isEn && exhibition.venueAddressEn) || exhibition.venueAddress;
+	// 주차 안내는 한국어 문장뿐이라 영어 설정에서는 숨긴다
+	const parking = isEn ? undefined : exhibition.museum?.parking;
 	const openHours = exhibition.openHours;
 	const closedDays = exhibition.museum?.closedDays;
 	const parkingAlternatives = useMemo(() => parseParkingAlternatives(parking), [parking]);
@@ -40,14 +50,25 @@ export function ExhibitionVenueInfo({ hasTopSpacing, ...exhibition }: Exhibition
 	const showParkingSummaryMapIcon = !(
 		parkingAlternatives.summary.startsWith('전용') && parkingAlternatives.alternatives.length === 0
 	);
-	const todayOpenStatus = useMemo(
-		() => formatTodayOpenStatus(openHours, closedDays),
+	const openStatus = useMemo(
+		() => getOpenStatus(openHours, closedDays, new Date()),
 		[openHours, closedDays],
 	);
 	const weeklyHours = useMemo(
 		() => buildWeeklyHours(openHours, closedDays),
 		[openHours, closedDays],
 	);
+	const openStatusLabel = {
+		open: t('map.venue.status_open'),
+		closed: t('map.venue.status_closed'),
+		'closed-today': t('map.venue.status_closed_today'),
+		'no-info': t('map.venue.hours_no_info'),
+		raw: openStatus.kind === 'raw' ? openStatus.text : '',
+	}[openStatus.kind];
+	const todayOpenStatus =
+		'hours' in openStatus ? `${openStatusLabel} · ${openStatus.hours}` : openStatusLabel;
+	const admissionKey = ADMISSION_LABEL_KEYS[exhibition.admission];
+	const admission = (isEn && admissionKey && t(admissionKey)) || exhibition.admission;
 
 	const handleCopy = useCallback(
 		async (text: string | undefined, setCopied: (copied: boolean) => void) => {
@@ -70,7 +91,7 @@ export function ExhibitionVenueInfo({ hasTopSpacing, ...exhibition }: Exhibition
 					{/* getDdayLabel이 이미 'D-n' / '오늘 마감' 형태로 돌려준다 — 접두사를 다시 붙이지 않는다 */}
 					{ddayLabel && <Text className="text-error">{ddayLabel}</Text>}
 				</ExhibitionInfoRow>
-				{exhibition.venueAddress && (
+				{venueAddress && (
 					<ExhibitionInfoRow
 						icon={
 							<Ionicons
@@ -79,14 +100,14 @@ export function ExhibitionVenueInfo({ hasTopSpacing, ...exhibition }: Exhibition
 								color={copiedAddress ? '#22c55e' : '#9ca3af'}
 							/>
 						}
-						label="위치"
-						onPress={() => handleCopy(exhibition.venueAddress, setCopiedAddress)}
+						label={t('exhibitions.detail.location')}
+						onPress={() => handleCopy(venueAddress, setCopiedAddress)}
 					>
-						{exhibition.venueAddress}
+						{venueAddress}
 					</ExhibitionInfoRow>
 				)}
 				<ExhibitionInfoRow
-					label="전화번호"
+					label={t('exhibitions.detail.phone')}
 					onPress={() => handleCopy(exhibition.phone, setCopiedPhone)}
 					icon={
 						<Ionicons
@@ -96,7 +117,7 @@ export function ExhibitionVenueInfo({ hasTopSpacing, ...exhibition }: Exhibition
 						/>
 					}
 				>
-					{exhibition.phone ?? '정보 없음'}{' '}
+					{exhibition.phone ?? t('exhibitions.detail.no_info')}{' '}
 				</ExhibitionInfoRow>
 				<View
 					className="relative flex-row items-center gap-3 py-3.5 border-b border-gray300"
@@ -104,14 +125,14 @@ export function ExhibitionVenueInfo({ hasTopSpacing, ...exhibition }: Exhibition
 				>
 					<View className="flex-1 pt-1">
 						<Text className="text-gray500 text-[11px] font-pretendard-medium tracking-wider uppercase">
-							운영시간
+							{t('exhibitions.detail.hours')}
 						</Text>
 						<Pressable
 							onPress={() => setShowHours((prev) => !prev)}
 							hitSlop={8}
 							className="flex-row items-center gap-2 mt-0.5"
 							accessibilityRole="button"
-							accessibilityLabel="요일별 운영시간 보기"
+							accessibilityLabel={t('map.venue.weekly_toggle_a11y')}
 							accessibilityState={{ expanded: showHours }}
 						>
 							<Text className="text-gray900 text-[14px] font-pretendard-regular leading-5">
@@ -129,17 +150,19 @@ export function ExhibitionVenueInfo({ hasTopSpacing, ...exhibition }: Exhibition
 								style={{ zIndex: 999, elevation: 999 }}
 							>
 								{weeklyHours.map((entry) => (
-									<View key={entry.day} className="flex-row items-center justify-between py-1">
+									<View key={entry.dayIndex} className="flex-row items-center justify-between py-1">
 										<Text className="text-gray500 text-[13px] font-pretendard-semibold">
-											{entry.day}
+											{t(`map.venue.weekday_${entry.dayIndex}`)}
 										</Text>
 										<Text
 											className={cn(
 												'text-[14px] font-pretendard-medium',
-												entry.hours === '휴관' ? 'text-error' : 'text-gray900',
+												entry.isClosed ? 'text-error' : 'text-gray900',
 											)}
 										>
-											{entry.hours}
+											{entry.isClosed
+												? t('map.venue.weekly_closed')
+												: (entry.hours ?? t('map.venue.weekly_no_info'))}
 										</Text>
 									</View>
 								))}
@@ -147,10 +170,10 @@ export function ExhibitionVenueInfo({ hasTopSpacing, ...exhibition }: Exhibition
 						)}
 					</View>
 				</View>
-				<ExhibitionInfoRow label={t('exhibitions.admission')} isLast={!exhibition.museum?.parking}>
-					{exhibition.admission}
+				<ExhibitionInfoRow label={t('exhibitions.admission')} isLast={!parking}>
+					{admission}
 				</ExhibitionInfoRow>
-				{exhibition.museum?.parking && (
+				{parking && (
 					<View className="py-3.5 w-full">
 						<Text className="text-gray500 text-[11px] font-pretendard-medium tracking-wider uppercase">
 							주차 정보

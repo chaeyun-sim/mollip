@@ -6,7 +6,7 @@ import type { Database } from '@/src/types/database.types';
 
 // live Supabase exhibitions 컬럼 (2026-08 기준)
 export const EXHIBITION_COLUMNS =
-	'id, source, museum_id, venue_name_fallback, event_site, title, title_en, start_date, end_date, description, image_url, genre, type, tags, open_hours, closed_days, admission, ticket_url, web_site, note';
+	'id, source, museum_id, venue_name_fallback, event_site, title, title_en, start_date, end_date, description, description_en, image_url, genre, type, tags, open_hours, closed_days, admission, ticket_url, web_site, note';
 
 export type ExhibitionRow = Pick<
 	Database['public']['Tables']['exhibitions']['Row'],
@@ -20,6 +20,7 @@ export type ExhibitionRow = Pick<
 	| 'start_date'
 	| 'end_date'
 	| 'description'
+	| 'description_en'
 	| 'image_url'
 	| 'genre'
 	| 'type'
@@ -36,7 +37,9 @@ export type MuseumJoinRow = Pick<
 	Database['public']['Tables']['museums']['Row'],
 	| 'id'
 	| 'name'
+	| 'name_en'
 	| 'address'
+	| 'address_en'
 	| 'phone'
 	| 'homepage_url'
 	| 'open_hours'
@@ -106,11 +109,13 @@ export function mapExhibitionRowToExhibition(
 		title: row.title ? stripHtml(row.title) : '',
 		titleEn: row.title_en ? stripHtml(row.title_en) : undefined,
 		description: row.description ? stripHtml(row.description) : '',
+		descriptionEn: row.description_en ? stripHtml(row.description_en) : undefined,
 		genre: displayGenre(row.genre) ?? '',
 		exhibitionType: row.type?.trim() || undefined,
 		tags: sanitizeExhibitionTags(normalizeTags(row.tags as string[] | string | null)),
 		note: row.note?.trim() || undefined,
 		venue: venueName || '장소 정보 없음',
+		venueEn: museum?.name_en?.trim() || undefined,
 		museum: museum
 			? {
 					id: museum.id,
@@ -129,6 +134,7 @@ export function mapExhibitionRowToExhibition(
 			: null,
 		eventSite: row.event_site?.trim() || undefined,
 		venueAddress: museum?.address?.trim() || institutionInfo?.address,
+		venueAddressEn: museum?.address_en?.trim() || undefined,
 		// artist는 DB exhibitions 테이블에 없음 — 필요 시 museums 조인 또는 별도 소스에서 주입
 		coordinates,
 		startDate: row.start_date,

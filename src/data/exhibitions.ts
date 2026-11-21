@@ -28,6 +28,8 @@ export interface Exhibition {
 	titleEn?: string;
 	artist?: string;
 	description: string;
+	/** exhibitions.description_en — 영어 설정 시 표시 */
+	descriptionEn?: string;
 	genre: string;
 	exhibitionType?: string;
 	tags?: string[];
@@ -35,9 +37,13 @@ export interface Exhibition {
 
 	// — 장소
 	venue: string;
+	/** museums.name_en — 영어 설정 시 표시 */
+	venueEn?: string;
 	museum?: ExhibitionMuseum | null;
 	eventSite?: string;
 	venueAddress?: string;
+	/** museums.address_en — 영어 설정 시 표시 */
+	venueAddressEn?: string;
 	venueGroupName?: string;
 	coordinates?: { latitude: number; longitude: number };
 

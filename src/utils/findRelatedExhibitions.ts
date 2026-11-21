@@ -293,6 +293,23 @@ async function ensureMinimumRelated(
 	}
 }
 
+// 후보 조회는 미술관 조인 없이 하므로, 최종 결과에만 영문 장소명을 한 번에 붙인다
+async function attachVenueEn(exhibitions: Exhibition[]): Promise<Exhibition[]> {
+	const museumIds = [
+		...new Set(exhibitions.map((ex) => ex.museumId).filter((id): id is number => id != null)),
+	];
+	if (museumIds.length === 0) return exhibitions;
+
+	const { data, error } = await supabase.from('museums').select('id, name_en').in('id', museumIds);
+	if (error || !data) return exhibitions;
+
+	const nameEnById = new Map(data.map((museum) => [museum.id, museum.name_en?.trim()]));
+	return exhibitions.map((ex) => {
+		const venueEn = ex.museumId != null ? nameEnById.get(ex.museumId) : undefined;
+		return venueEn ? { ...ex, venueEn } : ex;
+	});
+}
+
 export async function findRelatedExhibitions(params: FindRelatedParams): Promise<Exhibition[]> {
 	const targetLimit = params.limit ?? RELATED_LIMIT;
 	const merged = new Map<string, ScoredExhibition>();
@@ -309,5 +326,5 @@ export async function findRelatedExhibitions(params: FindRelatedParams): Promise
 
 	await ensureMinimumRelated(params, merged);
 
-	return toExhibitionList(merged, targetLimit);
+	return attachVenueEn(toExhibitionList(merged, targetLimit));
 }

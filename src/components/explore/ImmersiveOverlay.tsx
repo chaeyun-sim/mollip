@@ -158,10 +158,10 @@ export function ImmersiveOverlay({ visible, title, onStart, onClose }: Immersive
 						onPress={handleStartPress}
 						className="mt-8 rounded-full px-6 py-3 bg-white/15 border-[1.5px] border-white/35"
 						accessibilityRole="button"
-						accessibilityLabel={t('onboarding.start')}
+						accessibilityLabel={t('exhibitions.detail.self_guide_start')}
 					>
 						<Text className="text-white font-pretendard-semibold text-[15px]">
-							셀프 가이드 시작하기
+							{t('exhibitions.detail.self_guide_start')}
 						</Text>
 					</Pressable>
 				</Animated.View>

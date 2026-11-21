@@ -1,5 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
+import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { usePressScale } from '@/src/hooks/usePressScale';
@@ -10,6 +11,7 @@ interface ExhibitionImmersiveFabProps {
 }
 
 export function ExhibitionImmersiveFab({ onPress }: ExhibitionImmersiveFabProps) {
+	const { t } = useTranslation();
 	const { style: pressStyle, setPressed } = usePressScale({
 		pressedScale: 0.88,
 		spring: { damping: 12 },
@@ -23,7 +25,7 @@ export function ExhibitionImmersiveFab({ onPress }: ExhibitionImmersiveFabProps)
 				Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
 				onPress();
 			}}
-			accessibilityLabel="몰입하기"
+			accessibilityLabel={t('exhibitions.detail.immersive_a11y')}
 			accessibilityRole="button"
 			hitSlop={8}
 		>

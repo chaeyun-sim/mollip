@@ -2,6 +2,7 @@ import { NaverMapMarkerOverlay, NaverMapView } from '@mj-studio/react-native-nav
 import * as Haptics from 'expo-haptics';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Pressable, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useMapStore } from '@/src/store/mapStore';
@@ -9,11 +10,19 @@ import { Indicator } from '../common/Indicator';
 
 interface ExhibitionMapPreviewProps {
 	coordinates: { latitude: number; longitude: number };
+	/** 지도 마커 식별자(한국어 이름) */
 	venueName: string;
+	/** 화면·접근성 라벨에 보일 이름 (영어 설정이면 영문) */
+	displayVenueName?: string;
 }
 
-export function ExhibitionMapPreview({ coordinates, venueName }: ExhibitionMapPreviewProps) {
+export function ExhibitionMapPreview({
+	coordinates,
+	venueName,
+	displayVenueName,
+}: ExhibitionMapPreviewProps) {
 	const router = useRouter();
+	const { t } = useTranslation();
 	const setPendingCamera = useMapStore((s) => s.setPendingCamera);
 	const [isNavigating, setIsNavigating] = useState(false);
 
@@ -28,7 +37,9 @@ export function ExhibitionMapPreview({ coordinates, venueName }: ExhibitionMapPr
 	return (
 		<Pressable
 			onPress={handlePress}
-			accessibilityLabel={`${venueName} 지도에서 보기`}
+			accessibilityLabel={t('exhibitions.detail.view_on_map_a11y', {
+				name: displayVenueName ?? venueName,
+			})}
 			accessibilityRole="button"
 			style={({ pressed }) => ({ opacity: pressed ? 0.85 : 1 })}
 		>
@@ -82,7 +93,7 @@ export function ExhibitionMapPreview({ coordinates, venueName }: ExhibitionMapPr
 						<Ionicons name="map-outline" size={12} className="text-gray900" />
 					)}
 					<Text className="font-pretendard-medium text-[11px] text-gray900">
-						{isNavigating ? '이동 중...' : '지도에서 보기'}
+						{isNavigating ? t('exhibitions.detail.navigating') : t('exhibitions.open_map')}
 					</Text>
 				</View>
 			</View>

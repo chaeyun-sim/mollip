@@ -2,10 +2,16 @@ import { initializeKakaoSDK } from '@react-native-kakao/core';
 import { shareLocationTemplate } from '@react-native-kakao/share';
 import { Share } from 'react-native';
 import type { Exhibition } from '@/src/data/exhibitions';
+import i18n from '@/src/i18n';
+import { localizeExhibition } from '@/src/utils/localizedExhibition';
 
 export function useShareExhibition(exhibition: Exhibition | null) {
 	const handleShare = async () => {
 		if (!exhibition) return;
+
+		const { title, venue } = localizeExhibition(exhibition, i18n.language);
+		const address =
+			(i18n.language === 'en' && exhibition.venueAddressEn) || exhibition.venueAddress || '';
 
 		const linkUrl = exhibition.web_site ?? exhibition.homepage_url ?? 'https://mollip.app';
 
@@ -26,17 +32,17 @@ export function useShareExhibition(exhibition: Exhibition | null) {
 			await initializeKakaoSDK(kakaoAppKey);
 			await shareLocationTemplate({
 				template: {
-					address: exhibition.venueAddress ?? '',
-					addressTitle: exhibition.venue,
+					address,
+					addressTitle: venue,
 					content: {
-						title: exhibition.title,
-						description: `📍 ${exhibition.venue} · ${exhibition.startDate} - ${exhibition.endDate}`,
+						title,
+						description: `📍 ${venue} · ${exhibition.startDate} - ${exhibition.endDate}`,
 						imageUrl: imageUrl ?? '',
 						link,
 					},
 					buttons: [
 						{
-							title: '전시 정보 보기',
+							title: i18n.t('exhibitions.detail.share_button'),
 							link,
 						},
 					],
@@ -46,8 +52,8 @@ export function useShareExhibition(exhibition: Exhibition | null) {
 			console.error('Kakao share failed:', error);
 
 			await Share.share({
-				message: `[전시] ${exhibition.title}\n${exhibition.venue}\n🗓 ${exhibition.startDate} - ${exhibition.endDate}`,
-				title: exhibition.title,
+				message: `${i18n.t('exhibitions.detail.share_prefix')} ${title}\n${venue}\n🗓 ${exhibition.startDate} - ${exhibition.endDate}`,
+				title,
 			});
 		}
 	};

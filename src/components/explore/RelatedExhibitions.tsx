@@ -8,6 +8,10 @@ import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-na
 import { ImageFallback } from '@/src/components/common/ImageFallback';
 import type { Exhibition } from '@/src/data/exhibitions';
 import { getDdayLabel } from '@/src/utils/exhibitionSearch';
+import { localizeExhibition } from '@/src/utils/localizedExhibition';
+
+/** getDdayLabel이 돌려주는 당일 마감 문구 */
+const CLOSES_TODAY_LABEL = '오늘 마감';
 
 const POSTER_W = 148;
 const POSTER_H = 216;
@@ -51,10 +55,15 @@ interface RelatedExhibitionCardProps {
 
 function RelatedExhibitionCard({ exhibition, onPress }: RelatedExhibitionCardProps) {
 	const scale = useSharedValue(1);
+	const { t, i18n } = useTranslation();
+
 	const animatedStyle = useAnimatedStyle(() => ({
 		transform: [{ scale: scale.value }],
 	}));
-	const ddayLabel = getDdayLabel(exhibition, undefined, Infinity);
+	const rawDdayLabel = getDdayLabel(exhibition, undefined, Infinity);
+	const ddayLabel =
+		rawDdayLabel === CLOSES_TODAY_LABEL ? t('exhibitions.detail.closes_today') : rawDdayLabel;
+	const localized = localizeExhibition(exhibition, i18n.language);
 
 	return (
 		<Pressable
@@ -67,7 +76,7 @@ function RelatedExhibitionCard({ exhibition, onPress }: RelatedExhibitionCardPro
 			}}
 			onPress={onPress}
 			style={{ width: POSTER_W }}
-			accessibilityLabel={`${exhibition.title}, ${exhibition.venue}`}
+			accessibilityLabel={`${localized.title}, ${localized.venue}`}
 			accessibilityRole="button"
 		>
 			<Animated.View style={animatedStyle}>
@@ -102,7 +111,7 @@ function RelatedExhibitionCard({ exhibition, onPress }: RelatedExhibitionCardPro
 				</ImageFallback>
 				<View className="pt-2.5" style={{ width: POSTER_W }}>
 					<Text className="font-pretendard-semibold text-[14px] text-gray-900" numberOfLines={2}>
-						{exhibition.title.trim()}
+						{localized.title}
 					</Text>
 					<View className="flex-row items-center gap-1 mt-1">
 						<Ionicons name="location-outline" size={11} color="#9CA3AF" />
@@ -110,7 +119,7 @@ function RelatedExhibitionCard({ exhibition, onPress }: RelatedExhibitionCardPro
 							className="font-pretendard-regular text-[11px] text-gray-400 flex-1"
 							numberOfLines={1}
 						>
-							{exhibition.venue}
+							{localized.venue}
 						</Text>
 					</View>
 				</View>
