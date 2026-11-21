@@ -329,6 +329,24 @@
 		"empty": "No announcements yet",
 		"not_found": "We couldn't find this announcement"
 	},
+	"inquiry": {
+		"intro": "Your inquiry will remain anonymous. We'll get back to you at the email address you provide, usually within 24 hours.",
+		"category_label": "Category",
+		"category_suggestion": "Feature Request",
+		"category_bug": "Bug Report",
+		"category_account": "Account",
+		"category_subscription": "Subscription",
+		"category_other": "Other",
+		"content_label": "Message",
+		"content_placeholder": "Tell us what's on your mind...",
+		"email_label": "Email",
+		"email_placeholder": "Email for our reply",
+		"send_failed": "Couldn't send your message. Please try again in a moment.",
+		"submit": "Send",
+		"submit_a11y": "Send inquiry",
+		"success_title": "We've received your message",
+		"success_body": "We'll review it and reply\nto the email you left"
+	},
 	"preferences": {
 		"title": "Art preferences",
 		"load_failed": "Couldn't load your preferences",

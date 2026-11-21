@@ -14,12 +14,12 @@ import { supabase } from '@/src/utils/supabase';
 
 type Category = 'suggestion' | 'bug' | 'account' | 'subscription' | 'other';
 
-const CATEGORY_OPTIONS: { value: Category; label: string; emoji: string }[] = [
-	{ value: 'suggestion', label: '기능 제안', emoji: '💡' },
-	{ value: 'bug', label: '버그 제보', emoji: '🐛' },
-	{ value: 'account', label: '계정', emoji: '👤' },
-	{ value: 'subscription', label: '구독', emoji: '💰' },
-	{ value: 'other', label: '기타', emoji: '✉️' },
+const CATEGORY_OPTIONS: { value: Category; labelKey: string; emoji: string }[] = [
+	{ value: 'suggestion', labelKey: 'inquiry.category_suggestion', emoji: '💡' },
+	{ value: 'bug', labelKey: 'inquiry.category_bug', emoji: '🐛' },
+	{ value: 'account', labelKey: 'inquiry.category_account', emoji: '👤' },
+	{ value: 'subscription', labelKey: 'inquiry.category_subscription', emoji: '💰' },
+	{ value: 'other', labelKey: 'inquiry.category_other', emoji: '✉️' },
 ];
 
 export default function InquiryScreen() {
@@ -71,8 +71,8 @@ export default function InquiryScreen() {
 					icon="checkmark"
 					tone="success"
 					iconBackground
-					title="문의가 접수됐어요"
-					description={'확인 후 남겨주신 연락처로\n답변드릴게요'}
+					title={t('inquiry.success_title')}
+					description={t('inquiry.success_body')}
 					actionLabel={t('common.confirm')}
 					onAction={() => router.back()}
 				/>
@@ -93,25 +93,24 @@ export default function InquiryScreen() {
 			>
 				<ScrollView
 					className="flex-1"
-					contentContainerClassName="pt-2 pb-10"
+					contentContainerClassName="pb-10"
 					showsVerticalScrollIndicator={false}
 					keyboardShouldPersistTaps="handled"
 				>
-					<Text className="mt-4 text-gray600 text-[13px] font-pretendard-regular leading-[20px]">
-						모든 문의는 익명으로 진행되며 확인 후 남겨주신 연락처로 빠르게 답변드릴게요. 답변은
-						1일정도 소요될 수 있어요.
+					<Text className="my-2 text-gray600 text-[13px] font-pretendard-regular leading-[20px]">
+						{t('inquiry.intro')}
 					</Text>
 					{/* 카테고리 */}
 					<Text className="mt-5 file:text-[12px] mb-3 font-pretendard-medium text-gray500 tracking-[0.6px] uppercase">
-						유형
+						{t('inquiry.category_label')}
 					</Text>
-					<View className="flex-row gap-2 mb-8">
+					<View className="flex-row flex-wrap gap-2 mb-8">
 						{CATEGORY_OPTIONS.map((opt) => {
 							const selected = category === opt.value;
 							return (
 								<Chip
 									key={opt.value}
-									label={opt.label}
+									label={t(opt.labelKey)}
 									active={selected}
 									onPress={() => setCategory(opt.value)}
 								/>
@@ -121,11 +120,11 @@ export default function InquiryScreen() {
 
 					{/* 내용 */}
 					<Text className="text-[12px] mb-3 font-pretendard-medium text-gray500 tracking-[0.6px] uppercase">
-						내용
+						{t('inquiry.content_label')}
 					</Text>
 					<TextField
 						variant="area"
-						placeholder="내용을 입력해주세요"
+						placeholder={t('inquiry.content_placeholder')}
 						value={content}
 						onChangeText={setContent}
 						maxLength={2000}
@@ -137,10 +136,10 @@ export default function InquiryScreen() {
 
 					{/* 연락처 */}
 					<Text className="text-[12px] mt-6 mb-3 font-pretendard-medium text-gray500 tracking-[0.6px] uppercase">
-						이메일
+						{t('inquiry.email_label')}
 					</Text>
 					<TextField
-						placeholder="답변받을 이메일"
+						placeholder={t('inquiry.email_placeholder')}
 						value={contactValue}
 						onChangeText={setContact}
 						keyboardType="email-address"
@@ -150,7 +149,7 @@ export default function InquiryScreen() {
 
 					{status === 'error' && (
 						<Text className="mt-4 text-[13px] font-pretendard-regular text-error">
-							전송에 실패했어요. 잠시 후 다시 시도해주세요.
+							{t('inquiry.send_failed')}
 						</Text>
 					)}
 				</ScrollView>
@@ -159,9 +158,9 @@ export default function InquiryScreen() {
 						onPress={handleSubmit}
 						disabled={!canSubmit}
 						loading={status === 'loading'}
-						accessibilityLabel="문의 보내기"
+						accessibilityLabel={t('inquiry.submit_a11y')}
 					>
-						보내기
+						{t('inquiry.submit')}
 					</Button>
 				</Screen.BottomAbsolute>
 			</KeyboardAvoidingView>
