@@ -341,6 +341,26 @@
 		"confirm_body": "Your account info, visit history, and saved exhibitions will all be deleted. This can't be undone.",
 		"confirm_delete": "Delete anyway"
 	},
+	"delete_account": {
+		"title": "Delete account",
+		"submit": "Delete account",
+		"intro_title": "Before you go",
+		"intro_body": "Deleting your account will remove your account info, visit history, and saved exhibitions. This can't be undone.",
+		"reason_label": "Why are you leaving?",
+		"reason_low_usage": "I don't use it as much as I expected",
+		"reason_too_many_notifications": "Too many notifications",
+		"tip_too_many_notifications": "You can choose which notifications to receive in notification settings.",
+		"reason_bad_recommendations": "Recommendations didn't match my taste",
+		"tip_bad_recommendations": "Updating your art preferences can make recommendations more accurate.",
+		"reason_privacy_concern": "I'm worried about my privacy",
+		"tip_privacy_concern": "Your data is only used for your records and recommendations, and it’s all deleted immediately when you leave.",
+		"reason_other": "Other",
+		"detail_placeholder": "Tell us what we could do better (optional)",
+		"failed": "Couldn't delete your account. Please try again in a moment.",
+		"done_title": "Thank you for being with us",
+		"done_body": "Your account has been deleted.\nYou’re welcome back anytime.",
+		"go_home": "Go to home"
+	},
 	"inquiry": {
 		"intro": "Your inquiry will remain anonymous. We'll get back to you at the email address you provide, usually within 24 hours.",
 		"category_label": "Category",

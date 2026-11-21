@@ -1,16 +1,10 @@
+import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import {
-	ActivityIndicator,
-	KeyboardAvoidingView,
-	Platform,
-	Pressable,
-	ScrollView,
-	Text,
-	View,
-} from 'react-native';
+import { KeyboardAvoidingView, Platform, Pressable, ScrollView, Text, View } from 'react-native';
+import { Button } from '@/src/components/common/Button';
 import { TextField } from '@/src/components/common/TextField';
 import { Screen } from '@/src/components/layout/Screen';
 import { cn } from '@/src/lib/cn';
@@ -23,27 +17,29 @@ import { colors } from '@/src/constants/colors';
 type Reason =
 	'low_usage' | 'too_many_notifications' | 'bad_recommendations' | 'privacy_concern' | 'other';
 
-const REASON_OPTIONS: { value: Reason; label: string; tip?: string }[] = [
-	{ value: 'low_usage', label: '생각보다 잘 쓰게 되지 않아요' },
+const REASON_OPTIONS: { value: Reason; labelKey: string; tipKey?: string }[] = [
+	{ value: 'low_usage', labelKey: 'delete_account.reason_low_usage' },
 	{
 		value: 'too_many_notifications',
-		label: '알림이 너무 많아요',
-		tip: '설정 > 알림에서 원하는 알림만 골라 끌 수 있어요',
+		labelKey: 'delete_account.reason_too_many_notifications',
+		tipKey: 'delete_account.tip_too_many_notifications',
 	},
 	{
 		value: 'bad_recommendations',
-		label: '취향에 맞는 추천을 못 받았어요',
-		tip: '온보딩에서 취향을 다시 골라보면 추천이 더 정확해질 수 있어요',
+		labelKey: 'delete_account.reason_bad_recommendations',
+		tipKey: 'delete_account.tip_bad_recommendations',
 	},
 	{
 		value: 'privacy_concern',
-		label: '개인정보가 걱정돼요',
-		tip: '정보는 개인 기록과 추천에만 사용 중이고, 탈퇴하면 전부 즉시 삭제돼요',
+		labelKey: 'delete_account.reason_privacy_concern',
+		tipKey: 'delete_account.tip_privacy_concern',
 	},
-	{ value: 'other', label: '기타' },
+	{ value: 'other', labelKey: 'delete_account.reason_other' },
 ];
 
 export default function DeleteAccountScreen() {
+	const { t } = useTranslation();
+
 	const router = useRouter();
 	const signOut = useAuthStore((s) => s.signOut);
 	const [reason, setReason] = useState<Reason | null>(null);
@@ -80,18 +76,20 @@ export default function DeleteAccountScreen() {
 						<Ionicons name="heart-outline" size={30} color="#B8935A" />
 					</View>
 					<Text className="text-gray-900 text-[18px] font-hahmlet-semibold text-center">
-						그동안 함께해주셔서 감사했어요
+						{t('delete_account.done_title')}
 					</Text>
 					<Text className="text-gray-400 text-[13px] font-pretendard-regular text-center leading-5">
-						계정이 정상적으로 삭제됐어요{'\n'}언제든 다시 찾아주세요
+						{t('delete_account.done_body')}
 					</Text>
 					<Pressable
 						onPress={() => router.replace('/(tabs)')}
 						className="mt-4 px-6 py-3 rounded-full bg-secondary"
 						accessibilityRole="button"
-						accessibilityLabel="메인으로 가기"
+						accessibilityLabel={t('delete_account.go_home')}
 					>
-						<Text className="text-white text-[14px] font-pretendard-semibold">메인으로 가기</Text>
+						<Text className="text-white text-[14px] font-pretendard-semibold">
+							{t('delete_account.go_home')}
+						</Text>
 					</Pressable>
 				</View>
 			</Screen>
@@ -101,35 +99,8 @@ export default function DeleteAccountScreen() {
 	return (
 		<Screen variant="warm">
 			<Screen.Header>
-				<Screen.Header.Left>
-					<Screen.Header.Back onPress={() => router.back()} />
-				</Screen.Header.Left>
-				<Screen.Header.Center>탈퇴하기</Screen.Header.Center>
-				<Screen.Header.Right>
-					<Pressable
-						onPress={handleSubmit}
-						disabled={!canSubmit}
-						hitSlop={8}
-						accessibilityRole="button"
-						accessibilityLabel="탈퇴하기"
-						accessibilityState={{ disabled: !canSubmit }}
-						className={cn('rounded-full px-3.5 py-1.5', canSubmit ? 'bg-red-500' : 'bg-black/10')}
-						style={({ pressed }) => ({ opacity: pressed && canSubmit ? 0.8 : 1 })}
-					>
-						{status === 'loading' ? (
-							<ActivityIndicator size="small" color="#fff" />
-						) : (
-							<Text
-								className={cn(
-									'text-[14px] font-pretendard-semibold',
-									canSubmit ? 'text-white' : 'text-gray400',
-								)}
-							>
-								탈퇴하기
-							</Text>
-						)}
-					</Pressable>
-				</Screen.Header.Right>
+				<Screen.Header.Back onPress={() => router.back()} />
+				<Screen.Header.Center>{t('delete_account.title')}</Screen.Header.Center>
 			</Screen.Header>
 
 			<KeyboardAvoidingView
@@ -138,19 +109,27 @@ export default function DeleteAccountScreen() {
 			>
 				<ScrollView
 					className="flex-1"
-					contentContainerClassName="pt-3 pb-6"
+					// 하단 고정 버튼에 가리지 않도록 여백을 둔다
+					contentContainerClassName="pt-4 pb-32"
 					showsVerticalScrollIndicator={false}
 					keyboardShouldPersistTaps="handled"
 				>
-					<Text className="text-[12px] mb-2 px-1 font-pretendard-semibold text-gray-400 tracking-[0.8]">
-						탈퇴하시는 이유를 알려주세요
+					<Text className="font-pretendard-bold text-[22px] leading-[30px] text-gray900">
+						{t('delete_account.intro_title')}
+					</Text>
+					<Text className="mt-2 font-pretendard-regular text-[14px] leading-[21px] text-gray600">
+						{t('delete_account.intro_body')}
+					</Text>
+
+					<Text className="ml-1 mt-8 mb-2 font-pretendard-semibold text-gray600 text-[12px] tracking-[1px]">
+						{t('delete_account.reason_label')}
 					</Text>
 					<View
-						className="rounded-3xl overflow-hidden bg-bg-tonal mb-3 shadow-gray900 elevation-[2px]"
+						className="mb-3 overflow-hidden rounded-2xl border border-ink/10 bg-white shadow-gray900 elevation-[2px]"
 						style={{
-							shadowOpacity: 0.05,
-							shadowRadius: 12,
-							shadowOffset: { width: 0, height: 4 },
+							shadowOpacity: 0.06,
+							shadowRadius: 10,
+							shadowOffset: { width: 0, height: 2 },
 						}}
 					>
 						{REASON_OPTIONS.map((opt, i) => {
@@ -162,28 +141,33 @@ export default function DeleteAccountScreen() {
 										Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
 										setReason(opt.value);
 									}}
-									className={cn(
-										'flex-row items-center justify-between px-4 min-h-[52px]',
-										i < REASON_OPTIONS.length - 1 && 'border-b border-black/5',
-									)}
+									className={cn('min-h-[52px] flex-row items-center justify-between px-4', {
+										'border-b border-ink/10': i < REASON_OPTIONS.length - 1,
+										'bg-surface-neutral': selected,
+									})}
 									accessibilityRole="radio"
 									accessibilityState={{ checked: selected }}
-									accessibilityLabel={opt.label}
+									accessibilityLabel={t(opt.labelKey)}
 								>
-									<Text className="font-pretendard-regular text-gray-900 text-[15px]">
-										{opt.label}
+									<Text
+										className={cn('flex-1 pr-3 text-[15px] text-gray900', {
+											'font-pretendard-semibold': selected,
+											'font-pretendard-regular': !selected,
+										})}
+									>
+										{t(opt.labelKey)}
 									</Text>
 									<Ionicons
 										name={selected ? 'radio-button-on' : 'radio-button-off'}
 										size={20}
-										className={cn(selected ? 'text-gray900' : 'text-gray500')}
+										className={cn(selected ? 'text-gray900' : 'text-gray400')}
 									/>
 								</Pressable>
 							);
 						})}
 					</View>
 
-					{selectedOption?.tip && (
+					{selectedOption?.tipKey && (
 						<View className="flex-row gap-2 rounded-2xl bg-surface-neutral px-4 py-3.5 mb-3">
 							<Ionicons
 								name="bulb-outline"
@@ -192,7 +176,7 @@ export default function DeleteAccountScreen() {
 								style={{ marginTop: 1 }}
 							/>
 							<Text className="flex-1 text-[13px] leading-[19px] font-pretendard-regular text-ink">
-								{selectedOption.tip}
+								{t(selectedOption.tipKey)}
 							</Text>
 						</View>
 					)}
@@ -200,8 +184,7 @@ export default function DeleteAccountScreen() {
 					{reason === 'other' && (
 						<TextField
 							variant="area"
-							className="rounded-3xl bg-bg-tonal border-0"
-							placeholder="어떤 점이 아쉬웠는지 알려주세요 (선택)"
+							placeholder={t('delete_account.detail_placeholder')}
 							placeholderTextColor={colors.gray700}
 							value={detail}
 							onChangeText={setDetail}
@@ -210,11 +193,22 @@ export default function DeleteAccountScreen() {
 					)}
 
 					{status === 'error' && (
-						<Text className="mt-4 px-1 text-[13px] font-pretendard-regular text-red-500">
-							탈퇴 처리에 실패했어요. 잠시 후 다시 시도해주세요
+						<Text className="mt-4 px-1 text-[13px] font-pretendard-regular text-error">
+							{t('delete_account.failed')}
 						</Text>
 					)}
 				</ScrollView>
+				<Screen.BottomAbsolute className="bottom-10 px-1">
+					<Button
+						onPress={handleSubmit}
+						tone="danger"
+						disabled={!canSubmit}
+						loading={status === 'loading'}
+						accessibilityLabel={t('delete_account.submit')}
+					>
+						{t('delete_account.submit')}
+					</Button>
+				</Screen.BottomAbsolute>
 			</KeyboardAvoidingView>
 		</Screen>
 	);

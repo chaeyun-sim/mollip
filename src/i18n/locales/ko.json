@@ -341,6 +341,26 @@
 		"confirm_body": "계정 정보, 관람 기록, 저장한 전시가 모두 삭제되며 이 작업은 되돌릴 수 없어요.",
 		"confirm_delete": "그래도 탈퇴할래요"
 	},
+	"delete_account": {
+		"title": "탈퇴하기",
+		"submit": "탈퇴하기",
+		"intro_title": "떠나시기 전에",
+		"intro_body": "탈퇴하면 계정 정보, 관람 기록, 저장한 전시가 모두 삭제되며 되돌릴 수 없어요.",
+		"reason_label": "탈퇴하시는 이유를 알려주세요",
+		"reason_low_usage": "생각보다 잘 쓰게 되지 않아요",
+		"reason_too_many_notifications": "알림이 너무 많아요",
+		"tip_too_many_notifications": "알림 설정에서 받고 싶은 알림만 골라 받을 수 있어요",
+		"reason_bad_recommendations": "취향에 맞는 추천을 못 받았어요",
+		"tip_bad_recommendations": "설정의 '내 취향 수정'에서 취향을 다시 고르면 추천이 더 정확해질 수 있어요",
+		"reason_privacy_concern": "개인정보가 걱정돼요",
+		"tip_privacy_concern": "정보는 개인 기록과 추천에만 사용 중이고, 탈퇴하면 전부 즉시 삭제돼요",
+		"reason_other": "기타",
+		"detail_placeholder": "어떤 점이 아쉬웠는지 알려주세요 (선택)",
+		"failed": "탈퇴 처리에 실패했어요. 잠시 후 다시 시도해주세요",
+		"done_title": "그동안 함께해주셔서 감사했어요",
+		"done_body": "계정이 정상적으로 삭제됐어요\n언제든 다시 찾아주세요",
+		"go_home": "메인으로 가기"
+	},
 	"inquiry": {
 		"intro": "모든 문의는 익명으로 진행되며 확인 후 남겨주신 연락처로 빠르게 답변드릴게요. 답변은 1일정도 소요될 수 있어요.",
 		"category_label": "유형",
