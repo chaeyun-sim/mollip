@@ -329,6 +329,18 @@
 		"empty": "No announcements yet",
 		"not_found": "We couldn't find this announcement"
 	},
+	"account": {
+		"title": "Account",
+		"email": "Email",
+		"login_method": "Sign-in method",
+		"login_kakao": "Kakao",
+		"login_apple": "Apple",
+		"delete": "Delete account",
+		"delete_a11y": "Delete account",
+		"confirm_title": "Delete your account?",
+		"confirm_body": "Your account info, visit history, and saved exhibitions will all be deleted. This can't be undone.",
+		"confirm_delete": "Delete anyway"
+	},
 	"inquiry": {
 		"intro": "Your inquiry will remain anonymous. We'll get back to you at the email address you provide, usually within 24 hours.",
 		"category_label": "Category",
