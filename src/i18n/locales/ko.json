@@ -420,6 +420,14 @@
 		"focus_symbolism": "작품 속 숨겨진 상징, 도상, 알레고리",
 		"focus_viewer_gaze": "조명, 액자, 구도가 시선을 이끄는 방식"
 	},
+	"licenses": {
+		"category_fonts": "폰트",
+		"category_libraries": "라이브러리",
+		"collapse_a11y": "{{name}} 라이선스 접기",
+		"expand_a11y": "{{name}} 라이선스 펼치기",
+		"open_github_a11y": "{{name}} GitHub 라이선스 원문 열기",
+		"view_on_github": "GitHub에서 보기"
+	},
 	"inquiry": {
 		"intro": "모든 문의는 익명으로 진행되며 확인 후 남겨주신 연락처로 빠르게 답변드릴게요. 답변은 1일정도 소요될 수 있어요.",
 		"category_label": "유형",

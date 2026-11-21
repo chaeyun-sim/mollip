@@ -420,6 +420,14 @@
 		"focus_symbolism": "Hidden symbols, iconography, and allegory",
 		"focus_viewer_gaze": "How lighting, framing, and composition guide your eye"
 	},
+	"licenses": {
+		"category_fonts": "Fonts",
+		"category_libraries": "Libraries",
+		"collapse_a11y": "Collapse {{name}} license",
+		"expand_a11y": "Expand {{name}} license",
+		"open_github_a11y": "Open {{name}} license on GitHub",
+		"view_on_github": "View on GitHub"
+	},
 	"inquiry": {
 		"intro": "Your inquiry will remain anonymous. We'll get back to you at the email address you provide, usually within 24 hours.",
 		"category_label": "Category",
