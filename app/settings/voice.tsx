@@ -1,3 +1,5 @@
+import type { TFunction } from 'i18next';
+import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { useRouter } from 'expo-router';
@@ -15,16 +17,16 @@ import { cn } from '@/src/lib/cn';
 
 const AVATAR_COLORS = ['#F3D9C4', '#CFE0DF', '#E8D9F0', '#D9E3F0', '#F0DDD9', '#DDEAD1'];
 
-const GENDER_LABEL: Record<string, string> = {
-	male: '남성',
-	female: '여성',
-	neutral: '중성',
+const GENDER_KEYS: Record<string, string> = {
+	male: 'voice.gender_male',
+	female: 'voice.gender_female',
+	neutral: 'voice.gender_neutral',
 };
 
-const AGE_LABEL: Record<string, string> = {
-	young: '청년',
-	middle_aged: '중년',
-	old: '장년',
+const AGE_KEYS: Record<string, string> = {
+	young: 'voice.age_young',
+	middle_aged: 'voice.age_middle_aged',
+	old: 'voice.age_old',
 };
 
 // ElevenLabs의 영문 descriptive 라벨 → 자연스러운 한국어 형용사
@@ -51,35 +53,50 @@ function avatarColor(name: string) {
 }
 
 interface VoiceDescription {
-	/** "목소리" 바로 앞의 강조 키워드 (예: "편안한") */
+	/** "목소리"/"voice" 바로 앞의 강조 키워드 (예: "편안한", "relaxed") */
 	keyword: string;
-	/** 키워드 앞에 붙는 나이/성별 문구 (예: "중년 남성의 ") */
+	/** 키워드 앞에 붙는 나이/성별 문구 (예: "중년 남성의 ", "Middle-aged male · ") */
 	prefix: string;
 }
 
+const capitalize = (text: string) => text.charAt(0).toUpperCase() + text.slice(1);
+
+// 영어는 ElevenLabs 원문 라벨을 그대로 쓰고, 한국어는 자연스러운 형용사로 바꾼다
+const localizeDescriptive = (descriptive: string | undefined, isEn: boolean) => {
+	if (!descriptive) return '';
+	if (isEn) return descriptive.toLowerCase();
+	return DESCRIPTIVE_LABEL_KO[descriptive.toLowerCase()] ?? descriptive;
+};
+
 // 나이/성별/특징 키워드를 풀어서 자연스러운 한 문장으로 조합
-function voiceDescription(voice: Voice): VoiceDescription | null {
+const voiceDescription = (voice: Voice, t: TFunction, isEn: boolean): VoiceDescription | null => {
 	const displayName = voice.name.split(' - ')[0];
 	const gender = GENDER_OVERRIDE[displayName] ?? voice.labels?.gender;
 	const age = voice.labels?.age;
 	const descriptive = voice.labels?.descriptive;
 
-	const personLabel = [age && AGE_LABEL[age], gender && GENDER_LABEL[gender]]
-		.filter(Boolean)
+	const personLabel = [age && AGE_KEYS[age], gender && GENDER_KEYS[gender]]
+		.filter((key): key is string => Boolean(key))
+		.map((key) => t(key))
 		.join(' ');
-	const descriptiveLabel = descriptive
-		? (DESCRIPTIVE_LABEL_KO[descriptive.toLowerCase()] ?? descriptive)
-		: '';
+	const descriptiveLabel = localizeDescriptive(descriptive, isEn);
+	// 영어는 문장 첫 글자만 대문자로 만든다
+	const sentenceStart = (text: string) => (isEn ? capitalize(text) : text);
 
 	if (!personLabel && !descriptiveLabel) return null;
-	if (descriptiveLabel)
-		return { keyword: descriptiveLabel, prefix: personLabel ? `${personLabel}의 ` : '' };
-	return { keyword: personLabel, prefix: '' };
-}
+	if (!descriptiveLabel) return { keyword: sentenceStart(personLabel), prefix: '' };
+	if (!personLabel) return { keyword: sentenceStart(descriptiveLabel), prefix: '' };
+	return {
+		keyword: descriptiveLabel,
+		prefix: t('voice.person_prefix', { person: sentenceStart(personLabel) }),
+	};
+};
 
 /* ─── 메인 ─── */
 
 export default function VoiceScreen() {
+	const { t, i18n } = useTranslation();
+
 	const router = useRouter();
 	const { voiceId, voiceSpeed, setVoiceId } = useSettingsStore();
 
@@ -88,6 +105,8 @@ export default function VoiceScreen() {
 	const [previewingId, setPreviewingId] = useState<string | null>(null);
 
 	const previewPlayer = useAudioPlayer(null);
+
+	const isEn = i18n.language === 'en';
 
 	useEffect(() => {
 		fetchVoices()
@@ -104,13 +123,14 @@ export default function VoiceScreen() {
 		try {
 			const uri = await fetchTTSBlob(
 				voice.voice_id,
+				// 해설과 음성이 아직 한국어 전용이라 미리 듣기 문장도 한국어로 둔다
 				'안녕하세요! 이 목소리로 해설을 들려드릴게요.',
 				voiceSpeed,
 			);
 			previewPlayer.replace(uri);
 			previewPlayer.play();
 		} catch {
-			Alert.alert('미리 듣기 실패', '잠시 후 다시 시도해 주세요.');
+			Alert.alert(t('voice.preview_failed_title'), t('voice.preview_failed_body'));
 		} finally {
 			setPreviewingId(null);
 		}
@@ -122,17 +142,18 @@ export default function VoiceScreen() {
 				<Screen.Header.Left>
 					<Screen.Header.Back onPress={() => router.back()} />
 				</Screen.Header.Left>
-				<Screen.Header.Center>음성 선택</Screen.Header.Center>
+				<Screen.Header.Center>{t('voice.title')}</Screen.Header.Center>
 				<Screen.Header.Right />
 			</Screen.Header>
 
 			<ScrollView
-				className="flex-1"
-				contentContainerClassName="pt-1 pb-12"
+				// 스크롤뷰가 바깥 영역을 잘라내므로 스크롤뷰도 화면 끝까지 넓히고 안쪽 여백으로 되돌린다
+				className="-mx-6 flex-1"
+				contentContainerClassName="px-6 pt-1 pb-12"
 				showsVerticalScrollIndicator={false}
 			>
 				<Text className="text-gray-400 text-[13px] font-pretendard-regular mb-5 leading-[19px]">
-					해설을 읽어줄 목소리를 골라보세요. 재생 버튼으로 미리 들을 수 있어요.
+					{t('voice.intro')}
 				</Text>
 				{voicesLoading && (
 					<View className="gap-2.5">
@@ -145,7 +166,7 @@ export default function VoiceScreen() {
 					<Result
 						icon="mic-off-outline"
 						iconSize={32}
-						title="불러올 수 있는 음성이 없어요"
+						title={t('voice.empty')}
 						className="flex-none py-10"
 					/>
 				)}
@@ -154,11 +175,12 @@ export default function VoiceScreen() {
 						{voices.map((voice) => {
 							const selected = voiceId === voice.voice_id;
 							const displayName = voice.name.split(' - ')[0];
-							const description = voiceDescription(voice);
+							const description = voiceDescription(voice, t, isEn);
 							return (
 								<Pressable
 									key={voice.voice_id}
-									className={cn('rounded-[22px] py-3.5', selected && 'bg-brand/5')}
+									// 선택 배경이 화면 끝까지 닿도록 Screen의 px-6만큼 바깥으로 넓히고 안쪽 여백으로 되돌린다
+									className={cn('-mx-6 px-6 py-3.5', selected && 'bg-brand/5')}
 									style={({ pressed }) => ({
 										transform: [{ scale: pressed ? 0.98 : 1 }],
 										backgroundColor: !selected && pressed ? colors['bg-tonal'] : undefined,
@@ -206,7 +228,7 @@ export default function VoiceScreen() {
 												<Text className="text-[12px] font-pretendard-regular text-gray-500 mt-1">
 													{description.prefix}
 													<Text className="text-brand">{description.keyword}</Text>
-													{' 목소리'}
+													{t('voice.voice_suffix')}
 												</Text>
 											)}
 										</View>
@@ -214,7 +236,7 @@ export default function VoiceScreen() {
 										<Pressable
 											className="items-center justify-center w-9 h-9 rounded-full bg-white"
 											hitSlop={8}
-											accessibilityLabel={`${displayName} 미리 듣기`}
+											accessibilityLabel={t('voice.preview_a11y', { name: displayName })}
 											accessibilityRole="button"
 											onPress={() => {
 												Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);

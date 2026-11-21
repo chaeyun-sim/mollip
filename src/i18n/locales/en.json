@@ -379,6 +379,22 @@
 		"open_failed_title": "Manage subscription",
 		"open_failed_body": "We couldn't open subscription management."
 	},
+	"voice": {
+		"title": "Choose a Voice",
+		"intro": "Choose a voice for your audio guides. Tap to preview",
+		"empty": "No voices available",
+		"preview_a11y": "Preview {{name}}",
+		"preview_failed_title": "Couldn't play preview",
+		"preview_failed_body": "Please try again in a moment.",
+		"gender_male": "male",
+		"gender_female": "female",
+		"gender_neutral": "neutral",
+		"age_young": "Young",
+		"age_middle_aged": "Middle-aged",
+		"age_old": "Older",
+		"person_prefix": "{{person}} · ",
+		"voice_suffix": " voice"
+	},
 	"inquiry": {
 		"intro": "Your inquiry will remain anonymous. We'll get back to you at the email address you provide, usually within 24 hours.",
 		"category_label": "Category",
