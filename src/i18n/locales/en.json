@@ -323,6 +323,12 @@
 		"store_open_failed_title": "Couldn't open the App Store",
 		"store_open_failed_body": "Please try again on a real device."
 	},
+	"notice": {
+		"detail_title": "Announcement",
+		"loading": "Loading…",
+		"empty": "No announcements yet",
+		"not_found": "We couldn't find this announcement"
+	},
 	"preferences": {
 		"title": "Art preferences",
 		"load_failed": "Couldn't load your preferences",

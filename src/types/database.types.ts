@@ -396,24 +396,30 @@ export type Database = {
 			notices: {
 				Row: {
 					body: string;
+					body_en: string | null;
 					category: string;
 					created_at: string;
 					id: string;
 					title: string;
+					title_en: string | null;
 				};
 				Insert: {
 					body: string;
+					body_en?: string | null;
 					category?: string;
 					created_at?: string;
 					id?: string;
 					title: string;
+					title_en?: string | null;
 				};
 				Update: {
 					body?: string;
+					body_en?: string | null;
 					category?: string;
 					created_at?: string;
 					id?: string;
 					title?: string;
+					title_en?: string | null;
 				};
 				Relationships: [];
 			};

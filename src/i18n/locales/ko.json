@@ -323,6 +323,12 @@
 		"store_open_failed_title": "App Store를 열 수 없어요",
 		"store_open_failed_body": "실제 기기에서 다시 시도해 주세요."
 	},
+	"notice": {
+		"detail_title": "공지사항 상세",
+		"loading": "불러오는 중이에요",
+		"empty": "아직 등록된 공지사항이 없어요",
+		"not_found": "공지사항을 찾을 수 없어요"
+	},
 	"preferences": {
 		"title": "내 취향 수정",
 		"load_failed": "취향을 불러오지 못했어요",
