@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 import Svg, { Circle, Path, Rect } from 'react-native-svg';
 import { FRAME_SWING, Swingable } from '@/src/components/guide/Swingable';
@@ -9,6 +10,8 @@ interface BookmarkEmptyIllustrationProps {
 
 /** 북마크 없음 — 도록 한 권과 그 옆의 비어 있는 점선 책갈피. 책갈피 자리를 누르면 팔랑인다 */
 export function BookmarkEmptyIllustration({ width = 220 }: BookmarkEmptyIllustrationProps) {
+	const { t } = useTranslation();
+
 	const scale = width / 320;
 	const height = 200 * scale;
 
@@ -54,7 +57,7 @@ export function BookmarkEmptyIllustration({ width = 220 }: BookmarkEmptyIllustra
 				width={44}
 				height={104}
 				scale={scale}
-				accessibilityLabel="비어 있는 책갈피, 눌러 보세요"
+				accessibilityLabel={t('illustration.bookmark_empty_a11y')}
 			>
 				<Path
 					d="M3 3 H41 V99 L22 81 L3 99 Z"

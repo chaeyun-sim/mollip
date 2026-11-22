@@ -421,7 +421,32 @@
 		"audio_tab": "Audio",
 		"exhibition_tab": "Exhibitions",
 		"no_audio": "No saved audio guides",
-		"no_exhibitions": "No bookmarked exhibitions"
+		"no_exhibitions": "No bookmarked exhibitions",
+		"exhibitions_empty_description": "Bookmark exhibitions you like",
+		"filter_empty": "No exhibitions match this filter",
+		"audio_empty_title": "No saved audio yet",
+		"audio_empty_description": "Tap the heart on a guide to save it here",
+		"audio_login_description": "Log in to keep your saved audio",
+		"audio_login_action": "Log In",
+		"audio_premium_title": "This is a Premium feature",
+		"audio_premium_description": "Upgrade to Premium to replay your saved audio",
+		"offline_save": "Save bookmarked guides for offline",
+		"download_all": "Download all",
+		"downloading": "Downloading… {{done}}/{{total}}",
+		"downloading_a11y": "Downloading, {{done}} of {{total}} done",
+		"downloaded_size": "Downloaded {{size}}",
+		"delete_all_downloads_a11y": "Delete all downloaded guides",
+		"delete_all_downloads_title": "Delete downloaded guides",
+		"delete_all_downloads_message_one": "This deletes {{count}} saved audio file. You'll need a connection to listen again.",
+		"delete_all_downloads_message_other": "This deletes all {{count}} saved audio files. You'll need a connection to listen again.",
+		"delete_download_title": "Delete download",
+		"delete_download_message": "Delete the download for \"{{title}}\"? You'll need a connection to listen again.",
+		"unsave_title": "Remove from saved",
+		"unsave_message": "Remove \"{{title}}\" from your saved list?",
+		"unsave_confirm": "Remove",
+		"image_a11y": "{{title}} image",
+		"pause_a11y": "Pause",
+		"play_a11y": "Play guide"
 	},
 	"settings": {
 		"title": "Settings",
@@ -769,5 +794,14 @@
 			"revisit_venue": "Venue you loved",
 			"revisit_genre": "Genre you enjoyed"
 		}
+	},
+	"illustration": {
+		"audio_empty_a11y": "Empty sign, tap it",
+		"bookmark_empty_a11y": "Empty bookmark, tap it"
+	},
+	"download_status": {
+		"loading_a11y": "Downloading",
+		"done_a11y": "Downloaded, available offline",
+		"failed_a11y": "Download failed, tap to retry"
 	}
 }

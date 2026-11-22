@@ -421,7 +421,32 @@
 		"audio_tab": "오디오",
 		"exhibition_tab": "전시",
 		"no_audio": "저장한 오디오 가이드가 없어요",
-		"no_exhibitions": "북마크한 전시가 없어요"
+		"no_exhibitions": "북마크한 전시가 없어요",
+		"exhibitions_empty_description": "전시를 탐색하고 북마크해보세요",
+		"filter_empty": "해당하는 전시가 없어요",
+		"audio_empty_title": "저장된 오디오가 없어요",
+		"audio_empty_description": "해설 화면에서 하트를 눌러 저장해보세요",
+		"audio_login_description": "로그인해야 저장한 오디오가 보관돼요",
+		"audio_login_action": "로그인하기",
+		"audio_premium_title": "프리미엄 전용 기능이에요",
+		"audio_premium_description": "프리미엄으로 업그레이드하면 저장한 오디오를 다시 들을 수 있어요",
+		"offline_save": "북마크한 해설 오프라인으로 저장",
+		"download_all": "전체 받기",
+		"downloading": "받는 중… {{done}}/{{total}}",
+		"downloading_a11y": "다운로드 진행 중, {{total}}개 중 {{done}}개 완료",
+		"downloaded_size": "다운로드 {{size}}",
+		"delete_all_downloads_a11y": "다운로드한 해설 전체 삭제",
+		"delete_all_downloads_title": "다운로드한 해설 삭제",
+		"delete_all_downloads_message_one": "저장된 오디오 {{count}}개를 모두 삭제해요. 다시 들으려면 네트워크가 필요해요",
+		"delete_all_downloads_message_other": "저장된 오디오 {{count}}개를 모두 삭제해요. 다시 들으려면 네트워크가 필요해요",
+		"delete_download_title": "다운로드 삭제",
+		"delete_download_message": "\"{{title}}\" 다운로드 파일을 삭제해요. 다시 들으려면 네트워크가 필요해요",
+		"unsave_title": "저장 취소",
+		"unsave_message": "\"{{title}}\"을 저장 목록에서 지울까요?",
+		"unsave_confirm": "지우기",
+		"image_a11y": "{{title}} 이미지",
+		"pause_a11y": "일시정지",
+		"play_a11y": "해설 듣기"
 	},
 	"settings": {
 		"title": "설정",
@@ -769,5 +794,14 @@
 			"revisit_venue": "다시 찾고 싶은 미술관",
 			"revisit_genre": "좋아한 장르"
 		}
+	},
+	"illustration": {
+		"audio_empty_a11y": "비어 있다는 표시, 눌러 보세요",
+		"bookmark_empty_a11y": "비어 있는 책갈피, 눌러 보세요"
+	},
+	"download_status": {
+		"loading_a11y": "다운로드 중",
+		"done_a11y": "다운로드 완료, 오프라인 재생 가능",
+		"failed_a11y": "다운로드 실패, 탭해서 재시도"
 	}
 }

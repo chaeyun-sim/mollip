@@ -61,7 +61,7 @@ export function BookmarkedExhibitionList() {
 				icon="bookmark-outline"
 				illustration={<BookmarkEmptyIllustration />}
 				title={t('bookmark.no_exhibitions')}
-				description={'전시를 탐색하고 북마크해보세요'}
+				description={t('bookmark.exhibitions_empty_description')}
 				className="mb-20"
 			/>
 		);
@@ -106,7 +106,7 @@ export function BookmarkedExhibitionList() {
 				<Result
 					icon="bookmark-outline"
 					illustration={<BookmarkEmptyIllustration width={180} />}
-					title="해당하는 전시가 없어요"
+					title={t('bookmark.filter_empty')}
 				/>
 			)}
 		</View>

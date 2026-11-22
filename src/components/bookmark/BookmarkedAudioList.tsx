@@ -143,8 +143,8 @@ export function BookmarkedAudioList() {
 	const handleDeleteAllDownloads = useCallback(() => {
 		Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
 		Alert.alert(
-			'다운로드한 해설 삭제',
-			`저장된 오디오 ${doneIds.length}개를 모두 삭제해요. 다시 들으려면 네트워크가 필요해요`,
+			t('bookmark.delete_all_downloads_title'),
+			t('bookmark.delete_all_downloads_message', { count: doneIds.length }),
 			[
 				{ text: t('common.cancel'), style: 'cancel' },
 				{
@@ -160,8 +160,8 @@ export function BookmarkedAudioList() {
 		(item: HistoryItem) => {
 			Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
 			Alert.alert(
-				'다운로드 삭제',
-				`"${item.title}" 다운로드 파일을 삭제해요. 다시 들으려면 네트워크가 필요해요`,
+				t('bookmark.delete_download_title'),
+				t('bookmark.delete_download_message', { title: item.title }),
 				[
 					{ text: t('common.cancel'), style: 'cancel' },
 					{
@@ -190,10 +190,10 @@ export function BookmarkedAudioList() {
 	const handleUnbookmark = useCallback(
 		(item: HistoryItem) => {
 			Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-			Alert.alert('저장 취소', `"${item.title}"을 저장 목록에서 지울까요?`, [
+			Alert.alert(t('bookmark.unsave_title'), t('bookmark.unsave_message', { title: item.title }), [
 				{ text: t('common.close'), style: 'cancel' },
 				{
-					text: '지우기',
+					text: t('bookmark.unsave_confirm'),
 					style: 'destructive',
 					onPress: () => toggleBookmark(item.id),
 				},
@@ -222,8 +222,8 @@ export function BookmarkedAudioList() {
 				icon="lock-closed-outline"
 				iconSize={36}
 				title={t('auth.login_required')}
-				description={'로그인해야 저장한 오디오가 보관돼요'}
-				actionLabel="로그인하기"
+				description={t('bookmark.audio_login_description')}
+				actionLabel={t('bookmark.audio_login_action')}
 				onAction={() => router.push({ pathname: '/auth/login', params: { returnTo: '/bookmark' } })}
 				className="mb-20"
 			/>
@@ -246,8 +246,8 @@ export function BookmarkedAudioList() {
 			<Result
 				icon="sparkles-outline"
 				iconSize={36}
-				title="프리미엄 전용 기능이에요"
-				description={'프리미엄으로 업그레이드하면 저장한 오디오를 다시 들을 수 있어요'}
+				title={t('bookmark.audio_premium_title')}
+				description={t('bookmark.audio_premium_description')}
 				className="mb-20"
 			/>
 		);
@@ -261,7 +261,7 @@ export function BookmarkedAudioList() {
 						<View className="flex-row items-center gap-2">
 							<Ionicons name="cloud-download-outline" size={18} className="text-gray700" />
 							<Text className="font-pretendard-regular text-gray700 text-[13px]">
-								북마크한 해설 오프라인으로 저장
+								{t('bookmark.offline_save')}
 							</Text>
 						</View>
 						<Pressable
@@ -271,8 +271,8 @@ export function BookmarkedAudioList() {
 							accessibilityRole="button"
 							accessibilityLabel={
 								isDownloading
-									? `다운로드 진행 중, ${downloadProgress.total}개 중 ${downloadProgress.done}개 완료`
-									: '북마크한 해설 오프라인으로 저장'
+									? t('bookmark.downloading_a11y', downloadProgress)
+									: t('bookmark.offline_save')
 							}
 							accessibilityState={{ busy: isDownloading }}
 							style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
@@ -280,8 +280,8 @@ export function BookmarkedAudioList() {
 							<View className="flex-row items-center gap-1.5">
 								<Text className="font-pretendard-semibold text-gray900 text-[13px]">
 									{isDownloading
-										? `받는 중… ${downloadProgress.done}/${downloadProgress.total}`
-										: '전체 받기'}
+										? t('bookmark.downloading', downloadProgress)
+										: t('bookmark.download_all')}
 								</Text>
 								{isDownloading && <ActivityIndicator size="small" className="text-gray500" />}
 							</View>
@@ -294,13 +294,13 @@ export function BookmarkedAudioList() {
 				<View className="px-4 pb-3">
 					<View className="flex-row items-center justify-between rounded-2xl bg-[rgba(28,25,23,0.04)] px-4 py-3">
 						<Text className="font-pretendard-regular text-gray600 text-[13px]">
-							다운로드 {totalSizeLabel}
+							{t('bookmark.downloaded_size', { size: totalSizeLabel })}
 						</Text>
 						<Pressable
 							onPress={handleDeleteAllDownloads}
 							hitSlop={8}
 							accessibilityRole="button"
-							accessibilityLabel="다운로드한 해설 전체 삭제"
+							accessibilityLabel={t('bookmark.delete_all_downloads_a11y')}
 							style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
 						>
 							<View className="flex-row items-center gap-1.5">
@@ -332,7 +332,7 @@ export function BookmarkedAudioList() {
 									className="w-[40px] h-[40px] rounded-full bg-[#E8E3DB]"
 									iconSize={18}
 									resizeMode="cover"
-									accessibilityLabel={`${item.title} 이미지`}
+									accessibilityLabel={t('bookmark.image_a11y', { title: item.title })}
 								/>
 								<DownloadStatusBadge
 									status={downloadStatuses[item.id] ?? 'idle'}
@@ -359,7 +359,7 @@ export function BookmarkedAudioList() {
 
 							<IconButton
 								onPress={() => handleUnbookmark(item)}
-								accessibilityLabel="저장 취소"
+								accessibilityLabel={t('bookmark.unsave_title')}
 								variant="bare"
 								className="p-1"
 								iconClassName="text-red-400"
@@ -376,8 +376,8 @@ export function BookmarkedAudioList() {
 				<Result
 					icon="headset-outline"
 					illustration={<AudioEmptyIllustration />}
-					title="저장된 오디오가 없어요"
-					description={'해설 화면에서 하트를 눌러 저장해보세요'}
+					title={t('bookmark.audio_empty_title')}
+					description={t('bookmark.audio_empty_description')}
 					className="mb-20"
 				/>
 			)}
@@ -408,7 +408,9 @@ export function BookmarkedAudioList() {
 								<Pressable
 									onPress={handlePlayPause}
 									hitSlop={8}
-									accessibilityLabel={isSpeaking ? '일시정지' : '해설 듣기'}
+									accessibilityLabel={
+										isSpeaking ? t('bookmark.pause_a11y') : t('bookmark.play_a11y')
+									}
 									accessibilityRole="button"
 									style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
 								>
@@ -426,7 +428,7 @@ export function BookmarkedAudioList() {
 									<IconButton
 										onPress={() => handleDeleteSingleDownload(selected)}
 										hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
-										accessibilityLabel="다운로드 삭제"
+										accessibilityLabel={t('bookmark.delete_download_title')}
 										variant="bare"
 										icon="trash-outline"
 										iconSize={22}
@@ -453,7 +455,7 @@ export function BookmarkedAudioList() {
 									className="w-full h-[200px] rounded-lg"
 									iconSize={64}
 									resizeMode="cover"
-									accessibilityLabel={`${selected.title} 이미지`}
+									accessibilityLabel={t('bookmark.image_a11y', { title: selected.title })}
 								/>
 							</View>
 						)}

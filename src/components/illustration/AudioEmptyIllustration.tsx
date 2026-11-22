@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 import Svg, { Circle, Path, Rect } from 'react-native-svg';
 import { PLANT_SWING, Swingable } from '@/src/components/guide/Swingable';
@@ -9,6 +10,8 @@ interface AudioEmptyIllustrationProps {
 
 /** 저장된 오디오 없음 — 헤드폰 사이에 놓인 회색 X. X를 누르면 흔들린다 */
 export function AudioEmptyIllustration({ width = 220 }: AudioEmptyIllustrationProps) {
+	const { t } = useTranslation();
+
 	const scale = width / 320;
 	const height = 200 * scale;
 
@@ -51,7 +54,7 @@ export function AudioEmptyIllustration({ width = 220 }: AudioEmptyIllustrationPr
 				width={40}
 				height={40}
 				scale={scale}
-				accessibilityLabel="비어 있다는 표시, 눌러 보세요"
+				accessibilityLabel={t('illustration.audio_empty_a11y')}
 			>
 				<Path d="M8 8 L32 32 M32 8 L8 32" stroke={C.gray} strokeWidth="8" strokeLinecap="round" />
 			</Swingable>

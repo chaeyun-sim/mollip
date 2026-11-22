@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { IconButton } from '@/src/components/common/IconButton';
@@ -9,10 +10,10 @@ interface DownloadStatusBadgeProps {
 	onRetry?: () => void;
 }
 
-const ACCESSIBILITY_LABEL: Record<Exclude<DownloadStatus, 'idle'>, string> = {
-	loading: '다운로드 중',
-	done: '다운로드 완료, 오프라인 재생 가능',
-	failed: '다운로드 실패, 탭해서 재시도',
+const ACCESSIBILITY_LABEL_KEY: Record<Exclude<DownloadStatus, 'idle'>, string> = {
+	loading: 'download_status.loading_a11y',
+	done: 'download_status.done_a11y',
+	failed: 'download_status.failed_a11y',
 };
 
 /**
@@ -22,13 +23,15 @@ const ACCESSIBILITY_LABEL: Record<Exclude<DownloadStatus, 'idle'>, string> = {
  * (`ImageFallback`의 루트 View가 `overflow-hidden` 고정이라 children으로 넘기면 클리핑된다, iteration 3 Blocker 1).
  */
 export function DownloadStatusBadge({ status, onRetry }: DownloadStatusBadgeProps) {
+	const { t } = useTranslation();
+
 	if (status === 'idle') return null;
 
 	if (status === 'loading') {
 		return (
 			<View
 				className="absolute -top-1 -right-1 w-[28px] h-[28px] rounded-full bg-gray900 items-center justify-center"
-				accessibilityLabel={ACCESSIBILITY_LABEL.loading}
+				accessibilityLabel={t(ACCESSIBILITY_LABEL_KEY.loading)}
 				accessibilityRole="image"
 			>
 				<ActivityIndicator size="small" className="text-gray500" />
@@ -41,7 +44,7 @@ export function DownloadStatusBadge({ status, onRetry }: DownloadStatusBadgeProp
 			return (
 				<View
 					className="absolute -top-1 -right-1 w-[22px] h-[22px] rounded-full bg-gray900 items-center justify-center"
-					accessibilityLabel={ACCESSIBILITY_LABEL.failed}
+					accessibilityLabel={t(ACCESSIBILITY_LABEL_KEY.failed)}
 					accessibilityRole="image"
 				>
 					<Ionicons name="alert-circle" size={12} className="text-error" />
@@ -53,7 +56,7 @@ export function DownloadStatusBadge({ status, onRetry }: DownloadStatusBadgeProp
 			<IconButton
 				onPress={onRetry}
 				hitSlop={{ top: 16, bottom: 16, left: 16, right: 16 }}
-				accessibilityLabel={ACCESSIBILITY_LABEL.failed}
+				accessibilityLabel={t(ACCESSIBILITY_LABEL_KEY.failed)}
 				variant="bare"
 				icon="alert-circle"
 				iconSize={12}
@@ -66,7 +69,7 @@ export function DownloadStatusBadge({ status, onRetry }: DownloadStatusBadgeProp
 	return (
 		<View
 			className="absolute -top-1 -right-1 w-[22px] h-[22px] rounded-full bg-gray900 items-center justify-center"
-			accessibilityLabel={ACCESSIBILITY_LABEL.done}
+			accessibilityLabel={t(ACCESSIBILITY_LABEL_KEY.done)}
 			accessibilityRole="image"
 		>
 			<Ionicons name="checkmark-circle" size={12} className="text-success" />
