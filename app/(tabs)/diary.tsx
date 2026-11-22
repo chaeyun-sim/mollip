@@ -15,6 +15,7 @@ import { Button } from '@/src/components/common/Button';
 import { CommonHeader } from '@/src/components/common/CommonHeader';
 import { EmptyWallIllustration } from '@/src/components/illustration/EmptyWallIllustration';
 import { Screen } from '@/src/components/layout/Screen';
+import { useExhibitionEnglishNames } from '@/src/hooks/useExhibitionEnglishNames';
 import { useExhibitionPosterUrls } from '@/src/hooks/useExhibitionPosterUrls';
 import { useSubscription } from '@/src/hooks/useSubscription';
 import { useAuthStore } from '@/src/store/authStore';
@@ -22,9 +23,10 @@ import { useRecordDraftStore } from '@/src/store/recordDraftStore';
 import { dateKeyOf, useVisitStore } from '@/src/store/visitStore';
 import { ARCHIVE_STAT_ACCENTS } from '@/src/constants/archivePalette';
 import { buildWallMonths, pendingDaysLeft, toWallItem } from '@/src/utils/museumWall';
+import { localizeVisitNames } from '@/src/utils/visitEnglishNames';
 
 export default function DiaryScreen() {
-	const { t } = useTranslation();
+	const { t, i18n } = useTranslation();
 
 	const router = useRouter();
 	const insets = useSafeAreaInsets();
@@ -34,6 +36,26 @@ export default function DiaryScreen() {
 	const { isPremium, isLoading: subscriptionLoading } = useSubscription();
 	const startDraft = useRecordDraftStore((s) => s.start);
 	const visits = useVisitStore((s) => s.visits);
+
+	const isEn = i18n.language === 'en';
+	// 영어 화면에서는 연결된 전시의 영문 제목·장소로 바꿔 보여준다 — 기록 원본은 그대로 둔다
+	const englishNames = useExhibitionEnglishNames(visits, isEn);
+	const displayVisits = useMemo(
+		() => (isEn ? localizeVisitNames(visits, englishNames) : visits),
+		[isEn, visits, englishNames],
+	);
+	const wallLabels = useMemo(
+		() => ({
+			formatMonthLabel: (year: number, month: number) =>
+				isEn
+					? new Intl.DateTimeFormat('en-US', { month: 'long', year: 'numeric' }).format(
+							new Date(year, month - 1, 1),
+						)
+					: `${year}년 ${month}월`,
+			untitledTitle: t('diary.untitled_exhibition'),
+		}),
+		[isEn, t],
+	);
 
 	// 벽에는 확정 기록, 상단 스트립에는 기록 대기 관람만 쓴다 — 포스터는 한 번에 조회
 	const wallVisits = useMemo(
@@ -46,17 +68,20 @@ export default function DiaryScreen() {
 		[visits],
 	);
 	const posterUrls = useExhibitionPosterUrls(wallVisits);
-	const months = useMemo(() => buildWallMonths(visits, posterUrls), [visits, posterUrls]);
+	const months = useMemo(
+		() => buildWallMonths(displayVisits, posterUrls, wallLabels),
+		[displayVisits, posterUrls, wallLabels],
+	);
 	const pendingItems = useMemo(
 		(): PendingRecordItem[] =>
-			Object.entries(visits)
+			Object.entries(displayVisits)
 				.filter(([, v]) => v.status === 'pending')
 				.map(([key, v]) => ({
 					visitKey: key,
-					title: toWallItem(key, v).title,
+					title: toWallItem(key, v, undefined, wallLabels.untitledTitle).title,
 					daysLeft: pendingDaysLeft(v.pendingSince),
 				})),
-		[visits],
+		[displayVisits, wallLabels.untitledTitle],
 	);
 
 	useEffect(() => {

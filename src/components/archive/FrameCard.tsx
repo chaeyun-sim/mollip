@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Image } from 'expo-image';
 import { useState } from 'react';
 import { Pressable, Text, View, type LayoutChangeEvent } from 'react-native';
@@ -29,13 +30,22 @@ const NAIL_RADIUS = 2;
 
 /** 벽에 걸린 액자 한 점 — 못과 삼각형 줄, 흰 매트 액자, 캡션. 이미지가 없으면 전시명 타이포 면으로 대체한다 */
 export function FrameCard({ item, onPress, compact = false }: FrameCardProps) {
+	const { t } = useTranslation();
+
 	const [hasImageError, setHasImageError] = useState(false);
 	const [width, setWidth] = useState(0);
 
 	const showImage = Boolean(item.imageUri) && !hasImageError;
 	// 이미지 없는 면은 blanket과 중립 톤을 번갈아 — 기록마다 같은 면이 유지되도록 키 길이로 정한다
 	const faceClassName = item.visitKey.length % 2 === 0 ? 'bg-blanket' : 'bg-surface-neutral';
-	const ratingLabel = item.rating ? `, 별점 ${item.rating}점` : '';
+	const a11yLabel = [
+		item.title,
+		toCaptionDate(item.dateKey),
+		item.rating ? t('diary.frame_rating_a11y', { rating: item.rating }) : '',
+		onPress ? t('diary.frame_view_a11y') : t('diary.frame_preview_a11y'),
+	]
+		.filter(Boolean)
+		.join(', ');
 
 	const handleLayout = (event: LayoutChangeEvent) => setWidth(event.nativeEvent.layout.width);
 
@@ -44,7 +54,7 @@ export function FrameCard({ item, onPress, compact = false }: FrameCardProps) {
 			onPress={onPress ? () => onPress(item.visitKey) : undefined}
 			disabled={!onPress}
 			accessibilityRole={onPress ? 'button' : 'image'}
-			accessibilityLabel={`${item.title}, ${toCaptionDate(item.dateKey)}${ratingLabel}${onPress ? ', 기록 보기' : ', 미리보기'}`}
+			accessibilityLabel={a11yLabel}
 			style={({ pressed }) => ({ opacity: pressed && onPress ? 0.85 : 1 })}
 			className={cn(compact ? 'mb-1' : 'mb-6')}
 			onLayout={handleLayout}

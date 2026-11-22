@@ -53,10 +53,23 @@ export const cleanText = (value?: string): string | undefined => {
 	return trimmed && trimmed !== '-' ? trimmed : undefined;
 };
 
-export const toWallItem = (visitKey: string, visit: DayVisit, posterUrl?: string): WallItem => ({
+const DEFAULT_UNTITLED_TITLE = '제목 없는 전시';
+
+/** 화면 언어에 맞춘 표시 옵션 — 기본값은 한국어 */
+export interface WallLabelOptions {
+	formatMonthLabel?: (year: number, month: number) => string;
+	untitledTitle?: string;
+}
+
+export const toWallItem = (
+	visitKey: string,
+	visit: DayVisit,
+	posterUrl?: string,
+	untitledTitle: string = DEFAULT_UNTITLED_TITLE,
+): WallItem => ({
 	visitKey,
 	shape: frameShapeFor(visitKey),
-	title: cleanText(visit.exhibitionTitle) ?? '제목 없는 전시',
+	title: cleanText(visit.exhibitionTitle) ?? untitledTitle,
 	venue: cleanText(visit.venue),
 	dateKey: dateKeyOf(visitKey),
 	memo: cleanText(visit.memo),
@@ -68,10 +81,14 @@ export const toWallItem = (visitKey: string, visit: DayVisit, posterUrl?: string
 export const buildWallMonths = (
 	visits: Record<string, DayVisit>,
 	posterUrls: Record<string, string> = {},
+	{
+		formatMonthLabel = (year, month) => `${year}년 ${month}월`,
+		untitledTitle = DEFAULT_UNTITLED_TITLE,
+	}: WallLabelOptions = {},
 ): WallMonth[] => {
 	const items = Object.entries(visits)
 		.filter(([, visit]) => visit.status === 'confirmed')
-		.map(([key, visit]) => toWallItem(key, visit, posterUrls[key]))
+		.map(([key, visit]) => toWallItem(key, visit, posterUrls[key], untitledTitle))
 		.sort((a, b) => b.dateKey.localeCompare(a.dateKey) || a.visitKey.localeCompare(b.visitKey));
 
 	const byMonth = new Map<string, WallItem[]>();
@@ -89,7 +106,7 @@ export const buildWallMonths = (
 			heights[target] += FRAME_HEIGHT_RATIO[item.shape] + CAPTION_HEIGHT_RATIO;
 		}
 		const [year, month] = monthKey.split('-').map(Number);
-		return { monthKey, label: `${year}년 ${month}월`, count: monthItems.length, columns };
+		return { monthKey, label: formatMonthLabel(year, month), count: monthItems.length, columns };
 	});
 };
 

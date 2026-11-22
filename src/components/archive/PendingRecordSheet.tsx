@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
 import { BottomSheetBackdrop, BottomSheetModal, BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { forwardRef } from 'react';
@@ -16,6 +17,8 @@ interface PendingRecordSheetProps {
 /** 기록을 기다리는 전시 목록 — 하나만 있어도 같은 시트로 보여준다 */
 export const PendingRecordSheet = forwardRef<BottomSheetModal, PendingRecordSheetProps>(
 	function PendingRecordSheet({ items, onPress }, ref) {
+		const { t } = useTranslation();
+
 		const insets = useSafeAreaInsets();
 		const { height: windowHeight } = useWindowDimensions();
 
@@ -44,10 +47,10 @@ export const PendingRecordSheet = forwardRef<BottomSheetModal, PendingRecordShee
 						accessibilityRole="header"
 						className="font-pretendard-bold text-[20px] leading-[28px] text-ink"
 					>
-						기록을 기다리는 전시
+						{t('diary.pending_title')}
 					</Text>
 					<Text className="mt-1 font-pretendard-regular text-[13px] text-gray600">
-						기간이 지나면 사라져요. 남은 기간이 짧은 순서예요
+						{t('diary.pending_sheet_body')}
 					</Text>
 
 					<View className="mt-4">
@@ -56,7 +59,10 @@ export const PendingRecordSheet = forwardRef<BottomSheetModal, PendingRecordShee
 								key={item.visitKey}
 								onPress={() => onPress(item.visitKey)}
 								accessibilityRole="button"
-								accessibilityLabel={`${item.title} 기록하기, ${item.daysLeft}일 남음`}
+								accessibilityLabel={t('diary.pending_item_a11y', {
+									title: item.title,
+									daysLeft: t('diary.pending_days_left', { count: item.daysLeft }),
+								})}
 								className={cn(
 									'min-h-[64px] flex-row items-center gap-3 py-3',
 									index > 0 && 'border-t-[0.5px] border-divider',
@@ -73,12 +79,14 @@ export const PendingRecordSheet = forwardRef<BottomSheetModal, PendingRecordShee
 									<View className="mt-1 flex-row items-center gap-1">
 										<Ionicons name="time-outline" size={13} color={colors.gray600} />
 										<Text className="font-pretendard-regular text-[12px] text-gray600">
-											{item.daysLeft}일 남음
+											{t('diary.pending_days_left', { count: item.daysLeft })}
 										</Text>
 									</View>
 								</View>
 								<View className="flex-row items-center gap-0.5">
-									<Text className="font-pretendard-semibold text-[13px] text-brand">기록하기</Text>
+									<Text className="font-pretendard-semibold text-[13px] text-brand">
+										{t('diary.pending_record')}
+									</Text>
 									<Ionicons name="chevron-forward" size={14} color={colors.brand} />
 								</View>
 							</Pressable>

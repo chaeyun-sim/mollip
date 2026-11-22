@@ -66,6 +66,19 @@ describe('buildWallMonths', () => {
 		expect(item.venue).toBeUndefined();
 	});
 
+	it('월 라벨 포맷과 대체 제목을 언어에 맞게 바꿀 수 있다', () => {
+		const [month] = buildWallMonths(
+			{ '2026-10-01::manual': visit({ exhibitionTitle: undefined }) },
+			{},
+			{
+				formatMonthLabel: (year, monthNumber) => `${monthNumber}/${year}`,
+				untitledTitle: 'Untitled exhibition',
+			},
+		);
+		expect(month.label).toBe('10/2026');
+		expect(month.columns[0][0].title).toBe('Untitled exhibition');
+	});
+
 	it('기록이 없으면 빈 배열', () => {
 		expect(buildWallMonths({})).toEqual([]);
 	});
