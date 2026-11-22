@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 import { StarButton } from '@/src/components/archive/StarButton';
 
@@ -18,6 +19,8 @@ export function StarRating({
 	disabled,
 	tone = 'light',
 }: StarRatingProps) {
+	const { t } = useTranslation();
+
 	const STAR_VALUES = [1, 2, 3, 4, 5] as const;
 
 	const filled = {
@@ -48,8 +51,8 @@ export function StarRating({
 						iconClassName={n - 0.5 <= value ? filled : empty}
 						onPress={(locationX) => onChange(locationX < size / 2 ? n - 0.5 : n)}
 						disabled={disabled}
-						accessibilityLabel={`별점 ${n - 0.5}점 또는 ${n}점`}
-						accessibilityHint="별의 왼쪽은 반 점, 오른쪽은 한 점"
+						accessibilityLabel={t('diary.star_a11y', { half: n - 0.5, full: n })}
+						accessibilityHint={t('diary.star_hint')}
 						selected={n - 0.5 <= value}
 					/>
 				);

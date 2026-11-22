@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useEffect, useRef, useState } from 'react';
 import {
@@ -28,6 +29,7 @@ interface PhotoGalleryProps {
 
 /** 기록 사진 히어로 갤러리 — 풀폭 가로 페이징(cover), 2장 이상이면 사진 안쪽 하단 중앙에 캐러셀 점을 겹쳐 둔다 */
 export function PhotoGallery({ photos, title, scrimHeight = 0, className }: PhotoGalleryProps) {
+	const { t } = useTranslation();
 	const { width: windowWidth, height: windowHeight } = useWindowDimensions();
 	const [width, setWidth] = useState(0);
 	// 인덱스와 함께 보던 사진의 uri를 들고 있어야 목록이 바뀌어도 같은 사진을 따라갈 수 있다
@@ -69,7 +71,7 @@ export function PhotoGallery({ photos, title, scrimHeight = 0, className }: Phot
 				className={cn('w-full items-center justify-center bg-surface-neutral px-10', className)}
 				style={{ height: stageHeight }}
 				accessibilityRole="image"
-				accessibilityLabel={`${title}, 등록된 사진이 없어요`}
+				accessibilityLabel={t('diary.gallery_no_photos_a11y', { title })}
 			>
 				<Text
 					numberOfLines={4}
@@ -78,7 +80,7 @@ export function PhotoGallery({ photos, title, scrimHeight = 0, className }: Phot
 					{title}
 				</Text>
 				<Text className="mt-3 font-pretendard-regular text-[12px] text-gray600">
-					등록된 사진이 없어요
+					{t('diary.gallery_no_photos')}
 				</Text>
 			</View>
 		);
@@ -105,7 +107,11 @@ export function PhotoGallery({ photos, title, scrimHeight = 0, className }: Phot
 								uri={item}
 								width={width}
 								height={stageHeight}
-								accessibilityLabel={`${title} 사진 ${index + 1}/${total}`}
+								accessibilityLabel={t('diary.gallery_photo_a11y', {
+									title,
+									index: index + 1,
+									total,
+								})}
 							/>
 						)}
 					/>
@@ -115,7 +121,7 @@ export function PhotoGallery({ photos, title, scrimHeight = 0, className }: Phot
 					<View pointerEvents="none" className="absolute inset-x-0 bottom-4 items-center">
 						<View
 							accessible
-							accessibilityLabel={`사진 ${current + 1}/${total}`}
+							accessibilityLabel={t('diary.gallery_position_a11y', { index: current + 1, total })}
 							accessibilityLiveRegion="polite"
 							className="flex-row items-center gap-[5px] rounded-full bg-black/40 px-2.5 py-1.5"
 						>

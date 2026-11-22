@@ -35,7 +35,7 @@ export function GalleryPhoto({ uri, width, height, accessibilityLabel }: Gallery
 				<View className="items-center px-8">
 					<Ionicons name="image-outline" size={32} color={colors.gray500} />
 					<Text className="mt-2 font-pretendard-medium text-[14px] text-gray600">
-						사진을 불러오지 못했어요
+						{t('diary.photo_load_failed')}
 					</Text>
 					<Button
 						variant="ghost"
@@ -45,7 +45,7 @@ export function GalleryPhoto({ uri, width, height, accessibilityLabel }: Gallery
 						block={false}
 						className="min-h-11"
 						onPress={handleRetry}
-						accessibilityLabel="사진 다시 불러오기"
+						accessibilityLabel={t('diary.photo_reload_a11y')}
 					>
 						{t('common.retry')}
 					</Button>

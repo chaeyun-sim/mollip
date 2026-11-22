@@ -37,14 +37,13 @@ import type { HistoryItem } from '@/src/store/historyStore';
 import { Screen } from '@/src/components/layout/Screen';
 import { cn } from '@/src/lib/cn';
 import { colors } from '@/src/constants/colors';
-import { WEEKDAYS } from '@/src/constants/week';
 import { galleryStageHeight } from '@/src/utils/visitGallery';
 import { uploadTicketVisitPhotos } from '@/src/utils/visitPhotos';
 
 const MAX_VENUE_PHOTOS = 9;
 
 export default function DiaryDateScreen() {
-	const { t } = useTranslation();
+	const { t, i18n } = useTranslation();
 
 	const router = useRouter();
 	const params = useLocalSearchParams<{ date?: string; visit?: string }>();
@@ -56,11 +55,19 @@ export default function DiaryDateScreen() {
 		return /^\d{4}-\d{2}-\d{2}$/.test(raw) ? raw : new Date().toISOString().slice(0, 10);
 	}, [params.date]);
 
+	const isEn = i18n.language === 'en';
+	// 블록 메타 줄에 쓰는 관람일 — 한국어는 2026.10.17, 영어는 Oct 17, 2026
 	const dateLabel = useMemo(() => {
 		const [y, m, d] = dateKey.split('-').map(Number);
-		const weekday = WEEKDAYS[new Date(y, m - 1, d).getDay()];
-		return `${y}.${m}.${d} ${weekday}요일`;
-	}, [dateKey]);
+		if (isEn) {
+			return new Intl.DateTimeFormat('en-US', {
+				month: 'short',
+				day: 'numeric',
+				year: 'numeric',
+			}).format(new Date(y, m - 1, d));
+		}
+		return `${y}.${m}.${d}`;
+	}, [dateKey, isEn]);
 
 	const { visits, setVisitMemo, setVisitRating, deleteVisit, updateVisitPhotos } = useVisitStore(
 		useShallow((s) => ({
@@ -142,10 +149,8 @@ export default function DiaryDateScreen() {
 			: await ImagePicker.requestMediaLibraryPermissionsAsync();
 		if (!permission.granted) {
 			Alert.alert(
-				'권한 필요',
-				useCamera
-					? '카메라를 사용하려면 설정에서 카메라 권한을 허용해 주세요.'
-					: '사진을 선택하려면 설정에서 사진 접근을 허용해 주세요.',
+				t('diary.detail_permission_title'),
+				useCamera ? t('diary.detail_permission_camera') : t('diary.detail_permission_photos'),
 			);
 			return [];
 		}
@@ -188,11 +193,11 @@ export default function DiaryDateScreen() {
 			return;
 		}
 		if (!editTicketUri) {
-			Alert.alert('티켓 사진 필요', '티켓 사진은 반드시 있어야 해요.');
+			Alert.alert(t('diary.detail_ticket_required_title'), t('diary.detail_ticket_required_body'));
 			return;
 		}
 		if (!userId) {
-			Alert.alert('로그인 필요', '사진 수정은 로그인 후 저장돼요.');
+			Alert.alert(t('diary.detail_login_required_title'), t('diary.detail_login_required_body'));
 			setActiveMemoKey(null);
 			return;
 		}
@@ -207,7 +212,7 @@ export default function DiaryDateScreen() {
 			updateVisitPhotos(activeMemoKey, { thumbnail: ticketUrl, venuePhotos: venueUrls });
 		} catch (error) {
 			console.warn('[visit] photo update failed:', error);
-			Alert.alert('저장 실패', '사진을 서버에 올리지 못했어요. 잠시 후 다시 시도해 주세요.');
+			Alert.alert(t('diary.detail_save_failed_title'), t('diary.detail_save_failed_body'));
 			setSavingPhotos(false);
 			return;
 		}
@@ -260,7 +265,7 @@ export default function DiaryDateScreen() {
 			setShowPreviewNotice(true);
 			return;
 		}
-		Alert.alert('기록 삭제', '이 기록을 삭제할까요?', [
+		Alert.alert(t('diary.detail_delete_title'), t('diary.detail_delete_body'), [
 			{ text: t('common.close'), style: 'cancel' },
 			{
 				text: t('common.delete'),
@@ -300,7 +305,7 @@ export default function DiaryDateScreen() {
 					onPress={handleBack}
 					hitSlop={4}
 					accessibilityRole="button"
-					accessibilityLabel="뒤로 가기"
+					accessibilityLabel={t('diary.detail_back_a11y')}
 					className={cn(
 						'h-11 w-11 items-center justify-center rounded-full',
 						isLightOverPhoto ? 'bg-black/50' : 'border-[0.5px] border-divider bg-white/90',
@@ -354,9 +359,9 @@ export default function DiaryDateScreen() {
 				!isLeavingAfterDelete && (
 					<Result
 						icon="images-outline"
-						title="기록을 찾을 수 없어요"
-						description="삭제되었거나 아직 불러오지 못한 기록이에요."
-						actionLabel="돌아가기"
+						title={t('diary.detail_not_found_title')}
+						description={t('diary.detail_not_found_description')}
+						actionLabel={t('diary.detail_not_found_action')}
 						onAction={handleBack}
 					/>
 				)
@@ -374,7 +379,7 @@ export default function DiaryDateScreen() {
 						className="rounded-full bg-gray800 px-4 py-2.5"
 					>
 						<Text className="font-pretendard-medium text-[13px] text-white">
-							미리보기용 샘플이라 수정·삭제할 수 없어요
+							{t('diary.detail_preview_notice')}
 						</Text>
 					</View>
 				</View>
@@ -394,7 +399,7 @@ export default function DiaryDateScreen() {
 							className="flex-1 bg-black/50"
 							onPress={handleCloseEditor}
 							accessibilityRole="button"
-							accessibilityLabel="감상 편집 닫기"
+							accessibilityLabel={t('diary.detail_editor_close_a11y')}
 						/>
 						<View
 							className="max-h-full bg-white rounded-t-3xl px-6 pt-5"
@@ -402,7 +407,7 @@ export default function DiaryDateScreen() {
 						>
 							<View className="flex-row items-center justify-between mb-4">
 								<Text className="text-ink font-pretendard-semibold text-[17px]">
-									나의 감상 편집
+									{t('diary.detail_editor_title')}
 								</Text>
 								<Pressable
 									onPress={handleCloseEditor}
@@ -435,13 +440,13 @@ export default function DiaryDateScreen() {
 								{activeIsTicketVisit && (
 									<View className="mb-5">
 										<Text className="text-gray600 text-[13px] font-pretendard-medium mb-2">
-											티켓 사진
+											{t('diary.detail_ticket_photo')}
 										</Text>
 										<Pressable
 											onPress={handlePickTicketPhoto}
 											disabled={savingPhotos}
 											accessibilityRole="button"
-											accessibilityLabel="티켓 사진 변경"
+											accessibilityLabel={t('diary.detail_ticket_photo_change_a11y')}
 											className="mb-4 overflow-hidden rounded-2xl"
 											style={({ pressed }) => ({ opacity: pressed ? 0.85 : 1 })}
 										>
@@ -458,7 +463,7 @@ export default function DiaryDateScreen() {
 										</Pressable>
 
 										<Text className="text-gray600 text-[13px] font-pretendard-medium mb-2">
-											현장 사진
+											{t('diary.detail_venue_photos')}
 										</Text>
 										<View className="flex-row flex-wrap gap-2">
 											{editVenuePhotos.map((uri) => (
@@ -471,7 +476,7 @@ export default function DiaryDateScreen() {
 														onPress={() => handleRemoveVenuePhoto(uri)}
 														disabled={savingPhotos}
 														accessibilityRole="button"
-														accessibilityLabel="현장 사진 삭제"
+														accessibilityLabel={t('diary.detail_venue_photo_remove_a11y')}
 														hitSlop={6}
 														className="absolute top-1 right-1 h-5 w-5 items-center justify-center rounded-full bg-black/60"
 													>
@@ -484,7 +489,7 @@ export default function DiaryDateScreen() {
 													onPress={handleAddVenuePhoto}
 													disabled={savingPhotos}
 													accessibilityRole="button"
-													accessibilityLabel="현장 사진 추가"
+													accessibilityLabel={t('diary.detail_venue_photo_add_a11y')}
 													className="w-[72px] h-[72px] items-center justify-center rounded-xl bg-surface-neutral"
 													style={({ pressed }) => ({ opacity: pressed ? 0.75 : 1 })}
 												>
@@ -502,12 +507,12 @@ export default function DiaryDateScreen() {
 										onChangeText={(text) =>
 											isStoredKey(activeMemoKey) && setVisitMemo(activeMemoKey, text)
 										}
-										placeholder="오늘 기억하고 싶은 것을 적어보세요"
+										placeholder={t('diary.detail_memo_placeholder')}
 										placeholderTextColor={colors.gray500}
 										multiline
 										scrollEnabled={false}
 										maxLength={400}
-										accessibilityLabel="관람 메모 입력"
+										accessibilityLabel={t('diary.detail_memo_a11y')}
 										className="text-ink text-[15px] min-h-[120px]"
 										style={{ lineHeight: 30 }}
 									/>

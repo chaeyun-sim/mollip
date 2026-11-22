@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
 import { useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
@@ -24,6 +25,8 @@ export function ListenedArtworkRow({
 	chatMessages,
 	onPlay,
 }: ListenedArtworkRowProps) {
+	const { t } = useTranslation();
+
 	const [expanded, setExpanded] = useState(false);
 
 	const chatCount = chatMessages.length;
@@ -55,7 +58,11 @@ export function ListenedArtworkRow({
 						hitSlop={4}
 						accessibilityRole="button"
 						accessibilityState={{ expanded }}
-						accessibilityLabel={`${title} 대화 ${chatCount}개 ${expanded ? '접기' : '펼치기'}`}
+						accessibilityLabel={
+							expanded
+								? t('diary.listened_chat_collapse_a11y', { title, count: chatCount })
+								: t('diary.listened_chat_expand_a11y', { title, count: chatCount })
+						}
 						className={cn(
 							'h-8 flex-row items-center gap-1 rounded-full px-2.5',
 							expanded ? 'bg-brand' : 'bg-surface-neutral',
@@ -82,7 +89,7 @@ export function ListenedArtworkRow({
 						onPress={onPlay}
 						hitSlop={6}
 						accessibilityRole="button"
-						accessibilityLabel={`${title} 해설 듣기`}
+						accessibilityLabel={t('diary.listened_play_a11y', { title })}
 						className="h-9 w-9 items-center justify-center rounded-full bg-brand"
 						style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
 					>

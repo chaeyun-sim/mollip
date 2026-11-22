@@ -49,7 +49,7 @@ export function VisitBlock({
 	heroTopInset = 0,
 	onHeroPhotoChange,
 }: VisitBlockProps) {
-	const { t } = useTranslation();
+	const { t, i18n } = useTranslation();
 
 	const dotsRef = useRef<View>(null);
 	const [menuOpen, setMenuOpen] = useState(false);
@@ -59,8 +59,16 @@ export function VisitBlock({
 
 	const { data: visitExhibition } = useExhibitionDetail(visit.exhibitionId ?? undefined);
 
-	const title = cleanText(visit.exhibitionTitle) ?? visitExhibition?.title ?? '제목 없는 전시';
-	const venue = cleanText(visit.venue) ?? cleanText(visitExhibition?.venue);
+	const isEn = i18n.language === 'en';
+	// title은 그날 채팅·해설 기록과 제목을 맞추는 키로도 쓰니 저장된 원래 제목을 유지한다
+	const title =
+		cleanText(visit.exhibitionTitle) ?? visitExhibition?.title ?? t('diary.untitled_exhibition');
+	// 화면에 보이는 제목·장소만 영어일 때 전시 영문 값으로 바꾼다
+	const displayTitle = (isEn ? cleanText(visitExhibition?.titleEn) : undefined) ?? title;
+	const venue =
+		(isEn ? cleanText(visitExhibition?.venueEn) : undefined) ??
+		cleanText(visit.venue) ??
+		cleanText(visitExhibition?.venue);
 	const memo = cleanText(visit.memo);
 	// 작가는 전시 상세(Exhibition.artist)에 있을 때만 쓴다 — DayVisit에는 없고 작품 작가로 대신 채우지 않는다
 	const creditLine = buildCreditLine(visitExhibition?.artist, venue);
@@ -148,7 +156,7 @@ export function VisitBlock({
 			<View>
 				<PhotoGallery
 					photos={photos}
-					title={title}
+					title={displayTitle}
 					scrimHeight={hasHeroPhoto && heroTopInset > 0 ? heroTopInset + 72 : 0}
 				/>
 				{/* 사진 우상단 오버레이 — 제목 중앙 정렬을 밀지 않는다. 사진 위에서도 읽히게 반투명 면을 깐다 */}
@@ -157,7 +165,7 @@ export function VisitBlock({
 						ref={dotsRef}
 						onPress={handleOpenMenu}
 						hitSlop={4}
-						accessibilityLabel="기록 옵션 더보기"
+						accessibilityLabel={t('diary.visit_more_a11y')}
 						accessibilityRole="button"
 						className={cn(
 							'h-11 w-11 items-center justify-center rounded-full',
@@ -180,7 +188,7 @@ export function VisitBlock({
 					accessibilityRole="header"
 					className="text-center font-pretendard-semibold text-[24px] leading-[32px] text-ink"
 				>
-					{title}
+					{displayTitle}
 				</Text>
 
 				{creditLine ? (
@@ -188,14 +196,14 @@ export function VisitBlock({
 						numberOfLines={2}
 						className="mt-2 text-center font-pretendard-regular text-[14px] leading-[20px] text-gray600"
 					>
-						{creditLine} · {dateLabel.split(' ')[0]}
+						{creditLine} · {dateLabel}
 					</Text>
 				) : (
 					<Text
 						numberOfLines={2}
 						className="mt-2 text-center font-pretendard-regular text-[14px] leading-[20px] text-gray600"
 					>
-						{dateLabel.split(' ')[0]}
+						{dateLabel}
 					</Text>
 				)}
 			</View>
@@ -205,7 +213,7 @@ export function VisitBlock({
 					{/* 관람 노트 — 잡지 기사 머리말처럼 가는 선 위에 작은 제목과 별점을 한 줄로 둔다 */}
 					{/* 메모가 없으면 아래에 이어지는 구분선과 겹쳐 두 줄이 되니 머리말 선은 뺀다 */}
 					<VisitSectionHeader
-						label="관람 노트"
+						label={t('diary.visit_notes')}
 						divider={Boolean(memo)}
 						right={
 							hasRating && (
@@ -213,7 +221,7 @@ export function VisitBlock({
 								<View
 									accessible
 									accessibilityRole="text"
-									accessibilityLabel={`별점 ${ratingText}점, 5점 만점`}
+									accessibilityLabel={t('diary.visit_rating_a11y', { rating: ratingText })}
 									className="flex-row items-center gap-2"
 								>
 									<StarRating value={rating} onChange={() => {}} disabled size={18} tone="light" />
@@ -249,11 +257,11 @@ export function VisitBlock({
 			{listenedItems.length > 0 && (
 				<View className="mx-6 mt-10">
 					<VisitSectionHeader
-						label="들은 작품"
+						label={t('diary.visit_listened')}
 						divider
 						right={
 							<Text className="font-pretendard-regular text-[12px] text-gray600">
-								{`${listenedItems.length}곡`}
+								{t('diary.visit_listened_count', { count: listenedItems.length })}
 							</Text>
 						}
 					/>
@@ -272,7 +280,7 @@ export function VisitBlock({
 
 			{otherChatItems.length > 0 && (
 				<View className="mx-6 mt-10">
-					<VisitSectionHeader label="함께 나눈 채팅" divider />
+					<VisitSectionHeader label={t('diary.visit_chats')} divider />
 					{otherChatItems.map((item) => (
 						<View key={item.id} className="mt-5">
 							<Text
@@ -297,7 +305,7 @@ export function VisitBlock({
 						className="absolute inset-0"
 						onPress={handleClose}
 						accessibilityRole="button"
-						accessibilityLabel="메뉴 닫기"
+						accessibilityLabel={t('diary.visit_menu_close_a11y')}
 					/>
 					<View
 						className="absolute overflow-hidden rounded-2xl border-[0.5px] border-divider bg-white shadow-chip"
@@ -307,7 +315,7 @@ export function VisitBlock({
 							onPress={handleEditMemo}
 							className="min-h-11 flex-row items-center gap-2 px-4 py-3"
 							accessibilityRole="button"
-							accessibilityLabel="나의 감상 편집"
+							accessibilityLabel={t('diary.visit_edit_a11y')}
 							style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
 						>
 							<Ionicons name="pencil-outline" size={16} color={colors.ink} />
@@ -320,7 +328,7 @@ export function VisitBlock({
 							onPress={handleDelete}
 							className="min-h-11 flex-row items-center gap-2 px-4 py-3"
 							accessibilityRole="button"
-							accessibilityLabel="기록 삭제"
+							accessibilityLabel={t('diary.visit_delete_a11y')}
 							style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
 						>
 							<Ionicons name="trash-outline" size={16} color={colors.error} />

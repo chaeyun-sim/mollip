@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
@@ -23,6 +24,8 @@ interface DiaryGuidePlayerProps {
 // ScrollView 형제가 되어야 화면 하단에서 올라오고 별점 위에 뜬다.
 export const DiaryGuidePlayer = forwardRef<DiaryGuidePlayerHandle, DiaryGuidePlayerProps>(
 	function DiaryGuidePlayer({ item, onClose }, ref) {
+		const { t } = useTranslation();
+
 		const sheetRef = useRef<BottomSheet>(null);
 		const [wikiImageUrl, setWikiImageUrl] = useState<string | null>(null);
 		const [wikiImageLoading, setWikiImageLoading] = useState(false);
@@ -116,7 +119,9 @@ export const DiaryGuidePlayer = forwardRef<DiaryGuidePlayerHandle, DiaryGuidePla
 								<Pressable
 									onPress={handlePlayPause}
 									hitSlop={8}
-									accessibilityLabel={isSpeaking ? '일시정지' : '해설 듣기'}
+									accessibilityLabel={
+										isSpeaking ? t('diary.player_pause_a11y') : t('diary.player_play_a11y')
+									}
 									accessibilityRole="button"
 									style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
 									disabled={isLoading}
@@ -134,7 +139,7 @@ export const DiaryGuidePlayer = forwardRef<DiaryGuidePlayerHandle, DiaryGuidePla
 								<Pressable
 									onPress={handleClose}
 									hitSlop={8}
-									accessibilityLabel="닫기"
+									accessibilityLabel={t('common.close')}
 									accessibilityRole="button"
 									style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
 									disabled={isLoading}
@@ -159,7 +164,7 @@ export const DiaryGuidePlayer = forwardRef<DiaryGuidePlayerHandle, DiaryGuidePla
 								resizeMode="contain"
 								className="mt-6 w-full h-[220px] rounded-lg bg-gray800"
 								loadingIndicatorColor="brand-on-dark"
-								accessibilityLabel={`${item.title} 작품 이미지`}
+								accessibilityLabel={t('diary.player_image_a11y', { title: item.title })}
 							/>
 						)}
 					</BottomSheetScrollView>

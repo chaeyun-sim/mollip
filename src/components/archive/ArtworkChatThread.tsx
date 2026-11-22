@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Text, View } from 'react-native';
 import { cn } from '@/src/lib/cn';
 import type { StoredChatMessage } from '@/src/store/historyStore';
@@ -8,6 +9,8 @@ interface ArtworkChatThreadProps {
 
 // 한 작품에 대한 도슨트 대화 말풍선 목록 (읽기 전용) — 연한 회색 패널 위에 놓이므로 AI 말풍선은 흰색
 export function ArtworkChatThread({ messages }: ArtworkChatThreadProps) {
+	const { t } = useTranslation();
+
 	return (
 		<View className="gap-y-2">
 			{messages.map((msg) => (
@@ -15,7 +18,11 @@ export function ArtworkChatThread({ messages }: ArtworkChatThreadProps) {
 					key={msg.id}
 					className={msg.role === 'user' ? 'items-end' : 'items-start'}
 					accessibilityRole="text"
-					accessibilityLabel={msg.role === 'user' ? `내 질문: ${msg.text}` : `AI 답변: ${msg.text}`}
+					accessibilityLabel={
+						msg.role === 'user'
+							? t('diary.chat_user_a11y', { text: msg.text })
+							: t('diary.chat_ai_a11y', { text: msg.text })
+					}
 				>
 					<View
 						className={cn(
