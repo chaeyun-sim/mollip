@@ -10,6 +10,9 @@ interface BookmarkAudioStore {
 	isBookmarked: (audioGuideId: string) => boolean;
 	/** 로그인 후 원격 bookmark_audio로 로컬 상태를 교체 */
 	loadFromRemote: (ids: string[]) => void;
+	/** 로그인 후 서버 동기화가 끝났는지 (실패해도 끝난 것으로 본다) — 로딩 스켈레톤용, 저장하지 않는다 */
+	isRemoteLoaded: boolean;
+	setRemoteLoaded: (isRemoteLoaded: boolean) => void;
 }
 
 export const useBookmarkAudioStore = create<BookmarkAudioStore>()(
@@ -52,11 +55,14 @@ export const useBookmarkAudioStore = create<BookmarkAudioStore>()(
 				}
 			},
 			isBookmarked: (id) => get().ids.includes(id),
-			loadFromRemote: (ids) => set({ ids }),
+			loadFromRemote: (ids) => set({ ids, isRemoteLoaded: true }),
+			isRemoteLoaded: false,
+			setRemoteLoaded: (isRemoteLoaded) => set({ isRemoteLoaded }),
 		}),
 		{
 			name: 'bookmark-audio',
 			storage: createJSONStorage(createAuthAwareStorage),
+			partialize: (state) => ({ ids: state.ids }),
 		},
 	),
 );

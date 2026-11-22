@@ -6,6 +6,7 @@ import { useRouter } from 'expo-router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ActivityIndicator, Alert, FlatList, Pressable, Text, View } from 'react-native';
 import { useShallow } from 'zustand/react/shallow';
+import { BookmarkedAudioRowSkeleton } from '@/src/components/bookmark/BookmarkedAudioRowSkeleton';
 import { Divider } from '@/src/components/common/Divider';
 import { IconButton } from '@/src/components/common/IconButton';
 import { ImageFallback } from '@/src/components/common/ImageFallback';
@@ -43,11 +44,19 @@ export function BookmarkedAudioList() {
 	// Zustand 상태 관리
 	const session = useAuthStore((s) => s.session);
 	const { isPremium, isLoading: subscriptionLoading } = useSubscription();
-	const { historyItems, updateHistory } = useHistoryStore(
-		useShallow((s) => ({ historyItems: s.items, updateHistory: s.update })),
+	const { historyItems, updateHistory, isHistoryLoaded } = useHistoryStore(
+		useShallow((s) => ({
+			historyItems: s.items,
+			updateHistory: s.update,
+			isHistoryLoaded: s.isRemoteLoaded,
+		})),
 	);
-	const { bookmarkedIds, toggleBookmark } = useBookmarkAudioStore(
-		useShallow((s) => ({ bookmarkedIds: s.ids, toggleBookmark: s.toggle })),
+	const { bookmarkedIds, toggleBookmark, isBookmarkLoaded } = useBookmarkAudioStore(
+		useShallow((s) => ({
+			bookmarkedIds: s.ids,
+			toggleBookmark: s.toggle,
+			isBookmarkLoaded: s.isRemoteLoaded,
+		})),
 	);
 	const { voiceId, voiceSpeed } = useSettingsStore(
 		useShallow((s) => ({ voiceId: s.voiceId, voiceSpeed: s.voiceSpeed })),
@@ -97,6 +106,8 @@ export function BookmarkedAudioList() {
 		() => (doneIds.length > 0 ? formatOfflineAudioSize(getOfflineAudioTotalSizeBytes()) : ''),
 		[doneIds.length],
 	);
+
+	const isAudioSyncing = !isHistoryLoaded || !isBookmarkLoaded;
 
 	// 다운로드 가능 여부 계산 (유틸)
 	const canStartDownload = hasIdle(downloadTargetIds, downloadStatuses);
@@ -219,7 +230,16 @@ export function BookmarkedAudioList() {
 		);
 	}
 
-	if (subscriptionLoading) return null;
+	// 구독 확인·해설 동기화 전에는 빈 화면 대신 스켈레톤 — 이미 받은 목록이 있으면 그대로 보여준다
+	if (subscriptionLoading || (isAudioSyncing && items.length === 0)) {
+		return (
+			<View className="flex-1 px-1 pt-4">
+				{Array.from({ length: 5 }).map((_, index) => (
+					<BookmarkedAudioRowSkeleton key={index} />
+				))}
+			</View>
+		);
+	}
 
 	if (!isPremium) {
 		return (

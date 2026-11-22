@@ -38,6 +38,9 @@ interface HistoryStore {
 	saveChatMessages: (id: string, messages: StoredChatMessage[]) => void;
 	/** 로그인 후 원격 오디오 가이드로 로컬 상태를 교체 */
 	loadFromRemote: (items: HistoryItem[]) => void;
+	/** 로그인 후 서버 동기화가 끝났는지 (실패해도 끝난 것으로 본다) — 로딩 스켈레톤용 */
+	isRemoteLoaded: boolean;
+	setRemoteLoaded: (isRemoteLoaded: boolean) => void;
 	/** 게스트 SQLite에서 해설·채팅을 한 번 읽어 메모리에 올린다 */
 	hydrateFromGuestDb: () => Promise<void>;
 	/** blind 매칭 시절 저장된 신뢰할 수 없는 위키 이미지를 일괄 제거 */
@@ -129,7 +132,9 @@ export const useHistoryStore = create<HistoryStore>()((set, get) => ({
 
 		saveGuestHistoryChat(id, messages);
 	},
-	loadFromRemote: (items) => set({ items }),
+	loadFromRemote: (items) => set({ items, isRemoteLoaded: true }),
+	isRemoteLoaded: false,
+	setRemoteLoaded: (isRemoteLoaded) => set({ isRemoteLoaded }),
 	hydrateFromGuestDb: async () => {
 		if (!isGuest()) return;
 		await migrateGuestHistoryFromAsyncStorage();

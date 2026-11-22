@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { useShallow } from 'zustand/react/shallow';
 import { useAuthStore } from '../store/authStore';
 import { useBookmarkAudioStore } from '../store/bookmarkAudioStore';
 import { supabase } from '../utils/supabase';
@@ -9,11 +10,15 @@ import { supabase } from '../utils/supabase';
  */
 export function useBookmarkAudioSync() {
 	const userId = useAuthStore((s) => s.user?.id);
-	const loadFromRemote = useBookmarkAudioStore((s) => s.loadFromRemote);
+	const { loadFromRemote, setRemoteLoaded } = useBookmarkAudioStore(
+		useShallow((s) => ({ loadFromRemote: s.loadFromRemote, setRemoteLoaded: s.setRemoteLoaded })),
+	);
 
 	useEffect(() => {
 		if (!userId) return;
 		let cancelled = false;
+		// 사용자가 바뀌면 이전 동기화 결과를 믿지 않는다 — 다시 받을 때까지 로딩
+		setRemoteLoaded(false);
 
 		supabase
 			.from('bookmark_audio')
@@ -23,6 +28,8 @@ export function useBookmarkAudioSync() {
 				if (cancelled) return;
 				if (error) {
 					console.warn('[bookmark_audio] load failed:', error.message);
+					// 실패해도 스켈레톤이 계속 돌지 않게 끝난 것으로 본다
+					setRemoteLoaded(true);
 					return;
 				}
 				if (data) {
@@ -35,5 +42,5 @@ export function useBookmarkAudioSync() {
 		return () => {
 			cancelled = true;
 		};
-	}, [userId, loadFromRemote]);
+	}, [userId, loadFromRemote, setRemoteLoaded]);
 }
