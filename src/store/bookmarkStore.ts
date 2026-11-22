@@ -7,6 +7,8 @@ import { createAuthAwareStorage } from '../utils/authAwareStorage';
 interface BookmarkStore {
 	ids: string[];
 	toggle: (id: string, onError?: () => void) => void;
+	/** 스크랩돼 있을 때만 해제한다 — toggle과 달리 없는 전시를 새로 스크랩하지 않는다 */
+	remove: (id: string) => void;
 	isBookmarked: (id: string) => boolean;
 	/** 로그인 후 원격 북마크로 로컬 상태를 교체 */
 	loadFromRemote: (ids: string[]) => void;
@@ -51,6 +53,24 @@ export const useBookmarkStore = create<BookmarkStore>()(
 							}
 						});
 				}
+			},
+			remove: (id) => {
+				const current = get().ids;
+				if (!current.includes(id)) return;
+				set({ ids: current.filter((i) => i !== id) });
+
+				const userId = useAuthStore.getState().user?.id;
+				if (!userId) return;
+				supabase
+					.from('bookmark_exhibitions')
+					.delete()
+					.match({ user_id: userId, exhibition_id: id })
+					.then(({ error }) => {
+						if (error) {
+							console.warn('[bookmark] delete failed:', error.message);
+							set({ ids: current });
+						}
+					});
 			},
 			isBookmarked: (id) => get().ids.includes(id),
 			loadFromRemote: (ids) => set({ ids }),

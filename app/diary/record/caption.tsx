@@ -11,6 +11,7 @@ import { RecordStepHeader } from '@/src/components/record/RecordStepHeader';
 import { RecordWriteProgress } from '@/src/components/record/RecordWriteProgress';
 import { colors } from '@/src/constants/colors';
 import { useAuthStore } from '@/src/store/authStore';
+import { useBookmarkStore } from '@/src/store/bookmarkStore';
 import { useRecordDraftStore } from '@/src/store/recordDraftStore';
 import { makeVisitKey, useVisitStore, visitIdentityOf } from '@/src/store/visitStore';
 import { getProgressTotal } from '@/src/utils/recordWriteFlow';
@@ -35,6 +36,7 @@ export default function RecordCaptionScreen() {
 		useShallow((s) => ({ draft: s.draft, reset: s.reset })),
 	);
 	const saveRecord = useVisitStore((s) => s.saveRecord);
+	const removeBookmark = useBookmarkStore((s) => s.remove);
 	const userId = useAuthStore((s) => s.user?.id);
 
 	// 앞 단계를 거치지 않고 들어온 경우(앱 재시작 등) 처음으로 돌려보낸다
@@ -104,6 +106,8 @@ export default function RecordCaptionScreen() {
 			memo: memo.trim(),
 			isRevisit: draft.isRevisit ?? false,
 		});
+		// 다녀온 전시는 스크랩에서 뺀다 — 관람을 기록해 확정한 순간만 해당한다
+		if (draft.exhibitionId) removeBookmark(draft.exhibitionId);
 
 		// 걸리는 액자가 보이도록 맨 위로 올린다
 		scrollRef.current?.scrollTo({ y: 0, animated: true });
