@@ -8,6 +8,16 @@ import {
 } from '@/src/utils/exhibitionMapper';
 import { supabase } from '@/src/utils/supabase';
 
+type MuseumNameEn = { name_en: string | null };
+type BookmarkedExhibitionRow = ExhibitionRow & {
+	museums: MuseumNameEn | MuseumNameEn[] | null;
+};
+
+const museumNameEn = (raw: BookmarkedExhibitionRow['museums']) => {
+	const museum = Array.isArray(raw) ? raw[0] : raw;
+	return museum?.name_en?.trim() || undefined;
+};
+
 export function useBookmarkedExhibitions(): {
 	data: Exhibition[];
 	isLoading: boolean;
@@ -31,7 +41,8 @@ export function useBookmarkedExhibitions(): {
 
 		supabase
 			.from('exhibitions')
-			.select(EXHIBITION_COLUMNS)
+			// 영어 화면용 미술관 영문명만 조인한다 — 한국어 장소(venue)는 기존 그대로
+			.select(`${EXHIBITION_COLUMNS}, museums(name_en)`)
 			.in(
 				'id',
 				ids.map(Number).filter((n) => !isNaN(n)),
@@ -41,7 +52,12 @@ export function useBookmarkedExhibitions(): {
 					setError(new Error(sbError.message));
 					setData([]);
 				} else {
-					setData((rows ?? []).map((row) => mapExhibitionRowToExhibition(row as ExhibitionRow)));
+					setData(
+						((rows ?? []) as BookmarkedExhibitionRow[]).map((row) => ({
+							...mapExhibitionRowToExhibition(row),
+							venueEn: museumNameEn(row.museums),
+						})),
+					);
 				}
 				setIsLoading(false);
 			});
