@@ -35,8 +35,15 @@ export const getDefaultVisitDate = (
 };
 
 /** "2026-10-09" → "10.09 금" — 방문일 표시 */
-export const toPassDate = (dateKey: string): string => {
+export const toPassDate = (dateKey: string, language = 'ko'): string => {
 	const [y, m, d] = dateKey.split('-').map(Number);
+	if (language === 'en') {
+		return new Intl.DateTimeFormat('en-US', {
+			weekday: 'short',
+			month: 'short',
+			day: 'numeric',
+		}).format(new Date(y, m - 1, d));
+	}
 	const weekday = WEEKDAYS[new Date(y, m - 1, d).getDay()];
 	return `${String(m).padStart(2, '0')}.${String(d).padStart(2, '0')} ${weekday}`;
 };

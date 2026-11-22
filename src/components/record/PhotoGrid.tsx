@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
 import { Image, Pressable, Text, View } from 'react-native';
 import { ScalePressable } from '@/src/components/common/ScalePressable';
@@ -13,6 +14,8 @@ interface PhotoGridProps {
 
 /** 오늘 찍은 사진 — 3열 그리드, 남은 칸만큼 앨범에서 여러 장 고른다 */
 export function PhotoGrid({ value, onChange, max }: PhotoGridProps) {
+	const { t } = useTranslation();
+
 	const remaining = max - value.length;
 
 	const handleAdd = async () => {
@@ -41,7 +44,7 @@ export function PhotoGrid({ value, onChange, max }: PhotoGridProps) {
 									key="add"
 									onPress={handleAdd}
 									accessibilityRole="button"
-									accessibilityLabel={`사진 추가, ${remaining}장 더 올릴 수 있어요`}
+									accessibilityLabel={t('diary.photo_add_a11y', { count: remaining })}
 									className="aspect-square flex-1 items-center justify-center rounded-xl border border-dashed border-gray300 bg-bg-tonal"
 								>
 									<Ionicons name="add" size={22} className="text-gray500" />
@@ -59,7 +62,7 @@ export function PhotoGrid({ value, onChange, max }: PhotoGridProps) {
 									onPress={() => onChange(value.filter((uri) => uri !== cell))}
 									hitSlop={6}
 									accessibilityRole="button"
-									accessibilityLabel="사진 빼기"
+									accessibilityLabel={t('diary.photo_remove_a11y')}
 									className="absolute right-1.5 top-1.5 h-6 w-6 items-center justify-center rounded-full bg-black/55"
 								>
 									<Ionicons name="close" size={14} className="text-white" />

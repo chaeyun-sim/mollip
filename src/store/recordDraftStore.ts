@@ -7,6 +7,9 @@ export interface RecordDraft {
 	exhibitionId: string | null;
 	title: string;
 	venue?: string;
+	/** 영어 화면 미리보기용 전시 영문 제목·장소 — 저장하는 기록에는 쓰지 않는다 */
+	titleEn?: string;
+	venueEn?: string;
 	/** 전시 포스터(검색 전시) 또는 직접 기록에서 올린 포스터 로컬 uri */
 	poster?: string | null;
 	/** 직접 기록에서 사용자가 올린 포스터인지 — 저장 시 업로드 대상 */

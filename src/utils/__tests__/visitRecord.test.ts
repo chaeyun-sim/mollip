@@ -24,6 +24,10 @@ describe('toPassDate — 방문일 표시', () => {
 		expect(toPassDate('2026-10-09')).toBe('10.09 금');
 		expect(toPassDate('2026-01-04')).toBe('01.04 일');
 	});
+
+	it('영어는 요일, 월 일 순으로', () => {
+		expect(toPassDate('2026-10-09', 'en')).toBe('Fri, Oct 9');
+	});
 });
 
 describe('getRecordDateKey — 기록 중 방문일', () => {

@@ -26,7 +26,7 @@ const DISMISS_SETTLE_MS = 600;
 
 /** 기록하기 3단계(마지막) — 확인: 어떻게 저장될지 보여주고, 고칠 곳은 뒤로 돌아가 수정한다. 남기면 벽에 걸린다 */
 export default function RecordCaptionScreen() {
-	const { t } = useTranslation();
+	const { t, i18n } = useTranslation();
 
 	const router = useRouter();
 	const [isSaving, setIsSaving] = useState(false);
@@ -56,13 +56,28 @@ export default function RecordCaptionScreen() {
 	const totalSteps = getProgressTotal(draft.fromPicker === true, Boolean(draft.fixedDateKey));
 
 	const listenedTitles = draft.listenedTitles ?? [];
+	// 액자 미리보기만 영어일 때 전시 영문 이름으로 — 저장하는 기록은 한국어 원본 그대로
+	const isEn = i18n.language === 'en';
+	const displayTitle = (isEn ? draft.titleEn : undefined) ?? draft.title;
+	const displayVenue = (isEn ? draft.venueEn : undefined) ?? draft.venue;
 
 	const summaryRows = [
-		{ label: '방문일', value: toPassDate(dateKey) },
+		{ label: t('diary.record_visit_date'), value: toPassDate(dateKey, i18n.language) },
 		{ label: t('diary.rating'), value: `${rating.toFixed(1)} / 5` },
-		{ label: t('diary.photo'), value: photos.length > 0 ? `${photos.length}장` : '없음' },
-		{ label: '재방문', value: draft.isRevisit ? '또 갈 거예요' : '다시 안 갈 거예요' },
-		{ label: '캡션', value: memo.trim() || '없음' },
+		{
+			label: t('diary.photo'),
+			value:
+				photos.length > 0
+					? t('diary.record_photo_count', { count: photos.length })
+					: t('diary.record_none'),
+		},
+		{
+			label: t('diary.record_revisit'),
+			value: draft.isRevisit
+				? t('diary.record_revisit_yes_summary')
+				: t('diary.record_revisit_no_summary'),
+		},
+		{ label: t('diary.record_caption'), value: memo.trim() || t('diary.record_none') },
 	];
 
 	const handleBack = () => {
@@ -89,7 +104,7 @@ export default function RecordCaptionScreen() {
 				photoUris = uploaded.photoUrls;
 			} catch (error) {
 				console.warn('[record] photo upload failed:', error);
-				Alert.alert('저장 실패', '사진을 올리지 못했어요. 잠시 후 다시 시도해 주세요.');
+				Alert.alert(t('diary.detail_save_failed_title'), t('diary.record_upload_failed_body'));
 				setIsSaving(false);
 				return;
 			}
@@ -138,8 +153,8 @@ export default function RecordCaptionScreen() {
 					hung={isHung}
 					dateKey={dateKey}
 					exhibitionId={draft.exhibitionId}
-					title={draft.title}
-					venue={draft.venue}
+					title={displayTitle}
+					venue={displayVenue}
 					imageUri={draft.poster ?? photos[0]}
 					memo={memo}
 					rating={rating}
@@ -176,7 +191,7 @@ export default function RecordCaptionScreen() {
 									accessibilityRole="header"
 									className="font-pretendard-medium text-[13px] text-gray600"
 								>
-									{`플레이리스트 ${listenedTitles.length}`}
+									{t('diary.record_playlist', { count: listenedTitles.length })}
 								</Text>
 							</View>
 							{listenedTitles.map((title, index) => (
@@ -201,22 +216,22 @@ export default function RecordCaptionScreen() {
 						tone="gray"
 						onPress={handleBack}
 						disabled={isBusy}
-						accessibilityLabel="이전 질문으로 돌아가 수정"
+						accessibilityLabel={t('diary.record_back_edit_a11y')}
 						className="px-5"
 					>
-						뒤로
+						{t('diary.record_back')}
 					</Button>
 					<Button
 						onPress={handleSave}
 						disabled={isBusy}
 						loading={isSaving && !isHung}
-						accessibilityLabel="기록 남기기"
+						accessibilityLabel={t('diary.record_save')}
 						tone="inverse"
 						haptic="medium"
 						block={false}
 						className="flex-1"
 					>
-						기록 남기기
+						{t('diary.record_save')}
 					</Button>
 				</View>
 			</Screen.Bottom>

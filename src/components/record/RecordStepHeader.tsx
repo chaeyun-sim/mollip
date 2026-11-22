@@ -19,7 +19,7 @@ export function RecordStepHeader({ step, total = 3, onBack }: RecordStepHeaderPr
 			<ScreenHeader.Center>{t('diary.record_button')}</ScreenHeader.Center>
 			<ScreenHeader.Right className="top-0 bottom-0 justify-center">
 				<Text
-					accessibilityLabel={`${total}단계 중 ${step}단계`}
+					accessibilityLabel={t('diary.record_step_a11y', { step, total })}
 					className="text-gray500 text-[13px] font-pretendard-semibold tracking-[1px]"
 				>
 					{`${step}/${total}`}

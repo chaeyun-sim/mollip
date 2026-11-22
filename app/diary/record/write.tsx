@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
 import { Stack } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
@@ -36,6 +37,8 @@ const MAX_MEMO_LENGTH = 100;
 
 /** 기록하기 — 전시 고르기 → 방문일 → 별점 → 오늘 찍은 사진 → 재방문, 화면 이동 없이 한 번에 한 질문씩 */
 export default function RecordWriteScreen() {
+	const { t, i18n } = useTranslation();
+
 	const reduceMotion = useReducedMotion();
 	const [isPickingDate, setIsPickingDate] = useState(false);
 	const scrollRef = useRef<ScrollView>(null);
@@ -97,7 +100,8 @@ export default function RecordWriteScreen() {
 	const rating = draft.rating ?? 0;
 	const photos = draft.photos ?? [];
 	// 사진은 선택이라 한 장도 없으면 "건너뛰기"로 보여준다
-	const nextLabel = step === 'photos' && photos.length === 0 ? '건너뛰기' : '다음';
+	const nextLabel = step === 'photos' && photos.length === 0 ? t('common.skip') : t('common.next');
+	const passDate = toPassDate(dateKey, i18n.language);
 
 	return (
 		<Screen variant="warm">
@@ -136,22 +140,25 @@ export default function RecordWriteScreen() {
 
 					<Animated.View key={step} entering={reduceMotion ? undefined : FadeIn.duration(180)}>
 						{step === 'date' && (
-							<RecordQuestion title="언제 방문했나요?" description="실제 방문한 날짜를 알려주세요">
+							<RecordQuestion
+								title={t('diary.record_date_title')}
+								description={t('diary.record_date_description')}
+							>
 								<Pressable
 									onPress={() => setIsPickingDate(true)}
 									disabled={isDateFixed}
 									accessibilityRole="button"
 									accessibilityLabel={
 										isDateFixed
-											? `방문일 ${toPassDate(dateKey)}, 도슨트 관람일로 고정`
-											: `방문일 ${toPassDate(dateKey)}, 바꾸기`
+											? t('diary.record_date_fixed_a11y', { date: passDate })
+											: t('diary.record_date_change_a11y', { date: passDate })
 									}
 									accessibilityState={{ disabled: isDateFixed }}
 									className="min-h-[56px] flex-row items-end justify-between border-b border-divider/50 pb-3"
 									style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
 								>
 									<Text className="font-pretendard-medium text-lg leading-[34px] text-ink">
-										{toPassDate(dateKey)}
+										{passDate}
 									</Text>
 									<Ionicons
 										name={isDateFixed ? 'lock-closed-outline' : 'calendar-outline'}
@@ -161,7 +168,7 @@ export default function RecordWriteScreen() {
 								</Pressable>
 								{isDateFixed && (
 									<Text className="mt-2 font-pretendard-regular text-[12px] text-gray600">
-										도슨트 관람일로 고정
+										{t('diary.record_date_fixed')}
 									</Text>
 								)}
 							</RecordQuestion>
@@ -169,8 +176,8 @@ export default function RecordWriteScreen() {
 
 						{step === 'rating' && (
 							<RecordQuestion
-								title="전시는 어땠나요?"
-								description="만족도에 따라 별점과 후기를 남겨주세요"
+								title={t('diary.record_rating_title')}
+								description={t('diary.record_rating_description')}
 							>
 								<View className="mt-6 items-center rounded-3xl bg-white py-7">
 									<StarRating
@@ -185,7 +192,7 @@ export default function RecordWriteScreen() {
 											'text-[14px] text-gray600': rating === 0,
 										})}
 									>
-										{rating > 0 ? `${rating.toFixed(1)} / 5` : '별을 탭해 점수를 남겨보세요'}
+										{rating > 0 ? `${rating.toFixed(1)} / 5` : t('diary.record_rating_empty')}
 									</Text>
 								</View>
 								{rating > 0 && (
@@ -209,8 +216,8 @@ export default function RecordWriteScreen() {
 
 						{step === 'photos' && (
 							<RecordQuestion
-								title="오늘 찍은 사진이 있나요?"
-								description="선택이에요. 최대 6장까지 올릴 수 있어요"
+								title={t('diary.record_photos_title')}
+								description={t('diary.record_photos_description', { max: MAX_RECORD_PHOTOS })}
 							>
 								<PhotoGrid
 									value={photos}
@@ -221,10 +228,10 @@ export default function RecordWriteScreen() {
 						)}
 
 						{step === 'revisit' && (
-							<RecordQuestion title="다시 방문할 의향있나요?">
+							<RecordQuestion title={t('diary.record_revisit_title')}>
 								<View accessibilityRole="radiogroup" className="gap-3">
 									<RecordChoice
-										label="네, 또 갈거에요."
+										label={t('diary.record_revisit_yes')}
 										selected={draft.isRevisit === true}
 										onPress={() => patch({ isRevisit: true })}
 									/>
@@ -234,7 +241,7 @@ export default function RecordWriteScreen() {
 										onPress={() => patch({ isRevisit: true })}
 									/> */}
 									<RecordChoice
-										label="아니요, 다시 안 갈거에요."
+										label={t('diary.record_revisit_no')}
 										selected={draft.isRevisit === false}
 										onPress={() => patch({ isRevisit: false })}
 									/>
@@ -250,10 +257,10 @@ export default function RecordWriteScreen() {
 							variant="ghost"
 							tone="gray"
 							onPress={goBack}
-							accessibilityLabel="이전 질문"
+							accessibilityLabel={t('diary.record_prev_question_a11y')}
 							className="px-5"
 						>
-							뒤로
+							{t('diary.record_back')}
 						</Button>
 						<Button
 							onPress={goNext}
@@ -276,6 +283,7 @@ export default function RecordWriteScreen() {
 				minimumDate={minDate}
 				maximumDate={maxDate}
 				onChange={(date) => patch({ dateKey: dateKeyFrom(date) })}
+				confirmLabel={t('common.done')}
 				onDismiss={() => setIsPickingDate(false)}
 			/>
 		</Screen>

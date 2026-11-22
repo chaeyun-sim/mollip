@@ -61,14 +61,10 @@ export function RecordMemoField({
 			runGenerate();
 			return;
 		}
-		Alert.alert(
-			'AI로 다시 써볼까요?',
-			'지금 쓴 글을 바탕으로 AI가 새로 써요. 현재 글은 바뀌어요.',
-			[
-				{ text: t('common.cancel'), style: 'cancel' },
-				{ text: '써보기', onPress: runGenerate },
-			],
-		);
+		Alert.alert(t('diary.memo_regenerate_title'), t('diary.memo_regenerate_body'), [
+			{ text: t('common.cancel'), style: 'cancel' },
+			{ text: t('diary.memo_regenerate_confirm'), onPress: runGenerate },
+		]);
 	};
 
 	return (
@@ -82,15 +78,15 @@ export function RecordMemoField({
 					disabled={isStreaming}
 					hitSlop={8}
 					accessibilityRole="button"
-					accessibilityLabel="AI로 써보기"
-					accessibilityHint="별점과 들은 해설을 바탕으로 AI가 한 줄을 써줘요"
+					accessibilityLabel={t('diary.memo_ai_a11y')}
+					accessibilityHint={t('diary.memo_ai_hint')}
 					accessibilityState={{ disabled: isStreaming }}
 					className="flex-row items-center gap-1"
 					style={({ pressed }) => ({ opacity: isStreaming ? 0.4 : pressed ? 0.6 : 1 })}
 				>
 					<Ionicons name="sparkles-outline" size={14} className="text-brand" />
 					<Text className="font-pretendard-semibold text-[13px] text-brand">
-						{isStreaming ? '쓰는 중…' : 'AI로 써보기'}
+						{isStreaming ? t('diary.memo_ai_writing') : t('diary.memo_ai_a11y')}
 					</Text>
 				</Pressable>
 			</View>
@@ -103,9 +99,9 @@ export function RecordMemoField({
 					value={value}
 					onChangeText={(memo) => onChange(memo.slice(0, maxLength))}
 					editable={!isStreaming}
-					placeholder="기억에 남는 순간을 적어보세요 (선택)"
+					placeholder={t('diary.memo_placeholder')}
 					maxLength={maxLength}
-					accessibilityLabel="액자 캡션 (선택)"
+					accessibilityLabel={t('diary.memo_a11y')}
 					className="flex-none p-0 text-[14px]"
 					lineBreakStrategyIOS="hangul-word"
 					style={{ lineHeight: 20 }}
@@ -114,7 +110,7 @@ export function RecordMemoField({
 
 			{isError && (
 				<Text className="mt-2 font-pretendard-regular text-[12px] text-gray600">
-					AI가 글을 쓰지 못했어요. 잠시 후 다시 시도해 주세요
+					{t('diary.memo_ai_failed')}
 				</Text>
 			)}
 		</View>

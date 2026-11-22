@@ -74,10 +74,10 @@ export function ManualRecordForm({ initialTitle, onSubmit }: ManualRecordFormPro
 		>
 			<View className="px-6 pt-2">
 				<Text className="font-pretendard-bold text-[22px] leading-[30px] text-ink">
-					직접 기록하기
+					{t('diary.manual_title')}
 				</Text>
 				<Text className="mt-1 font-pretendard-regular text-[13px] text-gray600">
-					이름만 있으면 바로 남길 수 있어요
+					{t('diary.manual_description')}
 				</Text>
 
 				{/* 포스터는 선택 — 가운데 액자를 탭하면 사진을 고른다 */}
@@ -85,7 +85,9 @@ export function ManualRecordForm({ initialTitle, onSubmit }: ManualRecordFormPro
 					<Pressable
 						onPress={handlePickPoster}
 						accessibilityRole="button"
-						accessibilityLabel={poster ? '포스터 다시 고르기' : '포스터 추가 (선택)'}
+						accessibilityLabel={
+							poster ? t('diary.manual_poster_change_a11y') : t('diary.manual_poster_add_a11y')
+						}
 						className="h-[148px] w-[111px] rounded-[4px] border-[0.5px] border-divider bg-white p-2"
 						style={({ pressed }) => ({
 							opacity: pressed ? 0.8 : 1,
@@ -105,10 +107,10 @@ export function ManualRecordForm({ initialTitle, onSubmit }: ManualRecordFormPro
 										<Ionicons name="image-outline" size={20} color={colors.gray600} />
 									</View>
 									<Text className="mt-2 font-pretendard-medium text-[12px] text-gray600">
-										포스터 추가
+										{t('diary.manual_poster_add')}
 									</Text>
 									<Text className="mt-0.5 font-pretendard-regular text-[11px] text-gray500">
-										선택
+										{t('diary.manual_optional')}
 									</Text>
 								</>
 							)}
@@ -119,16 +121,20 @@ export function ManualRecordForm({ initialTitle, onSubmit }: ManualRecordFormPro
 					</Pressable>
 				</View>
 
-				<RecordFormSection label="전시 이름" hint="필수" className="mt-6">
+				<RecordFormSection
+					label={t('diary.manual_name')}
+					hint={t('diary.manual_required')}
+					className="mt-6"
+				>
 					<BottomSheetTextInput
 						value={title}
-						accessibilityLabel="전시 이름 (필수)"
+						accessibilityLabel={t('diary.manual_name_a11y')}
 						onChangeText={setTitle}
 						onFocus={() => setFocusedField('title')}
 						onBlur={() => setFocusedField(null)}
 						onSubmitEditing={() => venueRef.current?.focus()}
 						submitBehavior="submit"
-						placeholder="전시 이름"
+						placeholder={t('diary.manual_name')}
 						returnKeyType="next"
 						placeholderTextColor={colors.gray500}
 						selectionColor={colors.brand}
@@ -139,15 +145,19 @@ export function ManualRecordForm({ initialTitle, onSubmit }: ManualRecordFormPro
 					/>
 				</RecordFormSection>
 
-				<RecordFormSection label={t('exhibitions.venue')} hint="선택" className="mt-5">
+				<RecordFormSection
+					label={t('exhibitions.venue')}
+					hint={t('diary.manual_optional')}
+					className="mt-5"
+				>
 					<BottomSheetTextInput
 						ref={venueRef}
 						value={venue}
-						accessibilityLabel="장소 (선택)"
+						accessibilityLabel={t('diary.manual_venue_a11y')}
 						onChangeText={setVenue}
 						onFocus={() => setFocusedField('venue')}
 						onBlur={() => setFocusedField(null)}
-						placeholder="미술관·갤러리"
+						placeholder={t('diary.manual_venue_placeholder')}
 						returnKeyType="done"
 						placeholderTextColor={colors.gray500}
 						selectionColor={colors.brand}
@@ -158,14 +168,22 @@ export function ManualRecordForm({ initialTitle, onSubmit }: ManualRecordFormPro
 					/>
 				</RecordFormSection>
 
-				<RecordFormSection label="방문 날짜" hint="선택" className="mt-5">
+				<RecordFormSection
+					label={t('diary.manual_date')}
+					hint={t('diary.manual_optional')}
+					className="mt-5"
+				>
 					<Pressable
 						onPress={() => {
 							Keyboard.dismiss();
 							setIsDatePickerOpen(true);
 						}}
 						accessibilityRole="button"
-						accessibilityLabel={`방문일 ${visitDate ? toBoardDate(visitDate) : '선택'}`}
+						accessibilityLabel={
+							visitDate
+								? t('diary.manual_date_a11y', { date: toBoardDate(visitDate) })
+								: t('diary.manual_date_select_a11y')
+						}
 						className="h-[52px] flex-row items-center justify-between rounded-2xl border-[0.5px] border-divider bg-white pl-4 pr-2"
 						style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
 					>
@@ -175,7 +193,7 @@ export function ManualRecordForm({ initialTitle, onSubmit }: ManualRecordFormPro
 								visitDate ? 'text-ink' : 'text-gray500',
 							)}
 						>
-							{visitDate ? toBoardDate(visitDate) : '날짜 선택'}
+							{visitDate ? toBoardDate(visitDate) : t('diary.manual_date_select')}
 						</Text>
 						<View className="h-9 w-9 items-center justify-center rounded-full bg-surface-neutral">
 							<Ionicons name="calendar-outline" size={16} color={colors.gray700} />
@@ -186,12 +204,12 @@ export function ManualRecordForm({ initialTitle, onSubmit }: ManualRecordFormPro
 				<Button
 					onPress={handleSubmit}
 					disabled={!canSubmit}
-					accessibilityLabel="이 전시로 기록하기"
+					accessibilityLabel={t('diary.manual_submit')}
 					tone="brand"
 					haptic="light"
 					className="mt-8"
 				>
-					이 전시로 기록하기
+					{t('diary.manual_submit')}
 				</Button>
 
 				<DatePickerModal
@@ -200,7 +218,8 @@ export function ManualRecordForm({ initialTitle, onSubmit }: ManualRecordFormPro
 					maximumDate={new Date()}
 					onChange={setVisitDate}
 					onReset={() => setVisitDate(null)}
-					resetLabel="날짜 선택 해제"
+					resetLabel={t('diary.manual_date_reset')}
+					confirmLabel={t('common.done')}
 					onDismiss={() => setIsDatePickerOpen(false)}
 				/>
 			</View>
