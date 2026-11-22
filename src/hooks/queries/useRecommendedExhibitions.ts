@@ -11,6 +11,13 @@ import {
 	matchPreferredTastes,
 	type PreferredTasteDetails,
 } from '@/src/utils/preferredTaste';
+import {
+	buildRevisitAffinity,
+	lovedExhibitionIds,
+	revisitMatchesFor,
+	type RevisitAffinity,
+	type RevisitSourceRow,
+} from '@/src/utils/revisitAffinity';
 import { supabase } from '@/src/utils/supabase';
 
 const MAX_RECOMMENDED = 100;
@@ -20,6 +27,7 @@ const RECOMMENDED_STALE_MS = 5 * 60 * 1000;
 
 interface ExhibitionRow {
 	id: string | number;
+	museum_id: number | null;
 	title: string;
 	title_en: string | null;
 	description: string | null;
@@ -33,10 +41,21 @@ interface ExhibitionRow {
 	museums: { name_en: string | null } | null;
 }
 
+const EXHIBITION_ROW_COLUMNS =
+	'id, museum_id, title, title_en, description, venue_name_fallback, image_url, genre, tags, synced_at, start_date, end_date, museums(name_en)';
+
+const EMPTY_AFFINITY: RevisitAffinity = { museumIds: new Set(), genres: new Set() };
+
+interface RecommendationSource {
+	rows: ExhibitionRow[];
+	affinity: RevisitAffinity;
+}
+
 export function recommendedExhibitionsQueryKey(
 	preferredGenres: string[],
 	preferredArtists: string[],
 	preferredTaste: PreferredTasteDetails,
+	lovedIds: number[] = [],
 ) {
 	return [
 		'exhibitions',
@@ -46,6 +65,7 @@ export function recommendedExhibitionsQueryKey(
 		[...preferredTaste.moods].sort(),
 		[...preferredTaste.venueScales].sort(),
 		[...preferredTaste.artMovements].sort(),
+		lovedIds,
 	] as const;
 }
 
@@ -56,8 +76,9 @@ function scoreExhibition(
 	preferredTaste: PreferredTasteDetails,
 	visitedSet: Set<string>,
 	bookmarkedSet: Set<string>,
+	affinity: RevisitAffinity,
 ): number {
-	let score = 0;
+	let score = revisitMatchesFor(row, affinity).score;
 	if (row.genre && preferredGenres.includes(row.genre)) score += 40;
 	if (matchPreferredArtist(`${row.title} ${row.description ?? ''}`, preferredArtists)) score += 25;
 	if (
@@ -79,12 +100,50 @@ function scoreExhibition(
 	return score;
 }
 
+/** "또 갈래요" 전시의 미술관·장르 — 기록이 없으면 요청하지 않는다 */
+async function fetchRevisitAffinity(lovedIds: number[]): Promise<RevisitAffinity> {
+	if (lovedIds.length === 0) return EMPTY_AFFINITY;
+	const { data, error } = await supabase
+		.from('exhibitions')
+		.select('id, museum_id, genre')
+		.in('id', lovedIds);
+	if (error) throw error;
+	return buildRevisitAffinity((data ?? []) as RevisitSourceRow[]);
+}
+
+/** 좋아한 미술관에서 진행 중인 전시 — 장르로 좁힌 후보에서 빠지지 않게 따로 받는다 */
+async function fetchMuseumRows(museumIds: number[]): Promise<ExhibitionRow[]> {
+	if (museumIds.length === 0) return [];
+	const { data, error } = await supabase
+		.from('exhibitions')
+		.select(EXHIBITION_ROW_COLUMNS)
+		.gte('end_date', todayExhibitionDateString())
+		.in('museum_id', museumIds)
+		.limit(FETCH_LIMIT);
+	if (error) throw error;
+	return (data ?? []) as ExhibitionRow[];
+}
+
+async function fetchRecommendationSource(
+	preferredGenres: string[],
+	lovedIds: number[],
+): Promise<RecommendationSource> {
+	const affinity = await fetchRevisitAffinity(lovedIds);
+	const [rows, museumRows] = await Promise.all([
+		fetchExhibitionRows(preferredGenres),
+		fetchMuseumRows([...affinity.museumIds]),
+	]);
+	const seen = new Set(rows.map((row) => String(row.id)));
+	return {
+		rows: [...rows, ...museumRows.filter((row) => !seen.has(String(row.id)))],
+		affinity,
+	};
+}
+
 async function fetchExhibitionRows(preferredGenres: string[]): Promise<ExhibitionRow[]> {
 	let query = supabase
 		.from('exhibitions')
-		.select(
-			'id, title, title_en, description, venue_name_fallback, image_url, genre, tags, synced_at, start_date, end_date, museums(name_en)',
-		)
+		.select(EXHIBITION_ROW_COLUMNS)
 		.gte('end_date', todayExhibitionDateString())
 		.order('synced_at', { ascending: false })
 		.limit(FETCH_LIMIT);
@@ -103,6 +162,7 @@ function toRecommendableItem(
 	preferredGenres: string[],
 	preferredArtists: string[],
 	preferredTaste: PreferredTasteDetails,
+	affinity: RevisitAffinity = EMPTY_AFFINITY,
 ): RecommendableItem {
 	const matchedGenre = row.genre && preferredGenres.includes(row.genre) ? row.genre : null;
 	const matchedArtists = matchPreferredArtists(
@@ -125,7 +185,13 @@ function toRecommendableItem(
 		startDate: row.start_date ?? null,
 		endDate: row.end_date ?? null,
 		recommendationTags: [
-			...new Set([...(matchedGenre ? [matchedGenre] : []), ...matchedTastes, ...matchedArtists]),
+			...new Set([
+				...(matchedGenre ? [matchedGenre] : []),
+				...matchedTastes,
+				...matchedArtists,
+				// "또 갈래요" 전시와 같은 미술관·장르 — recommendations.labels에서 문구로 바뀐다
+				...revisitMatchesFor(row, affinity).tags,
+			]),
 		],
 	};
 }
@@ -145,16 +211,24 @@ export function useRecommendedExhibitions(
 		preferredTaste.venueScales.length > 0 ||
 		preferredTaste.artMovements.length > 0;
 
+	const lovedIds = useMemo(() => lovedExhibitionIds(visits), [visits]);
+
 	const query = useQuery({
-		queryKey: recommendedExhibitionsQueryKey(preferredGenres, preferredArtists, preferredTaste),
-		queryFn: () => fetchExhibitionRows(hasDetailedTaste ? [] : preferredGenres),
+		queryKey: recommendedExhibitionsQueryKey(
+			preferredGenres,
+			preferredArtists,
+			preferredTaste,
+			lovedIds,
+		),
+		queryFn: () => fetchRecommendationSource(hasDetailedTaste ? [] : preferredGenres, lovedIds),
 		enabled: isPersonalized,
 		staleTime: RECOMMENDED_STALE_MS,
 		retry: 1,
 	});
 
 	const data = useMemo((): RecommendableItem[] => {
-		const rows = query.data ?? [];
+		const rows = query.data?.rows ?? [];
+		const affinity = query.data?.affinity ?? EMPTY_AFFINITY;
 		if (rows.length === 0) return [];
 		if (!isPersonalized) {
 			return rows
@@ -177,11 +251,14 @@ export function useRecommendedExhibitions(
 					preferredTaste,
 					visitedSet,
 					bookmarkedSet,
+					affinity,
 				),
 			}))
 			.sort((a, b) => b.score - a.score)
 			.slice(0, MAX_RECOMMENDED)
-			.map(({ row }) => toRecommendableItem(row, preferredGenres, preferredArtists, preferredTaste))
+			.map(({ row }) =>
+				toRecommendableItem(row, preferredGenres, preferredArtists, preferredTaste, affinity),
+			)
 			.filter((item) => (item.recommendationTags?.length ?? 0) > 0);
 	}, [
 		query.data,

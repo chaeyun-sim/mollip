@@ -765,7 +765,9 @@
 			"초현실주의": "Surrealism",
 			"추상미술": "Abstract art",
 			"표현주의": "Expressionism",
-			"미니멀리즘": "Minimalism"
+			"미니멀리즘": "Minimalism",
+			"revisit_venue": "Venue you loved",
+			"revisit_genre": "Genre you enjoyed"
 		}
 	}
 }
