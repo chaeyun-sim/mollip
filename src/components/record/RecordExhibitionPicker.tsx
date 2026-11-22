@@ -158,6 +158,9 @@ export function RecordExhibitionPicker({ onPick }: RecordExhibitionPickerProps) 
 					<Text className="mt-6 font-pretendard-bold text-[22px] leading-[32px] text-gray900">
 						{t('diary.picker_title')}
 					</Text>
+					<Text className="my-2 text-gray600 text-[14px] leading-[21px] font-pretendard-regular">
+						{t('diary.picker_empty')}
+					</Text>
 
 					<SearchBar
 						variant="tonal"
@@ -251,16 +254,8 @@ export function RecordExhibitionPicker({ onPick }: RecordExhibitionPickerProps) 
 							)}
 							{isLoading && bookmarkSuggestions.length === 0 && (
 								<View className="mt-6">
-									<Text className="mb-1 text-gray600 text-[12px] font-pretendard-semibold tracking-[0.5px]">
-										{t('diary.picker_bookmarked')}
-									</Text>
 									<ActivityIndicator style={{ marginTop: 40 }} />
 								</View>
-							)}
-							{!focused && !isLoading && !bookmarkSuggestions.length && (
-								<Text className="mt-6 text-gray600 text-[14px] leading-[21px] font-pretendard-regular">
-									{t('diary.picker_empty')}
-								</Text>
 							)}
 						</>
 					)}
