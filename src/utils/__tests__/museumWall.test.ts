@@ -50,6 +50,31 @@ describe('buildWallMonths', () => {
 		expect(pick(base)).toBe('listened');
 	});
 
+	it('포스터를 받는 중에는 전시가 연결된 액자에 내 사진을 먼저 넣지 않는다 — 깜빡임 방지', () => {
+		const linked = visit({ exhibitionId: '1', venuePhotos: ['photo'] });
+		const manual = visit({ venuePhotos: ['manual-photo'] });
+		const [month] = buildWallMonths(
+			{ '2026-10-02::id:1': linked, '2026-10-01::t:x': manual },
+			{},
+			{ waitForPosters: true },
+		);
+		const items = [...month.columns[0], ...month.columns[1]];
+		const imageOf = (key: string) => items.find((item) => item.visitKey === key)?.imageUri;
+		// 전시가 연결된 기록은 포스터가 올 때까지 비워 둔다
+		expect(imageOf('2026-10-02::id:1')).toBeUndefined();
+		// 전시가 연결되지 않은 기록은 포스터가 없으니 바로 내 사진을 쓴다
+		expect(imageOf('2026-10-01::t:x')).toBe('manual-photo');
+	});
+
+	it('포스터를 다 받은 뒤 포스터가 없는 전시는 내 사진을 쓴다', () => {
+		const [month] = buildWallMonths(
+			{ '2026-10-02::id:1': visit({ exhibitionId: '1', venuePhotos: ['photo'] }) },
+			{},
+			{ waitForPosters: false },
+		);
+		expect(month.columns[0][0].imageUri).toBe('photo');
+	});
+
 	it('전시명이 없으면 대체 제목을 쓴다', () => {
 		const [month] = buildWallMonths({
 			'2026-10-01::manual': visit({ exhibitionTitle: undefined }),

@@ -41,11 +41,17 @@ const hashOf = (key: string): number => {
 /** 같은 기록은 항상 같은 모양 — 다시 그려도 벽이 흔들리지 않는다 */
 export const frameShapeFor = (visitKey: string): FrameShape => SHAPES[hashOf(visitKey) % 3];
 
-const pickImageUri = (visit: DayVisit, posterUrl?: string): string | undefined =>
-	visit.thumbnail ??
-	posterUrl ??
-	visit.venuePhotos?.[0] ??
-	visit.listened.find((l) => l.imageUrl)?.imageUrl;
+const pickImageUri = (
+	visit: DayVisit,
+	posterUrl: string | undefined,
+	waitForPoster: boolean,
+): string | undefined => {
+	if (visit.thumbnail) return visit.thumbnail;
+	if (posterUrl) return posterUrl;
+	// 포스터를 받는 중이면 내 사진으로 먼저 채우지 않는다 — 포스터가 오면 바뀌며 깜빡인다
+	if (waitForPoster && visit.exhibitionId) return undefined;
+	return visit.venuePhotos?.[0] ?? visit.listened.find((l) => l.imageUrl)?.imageUrl;
+};
 
 /** 비어 있거나 "-"만 적힌 값은 없는 것으로 본다 — 직접 기록·옛 데이터에 남아 있다 */
 export const cleanText = (value?: string): string | undefined => {
@@ -55,10 +61,12 @@ export const cleanText = (value?: string): string | undefined => {
 
 const DEFAULT_UNTITLED_TITLE = '제목 없는 전시';
 
-/** 화면 언어에 맞춘 표시 옵션 — 기본값은 한국어 */
-export interface WallLabelOptions {
+/** 벽 구성 옵션 — 라벨 기본값은 한국어 */
+export interface WallBuildOptions {
 	formatMonthLabel?: (year: number, month: number) => string;
 	untitledTitle?: string;
+	/** 포스터를 아직 받는 중인지 — true면 전시가 연결된 액자는 포스터가 올 때까지 이미지를 비워 둔다 */
+	waitForPosters?: boolean;
 }
 
 export const toWallItem = (
@@ -66,6 +74,7 @@ export const toWallItem = (
 	visit: DayVisit,
 	posterUrl?: string,
 	untitledTitle: string = DEFAULT_UNTITLED_TITLE,
+	waitForPoster = false,
 ): WallItem => ({
 	visitKey,
 	shape: frameShapeFor(visitKey),
@@ -74,7 +83,7 @@ export const toWallItem = (
 	dateKey: dateKeyOf(visitKey),
 	memo: cleanText(visit.memo),
 	rating: visit.rating,
-	imageUri: pickImageUri(visit, posterUrl),
+	imageUri: pickImageUri(visit, posterUrl, waitForPoster),
 });
 
 /** 확정된 기록을 월별로 묶고, 각 월을 높이가 낮은 열부터 채워 2열 벽으로 배치한다 */
@@ -84,11 +93,12 @@ export const buildWallMonths = (
 	{
 		formatMonthLabel = (year, month) => `${year}년 ${month}월`,
 		untitledTitle = DEFAULT_UNTITLED_TITLE,
-	}: WallLabelOptions = {},
+		waitForPosters = false,
+	}: WallBuildOptions = {},
 ): WallMonth[] => {
 	const items = Object.entries(visits)
 		.filter(([, visit]) => visit.status === 'confirmed')
-		.map(([key, visit]) => toWallItem(key, visit, posterUrls[key], untitledTitle))
+		.map(([key, visit]) => toWallItem(key, visit, posterUrls[key], untitledTitle, waitForPosters))
 		.sort((a, b) => b.dateKey.localeCompare(a.dateKey) || a.visitKey.localeCompare(b.visitKey));
 
 	const byMonth = new Map<string, WallItem[]>();
