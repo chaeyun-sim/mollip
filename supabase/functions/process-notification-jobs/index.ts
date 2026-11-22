@@ -117,6 +117,7 @@ const buildVisitRecords = async (
 		.eq('user_id', userId)
 		.eq('visit_key', String(payload.visitKey))
 		.eq('date', String(payload.date))
+		.is('deleted_at', null)
 		.maybeSingle();
 	if (!visit || visit.memo?.trim()) return [];
 

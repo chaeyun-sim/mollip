@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
 import { useAuthStore } from '../store/authStore';
-import { localVisitKeyFromRemote, upsertRemoteVisit, useVisitStore } from '../store/visitStore';
-import type { DayVisit } from '../store/visitStore';
-import { loadAllLocalVisits } from '../utils/localVisitDb';
+import { upsertRemoteVisit, useVisitStore } from '../store/visitStore';
+import { deleteLocalVisit, loadAllLocalVisits } from '../utils/localVisitDb';
+import { mergeRemoteVisits } from '../utils/mergeRemoteVisits';
 import { supabase } from '../utils/supabase';
 
 /**
@@ -20,7 +20,7 @@ export const useVisitSync = () => {
 		supabase
 			.from('visits')
 			.select(
-				'visit_key, date, exhibition_id, memo, exhibition_title, venue, ticket_photo_url, venue_photo_urls',
+				'visit_key, date, exhibition_id, memo, exhibition_title, venue, ticket_photo_url, venue_photo_urls, visit_status, visit_started_at, visit_ended_at, rating, listened, signature_svg, companion, keywords, is_revisit, pending_since, deleted_at',
 			)
 			.eq('user_id', userId)
 			.then(({ data, error }) => {
@@ -30,60 +30,10 @@ export const useVisitSync = () => {
 					return;
 				}
 				if (data) {
-					// 사진·메모는 원격이 소스다. 로컬에는 status/서명처럼 DB에 없는 오버레이만 이어받는다.
-					const localVisits = loadAllLocalVisits();
-					const visits: Record<string, DayVisit> = {};
-					for (const r of data) {
-						const exhibitionId = r.exhibition_id ? String(r.exhibition_id) : null;
-						const exhibitionTitle = r.exhibition_title ?? undefined;
-						const key = localVisitKeyFromRemote(r.date, r.visit_key);
-						const local = localVisits[key];
-						visits[key] = {
-							exhibitionId,
-							listened: local?.listened ?? [],
-							memo: r.memo ?? undefined,
-							exhibitionTitle: local?.exhibitionTitle ?? exhibitionTitle,
-							venue: local?.venue ?? r.venue ?? undefined,
-							thumbnail: r.ticket_photo_url ?? undefined,
-							venuePhotos:
-								r.venue_photo_urls && r.venue_photo_urls.length > 0
-									? r.venue_photo_urls
-									: undefined,
-							status: local?.status ?? (r.ticket_photo_url ? 'confirmed' : undefined),
-							pendingSince: local?.pendingSince,
-							signatureSvg: local?.signatureSvg,
-							visitedAt: local?.visitedAt,
-							rating: local?.rating,
-							// 동행·키워드·재방문은 서버 컬럼이 없어 로컬 값을 그대로 지킨다
-							companion: local?.companion,
-							keywords: local?.keywords,
-							isRevisit: local?.isRevisit,
-						};
-					}
-					// 진행 중·미확정은 로컬 키로 유지. 같은 날 덮여서 원격에 없는 확정 기록은 다시 올린다.
-					for (const [key, local] of Object.entries(localVisits)) {
-						if (visits[key]) continue;
-						if (local.status === 'pending' || local.status === 'in_progress') {
-							visits[key] = {
-								...local,
-								thumbnail: undefined,
-								venuePhotos: undefined,
-								memo: undefined,
-							};
-							continue;
-						}
-						if (local.status !== 'confirmed') continue;
-						if (!local.exhibitionId && !local.exhibitionTitle) continue;
-						visits[key] = local;
-						upsertRemoteVisit(userId, key, {
-							exhibition_id: local.exhibitionId ? Number(local.exhibitionId) || null : null,
-							exhibition_title: local.exhibitionTitle ?? null,
-							venue: local.venue ?? null,
-							...(local.thumbnail ? { ticket_photo_url: local.thumbnail } : {}),
-							...(local.venuePhotos ? { venue_photo_urls: local.venuePhotos } : {}),
-							...(local.memo ? { memo: local.memo } : {}),
-						});
-					}
+					const { visits, deletedKeys, uploads } = mergeRemoteVisits(data, loadAllLocalVisits());
+					// 다른 기기에서 지운 기록은 이 기기에서도 지운다 — 남겨두면 다음 동기화 때 되살아난다
+					for (const key of deletedKeys) deleteLocalVisit(key);
+					for (const { key, patch } of uploads) upsertRemoteVisit(userId, key, patch);
 					loadFromRemote(visits);
 				}
 			});

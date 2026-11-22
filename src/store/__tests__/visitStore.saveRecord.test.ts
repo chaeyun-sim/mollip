@@ -86,12 +86,12 @@ describe('visitStore.saveRecord — 기록하기 저장', () => {
 		expect(visit.listened).toEqual([{ title: '작품 A' }]);
 	});
 
-	it('재방문 여부를 DayVisit에 남기되 원격에는 보내지 않는다', () => {
+	it('재방문 여부를 DayVisit에 남기고 원격에는 is_revisit 컬럼으로 보낸다', () => {
 		const key = useVisitStore.getState().saveRecord({ ...base, isRevisit: true });
 
 		expect(useVisitStore.getState().visits[key].isRevisit).toBe(true);
 		expect(mockUpsert.mock.calls[0][0]).not.toHaveProperty('isRevisit');
-		expect(mockUpsert.mock.calls[0][0]).not.toHaveProperty('is_revisit');
+		expect(mockUpsert.mock.calls[0][0]).toHaveProperty('is_revisit', true);
 	});
 
 	it('재방문을 끈 채 저장하면 false로 남고, 값이 없으면 기존 값을 지킨다', () => {

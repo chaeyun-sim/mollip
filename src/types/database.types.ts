@@ -583,6 +583,14 @@ export type Database = {
 					visit_key: string;
 					visit_started_at: string | null;
 					visit_status: string;
+					companion: string | null;
+					deleted_at: string | null;
+					is_revisit: boolean | null;
+					keywords: string[] | null;
+					listened: Json;
+					pending_since: string | null;
+					rating: number | null;
+					signature_svg: string | null;
 				};
 				Insert: {
 					date: string;
@@ -597,6 +605,14 @@ export type Database = {
 					visit_key: string;
 					visit_started_at?: string | null;
 					visit_status?: string;
+					companion?: string | null;
+					deleted_at?: string | null;
+					is_revisit?: boolean | null;
+					keywords?: string[] | null;
+					listened?: Json;
+					pending_since?: string | null;
+					rating?: number | null;
+					signature_svg?: string | null;
 				};
 				Update: {
 					date?: string;
@@ -611,6 +627,14 @@ export type Database = {
 					visit_key?: string;
 					visit_started_at?: string | null;
 					visit_status?: string;
+					companion?: string | null;
+					deleted_at?: string | null;
+					is_revisit?: boolean | null;
+					keywords?: string[] | null;
+					listened?: Json;
+					pending_since?: string | null;
+					rating?: number | null;
+					signature_svg?: string | null;
 				};
 				Relationships: [
 					{

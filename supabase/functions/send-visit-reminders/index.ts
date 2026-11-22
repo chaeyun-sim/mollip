@@ -64,7 +64,8 @@ Deno.serve(async (req) => {
 		.from('visits')
 		.select('user_id, date')
 		.eq('date', yesterday)
-		.is('memo', null);
+		.is('memo', null)
+		.is('deleted_at', null);
 
 	if (visitErr || !visits?.length) {
 		return new Response(JSON.stringify({ sent: 0, reason: visitErr?.message ?? 'no visits' }));

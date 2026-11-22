@@ -8,6 +8,8 @@ import {
 	persistAllLocalVisits,
 	upsertLocalVisit,
 } from '../utils/localVisitDb';
+import type { Json } from '../types/database.types';
+import { toRemoteVisitFields } from '../utils/mergeRemoteVisits';
 import { supabase } from '../utils/supabase';
 import type { Companion } from '../utils/visitRecord';
 import { deleteManagedVisitPhotos, persistLocalVisitPhoto } from '../utils/visitPhotoFiles';
@@ -56,13 +58,13 @@ export interface DayVisit {
 	signatureSvg?: string;
 	/** 관람 시작~종료 시각(ISO) — 몰입모드 진입~종료 기준 */
 	visitedAt?: { start: string; end: string };
-	/** 확정 큐에서 매긴 별점(1~5) — Supabase에 컬럼이 없어 로컬 전용 */
+	/** 확정 큐에서 매긴 별점(1~5) — visits.rating */
 	rating?: number;
-	/** 기록 체크인에서 고른 동행 — 로컬 전용 */
+	/** 기록 체크인에서 고른 동행 — visits.companion */
 	companion?: Companion;
-	/** 기록에 남긴 감각 키워드(최대 5) — 로컬 전용 */
+	/** 기록에 남긴 감각 키워드(최대 5) — visits.keywords */
 	keywords?: string[];
-	/** 재방문 여부 — 기록 감상 단계에서 고른 값, 로컬 전용 */
+	/** 재방문 여부 — 기록 감상 단계에서 고른 값, visits.is_revisit */
 	isRevisit?: boolean;
 	/**
 	 * rev1에서 한줄평과 분리 저장하던 감상문. rev2부터는 `memo`로 이관하고 이 필드는 쓰지 않는다.
@@ -107,7 +109,7 @@ interface VisitStore {
 		item: ListenedItem,
 	) => void;
 	setVisitMemo: (visitKey: string, memo: string) => void;
-	/** 별점(1~5) 수정 — Supabase에 컬럼이 없어 로컬 전용 */
+	/** 별점(1~5) 수정 — 로컬과 visits.rating에 함께 저장 */
 	setVisitRating: (visitKey: string, rating: number) => void;
 	/** 티켓 인증 후 티켓/현장 사진을 다시 올려 교체 */
 	updateVisitPhotos: (
@@ -139,7 +141,46 @@ interface VisitStore {
 	hydrateFromLocalDb: () => Promise<void>;
 }
 
+/** visits 행에 올리는 값 — 넘긴 컬럼만 덮어쓴다 */
+export interface RemoteVisitPatch {
+	exhibition_id?: number | null;
+	exhibition_title?: string | null;
+	venue?: string | null;
+	memo?: string | null;
+	ticket_photo_url?: string | null;
+	venue_photo_urls?: string[];
+	visit_started_at?: string | null;
+	visit_ended_at?: string | null;
+	visit_status?: 'recorded' | 'ended' | 'confirmed';
+	rating?: number | null;
+	listened?: ListenedItem[];
+	signature_svg?: string | null;
+	companion?: Companion | null;
+	keywords?: string[] | null;
+	is_revisit?: boolean | null;
+	pending_since?: string | null;
+	/** 삭제 표시 — 행을 지우지 않아 다른 기기가 다시 올려도 되살아나지 않는다. 새로 기록하면 null로 비운다 */
+	deleted_at?: string | null;
+}
+
 const VISIT_CONFLICT = 'user_id,visit_key,date';
+
+/** 지운 기록에 남는 내용을 비우는 값 — 같은 키로 다시 기록할 때 옛 내용이 따라오지 않게 */
+const CLEARED_VISIT_FIELDS: RemoteVisitPatch = {
+	memo: null,
+	ticket_photo_url: null,
+	venue_photo_urls: [],
+	visit_started_at: null,
+	visit_ended_at: null,
+	visit_status: 'recorded',
+	rating: null,
+	listened: [],
+	signature_svg: null,
+	companion: null,
+	keywords: null,
+	is_revisit: null,
+	pending_since: null,
+};
 
 const persistVisit = (key: string, visit: DayVisit | undefined): void => {
 	if (!visit) return;
@@ -151,35 +192,31 @@ const remoteExhibitionId = (exhibitionId: string | null | undefined): number | n
 };
 
 /** 관람일(date) + 전시 식별(visit_key)로 upsert — 티켓은 고른 관람일, 몰입은 가이드 당일 */
+const upsertRemoteVisitRow = async (
+	userId: string,
+	visitKey: string,
+	patch: RemoteVisitPatch,
+): Promise<void> => {
+	const { listened, ...rest } = patch;
+	const { error } = await supabase.from('visits').upsert(
+		{
+			user_id: userId,
+			visit_key: visitIdentityOf(visitKey),
+			date: dateKeyOf(visitKey),
+			...rest,
+			...(listened ? { listened: listened as unknown as Json } : {}),
+		},
+		{ onConflict: VISIT_CONFLICT },
+	);
+	if (error) console.warn('[visit] upsert failed:', error.message);
+};
+
 export const upsertRemoteVisit = (
 	userId: string,
 	visitKey: string,
-	patch: {
-		exhibition_id?: number | null;
-		exhibition_title?: string | null;
-		venue?: string | null;
-		memo?: string | null;
-		ticket_photo_url?: string | null;
-		venue_photo_urls?: string[];
-		visit_started_at?: string | null;
-		visit_ended_at?: string | null;
-		visit_status?: 'recorded' | 'ended' | 'confirmed';
-	},
+	patch: RemoteVisitPatch,
 ): void => {
-	void supabase
-		.from('visits')
-		.upsert(
-			{
-				user_id: userId,
-				visit_key: visitIdentityOf(visitKey),
-				date: dateKeyOf(visitKey),
-				...patch,
-			},
-			{ onConflict: VISIT_CONFLICT },
-		)
-		.then(({ error }) => {
-			if (error) console.warn('[visit] upsert failed:', error.message);
-		});
+	void upsertRemoteVisitRow(userId, visitKey, patch);
 };
 
 export const useVisitStore = create<VisitStore>()((set, get) => ({
@@ -220,12 +257,15 @@ export const useVisitStore = create<VisitStore>()((set, get) => ({
 				venue: meta?.venue ?? null,
 				...(meta?.thumbnail ? { ticket_photo_url: meta.thumbnail } : {}),
 				...(meta?.venuePhotos ? { venue_photo_urls: meta.venuePhotos } : {}),
+				// 지웠던 기록을 같은 날 다시 시작하면 되살린다
+				deleted_at: null,
 			});
 		}
 		persistVisit(key, get().visits[key]);
 	},
 	recordListened: (dateKey, exhibitionId, title, item) => {
 		const key = makeVisitKey(dateKey, exhibitionId, title);
+		const before = get().visits[key];
 		set((state) => {
 			const prev = state.visits[key] ?? { exhibitionId, exhibitionTitle: title, listened: [] };
 			// 같은 제목은 하루에 한 번만 기록
@@ -237,7 +277,19 @@ export const useVisitStore = create<VisitStore>()((set, get) => ({
 				},
 			};
 		});
-		persistVisit(key, get().visits[key]);
+		const after = get().visits[key];
+
+		const userId = useAuthStore.getState().user?.id;
+		if (userId && after && after !== before) {
+			upsertRemoteVisit(userId, key, {
+				listened: after.listened,
+				...(before ? {} : { exhibition_id: remoteExhibitionId(exhibitionId) }),
+				...(!before && title ? { exhibition_title: title } : {}),
+				// 이 기기에 없던 기록이 새로 생긴 것 — 예전에 지운 같은 키라면 되살린다
+				...(before ? {} : { deleted_at: null }),
+			});
+		}
+		persistVisit(key, after);
 	},
 	setVisitMemo: (visitKey, memo) => {
 		set((state) => {
@@ -266,6 +318,11 @@ export const useVisitStore = create<VisitStore>()((set, get) => ({
 				},
 			};
 		});
+
+		const userId = useAuthStore.getState().user?.id;
+		if (userId) {
+			upsertRemoteVisit(userId, visitKey, { rating });
+		}
 		persistVisit(visitKey, get().visits[visitKey]);
 	},
 	updateVisitPhotos: (visitKey, patch) => {
@@ -312,13 +369,12 @@ export const useVisitStore = create<VisitStore>()((set, get) => ({
 
 		const userId = useAuthStore.getState().user?.id;
 		if (userId) {
-			const { error } = await supabase
-				.from('visits')
-				.delete()
-				.eq('user_id', userId)
-				.eq('visit_key', visitIdentityOf(visitKey))
-				.eq('date', dateKeyOf(visitKey));
-			if (error) console.warn('[visit] delete failed:', error.message);
+			// 행을 지우면 다른 기기가 자기 사본을 다시 올려 되살아난다.
+			// 삭제 표시만 남기고 내용은 비운다 — 다시 올려도 deleted_at은 그대로라 숨겨진 채로 남는다.
+			await upsertRemoteVisitRow(userId, visitKey, {
+				...CLEARED_VISIT_FIELDS,
+				deleted_at: new Date().toISOString(),
+			});
 		}
 	},
 	markPending: (visitKey, meta) => {
@@ -346,6 +402,7 @@ export const useVisitStore = create<VisitStore>()((set, get) => ({
 				visit_started_at: meta.start,
 				visit_ended_at: meta.end,
 				visit_status: 'ended',
+				pending_since: get().visits[visitKey]?.pendingSince ?? null,
 			});
 		}
 	},
@@ -365,12 +422,18 @@ export const useVisitStore = create<VisitStore>()((set, get) => ({
 			return { visits: { ...state.visits, [visitKey]: next } };
 		});
 
-		const memo = meta.memo;
-		if (memo) {
-			const userId = useAuthStore.getState().user?.id;
-			if (userId) upsertRemoteVisit(userId, visitKey, { memo });
+		const confirmed = get().visits[visitKey];
+		const userId = useAuthStore.getState().user?.id;
+		if (userId && confirmed) {
+			upsertRemoteVisit(userId, visitKey, {
+				...(meta.memo ? { memo: meta.memo } : {}),
+				signature_svg: meta.signatureSvg,
+				rating: confirmed.rating ?? null,
+				visit_status: 'confirmed',
+				pending_since: null,
+			});
 		}
-		persistVisit(visitKey, get().visits[visitKey]);
+		persistVisit(visitKey, confirmed);
 	},
 	saveRecord: (input) => {
 		const key = makeVisitKey(input.dateKey, input.exhibitionId, input.title);
@@ -406,6 +469,7 @@ export const useVisitStore = create<VisitStore>()((set, get) => ({
 			return { visits: { ...state.visits, [key]: next } };
 		});
 
+		const saved = get().visits[key];
 		const userId = useAuthStore.getState().user?.id;
 		if (userId) {
 			upsertRemoteVisit(userId, key, {
@@ -415,10 +479,13 @@ export const useVisitStore = create<VisitStore>()((set, get) => ({
 				...(memo ? { memo } : {}),
 				...(input.poster ? { ticket_photo_url: input.poster } : {}),
 				...(input.photos?.length ? { venue_photo_urls: input.photos } : {}),
+				...toRemoteVisitFields(saved),
 				visit_status: 'confirmed',
+				pending_since: null,
+				deleted_at: null,
 			});
 		}
-		persistVisit(key, get().visits[key]);
+		persistVisit(key, saved);
 		return key;
 	},
 	pruneExpiredPending: async () => {
