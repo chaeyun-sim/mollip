@@ -442,7 +442,7 @@
 		"delete_download_title": "Delete download",
 		"delete_download_message": "Delete the download for \"{{title}}\"? You'll need a connection to listen again.",
 		"unsave_title": "Remove from saved",
-		"unsave_message": "Remove \"{{title}}\" from your saved list?",
+		"unsave_message": "Remove \"{{title}}\"?",
 		"unsave_confirm": "Remove",
 		"image_a11y": "{{title}} image",
 		"pause_a11y": "Pause",
