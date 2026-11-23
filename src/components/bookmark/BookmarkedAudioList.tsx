@@ -28,7 +28,7 @@ import {
 	useOfflineDownloadStore,
 } from '@/src/store/offlineDownloadStore';
 import { useSettingsStore } from '@/src/store/settingsStore';
-import { formatDate } from '@/src/utils/cultureExhibitionMapper';
+import { formatDate } from '@/src/utils/formatDate';
 import { formatOfflineAudioSize, getOfflineAudioTotalSizeBytes } from '@/src/utils/offlineAudio';
 import { fetchWikidataImage } from '@/src/utils/wikidataImage';
 
@@ -291,7 +291,7 @@ export function BookmarkedAudioList() {
 			)}
 
 			{doneIds.length > 0 && (
-				<View className="px-4 pb-3">
+				<View className="pb-3">
 					<View className="flex-row items-center justify-between rounded-2xl bg-[rgba(28,25,23,0.04)] px-4 py-3">
 						<Text className="font-pretendard-regular text-gray600 text-[13px]">
 							{t('bookmark.downloaded_size', { size: totalSizeLabel })}
