@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 import Svg, { Circle, Path, Rect } from 'react-native-svg';
 import { SIDE_SWING, Swingable } from '@/src/components/guide/Swingable';
@@ -9,6 +10,8 @@ interface ErrorIllustrationProps {
 
 /** 오류·오프라인·없는 페이지 — 비어 있는 콘센트와 뽑혀 옆으로 늘어진 플러그. 플러그를 누르면 덜렁거린다 */
 export function ErrorIllustration({ width = 220 }: ErrorIllustrationProps) {
+	const { t } = useTranslation();
+
 	const scale = width / 320;
 	const height = 200 * scale;
 
@@ -55,7 +58,7 @@ export function ErrorIllustration({ width = 220 }: ErrorIllustrationProps) {
 				width={150}
 				height={40}
 				scale={scale}
-				accessibilityLabel="뽑힌 플러그, 눌러 보세요"
+				accessibilityLabel={t('illustration.error_a11y')}
 			>
 				<Rect x="0" y="9" width="14" height="4.5" rx="2.2" fill={C.ink} />
 				<Rect x="0" y="22" width="14" height="4.5" rx="2.2" fill={C.ink} />

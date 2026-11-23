@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 import Svg, { Circle, Path, Rect } from 'react-native-svg';
 import { Swingable, TILT_SWING } from '@/src/components/guide/Swingable';
@@ -9,6 +10,8 @@ interface SearchEmptyIllustrationProps {
 
 /** 검색 결과 없음 — 갸우뚱하는 얼굴의 돋보기. 돋보기를 누르면 갸웃거린다 */
 export function SearchEmptyIllustration({ width = 220 }: SearchEmptyIllustrationProps) {
+	const { t } = useTranslation();
+
 	const scale = width / 320;
 	const height = 200 * scale;
 
@@ -56,7 +59,7 @@ export function SearchEmptyIllustration({ width = 220 }: SearchEmptyIllustration
 				width={128}
 				height={146}
 				scale={scale}
-				accessibilityLabel="갸우뚱하는 돋보기, 눌러 보세요"
+				accessibilityLabel={t('illustration.search_empty_a11y')}
 			>
 				{/* 손잡이 */}
 				<Path d="M90 92 L112 130" stroke={C.oak} strokeWidth="16" strokeLinecap="round" />

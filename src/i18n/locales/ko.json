@@ -797,7 +797,10 @@
 	},
 	"illustration": {
 		"audio_empty_a11y": "비어 있다는 표시, 눌러 보세요",
-		"bookmark_empty_a11y": "비어 있는 책갈피, 눌러 보세요"
+		"bookmark_empty_a11y": "비어 있는 책갈피, 눌러 보세요",
+		"empty_wall_a11y": "비어 있는 액자, 눌러 보세요",
+		"error_a11y": "뽑힌 플러그, 눌러 보세요",
+		"search_empty_a11y": "갸우뚱하는 돋보기, 눌러 보세요"
 	},
 	"download_status": {
 		"loading_a11y": "다운로드 중",

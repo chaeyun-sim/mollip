@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 import Svg, { Circle, Path, Rect } from 'react-native-svg';
 import { FRAME_SWING, Swingable } from '@/src/components/guide/Swingable';
@@ -9,6 +10,8 @@ interface EmptyWallIllustrationProps {
 
 /** 다이어리 빈 상태 — 아직 비어 있는 점선 액자 세 칸. 액자를 누르면 흔들린다 */
 export function EmptyWallIllustration({ width = 240 }: EmptyWallIllustrationProps) {
+	const { t } = useTranslation();
+
 	const scale = width / 320;
 	const height = 200 * scale;
 
@@ -47,7 +50,7 @@ export function EmptyWallIllustration({ width = 240 }: EmptyWallIllustrationProp
 				width={64}
 				height={84}
 				scale={scale}
-				accessibilityLabel="비어 있는 액자, 눌러 보세요"
+				accessibilityLabel={t('illustration.empty_wall_a11y')}
 			>
 				<Rect
 					x="1.5"
@@ -70,7 +73,7 @@ export function EmptyWallIllustration({ width = 240 }: EmptyWallIllustrationProp
 				width={88}
 				height={108}
 				scale={scale}
-				accessibilityLabel="비어 있는 액자, 눌러 보세요"
+				accessibilityLabel={t('illustration.empty_wall_a11y')}
 			>
 				<Rect
 					x="1.5"
@@ -93,7 +96,7 @@ export function EmptyWallIllustration({ width = 240 }: EmptyWallIllustrationProp
 				width={64}
 				height={76}
 				scale={scale}
-				accessibilityLabel="비어 있는 액자, 눌러 보세요"
+				accessibilityLabel={t('illustration.empty_wall_a11y')}
 			>
 				<Rect
 					x="1.5"

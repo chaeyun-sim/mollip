@@ -797,7 +797,10 @@
 	},
 	"illustration": {
 		"audio_empty_a11y": "Empty sign, tap it",
-		"bookmark_empty_a11y": "Empty bookmark, tap it"
+		"bookmark_empty_a11y": "Empty bookmark, tap it",
+		"empty_wall_a11y": "Empty frame, tap it",
+		"error_a11y": "Unplugged plug, tap it",
+		"search_empty_a11y": "Puzzled magnifier, tap it"
 	},
 	"download_status": {
 		"loading_a11y": "Downloading",
